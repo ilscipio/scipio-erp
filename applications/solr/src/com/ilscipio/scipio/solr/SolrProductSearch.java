@@ -72,7 +72,7 @@ public abstract class SolrProductSearch {
     private static final int maxLogIds = UtilProperties.getPropertyAsInteger(SolrUtil.solrConfigName,
             "solr.log.max.id", 10);
     private static final boolean ecaAsync = "async".equals(UtilProperties.getPropertyValue(SolrUtil.solrConfigName,
-            "solr.eca.service.mode", "sync"));
+            "solr.eca.service.mode", "async"));
 
     public static Map<String, Object> addToSolr(DispatchContext dctx, Map<String, Object> context) {
         return updateToSolrCommon(dctx, context, true, true);

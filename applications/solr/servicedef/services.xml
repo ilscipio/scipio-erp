@@ -201,8 +201,9 @@ code package.
     </service>
     
     <service name="updateToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="updateToSolr"
-        transaction-timeout="72000">
-        <description>Immediately adds OR removes product to/from solr index by product instance or by productId - intended for use with ECAs/SECAs</description>
+        transaction-timeout="72000" priority="90">
+        <description>Immediately adds OR removes product to/from solr index by product instance or by productId - intended for use with ECAs/SECAs,
+            automatically called by registerUpdateToSolr</description>
         <implements service="updateToSolrSingleInterface"/>
         <implements service="updateToSolrMultiInterface"/>
         <implements service="updateToSolrControlInterface"/>

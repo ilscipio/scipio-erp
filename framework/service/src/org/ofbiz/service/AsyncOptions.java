@@ -37,12 +37,12 @@ public abstract class AsyncOptions extends ServiceOptions {
         return this;
     }
 
-    /** The job priority, 0-100, defaults to {@link org.ofbiz.service.job.JobPriority#NORMAL}. */
+    /** The job priority, 0-100, defaults to priority service attribute otherwise {@link org.ofbiz.service.job.JobPriority#NORMAL}. */
     public Long priority() {
         return priority;
     }
 
-    /** The job priority, 0-100, defaults to {@link org.ofbiz.service.job.JobPriority#NORMAL}. */
+    /** The job priority, 0-100, defaults to priority service attribute otherwise {@link org.ofbiz.service.job.JobPriority#NORMAL}. */
     public AsyncOptions priority(Long priority) {
         this.priority = priority;
         return this;

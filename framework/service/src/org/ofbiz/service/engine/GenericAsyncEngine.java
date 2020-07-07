@@ -132,7 +132,8 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                 jFields.put("loaderName", localName);
                 jFields.put("maxRetry", (pao.maxRetry() != null) ? (long) pao.maxRetry() : (long) modelService.maxRetry);
                 jFields.put("runtimeDataId", dataId);
-                jFields.put("priority", (pao.priority() != null) ? pao.priority() : JobPriority.NORMAL); // SCIPIO: Configurable priority
+                // SCIPIO: NOTE: we leave priority null unless explicit so it picks up default from ModelService/JobPriority
+                jFields.put("priority", (pao.priority() != null) ? pao.priority() : null);
                 if (UtilValidate.isNotEmpty(authUserLoginId)) {
                     jFields.put("authUserLoginId", authUserLoginId);
                 }
@@ -161,7 +162,7 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                 if (serviceOptions.jobPool() == null || isJobPoolApplicable(serviceOptions.jobPool())) { // SCIPIO: jobPool
                     String name = Long.toString(System.currentTimeMillis());
                     String jobId = modelService.name + "." + name;
-                    job = new GenericServiceJob(dctx, jobId, name, modelService.name, serviceOptions, context, requester); // SCIPIO: jobPool
+                    job = new GenericServiceJob(dctx, jobId, name, modelService, serviceOptions, context, requester); // SCIPIO: jobPool
                     try {
                         dispatcher.getJobManager().runJob((Job) job);
                     } catch (JobManagerException jse) {

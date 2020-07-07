@@ -169,6 +169,14 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="priority"><!-- default="50" -->
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Default job priority when this service is run either async (ECA) or scheduled as a job. Default: 50 (normal)
+                    NOTE: This currently has no effect on services invoked in "sync" mode.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="notification">
         <xs:complexType>

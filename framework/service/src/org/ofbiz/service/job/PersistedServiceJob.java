@@ -79,7 +79,8 @@ public class PersistedServiceJob extends GenericServiceJob {
      */
     protected PersistedServiceJob(DispatchContext dctx, GenericValue jobValue, GenericRequester req, boolean minimalJob, PersistAsyncOptions serviceOptions) {
         // SCIPIO: TODO: REVIEW: DO NOT pass serviceOptions to super here because we're only exploiting its implementation... abstraction issues
-        super(dctx, jobValue.getString("jobId"), jobValue.getString("jobName"), null, null, null, req); // SCIPIO: jobPool, overridden in getJobPool()
+        super(dctx, jobValue.getString("jobId"), jobValue.getString("jobName"),
+                dctx.getModelServiceAlways(jobValue.getString("serviceName")), null, null, req); // SCIPIO: jobPool, overridden in getJobPool()
         this.delegator = dctx.getDelegator();
         this.jobValue = jobValue;
         Timestamp storedDate = jobValue.getTimestamp("runTime");
@@ -260,9 +261,10 @@ public class PersistedServiceJob extends GenericServiceJob {
             }
             nextRecurrence = next;
             // Set priority if missing
-            if (newJob.getLong("priority") == null) {
-                newJob.set("priority", JobPriority.NORMAL);
-            }
+            // SCIPIO: DON'T: null will indicate normal OR ModelService.priority, and this is unnecessary anyway
+            //if (newJob.getLong("priority") == null) {
+            //    newJob.set("priority", JobPriority.NORMAL);
+            //}
 
             // SCIPIO: Transfer the special new eventId field
             // 2017-08-30: copy eventId (e.g. SCH_EVENT_STARTUP) ONLY if this is
@@ -475,7 +477,7 @@ public class PersistedServiceJob extends GenericServiceJob {
 
     /*
      * Returns the priority stored in the JobSandbox.priority field, if no value is present
-     * then it defaults to AbstractJob.getPriority()
+     * then it defaults to AbstractJob.getPriority() (SCIPIO: actually GenericServiceJob, which does the ModelService lookup)
      */
     @Override
     public long getPriority() {

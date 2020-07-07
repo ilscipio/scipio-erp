@@ -313,6 +313,18 @@ public class ModelServiceReader implements Serializable {
 
         service.overriddenService = overriddenService; // SCIPIO
 
+        // SCIPIO
+        String priorityStr = serviceElement.getAttribute("priority");
+        Long priority = null;
+        if (priorityStr.length() > 0) {
+            try {
+                priority = Long.parseLong(priorityStr);
+            } catch(NumberFormatException e) {
+                Debug.logError("Error parsing service definition [" + service.name + "] priority attribute: " + e.toString(), module);
+            }
+        }
+        service.priority = priority;
+
         return service;
     }
 

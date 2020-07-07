@@ -49,16 +49,17 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
     private final String jobPool; // SCIPIO
     private final Map<String, Object> context;
 
-    public GenericServiceJob(DispatchContext dctx, String jobId, String jobName, String service, AsyncOptions serviceOptions, Map<String, Object> context, GenericRequester req) {
+    public GenericServiceJob(DispatchContext dctx, String jobId, String jobName, ModelService modelService,
+                             AsyncOptions serviceOptions, Map<String, Object> context, GenericRequester req) { // SCIPIO: Refactored
         super(jobId, jobName);
         if (serviceOptions == null) {
             serviceOptions = MemoryAsyncOptions.DEFAULT;
         }
         Assert.notNull("dctx", dctx);
         this.dctx = dctx;
-        this.service = service;
+        this.service = modelService.name;
         // SCIPIO: NOTE: serviceOptions could be a PersistAsyncOptions instance in this class design so if need MemoryAsyncOptions check AsyncOptions.isPersisted/instance
-        this.priority = serviceOptions.priority() != null ? serviceOptions.priority() : JobPriority.NORMAL;
+        this.priority = modelService.determinePriority(serviceOptions, JobPriority.NORMAL);
         this.jobPool = serviceOptions.jobPool();
         this.context = context;
         this.requester = req;

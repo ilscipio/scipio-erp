@@ -77,6 +77,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.service.group.GroupModel;
 import org.ofbiz.service.group.GroupServiceModel;
 import org.ofbiz.service.group.ServiceGroupReader;
+import org.ofbiz.service.job.JobPriority;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -296,6 +297,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     ModelService overriddenService; // SCIPIO: This is always null unless
 
+    /**
+     * SCIPIO: Service priority for async and job services.
+     */
+    Long priority;
+
     public ModelService() {}
 
     public ModelService(ModelService model) {
@@ -337,10 +343,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         for (ModelParam param: modelParamList) {
             this.addParamClone(param);
         }
-        this.relativeDefinitionLocation = model.relativeDefinitionLocation; // SCIPIO
-        this.logLevel = model.logLevel; // SCIPIO
-        this.ecaLogLevel = model.ecaLogLevel; // SCIPIO
-        this.typeConvertParamList = model.typeConvertParamList; // SCIPIO
+        // SCIPIO
+        this.relativeDefinitionLocation = model.relativeDefinitionLocation;
+        this.logLevel = model.logLevel;
+        this.ecaLogLevel = model.ecaLogLevel;
+        this.typeConvertParamList = model.typeConvertParamList;
+        this.priority = model.priority;
     }
 
     @Override
@@ -2394,5 +2402,34 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public static boolean isSysResponseField(String fieldName) {
         return SYS_RESPONSE_FIELDS_SET.contains(fieldName);
+    }
+
+    /**
+     * SCIPIO: Returns the default service priority for async and job services, or null if default.
+     */
+    public Long getPriority() {
+        return priority;
+    }
+
+    /**
+     * SCIPIO: Determines the effected priority for async and job service.
+     * NOTE: This is NOT stored in JobSandbox.
+     */
+    public Long determinePriority(AsyncOptions options, Long defaultPriority) {
+        if (options != null && options.priority != null) {
+            return options.priority;
+        } else if (getPriority() != null) {
+            return getPriority();
+        } else {
+            return defaultPriority;
+        }
+    }
+
+    /**
+     * SCIPIO: Determines the effected priority for async and job service.
+     * NOTE: This is NOT stored in JobSandbox.
+     */
+    public Long determinePriority(Long explicitPriority, Long defaultPriority) {
+        return (explicitPriority != null) ? explicitPriority : (getPriority() != null ? getPriority() : defaultPriority);
     }
 }

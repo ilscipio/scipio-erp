@@ -51,8 +51,10 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.entity.util.FlexibleEntityFilter;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.JobInfo;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.PersistAsyncOptions;
 import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.service.ServiceOptions;
@@ -628,6 +630,8 @@ public final class JobManager {
      * Schedule a job to start at a specific time with specific recurrence info
      * <p>
      * SCIPIO: Modified for job options.
+     * <p>
+     * FIXME: this method should receive a ModelService, serviceName is pointless.
      *
      * @param jobName The name of the job
      * @param serviceName The name of the service to invoke
@@ -662,6 +666,8 @@ public final class JobManager {
      * Schedule a job to start at a specific time with specific recurrence info
      * <p>
      * SCIPIO: Modified to accept an event ID.
+     * <p>
+     * FIXME: this method should receive a ModelService, serviceName is pointless.
      *
      * @param jobName The name of the job
      * @param serviceName The name of the service to invoke
@@ -676,8 +682,16 @@ public final class JobManager {
         if (serviceOptions == null) {
             serviceOptions = PersistAsyncOptions.DEFAULT;
         }
+        // FIXME: this method should receive a ModelService, serviceName is pointless.
+        ModelService modelService;
+        try {
+            modelService = getDispatcher().getModelService(serviceName);
+        } catch (GenericServiceException e) {
+            throw new JobManagerException(e);
+        }
         String poolName = serviceOptions.jobPool();
-        long priority = (serviceOptions.priority() != null) ? serviceOptions.priority() : JobPriority.NORMAL;
+        // SCIPIO: NOTE: we leave priority null unless explicit so it picks up default from ModelService/JobPriority
+        Long priority = (serviceOptions.priority() != null) ? serviceOptions.priority() : null;
         long startTime = (serviceOptions.startTime() != null) ? serviceOptions.startTime() : System.currentTimeMillis(); // SCIPIO: new: if missing, assume now (simplifies API)
         int frequency = (serviceOptions.frequency() != null) ? serviceOptions.frequency() : -1;
         // SCIPIO: NOTE: some places use interval=1 as default, but frequency must be > -1 to matter so they have to be set together anyway

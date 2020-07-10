@@ -848,15 +848,12 @@ public class ShoppingCartHelper {
                                         BigDecimal minQuantity = ShoppingCart.getMinimumOrderQuantity(delegator, item.getBasePrice(), item.getProductId());
                                         oldQuantity = item.getQuantity();
                                         if (oldQuantity.compareTo(quantity) != 0) {
-											// SCIPIO: Reset shipment method information in cart only if shipping applies on product.
+                                            // Reset shipment method information in cart only if shipping applies on product.
                                             //cart.setShipmentMethodTypeId(index, null);
                                             GenericValue product = item.getProduct();
-                                            if (UtilValidate.isNotEmpty(product) && ProductWorker.shippingApplies(product)) {
-                                                for (int shipGroupIndex = 0; shipGroupIndex < cart.getShipGroupSize(); shipGroupIndex++) {
-                                                    String shipContactMechId = cart.getShippingContactMechId(shipGroupIndex);
-                                                    if (UtilValidate.isNotEmpty(shipContactMechId)) {
-                                                        cart.setShipmentMethodTypeId(shipGroupIndex, null);
-                                                    }
+                                            if (product != null && ProductWorker.shippingApplies(product)) {
+                                                for(ShoppingCart.CartShipInfo cartShipInfo : cart.getItemShipInfos(item)) {
+                                                    cartShipInfo.setShipmentMethodTypeId(null);
                                                 }
                                             }
                                         }

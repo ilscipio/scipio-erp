@@ -64,6 +64,7 @@ SCIPIO_ADDON_MAP[projectmgr]="projectmgr addons/projectmgr ee projectmgr /"
 SCIPIO_ADDON_MAP[redsys]="redsys addons/redsys ee redsys /"
 SCIPIO_ADDON_MAP[shopde]="shopde addons/shopde ee shopde /"
 SCIPIO_ADDON_MAP[vue-theme]="vue-theme themes/vue ee vue-theme /"
+SCIPIO_ADDON_MAP[stripe]="stripe addons/stripe ee stripe /"
 
 # OVERRIDES
 # If you need to override any of the above definitions (for whatever reason, normally not),

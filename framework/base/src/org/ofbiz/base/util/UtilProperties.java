@@ -1714,19 +1714,30 @@ public final class UtilProperties implements Serializable {
      * and end with given suffix, with option to forbid dots in between.
      * Added 2017-07-10.
      */
-    public static Set<String> getPropertyNamesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
-        Set<String> names = new HashSet<>();
+    public static <C extends Collection<String>> C getPropertyNamesWithPrefixSuffix(C out, Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        if (properties == null) {
+            return out;
+        }
         int prefixLength = (prefix == null) ? 0 : prefix.length();
         int suffixLength = (suffix == null ? 0 : suffix.length());
         for(String name : properties.stringPropertyNames()) {
             if ((prefix == null || name.startsWith(prefix)) && (suffix == null || name.endsWith(suffix))) {
                 String middle = name.substring(prefixLength, name.length() - suffixLength);
                 if (allowDots || !middle.contains(".")) {
-                    names.add((returnPrefix ? prefix : "") + middle + (returnSuffix ? suffix : ""));
+                    out.add((returnPrefix ? prefix : "") + middle + (returnSuffix ? suffix : ""));
                 }
             }
         }
-        return names;
+        return out;
+    }
+
+    /**
+     * SCIPIO: Returns all property names in the given Properties that start with given prefix
+     * and end with given suffix, with option to forbid dots in between.
+     * Added 2017-07-10.
+     */
+    public static Set<String> getPropertyNamesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        return getPropertyNamesWithPrefixSuffix(new HashSet<>(), properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
     }
 
     /**
@@ -1734,7 +1745,10 @@ public final class UtilProperties implements Serializable {
      * and end with given suffix, with option to forbid dots in between, to the given out map.
      * Added 2017-07-10.
      */
-    public static void putPropertiesWithPrefixSuffix(Map<String, ? super String> out, Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+    public static <M extends Map<String, ? super String>> M putPropertiesWithPrefixSuffix(M out, Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        if (properties == null) {
+            return out;
+        }
         int prefixLength = (prefix == null) ? 0 : prefix.length();
         int suffixLength = (suffix == null) ? 0 : suffix.length();
         for(String name : properties.stringPropertyNames()) {
@@ -1747,6 +1761,7 @@ public final class UtilProperties implements Serializable {
                 }
             }
         }
+        return out;
     }
 
     /**
@@ -1754,7 +1769,10 @@ public final class UtilProperties implements Serializable {
      * with option to forbid dots in names, to the given out map.
      * Added 2017-07-10.
      */
-    public static void putPropertiesWithPrefix(Map<String, ? super String> out, Properties properties, String prefix, boolean allowDots, boolean returnPrefix) {
+    public static <M extends Map<String, ? super String>> M putPropertiesWithPrefix(M out, Properties properties, String prefix, boolean allowDots, boolean returnPrefix) {
+        if (properties == null) {
+            return out;
+        }
         int prefixLength = (prefix == null) ? 0 : prefix.length();
         for(String name : properties.stringPropertyNames()) {
             if ((prefix == null || name.startsWith(prefix))) {
@@ -1766,6 +1784,7 @@ public final class UtilProperties implements Serializable {
                 }
             }
         }
+        return out;
     }
 
     /**
@@ -1773,8 +1792,8 @@ public final class UtilProperties implements Serializable {
      * stripping the prefix and allowing dots in names, to the given out map.
      * Added 2017-07-10.
      */
-    public static void putPropertiesWithPrefix(Map<String, ? super String> out, Properties properties, String prefix) {
-        putPropertiesWithPrefix(out, properties, prefix, true, false);
+    public static <M extends Map<String, ? super String>> M putPropertiesWithPrefix(M out, Properties properties, String prefix) {
+        return putPropertiesWithPrefix(out, properties, prefix, true, false);
     }
 
     /**
@@ -1783,9 +1802,7 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Map<String, String> getPropertiesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
-        Map<String, String> out = new HashMap<>();
-        putPropertiesWithPrefixSuffix(out, properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
-        return out;
+        return putPropertiesWithPrefixSuffix(new HashMap<>(), properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
     }
 
     /**
@@ -1794,9 +1811,7 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Map<String, String> getPropertiesWithPrefix(Properties properties, String prefix, boolean allowDots, boolean returnPrefix) {
-        Map<String, String> out = new HashMap<>();
-        putPropertiesWithPrefix(out, properties, prefix, allowDots, returnPrefix);
-        return out;
+        return putPropertiesWithPrefix(new HashMap<>(), properties, prefix, allowDots, returnPrefix);
     }
 
     /**
@@ -1805,17 +1820,15 @@ public final class UtilProperties implements Serializable {
      * Added 2018-04-27.
      */
     public static Map<String, String> getPropertiesWithPrefix(Properties properties, String prefix) {
-        Map<String, String> out = new HashMap<>();
-        putPropertiesWithPrefix(out, properties, prefix, true, false);
-        return out;
+        return putPropertiesWithPrefix(new HashMap<>(), properties, prefix, true, false);
     }
 
     /**
      * SCIPIO: Extracts properties having the given prefix and keyed by an ID as the next name part between dots.
      * Added 2017-11.
      */
-    public static <T> void extractPropertiesWithPrefixAndId(Map<String, Map<String, T>> out, Properties properties, String prefix) {
-        extractPropertiesWithPrefixAndId(out, (Map<?, ?>) properties, prefix);
+    public static <T, M extends Map<String, Map<String, T>>> M extractPropertiesWithPrefixAndId(M out, Properties properties, String prefix) {
+        return extractPropertiesWithPrefixAndId(out, (Map<?, ?>) properties, prefix);
     }
 
     /**
@@ -1823,7 +1836,10 @@ public final class UtilProperties implements Serializable {
      * Added 2017-11.
      */
     @SuppressWarnings("unchecked")
-    public static <T> void extractPropertiesWithPrefixAndId(Map<String, Map<String, T>> out, Map<?, ?> properties, String prefix) {
+    public static <T, M extends Map<String, Map<String, T>>> M extractPropertiesWithPrefixAndId(M out, Map<?, ?> properties, String prefix) {
+        if (properties == null) {
+            return out;
+        }
         if (prefix == null) prefix = "";
         for(Map.Entry<?, ?> entry : properties.entrySet()) {
             String name = (String) entry.getKey();
@@ -1843,6 +1859,7 @@ public final class UtilProperties implements Serializable {
                 }
             }
         }
+        return out;
     }
 
     /**
@@ -1850,7 +1867,10 @@ public final class UtilProperties implements Serializable {
      * with option to return names from the first numbered regexp group.
      * Added 2018-08-23.
      */
-    public static void putPropertiesMatching(Map<String, ? super String> out, Properties properties, Pattern nameRegexp, boolean returnFirstGroup) {
+    public static <M extends Map<String, ? super String>> M putPropertiesMatching(M out, Properties properties, Pattern nameRegexp, boolean returnFirstGroup) {
+        if (properties == null) {
+            return out;
+        }
         for(String name : properties.stringPropertyNames()) {
             Matcher m = nameRegexp.matcher(name);
             if (m.matches()) {
@@ -1859,6 +1879,7 @@ public final class UtilProperties implements Serializable {
                 out.put(returnFirstGroup ? m.group(1) : name, value);
             }
         }
+        return out;
     }
 
     /**
@@ -1866,8 +1887,8 @@ public final class UtilProperties implements Serializable {
      * The names are unchanged.
      * Added 2018-08-23.
      */
-    public static void putPropertiesMatching(Map<String, ? super String> out, Properties properties, Pattern nameRegexp) {
-        putPropertiesMatching(out, properties, nameRegexp, false);
+    public static <M extends Map<String, ? super String>> M putPropertiesMatching(M out, Properties properties, Pattern nameRegexp) {
+        return putPropertiesMatching(out, properties, nameRegexp, false);
     }
 
     /**
@@ -1876,9 +1897,7 @@ public final class UtilProperties implements Serializable {
      * Added 2018-08-23.
      */
     public static Map<String, String> getPropertiesMatching(Properties properties, Pattern nameRegexp, boolean returnFirstGroup) {
-        Map<String, String> out = new HashMap<>();
-        putPropertiesMatching(out, properties, nameRegexp, returnFirstGroup);
-        return out;
+        return putPropertiesMatching(new HashMap<>(), properties, nameRegexp, returnFirstGroup);
     }
 
     /**
@@ -1887,9 +1906,7 @@ public final class UtilProperties implements Serializable {
      * Added 2018-08-23.
      */
     public static Map<String, String>  getPropertiesMatching(Properties properties, Pattern nameRegexp) {
-        Map<String, String> out = new HashMap<>();
-        putPropertiesMatching(out, properties, nameRegexp, false);
-        return out;
+        return putPropertiesMatching(new HashMap<>(), properties, nameRegexp, false);
     }
 
     /**

@@ -299,7 +299,7 @@ public class ContentUrlTag {
     }
 
     // SCIPIO: Modified to support Boolean, heavily modified
-    public static void appendContentPrefix(GenericValue webSite, Boolean secure, Appendable urlBuffer) throws IOException {
+    public static <A extends Appendable> A appendContentPrefix(GenericValue webSite, Boolean secure, A urlBuffer) throws IOException {
         // SCIPIO: WARN: Don't have request, can't determine sane default when secure null, so assume false
         secure = !Boolean.FALSE.equals(secure); // default TRUE (2018-08)
         if (secure) {
@@ -331,6 +331,17 @@ public class ContentUrlTag {
                 urlBuffer.append(prefix);
             }
         }
+        return urlBuffer;
+    }
+
+    public static String getContentPrefix(GenericValue webSite, Boolean secure) { // SCIPIO
+        StringBuilder sb = new StringBuilder();
+        try {
+            appendContentPrefix(webSite, secure, sb);
+        } catch (IOException e) {
+            Debug.logError(e, module);
+        }
+        return sb.toString();
     }
 
     public static String getContentPrefix(HttpServletRequest request) {

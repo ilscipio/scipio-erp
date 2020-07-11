@@ -126,6 +126,12 @@ code package.
                 delete-all-first (clears whole index before reindexing, default),
                 no-delete (deleted products will remain in solr index, can use when you know no products have changed since last indexing to minimize impact of reindex)</description><!-- Added 2020-03-12 -->
         </attribute>
+        <attribute name="includeMainStoreIds" type="Collection" mode="IN" optional="true">
+            <description>Only index products whose default/main store is one of these productStoreIds; warning: slow</description>
+        </attribute>
+        <attribute name="includeAnyStoreIds" type="Collection" mode="IN" optional="true">
+            <description>Only index products linked to any of these productStoreIds; warning: slow</description>
+        </attribute>
         <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
         <attribute mode="OUT" name="executed" optional="true" type="Boolean" />
     </service>

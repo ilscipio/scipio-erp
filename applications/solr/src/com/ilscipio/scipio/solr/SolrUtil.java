@@ -595,15 +595,15 @@ public abstract class SolrUtil {
     }
 
     public static HttpSolrClient makeQueryHttpSolrClientFromUrl(String url, String solrUsername, String solrPassword) {
-        return SolrClientFactory.newQueryClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
+        return SolrClientFactory.NewSolrClientFactory.newQueryClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
     }
 
     public static HttpSolrClient makeUpdateHttpSolrClientFromUrl(String url, String solrUsername, String solrPassword) {
-        return SolrClientFactory.newUpdateClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
+        return SolrClientFactory.NewSolrClientFactory.newUpdateClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
     }
 
     public static HttpSolrClient makeAdminHttpSolrClientFromUrl(String url, String solrUsername, String solrPassword) {
-        return SolrClientFactory.newAdminClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
+        return SolrClientFactory.NewSolrClientFactory.newAdminClientFactory.getClientFromUrl(url, solrUsername, solrPassword);
     }
 
     static SolrConnectConfig getSolrQueryConnectConfig() {
@@ -718,13 +718,6 @@ public abstract class SolrUtil {
     private static abstract class SolrClientFactory {
 
         /**
-         * Factory that always creates a new client.
-         */
-        static final SolrClientFactory newQueryClientFactory = NewSolrClientFactory.create(SolrConnectConfig.queryConnectConfig);
-        static final SolrClientFactory newUpdateClientFactory = NewSolrClientFactory.create(SolrConnectConfig.updateConnectConfig);
-        static final SolrClientFactory newAdminClientFactory = NewSolrClientFactory.create(SolrConnectConfig.adminConnectConfig);
-
-        /**
          * Abstracted factory that gets a cached or new client.
          */
         static final SolrClientFactory queryClientFactory = create(SolrConnectConfig.queryConnectConfig);
@@ -768,6 +761,13 @@ public abstract class SolrUtil {
 
         static class NewSolrClientFactory extends SolrClientFactory {
             private final SolrConnectConfig connectConfig;
+
+            /**
+             * Factory that always creates a new client.
+             */
+            static final SolrClientFactory newQueryClientFactory = NewSolrClientFactory.create(SolrConnectConfig.queryConnectConfig);
+            static final SolrClientFactory newUpdateClientFactory = NewSolrClientFactory.create(SolrConnectConfig.updateConnectConfig);
+            static final SolrClientFactory newAdminClientFactory = NewSolrClientFactory.create(SolrConnectConfig.adminConnectConfig);
 
             NewSolrClientFactory(SolrConnectConfig connectConfig) {
                 this.connectConfig = connectConfig;

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -54,6 +55,8 @@ public class SolrProductIndexer {
     private Map<String, Object> serviceContext;
     private GenericValue userLogin;
     private ProductDataReader productDataReader;
+    private ProductDocBuilder lastProductDocBuilder;
+    private ProductUpdateRequest lastProductUpdateRequest;
     private boolean useEntityCache;
     private long startTime = System.currentTimeMillis();
 
@@ -153,6 +156,13 @@ public class SolrProductIndexer {
     /** Returns the main source of product/category/catalog data (may be caching). */
     public ProductDataReader getProductData() {
         return productDataReader;
+    }
+
+    /** Returns the last product document builder used by the indexer, for reuse - NOTE: use the method parameter where available instead of this. */
+    public ProductDocBuilder getLastProductDocBuilder() { return lastProductDocBuilder; }
+
+    public ProductUpdateRequest getLastProductUpdateRequest() {
+        return lastProductUpdateRequest;
     }
 
     public boolean isUseIndexerCache() {
@@ -289,7 +299,7 @@ public class SolrProductIndexer {
         }
     }
 
-    public ExpandProductResult expandProductsForIndexing(Map<String, ProductUpdateRequest> products, Map<String, ExpandedProductUpdateRequest> expandedProducts) {
+    public ExpandProductResult expandProductsForIndexing(Map<String, ProductUpdateRequest> products, Map<String, ProductUpdateRequest> expandedProducts) {
         ExpandProductResult expandResult = makeExpandProductResult();
         for(Map.Entry<String, ProductUpdateRequest> entry : products.entrySet()) {
             try {
@@ -304,7 +314,7 @@ public class SolrProductIndexer {
 
     /** Returns true if there's any chance the product should expand for indexing. */
     public boolean isExpandProductForIndexing(String productId, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
-                                              Map<String, ExpandedProductUpdateRequest> expandedProducts, ExpandProductResult expandResult) {
+                                              Map<String, ProductUpdateRequest> expandedProducts, ExpandProductResult expandResult) {
         if (pur.isExplicitRemove()) {
             // Here the Product will already have been removed so we can't determine its
             // variants; but that's ok because it makes no sense for virtual to have been
@@ -316,9 +326,9 @@ public class SolrProductIndexer {
     }
 
     public int expandProductForIndexing(String productId, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
-                                        Map<String, ExpandedProductUpdateRequest> expandedProducts, ExpandProductResult expandResult) throws GeneralException {
+                                        Map<String, ProductUpdateRequest> expandedProducts, ExpandProductResult expandResult) throws GeneralException {
         int numProducts = 1;
-        expandedProducts.put(productId, makeExpandedProductUpdateRequest(productId, pur));
+        expandedProducts.put(productId, pur);
         if (isExpandProductForIndexing(productId, pur, products, expandedProducts, expandResult)) {
             GenericValue product = lookupProductForIndexing(productId, pur);
             if (product != null) {
@@ -329,7 +339,7 @@ public class SolrProductIndexer {
                         // NOTE: we crush any prior entry for same product; chronological last update request in transaction has priority
                         // re-add the key to LinkedHashMap keep a readable order in log
                         expandedProducts.remove(relatedProductId);
-                        expandedProducts.put(relatedProductId, makeExpandedProductUpdateRequest(relatedProductId, pur));
+                        expandedProducts.put(relatedProductId, pur);
                         numProducts++;
                     }
                 }
@@ -348,9 +358,9 @@ public class SolrProductIndexer {
 
     /** NOTE: this gets the instance passed by the callers if possible - we don't do this during the main indexing run to prevent bad caching e.g. from entities. */
     public GenericValue lookupProductForIndexing(String productId, ProductUpdateRequest pur) throws GeneralException {
-        if (pur.getInstance() instanceof GenericValue) {
+        if (pur.getProductInst() != null) { // NOTE: Likely to be null
             // NOTE: this is only used for the isVirtual/isVariant flag: it is re-looked up by productId in updateToSolrCoreMultiAddImp
-            return (GenericValue) pur.getInstance();
+            return pur.getProductInst();
         } else {
             return getProductData().getProduct(getDctx(), productId, false);
             //return dctx.getDelegator().findOne("Product", UtilMisc.toMap("productId", productId), false);
@@ -358,7 +368,7 @@ public class SolrProductIndexer {
     }
 
     public Collection<String> getRelatedProductIdsForIndexing(String productId, GenericValue product, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
-                                                              Map<String, ExpandedProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
+                                                              Map<String, ProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
         Collection<String> relatedProductIds = null;
         if (hasChildProductIdsForIndexing(productId, product, pur, products, expandedProducts, moment, expandResult)) {
             Collection<String> variantProductIds = getChildProductIdsForIndexing(productId, product, pur, products, expandedProducts, moment, expandResult);
@@ -380,12 +390,12 @@ public class SolrProductIndexer {
     }
 
     public boolean hasChildProductIdsForIndexing(String productId, GenericValue product, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
-                                                 Map<String, ExpandedProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
+                                                 Map<String, ProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
         return pur.isUpdateVariants() && Boolean.TRUE.equals(product.getBoolean("isVirtual"));
     }
 
     public Collection<String> getChildProductIdsForIndexing(String productId, GenericValue product, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
-                                                            Map<String, ExpandedProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
+                                                            Map<String, ProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
         if (pur.isUpdateVariantsDeep()) {
             return getProductData().getVariantProductIdsDeepDfs(getDctx(), productId, moment, false);
         } else {
@@ -394,12 +404,12 @@ public class SolrProductIndexer {
     }
 
     public boolean hasParentProductIdsForIndexing(String productId, GenericValue product, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
-                                                  Map<String, ExpandedProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
+                                                  Map<String, ProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
         return pur.isUpdateVirtual() && Boolean.TRUE.equals(product.getBoolean("isVariant"));
     }
 
     public Collection<String> getParentProductIdsForIndexing(String productId, GenericValue product, ProductUpdateRequest pur, Map<String, ProductUpdateRequest> products,
-                                                             Map<String, ExpandedProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
+                                                             Map<String, ProductUpdateRequest> expandedProducts, Timestamp moment, ExpandProductResult expandResult) throws GeneralException {
         if (pur.isUpdateVirtualDeep()) {
             return getProductData().getVirtualProductIdsDeepDfs(getDctx(), productId, moment, false);
         } else {
@@ -409,95 +419,73 @@ public class SolrProductIndexer {
         }
     }
 
-    public ProductUpdateRequest makeProductUpdateRequest(Map<String, Object> fromMap) {
-        return new ProductUpdateRequest(fromMap);
+    /** Map-based factory method with specific field overrides (no fallbacks to map). NOTE: Pass productInst null to force re-lookup by productId. */
+    public ProductUpdateRequest makeProductUpdateRequest(String productId, Map<String, Object> srcInst, GenericValue productInst, Boolean action, Map<String, Object> fromMap) {
+        return new ProductUpdateRequest(productId, srcInst, productInst, action, fromMap);
     }
 
-    public ProductUpdateRequest makeProductUpdateRequest(Map<String, Object> fromMap, Boolean action, Map<String, Object> instance) {
-        return new ProductUpdateRequest(fromMap, action, instance);
+    public ProductUpdateRequest getNullProductUpdateRequest() {
+        return ProductUpdateRequest.NULL;
     }
 
     /** Class representing the attributes of the updateToSolrSingleInterface service interface */
     public static class ProductUpdateRequest {
-        //protected final String productId;
-        protected final Boolean action; // true = add, false = remove
-        protected final Map<String, Object> instance;
+        protected static final ProductUpdateRequest NULL = new ProductUpdateRequest(null, null, null, null, null);
+
+        protected final String productId;
+        protected final Map<String, Object> srcInst; // any instance with a productId
+        protected final GenericValue productInst; // may be null but always Product value
+        protected final Boolean action;
         protected final Boolean updateVariants;
         protected final Boolean updateVariantsDeep;
         protected final Boolean updateVirtual;
         protected final Boolean updateVirtualDeep;
 
-        protected ProductUpdateRequest(String productId, Boolean action, Map<String, Object> instance, Boolean updateVariants, Boolean updateVariantsDeep, Boolean updateVirtual, Boolean updateVirtualDeep) {
+        protected ProductUpdateRequest(String productId, Map<String, Object> srcInst, GenericValue productInst, Boolean action, Map<String, Object> fromMap) {
+            if (fromMap == null) {
+                fromMap = Collections.emptyMap();
+            }
+            this.productId = productId;
+            this.srcInst = srcInst;
+            this.productInst = productInst;
             this.action = action;
-            this.instance = instance;
-            this.updateVariants = updateVariants;
-            this.updateVariantsDeep = updateVariantsDeep;
-            this.updateVirtual = updateVirtual;
-            this.updateVirtualDeep = updateVirtualDeep;
-        }
-
-        public ProductUpdateRequest(Map<String, Object> fromMap) {
-            this.action = SolrProductSearch.getUpdateToSolrActionBool(fromMap.get("action"));
-            this.instance = UtilGenerics.cast(fromMap.get("instance"));
             this.updateVariants = (Boolean) fromMap.get("updateVariants");
             this.updateVariantsDeep = (Boolean) fromMap.get("updateVariantsDeep");
             this.updateVirtual = (Boolean) fromMap.get("updateVirtual");
             this.updateVirtualDeep = (Boolean) fromMap.get("updateVirtualDeep");
         }
 
-        protected ProductUpdateRequest(Map<String, Object> fromMap, Boolean action, Map<String, Object> instance) {
-            this.action = action;
-            this.instance = instance;
-            this.updateVariants = (Boolean) fromMap.get("updateVariants");
-            this.updateVariantsDeep = (Boolean) fromMap.get("updateVariantsDeep");
-            this.updateVirtual = (Boolean) fromMap.get("updateVirtual");
-            this.updateVirtualDeep = (Boolean) fromMap.get("updateVirtualDeep");
-        }
+        /** Returns the productId that triggered the update request, always non-null. */
+        public String getProductId() { return productId; }
+        /** The instance that triggered the ECA, or null if no ECA or if only productId was passed. */
+        public Map<String, Object> getSrcInst() { return srcInst; }
+        /** The product instance if available, which may be null or old and should not be relied on for data lookups. */
+        public GenericValue getProductInst() { return productInst; }
 
+        /** true = add, false = remove, null = auto-determined.
+         * NOTE: You can't tell from this class which was done when null - see SolrProductSearch.updateToSolrCoreMultiAdd. */
         public Boolean getAction() { return action; }
         public boolean isExplicitAdd() { return Boolean.TRUE.equals(getAction()); }
         public boolean isExplicitRemove() { return Boolean.FALSE.equals(getAction()); }
 
-        /** NOTE: do not rely on this value for anything - may be a bad cached value - only in pre-index or to get productId this is safe to use. */
-        public Map<String, Object> getInstance() { return instance; }
         public Boolean getUpdateVariants() { return updateVariants; }
         public Boolean getUpdateVariantsDeep() { return updateVariantsDeep; }
         public Boolean getUpdateVirtual() { return updateVirtual; }
         public Boolean getUpdateVirtualDeep() { return updateVirtualDeep; }
 
-        public boolean isUpdateRelatedProducts() {
-            return isUpdateVariants() || isUpdateVirtual();
-        }
-        public boolean isUpdateVariants() {
-            return Boolean.TRUE.equals(getUpdateVariants()) || isUpdateVariantsDeep();
-        }
-        public boolean isUpdateVariantsDeep() {
-            return Boolean.TRUE.equals(getUpdateVariantsDeep());
-        }
-        public boolean isUpdateVirtual() {
-            return Boolean.TRUE.equals(getUpdateVirtual()) || isUpdateVirtualDeep();
-        }
-        public boolean isUpdateVirtualDeep() {
-            return Boolean.TRUE.equals(getUpdateVirtualDeep());
-        }
+        public boolean isUpdateRelatedProducts() { return isUpdateVariants() || isUpdateVirtual(); }
+        public boolean isUpdateVariants() { return Boolean.TRUE.equals(getUpdateVariants()) || isUpdateVariantsDeep(); }
+        public boolean isUpdateVariantsDeep() { return Boolean.TRUE.equals(getUpdateVariantsDeep()); }
+        public boolean isUpdateVirtual() { return Boolean.TRUE.equals(getUpdateVirtual()) || isUpdateVirtualDeep(); }
+        public boolean isUpdateVirtualDeep() { return Boolean.TRUE.equals(getUpdateVirtualDeep()); }
     }
 
-    public ExpandedProductUpdateRequest makeExpandedProductUpdateRequest(String productId, ProductUpdateRequest pur) {
-        return new ExpandedProductUpdateRequest(productId, pur.getAction());
+    public static boolean isProductInstance(Map<String, Object> srcInstance) {
+        return (srcInstance instanceof GenericValue && "Product".equals(((GenericValue) srcInstance).getEntityName()));
     }
 
-    protected static class ExpandedProductUpdateRequest {
-        //protected final String productId;
-        protected final Boolean action;
-        protected ExpandedProductUpdateRequest(String productId, Boolean action) {
-            //this.productId = productId;
-            this.action = action;
-        }
-        protected ExpandedProductUpdateRequest(String productId, ProductUpdateRequest pur) {
-            //this.productId = productId;
-            this.action = pur.getAction();
-        }
-        public Boolean getAction() { return action; }
+    public static GenericValue asProductInstanceOrNull(Map<String, Object> srcInstance) {
+        return isProductInstance(srcInstance) ? (GenericValue) srcInstance : null;
     }
 
     /*
@@ -560,21 +548,96 @@ public class SolrProductIndexer {
      * The useCache parameter here will always be false for the foreseeable future.
      * <p>
      * <b>WARNING:</b> You should use the provided nowTimestamp for filter-by-date operations.
+     * <p>
+     * @param product the product value
+     * @param productUpdateRequest request source information, usually from ECAs - may be null
+     * @return a document map representing the product - can then be passed to {@link #makeSolrDoc(Map)}
      */
-    public Map<String, Object> makeProductMapDoc(GenericValue product) throws Exception {
+    public Map<String, Object> makeProductMapDoc(GenericValue product, ProductUpdateRequest productUpdateRequest, ProductFilter productFilter) throws Exception {
+        this.lastProductUpdateRequest = productUpdateRequest;
         ProductDocBuilder productDocBuilder = makeProductDocBuilder(product);
+        this.lastProductDocBuilder = productDocBuilder;
+        if (productFilter != null && productFilter.allowProduct(productDocBuilder, product, productUpdateRequest)) {
+            if (SolrUtil.verboseOn()) {
+                Debug.logInfo("Solr: makeProductMapDoc: Filtered out product '" + productDocBuilder.getProductId() + "'", module);
+            }
+            return null;
+        }
         if (SolrUtil.verboseOn()) {
             Debug.logInfo("Solr: makeProductMapDoc: Getting product content for product '" + productDocBuilder.getProductId() + "'", module);
         }
-        return productDocBuilder.populateDoc(new HashMap<>());
+        return productDocBuilder.populateDoc(makeEmptyProductMapDoc());
     }
 
-    /**
-     * Generates a document in SolrInputDocument form of product content.
-     * @see #makeProductMapDoc(GenericValue)
-     */
-    public SolrInputDocument makeProductSolrDoc(GenericValue product) throws Exception {
-        return makeSolrDoc(makeProductMapDoc(product));
+    /** @see #makeProductMapDoc(GenericValue, ProductUpdateRequest, ProductFilter). */
+    public Map<String, Object> makeProductMapDoc(GenericValue product) throws Exception {
+        return makeProductMapDoc(product, getNullProductUpdateRequest(), null);
+    }
+
+    /** Makes empty map for new document, can be overridden. NOTE: 2020-07: Now LinkedHashMap to preserve order since SolrInputDocument._fields is also one. */
+    protected Map<String, Object> makeEmptyProductMapDoc() {
+        //return new HashMap<>();
+        return new LinkedHashMap<>();
+    }
+
+    public interface ProductFilter {
+        boolean allowProduct(ProductDocBuilder productDocBuilder, GenericValue product, ProductUpdateRequest productUpdateRequest) throws Exception;
+    }
+
+    public ProductFilter makeStoreProductFilter(Collection<String> includeMainStoreIds, Collection<String> includeAnyStoreIds) {
+        if (includeMainStoreIds != null) {
+            return new MainStoreProductFilter(includeMainStoreIds);
+        } else if (includeAnyStoreIds != null) {
+            return new AnyStoreProductFilter(includeAnyStoreIds);
+        } else {
+            return null;
+        }
+    }
+
+    public static abstract class StoreProductFilter implements ProductFilter {
+        protected final Collection<String> includeStoreIds;
+
+        public StoreProductFilter(Collection<String> includeStoreIds) {
+            this.includeStoreIds = includeStoreIds;
+        }
+
+        public Collection<String> getIncludeStoreIds() {
+            return includeStoreIds;
+        }
+
+        public boolean isIncludeStoreId(String productStoreId) {
+            return getIncludeStoreIds().contains(productStoreId);
+        }
+    }
+
+    public static class AnyStoreProductFilter extends StoreProductFilter {
+        public AnyStoreProductFilter(Collection<String> includeStoreIds) {
+            super(includeStoreIds);
+        }
+
+        @Override
+        public boolean allowProduct(ProductDocBuilder productDocBuilder, GenericValue product, ProductUpdateRequest productUpdateRequest) throws Exception {
+            Collection<String> productStoreIds = productDocBuilder.getProductStoreIds();
+            if (productStoreIds != null) {
+                for(String productStoreId : productStoreIds) {
+                    if (isIncludeStoreId(productStoreId)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
+
+    public static class MainStoreProductFilter extends StoreProductFilter {
+        public MainStoreProductFilter(Collection<String> includeStoreIds) {
+            super(includeStoreIds);
+        }
+
+        @Override
+        public boolean allowProduct(ProductDocBuilder productDocBuilder, GenericValue product, ProductUpdateRequest productUpdateRequest) throws Exception {
+            return isIncludeStoreId(productDocBuilder.getProductStoreId());
+        }
     }
 
     /** Creates a new product reader instance for doc map generation. Client code should override. */
@@ -1160,6 +1223,10 @@ public class SolrProductIndexer {
                         getProductStores(), true, isUseVariantStockCalcForTotal(), getMoment(), isUseEntityCache());
             }
             return productStoreInventories;
+        }
+
+        public BigDecimal getProductStoreInventory(String productStoreId) throws Exception {
+            return getProductStoreInventories().get(productStoreId);
         }
 
         public Timestamp getSalesDiscDate() throws Exception {

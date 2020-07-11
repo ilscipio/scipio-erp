@@ -126,6 +126,27 @@ public final class UtilMisc {
         return map;
     }
 
+    /**
+     * Create a map from passed nameX, valueX parameters, as ordered map (currently LinkedHashMap) (SCIPIO).
+     * @return The resulting Map
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> toOrderedMap(Object... data) {
+        if (data.length == 1 && data[0] instanceof Map) {
+            return UtilGenerics.<K, V>checkMap(data[0]);
+        }
+        if (data.length % 2 == 1) {
+            IllegalArgumentException e = new IllegalArgumentException("You must pass an even sized array to the toMap method (size = " + data.length + ")");
+            Debug.logInfo(e, module);
+            throw e;
+        }
+        Map<K, V> map = new LinkedHashMap<>();
+        for (int i = 0; i < data.length;) {
+            map.put((K) data[i++], (V) data[i++]);
+        }
+        return map;
+    }
+
     public static <K, V> String printMap(Map<? extends K, ? extends V> theMap) {
         StringBuilder theBuf = new StringBuilder();
         for (Map.Entry<? extends K, ? extends V> entry: theMap.entrySet()) {
@@ -589,6 +610,34 @@ public final class UtilMisc {
         }
 
         return locale;
+    }
+
+    /**
+     * Parse a locale string Locale objects (SCIPIO).
+     * @param localeStrings The locale strings (en_US)
+     * @return The locales
+     */
+    public static List<Locale> parseLocales(Collection<String> localeStrings) {
+        List<Locale> locales = new ArrayList<>(localeStrings.size());
+        for(String localeString : localeStrings) {
+            Locale locale = parseLocale(localeString);
+            if (locale != null) {
+                locales.add(locale);
+            }
+        }
+        return locales;
+    }
+
+    /**
+     * Parse a locale string Locale objects (SCIPIO).
+     * @param localeString The comma-separated locales string (en_US)
+     * @return The locales
+     */
+    public static List<Locale> parseLocales(String localeString) {
+        if (UtilValidate.isEmpty(localeString)) {
+            return Collections.emptyList();
+        }
+        return parseLocales(Arrays.asList(localeString.split("\\*,\\*")));
     }
 
     /** The input can be a String, Locale, or even null and a valid Locale will always be returned; if nothing else works, returns the default locale.
@@ -1886,5 +1935,30 @@ public final class UtilMisc {
             list.add(member);
         }
         return list;
+    }
+
+    /**
+     * SCIPIO: Returns an ordered (currently tree) map where all keys are converted to integers and sorted naturally.
+     */
+    public static <V> Map<Integer, V> asOrderedIntegerMap(Map<String, V> map) {
+        Map<Integer, V> orderedMap = new TreeMap<>();
+        for(Map.Entry<String, V> entry : map.entrySet()) {
+            orderedMap.put(Integer.parseInt(entry.getKey()), entry.getValue());
+        }
+        return orderedMap;
+    }
+
+    /**
+     * SCIPIO: Returns null if collection is empty, otherwise the collection itself.
+     */
+    public static <C extends Collection> C nullIfEmpty(C collection) {
+        return (collection == null) || !collection.isEmpty() ? collection : null;
+    }
+
+    /**
+     * SCIPIO: Returns null if map is empty, otherwise the map itself.
+     */
+    public static <M extends Map<?, ?>> M nullIfEmpty(M map) {
+        return (map == null) || !map.isEmpty() ? map : null;
     }
 }

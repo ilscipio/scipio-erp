@@ -58,9 +58,14 @@ public final class CommonWorkers {
 
         List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("geoTypeId", EntityOperator.EQUALS, "COUNTRY"));
         List<String> countriesAvailable = StringUtil.split(EntityUtilProperties.getPropertyValue("general", "countries.geo.id.available", delegator), ",");
+        List<String> countriesUnAvailable = StringUtil.split(EntityUtilProperties.getPropertyValue("general", "countries.geo.id.unavailable", delegator), ",");
         if (UtilValidate.isNotEmpty(countriesAvailable)) {
             // only available countries (we don't verify the list of geoId in countries.geo.id.available)
             exprs.add(EntityCondition.makeCondition("geoId", EntityOperator.IN, countriesAvailable));
+        }
+
+        if(UtilValidate.isNotEmpty(countriesUnAvailable)){
+            exprs.add(EntityCondition.makeCondition("geoId", EntityOperator.NOT_IN, countriesUnAvailable));
         }
 
         List<GenericValue> countriesList = new LinkedList<>();

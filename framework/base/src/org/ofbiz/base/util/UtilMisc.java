@@ -1961,4 +1961,50 @@ public final class UtilMisc {
     public static <M extends Map<?, ?>> M nullIfEmpty(M map) {
         return (map == null) || !map.isEmpty() ? map : null;
     }
+
+    /**
+     * SCIPIO: Simple method to extract keys having prefix.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, W extends V> Map<K, V> getEntriesWithKeyPrefix(Map<K, V> out, Map<String, W> map, String prefix) {
+        for(Map.Entry<String, W> entry : map.entrySet()) {
+            if (entry.getKey().startsWith(prefix)) {
+                out.put((K) entry.getKey(), entry.getValue());
+            }
+        }
+        return out;
+    }
+
+    /**
+     * SCIPIO: Simple method to extract keys having prefix.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, W extends V> Map<K, V> getEntriesWithKeyPrefix(Map<String, W> map, String prefix) {
+        return getEntriesWithKeyPrefix(new LinkedHashMap<>(), map, prefix);
+    }
+
+    /**
+     * SCIPIO: Simple method to extract keys having prefix, with ability to strip prefix whole or partial.
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, W extends V> Map<K, V> getStripEntriesWithKeyPrefix(Map<K, V> out, Map<String, W> map, String prefix, String stripPrefix) {
+        for(Map.Entry<String, W> entry : map.entrySet()) {
+            if (entry.getKey().startsWith(prefix)) {
+                out.put((K) entry.getKey().substring(stripPrefix.length()), entry.getValue());
+            }
+        }
+        return out;
+    }
+
+    public static <V, T extends V> V getFirst(Iterable<T> iterable) {
+        if (iterable instanceof List) {
+            return getFirst(UtilGenerics.<List<T>>cast(iterable));
+        } else {
+            return (iterable != null) ? iterable.iterator().next() : null;
+        }
+    }
+
+    public static <V, T extends V> V getFirst(List<T> list) {
+        return (list != null) ? list.get(0) : null;
+    }
 }

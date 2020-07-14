@@ -56,6 +56,7 @@ SCIPIO_ADDON_MAP[auth-twitter]="auth-twitter addons/auth-twitter ee auth-twitter
 SCIPIO_ADDON_MAP[bootstrap-theme]="bootstrap-theme themes/bootstrap ee bootstrap-theme /"
 SCIPIO_ADDON_MAP[camel]="camel addons/camel ee camel /"
 SCIPIO_ADDON_MAP[data-categorytree]="data-categorytree addons/data-categorytree ee data-categorytree /"
+SCIPIO_ADDON_MAP[google-shopping]="google-shopping addons/google-shopping ee google-shopping /"
 SCIPIO_ADDON_MAP[ignite-admin-theme]="ignite-admin-theme themes/ignite-admin ee ignite-admin-theme /"
 SCIPIO_ADDON_MAP[ignite-shop-theme]="ignite-shop-theme themes/ignite-shop ee ignite-shop-theme /"
 SCIPIO_ADDON_MAP[lightning]="lightning addons/lightning ee lightning /"

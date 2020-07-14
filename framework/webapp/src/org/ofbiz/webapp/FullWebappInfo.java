@@ -325,6 +325,17 @@ public class FullWebappInfo {
         return fullWebappInfo;
     }
 
+    /**
+     * Gets webapp info, without any context information (low-level no-context factory method) - no caching.
+     * For inter-webapp links.
+     * <p>
+     * WARN: Prefer method with context or request wherever available, instead of this one.
+     * This method has less information to work with compared to request and context overloads.
+     */
+    public static FullWebappInfo fromWebapp(ExtWebappInfo extWebappInfo, Delegator delegator) throws IllegalArgumentException {
+        return new FullWebappInfo(extWebappInfo, delegator);
+    }
+
     /*
      * ******************************************************
      * High-level/combination factory methods

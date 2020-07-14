@@ -102,7 +102,7 @@ public class SeoCatalogUrlWorker implements Serializable {
         protected final List<List<String>> trails;
         protected TrailCacheEntry(Set<String> topCategoryIds, List<List<String>> trails) {
             this.topCategoryIds = topCategoryIds;
-            this.trails = trails;
+            this.trails = (trails != null) ? trails : Collections.emptyList();
         }
         public Set<String> getTopCategoryIds() { return topCategoryIds; }
         public List<List<String>> getTrails() { return trails; }

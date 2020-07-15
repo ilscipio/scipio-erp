@@ -120,7 +120,7 @@ public class CmsAccessHandler implements HttpSessionListener {
         // TODO: REVIEW: Here we can query only by token and not by pageId because the page is not yet known,
         //  but this has minimal impact on security because the pageId is mostly needed to provide variety in token strings rather than bind to any specific page.
         //  If we try to do the pageId here it may cause complications for process mappings in the future.
-        GenericValue tokenRecord = delegator.from("CmsAccessToken").where("token", paramToken).queryOneSafe();
+        GenericValue tokenRecord = delegator.from("CmsAccessToken").where("token", paramToken).queryFirstSafe();
         if (tokenRecord == null) {
             return false;
         }

@@ -586,6 +586,16 @@ public class EntityQuery {
             //if (Debug.verboseOn()) {
             //    Debug.logVerbose("queryOne: using findOne() implementation" + toLogAppend(), module);
             //}
+            // TODO: REMOVE: in the future this PK check can be removed for performance reasons,
+            //  is here due to ofbiz flaw in makeWhereCondition we don't want
+            GenericPK pk = GenericPK.create(delegator.getModelEntity(entityName));
+            pk.setPKFields(fieldMap);
+            if (pk.size() < fieldMap.size()) {
+                String msg = "queryOne(): Passed primary key is not a valid primary key for entity [" + entityName +
+                        "], truncating: " + fieldMap.keySet();
+                Debug.logError(new IllegalArgumentException(msg), msg, module);
+                fieldMap = pk;
+            }
             result = delegator.findOne(entityName, fieldMap, useCache);
             if (result != null && fieldsToSelect != null) {
                 result = result.select(fieldsToSelect);

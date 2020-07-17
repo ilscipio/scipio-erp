@@ -167,6 +167,12 @@ code package.
         <attribute mode="IN" name="waitSolrReady" optional="true" type="Boolean"/>
     </service>
 
+    <service name="abortRebuildSolrIndex" engine="java"
+             location="com.ilscipio.scipio.solr.SolrProductSearch"
+             invoke="abortRebuildSolrIndex" use-transaction="false">
+        <description>Aborts rebuildSolrIndex if possible</description>
+    </service>
+
     <service name="updateToSolrSingleInterface" engine="interface">
         <description>Represents the updateToSolr options for a single product, represented by com.ilscipio.scipio.solr.SolrProductSearch.UpdateProductInfo</description>
         <!-- NOTE: 2017-12-20: type may be org.ofbiz.entity.GenericValue or GenericPk, so use common parent Map (previously GenericEntity) -->

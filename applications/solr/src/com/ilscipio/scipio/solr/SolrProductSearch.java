@@ -33,6 +33,7 @@ import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.CommonParams;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -72,7 +73,7 @@ public abstract class SolrProductSearch {
             "solr.log.max.id", 10);
     private static final boolean ecaAsync = "async".equals(UtilProperties.getPropertyValue(SolrUtil.solrConfigName,
             "solr.eca.service.mode", "async"));
-
+    private static final ProcessSignals rebuildSolrIndexSignals = ProcessSignals.make("rebuildSolrIndex", true);
 
     public static Map<String, Object> registerUpdateToSolr(DispatchContext dctx, Map<String, Object> context) {
         return updateToSolrCommon(dctx, context, getUpdateToSolrActionBool(context.get("action")),
@@ -1615,6 +1616,20 @@ public abstract class SolrProductSearch {
      * Rebuilds the solr index.
      */
     public static Map<String, Object> rebuildSolrIndex(DispatchContext dctx, Map<String, Object> context) {
+        try {
+            rebuildSolrIndexSignals.clear();
+            return rebuildSolrIndexImpl(dctx, context, rebuildSolrIndexSignals);
+        } finally {
+            rebuildSolrIndexSignals.clear();
+        }
+    }
+
+    public static Map<String, Object> abortRebuildSolrIndex(DispatchContext dctx, Map<String, Object> context) {
+        rebuildSolrIndexSignals.put("stop");
+        return ServiceUtil.returnSuccess();
+    }
+
+    private static Map<String, Object> rebuildSolrIndexImpl(DispatchContext dctx, Map<String, Object> context, ProcessSignals processSignals) {
         HttpSolrClient client;
         Map<String, Object> result = null;
         Delegator delegator = dctx.getDelegator();
@@ -1641,22 +1656,22 @@ public abstract class SolrProductSearch {
             if (onlyIfDirty && ifConfigChange) {
                 if (dataStatusOk && dataCfgVerOk) {
                     result = ServiceUtil.returnSuccess("SOLR data is already marked OK; SOLR data is already at config version " + cfgVersion + "; not rebuilding");
-                    result.put("numDocs", (int) 0);
-                    result.put("executed", Boolean.FALSE);
+                    result.put("numDocs", 0);
+                    result.put("executed", false);
                     return result;
                 }
             } else if (onlyIfDirty) {
                 if (dataStatusOk) {
                     result = ServiceUtil.returnSuccess("SOLR data is already marked OK; not rebuilding");
-                    result.put("numDocs", (int) 0);
-                    result.put("executed", Boolean.FALSE);
+                    result.put("numDocs", 0);
+                    result.put("executed", false);
                     return result;
                 }
             } else if (ifConfigChange) {
                 if (dataCfgVerOk) {
                     result = ServiceUtil.returnSuccess("SOLR data is already at config version " + cfgVersion + "; not rebuilding");
-                    result.put("numDocs", (int) 0);
-                    result.put("executed", Boolean.FALSE);
+                    result.put("numDocs", 0);
+                    result.put("executed", false);
                     return result;
                 }
             }
@@ -1678,13 +1693,19 @@ public abstract class SolrProductSearch {
         boolean executed = false;
         try {
             client = SolrUtil.getUpdateHttpSolrClient((String) context.get("core"));
+            if (processSignals != null && processSignals.isSet("stop")) {
+                return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted");
+            }
 
             // 2018-02-20: new ability to wait for Solr to load
             if (Boolean.TRUE.equals(context.get("waitSolrReady"))) {
                 // NOTE: skipping runSync for speed; we know the implementation...
                 Map<String, Object> waitCtx = new HashMap<>();
                 waitCtx.put("client", client);
-                Map<String, Object> waitResult = waitSolrReady(dctx, waitCtx); // params will be null
+                Map<String, Object> waitResult = waitSolrReady(dctx, waitCtx, processSignals); // params will be null
+                if (processSignals != null && processSignals.isSet("stop")) {
+                    return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted");
+                }
                 if (!ServiceUtil.isSuccess(waitResult)) {
                     throw new ScipioSolrException(ServiceUtil.getErrorMessage(waitResult)).setLightweight(true);
                 }
@@ -1716,6 +1737,9 @@ public abstract class SolrProductSearch {
             EntityFindOptions findOptions = new EntityFindOptions();
             //findOptions.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE); // not needed anymore, only for getPartialList (done manual instead)
             prodIt = delegator.find("Product", null, null, null, null, findOptions);
+            if (processSignals != null && processSignals.isSet("stop")) {
+                return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted");
+            }
 
             Map<String, Object> productContext = new HashMap<>(context);
             productContext.put("useCache", clearAndUseCache);
@@ -1738,10 +1762,16 @@ public abstract class SolrProductSearch {
                     status.registerHookFailure(null, e, hookHandler, "begin");
                 }
             }
+            if (processSignals != null && processSignals.isSet("stop")) {
+                return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted");
+            }
 
             int docsConsumed = 0;
             boolean lastReached = false;
             while (!lastReached) {
+                if (processSignals != null && processSignals.isSet("stop")) {
+                    return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted");
+                }
                 status.updateStartEndIndex(docsConsumed);
                 docs.clear();
                 docsConsumed = 0;
@@ -2026,10 +2056,14 @@ public abstract class SolrProductSearch {
     }
 
     public static Map<String, Object> waitSolrReady(DispatchContext dctx, Map<String, Object> context) {
+        return waitSolrReady(dctx, context, null);
+    }
+
+    private static Map<String, Object> waitSolrReady(DispatchContext dctx, Map<String, Object> context, ProcessSignals processSignals) {
         if (!SolrUtil.isSolrEnabled()) { // NOTE: this must NOT use SolrUtil.isSolrLocalWebappPresent() anymore
             return ServiceUtil.returnFailure("Solr not enabled");
         }
-        HttpSolrClient client = null;
+        HttpSolrClient client;
         try {
             client = (HttpSolrClient) context.get("client");
             if (client == null) client = SolrUtil.getQueryHttpSolrClient((String) context.get("core"));
@@ -2054,6 +2088,9 @@ public abstract class SolrProductSearch {
         int checkNum = 2; // first already done above
         while((maxChecks == null || checkNum <= maxChecks)) {
             Debug.logInfo("Solr: waitSolrReady: Solr not ready, waiting " + sleepTime + "ms (check " + checkNum + (maxChecks != null ? "/" + maxChecks : "") + ")", module);
+            if (processSignals != null && processSignals.isSet("stop")) {
+                return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted");
+            }
 
             try {
                 Thread.sleep(sleepTime);

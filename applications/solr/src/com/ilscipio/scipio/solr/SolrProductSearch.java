@@ -74,6 +74,7 @@ public abstract class SolrProductSearch {
     private static final boolean ecaAsync = "async".equals(UtilProperties.getPropertyValue(SolrUtil.solrConfigName,
             "solr.eca.service.mode", "async"));
     private static final ProcessSignals rebuildSolrIndexSignals = ProcessSignals.make("rebuildSolrIndex", true);
+    private static final int defaultBufSize = UtilProperties.getPropertyAsInteger(SolrUtil.solrConfigName, "solr.index.rebuild.record.buffer.size", 1000);
 
     public static Map<String, Object> registerUpdateToSolr(DispatchContext dctx, Map<String, Object> context) {
         return updateToSolrCommon(dctx, context, getUpdateToSolrActionBool(context.get("action")),
@@ -302,7 +303,7 @@ public abstract class SolrProductSearch {
                                                                 IndexingHookHandler.HookType hookType, List<? extends IndexingHookHandler> hookHandlers,
                                                                 boolean doSolrCommit, String logPrefix) {
         final boolean treatConnectErrorNonFatal = SolrUtil.isEcaTreatConnectErrorNonFatal();
-        IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, hookType, indexer, expandedProducts.size(), logPrefix);
+        IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, hookType, indexer, expandedProducts.size(), defaultBufSize, logPrefix);
         List<Map<String, Object>> solrDocs = (status.getBufSize() > 0) ? new ArrayList<>(Math.min(status.getBufSize(), status.getMaxDocs())) : new ArrayList<>(status.getMaxDocs());
 
         if (hookHandlers == null) {
@@ -1730,7 +1731,7 @@ public abstract class SolrProductSearch {
 
             Integer bufSize = (Integer) context.get("bufSize");
             if (bufSize == null) {
-                bufSize = UtilProperties.getPropertyAsInteger(SolrUtil.solrConfigName, "solr.index.rebuild.record.buffer.size", 1000);
+                bufSize = defaultBufSize;
             }
 
             // now lets fetch all products
@@ -1745,7 +1746,8 @@ public abstract class SolrProductSearch {
             productContext.put("useCache", clearAndUseCache);
             SolrProductIndexer indexer = SolrProductIndexer.getInstance(dctx, productContext);
             numDocs = prodIt.getResultsSizeAfterPartialList();
-            IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, IndexingHookHandler.HookType.REINDEX, indexer, numDocs, "Solr: rebuildSolrIndex: ");
+            IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, IndexingHookHandler.HookType.REINDEX, indexer,
+                    numDocs, bufSize, "Solr: rebuildSolrIndex: ");
             // NOTE: use ArrayList instead of LinkedList (EntityListIterator) in buffered mode because it will use less total memory
             List<Map<String, Object>> docs = (bufSize > 0) ? new ArrayList<>(Math.min(bufSize, status.getMaxDocs())) : new LinkedList<>();
 

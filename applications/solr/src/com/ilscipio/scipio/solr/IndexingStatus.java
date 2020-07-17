@@ -37,12 +37,12 @@ public interface IndexingStatus {
         private int endIndex;
         private int hookFailures;
 
-        public Standard(DispatchContext dctx, IndexingHookHandler.HookType hookType, SolrProductIndexer indexer, int maxDocs, String logPrefix) {
+        public Standard(DispatchContext dctx, IndexingHookHandler.HookType hookType, SolrProductIndexer indexer, int maxDocs, int bufSize, String logPrefix) {
             this.dctx = dctx;
             this.hookType = hookType;
             this.indexer = indexer;
             this.logPrefix = logPrefix != null ? logPrefix : "";
-            this.bufSize = UtilProperties.getPropertyAsInteger(SolrUtil.solrConfigName, "solr.index.rebuild.record.buffer.size", 1000);
+            this.bufSize = bufSize;
             this.maxDocs = maxDocs;
             this.numDocsToIndex = 0;
             this.numFailures = 0;

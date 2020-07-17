@@ -257,7 +257,7 @@ public final class WebAppUtil {
         }
         // SCIPIO: much clearer message
         //throw new IllegalArgumentException("Web site ID '" + webSiteId + "' not found.");
-        throw new IllegalArgumentException("Could not get webapp info for website ID '" + webSiteId
+        throw new WebAppNotFoundException("Could not get webapp info for website ID '" + webSiteId
                 + "'; the website may not exist, or may not have a webapp (web.xml)"
                 + ", or its webapp may be shadowed/overridden in the system (ofbiz_component.xml)");
     }
@@ -277,7 +277,7 @@ public final class WebAppUtil {
         final String origPath = path; // SCIPIO
         // Must be absolute (NOTE: empty path is valid, designates root-mounted "/" webapp)
         if (path.length() > 0 && !path.startsWith("/")) {
-            throw new IllegalArgumentException("Scipio: Web app for path '" + origPath + "' not found (must be absolute path).");
+            throw new WebAppNotFoundException("Scipio: Web app for path '" + origPath + "' not found (must be absolute path).");
         }
 
         if (stripQuery) {
@@ -288,7 +288,7 @@ public final class WebAppUtil {
         }
         Map<String, WebappInfo> webappInfosByContextPath = ComponentConfig.getWebappInfosByContextRoot(serverName);
         if (webappInfosByContextPath == null) {
-            throw new IllegalArgumentException("Web app for path '" + origPath + "' not found by context path because server name '"
+            throw new WebAppNotFoundException("Web app for path '" + origPath + "' not found by context path because server name '"
                     + serverName + "' is not registered");
         }
         while(true) {
@@ -298,7 +298,7 @@ public final class WebAppUtil {
             }
             int i = path.lastIndexOf('/');
             if (i < 0) {
-                throw new IllegalArgumentException("Web app for path '" + origPath + "' not found by context path.");
+                throw new WebAppNotFoundException("Web app for path '" + origPath + "' not found by context path.");
             }
             path = path.substring(0, i);
         }
@@ -318,7 +318,7 @@ public final class WebAppUtil {
         Assert.notNull("contextPath", contextPath);
         WebappInfo webappInfo = ComponentConfig.getWebappInfoByContextRoot(serverName, contextPath);
         if (webappInfo == null) {
-            throw new IllegalArgumentException("Web app for context path '" + contextPath + "' not found.");
+            throw new WebAppNotFoundException("Web app for context path '" + contextPath + "' not found.");
         }
         return webappInfo;
     }
@@ -334,7 +334,7 @@ public final class WebAppUtil {
         Assert.notNull("contextPath", contextPath);
         WebappInfo webappInfo = ComponentConfig.getWebappInfoByContextRoot(null, contextPath);
         if (webappInfo == null) {
-            throw new IllegalArgumentException("Web app for context path '" + contextPath + "' not found.");
+            throw new WebAppNotFoundException("Web app for context path '" + contextPath + "' not found.");
         }
         return webappInfo;
     }
@@ -413,7 +413,7 @@ public final class WebAppUtil {
         if (result == null) {
             File file = new File(webXmlFileLocation);
             if (!file.exists()) {
-                throw new IllegalArgumentException(webXmlFileLocation + " does not exist.");
+                throw new WebAppNotFoundException(webXmlFileLocation + " does not exist.");
             }
             boolean namespaceAware = true;
             InputStream is = new FileInputStream(file);
@@ -474,7 +474,7 @@ public final class WebAppUtil {
         try {
             return getWebappContextParams(webappInfo, WebAppUtil.getWebXml(webappInfo));
         } catch (Exception e) {
-            throw new IllegalArgumentException("Could not get webapp context-params: Web app xml definition for webapp " + webappInfo + " not found.", e);
+            throw new WebAppNotFoundException("Could not get webapp context-params: Web app xml definition for webapp " + webappInfo + " not found.", e);
         }
     }
 
@@ -501,7 +501,7 @@ public final class WebAppUtil {
             WebappInfo webappInfo = WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
             return getWebappContextParams(webappInfo, WebAppUtil.getWebXml(webappInfo));
         } catch (Exception e) {
-            throw new IllegalArgumentException("Could not get webapp context-params: Web app xml definition for webSiteId '" + webSiteId + "' not found.", e);
+            throw new WebAppNotFoundException("Could not get webapp context-params: Web app xml definition for webSiteId '" + webSiteId + "' not found.", e);
         }
     }
 

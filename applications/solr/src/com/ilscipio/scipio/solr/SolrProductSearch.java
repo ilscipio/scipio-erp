@@ -46,6 +46,7 @@ import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceSyncRegistrations;
@@ -1852,8 +1853,10 @@ public abstract class SolrProductSearch {
             if (result == null) {
                 String cacheStats = indexer.getLogStatsShort();
                 cacheStats = (cacheStats != null) ? " (caches: " + cacheStats + ")" : "";
-                Debug.logInfo("Solr: rebuildSolrIndex: Finished with " + status.getNumDocsToIndex() + " documents indexed; failures: " + status.getNumFailures() + cacheStats, module);
-                final String statusMsg = "Cleared solr index and reindexed " + status.getNumDocsToIndex() + " documents; failures: " + status.getNumFailures() + cacheStats;
+                Debug.logInfo("Solr: rebuildSolrIndex: Finished with " + status.getNumDocsToIndex() + " documents indexed; failures: " +
+                        status.getNumFailures() + "; hook failures: " + status.getHookFailures() + cacheStats, module);
+                final String statusMsg = "Cleared solr index and reindexed " + status.getNumDocsToIndex() + " documents; failures: " +
+                        status.getNumFailures() + "; hook failures: " + status.getHookFailures() + cacheStats;
                 result = (status.getNumFailures() > 0) ? ServiceUtil.returnFailure(statusMsg) : ServiceUtil.returnSuccess(statusMsg);
             }
         } catch (SolrServerException e) {
@@ -1909,9 +1912,24 @@ public abstract class SolrProductSearch {
         return result;
     }
 
-    /**
-     * Rebuilds the solr index - auto run.
-     */
+    public static Map<String, Object> rebuildSolrIndexNoDelete(DispatchContext dctx, Map<String, Object> context) {
+        try {
+            Map<String, Object> servCtx = dctx.makeValidContext("rebuildSolrIndex", ModelService.IN_PARAM, context);
+            return dctx.getDispatcher().runSync("rebuildSolrIndex", servCtx);
+        } catch (GenericServiceException e) {
+            return ServiceUtil.returnError(e.toString());
+        }
+    }
+
+    public static Map<String, Object> rebuildSolrIndexIfDirty(DispatchContext dctx, Map<String, Object> context) {
+        try {
+            Map<String, Object> servCtx = dctx.makeValidContext("rebuildSolrIndex", ModelService.IN_PARAM, context);
+            return dctx.getDispatcher().runSync("rebuildSolrIndex", servCtx);
+        } catch (GenericServiceException e) {
+            return ServiceUtil.returnError(e.toString());
+        }
+    }
+
     public static Map<String, Object> rebuildSolrIndexAuto(DispatchContext dctx, Map<String, Object> context) {
         Map<String, Object> result;
         Delegator delegator = dctx.getDelegator();
@@ -1984,7 +2002,6 @@ public abstract class SolrProductSearch {
             Debug.logInfo("Solr: rebuildSolrIndexAuto: not running - disabled (startupForce: " + startupForce + ", eventId: " + eventId + ")", module);
             result = ServiceUtil.returnSuccess();
         }
-
         return result;
     }
 
@@ -1999,13 +2016,6 @@ public abstract class SolrProductSearch {
             return null;
         }
         return UtilMisc.booleanValueVersatile(forceStr);
-    }
-
-    /**
-     * Rebuilds the solr index - only if dirty.
-     */
-    public static Map<String, Object> rebuildSolrIndexIfDirty(DispatchContext dctx, Map<String, Object> context) {
-        return rebuildSolrIndex(dctx, context);
     }
 
     public static Map<String, Object> setSolrDataStatus(DispatchContext dctx, Map<String, Object> context) {

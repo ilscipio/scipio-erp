@@ -106,7 +106,7 @@ code package.
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="rebuildSolrIndex"
         semaphore="fail">
-        <description>rebuild SOLR Index</description>
+        <description>Rebuild Solr index, all products</description>
         <implements service="scipioJobCtxInterface"/>
         <attribute mode="IN" name="treatConnectErrorNonFatal" optional="true" type="Boolean" default-value="false" />
         <attribute mode="IN" name="core" optional="true" type="String" />
@@ -135,19 +135,24 @@ code package.
         <attribute mode="OUT" name="numDocs" optional="true" type="Integer" />
         <attribute mode="OUT" name="executed" optional="true" type="Boolean" />
     </service>
-    
+
+    <service name="rebuildSolrIndexNoDelete" engine="java"
+             transaction-timeout="72000"
+             location="com.ilscipio.scipio.solr.SolrProductSearch"
+             invoke="rebuildSolrIndexNoDelete">
+        <description>Rebuild Solr index, all products, without clearing index first</description>
+        <implements service="rebuildSolrIndex"/>
+        <attribute mode="IN" name="deleteMode" optional="true" type="String" default-value="no-delete"/>
+    </service>
+
     <service name="rebuildSolrIndexIfDirty" engine="java"
         transaction-timeout="72000"
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="rebuildSolrIndexIfDirty">
-        <description>rebuild SOLR Index if data status dirty (or unknown) OR if config change (2017-08-23)</description>
-        <implements service="rebuildSolrIndex" />
-        <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="true" />
+        <description>Rebuild Solr index, all products, if data status dirty or unknown or if config change</description>
+        <implements service="rebuildSolrIndex"/>
+        <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" default-value="true"/>
         <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean" default-value="true"/>
-        <attribute mode="IN" name="bufSize" optional="true" type="Integer"/>
-        <attribute mode="IN" name="clearAndUseCache" optional="true" type="Boolean">
-            <description>see solrconfig.properties/solr.index.rebuild.clearAndUseCache</description>
-        </attribute>
         <attribute mode="IN" name="waitSolrReady" optional="true" type="Boolean"/>
     </service>
     
@@ -156,14 +161,10 @@ code package.
         location="com.ilscipio.scipio.solr.SolrProductSearch"
         invoke="rebuildSolrIndexAuto">
         <description>rebuild SOLR Index - auto-run service</description>
-        <implements service="rebuildSolrIndex" />
+        <implements service="rebuildSolrIndex"/>
         <!-- NOTE: MUST use attribute here, not override, to prevent default-value -->
         <attribute mode="IN" name="onlyIfDirty" optional="true" type="Boolean" />
         <attribute mode="IN" name="ifConfigChange" optional="true" type="Boolean"/>
-        <attribute mode="IN" name="bufSize" optional="true" type="Integer"/>
-        <attribute mode="IN" name="clearAndUseCache" optional="true" type="Boolean">
-            <description>see solrconfig.properties/solr.index.rebuild.clearAndUseCache</description>
-        </attribute>
         <attribute mode="IN" name="waitSolrReady" optional="true" type="Boolean"/>
     </service>
 

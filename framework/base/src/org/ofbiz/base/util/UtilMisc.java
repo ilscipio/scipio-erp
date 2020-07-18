@@ -637,7 +637,7 @@ public final class UtilMisc {
         if (UtilValidate.isEmpty(localeString)) {
             return Collections.emptyList();
         }
-        return parseLocales(Arrays.asList(localeString.split("\\*,\\*")));
+        return parseLocales(Arrays.asList(localeString.split("\\s*,\\s*")));
     }
 
     /** The input can be a String, Locale, or even null and a valid Locale will always be returned; if nothing else works, returns the default locale.

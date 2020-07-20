@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 
 /**
  * Contains a number of variables used to select certain advanced finding options.
+ * SCIPIO: Setters now return this instance for chaining like a builder.
  */
 @SuppressWarnings("serial")
 public class EntityFindOptions implements java.io.Serializable {
@@ -86,8 +87,9 @@ public class EntityFindOptions implements java.io.Serializable {
     /** If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify
      *      how the results will be used; if false the default values for the JDBC driver will be used
      */
-    public void setSpecifyTypeAndConcur(boolean specifyTypeAndConcur) {
+    public EntityFindOptions setSpecifyTypeAndConcur(boolean specifyTypeAndConcur) {
         this.specifyTypeAndConcur = specifyTypeAndConcur;
+        return this;
     }
 
     /** Specifies how the ResultSet will be traversed. Available values: ResultSet.TYPE_FORWARD_ONLY,
@@ -102,8 +104,9 @@ public class EntityFindOptions implements java.io.Serializable {
      *      ResultSet.TYPE_SCROLL_INSENSITIVE or ResultSet.TYPE_SCROLL_SENSITIVE. See the java.sql.ResultSet JavaDoc for
      *      more information. If you want it to be fast, use the common default: ResultSet.TYPE_FORWARD_ONLY.
      */
-    public void setResultSetType(int resultSetType) {
+    public EntityFindOptions setResultSetType(int resultSetType) {
         this.resultSetType = resultSetType;
+        return this;
     }
 
     /** Specifies whether or not the ResultSet can be updated. Available values:
@@ -118,8 +121,9 @@ public class EntityFindOptions implements java.io.Serializable {
      *      ResultSet.CONCUR_READ_ONLY or ResultSet.CONCUR_UPDATABLE. Should pretty much always be
      *      ResultSet.CONCUR_READ_ONLY with the Entity Engine.
      */
-    public void setResultSetConcurrency(int resultSetConcurrency) {
+    public EntityFindOptions setResultSetConcurrency(int resultSetConcurrency) {
         this.resultSetConcurrency = resultSetConcurrency;
+        return this;
     }
 
     /** Specifies the fetch size for this query. -1 will fall back to datasource settings. */
@@ -128,8 +132,9 @@ public class EntityFindOptions implements java.io.Serializable {
     }
 
     /** Specifies the fetch size for this query. -1 will fall back to datasource settings. */
-    public void setFetchSize(int fetchSize) {
+    public EntityFindOptions setFetchSize(int fetchSize) {
         this.fetchSize = fetchSize;
+        return this;
     }
 
     /** Specifies the max number of rows to return, 0 means all rows. */
@@ -138,8 +143,9 @@ public class EntityFindOptions implements java.io.Serializable {
     }
 
     /** Specifies the max number of rows to return, 0 means all rows. */
-    public void setMaxRows(int maxRows) {
+    public EntityFindOptions setMaxRows(int maxRows) {
         this.maxRows = maxRows;
+        return this;
     }
 
     /** Specifies whether the values returned should be filtered to remove duplicate values. */
@@ -148,8 +154,9 @@ public class EntityFindOptions implements java.io.Serializable {
     }
 
     /** Specifies whether the values returned should be filtered to remove duplicate values. */
-    public void setDistinct(boolean distinct) {
+    public EntityFindOptions setDistinct(boolean distinct) {
         this.distinct = distinct;
+        return this;
     }
 
 
@@ -159,8 +166,9 @@ public class EntityFindOptions implements java.io.Serializable {
     }
 
     /** Specifies the LIMIT number. */
-    public void setLimit(int limit) {
+    public EntityFindOptions setLimit(int limit) {
         this.limit = limit;
+        return this;
     }
 
     /** Get the OFFSET number. */
@@ -169,7 +177,8 @@ public class EntityFindOptions implements java.io.Serializable {
     }
 
     /** Specifies the OFFSET number. */
-    public void setOffset(int offset) {
+    public EntityFindOptions setOffset(int offset) {
         this.offset = offset;
+        return this;
     }
 }

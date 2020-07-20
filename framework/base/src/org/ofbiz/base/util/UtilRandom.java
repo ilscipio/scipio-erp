@@ -115,9 +115,7 @@ public class UtilRandom {
 
     public static int getRandomInt(int min, int max) {
         Random rand = new Random();
-        int x = rand.nextInt(max - min + 1) + min;
-        x = rand.nextInt(max - min + 1) + min;
-        return x;
+        return rand.nextInt(max - min + 1) + min; // SCIPIO: fixed redundant
     }
 
     public static String generateRandom() {

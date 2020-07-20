@@ -239,7 +239,7 @@ public class ExtWebappInfo implements Serializable {
         try {
             webappInfo = WebAppUtil.getWebappInfoFromContextPath(serverName, contextPath);
         } catch(IllegalArgumentException e) {
-            throw new IllegalArgumentException(e);
+            throw e;
         } catch (Exception e) {
             throw new IllegalArgumentException("Could not read or find ofbiz webapp info (WebappInfo) for context path '" + contextPath + "': " + e.getMessage(), e);
         }
@@ -580,24 +580,24 @@ public class ExtWebappInfo implements Serializable {
     /**
      * Helper wrapper to read WebappInfo reliably.
      */
-    public static WebappInfo getWebappInfoAlways(String webSiteId) throws IllegalArgumentException {
+    public static WebappInfo getWebappInfoAlways(String webSiteId) throws WebAppNotFoundException {
         try {
             return WebAppUtil.getWebappInfoFromWebsiteId(webSiteId);
-        } catch(IllegalArgumentException e) {
-            throw new IllegalArgumentException(e); // exception message already good
+        } catch(WebAppNotFoundException e) {
+            throw e;
         } catch (Exception e) {
-            throw new IllegalArgumentException("Could not read or find ofbiz webapp info (WebappInfo) for website ID '" + webSiteId + "': " + e.getMessage(), e);
+            throw new WebAppNotFoundException("Could not read or find ofbiz webapp info (WebappInfo) for website ID '" + webSiteId + "': " + e.getMessage(), e);
         }
     }
 
     /**
      * Helper wrapper to read WebXml reliably.
      */
-    public static WebXml getWebXmlAlways(String webSiteId, WebappInfo webappInfo) throws IllegalArgumentException {
+    public static WebXml getWebXmlAlways(String webSiteId, WebappInfo webappInfo) throws WebAppNotFoundException {
         try {
             return WebAppUtil.getWebXml(webappInfo);
         } catch(Exception e) {
-            throw new IllegalArgumentException("Could not read or find webapp container info (web.xml) for website ID '" + webSiteId
+            throw new WebAppNotFoundException("Could not read or find webapp container info (web.xml) for website ID '" + webSiteId
                         + "' (mount-point '" + webappInfo.getContextRoot() + "'): " + e.getMessage(), e);
         }
     }

@@ -1910,6 +1910,50 @@ public final class UtilProperties implements Serializable {
     }
 
     /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that match the given regexp,
+     * with option to return names from the first numbered regexp group.
+     */
+    public static <M extends Map<String, ? super String>> M putPropertiesMatching(M out, Map<?, ?> properties, Pattern nameRegexp, boolean returnFirstGroup) {
+        if (properties == null) {
+            return out;
+        }
+        for(Object nameObj : properties.keySet()) {
+            String name = (String) nameObj;
+            Matcher m = nameRegexp.matcher(name);
+            if (m.matches()) {
+                String value = (String) properties.get(name);
+                if (value != null) value = value.trim();
+                out.put(returnFirstGroup ? m.group(1) : name, value);
+            }
+        }
+        return out;
+    }
+
+    /**
+     * SCIPIO: Puts all property name/value pairs in the given Properties that match the given regexp.
+     * The names are unchanged.
+     */
+    public static <M extends Map<String, ? super String>> M putPropertiesMatching(M out, Map<?, ?> properties, Pattern nameRegexp) {
+        return putPropertiesMatching(out, properties, nameRegexp, false);
+    }
+
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that match the given regexp,
+     * with option to return names from the first numbered regexp group.
+     */
+    public static Map<String, String> getPropertiesMatching(Map<?, ?> properties, Pattern nameRegexp, boolean returnFirstGroup) {
+        return putPropertiesMatching(new HashMap<>(), properties, nameRegexp, returnFirstGroup);
+    }
+
+    /**
+     * SCIPIO: Gets all property name/value pairs in the given Properties that match the given regexp.
+     * The names are unchanged.
+     */
+    public static Map<String, String>  getPropertiesMatching(Map<?, ?> properties, Pattern nameRegexp) {
+        return putPropertiesMatching(new HashMap<>(), properties, nameRegexp, false);
+    }
+
+    /**
      * SCIPIO: Cleans the given string value, following {@link #getPropertyValue} logic.
      * Added 2018-04-27.
      */

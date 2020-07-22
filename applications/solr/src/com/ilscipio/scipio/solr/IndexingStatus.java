@@ -1,7 +1,6 @@
 package com.ilscipio.scipio.solr;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.service.DispatchContext;
 
 /**
@@ -15,7 +14,7 @@ public interface IndexingStatus {
     SolrProductIndexer getIndexer();
     int getBufSize();
     int getMaxDocs();
-    int getNumDocsToIndex();
+    int getNumDocs();
     int getNumFailures();
     int getStartIndex();
     int getEndIndex();
@@ -31,7 +30,7 @@ public interface IndexingStatus {
         private final String logPrefix;
         private int bufSize;
         private int maxDocs;
-        private int numDocsToIndex;
+        private int numDocs;
         private int numFailures;
         private int startIndex;
         private int endIndex;
@@ -44,7 +43,7 @@ public interface IndexingStatus {
             this.logPrefix = logPrefix != null ? logPrefix : "";
             this.bufSize = bufSize;
             this.maxDocs = maxDocs;
-            this.numDocsToIndex = 0;
+            this.numDocs = 0;
             this.numFailures = 0;
             this.startIndex = 1;
             this.endIndex = -1; // calculated on first loop
@@ -63,8 +62,8 @@ public interface IndexingStatus {
         public int getMaxDocs() {
             return maxDocs;
         }
-        public int getNumDocsToIndex() {
-            return numDocsToIndex;
+        public int getNumDocs() {
+            return numDocs;
         }
         public int getNumFailures() {
             return numFailures;
@@ -81,8 +80,8 @@ public interface IndexingStatus {
 
         public void setBufSize(int bufSize) { this.bufSize = bufSize; }
         public void setMaxDocs(int maxDocs) { this.maxDocs = maxDocs; }
-        public void setNumDocsToIndex(int numDocsToIndex) { this.numDocsToIndex = numDocsToIndex; }
-        public void increaseNumDocsToIndex(int amount) { this.numDocsToIndex += amount; }
+        public void setNumDocs(int numDocs) { this.numDocs = numDocs; }
+        public void increaseNumDocs(int amount) { this.numDocs += amount; }
         public void setNumFailures(int numFailures) { this.numFailures = numFailures; }
         public void registerGeneralFailure(String msg, Throwable t) {
             this.numFailures++;

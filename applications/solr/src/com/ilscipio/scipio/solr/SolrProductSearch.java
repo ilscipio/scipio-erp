@@ -371,7 +371,7 @@ public abstract class SolrProductSearch {
                             Timestamp moment = UtilDateTime.nowTimestamp();
                             doc = indexer.makeProductMapDoc(product, props, null, moment);
                             solrDocs.add(doc);
-                            status.increaseNumDocsToIndex(1);
+                            status.increaseNumDocs(1);
                             numLeft--;
 
                             for(IndexingHookHandler hookHandler : hookHandlers) {
@@ -440,11 +440,11 @@ public abstract class SolrProductSearch {
 
         Map<String, Object> result;
         if (status.getNumFailures() > 0) {
-            result = ServiceUtil.returnFailure("Problems occurred: failures: " + status.getNumFailures() + "; indexed: " + status.getNumDocsToIndex());
+            result = ServiceUtil.returnFailure("Problems occurred: failures: " + status.getNumFailures() + "; indexed: " + status.getNumDocs());
         } else {
-            result = ServiceUtil.returnSuccess("Indexed: " + status.getNumDocsToIndex());
+            result = ServiceUtil.returnSuccess("Indexed: " + status.getNumDocs());
         }
-        result.put("numIndexed", status.getNumDocsToIndex());
+        result.put("numIndexed", status.getNumDocs());
         result.put("numFailures", status.getNumFailures());
         return result;
     }
@@ -1801,7 +1801,7 @@ public abstract class SolrProductSearch {
                             Timestamp moment = UtilDateTime.nowTimestamp();
                             Map<String, Object> doc = indexer.makeProductMapDoc(product, null, productFilter, moment);
                             docs.add(doc);
-                            status.increaseNumDocsToIndex(1);
+                            status.increaseNumDocs(1);
                             numLeft--;
 
                             for(IndexingHookHandler hookHandler : hookHandlers) {
@@ -1857,9 +1857,9 @@ public abstract class SolrProductSearch {
             if (result == null) {
                 String cacheStats = indexer.getLogStatsShort();
                 cacheStats = (cacheStats != null) ? " (caches: " + cacheStats + ")" : "";
-                Debug.logInfo("Solr: rebuildSolrIndex: Finished with " + status.getNumDocsToIndex() + " documents indexed; failures: " +
+                Debug.logInfo("Solr: rebuildSolrIndex: Finished with " + status.getNumDocs() + " documents indexed; failures: " +
                         status.getNumFailures() + "; hook failures: " + status.getHookFailures() + cacheStats, module);
-                final String statusMsg = "Cleared solr index and reindexed " + status.getNumDocsToIndex() + " documents; failures: " +
+                final String statusMsg = "Cleared solr index and reindexed " + status.getNumDocs() + " documents; failures: " +
                         status.getNumFailures() + "; hook failures: " + status.getHookFailures() + cacheStats;
                 result = (status.getNumFailures() > 0) ? ServiceUtil.returnFailure(statusMsg) : ServiceUtil.returnSuccess(statusMsg);
             }

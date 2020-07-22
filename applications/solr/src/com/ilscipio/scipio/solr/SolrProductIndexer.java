@@ -27,7 +27,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -553,9 +552,10 @@ public class SolrProductIndexer {
      * @param productUpdateRequest request source information, usually from ECAs - may be null
      * @return a document map representing the product - can then be passed to {@link #makeSolrDoc(Map)}
      */
-    public Map<String, Object> makeProductMapDoc(GenericValue product, ProductUpdateRequest productUpdateRequest, ProductFilter productFilter) throws Exception {
+    public Map<String, Object> makeProductMapDoc(GenericValue product, ProductUpdateRequest productUpdateRequest,
+                                                 ProductFilter productFilter, Timestamp moment) throws Exception {
         this.lastProductUpdateRequest = productUpdateRequest;
-        ProductDocBuilder productDocBuilder = makeProductDocBuilder(product);
+        ProductDocBuilder productDocBuilder = makeProductDocBuilder(product.getString("productId"), product, moment);
         this.lastProductDocBuilder = productDocBuilder;
         if (productFilter != null && productFilter.allowProduct(productDocBuilder, product, productUpdateRequest)) {
             if (SolrUtil.verboseOn()) {
@@ -569,9 +569,9 @@ public class SolrProductIndexer {
         return productDocBuilder.populateDoc(makeEmptyProductMapDoc());
     }
 
-    /** @see #makeProductMapDoc(GenericValue, ProductUpdateRequest, ProductFilter). */
+    /** @see #makeProductMapDoc(GenericValue, ProductUpdateRequest, ProductFilter, Timestamp). */
     public Map<String, Object> makeProductMapDoc(GenericValue product) throws Exception {
-        return makeProductMapDoc(product, getNullProductUpdateRequest(), null);
+        return makeProductMapDoc(product, getNullProductUpdateRequest(), null, UtilDateTime.nowTimestamp());
     }
 
     /** Makes empty map for new document, can be overridden. NOTE: 2020-07: Now LinkedHashMap to preserve order since SolrInputDocument._fields is also one. */
@@ -641,8 +641,8 @@ public class SolrProductIndexer {
     }
 
     /** Creates a new product reader instance for doc map generation. Client code should override. */
-    public ProductDocBuilder makeProductDocBuilder(GenericValue product) {
-        return new ProductDocBuilder(product);
+    public ProductDocBuilder makeProductDocBuilder(String productId, GenericValue product, Timestamp moment) {
+        return new ProductDocBuilder(productId, product, moment);
     }
 
     /**
@@ -654,9 +654,9 @@ public class SolrProductIndexer {
      * <p>NOTE: Further caching is done underneath by {@link ProductDataCache} from {@link #getProductData()}.</p>
      */
     public class ProductDocBuilder {
-        protected final Timestamp moment;
-        protected final GenericValue product;
         protected final String productId;
+        protected GenericValue product;
+        protected Timestamp moment;
         protected String parentProductId; // empty string means already looked up
 
         protected List<GenericValue> productAssocFrom;
@@ -707,10 +707,10 @@ public class SolrProductIndexer {
         protected Map<String, String> longDescriptionLocaleMap;
         protected Set<String> keywords;
 
-        protected ProductDocBuilder(GenericValue product) {
-            this.product = product;
-            this.productId = product.getString("productId");
-            this.moment = UtilDateTime.nowTimestamp();
+        protected ProductDocBuilder(String productId, GenericValue product, Timestamp moment) {
+            this.productId = (productId != null) ? productId : product.getString("productId");
+            this.product = product; // may be null
+            this.moment = (moment != null) ? UtilDateTime.nowTimestamp() : moment;
         }
 
         /*
@@ -930,12 +930,15 @@ public class SolrProductIndexer {
             return moment;
         }
 
-        public GenericValue getProduct() {
-            return product;
-        }
-
         public String getProductId() {
             return productId;
+        }
+
+        public GenericValue getProduct() throws Exception {
+            if (product == null) {
+                product = getProductData().getProduct(getDctx(), getProductId(), isUseEntityCache());
+            }
+            return product;
         }
 
         public String getParentProductId() throws Exception {

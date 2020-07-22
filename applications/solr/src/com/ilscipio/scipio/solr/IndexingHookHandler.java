@@ -34,7 +34,7 @@ public interface IndexingHookHandler {
 
     default void beginBatch(IndexingStatus indexingStatus) throws Exception {}
 
-    default void processDocAdd(IndexingStatus indexingStatus, Map<String, Object> doc, SolrProductIndexer.ProductDocBuilder docBuilder, GenericValue product,
+    default void processDocAdd(IndexingStatus indexingStatus, Map<String, Object> doc, SolrProductIndexer.ProductDocBuilder docBuilder,
                                SolrProductIndexer.ProductUpdateRequest productUpdateRequest) throws Exception {}
 
     default void processDocRemove(IndexingStatus indexingStatus, String productId,

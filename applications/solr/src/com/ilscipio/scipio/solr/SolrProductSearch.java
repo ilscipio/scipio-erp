@@ -3,6 +3,7 @@ package com.ilscipio.scipio.solr;
 import java.io.IOException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,6 +35,7 @@ import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.CommonParams;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ProcessSignals;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -366,14 +368,15 @@ public abstract class SolrProductSearch {
                     if (product != null) {
                         Map<String, Object> doc;
                         try {
-                            doc = indexer.makeProductMapDoc(product, props, null);
+                            Timestamp moment = UtilDateTime.nowTimestamp();
+                            doc = indexer.makeProductMapDoc(product, props, null, moment);
                             solrDocs.add(doc);
                             status.increaseNumDocsToIndex(1);
                             numLeft--;
 
                             for(IndexingHookHandler hookHandler : hookHandlers) {
                                 try {
-                                    hookHandler.processDocAdd(status, doc, indexer.getLastProductDocBuilder(), product, props);
+                                    hookHandler.processDocAdd(status, doc, indexer.getLastProductDocBuilder(), props);
                                 } catch (Exception e) {
                                     status.registerHookFailure(null, e, hookHandler, "processDocAdd");
                                 }
@@ -1795,14 +1798,15 @@ public abstract class SolrProductSearch {
                     if (product != null) {
                         docsConsumed++;
                         try {
-                            Map<String, Object> doc = indexer.makeProductMapDoc(product, null, productFilter);
+                            Timestamp moment = UtilDateTime.nowTimestamp();
+                            Map<String, Object> doc = indexer.makeProductMapDoc(product, null, productFilter, moment);
                             docs.add(doc);
                             status.increaseNumDocsToIndex(1);
                             numLeft--;
 
                             for(IndexingHookHandler hookHandler : hookHandlers) {
                                 try {
-                                    hookHandler.processDocAdd(status, doc, indexer.getLastProductDocBuilder(), product, indexer.getNullProductUpdateRequest());
+                                    hookHandler.processDocAdd(status, doc, indexer.getLastProductDocBuilder(), indexer.getNullProductUpdateRequest());
                                 } catch (Exception e) {
                                     status.registerHookFailure(null, e, hookHandler, "processDocAdd");
                                 }

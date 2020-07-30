@@ -267,6 +267,15 @@ public final class UtilValidate {
     }
 
     /**
+     * SCIPIO: If the value is empty string, return null, otherwise returns the value.
+     * <p>
+     * Acts as a convenient filter to minimize the number of intermediate variables and repeated container accesses.
+     */
+    public static <T> T nullIfEmptyString(T value) {
+        return (value instanceof CharSequence && ((CharSequence) value).length() == 0) ? null : value;
+    }
+
+    /**
      * SCIPIO: If the value is non-empty, returns it as-is; otherwise (if empty or null) returns null.
      * In other words, this makes the empty string case return null, as a convenience, to simplify code.
      * <p>

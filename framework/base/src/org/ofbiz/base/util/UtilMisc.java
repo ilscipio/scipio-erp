@@ -2007,4 +2007,44 @@ public final class UtilMisc {
     public static <V, T extends V> V getFirst(List<T> list) {
         return (list != null) ? list.get(0) : null;
     }
+
+    /**
+     * Adds the given values pairs to the collection and returns the collection, for chaining (SCIPIO).
+     */
+    public static <C extends Collection<E>, E> C add(C collection, Collection<? extends E> newElems) {
+        collection.addAll(newElems);
+        return collection;
+    }
+
+    /**
+     * Adds the given values pairs to the collection and returns the collection, for chaining (SCIPIO).
+     */
+    public static <C extends Collection<E>, E> C add(C collection, E... newElems) {
+        collection.addAll(Arrays.asList(newElems));
+        return collection;
+    }
+
+    /**
+     * Puts the given key-value pairs into the map and returns the map, for chaining (SCIPIO).
+     */
+    public static <M extends Map<K, V>, K, V> M put(M map, Object... keyValuePairs) {
+        for (int i = 0; i < keyValuePairs.length;) {
+            @SuppressWarnings("unchecked")
+            K key = (K) keyValuePairs[i++];
+            @SuppressWarnings("unchecked")
+            V value = (V) keyValuePairs[i++];
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    public static <T, I extends Iterator<T>> Iterator<T> asIterator(Object object) { // SCIPIO
+        if (object instanceof Iterator) {
+            return UtilGenerics.cast(object);
+        } else if (object instanceof Iterable) {
+            return UtilGenerics.<Iterable<T>>cast(object).iterator();
+        } else {
+            throw new IllegalArgumentException("Not iterable or iterator");
+        }
+    }
 }

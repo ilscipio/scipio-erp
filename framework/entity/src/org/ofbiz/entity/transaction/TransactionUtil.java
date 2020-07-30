@@ -205,6 +205,17 @@ public final class TransactionUtil implements Status {
         return STATUS_NO_TRANSACTION;
     }
 
+    /** Gets the status of the transaction in the current thread IF
+     * transactions are available, otherwise returns STATUS_NO_TRANSACTION; no exceptions (SCIPIO) */
+    public static int getStatusSafe() {
+        try {
+            return getStatus();
+        } catch(Exception e) {
+            Debug.logError("Could not get transaction status: " + e.getMessage(), module);
+            return STATUS_NO_TRANSACTION;
+        }
+    }
+
     public static String getStatusString() throws GenericTransactionException {
         return getTransactionStateString(getStatus());
     }

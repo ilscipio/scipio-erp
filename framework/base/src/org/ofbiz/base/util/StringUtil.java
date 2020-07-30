@@ -1019,4 +1019,41 @@ public class StringUtil {
         }
         return true;
     }
+
+    /**
+     * SCIPIO: String.splits the string into the collection.
+     */
+    public static <C extends Collection<? super String>> C splitRegex(C out, String str, String regex, Integer limit, boolean trim, boolean includeEmpty) { // SCIPIO
+        if (str == null || str.isEmpty()) {
+            return out;
+        }
+        String[] parts = (limit != null) ? str.split(regex, limit) : str.split(regex);
+        if (trim) {
+            if (includeEmpty) {
+                for (String part : parts) {
+                    out.add(part.trim());
+                }
+            } else {
+                for (String part : parts) {
+                    part = part.trim();
+                    if (!part.isEmpty()) {
+                        out.add(part);
+                    }
+                }
+            }
+        } else {
+            if (includeEmpty) {
+                for (String part : parts) {
+                    out.add(part);
+                }
+            } else {
+                for (String part : parts) {
+                    if (!part.isEmpty()) {
+                        out.add(part);
+                    }
+                }
+            }
+        }
+        return out;
+    }
 }

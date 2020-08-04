@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Caches supplied product-related data from db, mainly used by <code>SolrProductIndexer</code> (SCIPIO).
+ * Caches supplied product-related data from db, mainly used by <code>SolrDocBuilder</code> (SCIPIO).
  * Primarily optimized for solr indexing.
  * <p>
  * WARN: This class intentionally ignores differences in "moment" parameters! Currently it assumes moments passed are never non-null

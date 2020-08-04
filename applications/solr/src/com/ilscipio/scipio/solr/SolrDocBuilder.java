@@ -45,7 +45,7 @@ import java.util.function.Function;
  * <p>This is a local worker: not thread-safe, not serializable.</p>
  * <p>Main method: {@link #makeProductMapDoc}</p>
  */
-public class SolrProductIndexer {
+public class SolrDocBuilder {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected static final Factory DEFAULT_FACTORY = new Factory();
@@ -61,7 +61,7 @@ public class SolrProductIndexer {
     private final boolean useEntityCache;
     private volatile long startTime = System.currentTimeMillis();
 
-    protected SolrProductIndexer(DispatchContext dctx, Map<String, Object> serviceContext, ProductDataReader productDataReader) {
+    protected SolrDocBuilder(DispatchContext dctx, Map<String, Object> serviceContext, ProductDataReader productDataReader) {
         this.dctx = dctx;
         serviceContext = Collections.unmodifiableMap(new HashMap<>(serviceContext)); // TODO: REVIEW: precaution
         this.serviceContext = serviceContext;
@@ -70,7 +70,7 @@ public class SolrProductIndexer {
         this.useEntityCache = isUseEntityCache(serviceContext);
     }
 
-    protected SolrProductIndexer(DispatchContext dctx, Map<String, Object> serviceContext) {
+    protected SolrDocBuilder(DispatchContext dctx, Map<String, Object> serviceContext) {
         this(dctx, serviceContext, DEFAULT_FACTORY.getProductDataReader(dctx, serviceContext));
     }
 
@@ -80,7 +80,7 @@ public class SolrProductIndexer {
      * *************************************************************
      */
 
-    public static SolrProductIndexer getInstance(DispatchContext dctx, Map<String, ?> serviceContext) {
+    public static SolrDocBuilder getInstance(DispatchContext dctx, Map<String, ?> serviceContext) {
         return getFactory(dctx).getIndexer(dctx, UtilGenerics.cast(serviceContext));
     }
 
@@ -91,7 +91,7 @@ public class SolrProductIndexer {
     protected static Factory readConfiguredFactory() {
         String factoryClassName = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.index.indexer.factoryClass", Factory.class.getName());
         try {
-            Class<Factory> factoryClass = UtilGenerics.cast(SolrProductIndexer.class.getClassLoader().loadClass(factoryClassName));
+            Class<Factory> factoryClass = UtilGenerics.cast(SolrDocBuilder.class.getClassLoader().loadClass(factoryClassName));
             return factoryClass.newInstance();
         } catch (Exception e) {
             Debug.logError(e, "Error loading indexer cache from " + SolrUtil.solrConfigName + "#solr.index.indexer.factoryClass", module);
@@ -100,8 +100,8 @@ public class SolrProductIndexer {
     }
 
     public static class Factory {
-        public SolrProductIndexer getIndexer(DispatchContext dctx, Map<String, Object> serviceContext) {
-            return new SolrProductIndexer(dctx, serviceContext, getProductDataReader(dctx, serviceContext));
+        public SolrDocBuilder getIndexer(DispatchContext dctx, Map<String, Object> serviceContext) {
+            return new SolrDocBuilder(dctx, serviceContext, getProductDataReader(dctx, serviceContext));
         }
 
         // helpers methods
@@ -558,7 +558,7 @@ public class SolrProductIndexer {
     /**
      * If the given docValue is not already a ProductDocEntry, tries to create one, in other words auto-converting/normalizing.
      */
-    public ProductIndexer.ProductDocEntry asDocEntry(Object docValue, SolrProductIndexer.ProductFilter productFilter, Timestamp moment) throws Exception {
+    public ProductIndexer.ProductDocEntry asDocEntry(Object docValue, SolrDocBuilder.ProductFilter productFilter, Timestamp moment) throws Exception {
         ProductIndexer entityIndexer = getProductIndexer();
         if (docValue instanceof ProductIndexer.ProductDocEntry) {
             return (ProductIndexer.ProductDocEntry) docValue;
@@ -570,7 +570,7 @@ public class SolrProductIndexer {
         }
         GenericPK pk;
         Map<String, Object> doc;
-        SolrProductIndexer.ProductDocBuilder data;
+        SolrDocBuilder.ProductDocBuilder data;
         ProductIndexer.ProductEntry entry = null;
         if (docValue instanceof ProductIndexer.ProductEntry) {
             entry = (ProductIndexer.ProductEntry) docValue;

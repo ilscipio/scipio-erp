@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  *
  * <p>scheduleDataIndexing and registerUpdateToSolr services add the productId or other ID to a global FIFO queue which is
  * processed by a data worker thread created on-demand. The data worker thread removes productIds from the queue for
- * which it creates instances of {@link SolrProductIndexer.ProductDocBuilder} (FIXME: for legacy reasons this class is
+ * which it creates instances of {@link SolrDocBuilder.ProductDocBuilder} (FIXME: for legacy reasons this class is
  * tied to a solr class). These are passed to handlers implementing {@link IndexingHookHandler}.</p>
  *
  * <p>NOTE: It is now possible to disable the solr commit hook in <code>applications/solr/config/solrhooks.properties</code>

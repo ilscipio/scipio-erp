@@ -38,7 +38,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 /**
- * Supplies general product-related data (including category/catalog data) from db, mainly used by <code>SolrProductIndexer</code> (SCIPIO).
+ * Supplies general product-related data (including category/catalog data) from db, mainly used by <code>SolrDocBuilder</code> (SCIPIO).
  * Use {@link ProductDataCache} for caching version. These were previously a bunch of helpers in SolrProductUtil.
  * <p>
  * NOTE: This is generally a work-in-progress interface and mainly for use by solr.

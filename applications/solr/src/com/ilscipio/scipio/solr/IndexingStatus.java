@@ -13,7 +13,7 @@ public interface IndexingStatus {
     boolean isAborted();
     DispatchContext getDctx();
     IndexingHookHandler.HookType getHookType();
-    SolrProductIndexer getIndexer();
+    SolrDocBuilder getIndexer();
     int getBufSize();
     int getMaxDocs();
     int getNumDocs();
@@ -29,7 +29,7 @@ public interface IndexingStatus {
 
         private final DispatchContext dctx;
         private final IndexingHookHandler.HookType hookType;
-        private final SolrProductIndexer indexer;
+        private final SolrDocBuilder indexer;
         private final String logPrefix;
         private int bufSize;
         private int maxDocs;
@@ -40,7 +40,7 @@ public interface IndexingStatus {
         private int hookFailures;
         private boolean aborted = false;
 
-        public Standard(DispatchContext dctx, IndexingHookHandler.HookType hookType, SolrProductIndexer indexer, int maxDocs, int bufSize, String logPrefix) {
+        public Standard(DispatchContext dctx, IndexingHookHandler.HookType hookType, SolrDocBuilder indexer, int maxDocs, int bufSize, String logPrefix) {
             this.dctx = dctx;
             this.hookType = hookType;
             this.indexer = indexer;
@@ -69,7 +69,7 @@ public interface IndexingStatus {
         public IndexingHookHandler.HookType getHookType() {
             return hookType;
         }
-        public SolrProductIndexer getIndexer() {
+        public SolrDocBuilder getIndexer() {
             return indexer;
         }
         public String getLogPrefix() { return logPrefix; }

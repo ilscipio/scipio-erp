@@ -14,7 +14,6 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -28,7 +27,7 @@ import java.util.Set;
 /**
  * Special Product-focused EntityIndexer that produces Solr documents that entity indexing consumers can convert and
  * commit to their data sources.
- * Instances are global; {@link SolrProductIndexer} is a local worker that holds dispatch context.
+ * Instances are global; {@link SolrDocBuilder} is a local worker that holds dispatch context.
  */
 public class ProductIndexer extends EntityIndexer {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -57,7 +56,7 @@ public class ProductIndexer extends EntityIndexer {
 
     @Override
     public IndexingStatus readDocuments(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries, List<DocEntry> docs, Set<Entry> docsToRemove) {
-        SolrProductIndexer dataIndexer = SolrProductIndexer.getInstance(dctx, context);
+        SolrDocBuilder docBuilder = SolrDocBuilder.getInstance(dctx, context);
 
         // Eliminate duplicates and read only the last Entry (action) for each product
         Map<String, ProductEntry> products = new LinkedHashMap<>();
@@ -69,13 +68,13 @@ public class ProductIndexer extends EntityIndexer {
 
         // Expand virtual/variants
         Map<String, ProductEntry> expandedProducts = new LinkedHashMap<>();
-        SolrProductIndexer.ExpandProductResult expandResult = dataIndexer.expandProductsForIndexing(UtilGenerics.cast(products.values()), expandedProducts);
+        SolrDocBuilder.ExpandProductResult expandResult = docBuilder.expandProductsForIndexing(UtilGenerics.cast(products.values()), expandedProducts);
 
         IndexingHookHandler.HookType hookType = IndexingHookHandler.HookType.ECA;
         List<? extends IndexingHookHandler> hookHandlers = IndexingHookHandler.Handlers.getHookHandlers(
                 IndexingHookHandler.Handlers.getHookHandlerFactories(hookType));
         String logPrefix = "";
-        IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, hookType, dataIndexer, expandedProducts.size(), getBufSize(), logPrefix);
+        IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, hookType, docBuilder, expandedProducts.size(), getBufSize(), logPrefix);
         if (expandResult.isError()) { // for expandProductsForIndexing above - need to return status
             status.registerGeneralFailure("Error expanding products for indexing: " + ServiceUtil.getErrorMessage(expandResult.getErrorResult()), null);
             return status;
@@ -125,7 +124,7 @@ public class ProductIndexer extends EntityIndexer {
                     GenericValue product = null;
                     boolean goodLookup = false;
                     try {
-                        product = dataIndexer.getProductData().getProduct(dctx, productId, false);
+                        product = docBuilder.getProductData().getProduct(dctx, productId, false);
                         goodLookup = true;
                     } catch (GenericEntityException e) {
                         status.registerGeneralFailure("Error reading product '" + productId + "'", e);
@@ -133,11 +132,11 @@ public class ProductIndexer extends EntityIndexer {
                     if (goodLookup) {
                         if (product != null) {
                             Map<String, Object> doc;
-                            SolrProductIndexer.ProductDocBuilder data;
+                            SolrDocBuilder.ProductDocBuilder data;
                             try {
                                 Timestamp moment = UtilDateTime.nowTimestamp();
-                                data = dataIndexer.makeProductDocBuilder(product, moment);
-                                doc = dataIndexer.makeProductMapDoc(data, entry, null);
+                                data = docBuilder.makeProductDocBuilder(product, moment);
+                                doc = docBuilder.makeProductMapDoc(data, entry, null);
                                 status.increaseNumDocs(1);
                                 numLeft--;
                                 ProductDocEntry docEntry = makeDocEntry(entry, doc, data);
@@ -316,22 +315,22 @@ public class ProductIndexer extends EntityIndexer {
     }
 
     public ProductDocEntry makeDocEntry(Entry entry, Map<String, Object> doc, Object data) {
-        return new ProductDocEntry((ProductEntry) entry, doc, (SolrProductIndexer.ProductDocBuilder) data);
+        return new ProductDocEntry((ProductEntry) entry, doc, (SolrDocBuilder.ProductDocBuilder) data);
     }
 
     public ProductDocEntry makeDocEntry(GenericPK pk, Map<String, Object> doc, Object data) {
-        return new ProductDocEntry(pk, doc, (SolrProductIndexer.ProductDocBuilder) data);
+        return new ProductDocEntry(pk, doc, (SolrDocBuilder.ProductDocBuilder) data);
     }
 
     /**
      * Processed document entry (commit).
      */
     public static class ProductDocEntry extends DocEntry { // TODO: extend DocEntry in EntityIndexer
-        protected ProductDocEntry(ProductEntry entry, Map<String, Object> doc, SolrProductIndexer.ProductDocBuilder data) {
+        protected ProductDocEntry(ProductEntry entry, Map<String, Object> doc, SolrDocBuilder.ProductDocBuilder data) {
             super(entry, doc, data);
         }
 
-        public ProductDocEntry(GenericPK pk, Map<String, Object> doc, SolrProductIndexer.ProductDocBuilder data) {
+        public ProductDocEntry(GenericPK pk, Map<String, Object> doc, SolrDocBuilder.ProductDocBuilder data) {
             super(pk, doc, data);
         }
 
@@ -346,8 +345,8 @@ public class ProductIndexer extends EntityIndexer {
         }
 
         @Override
-        public SolrProductIndexer.ProductDocBuilder getData() {
-            return (SolrProductIndexer.ProductDocBuilder) super.getData();
+        public SolrDocBuilder.ProductDocBuilder getData() {
+            return (SolrDocBuilder.ProductDocBuilder) super.getData();
         }
     }
 
@@ -357,15 +356,15 @@ public class ProductIndexer extends EntityIndexer {
      * This is a general-purpose method that allows to reuse hooks anywhere.
      */
     public IndexingStatus runProductHooks(DispatchContext dctx, Map<String, ?> context,
-                                          Object products, SolrProductIndexer indexer,
+                                          Object products, SolrDocBuilder docBuilder,
                                           IndexingHookHandler.HookType hookType, List<? extends IndexingHookHandler> hookHandlers,
-                                          SolrProductIndexer.ProductFilter productFilter, ProcessSignals processSignals,
+                                          SolrDocBuilder.ProductFilter productFilter, ProcessSignals processSignals,
                                           int bufSize, String logPrefix, Object logger) {
         Iterator<? extends Map<String, Object>> productsIt = UtilMisc.asIterator(products);
         try {
             int numDocs = 0;
             IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, IndexingHookHandler.HookType.REINDEX,
-                    indexer, numDocs, bufSize, logPrefix);
+                    docBuilder, numDocs, bufSize, logPrefix);
             for(IndexingHookHandler hookHandler : hookHandlers) {
                 try {
                     hookHandler.begin(status);
@@ -403,7 +402,7 @@ public class ProductIndexer extends EntityIndexer {
 
                         Timestamp moment = UtilDateTime.nowTimestamp();
                         try {
-                            docEntry = indexer.asDocEntry(productObj, productFilter, moment);
+                            docEntry = docBuilder.asDocEntry(productObj, productFilter, moment);
                             status.increaseNumDocs(1);
                             numLeft--;
 

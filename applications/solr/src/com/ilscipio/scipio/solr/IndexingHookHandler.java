@@ -2,7 +2,6 @@ package com.ilscipio.scipio.solr;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.entity.GenericValue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +19,8 @@ import java.util.Set;
  * Base class for solr product indexer-derived data, hooked in solrhooks.properties files as numbered entries.
  * Instantiated from factory before every indexing iteration (instances not cached).
  * See SolrProductSearch.updateToSolrCoreMultiAdd for reference calls.
+ * <p>DEV NOTE: This is a LEGACY hook system used before {@link EntityIndexer} was created which uses callback
+ * async services as consumers instead of hooks, but IndexingHookHandler is still in use for now because the handlers are reusable.</p>
  */
 public interface IndexingHookHandler {
 
@@ -34,11 +35,9 @@ public interface IndexingHookHandler {
 
     default void beginBatch(IndexingStatus indexingStatus) throws Exception {}
 
-    default void processDocAdd(IndexingStatus indexingStatus, Map<String, Object> doc, SolrProductIndexer.ProductDocBuilder docBuilder,
-                               SolrProductIndexer.ProductUpdateRequest productUpdateRequest) throws Exception {}
+    default void processDocAdd(IndexingStatus indexingStatus, EntityIndexer.DocEntry docEntry) throws Exception {}
 
-    default void processDocRemove(IndexingStatus indexingStatus, String productId,
-                                  SolrProductIndexer.ProductUpdateRequest productUpdateRequest) throws Exception {}
+    default void processDocRemove(IndexingStatus indexingStatus, EntityIndexer.Entry entry) throws Exception {}
 
     /** Batch end commit, called after solr docs are sent to server. NOTE: endBatch may be called even if no docs added/removed */
     default void endBatch(IndexingStatus indexingStatus) throws Exception {}
@@ -145,9 +144,5 @@ public interface IndexingHookHandler {
             }
             return Collections.unmodifiableMap(factories);
         }
-    }
-
-    class HookHelper {
-
     }
 }

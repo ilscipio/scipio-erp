@@ -26,7 +26,8 @@ code package.
     <entity-resource type="data" reader-name="seed-initial" loader="main" location="data/SolrMarkDirtyData.xml"/>
 
     <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
-    
+
+    <service-resource type="model" loader="main" location="servicedef/services_entity.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     

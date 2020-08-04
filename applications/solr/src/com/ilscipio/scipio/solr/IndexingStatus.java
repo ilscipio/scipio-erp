@@ -9,16 +9,19 @@ import org.ofbiz.service.DispatchContext;
  */
 public interface IndexingStatus {
 
+    boolean isSuccess();
+    boolean isAborted();
     DispatchContext getDctx();
     IndexingHookHandler.HookType getHookType();
     SolrProductIndexer getIndexer();
     int getBufSize();
     int getMaxDocs();
     int getNumDocs();
-    int getNumFailures();
+    int getGeneralFailures();
     int getStartIndex();
     int getEndIndex();
     int getHookFailures();
+    default int getTotalFailures() { return getGeneralFailures() + getHookFailures(); }
     default String getIndexProgressString() { return getStartIndex() + "-" + getEndIndex() + " / " + getMaxDocs(); }
 
     class Standard implements IndexingStatus {
@@ -31,10 +34,11 @@ public interface IndexingStatus {
         private int bufSize;
         private int maxDocs;
         private int numDocs;
-        private int numFailures;
+        private int generalFailures;
         private int startIndex;
         private int endIndex;
         private int hookFailures;
+        private boolean aborted = false;
 
         public Standard(DispatchContext dctx, IndexingHookHandler.HookType hookType, SolrProductIndexer indexer, int maxDocs, int bufSize, String logPrefix) {
             this.dctx = dctx;
@@ -44,10 +48,21 @@ public interface IndexingStatus {
             this.bufSize = bufSize;
             this.maxDocs = maxDocs;
             this.numDocs = 0;
-            this.numFailures = 0;
+            this.generalFailures = 0;
             this.startIndex = 1;
             this.endIndex = -1; // calculated on first loop
             this.hookFailures = 0;
+        }
+
+        public boolean isSuccess() {
+            return getGeneralFailures() == 0 && getHookFailures() == 0 && !isAborted();
+        }
+
+        public boolean isAborted() {
+            return aborted;
+        }
+        public void setAborted(boolean aborted) {
+            this.aborted = aborted;
         }
 
         public DispatchContext getDctx() { return dctx; }
@@ -65,8 +80,8 @@ public interface IndexingStatus {
         public int getNumDocs() {
             return numDocs;
         }
-        public int getNumFailures() {
-            return numFailures;
+        public int getGeneralFailures() {
+            return generalFailures;
         }
         public int getStartIndex() {
             return startIndex;
@@ -82,9 +97,9 @@ public interface IndexingStatus {
         public void setMaxDocs(int maxDocs) { this.maxDocs = maxDocs; }
         public void setNumDocs(int numDocs) { this.numDocs = numDocs; }
         public void increaseNumDocs(int amount) { this.numDocs += amount; }
-        public void setNumFailures(int numFailures) { this.numFailures = numFailures; }
+        public void setGeneralFailures(int generalFailures) { this.generalFailures = generalFailures; }
         public void registerGeneralFailure(String msg, Throwable t) {
-            this.numFailures++;
+            this.generalFailures++;
             Debug.logError(t, getLogPrefix() + msg + getErrorLogSuffix(), module);
         }
         public void setStartIndex(int startIndex) { this.startIndex = startIndex; }
@@ -105,6 +120,7 @@ public interface IndexingStatus {
                 setEndIndex(getMaxDocs());
             }
         }
-        public String getErrorLogSuffix() { return "; total general errors: " + getNumFailures() + "; total hook errors: " + getHookFailures(); }
+        public String getErrorLogSuffix() { return "; total general errors: " + getGeneralFailures() + "; total hook errors: " + getHookFailures(); }
+
     }
 }

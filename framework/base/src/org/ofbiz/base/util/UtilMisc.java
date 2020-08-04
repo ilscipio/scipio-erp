@@ -511,6 +511,16 @@ public final class UtilMisc {
         return result == null ? 0 : result;
     }
 
+    /** Converts an <code>Object</code> to an <code>int</code>. Returns
+     * default value if conversion is not possible (SCIPIO).
+     * @param obj Object to convert
+     * @return int value
+     */
+    public static int toInteger(Object obj, int defaultValue) {
+        Integer result = toIntegerObject(obj);
+        return result == null ? defaultValue : result;
+    }
+
     /** Converts an <code>Object</code> to an <code>Integer</code>. Returns
      * <code>null</code> if conversion is not possible.
      * @param obj Object to convert

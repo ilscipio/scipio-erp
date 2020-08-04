@@ -31,9 +31,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
@@ -1946,4 +1948,40 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         return modelInfo.getVersion();
     }
 
+    public boolean getPkMapFromId(Map<String, Object> out, String id, Delegator delegator) { // SCIPIO
+        boolean valid;
+        if (getPksSize() == 1) {
+            ModelField pkField = fields.pks.get(0);
+            Object pkFieldValue = UtilValidate.nullIfEmptyString(convertFieldValue(pkField, id, delegator));
+            out.put(pkField.getName(), pkFieldValue);
+            valid = (pkFieldValue != null);
+        } else {
+            StringTokenizer st = new StringTokenizer(id, getIdSep());
+            int i = 0;
+            valid = true;
+            while (st.hasMoreTokens() && i < getPksSize()) {
+                String pkPart = st.nextToken();
+                ModelField pkField = fields.pks.get(i);
+                Object pkFieldValue = UtilValidate.nullIfEmptyString(convertFieldValue(pkField, pkPart, delegator));
+                out.put(pkField.getName(), pkFieldValue);
+                if (pkFieldValue == null) {
+                    valid = false;
+                }
+                i++;
+            }
+            if (i < getPksSize() || st.hasMoreTokens()) {
+                valid = false;
+            }
+        }
+        return valid;
+    }
+
+    public Map<String, Object> getPkMapFromId(String id, Delegator delegator) { // SCIPIO
+        Map<String, Object> pkMap = new HashMap<>();
+        return getPkMapFromId(pkMap, id, delegator) ? pkMap : null;
+    }
+
+    public String getIdSep() { // SCIPIO
+        return "::";
+    }
 }

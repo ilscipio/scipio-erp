@@ -80,17 +80,7 @@ public class GenericValue extends GenericEntity {
      * source fields are assumed to already be correct/same types as those on the new value (no type checks).<p>
      * NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
      * copy constructor and construction from map. Added 2018-10-22. */
-    public static GenericValue createAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericValue sourceFieldsValue, Map<String, String> newToExistingFieldMap) {
-        GenericValue newValue = new GenericValue();
-        newValue.initAsFieldSubset(delegator, modelEntity, sourceFieldsValue, newToExistingFieldMap);
-        return newValue;
-    }
-
-    /** SCIPIO: Creates new GenericValue partially from fields from existing GenericValue with new-to-existing field name mappings, but treated as a "new" instance (not a "copy");
-     * source fields are assumed to already be correct/same types as those on the new value (no type checks).<p>
-     * NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
-     * copy constructor and construction from map. Added 2018-10-22. */
-    public static GenericValue createAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericValue sourceFieldsValue, Collection<String> fieldNames) {
+    public static GenericValue createAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericEntity sourceFieldsValue, Object fieldNames) {
         GenericValue newValue = new GenericValue();
         newValue.initAsFieldSubset(delegator, modelEntity, sourceFieldsValue, fieldNames);
         return newValue;

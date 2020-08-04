@@ -191,7 +191,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /** Creates new GenericEntity from existing Map */
-    protected void init(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fields) {
+    protected void init(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fields, Object fieldNames) {
         assertIsMutable();
         if (modelEntity == null) {
             throw new IllegalArgumentException("Cannot create a GenericEntity with a null modelEntity parameter");
@@ -201,12 +201,46 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         this.delegatorName = delegator.getDelegatorName();
         this.internalDelegator = delegator;
         this.observable = new Observable();
-        setFields(fields);
+        if (fields instanceof GenericEntity) { // SCIPIO
+            fields = ((GenericEntity) fields).fields;
+        }
+        if (fieldNames != null) { // SCIPIO
+            if (fieldNames instanceof Iterable) {
+                for (String fieldName : UtilGenerics.<Iterable<String>>cast(fieldNames)) {
+                    Object value = fields.get(fieldName);
+                    if (value != null) {
+                        set(fieldName, value);
+                    }
+                }
+            } else if (fieldNames instanceof Map) {
+                for (Map.Entry<String, String> fieldNameMap : UtilGenerics.<Map<String, String>>cast(fieldNames).entrySet()) {
+                    if (fieldNameMap.getValue() != null) {
+                        Object value = fields.get(fieldNameMap.getValue());
+                        if (value != null) {
+                            set(fieldNameMap.getKey(), value);
+                        }
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("Invalid initialization field names");
+            }
+        } else {
+            setFields(fields);
+        }
 
         // check some things
         if (this.entityName == null) {
             throw new IllegalArgumentException("Cannot create a GenericEntity with a null entityName in the modelEntity parameter");
         }
+    }
+
+    protected void initFields() {
+
+    }
+
+    /** Creates new GenericEntity from existing Map */
+    protected void init(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fields) {
+        init(delegator, modelEntity, fields, null); // SCIPIO: delegating
     }
 
     /** Creates new GenericEntity from existing Map */
@@ -261,10 +295,11 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /** SCIPIO: Creates new GenericEntity partially from fields from existing GenericEntity with new-to-existing field name mappings, but treated as a "new" instance (not a "copy");
-     * source fields are assumed to already be correct/same types as those on the new value (no type checks).<p>
-     * NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
-     * copy constructor and construction from map. Added 2018-10-22. */
-    protected void initAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericEntity sourceFieldsValue, Map<String, String> newToExistingFieldMapping) {
+     * source fields are assumed to already be correct/same types as those on the new value (no type checks).
+     * <p>This is similar to {@link #init(Delegator, ModelEntity, Map, Object)} except the source fields are not re-checked for type.</p>
+     * <p>NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
+     * copy constructor and construction from map. Added 2018-10-22.</p> */
+    protected void initAsFieldSubset(Delegator delegator, ModelEntity modelEntity, Map<String, Object> fields, Object fieldNames) {
         assertIsMutable();
         if (modelEntity == null) {
             throw new IllegalArgumentException("Cannot create a GenericEntity with a null modelEntity parameter");
@@ -274,42 +309,31 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         this.delegatorName = delegator.getDelegatorName();
         this.internalDelegator = delegator;
         this.observable = new Observable();
-        if (newToExistingFieldMapping != null) {
-            for(Map.Entry<String, String> entry : newToExistingFieldMapping.entrySet()) {
-                if (entry.getValue() != null) {
-                    this.fields.put(entry.getKey(), sourceFieldsValue.fields.get(entry.getValue()));
-                }
-            }
-        } else {
-            this.fields.putAll(sourceFieldsValue.fields);
+        if (fields instanceof GenericEntity) {
+            fields = ((GenericEntity) fields).fields;
         }
-
-        // check some things
-        if (this.entityName == null) {
-            throw new IllegalArgumentException("Cannot create a GenericEntity with a null entityName in the modelEntity parameter");
-        }
-    }
-
-    /** SCIPIO: Creates new GenericEntity partially from fields from existing GenericEntity with new-to-existing field name mappings, but treated as a "new" instance (not a "copy");
-     * source fields are assumed to already be correct/same types as those on the new value (no type checks).<p>
-     * NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
-     * copy constructor and construction from map. Added 2018-10-22. */
-    protected void initAsFieldSubset(Delegator delegator, ModelEntity modelEntity, GenericEntity sourceFieldsValue, Collection<String> fieldNames) {
-        assertIsMutable();
-        if (modelEntity == null) {
-            throw new IllegalArgumentException("Cannot create a GenericEntity with a null modelEntity parameter");
-        }
-        this.modelEntity = modelEntity;
-        this.entityName = modelEntity.getEntityName();
-        this.delegatorName = delegator.getDelegatorName();
-        this.internalDelegator = delegator;
-        this.observable = new Observable();
         if (fieldNames != null) {
-            for(String fieldName : fieldNames) {
-                this.fields.put(fieldName, sourceFieldsValue.fields.get(fieldName));
+            if (fieldNames instanceof Iterable) {
+                for(String fieldName : UtilGenerics.<Iterable<String>>cast(fieldNames)) {
+                    Object value = fields.get(fieldName);
+                    if (value != null) {
+                        this.fields.put(fieldName, value);
+                    }
+                }
+            } else if (fieldNames instanceof Map) {
+                for(Map.Entry<String, String> fieldNameMap : UtilGenerics.<Map<String, String>>cast(fieldNames).entrySet()) {
+                    if (fieldNameMap.getValue() != null) {
+                        Object value = fields.get(fieldNameMap.getValue());
+                        if (value != null) {
+                            this.fields.put(fieldNameMap.getKey(), value);
+                        }
+                    }
+                }
+            } else {
+                throw new IllegalArgumentException("Invalid initialization field names");
             }
         } else {
-            this.fields.putAll(sourceFieldsValue.fields);
+            this.fields.putAll(fields);
         }
 
         // check some things
@@ -505,6 +529,12 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     public String getPkShortValueString() {
+        try { // SCIPIO: Try single-PK
+            ModelField onlyPk = this.getModelEntity().getOnlyPk();
+            Object pkValue = this.get(onlyPk.getName());
+            return (pkValue != null) ? pkValue.toString() : "null"; // "null" for legacy behavior
+        } catch(IllegalArgumentException e) {
+        }
         StringBuilder sb = new StringBuilder();
         for (ModelField curPk: this.getModelEntity().getPkFieldsUnmodifiable()) {
             if (sb.length() > 0) {
@@ -1204,7 +1234,9 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     public GenericPK getPrimaryKey() {
-        return GenericPK.create(this.getDelegator(), getModelEntity(), getFields(getModelEntity().getPkFieldNames()));
+        // SCIPIO: Unnecessary overhead
+        //return GenericPK.create(this.getDelegator(), getModelEntity(), getFields(getModelEntity().getPkFieldNames()));
+        return GenericPK.create(this.getDelegator(), getModelEntity(), fields, getModelEntity().getPkFieldNames());
     }
 
     /** go through the pks and for each one see if there is an entry in fields to set */
@@ -1360,6 +1392,33 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
             }
         }
         return true;
+    }
+
+    public GenericPK getRelatedOnePk(ModelRelation relation) { // SCIPIO
+        ModelEntity relModelEntity = getDelegator().getModelEntity(relation.getRelEntityName());
+        if (relModelEntity == null) {
+            throw new IllegalStateException("[GenericEntity.getRelatedPk] could not find modelEntity for entityName " + relation.getRelEntityName());
+        }
+        GenericPK pk = GenericPK.createAsFieldSubset(getDelegator(), relModelEntity, this.fields, relation.getRelFieldToFieldNameMap());
+        return (pk.size() == relModelEntity.getPksSize()) ? pk : null;
+    }
+
+    public GenericPK getRelatedOnePk(String relationName) { // SCIPIO
+        return getRelatedOnePk(getModelEntity().getRelation(relationName));
+    }
+
+    public <C extends Collection<M>, M extends Map<String, Object>> C getRelatedOnePksForEntity(C out, String relatedEntityName) { // SCIPIO
+        Iterator<ModelRelation> it = getModelEntity().getRelationsIterator();
+        while(it.hasNext()) {
+            ModelRelation relation = it.next();
+            if (relatedEntityName.equals(relation.getRelEntityName()) && relation.getType().startsWith("one")) {
+                GenericPK pk = getRelatedOnePk(relation);
+                if (pk != null) {
+                    out.add(UtilGenerics.cast(pk));
+                }
+            }
+        }
+        return out;
     }
 
     /** Used to indicate if locking is enabled for this entity

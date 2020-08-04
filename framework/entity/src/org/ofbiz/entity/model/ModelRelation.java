@@ -21,7 +21,9 @@ package org.ofbiz.entity.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -127,6 +129,10 @@ public final class ModelRelation extends ModelChild {
     private final String fullName;
 
     private final String combinedName;
+
+    // SCIPIO
+    private transient Map<String, String> fieldToRelFieldNameMap;
+    private transient Map<String, String> relFieldToFieldNameMap;
 
     private ModelRelation(ModelEntity modelEntity, String description, String type, String title, String relEntityName, String fkName, List<ModelKeyMap> keyMaps, boolean isAutoRelation) {
         super(modelEntity, description);
@@ -311,5 +317,31 @@ public final class ModelRelation extends ModelChild {
         }
 
         return root;
+    }
+
+    public Map<String, String> getFieldToRelFieldNameMap() { // SCIPIO
+        Map<String, String> fieldToRelFieldNameMap = this.fieldToRelFieldNameMap;
+        if (fieldToRelFieldNameMap == null) {
+            fieldToRelFieldNameMap = new LinkedHashMap<>();
+            for(ModelKeyMap keyMap : keyMaps) {
+                fieldToRelFieldNameMap.put(keyMap.getFieldName(), keyMap.getRelFieldName());
+            }
+            fieldToRelFieldNameMap = Collections.unmodifiableMap(fieldToRelFieldNameMap);
+            this.fieldToRelFieldNameMap = fieldToRelFieldNameMap;
+        }
+        return fieldToRelFieldNameMap;
+    }
+
+    public Map<String, String> getRelFieldToFieldNameMap() { // SCIPIO
+        Map<String, String> relFieldToFieldNameMap = this.relFieldToFieldNameMap;
+        if (relFieldToFieldNameMap == null) {
+            relFieldToFieldNameMap = new LinkedHashMap<>();
+            for(ModelKeyMap keyMap : keyMaps) {
+                relFieldToFieldNameMap.put(keyMap.getRelFieldName(), keyMap.getFieldName());
+            }
+            relFieldToFieldNameMap = Collections.unmodifiableMap(relFieldToFieldNameMap);
+            this.relFieldToFieldNameMap = relFieldToFieldNameMap;
+        }
+        return relFieldToFieldNameMap;
     }
 }

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.entity;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,6 +41,13 @@ public class GenericPK extends GenericEntity {
     }
 
     /** Creates new GenericPK from existing Map */
+    public static GenericPK create(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fields, Object fieldNames) { // SCIPIO: fieldNames
+        GenericPK newPK = new GenericPK();
+        newPK.init(delegator, modelEntity, fields, fieldNames);
+        return newPK;
+    }
+
+    /** Creates new GenericPK from existing Map */
     public static GenericPK create(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fields) {
         GenericPK newPK = new GenericPK();
         newPK.init(delegator, modelEntity, fields);
@@ -58,6 +66,16 @@ public class GenericPK extends GenericEntity {
         GenericPK newPK = new GenericPK();
         newPK.init(value);
         return newPK;
+    }
+
+    /** SCIPIO: Creates new GenericValue partially from fields from existing GenericValue with new-to-existing field name mappings, but treated as a "new" instance (not a "copy");
+     * source fields are assumed to already be correct/same types as those on the new value (no type checks).<p>
+     * NOTE: Instance members other than "fields" are treated as a "new" value, not copied from the passed value; this is half-way between
+     * copy constructor and construction from map. Added 2018-10-22. */
+    public static GenericPK createAsFieldSubset(Delegator delegator, ModelEntity modelEntity, Map<String, Object> sourceFieldsValue, Object fieldNames) {
+        GenericPK newValue = new GenericPK();
+        newValue.initAsFieldSubset(delegator, modelEntity, sourceFieldsValue, fieldNames);
+        return newValue;
     }
 
     @Override

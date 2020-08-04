@@ -70,6 +70,10 @@ public class ProductDataReader {
         return getDelegator(dctx).findOne("Product", UtilMisc.toMap("productId", productId), useCache);
     }
 
+    public GenericValue getProduct(DispatchContext dctx, Map<String, ?> pkFields, boolean useCache) throws GenericEntityException {
+        return getDelegator(dctx).findOne("Product", pkFields, useCache);
+    }
+
     public List<GenericValue> getProductAssocFrom(DispatchContext dctx, String productId, Timestamp moment, boolean useCache) throws GenericEntityException {
         return getDelegator(dctx).from("ProductAssoc").where("productId", productId).filterByDate(moment).cache(useCache).queryList();
     }

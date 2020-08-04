@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Caches supplied product-related data from db, mainly used by <code>SolrProductIndexer</code> (SCIPIO).
@@ -34,10 +35,11 @@ public class ProductDataCache extends ProductDataReader {
 
     // TODO: REVIEW: delegation caused complications due to method reuse, to be improved in future; problematic design for extensions
     //protected final ProductDataReader reader;
-    protected Map<String, StoreData> storeCache = new LinkedHashMap<>(); // LinkedHashMap so oldest entries will get removed first
-    protected Map<String, CatalogData> catalogCache = new LinkedHashMap<>();
-    protected Map<String, CategoryData> categoryCache = new LinkedHashMap<>();
-    protected Map<String, ProductData> productCache = new LinkedHashMap<>();
+    // FIXME: LinkedHashMap had to be removed for thread safety but it helped implement oldest-item removal, so this is currently flawed
+    protected Map<String, StoreData> storeCache = new ConcurrentHashMap<>();
+    protected Map<String, CatalogData> catalogCache = new ConcurrentHashMap<>();
+    protected Map<String, CategoryData> categoryCache = new ConcurrentHashMap<>();
+    protected Map<String, ProductData> productCache = new ConcurrentHashMap<>();
     protected Integer maxCacheStores;
     protected Integer maxCacheCatalogs;
     protected Integer maxCacheCategories;
@@ -163,8 +165,17 @@ public class ProductDataCache extends ProductDataReader {
         return product;
     }
 
+    @Override
+    public GenericValue getProduct(DispatchContext dctx, Map<String, ?> pkFields, boolean useCache) throws GenericEntityException {
+        return getProduct(dctx, (String) pkFields.get("productId"), useCache); // TODO: REVIEW: simpler for now
+    }
+
     protected GenericValue getProductSrc(DispatchContext dctx, String productId, boolean useCache) throws GenericEntityException {
         return super.getProduct(dctx, productId, useCache);
+    }
+
+    protected GenericValue getProductSrc(DispatchContext dctx, Map<String, ?> pkFields, boolean useCache) throws GenericEntityException {
+        return super.getProduct(dctx, pkFields, useCache);
     }
 
     @Override

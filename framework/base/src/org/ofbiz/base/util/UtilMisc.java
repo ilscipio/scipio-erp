@@ -516,7 +516,7 @@ public final class UtilMisc {
      * @param obj Object to convert
      * @return int value
      */
-    public static int toInteger(Object obj, int defaultValue) {
+    public static Integer toInteger(Object obj, Integer defaultValue) {
         Integer result = toIntegerObject(obj);
         return result == null ? defaultValue : result;
     }
@@ -551,6 +551,16 @@ public final class UtilMisc {
     public static long toLong(Object obj) {
         Long result = toLongObject(obj);
         return result == null ? 0 : result;
+    }
+
+    /** Converts an <code>Object</code> to a <code>long</code>. Returns
+     * default value if conversion is not possible (SCIPIO).
+     * @param obj Object to convert
+     * @return long value
+     */
+    public static Long toLong(Object obj, Long defaultValue) {
+        Long result = toLongObject(obj);
+        return result == null ? defaultValue : result;
     }
 
     /** Converts an <code>Object</code> to a <code>Long</code>. Returns

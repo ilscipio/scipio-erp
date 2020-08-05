@@ -121,7 +121,7 @@ code package.
         <attribute mode="IN" name="waitSolrReady" optional="true" type="Boolean" default-value="false">
             <description>If true, will wait for Solr to be loaded before running the indexing- see waitSolrReady service</description><!-- Added 2018-02-20 -->
         </attribute>
-        <attribute mode="IN" name="deleteMode" optional="true" type="String" default-value="delete-all-first">
+        <attribute mode="IN" name="deleteMode" optional="true" type="String" default-value="no-delete">
             <description>How old records get cleared from index or not. Supported values:
                 delete-all-first (clears whole index before reindexing, default),
                 no-delete (deleted products will remain in solr index, can use when you know no products have changed since last indexing to minimize impact of reindex)</description><!-- Added 2020-03-12 -->

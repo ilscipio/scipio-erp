@@ -799,16 +799,16 @@ public class SolrDocBuilder {
             Collection<String> catalogIds = getCatalogIds();
             if (productStores.isEmpty()) {
                 if (catalogIds.isEmpty()) {
-                    Debug.logInfo("Solr: Could not determine store for product '" + getProductId() + "'; no catalogs", module);
+                    Debug.logInfo("Could not determine store for product '" + getProductId() + "'; no catalogs", module);
                 } else {
-                    Debug.logInfo("Solr: Could not determine store for product '" + getProductId() + "' from catalogs: " + catalogIds, module);
+                    Debug.logInfo("Could not determine store for product '" + getProductId() + "' from catalogs: " + catalogIds, module);
                 }
             } else {
                 if (SolrUtil.verboseOn()) {
                     if (UtilValidate.isNotEmpty(getRelatedCatalogIds())) {
-                        Debug.logInfo("Solr: Determined store(s) for product '" + getProductId() + "' indirectly (" + getProductStoreIds() + ") from related catalogs: " + catalogIds, module);
+                        Debug.logInfo("Determined store(s) for product '" + getProductId() + "' indirectly (" + getProductStoreIds() + ") from related catalogs: " + catalogIds, module);
                     } else {
-                        Debug.logInfo("Solr: Determined store(s) for product '" + getProductId() + "' directly (" + getProductStoreIds() + ") from catalogs: " + catalogIds, module);
+                        Debug.logInfo("Determined store(s) for product '" + getProductId() + "' directly (" + getProductStoreIds() + ") from catalogs: " + catalogIds, module);
                     }
                 }
             }

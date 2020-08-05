@@ -18,6 +18,7 @@ import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.service.ServiceOptions;
 import org.ofbiz.service.ServiceSyncRegistrations;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.job.JobPoller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ import java.util.stream.Collectors;
 public class EntityIndexer implements Runnable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("entityindexing", "entity.indexer.debug", false);
     /**
      * Maps a data source name (by convention the entity name) and data element ID (primary key) to an indexer. The
      * The indexer refreshes the data with hooks using {@link IndexingHookHandler}.
@@ -327,7 +329,7 @@ public class EntityIndexer implements Runnable {
                 // commit if buffer full
                 if (entries.size() > 0) {
                     lastReadTime = entries.get(0).getEntryTime();
-                    readDocuments(dctx, context, entries, docs, docsToRemove);
+                    readDocs(dctx, context, entries, docs, docsToRemove);
                     entries.clear();
                 } else {
                     try {
@@ -344,17 +346,18 @@ public class EntityIndexer implements Runnable {
                 docsToRemove.clear();
             }
         }
-
-        Debug.logInfo("Finished runs for entity indexer [" + getName() + "]", module);
     }
 
     public void tryRun(DispatchContext dctx, Map<String, Object> context) {
         if (runSemaphore.tryAcquire()) {
-            Debug.logInfo("Starting entity indexing run for " + this, module);
+            Debug.logInfo("Entity indexer [" + getName() + "]: beginning run (queued: " + getQueue().size() + ")", module);
             try {
                 run(dctx, context);
             } finally {
                 runSemaphore.release();
+                if (isDebug()) {
+                    Debug.logInfo("Entity indexer [" + getName() + "]: finished run", module);
+                }
             }
         }
     }
@@ -366,7 +369,7 @@ public class EntityIndexer implements Runnable {
     /**
      * Main processing method, may be overridden; default implementation dispatches documents to consumers.
      */
-    public Object readDocuments(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries, List<DocEntry> docs, Set<Entry> docsToRemove) {
+    public Object readDocs(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries, List<DocEntry> docs, Set<Entry> docsToRemove) {
         for(Entry entry : entries) {
             if (entry.isExplicitRemove()) {
                 docsToRemove.add(entry);
@@ -378,10 +381,10 @@ public class EntityIndexer implements Runnable {
         return null;
     }
 
-    public Object readDocumentsAndCommit(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries) { // special cases/reuse
+    public Object readDocsAndCommit(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries) { // special cases/reuse
         List<DocEntry> docs = new ArrayList<>(getBufSize());
         Set<Entry> docsToRemove = new LinkedHashSet<>(getBufSize());
-        Object result = readDocuments(dctx, context, entries, docs, docsToRemove);
+        Object result = readDocs(dctx, context, entries, docs, docsToRemove);
         if (docs.size() > 0 || docsToRemove.size() > 0) {
             commit(dctx, context, docs, docsToRemove);
         }
@@ -730,7 +733,9 @@ public class EntityIndexer implements Runnable {
                         "userLogin", dctx.getDelegator().from("UserLogin").where("userLoginId", "system").cache().queryOneSafe(),
                         "docs", consumerDocs, "docsToRemove", consumerDocsToRemove);
                 if (consumer.isAsync()) {
-                    dctx.getDispatcher().runAsync(consumer.getServiceName(), servCtx, consumer.isPersist());
+                    dctx.getDispatcher().runAsync(consumer.getServiceName(), servCtx,
+                            ServiceOptions.async(consumer.isPersist()).priority(consumer.getPriority()));
+                    Debug.logInfo("Jobs after starting " + consumer.getServiceName() + ": " + JobPoller.getInstance().getPoolState(true, false), module);
                 } else {
                     Map<String, Object> servResult = dctx.getDispatcher().runSync(consumer.getServiceName(), servCtx);
                     if (ServiceUtil.isError(servResult)) {
@@ -784,11 +789,12 @@ public class EntityIndexer implements Runnable {
             Debug.logError("Invalid entity indexing consumer configuration: " + props, module);
             return null;
         }
-        return makeConsumer(name, UtilMisc.toInteger(props.get("sequenceNum"), 100), serviceName, topics, mode, persist);
+        long priority = UtilMisc.toLong(props.get("priority"), 99L);
+        return makeConsumer(name, UtilMisc.toInteger(props.get("sequenceNum"), 100), serviceName, topics, mode, persist, priority);
     }
 
-    protected Consumer makeConsumer(String name, int sequenceNum, String serviceName, Set<String> topics, String mode, boolean persist) {
-        return new Consumer(name, sequenceNum, serviceName, topics, mode, persist);
+    protected Consumer makeConsumer(String name, int sequenceNum, String serviceName, Set<String> topics, String mode, boolean persist, long priority) {
+        return new Consumer(name, sequenceNum, serviceName, topics, mode, persist, priority);
     }
 
     protected static class Consumer {
@@ -798,14 +804,16 @@ public class EntityIndexer implements Runnable {
         private final Set<String> topics;
         private final String mode;
         private final boolean persist;
+        private final long priority;
 
-        protected Consumer(String name, int sequenceNum, String serviceName, Set<String> topics, String mode, boolean persist) {
+        protected Consumer(String name, int sequenceNum, String serviceName, Set<String> topics, String mode, boolean persist, long priority) {
             this.name = name;
             this.sequenceNum = sequenceNum;
             this.serviceName = serviceName;
             this.topics = (topics != null) ? Collections.unmodifiableSet(new LinkedHashSet<>(topics)) : Collections.emptySet();
             this.mode = mode;
             this.persist = persist;
+            this.priority = priority;
         }
 
         public String getName() {
@@ -849,14 +857,20 @@ public class EntityIndexer implements Runnable {
             return false;
         }
 
+        public long getPriority() {
+            return priority;
+        }
+
         @Override
         public String toString() {
             return "{" +
                     "name='" + name + '\'' +
+                    ", sequenceNum=" + sequenceNum +
                     ", serviceName='" + serviceName + '\'' +
                     ", topics=" + topics +
                     ", mode='" + mode + '\'' +
                     ", persist=" + persist +
+                    ", priority=" + priority +
                     '}';
         }
     }
@@ -928,9 +942,28 @@ public class EntityIndexer implements Runnable {
                 servCtx.put("entitiesToIndex", entitiesToIndex);
                 regs.addCommitService(dctx, "scheduleEntityIndexing", null, servCtx, false, false);
             }
-            String msg = "Scheduled transaction commit entity indexing for " + entries.size() + " entries of entity " + indexer.getEntityName();
-            Debug.logInfo("scheduleEntityIndexing: " + msg, module);
-            return ServiceUtil.returnSuccess(msg);
+            //StringBuilder pkList = new StringBuilder();
+            //int pkCount = 0;
+            //for(Entry entry : entries) {
+            //    if (pkList.length() > 0) {
+            //        pkList.append(", ");
+            //    }
+            //    pkList.append(entry.getShortPk());
+            //    pkCount++;
+            //    if (pkCount >= SolrProductSearch.maxLogIds) {
+            //        break;
+            //    }
+            //}
+            //if (entries.size() > SolrProductSearch.maxLogIds) {
+            //    pkList.append("...");
+            //}
+
+            // This looks redundant because the queue below already does it and accumulates them
+            //String msg = "Scheduled transaction commit entity indexing for " + entries.size() + " entries of entity " + indexer.getEntityName()
+            //        + ": " + pkList;
+            //Debug.logInfo("scheduleEntityIndexing: " + msg, module);
+            return ServiceUtil.returnSuccess("Scheduled transaction commit entity indexing for " + entries.size() +
+                    " entries of entity " + indexer.getEntityName());
         } catch (Exception e) {
             final String errMsg = "Could not schedule transaction global-commit entity indexing";
             Debug.logError(e, "scheduleEntityIndexing: " + errMsg, module);
@@ -964,11 +997,30 @@ public class EntityIndexer implements Runnable {
                 }
             }
             int scheduled = 0;
+            StringBuilder pkList = new StringBuilder();
+            int pkCount = 0;
             for(Map.Entry<String, Map<GenericPK, Entry>> indexerEntry : entitiesToIndex.entrySet()) {
                 EntityIndexer targetIndexer = getIndexer(indexerEntry.getKey());
+                if (pkList.length() > 0) {
+                    pkList.append("; ");
+                }
+                pkList.append(targetIndexer.getEntityName());
+                pkList.append(": ");
+                boolean firstPk = true;
                 for(Entry entry : indexerEntry.getValue().values()) {
                     targetIndexer.add(entry);
+                    if (pkCount < SolrProductSearch.getMaxLogIds()) {
+                        if (!firstPk) {
+                            pkList.append(", ");
+                        }
+                        pkList.append(entry.getShortPk());
+                        pkCount++;
+                    } else if (pkCount == SolrProductSearch.getMaxLogIds()) {
+                        pkList.append("...");
+                        pkCount++;
+                    }
                     scheduled++;
+                    firstPk = false;
                 }
                 if (!targetIndexer.isRunning()) {
                     // Start the async service to create a new thread and prioritize in system at same time
@@ -977,7 +1029,7 @@ public class EntityIndexer implements Runnable {
                             ServiceOptions.asyncMemory().priority(targetIndexer.getRunServicePriority()));
                 }
             }
-            String msg = "Queued entity indexing for " + scheduled + " entries";
+            String msg = "Queued entity indexing for " + scheduled + " entries: " + pkList;
             Debug.logInfo("scheduleEntityIndexing: " + msg, module);
             return ServiceUtil.returnSuccess(msg);
         } catch (Exception e) {
@@ -1013,5 +1065,9 @@ public class EntityIndexer implements Runnable {
             }
         }
         return ServiceUtil.returnSuccess();
+    }
+
+    public static boolean isDebug() {
+        return DEBUG;
     }
 }

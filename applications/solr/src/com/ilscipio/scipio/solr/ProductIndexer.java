@@ -50,12 +50,12 @@ public class ProductIndexer extends EntityIndexer {
     }
 
     @Override
-    public IndexingStatus readDocumentsAndCommit(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries) {
-        return (IndexingStatus) super.readDocumentsAndCommit(dctx, context, entries);
+    public IndexingStatus readDocsAndCommit(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries) {
+        return (IndexingStatus) super.readDocsAndCommit(dctx, context, entries);
     }
 
     @Override
-    public IndexingStatus readDocuments(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries, List<DocEntry> docs, Set<Entry> docsToRemove) {
+    public IndexingStatus readDocs(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries, List<DocEntry> docs, Set<Entry> docsToRemove) {
         SolrDocBuilder docBuilder = SolrDocBuilder.getInstance(dctx, context);
 
         // Eliminate duplicates and read only the last Entry (action) for each product
@@ -73,7 +73,7 @@ public class ProductIndexer extends EntityIndexer {
         IndexingHookHandler.HookType hookType = IndexingHookHandler.HookType.ECA;
         List<? extends IndexingHookHandler> hookHandlers = IndexingHookHandler.Handlers.getHookHandlers(
                 IndexingHookHandler.Handlers.getHookHandlerFactories(hookType));
-        String logPrefix = "";
+        String logPrefix = "readDocs: ";
         IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, hookType, docBuilder, expandedProducts.size(), getBufSize(), logPrefix);
         if (expandResult.isError()) { // for expandProductsForIndexing above - need to return status
             status.registerGeneralFailure("Error expanding products for indexing: " + ServiceUtil.getErrorMessage(expandResult.getErrorResult()), null);

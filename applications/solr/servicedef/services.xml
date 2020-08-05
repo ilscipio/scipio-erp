@@ -174,7 +174,8 @@ code package.
         <description>Aborts rebuildSolrIndex if possible</description>
     </service>
 
-    <service name="commitToSolr" engine="java" transaction-timeout="7200" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="commitToSolr">
+    <service name="commitToSolr" engine="java" transaction-timeout="7200" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="commitToSolr" log="quiet"
+        use-transaction="false">
         <description>Solr commit service, chained to entity indexing</description>
         <implements service="entityIndexingConsumer"/>
     </service>

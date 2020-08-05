@@ -87,7 +87,7 @@ public abstract class SolrProductSearch {
             if (UtilValidate.isEmpty(entries)) {
                 return ServiceUtil.returnError("Missing product");
             }
-            IndexingStatus status = indexer.readDocumentsAndCommit(dctx, context, entries);
+            IndexingStatus status = indexer.readDocsAndCommit(dctx, context, entries);
             return status.isSuccess() ? ServiceUtil.returnSuccess() : ServiceUtil.returnError("Error committing documents to solr");
         } catch(Exception e) {
             Debug.logError(e, "Solr: removeFromSolr: " + e.getMessage(), module);
@@ -147,7 +147,7 @@ public abstract class SolrProductSearch {
                             return addResult;
                         }
                     } catch (Exception e) {
-                        Debug.logError(e, "Error committing " + docs.size() + " documents to solr: " + e.getMessage(), module);
+                        Debug.logError(e, "Solr: commit: Error committing " + docs.size() + " documents to solr: " + e.getMessage(), module);
                         return ServiceUtil.returnError("Error committing " + docs.size() + " documents to solr: " + e.toString());
                     }
                 }
@@ -159,7 +159,7 @@ public abstract class SolrProductSearch {
                             return addResult;
                         }
                     } catch (Exception e) {
-                        Debug.logError(e, "Error removing " + docsToRemove.size() + " documents from solr: " + e.getMessage(), module);
+                        Debug.logError(e, "Solr: commit: Error removing " + docsToRemove.size() + " documents from solr: " + e.getMessage(), module);
                         return ServiceUtil.returnError("Error committing " + docsToRemove.size() + " documents from solr: " + e.toString());
                     }
                 }
@@ -167,22 +167,23 @@ public abstract class SolrProductSearch {
                 result = ServiceUtil.returnSuccess();
             } else {
                 if (SolrUtil.verboseOn()) {
-                    Debug.logInfo("commitToSolr: Solr webapp not available; skipping indexing for product", module);
+                    Debug.logInfo("Solr: commit: Solr webapp not available; skipping indexing for product", module);
                 }
                 result = ServiceUtil.returnSuccess();
                 skippedDueToWebappInit = true;
             }
         } else {
             if (SolrUtil.verboseOn()) {
-                Debug.logInfo("commitToSolr: Solr ECA indexing disabled; skipping indexing for product", module);
+                Debug.logInfo("Solr: commit: Solr ECA indexing disabled; skipping indexing for product", module);
             }
             result = ServiceUtil.returnSuccess();
         }
+        /* TODO: REVIEW: for now this causes more complications than it solves
         if (!manual && !indexed && UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.enabled", false)) {
             boolean markDirtyNoWebappCheck = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.eca.markDirty.noWebappCheck", false);
             if (!(markDirtyNoWebappCheck && skippedDueToWebappInit)) {
                 if (SolrUtil.verboseOn()) {
-                    Debug.logInfo("commitToSolr: Did not update index for product; marking SOLR data as dirty (old)", module);
+                    Debug.logInfo("Solr: commit: Did not update index for product; marking SOLR data as dirty (old)", module);
                 }
                 // 2019-10-31: Performance fix/hack: if it's already marked old in the entity cache, do not bother to update it; this is important for operations
                 // that affect many products. This could theoretically cause issue in load-balanced setups, but this is best-effort anyhow.
@@ -191,6 +192,7 @@ public abstract class SolrProductSearch {
                 }
             }
         }
+         */
         return result;
     }
 
@@ -294,7 +296,7 @@ public abstract class SolrProductSearch {
                 query.append(SolrExprUtil.escapeTermFull(id));
             }
             if (Debug.infoOn()) {
-                Debug.logInfo("Solr: Removing " + docsToRemove.size() + " products from index: " +
+                Debug.logInfo("Solr: commit: Removing " + docsToRemove.size() + " products from index: " +
                         (query.length() > maxLogIdsSize ? query.substring(0, maxLogIdsSize) : query), module);
             }
             client.deleteByQuery("id:(" + query + ")");
@@ -304,7 +306,7 @@ public abstract class SolrProductSearch {
             result.put("numFailures", 0);
             return result;
         } catch (Exception e) {
-            Debug.logError(e, "Solr: Error removing " + docsToRemove.size() + " products (" +
+            Debug.logError(e, "Solr: commit: Error removing " + docsToRemove.size() + " products (" +
                     (query.length() > maxLogIdsSize ? query.substring(0, maxLogIdsSize) : query) + ") from solr index: " + e.getMessage(), module);
             return ServiceUtil.returnError("Error removing " + docsToRemove.size() + " products (" +
                     (query.length() > maxLogIdsSize ? query.substring(0, maxLogIdsSize) : query) + ") from solr index: " + e.toString());
@@ -1796,5 +1798,13 @@ public abstract class SolrProductSearch {
             Debug.logError(e, "Solr: Error removing SystemProperty " + property, module);
             return ServiceUtil.returnError("Error removing SystemProperty " + property + ": " + e.getMessage());
         }
+    }
+
+    public static int getMaxLogIds() {
+        return maxLogIds;
+    }
+
+    public static int getMaxLogIdsSize() {
+        return maxLogIdsSize;
     }
 }

@@ -682,7 +682,7 @@ public class ServiceDispatcher {
      */
     public JobInfo runAsync(String localName, ModelService service, Map<String, ? extends Object> params, GenericRequester requester, AsyncOptions serviceOptions) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         JobInfo job; // SCIPIO
-        if (Debug.timingOn()) {
+        if (Debug.timingOn() && service.getLogLevel() != ModelService.LogLevel.QUIET) { // SCIPIO: not if quiet, this is mostly useless anyway
             UtilTimer.timerLog(localName + " / " + service.name, "ASync service started...", module);
         }
         if (Debug.verboseOn() || service.debug) {
@@ -788,11 +788,11 @@ public class ServiceDispatcher {
                     job = new JobInfo.UnscheduledJobInfo(service.name, "in-validate service ECA failed: " + ServiceUtil.getErrorMessage(result));
                 }
 
-                if (Debug.timingOn()) {
+                if (Debug.timingOn() && service.getLogLevel() != ModelService.LogLevel.QUIET) { // SCIPIO: not if quiet, this is mostly useless anyway
                     UtilTimer.closeTimer(localName + " / " + service.name, "ASync service finished...", module);
                 }
             } catch (Throwable t) {
-                if (Debug.timingOn()) {
+                if (Debug.timingOn() && service.getLogLevel() != ModelService.LogLevel.QUIET) { // SCIPIO: not if quiet, this is mostly useless anyway
                     UtilTimer.closeTimer(localName + " / " + service.name, "ASync service failed...", module);
                 }
                 String errMsg = "Service [" + service.name + "] threw an unexpected exception/error";

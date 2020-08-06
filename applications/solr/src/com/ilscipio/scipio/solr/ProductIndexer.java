@@ -100,9 +100,14 @@ public class ProductIndexer extends EntityIndexer {
                     status.registerHookFailure(null, e, hookHandler, "beginBatch");
                 }
             }
-            if (Debug.infoOn()) {
-                Debug.logInfo(logPrefix+"Reading products " + status.getIndexProgressString() + " for indexing", module);
+            /* caller gives better for now
+            if (isDebug()) {
+                String progressStr = status.getIndexProgressString();
+                if (progressStr != null) {
+                    Debug.logInfo(logPrefix + "Reading products " + status.getIndexProgressString() + " for indexing", module);
+                }
             }
+             */
             int numLeft = status.getBufSize();
             while ((status.getBufSize() <= 0 || numLeft > 0) && prodIt.hasNext()) {
                 docsConsumed++;
@@ -189,7 +194,7 @@ public class ProductIndexer extends EntityIndexer {
         if (status.getGeneralFailures() > 0) {
             Debug.logError("Problems occurred processing product data: failures: " + status.getGeneralFailures() + "; success: " + status.getNumDocs(), module);
         } else {
-            Debug.logInfo("Processing product data: failures: " + status.getGeneralFailures() + "; success: " + status.getNumDocs(), module);
+            Debug.logInfo("Processing product data: success: " + status.getNumDocs() + "; fail: " + status.getGeneralFailures(), module);
         }
 
         return status;

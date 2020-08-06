@@ -176,7 +176,7 @@ code package.
 
     <service name="commitToSolr" engine="java" transaction-timeout="7200" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="commitToSolr" log="quiet"
         use-transaction="false">
-        <description>Solr commit service, chained to entity indexing</description>
+        <description>Solr commit service, chained to entity indexing to receive documents</description>
         <implements service="entityIndexingConsumer"/>
     </service>
 
@@ -200,7 +200,7 @@ code package.
         <override name="action" default-value="remove"/>
     </service>
 
-    <!-- NOTE: Now an alias for scheduleProductIndexing -->
+    <!-- NOTE: ProductIndexingNow an alias for scheduleProductIndexing, also triggers non-solr product updates, left for compatibility, will not be removed -->
     <service name="registerUpdateToSolr" engine="java" location="com.ilscipio.scipio.solr.EntityIndexer" invoke="scheduleProductIndexing"
         use-transaction="false" log="quiet" log-eca="quiet"><!-- must not force transaction; special behavior -->
         <description>Registers (queues) a product add or removal to/from solr index by product instance or by productId - intended for use with ECAs/SECAs

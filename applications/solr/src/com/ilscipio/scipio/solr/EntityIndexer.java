@@ -66,6 +66,7 @@ public class EntityIndexer implements Runnable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("entityindexing", "entity.indexer.debug", false);
+    private static final int STATS_INTERVAL = UtilProperties.getPropertyAsInteger("entityindexing", "entity.indexer.log.stats.interval", -1);
     /**
      * Maps a data source name (by convention the entity name) and data element ID (primary key) to an indexer. The
      * The indexer refreshes the data with hooks using {@link IndexingHookHandler}.
@@ -88,7 +89,7 @@ public class EntityIndexer implements Runnable {
     protected final String entityName;
     protected final Queue<Entry> queue;
     protected ModelEntity modelEntity;
-    protected final Semaphore runSemaphore = new Semaphore(1);
+    protected final Semaphore runSemaphore;
     protected Map<String, ?> properties;
     protected List<Consumer> consumers;
     protected Long runServicePriority;
@@ -97,6 +98,7 @@ public class EntityIndexer implements Runnable {
     protected int maxRunTime;
     protected int bufSize;
     protected int sleepTime;
+    protected long lastRunStatsTime = 0;
 
     protected EntityIndexer(String name, Map<String, ?> properties, Queue<Entry> queue) {
         if (properties == null) {
@@ -114,6 +116,8 @@ public class EntityIndexer implements Runnable {
         this.maxRunTime = UtilMisc.toInteger(properties.get("maxRunTime"), 60000);
         this.bufSize = UtilMisc.toInteger(properties.get("bufSize"), 1000);
         this.sleepTime = UtilMisc.toInteger(properties.get("sleepTime"), 500);
+        this.runSemaphore = new Semaphore(1);
+        this.lastRunStatsTime = 0;
     }
 
     public static class Factory {
@@ -317,6 +321,12 @@ public class EntityIndexer implements Runnable {
         List<DocEntry> docs = new ArrayList<>(getBufSize());
         Set<Entry> docsToRemove = new LinkedHashSet<>(getBufSize());
 
+        int processedEntries = 0;
+        int totalProcessedEntries = 0;
+        int oldQueueSize = getQueue().size();
+        int docsCommitted = 0;
+        int docsRemoved = 0;
+
         // Read entries up to maxRunTime until there are no more or as long as elements were read but the buffer is still waiting for more
         while (((System.currentTimeMillis()) - startTime) < getMaxRunTime()) {
             // Gather the queue as long as new elements become available or wait briefly if flush time not reached
@@ -329,6 +339,26 @@ public class EntityIndexer implements Runnable {
                 // commit if buffer full
                 if (entries.size() > 0) {
                     lastReadTime = entries.get(0).getEntryTime();
+                    if (Debug.infoOn()) {
+                        StringBuilder pkList = new StringBuilder();
+                        int pkCount = 0;
+                        for(Entry entry : entries) {
+                            if (pkCount > 0) {
+                                pkList.append(", ");
+                            }
+                            pkList.append(entry.getShortPk());
+                            pkCount++;
+                            if (pkCount >= SolrProductSearch.getMaxLogIds()) {
+                                break;
+                            }
+                        }
+                        if (entries.size() > SolrProductSearch.getMaxLogIds()) {
+                            pkList.append("...");
+                        }
+                        Debug.logInfo("Reading docs " + (processedEntries + 1) + "-" + (processedEntries + entries.size()) + " [" + getName() + "]: " + pkList, module);
+                    }
+                    processedEntries += entries.size();
+                    totalProcessedEntries += entries.size();
                     readDocs(dctx, context, entries, docs, docsToRemove);
                     entries.clear();
                 } else {
@@ -342,8 +372,19 @@ public class EntityIndexer implements Runnable {
             }
             if (!docs.isEmpty() || !docsToRemove.isEmpty()) {
                 commit(dctx, context, docs, docsToRemove);
+                docsCommitted += docs.size();
+                docsRemoved += docsToRemove.size();
                 docs.clear();
                 docsToRemove.clear();
+                processedEntries = 0;
+            }
+        }
+        if (getStatsInterval() >= 0) {
+            long nowTime = System.currentTimeMillis();
+            if ((nowTime - lastRunStatsTime) > getStatsInterval()) {
+                lastRunStatsTime = nowTime;
+                Debug.logInfo("Entity indexer [" + getName() + "] run doc stats: committed=" + docsCommitted + ", removed=" + docsRemoved +
+                        ", entries=" + totalProcessedEntries + ", runTime=" + (nowTime - startTime) + "ms", module);
             }
         }
     }
@@ -735,7 +776,7 @@ public class EntityIndexer implements Runnable {
                 if (consumer.isAsync()) {
                     dctx.getDispatcher().runAsync(consumer.getServiceName(), servCtx,
                             ServiceOptions.async(consumer.isPersist()).priority(consumer.getPriority()));
-                    Debug.logInfo("Jobs after starting " + consumer.getServiceName() + ": " + JobPoller.getInstance().getPoolState(true, false), module);
+                    //Debug.logInfo("Jobs after starting " + consumer.getServiceName() + ": " + JobPoller.getInstance().getPoolState(false, true, 16), module);
                 } else {
                     Map<String, Object> servResult = dctx.getDispatcher().runSync(consumer.getServiceName(), servCtx);
                     if (ServiceUtil.isError(servResult)) {
@@ -775,7 +816,7 @@ public class EntityIndexer implements Runnable {
         String serviceName = (String) props.get("service");
         Object topicsObj = props.get("topics");
         String mode = (String) props.get("mode");
-        boolean persist = UtilMisc.booleanValue(props.get("persist"));
+        boolean persist = UtilMisc.booleanValue(props.get("persist"), false);
         Set<String> topics = null;
         if (topicsObj instanceof Collection) {
             topics = UtilGenerics.cast(topicsObj);
@@ -1069,5 +1110,9 @@ public class EntityIndexer implements Runnable {
 
     public static boolean isDebug() {
         return DEBUG;
+    }
+
+    public static int getStatsInterval() {
+        return STATS_INTERVAL;
     }
 }

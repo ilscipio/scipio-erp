@@ -172,19 +172,31 @@ public final class JobPoller implements ServiceConfigListener {
      * Returns a <code>Map</code> containing <code>JobPoller</code> statistics including task list.
      */
     public Map<String, Object> getPoolState() {
-        return getPoolState(true, true);
+        return getPoolState(true, true, null);
     }
 
     /**
      * Returns a <code>Map</code> containing <code>JobPoller</code> statistics with optional queue task list and queue stats (SCIPIO).
      */
     public Map<String, Object> getPoolState(boolean includeQueueTaskStats, boolean includeTaskList) {
+        return getPoolState(includeQueueTaskStats, includeTaskList, null);
+    }
+
+    /**
+     * Returns a <code>Map</code> containing <code>JobPoller</code> statistics with optional queue task list and queue stats (SCIPIO).
+     */
+    public Map<String, Object> getPoolState(boolean includeQueueTaskStats, boolean includeTaskList, Integer maxTasks) {
         Map<String, Object> poolState = getGeneralPoolState(); // SCIPIO: Refactored
         if (!includeQueueTaskStats) {
             if (includeTaskList) {
                 List<Map<String, Object>> taskList = new ArrayList<>();
+                int index = 0;
                 for (Runnable task : executor.getQueue()) {
                     taskList.add(((Job) task).toTaskInfoMap()); // SCIPIO: Refactored
+                    index++;
+                    if (maxTasks != null && index >= maxTasks) {
+                        break;
+                    }
                 }
                 poolState.put("taskList", taskList);
             }
@@ -217,7 +229,7 @@ public final class JobPoller implements ServiceConfigListener {
                         stats.lastQueueIndex = index;
                     }
                 }
-                if (includeTaskList) {
+                if (includeTaskList && (maxTasks == null || index < maxTasks)) {
                     taskList.add(job.toTaskInfoMap()); // SCIPIO: Refactored
                 }
                 index++;
@@ -318,7 +330,7 @@ public final class JobPoller implements ServiceConfigListener {
     }
 
     protected String toLogPoolConfigStr(boolean verbose) { // SCIPIO: Debug logging
-        return "; config: " + getThreadPoolConfigMap() + "; state: " + getPoolState(true, verbose);
+        return "; config: " + getThreadPoolConfigMap() + "; state: " + getPoolState(true, verbose, null);
     }
 
     @Override

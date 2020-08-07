@@ -53,8 +53,6 @@ code package.
         <description>Registers product ID or values for indexing queueing at the end of the transaction or in global queue
             immediately if no transaction or requested. Replaces registerUpdateToSolr.</description>
         <implements service="scheduleEntityIndexing"/>
-        <override name="entityName" optional="true" default-value="Product"/>
-        <override name="idField" type="String" optional="true" default-value="productId"/>
         <attribute mode="IN" name="productId" optional="true" type="String"/>
         <attribute mode="IN" name="updateVariants" optional="true" type="Boolean" default-value="false">
             <description>If true, also update the variant products immediately associated to this one (added 2018-07-19).
@@ -72,6 +70,8 @@ code package.
             <description>If true, also update the virtual product associated to this one (added 2018-07-25), and its virtuals, etc.
                 (NOTE: ignored if effective action is product removal)</description>
         </attribute>
+        <override name="entityName" optional="true" default-value="Product"/>
+        <override name="idField" type="String" optional="true" default-value="productId"/>
     </service>
 
     <!-- ========================================================= -->

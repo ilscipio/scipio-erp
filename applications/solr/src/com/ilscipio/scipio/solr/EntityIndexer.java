@@ -18,13 +18,13 @@ import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.service.ServiceOptions;
 import org.ofbiz.service.ServiceSyncRegistrations;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.job.JobPoller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 /**
- * Implements Solr ECA, manual and scripted solr reindexing through the registerUpdateToSolr service.
+ * Implements Solr ECA, manual and scripted solr reindexing through the scheduleEntityIndexing service.
  *
  * <p>This is a replacement for the legacy hook system {@link IndexingHookHandler} as EntityIndexer uses callback
  * async services as consumers instead of hooks, but IndexingHookHandler is still in use for now because the handlers are reusable.</p>
@@ -278,8 +278,9 @@ public class EntityIndexer implements Runnable {
     }
 
     public int poll(List<Entry> entries, int max) {
+        int count;
         if (getQueue() instanceof PriorityBlockingQueue) {
-            return ((PriorityBlockingQueue<Entry>) getQueue()).drainTo(entries, max);
+            count = ((PriorityBlockingQueue<Entry>) getQueue()).drainTo(entries, max);
         } else {
             for(int i = 0; i < max; i++) {
                 Entry entry = getQueue().poll();
@@ -288,8 +289,28 @@ public class EntityIndexer implements Runnable {
                 }
                 entries.add(entry);
             }
-            return max;
+            count = max;
         }
+        // TODO: optimization: the entries are grouped by PK, so the last ones can get cut off, for now this will complicate
+        //  because have to read the queue twice and in between another element can be added
+        /*
+        // Consume as many sequential duplicate PKs as possible because the last batch of same-id-ordered entries may get cut in half.
+        Set<Entry> pks = null;
+        while(true) {
+            Entry entry = getQueue().peek();
+            if (entry == null) {
+                break;
+            }
+            if (pks == null) {
+                // NOTE: this uses the implicit pk equals/hashcode for duplicates, not perfect
+                pks = new HashSet<>(entries);
+            }
+            if (!pks.contains(entry)) {
+
+            }
+        }
+        */
+        return count;
     }
 
     public int getBufSize() {

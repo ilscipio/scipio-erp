@@ -26,7 +26,7 @@ import java.util.Set;
 
 /**
  * Special Product-focused EntityIndexer that produces Solr documents that entity indexing consumers can convert and
- * commit to their data sources.
+ * commit to their data sources. Invoked by scheduleProductIndexing service.
  * Instances are global; {@link SolrDocBuilder} is a local worker that holds dispatch context.
  */
 public class ProductIndexer extends EntityIndexer {

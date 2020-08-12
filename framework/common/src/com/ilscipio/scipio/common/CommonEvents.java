@@ -27,6 +27,8 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 
+import java.util.Objects;
+
 /**
  * Common Events
  */
@@ -42,20 +44,22 @@ public class CommonEvents {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String sysmsgId = request.getParameter("scipioSysMsgId");
-        if(userLogin!=null && UtilValidate.isNotEmpty(sysmsgId)){
+        if(userLogin!=null && UtilValidate.isNotEmpty(sysmsgId) && userLogin.get("partyId") != null){
             try {
-                GenericValue systemMessage = null;
-                systemMessage = EntityQuery.use(delegator).from("SystemMessages").where("messageId", sysmsgId,"toPartyId",userLogin.get("partyId")).queryOne();
+                GenericValue systemMessage = EntityQuery.use(delegator).from("SystemMessages").where("messageId", sysmsgId).queryOne();
                 if (systemMessage != null) {
-                    systemMessage.put("isRead", "Y");
-                    systemMessage.store();
+                    if (Objects.equals(userLogin.get("partyId"), systemMessage.get("toPartyId"))) {
+                        systemMessage.put("isRead", "Y");
+                        systemMessage.store();
+                    } else {
+                        Debug.logError("SystemMessages [" + sysmsgId + "] does not belong to party [" +
+                                userLogin.get("partyId") + "]", module);
+                    }
                 }
              } catch (Exception e) {
                  Debug.logWarning(e, "Problem updating systemMessage", module);
              }
-
         }
-
         return "success";
     }
 }

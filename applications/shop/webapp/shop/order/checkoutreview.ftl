@@ -30,7 +30,7 @@ code package.
   <@render resource="component://shop/widget/OrderScreens.xml#orderheader" />
   <@render resource="component://shop/widget/OrderScreens.xml#orderitems" />
 
-  <#if paymentMethodType.paymentMethodTypeId == "EXT_STRIPE">
+  <#if "EXT_STRIPE" == (paymentMethodType.paymentMethodTypeId)!>
     <#assign pk = Static["com.ilscipio.scipio.accounting.payment.stripe.StripeHelper"].getPublishableKey(request)!>
     <#assign stripeIntegrationMode = Static["com.ilscipio.scipio.accounting.payment.stripe.StripeHelper"].getIntegrationMode(request)!>
     <#assign stripePaymentIntent = sessionAttributes[Static["com.ilscipio.scipio.accounting.payment.stripe.StripeHelper"].STRIPE_PAYMENT_INTENT]!>

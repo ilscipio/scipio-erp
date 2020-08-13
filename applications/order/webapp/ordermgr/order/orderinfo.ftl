@@ -40,7 +40,7 @@ code package.
             
               <li>${loopStatusItem.get("description",locale)} <#if orderHeaderStatus.statusDatetime?has_content>- <@formattedDateTime date=orderHeaderStatus.statusDatetime defaultVal="0000-00-00 00:00:00"/></#if>
                       &nbsp;
-              ${uiLabelMap.CommonBy} - <#--${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userlogin.getString("partyId"), true)}--> [${orderHeaderStatus.statusUserLogin}]</li>
+              <#if orderHeaderStatus.statusUserLogin?has_content>${uiLabelMap.CommonBy} - <#--${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, userlogin.getString("partyId"), true)}--> [${orderHeaderStatus.statusUserLogin}]</#if></li>
             </#list>
           </ul>
         </#if>

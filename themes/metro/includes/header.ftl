@@ -280,6 +280,9 @@ code package.
   <#assign logoLinkURL = "${layoutSettings.commonHeaderImageLinkUrl}">
 </#if>
 <#assign organizationLogoLinkURL = "${layoutSettings.organizationLogoLinkUrl!}">
+<#if cmsPage?has_content && webSiteId?has_content && !(cmsPage.getPrimaryPathIndexable(webSiteId)!true)>
+    <meta name="ROBOTS" content="NOINDEX,FOLLOW" />
+</#if>
 <body class="<#if activeApp?has_content>app-${activeApp}</#if><#if parameters._CURRENT_VIEW_?has_content> page-${parameters._CURRENT_VIEW_!}</#if> <#if userLogin??>page-auth<#else>page-noauth</#if>">
 
 <div class="off-canvas-wrap" data-offcanvas id="body-content">

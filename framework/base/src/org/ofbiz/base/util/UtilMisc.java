@@ -2058,7 +2058,10 @@ public final class UtilMisc {
         return map;
     }
 
-    public static <T, I extends Iterator<T>> Iterator<T> asIterator(Object object) { // SCIPIO
+    /**
+     * Returns an Iterator as-is or from an Iterable (SCIPIO).
+     */
+    public static <T, I extends Iterator<T>> Iterator<T> asIterator(Object object) {
         if (object instanceof Iterator) {
             return UtilGenerics.cast(object);
         } else if (object instanceof Iterable) {
@@ -2066,5 +2069,23 @@ public final class UtilMisc {
         } else {
             throw new IllegalArgumentException("Not iterable or iterator");
         }
+    }
+
+    /**
+     * Static next() method that can handle any iterator type including NextOnlyIterator/EntityListIterator (SCIPIO),
+     * returns null when done.
+     * Example:
+     * <pre>{@code
+     *     Iterator<GenericValue> iterator = ...;
+     *     GenericValue entity;
+     *     while((entity = UtilMisc.next(iterator)) != null) {
+     *         ...
+     *     }
+     * }</pre>
+     * NOTE: Will not work properly if the iterator contains null entries.
+     * @return the next value or null if no more elements.
+     */
+    public static <T> T next(Iterator<T> iterator) {
+        return (iterator instanceof NextOnlyIterator) ? iterator.next() : (iterator.hasNext() ? iterator.next() : null);
     }
 }

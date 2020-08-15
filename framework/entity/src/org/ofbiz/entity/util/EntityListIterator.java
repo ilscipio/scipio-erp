@@ -22,11 +22,13 @@ package org.ofbiz.entity.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralRuntimeException;
+import org.ofbiz.base.util.NextOnlyIterator;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -46,7 +48,7 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
  * SCIPIO: TODO: in the future this should implement Closeable instead of only AutoCloseable, but this is
  *  compatibility-breaking...
  */
-public class EntityListIterator implements AutoCloseable, ListIterator<GenericValue> {
+public class EntityListIterator implements AutoCloseable, ListIterator<GenericValue>, NextOnlyIterator {
 
     private static final boolean USE_NOT_CLOSED_STACK_TRACE = UtilProperties.getPropertyAsBoolean("debug",
             "entity.EntityListIterator.notClosedStackTrace", false); // SCIPIO: debugging helper

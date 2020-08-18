@@ -145,9 +145,9 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
  * */
 getProductCacheKey = {
     if (userLogin) {
-        return productId+"::"+webSiteId+"::"+catalogId+"::"+categoryId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId;
+        return productId+"::"+webSiteId+"::"+catalogId+"::"+categoryId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId+"::"+delegator.getDelegatorName();
     } else {
-        return productId+"::"+webSiteId+"::"+catalogId+"::"+categoryId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_";
+        return productId+"::"+webSiteId+"::"+catalogId+"::"+categoryId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_"+"::"+delegator.getDelegatorName();
     }
 }
 

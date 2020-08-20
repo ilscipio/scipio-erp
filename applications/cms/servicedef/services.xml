@@ -283,14 +283,6 @@
         <attribute name="versionId" mode="OUT" type="String" optional="false"/>
     </service>
 
-    <service name="cmsActivatePageVersionAndClearCaches" engine="group" auth="true">
-        <description>Sets a specific version of the page as live version.</description>
-        <group>
-            <invoke name="cmsActivatePageVersion"/>
-            <invoke name="cmsClearMappingCachesDistrib"/>
-        </group>
-    </service>
-
     <service name="cmsUnpublishPage" engine="java" auth="true"
              location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="unpublishPage">
         <description>Unpublish page.</description>

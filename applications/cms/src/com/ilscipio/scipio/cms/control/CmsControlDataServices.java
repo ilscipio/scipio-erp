@@ -10,6 +10,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -149,14 +150,8 @@ public abstract class CmsControlDataServices {
 
         List<String> errMsgList = new ArrayList<>();
 
-        Boolean clearMemoryCaches = (Boolean) context.get("clearMemoryCaches");
-        if (clearMemoryCaches == null) {
-            clearMemoryCaches = true;
-        }
-        Boolean clearEntityCaches = (Boolean) context.get("clearEntityCaches");
-        if (clearEntityCaches == null) {
-            clearEntityCaches = true;
-        }
+        boolean clearMemoryCaches = !Boolean.FALSE.equals(context.get("clearMemoryCaches"));
+        boolean clearEntityCaches = !Boolean.FALSE.equals(context.get("clearEntityCaches"));
 
         if (clearEntityCaches) {
             try {
@@ -178,6 +173,14 @@ public abstract class CmsControlDataServices {
             CmsViewMapping.getWorker().clearMemoryCaches();
             CmsProcessViewMapping.getWorker().clearMemoryCaches();
             CmsProcessMapping.getWorker().clearMemoryCaches();
+        }
+
+        if (Boolean.TRUE.equals(context.get("distribute"))) {
+            DistributedCacheClear dcc = delegator.getDistributedCacheClear();
+            if (dcc != null) {
+                Map<String, Object> distCtx = UtilMisc.toMap("clearMemoryCaches", clearMemoryCaches, "clearEntityCaches", clearEntityCaches);
+                dcc.runDistributedService("cmsDistributedClearMappingCaches", distCtx);
+            }
         }
 
         Map<String, Object> result;

@@ -283,6 +283,14 @@
         <attribute name="versionId" mode="OUT" type="String" optional="false"/>
     </service>
 
+    <service name="cmsActivatePageVersionAndClearCaches" engine="group" auth="true">
+        <description>Sets a specific version of the page as live version.</description>
+        <group>
+            <invoke name="cmsActivatePageVersion"/>
+            <invoke name="cmsClearMappingCachesDistrib"/>
+        </group>
+    </service>
+
     <service name="cmsUnpublishPage" engine="java" auth="true"
              location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="unpublishPage">
         <description>Unpublish page.</description>
@@ -949,12 +957,19 @@
         <auto-attributes entity-name="CmsViewMapping" include="pk" mode="IN" optional="false"/>
     </service>
 
-    <service name="cmsClearMappingCaches" engine="java"
-            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="clearMappingCaches" auth="true">
+    <service name="cmsDistributedClearMappingCaches" engine="jms" location="serviceMessenger" invoke="cmsClearMappingCaches"
+             auth="true" use-transaction="false" log-eca="quiet" log="quiet" hideResultInLog="true">
+        <description>Clear CMS mapping caches for all Servers listening to the topic (SCIPIO)</description>
+        <attribute name="clearMemoryCaches" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="clearEntityCaches" type="Boolean" mode="IN" optional="true" default-value="true"/>
+    </service>
+    <service name="cmsClearMappingCaches" engine="java" export="true"
+            location="com.ilscipio.scipio.cms.control.CmsControlDataServices" invoke="clearMappingCaches" auth="true" use-transaction="false">
         <description>Clear front-end mapping caches</description>
-        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute name="clearMemoryCaches" type="Boolean" mode="IN" optional="true"/> <!-- default-value="true" -->
-        <attribute name="clearEntityCaches" type="Boolean" mode="IN" optional="true"/> <!-- default-value="true" -->
+        <!--<permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>-->
+        <attribute name="clearMemoryCaches" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="clearEntityCaches" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
     </service>
 
     <service name="cmsDeleteAllMappingRecords" engine="java"

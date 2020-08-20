@@ -123,17 +123,24 @@
     <request-map uri="activatePageVersion">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsActivatePageVersion"/>
-        <response name="success" type="request" value="json" />
+        <response name="success" type="request" value="clearCaches" />
         <response name="error" type="request" value="json" />
     </request-map>
-
     <request-map uri="unpublishPage">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsUnpublishPage"/>
+        <response name="success" type="request" value="clearCaches" />
+        <response name="error" type="request" value="json" />
+    </request-map>
+    <request-map uri="clearCaches">
+        <security auth="true" https="true"/>
+        <event type="groovy"><script><![CDATA[
+            return EventUtil.runServiceAsEvent(request, response, "cmsClearMappingCaches", [distribute:true]);
+        ]]></script></event>
         <response name="success" type="request" value="json" />
         <response name="error" type="request" value="json" />
     </request-map>
-
+    
     <request-map uri="addRemovePageViewMappings">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsAddRemovePageViewMappings"/>

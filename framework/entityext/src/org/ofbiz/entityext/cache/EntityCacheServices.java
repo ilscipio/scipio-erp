@@ -18,8 +18,10 @@
  *******************************************************************************/
 package org.ofbiz.entityext.cache;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -273,6 +275,30 @@ public class EntityCacheServices implements DistributedCacheClear {
             this.dispatcher.runAsync("distributedClearAllUtilCaches", UtilMisc.toMap("userLogin", userLogin), false);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error running the distributedClearAllUtilCaches service", module);
+        }
+    }
+
+    @Override
+    public void runDistributedService(String serviceName, Map<String, Object> context) {
+        if (this.dispatcher == null) {
+            Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed clear all caches", module);
+            return;
+        }
+
+        GenericValue contextUserLogin = (GenericValue) context.get("userLogin");
+        if (contextUserLogin == null) {
+            GenericValue userLogin = getAuthUserLogin();
+            if (userLogin == null) {
+                Debug.logWarning("The userLogin for distributed cache clear was not found with userLoginId [" + userLoginId + "], not clearing remote caches.", module);
+                return;
+            }
+            context.put("userLogin", userLogin);
+        }
+
+        try {
+            this.dispatcher.runAsync(serviceName, context, false);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Error running distributed service [" + serviceName + "]", module);
         }
     }
 }

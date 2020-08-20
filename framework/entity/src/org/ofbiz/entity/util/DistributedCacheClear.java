@@ -24,6 +24,9 @@ import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Distributed Cache Clear interface definition
  */
@@ -43,4 +46,15 @@ public interface DistributedCacheClear {
 
     /** Clears all util caches, automatically includes entity caches (SCIPIO). */
     public void clearAllUtilCaches(); // SCIPIO
+
+    /**
+     * Runs an arbitrary distributed (cache clear) service (SCIPIO).
+     * NOTE: Context may be modified (userLogin, other); userLogin only added if null in context.
+     */
+    public void runDistributedService(String serviceName, Map<String, Object> context); // SCIPIO
+
+    /** Runs an arbitrary distributed (cache clear) service (SCIPIO). */
+    default void runDistributedService(String serviceName) {
+        runDistributedService(serviceName, new HashMap<>());
+    }
 }

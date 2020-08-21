@@ -498,7 +498,7 @@ public class SolrDocBuilder {
      * <p>
      * <b>WARNING:</b> You should use the provided nowTimestamp for filter-by-date operations.
      * <p>
-     * @param product the product value
+     * @param productDocBuilder the product builder
      * @param productEntry request source information, usually from ECAs - may be null
      * @return a document map representing the product - can then be passed to {@link #makeSolrDoc(Map)}
      */
@@ -699,7 +699,7 @@ public class SolrDocBuilder {
     }
 
     /**
-     * Records and caches product info during call to {@link #makeProductMapDoc(GenericValue)}.
+     * Records and caches product info during call to {@link #makeProductMapDoc}.
      * <p>Intended for client code to subclass and override any method as needed - many factoring points provided.</p>
      * <p></p>Written to minimize entity lookups.</p>
      * <p>NOTE: These use mutable pattern to prevent multiple reads automatically and without effort.
@@ -763,7 +763,7 @@ public class SolrDocBuilder {
         protected ProductDocBuilder(String productId, GenericValue product, Timestamp moment) {
             this.productId = (productId != null) ? productId : product.getString("productId");
             this.product = product; // may be null
-            this.moment = (moment != null) ? UtilDateTime.nowTimestamp() : moment;
+            this.moment = (moment != null) ? moment : UtilDateTime.nowTimestamp();
         }
 
         /*

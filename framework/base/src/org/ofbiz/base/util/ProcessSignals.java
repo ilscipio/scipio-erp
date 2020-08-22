@@ -1,5 +1,7 @@
 package org.ofbiz.base.util;
 
+import org.apache.tomcat.jni.Proc;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -38,8 +40,16 @@ public class ProcessSignals implements Map<String, Object> {
         return signals.get(name);
     }
 
+    public static Object get(ProcessSignals processSignals, String name) {
+        return (processSignals != null) ? processSignals.get(name) : null;
+    }
+
     public boolean isSet(String name) {
         return signals.containsKey(name);
+    }
+
+    public static boolean isSet(ProcessSignals processSignals, String name) {
+        return (processSignals != null) && processSignals.isSet(name);
     }
 
     @Override

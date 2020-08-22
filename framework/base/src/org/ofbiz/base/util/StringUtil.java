@@ -1056,4 +1056,11 @@ public class StringUtil {
         }
         return out;
     }
+
+    public static <C extends Collection<String>> C splitNames(C out, String names) { // SCIPIO
+        if (UtilValidate.isNotEmpty(names)) {
+            out.addAll(Arrays.asList(names.split(",")));
+        }
+        return out;
+    }
 }

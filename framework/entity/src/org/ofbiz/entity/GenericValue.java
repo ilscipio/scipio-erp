@@ -90,6 +90,10 @@ public class GenericValue extends GenericEntity {
         return this.getDelegator().create(this);
     }
 
+    public GenericValue createOrStore() throws GenericEntityException { // SCIPIO
+        return this.getDelegator().createOrStore(this);
+    }
+
     public void store() throws GenericEntityException {
         this.getDelegator().store(this);
     }

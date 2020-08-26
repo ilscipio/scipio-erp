@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,7 +36,6 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
@@ -121,49 +121,80 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
          */
         protected static final Fields EMPTY = new Fields();
 
-        /** Model fields in the order they were defined. This list duplicates the values in fieldsMap, but
-         *  we must keep the list in its original sequence for SQL DISTINCT operations to work properly. */
-        private final ArrayList<ModelField> fieldsList;
-
+        /** NOTE: LinkedHashMap now preserves field order in map (SCIPIO). */
         private final Map<String, ModelField> fieldsMap;
 
-        private final ArrayList<String> pkFieldNames;
+        /** Model fields in the order they were defined. This list duplicates the values in fieldsMap, but
+         *  we must keep the list in its original sequence for SQL DISTINCT operations to work properly. */
+        private final List<ModelField> fieldsList;
+
+        private final List<String> fieldNames;
 
         /** A List of the Field objects for the Entity, one for each Primary Key */
-        private final ArrayList<ModelField> pks;
+        private final List<ModelField> pks;
+
+        private final List<String> pkFieldNames;
 
         /** A List of the Field objects for the Entity, one for each NON Primary Key */
-        private final ArrayList<ModelField> nopks;
+        private final List<ModelField> noPks;
 
-        protected Fields(ArrayList<ModelField> fieldsList, Map<String, ModelField> fieldsMap, ArrayList<String> pkFieldNames,
-                ArrayList<ModelField> pks, ArrayList<ModelField> nopks) {
-            this.fieldsList = fieldsList;
-            this.fieldsMap = fieldsMap;
-            this.pkFieldNames = pkFieldNames;
-            this.pks = pks;
-            this.nopks = nopks;
-        }
+        private final List<String> noPkFieldNames;
 
-        /**
-         * Modifies the given collections to be atomic and creates a new read-only instance from them.
-         * <p>
-         * WARN: Do not pass the collections from existing instance to this without making copy first.
-         */
-        public static Fields optimizeAndCreate(ArrayList<ModelField> fieldsList, Map<String, ModelField> fieldsMap, ArrayList<String> pkFieldNames,
-                ArrayList<ModelField> pks, ArrayList<ModelField> nopks) {
+        protected Fields(Map<String, ModelField> fieldsMap) {
+            ArrayList<ModelField> fieldsList = new ArrayList<>(fieldsMap.size());
+            ArrayList<String> fieldNames = new ArrayList<>(fieldsMap.size());
+            ArrayList<ModelField> pks = new ArrayList<>(fieldsMap.size());
+            ArrayList<String> pkFieldNames = new ArrayList<>(fieldsMap.size());
+            ArrayList<ModelField> nopks = new ArrayList<>(fieldsMap.size());
+            ArrayList<String> nonPkFieldNames = new ArrayList<>(fieldsMap.size());
+            for(ModelField field : fieldsMap.values()) {
+                fieldsList.add(field);
+                fieldNames.add(field.getName());
+                if (field.getIsPk()) {
+                    pks.add(field);
+                    pkFieldNames.add(field.getName());
+                } else {
+                    nopks.add(field);
+                    nonPkFieldNames.add(field.getName());
+                }
+            }
             fieldsList.trimToSize();
-            pkFieldNames.trimToSize();
+            fieldNames.trimToSize();
             pks.trimToSize();
+            pkFieldNames.trimToSize();
             nopks.trimToSize();
-            return new Fields(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
+            nonPkFieldNames.trimToSize();
+            this.fieldsList = Collections.unmodifiableList(fieldsList);
+            this.fieldsMap = Collections.unmodifiableMap(fieldsMap);
+            this.fieldNames = Collections.unmodifiableList(fieldNames);
+            this.pks = Collections.unmodifiableList(pks);
+            this.pkFieldNames = Collections.unmodifiableList(pkFieldNames);
+            this.noPks = Collections.unmodifiableList(nopks);
+            this.noPkFieldNames = Collections.unmodifiableList(nonPkFieldNames);
         }
+
+        public static Fields from(Map<String, ModelField> fieldsMap) {
+            return new Fields(new LinkedHashMap<>(fieldsMap));
+        }
+
+        /*
+        public static Fields from(List<ModelField> fieldsList) {
+            Map<String, ModelField> fieldsMap = new LinkedHashMap<>();
+            for(ModelField field : fieldsList) {
+                fieldsMap.put(field.getName(), field);
+            }
+            return new Fields(fieldsMap);
+        }
+         */
 
         private Fields() {
-            fieldsList = new ArrayList<>();
-            fieldsMap = new HashMap<>();
-            pks = new ArrayList<>();
-            pkFieldNames = new ArrayList<>();
-            nopks = new ArrayList<>();
+            this.fieldsList = Collections.emptyList();
+            this.fieldsMap = Collections.emptyMap();
+            this.fieldNames = Collections.emptyList();
+            this.pks = Collections.emptyList();
+            this.pkFieldNames = Collections.emptyList();
+            this.noPks = Collections.emptyList();
+            this.noPkFieldNames = Collections.emptyList();
         }
     }
 
@@ -256,11 +287,8 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         this.modelInfo = ModelInfo.createFromAttributes(modelInfo, entityElement);
 
         // SCIPIO: 2018-09-29: Create local instances of fields collections
-        ArrayList<ModelField> fieldsList = new ArrayList<>();
-        Map<String, ModelField> fieldsMap = new HashMap<>();
-        ArrayList<ModelField> pks = new ArrayList<>();
+        Map<String, ModelField> fieldsMap = new LinkedHashMap<>();
         ArrayList<String> pkFieldNames = new ArrayList<>();
-        ArrayList<ModelField> nopks = new ArrayList<>();
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before general/basic info");
         this.populateBasicInfo(entityElement);
@@ -275,20 +303,20 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             ModelField field = ModelField.create(this, fieldElement, isPk);
             // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
             //internalAddField(field, pkFieldNames);
-            internalAddField(field, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
+            fieldsMap.put(field.getName(), field);
         }
         // if applicable automatically add the STAMP_FIELD and STAMP_TX_FIELD fields
         if ((this.doLock || !this.noAutoStamp) && !fieldsMap.containsKey(STAMP_FIELD)) {
             ModelField newField = ModelField.create(this, "", STAMP_FIELD, "date-time", null, null, null, false, false, false, true, false, null);
             // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
             //internalAddField(newField, pkFieldNames);
-            internalAddField(newField, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
+            fieldsMap.put(newField.getName(), newField);
         }
         if (!this.noAutoStamp && !fieldsMap.containsKey(STAMP_TX_FIELD)) {
             ModelField newField = ModelField.create(this, "", STAMP_TX_FIELD, "date-time", null, null, null, false, false, false, true, false, null);
             // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
             //internalAddField(newField, pkFieldNames);
-            internalAddField(newField, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
+            fieldsMap.put(newField.getName(), newField);
             // also add an index for this field
             String indexName = ModelUtil.shortenDbName(this.tableName + "_TXSTMP", 18);
             Field indexField = new Field(STAMP_TX_FIELD, null);
@@ -300,13 +328,13 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             ModelField newField = ModelField.create(this, "", CREATE_STAMP_FIELD, "date-time", null, null, null, false, false, false, true, false, null);
             // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
             //internalAddField(newField, pkFieldNames);
-            internalAddField(newField, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
+            fieldsMap.put(newField.getName(), newField);
         }
         if (!this.noAutoStamp && !fieldsMap.containsKey(CREATE_STAMP_TX_FIELD)) {
             ModelField newField = ModelField.create(this, "", CREATE_STAMP_TX_FIELD, "date-time", null, null, null, false, false, false, true, false, null);
             // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
             //internalAddField(newField, pkFieldNames);
-            internalAddField(newField, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
+            fieldsMap.put(newField.getName(), newField);
             // also add an index for this field
             String indexName = ModelUtil.shortenDbName(this.tableName + "_TXCRTS", 18);
             Field indexField = new Field(CREATE_STAMP_TX_FIELD, null);
@@ -317,18 +345,13 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         for (String pkFieldName : pkFieldNames) {
             ModelField pkField = fieldsMap.get(pkFieldName);
             if (pkField == null) {
-                Debug.logWarning("Error in entity definition - primary key is invalid for entity " + this.getEntityName(), module);
-            } else {
-                pks.add(pkField);
+                Debug.logError("Error in entity definition - primary key is invalid for entity " + this.getEntityName(), module); // SCIPIO: now error
             }
         }
-        pkFieldNames.trimToSize();
-        pks.trimToSize();
-        nopks.trimToSize();
         reader.incrementFieldCount(fieldsMap.size());
 
         // SCIPIO: Update member with copies for change atomicity
-        this.fields = Fields.optimizeAndCreate(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
+        this.fields = Fields.from(fieldsMap);
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
         this.populateRelated(reader, entityElement);
@@ -348,22 +371,15 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         this.entityName = ModelUtil.dbNameToClassName(this.tableName);
 
         // SCIPIO: 2018-09-29: Create local instances of fields collections
-        ArrayList<ModelField> fieldsList = new ArrayList<>();
-        Map<String, ModelField> fieldsMap = new HashMap<>();
-        ArrayList<ModelField> pks = new ArrayList<>();
-        ArrayList<String> pkFieldNames = new ArrayList<>();
-        ArrayList<ModelField> nopks = new ArrayList<>();
-
+        Map<String, ModelField> fieldsMap = new LinkedHashMap<>();
         for (Map.Entry<String, DatabaseUtil.ColumnCheckInfo> columnEntry : colMap.entrySet()) {
             DatabaseUtil.ColumnCheckInfo ccInfo = columnEntry.getValue();
             ModelField newField = ModelField.create(this, ccInfo, modelFieldTypeReader);
             // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
             //addField(newField);
-            addField(newField, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
+            fieldsMap.put(newField.getName(), newField);
         }
-
-        // SCIPIO: Update member with copies for change atomicity
-        this.fields = Fields.optimizeAndCreate(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
+        this.fields = Fields.from(fieldsMap); // SCIPIO: Update member with copies for change atomicity
     }
 
     protected void populateBasicInfo(Element entityElement) {
@@ -396,15 +412,6 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         this.fieldsMap.put(newField.getName(), newField);
     }
     */
-
-    private static void internalAddField(ModelField newField, List<ModelField> fieldsList,
-            Map<String, ModelField> fieldsMap, List<ModelField> pks, List<String> pkFieldNames, List<ModelField> nopks) {
-        if (!newField.getIsPk()) {
-            nopks.add(newField);
-        }
-        fieldsList.add(newField);
-        fieldsMap.put(newField.getName(), newField);
-    }
 
     protected void populateRelated(ModelReader reader, Element entityElement) {
         List<ModelRelation> tempList = new ArrayList<>(this.relations);
@@ -479,12 +486,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         // add to the entity as a new field
         synchronized (fieldsLock) {
             // SCIPIO: Create copies for change atomicity
-            ArrayList<ModelField> fieldsList = new ArrayList<>(this.fields.fieldsList);
-            Map<String, ModelField> fieldsMap = new HashMap<>(this.fields.fieldsMap);
-            ArrayList<ModelField> pks = new ArrayList<>(this.fields.pks);
-            ArrayList<String> pkFieldNames = new ArrayList<>(this.fields.pkFieldNames);
-            ArrayList<ModelField> nopks = new ArrayList<>(this.fields.nopks);
-
+            Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fields.fieldsMap);
             for (Element fieldElement : UtilXml.childElementList(extendEntityElement, "field")) {
                 ModelField newField = ModelField.create(this, fieldElement, false);
                 ModelField existingField = this.getField(newField.getName());
@@ -512,11 +514,19 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                             enableAuditLog, existingField.getValidators());
                 }
                 //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Moved synchronized block outside the loop (was stock logic bug)
+                /*
                 if (existingField != null) {
                     fieldsList.remove(existingField);
                 }
                 fieldsList.add(newField);
+                 */
+                // SCIPIO: TODO: REVIEW: using a LinkedHashMap we have to do a remove before an add to emulate the previous list logic,
+                //          however the logic itself was doubtful (never happens?)...
+                if (existingField != null) {
+                    fieldsMap.remove(existingField.getName());
+                }
                 fieldsMap.put(newField.getName(), newField);
+                /* SCIPIO: redundant
                 if (!newField.getIsPk()) {
                     if (existingField != null) {
                         nopks.remove(existingField);
@@ -527,15 +537,13 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                         pks.remove(existingField);
                     }
                     pks.add(newField);
-                    if (!pkFieldNames.contains(newField.getName())) {
-                        pkFieldNames.add(newField.getName());
-                    }
                 }
+                */
                 //}
             }
 
             // SCIPIO: Update member with copies for change atomicity
-            this.fields = Fields.optimizeAndCreate(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
+            this.fields = Fields.from(fieldsMap);
         }
         this.modelInfo = ModelInfo.createFromAttributes(this.modelInfo, extendEntityElement);
         this.populateRelated(reader, extendEntityElement);
@@ -715,12 +723,12 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     public List<ModelField> getPkFields() {
         //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
-        return new ArrayList<>(this.fields.pks); // SCIPIO: 2018-09-29: fields member
+        return this.fields.pks; // SCIPIO: 2018-09-29: fields member
         //}
     }
 
     public List<ModelField> getPkFieldsUnmodifiable() {
-        return Collections.unmodifiableList(getPkFields());
+        return getPkFields();
     }
 
     public String getFirstPkFieldName() {
@@ -732,9 +740,13 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         return idFieldName;
     }
 
+    public List<ModelField> getNonPkFields() { // SCIPIO
+        return this.fields.noPks;
+    }
+
     public int getNopksSize() {
         //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
-        return this.fields.nopks.size(); // SCIPIO: 2018-09-29: fields member
+        return this.fields.noPks.size(); // SCIPIO: 2018-09-29: fields member
         //}
     }
 
@@ -744,7 +756,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     public List<ModelField> getNopksCopy() {
         //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
-        return new ArrayList<>(this.fields.nopks); // SCIPIO: 2018-09-29: fields member
+        return new ArrayList<>(this.fields.noPks); // SCIPIO: 2018-09-29: fields member
         //}
     }
 
@@ -761,12 +773,16 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         //}
     }
 
+    public List<ModelField> getFields() { // SCIPIO
+        return this.fields.fieldsList;
+    }
+
     public List<ModelField> getFieldsUnmodifiable() {
         //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
         // SCIPIO: 2018-10-02: Extra ArrayList copy is useless
         //List<ModelField> newList = new ArrayList<>(this.fields.fieldsList); // SCIPIO: 2018-09-29: fields member
         //return Collections.unmodifiableList(newList);
-        return Collections.unmodifiableList(this.fields.fieldsList); // SCIPIO: 2018-09-29: fields member
+        return this.fields.fieldsList; // SCIPIO: 2018-09-29: fields member
         //}
     }
 
@@ -798,32 +814,10 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             return;
         synchronized (fieldsLock) {
             // SCIPIO: Create copies for change atomicity
-            ArrayList<ModelField> fieldsList = new ArrayList<>(this.fields.fieldsList);
-            Map<String, ModelField> fieldsMap = new HashMap<>(this.fields.fieldsMap);
-            ArrayList<ModelField> pks = new ArrayList<>(this.fields.pks);
-            ArrayList<String> pkFieldNames = new ArrayList<>(this.fields.pkFieldNames);
-            ArrayList<ModelField> nopks = new ArrayList<>(this.fields.nopks);
-
-            // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
-            addField(field, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
-
+            Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fields.fieldsMap);
+            fieldsMap.put(field.getName(), field);
             // SCIPIO: Update member with copies for change atomicity
-            this.fields = Fields.optimizeAndCreate(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
-        }
-    }
-
-    private static void addField(ModelField field, List<ModelField> fieldsList, Map<String, ModelField> fieldsMap,
-            ArrayList<ModelField> pks, ArrayList<String> pkFieldNames, ArrayList<ModelField> nopks) { // SCIPIO: 2018-09-29
-        // SCIPIO: 2018-09-29: Code moved here from addField(ModelField) ("this." removed)
-        fieldsList.add(field);
-        fieldsMap.put(field.getName(), field);
-        if (field.getIsPk()) {
-            pks.add(field);
-            if (!pkFieldNames.contains(field.getName())) {
-                pkFieldNames.add(field.getName());
-            }
-        } else {
-            nopks.add(field);
+            this.fields = Fields.from(fieldsMap);
         }
     }
 
@@ -837,40 +831,16 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
      * This method may be removed entirely in Scipio soon.
      */
     public ModelField removeField(String fieldName) {
-        if (fieldName == null)
+        if (fieldName == null) {
             return null;
+        }
         synchronized (fieldsLock) {
             // SCIPIO: Create copies for change atomicity
-            ArrayList<ModelField> fieldsList = new ArrayList<>(this.fields.fieldsList);
-            Map<String, ModelField> fieldsMap = new HashMap<>(this.fields.fieldsMap);
-            ArrayList<ModelField> pks = new ArrayList<>(this.fields.pks);
-            ArrayList<String> pkFieldNames = new ArrayList<>(this.fields.pkFieldNames);
-            ArrayList<ModelField> nopks = new ArrayList<>(this.fields.nopks);
-
-            // SCIPIO: 2018-09-29: Now using new helper, to NOT edit instance collections in place
-            ModelField field = removeField(fieldName, fieldsList, fieldsMap, pks, pkFieldNames, nopks);
-
-            // SCIPIO: Update member with copies for change atomicity
-            this.fields = Fields.optimizeAndCreate(fieldsList, fieldsMap, pkFieldNames, pks, nopks);
-
+            Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fields.fieldsMap);
+            ModelField field = fieldsMap.remove(fieldName);
+            this.fields = Fields.from(fieldsMap);
             return field;
         }
-    }
-
-    private static ModelField removeField(String fieldName, List<ModelField> fieldsList, Map<String, ModelField> fieldsMap,
-            ArrayList<ModelField> pks, ArrayList<String> pkFieldNames, ArrayList<ModelField> nopks) { // SCIPIO: 2018-09-29
-        // SCIPIO: 2018-09-29: Code moved here from removeField(String) ("this." removed)
-        ModelField field = fieldsMap.remove(fieldName);
-        if (field != null) {
-            fieldsList.remove(field);
-            if (field.getIsPk()) {
-                pks.remove(field);
-                pkFieldNames.remove(field.getName());
-            } else {
-                nopks.remove(field);
-            }
-        }
-        return field;
     }
 
     public List<String> getAllFieldNames() {
@@ -888,12 +858,12 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     public List<String> getPkFieldNames() {
         //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
-        return new ArrayList<>(fields.pkFieldNames); // SCIPIO: 2018-09-29: fields member
+        return fields.pkFieldNames; // SCIPIO: 2018-09-29: fields member
         //}
     }
 
     public List<String> getNoPkFieldNames() {
-        return getFieldNamesFromFieldVector(getNopksCopy());
+        return fields.noPkFieldNames;
     }
 
     private List<String> getFieldNamesFromFieldVector(List<ModelField> modelFields) {

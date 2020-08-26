@@ -2088,4 +2088,29 @@ public final class UtilMisc {
     public static <T> T next(Iterator<T> iterator) {
         return (iterator instanceof NextOnlyIterator) ? iterator.next() : (iterator.hasNext() ? iterator.next() : null);
     }
+
+    public static <K, V> Map<K, V> subMap(Map<K, V> out, Map<K, V> map, Collection<? extends K> keys) { // SCIPIO
+        for(K key : keys) {
+            out.put(key, map.get(key));
+        }
+        return out;
+    }
+
+    public static <K, V> Map<K, V> subMap(Map<K, V> map, Collection<? extends K> keys) { // SCIPIO
+        return subMap(new LinkedHashMap<>(), map, keys);
+    }
+
+    public static <K, V> Map<K, V> subMapNonNull(Map<K, V> out, Map<K, V> map, Collection<? extends K> keys) { // SCIPIO
+        for(K key : keys) {
+            V value = map.get(key);
+            if (value != null) {
+                out.put(key, value);
+            }
+        }
+        return out;
+    }
+
+    public static <K, V> Map<K, V> subMapNonNull(Map<K, V> map, Collection<? extends K> keys) { // SCIPIO
+        return subMapNonNull(new LinkedHashMap<>(), map, keys);
+    }
 }

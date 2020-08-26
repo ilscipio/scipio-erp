@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -121,6 +120,8 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
          */
         protected static final Fields EMPTY = new Fields();
 
+        private final String entityName;
+
         /** NOTE: LinkedHashMap now preserves field order in map (SCIPIO). */
         private final Map<String, ModelField> fieldsMap;
 
@@ -140,22 +141,40 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
         private final List<String> noPkFieldNames;
 
-        protected Fields(Map<String, ModelField> fieldsMap) {
+        /**
+         * Main constructor. (Re)creates the fields info using a linked fields map - always pass LinkedHashMap.
+         * NOTE: The pk fields order must be explicitly passed because in rare (problem?) cases prim-key order on
+         * entities are different than field order, so not respecting breaks compatibility; if null same order is assumed.
+         */
+        protected Fields(String entityName, Map<String, ModelField> fieldsMap, List<String> pkFieldNamesOrig) {
+            this.entityName = entityName;
             ArrayList<ModelField> fieldsList = new ArrayList<>(fieldsMap.size());
             ArrayList<String> fieldNames = new ArrayList<>(fieldsMap.size());
             ArrayList<ModelField> pks = new ArrayList<>(fieldsMap.size());
-            ArrayList<String> pkFieldNames = new ArrayList<>(fieldsMap.size());
+            ArrayList<String> pkFieldNames = (pkFieldNamesOrig != null) ? new ArrayList<>(pkFieldNamesOrig) : new ArrayList<>(fieldsMap.size());
             ArrayList<ModelField> nopks = new ArrayList<>(fieldsMap.size());
             ArrayList<String> nonPkFieldNames = new ArrayList<>(fieldsMap.size());
             for(ModelField field : fieldsMap.values()) {
                 fieldsList.add(field);
                 fieldNames.add(field.getName());
-                if (field.getIsPk()) {
-                    pks.add(field);
-                    pkFieldNames.add(field.getName());
-                } else {
+                if (!field.getIsPk()) {
                     nopks.add(field);
                     nonPkFieldNames.add(field.getName());
+                } else if (pkFieldNamesOrig == null) {
+                    pks.add(field);
+                    pkFieldNames.add(field.getName());
+                }
+            }
+            if (pkFieldNamesOrig != null) {
+                // Must be done last to preserve pk field sequence
+                for (String pkFieldName : pkFieldNames) {
+                    ModelField pkField = fieldsMap.get(pkFieldName);
+                    if (pkField == null) {
+                        Debug.logError("Error in entity definition - primary key is invalid for entity [" + entityName + "]: " +
+                                "primary key [" + pkFieldName + "] name does not reference any entity field name", module); // SCIPIO: now error, better message
+                    } else {
+                        pks.add(pkField);
+                    }
                 }
             }
             fieldsList.trimToSize();
@@ -173,10 +192,6 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             this.noPkFieldNames = Collections.unmodifiableList(nonPkFieldNames);
         }
 
-        public static Fields from(Map<String, ModelField> fieldsMap) {
-            return new Fields(new LinkedHashMap<>(fieldsMap));
-        }
-
         /*
         public static Fields from(List<ModelField> fieldsList) {
             Map<String, ModelField> fieldsMap = new LinkedHashMap<>();
@@ -188,6 +203,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
          */
 
         private Fields() {
+            this.entityName = null;
             this.fieldsList = Collections.emptyList();
             this.fieldsMap = Collections.emptyMap();
             this.fieldNames = Collections.emptyList();
@@ -195,6 +211,42 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             this.pkFieldNames = Collections.emptyList();
             this.noPks = Collections.emptyList();
             this.noPkFieldNames = Collections.emptyList();
+        }
+
+        public static Fields from(String entityName, Map<String, ModelField> fieldsMap, List<String> pkFieldNames) {
+            return new Fields(entityName, fieldsMap, pkFieldNames);
+        }
+
+        public Fields add(ModelField newField) {
+            Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fieldsMap);
+            List<String> pkFieldNames = new ArrayList<>(this.pkFieldNames);
+            add(newField, fieldsMap, pkFieldNames);
+            return new Fields(this.entityName, fieldsMap, pkFieldNames);
+        }
+
+        public Fields add(Collection<ModelField> newFields) {
+            Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fieldsMap);
+            List<String> pkFieldNames = new ArrayList<>(this.pkFieldNames);
+            for(ModelField newField : newFields) {
+                add(newField, fieldsMap, pkFieldNames);
+            }
+            return new Fields(this.entityName, fieldsMap, pkFieldNames);
+        }
+
+        private static void add(ModelField newField, Map<String, ModelField> fieldsMap, List<String> pkFieldNames) {
+            fieldsMap.remove(newField.getName()); // NOTE: to preserve legacy behavior with the lists we do removes on the LinkedHashMap first
+            fieldsMap.put(newField.getName(), newField);
+            if (!pkFieldNames.contains(newField.getName())) {
+                pkFieldNames.add(newField.getName());
+            }
+        }
+
+        public Fields remove(String fieldName) {
+            Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fieldsMap);
+            List<String> pkFieldNames = new ArrayList<>(this.pkFieldNames);
+            fieldsMap.remove(fieldName);
+            pkFieldNames.remove(fieldName);
+            return new Fields(this.entityName, fieldsMap, pkFieldNames);
         }
     }
 
@@ -220,7 +272,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     protected ModelEntity specializationOfModelEntity = null;
 
     /** The list of entities that are specialization of on this entity */
-    protected Map<String, ModelEntity> specializedEntities = new HashMap<>();
+    protected Map<String, ModelEntity> specializedEntities = new LinkedHashMap<>();
 
     /**
      * map of ModelViewEntities that references this model
@@ -341,17 +393,10 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             ModelIndex txIndex = ModelIndex.create(this, null, indexName, UtilMisc.toList(indexField), false);
             indexes.add(txIndex);
         }
-        // Must be done last to preserve pk field sequence
-        for (String pkFieldName : pkFieldNames) {
-            ModelField pkField = fieldsMap.get(pkFieldName);
-            if (pkField == null) {
-                Debug.logError("Error in entity definition - primary key is invalid for entity " + this.getEntityName(), module); // SCIPIO: now error
-            }
-        }
         reader.incrementFieldCount(fieldsMap.size());
 
         // SCIPIO: Update member with copies for change atomicity
-        this.fields = Fields.from(fieldsMap);
+        this.fields = Fields.from(entityName, fieldsMap, pkFieldNames);
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
         this.populateRelated(reader, entityElement);
@@ -379,7 +424,8 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             //addField(newField);
             fieldsMap.put(newField.getName(), newField);
         }
-        this.fields = Fields.from(fieldsMap); // SCIPIO: Update member with copies for change atomicity
+        // SCIPIO: TODO: REVIEW: unlike XML constructor this does not make an effort to preserve pkFieldsNames order, could be a problem somewhere?
+        this.fields = Fields.from(entityName, fieldsMap, null); // SCIPIO: Update member with copies for change atomicity
     }
 
     protected void populateBasicInfo(Element entityElement) {
@@ -487,6 +533,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         synchronized (fieldsLock) {
             // SCIPIO: Create copies for change atomicity
             Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fields.fieldsMap);
+            List<String> pkFieldNames = new ArrayList<>(this.fields.pkFieldNames);
             for (Element fieldElement : UtilXml.childElementList(extendEntityElement, "field")) {
                 ModelField newField = ModelField.create(this, fieldElement, false);
                 ModelField existingField = this.getField(newField.getName());
@@ -526,6 +573,12 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                     fieldsMap.remove(existingField.getName());
                 }
                 fieldsMap.put(newField.getName(), newField);
+                if (newField.getIsPk()) {
+                    if (existingField != null) {
+                        pkFieldNames.remove(existingField.getName());
+                    }
+                    pkFieldNames.add(existingField.getName());
+                }
                 /* SCIPIO: redundant
                 if (!newField.getIsPk()) {
                     if (existingField != null) {
@@ -537,13 +590,16 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                         pks.remove(existingField);
                     }
                     pks.add(newField);
+                    if (!pkFieldNames.contains(newField.getName())) {
+                        pkFieldNames.add(newField.getName());
+                    }
                 }
                 */
                 //}
             }
 
             // SCIPIO: Update member with copies for change atomicity
-            this.fields = Fields.from(fieldsMap);
+            this.fields = Fields.from(entityName, fieldsMap, pkFieldNames);
         }
         this.modelInfo = ModelInfo.createFromAttributes(this.modelInfo, extendEntityElement);
         this.populateRelated(reader, extendEntityElement);
@@ -813,11 +869,8 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         if (field == null)
             return;
         synchronized (fieldsLock) {
-            // SCIPIO: Create copies for change atomicity
-            Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fields.fieldsMap);
-            fieldsMap.put(field.getName(), field);
             // SCIPIO: Update member with copies for change atomicity
-            this.fields = Fields.from(fieldsMap);
+            this.fields = this.fields.add(field);
         }
     }
 
@@ -836,9 +889,8 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         }
         synchronized (fieldsLock) {
             // SCIPIO: Create copies for change atomicity
-            Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fields.fieldsMap);
-            ModelField field = fieldsMap.remove(fieldName);
-            this.fields = Fields.from(fieldsMap);
+            ModelField field = this.fields.fieldsMap.get(fieldName);
+            this.fields = this.fields.remove(fieldName);
             return field;
         }
     }
@@ -1768,7 +1820,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         final boolean useRelationshipNames = false;
         ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
 
-        Map<String, Object> topLevelMap = new HashMap<>();
+        Map<String, Object> topLevelMap = new LinkedHashMap<>();
 
         topLevelMap.put("name", this.getEntityName());
         topLevelMap.put("externalName", this.getTableName(helperName));
@@ -1803,7 +1855,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
             ModelFieldType fieldType = modelFieldTypeReader.getModelFieldType(field.getType());
 
-            Map<String, Object> attributeMap = new HashMap<>();
+            Map<String, Object> attributeMap = new LinkedHashMap<>();
             attributesList.add(attributeMap);
 
             if (field.getIsPk()) {
@@ -1845,7 +1897,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             if (entityNameIncludeSet.contains(relationship.getRelEntityName())) {
                 ModelEntity relEntity = entityModelReader.getModelEntity(relationship.getRelEntityName());
 
-                Map<String, Object> relationshipMap = new HashMap<>();
+                Map<String, Object> relationshipMap = new LinkedHashMap<>();
                 relationshipsMapList.add(relationshipMap);
 
                 if (useRelationshipNames || relationship.isAutoRelation()) {
@@ -1867,7 +1919,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                 List<Map<String, Object>> joinsMapList = new ArrayList<>(relationship.getKeyMaps().size()); // SCIPIO: switched to ArrayList
                 relationshipMap.put("joins", joinsMapList);
                 for (ModelKeyMap keyMap: relationship.getKeyMaps()) {
-                    Map<String, Object> joinsMap = new HashMap<>();
+                    Map<String, Object> joinsMap = new LinkedHashMap<>();
                     joinsMapList.add(joinsMap);
 
                     ModelField thisField = this.getField(keyMap.getFieldName());
@@ -1947,7 +1999,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     public Map<String, Object> getPkMapFromId(String id, Delegator delegator) { // SCIPIO
-        Map<String, Object> pkMap = new HashMap<>();
+        Map<String, Object> pkMap = new LinkedHashMap<>();
         return getPkMapFromId(pkMap, id, delegator) ? pkMap : null;
     }
 

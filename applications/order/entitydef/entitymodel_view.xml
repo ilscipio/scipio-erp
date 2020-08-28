@@ -1766,8 +1766,7 @@ code package.
     <alias entity-alias="RI" name="returnItemTypeId" group-by="true"/>
     <alias entity-alias="RI" name="totalReturnValue" field="returnPrice" function="sum"/>
     <alias entity-alias="RI" name="totalQuantity" field="returnQuantity" function="sum"/>
-    <alias entity-alias="RI" name="lastUpdatedStamp" group-by="true" />
-    <alias entity-alias="RI" name="lastUpdatedStamp" group-by="true" />
+    <alias entity-alias="RI" name="lastUpdatedStamp" group-by="true"/>
     <alias entity-alias="RI" name="day" field="lastUpdatedStamp" group-by="true" function="extract-day"/>
     <alias entity-alias="RI" name="month" field="lastUpdatedStamp" group-by="true" function="extract-month"/>
     <alias entity-alias="RI" name="year" field="lastUpdatedStamp" group-by="true" function="extract-year"/>

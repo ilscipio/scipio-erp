@@ -3310,7 +3310,6 @@ code package.
         <alias entity-alias="TOCO" name="localeString" />
         <alias entity-alias="EL" name="textData" />
         <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
-        <alias entity-alias="CA" name="contentAssocTypeId" field="contentAssocTypeId"/>
         <view-link entity-alias="PC" rel-entity-alias="CA">
             <key-map field-name="contentId"/>
         </view-link>

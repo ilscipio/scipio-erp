@@ -233,8 +233,11 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             return new Fields(this.entityName, fieldsMap, pkFieldNames);
         }
 
-        private static void add(ModelField newField, Map<String, ModelField> fieldsMap, List<String> pkFieldNames) {
-            fieldsMap.remove(newField.getName()); // NOTE: to preserve legacy behavior with the lists we do removes on the LinkedHashMap first
+        private void add(ModelField newField, Map<String, ModelField> fieldsMap, List<String> pkFieldNames) {
+            ModelField oldField = fieldsMap.remove(newField.getName()); // NOTE: to preserve legacy behavior with the lists we do removes on the LinkedHashMap first
+            if (oldField != null) {
+                Debug.logWarning("Duplicate field definition in entity [" + entityName + "] for field [" + newField.getName() + "]; replacing with last added", module);
+            }
             fieldsMap.put(newField.getName(), newField);
             if (newField.getIsPk()) {
                 if (!pkFieldNames.contains(newField.getName())) { // NOTE: contains check was from stock - never change the pk order
@@ -798,7 +801,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         return idFieldName;
     }
 
-    public List<ModelField> getNonPkFields() { // SCIPIO
+    public List<ModelField> getNoPkFields() { // SCIPIO
         return this.fields.noPks;
     }
 
@@ -902,11 +905,12 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         // SCIPIO: 2018-10-02: keySet() loses the field order defined in entitymodel.xml, so go through list
         //return new ArrayList<>(this.fields.fieldsMap.keySet()); // SCIPIO: 2018-09-29: fields member
         // TODO?: May want to make a pre-built this.fields.allFieldNames later if gets used more at runtime
-        List<String> allFieldNames = new ArrayList<>(this.fields.fieldsList.size());
-        for(ModelField field : this.fields.fieldsList) {
-            allFieldNames.add(field.getName());
-        }
-        return allFieldNames;
+        //List<String> allFieldNames = new ArrayList<>(this.fields.fieldsList.size());
+        //for(ModelField field : this.fields.fieldsList) {
+        //    allFieldNames.add(field.getName());
+        //}
+        //return allFieldNames;
+        return this.fields.fieldNames;
         //}
     }
 

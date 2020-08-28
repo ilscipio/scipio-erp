@@ -21,6 +21,7 @@ package org.ofbiz.entity.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -551,7 +552,7 @@ public class ModelReader implements Serializable {
         if (ec == null) {
             throw new GenericEntityConfException("ERROR: Unable to load Entity Cache");
         }
-        return ec.keySet();
+        return Collections.unmodifiableSet(ec.keySet());
     }
 
     /** Get all entities, organized by package */

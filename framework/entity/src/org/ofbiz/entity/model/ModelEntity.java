@@ -236,8 +236,10 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         private static void add(ModelField newField, Map<String, ModelField> fieldsMap, List<String> pkFieldNames) {
             fieldsMap.remove(newField.getName()); // NOTE: to preserve legacy behavior with the lists we do removes on the LinkedHashMap first
             fieldsMap.put(newField.getName(), newField);
-            if (!pkFieldNames.contains(newField.getName())) {
-                pkFieldNames.add(newField.getName());
+            if (newField.getIsPk()) {
+                if (!pkFieldNames.contains(newField.getName())) { // NOTE: contains check was from stock - never change the pk order
+                    pkFieldNames.add(newField.getName());
+                }
             }
         }
 

@@ -114,14 +114,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
      * <p>
      * Added 2018-09-29.
      */
-    private static class Fields implements Serializable {
-        /**
-         * Read-only empty instance.
-         */
-        protected static final Fields EMPTY = new Fields();
-
-        private final String entityName;
-
+    private class Fields implements Serializable {
         /** NOTE: LinkedHashMap now preserves field order in map (SCIPIO). */
         private final Map<String, ModelField> fieldsMap;
 
@@ -146,8 +139,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
          * NOTE: The pk fields order must be explicitly passed because in rare (problem?) cases prim-key order on
          * entities are different than field order, so not respecting breaks compatibility; if null same order is assumed.
          */
-        protected Fields(String entityName, Map<String, ModelField> fieldsMap, List<String> pkFieldNamesOrig) {
-            this.entityName = entityName;
+        protected Fields(Map<String, ModelField> fieldsMap, List<String> pkFieldNamesOrig) {
             ArrayList<ModelField> fieldsList = new ArrayList<>(fieldsMap.size());
             ArrayList<String> fieldNames = new ArrayList<>(fieldsMap.size());
             ArrayList<ModelField> pks = new ArrayList<>(fieldsMap.size());
@@ -170,7 +162,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                 for (String pkFieldName : pkFieldNames) {
                     ModelField pkField = fieldsMap.get(pkFieldName);
                     if (pkField == null) {
-                        Debug.logError("Error in entity definition - primary key is invalid for entity [" + entityName + "]: " +
+                        Debug.logError("Error in entity definition - primary key is invalid for entity [" + getEntityName() + "]: " +
                                 "primary key [" + pkFieldName + "] name does not reference any entity field name", module); // SCIPIO: now error, better message
                     } else {
                         pks.add(pkField);
@@ -203,7 +195,6 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
          */
 
         private Fields() {
-            this.entityName = null;
             this.fieldsList = Collections.emptyList();
             this.fieldsMap = Collections.emptyMap();
             this.fieldNames = Collections.emptyList();
@@ -213,15 +204,11 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             this.noPkFieldNames = Collections.emptyList();
         }
 
-        public static Fields from(String entityName, Map<String, ModelField> fieldsMap, List<String> pkFieldNames) {
-            return new Fields(entityName, fieldsMap, pkFieldNames);
-        }
-
         public Fields add(ModelField newField) {
             Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fieldsMap);
             List<String> pkFieldNames = new ArrayList<>(this.pkFieldNames);
             add(newField, fieldsMap, pkFieldNames);
-            return new Fields(this.entityName, fieldsMap, pkFieldNames);
+            return new Fields(fieldsMap, pkFieldNames);
         }
 
         public Fields add(Collection<ModelField> newFields) {
@@ -230,7 +217,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             for(ModelField newField : newFields) {
                 add(newField, fieldsMap, pkFieldNames);
             }
-            return new Fields(this.entityName, fieldsMap, pkFieldNames);
+            return new Fields(fieldsMap, pkFieldNames);
         }
 
         private void add(ModelField newField, Map<String, ModelField> fieldsMap, List<String> pkFieldNames) {
@@ -251,7 +238,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             List<String> pkFieldNames = new ArrayList<>(this.pkFieldNames);
             fieldsMap.remove(fieldName);
             pkFieldNames.remove(fieldName);
-            return new Fields(this.entityName, fieldsMap, pkFieldNames);
+            return new Fields(fieldsMap, pkFieldNames);
         }
     }
 
@@ -316,26 +303,26 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     public ModelEntity() {
         this.modelReader = null;
         this.modelInfo = ModelInfo.DEFAULT;
-        this.fields = Fields.EMPTY; // SCIPIO: 2018-09-29
+        this.fields = new Fields(); // SCIPIO: 2018-09-29
     }
 
     protected ModelEntity(ModelReader reader) {
         this.modelReader = reader;
         this.modelInfo = ModelInfo.DEFAULT;
-        this.fields = Fields.EMPTY; // SCIPIO: 2018-09-29
+        this.fields = new Fields(); // SCIPIO: 2018-09-29
     }
 
     protected ModelEntity(ModelReader reader, ModelInfo modelInfo) {
         this.modelReader = reader;
         this.modelInfo = modelInfo;
-        this.fields = Fields.EMPTY; // SCIPIO: 2018-09-29
+        this.fields = new Fields(); // SCIPIO: 2018-09-29
     }
 
     /** XML Constructor */
     protected ModelEntity(ModelReader reader, Element entityElement, ModelInfo modelInfo) {
         this.modelReader = reader;
         this.modelInfo = ModelInfo.createFromAttributes(modelInfo, entityElement);
-        this.fields = Fields.EMPTY; // SCIPIO: 2018-09-29
+        this.fields = new Fields(); // SCIPIO: 2018-09-29
     }
 
     /** XML Constructor */
@@ -401,7 +388,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         reader.incrementFieldCount(fieldsMap.size());
 
         // SCIPIO: Update member with copies for change atomicity
-        this.fields = Fields.from(entityName, fieldsMap, pkFieldNames);
+        this.fields = new Fields(fieldsMap, pkFieldNames);
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
         this.populateRelated(reader, entityElement);
@@ -430,7 +417,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             fieldsMap.put(newField.getName(), newField);
         }
         // SCIPIO: TODO: REVIEW: unlike XML constructor this does not make an effort to preserve pkFieldsNames order, could be a problem somewhere?
-        this.fields = Fields.from(entityName, fieldsMap, null); // SCIPIO: Update member with copies for change atomicity
+        this.fields = new Fields(fieldsMap, null); // SCIPIO: Update member with copies for change atomicity
     }
 
     protected void populateBasicInfo(Element entityElement) {
@@ -604,7 +591,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             }
 
             // SCIPIO: Update member with copies for change atomicity
-            this.fields = Fields.from(entityName, fieldsMap, pkFieldNames);
+            this.fields = new Fields(fieldsMap, pkFieldNames);
         }
         this.modelInfo = ModelInfo.createFromAttributes(this.modelInfo, extendEntityElement);
         this.populateRelated(reader, extendEntityElement);

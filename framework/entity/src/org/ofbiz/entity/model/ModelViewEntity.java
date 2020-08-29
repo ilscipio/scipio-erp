@@ -26,10 +26,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ofbiz.entity.util.EntityInfoUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -120,6 +122,8 @@ public class ModelViewEntity extends ModelEntity {
     
     /** SCIPIO: Maps both entity alias and entity name to its ModelMemberEntity (first only!) */
     protected transient Map<String, ModelMemberEntityExt> memberEntitiesByAliasOrNameSingle = null;
+
+    protected List<String> memberEntityDependencyOrderByAlias; // SCIPIO
 
     public ModelViewEntity(ModelReader reader, Element entityElement, UtilTimer utilTimer, ModelInfo def) {
         super(reader, entityElement, def);
@@ -295,6 +299,10 @@ public class ModelViewEntity extends ModelEntity {
         return null;
     }
 
+    public List<ModelAlias> getAliases() { // SCIPIO
+        return Collections.unmodifiableList(this.aliases); // FIXME: should be stored unmodifiable after expansion
+    }
+
     public int getAliasesSize() {
         return this.aliases.size();
     }
@@ -333,6 +341,10 @@ public class ModelViewEntity extends ModelEntity {
     /** List of view links to define how entities are connected (or "joined") */
     public ModelViewLink getViewLink(int index) {
         return this.viewLinks.get(index);
+    }
+
+    public List<ModelViewLink> getViewLinks() { // SCIPIO
+        return Collections.unmodifiableList(this.viewLinks); // FIXME: unmodifiable should be stored in the instance
     }
 
     public int getViewLinksSize() {
@@ -785,6 +797,43 @@ public class ModelViewEntity extends ModelEntity {
                 aliases.add(expandedAlias);
             }
         }
+    }
+
+    /**
+     * Returns the member entity aliases in the order of the relational dependencies of their entities, with the least
+     * dependent first (the alias for the entity that should be created first). (SCIPIO).
+     */
+    public List<String> getMemberEntityDependencyOrderByAlias(ModelReader modelReader) {
+        List<String> memberEntityDependencyOrderByAlias = this.memberEntityDependencyOrderByAlias;
+        if (memberEntityDependencyOrderByAlias == null) {
+            memberEntityDependencyOrderByAlias = new ArrayList<>(this.getAllModelMemberEntities().size());
+            Set<ModelEntity> modelEntities = new LinkedHashSet<>();
+            Set<String> entityNames = new LinkedHashSet<>();
+            for(ModelMemberEntity memberEntity : getAllModelMemberEntities()) {
+                try {
+                    modelEntities.add(modelReader.getModelEntity(memberEntity.getEntityName()));
+                    entityNames.add(memberEntity.getEntityName());
+                } catch (Exception e) {
+                    Debug.logError(e, "Entity [" + memberEntity.getEntityName() + "] not found in view-entity [" + getEntityName() + "]", module);
+                }
+            }
+            // TODO: REVIEW: In reality we may want to limit the resolution to the relations in the view-links, but in practice
+            //  this is not likely to make a difference.
+            try {
+                List<String> entityNameDepMap = EntityInfoUtil.makeEntityNameDependencyOrder(modelEntities, entityNames);
+                for(String entityName : entityNameDepMap) {
+                    for(ModelMemberEntity memberEntity : getAllModelMemberEntities()) {
+                        if (entityName.equals(memberEntity.getEntityName())) {
+                            memberEntityDependencyOrderByAlias.add(memberEntity.getEntityAlias());
+                        }
+                    }
+                }
+            } catch(Exception e) {
+                Debug.logError(e,"Could not make member entity dependency map by alias for view-entity [" + getEntityName() + "]", module);
+            }
+            this.memberEntityDependencyOrderByAlias = memberEntityDependencyOrderByAlias;
+        }
+        return memberEntityDependencyOrderByAlias;
     }
 
     @Override
@@ -1359,6 +1408,8 @@ public class ModelViewEntity extends ModelEntity {
             return this.keyMaps.get(index);
         }
 
+        public List<ModelKeyMap> getKeyMaps() { return Collections.unmodifiableList(this.keyMaps); } // SCIPIO
+
         public int getKeyMapsSize() {
             return this.keyMaps.size();
         }
@@ -1378,6 +1429,24 @@ public class ModelViewEntity extends ModelEntity {
 
         public ViewEntityCondition getViewEntityCondition() {
             return this.viewEntityCondition;
+        }
+
+        public String getRelFieldNameForField(String fieldName) { // SCIPIO
+            for(ModelKeyMap keyMap : keyMaps) {
+                if (fieldName.equals(keyMap.getFieldName())) {
+                    return keyMap.getRelFieldName();
+                }
+            }
+            return null;
+        }
+
+        public String getFieldNameForRelField(String fieldName) { // SCIPIO
+            for(ModelKeyMap keyMap : keyMaps) {
+                if (fieldName.equals(keyMap.getRelFieldName())) {
+                    return keyMap.getFieldName();
+                }
+            }
+            return null;
         }
     }
 

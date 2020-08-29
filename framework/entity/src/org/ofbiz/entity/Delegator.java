@@ -901,10 +901,10 @@ public interface Delegator {
      *
      * @param values
      *            List of GenericValue instances containing the entities to
-     *            store
+     *            store (SCIPIO: now Collection)
      * @return int representing number of rows effected by this operation
      */
-    int storeAll(List<GenericValue> values) throws GenericEntityException;
+    int storeAll(Collection<GenericValue> values) throws GenericEntityException;
 
     /**
      * <p>Store the Entities from the List GenericValue instances to the persistent
@@ -924,10 +924,10 @@ public interface Delegator {
      *            See the EntityStoreOptions JavaDoc for more details.
      * @param values
      *            List of GenericValue instances containing the entities to
-     *            store
+     *            store (SCIPIO: now Collection)
      * @return int representing number of rows effected by this operation
      */
-    int storeAll(List<GenericValue> values, EntityStoreOptions storeOptions) throws GenericEntityException;
+    int storeAll(Collection<GenericValue> values, EntityStoreOptions storeOptions) throws GenericEntityException;
 
     /**
      * Store a group of values.

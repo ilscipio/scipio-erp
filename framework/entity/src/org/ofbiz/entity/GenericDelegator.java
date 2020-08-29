@@ -1271,7 +1271,7 @@ public class GenericDelegator implements Delegator {
      * @see org.ofbiz.entity.Delegator#storeAll(java.util.List)
      */
     @Override
-    public int storeAll(List<GenericValue> values) throws GenericEntityException {
+    public int storeAll(Collection<GenericValue> values) throws GenericEntityException {
         return this.storeAll(values, new EntityStoreOptions());
     }
 
@@ -1279,7 +1279,7 @@ public class GenericDelegator implements Delegator {
      * @see org.ofbiz.entity.Delegator#storeAll(java.util.List, org.ofbiz.entity.util.EntityStoreOptions)
      */
     @Override
-    public int storeAll(List<GenericValue> values, EntityStoreOptions storeOptions) throws GenericEntityException {
+    public int storeAll(Collection<GenericValue> values, EntityStoreOptions storeOptions) throws GenericEntityException {
         if (values == null) {
             return 0;
         }

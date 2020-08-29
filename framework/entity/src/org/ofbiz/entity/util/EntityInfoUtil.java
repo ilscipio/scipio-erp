@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.cms.data;
+package org.ofbiz.entity.util;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
@@ -18,6 +17,7 @@ import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.entity.model.ModelRelation;
 
+import org.apache.commons.lang3.StringUtils;
 import com.ilscipio.scipio.ce.build.util.DependencyGraph;
 
 /**
@@ -73,17 +73,17 @@ public abstract class EntityInfoUtil {
     public static Map<String, List<String>> makeEntityNameDependencyMap(Set<ModelEntity> modelEntities, Set<String> entityNames) {
         Map<String, List<String>> depMap = new LinkedHashMap<>();
         for(ModelEntity modelEntity : modelEntities) {
-            String name = modelEntity.getEntityName();
+            String entityName = modelEntity.getEntityName();
             Set<String> deps = new LinkedHashSet<>(); // eliminate duplicates
             // TODO: REVIEW: WE ARE EXCLUDING one-nofk RELATIONS FOR NOW
             // they are typically used to resolve circular deps, so we risk creating circular deps by including...
             for(ModelRelation relation : modelEntity.getRelationsList(true, false, false)) {
                 String relEntityName = relation.getRelEntityName();
-                if (entityNames.contains(relEntityName)) {
+                if (entityNames.contains(relEntityName) && !entityName.equals(relEntityName)) { // NOTE: some entities reference self
                     deps.add(relEntityName);
                 }
             }
-            depMap.put(name, new ArrayList<>(deps));
+            depMap.put(entityName, new ArrayList<>(deps));
         }
         return depMap;
     }

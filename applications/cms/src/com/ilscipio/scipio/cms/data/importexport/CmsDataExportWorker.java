@@ -76,7 +76,7 @@ import com.ilscipio.scipio.cms.data.CmsEntityVisit.CmsEntityVisitor;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelation;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.data.CmsObjectRegistry;
-import com.ilscipio.scipio.cms.data.EntityInfoUtil;
+import org.ofbiz.entity.util.EntityInfoUtil;
 import com.ilscipio.scipio.cms.media.CmsMediaWorker;
 import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
 

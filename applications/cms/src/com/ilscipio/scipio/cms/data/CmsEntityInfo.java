@@ -25,6 +25,7 @@ import org.ofbiz.entity.model.ModelRelation;
 import org.ofbiz.entity.model.ModelViewEntity;
 
 import com.ilscipio.scipio.cms.CmsUtil;
+import org.ofbiz.entity.util.EntityInfoUtil;
 
 /**
  * CMS entity meta info.

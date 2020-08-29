@@ -27,6 +27,7 @@ import com.ilscipio.scipio.cms.content.CmsPage.VisitRelPlan;
 import com.ilscipio.scipio.cms.data.CmsDataObject.DataObjectWorker;
 import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitValueStash.MultiValueEntry;
 import com.ilscipio.scipio.cms.template.CmsTemplate.TemplateBodySource;
+import org.ofbiz.entity.util.EntityInfoUtil;
 
 /**
  * Entity visiting interfaces (visitor/visitee) and common implementations.

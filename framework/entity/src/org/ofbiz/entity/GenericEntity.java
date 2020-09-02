@@ -1259,7 +1259,16 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         setAllFields(fields, setIfEmpty, null, Boolean.FALSE);
     }
 
+    /** Intelligently sets fields on this entity from the Map of fields passed in (SCIPIO). */
+    public void setAllFields(Map<? extends Object, ? extends Object> fields) {
+        setAllFields(fields, true, null, null);
+    }
 
+    /** Intelligently sets fields on this entity from the Map of fields passed in (SCIPIO). */
+    public void setAllFields(Map<? extends Object, ? extends Object> fields, boolean setIfEmpty) {
+        setAllFields(fields, setIfEmpty, null, null);
+    }
+    
     /** Intelligently sets fields on this entity from the Map of fields passed in
      * @param fields The fields Map to get the values from
      * @param setIfEmpty Used to specify whether empty/null values in the field Map should over-write non-empty values in this entity

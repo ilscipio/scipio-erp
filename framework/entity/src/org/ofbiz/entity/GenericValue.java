@@ -90,10 +90,6 @@ public class GenericValue extends GenericEntity {
         return this.getDelegator().create(this);
     }
 
-    public GenericValue createOrStore() throws GenericEntityException { // SCIPIO
-        return this.getDelegator().createOrStore(this);
-    }
-
     public void store() throws GenericEntityException {
         this.getDelegator().store(this);
     }
@@ -108,6 +104,23 @@ public class GenericValue extends GenericEntity {
 
     public void refreshFromCache() throws GenericEntityException {
         this.getDelegator().refreshFromCache(this);
+    }
+    
+    /**
+     * Creates or stores an Entity (SCIPIO).
+     */
+    public GenericValue createOrStore() throws GenericEntityException {
+        return this.getDelegator().createOrStore(this);
+    }
+
+    /**
+     * Sets the sequenced ID (for entity with one primary key field ONLY), and
+     * then does a create in the database as normal (SCIPIO). The reason to do it this
+     * way is that it will retry and fix the sequence if somehow the sequencer
+     * is in a bad state and returning a value that already exists.
+     */
+    public GenericValue createSetNextSeqId() throws GenericEntityException {
+        return this.getDelegator().createSetNextSeqId(this);
     }
 
     /** Get the named Related Entity for the GenericValue from the persistent store (no entity cache)

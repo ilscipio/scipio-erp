@@ -26,11 +26,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.util.EntityInfoUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -124,6 +126,13 @@ public class ModelViewEntity extends ModelEntity {
     protected transient Map<String, ModelMemberEntityExt> memberEntitiesByAliasOrNameSingle = null;
 
     protected List<String> memberEntityDependencyOrderByAlias; // SCIPIO
+
+    protected List<String> requiredEntityAliases; // SCIPIO
+    protected List<String> optionalEntityAliases; // SCIPIO
+
+    protected Map<String, AliasMappings> aliasMappings; // SCIPIO
+
+    protected Boolean hasOptionalViewLink; // SCIPIO
 
     public ModelViewEntity(ModelReader reader, Element entityElement, UtilTimer utilTimer, ModelInfo def) {
         super(reader, entityElement, def);
@@ -803,7 +812,7 @@ public class ModelViewEntity extends ModelEntity {
      * Returns the member entity aliases in the order of the relational dependencies of their entities, with the least
      * dependent first (the alias for the entity that should be created first). (SCIPIO).
      */
-    public List<String> getMemberEntityDependencyOrderByAlias(ModelReader modelReader) {
+    public List<String> getMemberEntityDependencyOrderByAlias() {
         List<String> memberEntityDependencyOrderByAlias = this.memberEntityDependencyOrderByAlias;
         if (memberEntityDependencyOrderByAlias == null) {
             memberEntityDependencyOrderByAlias = new ArrayList<>(this.getAllModelMemberEntities().size());
@@ -811,7 +820,7 @@ public class ModelViewEntity extends ModelEntity {
             Set<String> entityNames = new LinkedHashSet<>();
             for(ModelMemberEntity memberEntity : getAllModelMemberEntities()) {
                 try {
-                    modelEntities.add(modelReader.getModelEntity(memberEntity.getEntityName()));
+                    modelEntities.add(getModelReader().getModelEntity(memberEntity.getEntityName()));
                     entityNames.add(memberEntity.getEntityName());
                 } catch (Exception e) {
                     Debug.logError(e, "Entity [" + memberEntity.getEntityName() + "] not found in view-entity [" + getEntityName() + "]", module);
@@ -834,6 +843,47 @@ public class ModelViewEntity extends ModelEntity {
             this.memberEntityDependencyOrderByAlias = memberEntityDependencyOrderByAlias;
         }
         return memberEntityDependencyOrderByAlias;
+    }
+
+    public List<String> getRequiredEntityAliases() { // SCIPIO
+        List<String> requiredEntityAliases = this.requiredEntityAliases;
+        if (requiredEntityAliases == null) {
+            Set<String> requiredEntityAliasesSet = new LinkedHashSet<>();
+            for(ModelMemberEntity mme : getAllModelMemberEntities()) {
+                requiredEntityAliasesSet.add(mme.getEntityAlias());
+            }
+            requiredEntityAliasesSet.removeAll(getOptionalEntityAliases());
+            requiredEntityAliases = Collections.unmodifiableList(new ArrayList<>(requiredEntityAliasesSet));
+            this.requiredEntityAliases = requiredEntityAliases;
+        }
+        return requiredEntityAliases;
+    }
+
+    public boolean isRequiredEntityAlias(String entityAlias) {
+        return getRequiredEntityAliases().contains(entityAlias);
+    }
+
+    public List<String> getOptionalEntityAliases() { // SCIPIO
+        List<String> optionalEntityAliases = this.optionalEntityAliases;
+        if (optionalEntityAliases == null) {
+            Set<String> optionalEntityAliasesSet = new LinkedHashSet<>();
+            int prevSize = -1;
+            while (optionalEntityAliasesSet.size() != prevSize) {
+                prevSize = optionalEntityAliasesSet.size();
+                for (ModelViewLink viewLink : getViewLinks()) {
+                    if (viewLink.isRelOptional() || optionalEntityAliasesSet.contains(viewLink.getEntityAlias())) {
+                        optionalEntityAliasesSet.add(viewLink.getRelEntityAlias());
+                    }
+                }
+            }
+            optionalEntityAliases = Collections.unmodifiableList(new ArrayList<>(optionalEntityAliasesSet));
+            this.optionalEntityAliases = optionalEntityAliases;
+        }
+        return optionalEntityAliases;
+    }
+
+    public boolean isOptionalEntityAlias(String entityAlias) {
+        return getOptionalEntityAliases().contains(entityAlias);
     }
 
     @Override
@@ -1781,5 +1831,150 @@ public class ModelViewEntity extends ModelEntity {
 
             return EntityCondition.makeCondition(entityConditionList, this.operator);
         }
+    }
+
+    /**
+     * Records all the things an alias in the main view-entity is part of (SCIPIO).
+     */
+    public static class AliasMappings implements Serializable { // SCIPIO
+        private final ModelAlias alias;
+        private final List<ModelViewLink> viewLinks;
+        private final Map<String, List<String>> entityAliasFieldMap; // maps entity alias to entity field name
+        private final Map<String, List<String>> requiredEntityAliasFieldMap;
+        private final Map<String, List<String>> optionalEntityAliasFieldMap;
+
+        protected AliasMappings(ModelAlias alias, ModelViewEntity viewEntity) {
+            this.alias = alias;
+            String fieldName = UtilValidate.isNotEmpty(alias.getField()) ? alias.getField() : alias.getName();
+            Map<String, List<String>> aliasEntityFieldMap = new LinkedHashMap<>();
+            aliasEntityFieldMap.put(alias.getEntityAlias(), UtilMisc.toList(fieldName));
+            ArrayList<ModelViewLink> viewLinks = new ArrayList<>();
+            for(ModelViewLink viewLink : viewEntity.getViewLinks()) {
+                if (viewLink.getEntityAlias().equals(alias.getEntityAlias())) {
+                    for(ModelKeyMap keyMap : viewLink.getKeyMaps()) {
+                        if (fieldName.equals(keyMap.getFieldName())) {
+                            if (!viewLinks.contains(viewLink)) {
+                                viewLinks.add(viewLink);
+                            }
+                            addAliasEntityField(aliasEntityFieldMap, viewLink.getRelEntityAlias(), keyMap.getRelFieldName());
+                        }
+                    }
+                } else if (viewLink.getRelEntityAlias().equals(alias.getEntityAlias())) {
+                    for(ModelKeyMap keyMap : viewLink.getKeyMaps()) {
+                        if (fieldName.equals(keyMap.getRelFieldName())) {
+                            if (!viewLinks.contains(viewLink)) {
+                                viewLinks.add(viewLink);
+                            }
+                            addAliasEntityField(aliasEntityFieldMap, viewLink.getEntityAlias(), keyMap.getFieldName());
+                        }
+                    }
+                }
+            }
+            viewLinks.trimToSize();
+            for(Map.Entry<String, List<String>> entry : aliasEntityFieldMap.entrySet()) {
+                ((ArrayList<String>) entry.getValue()).trimToSize();
+                entry.setValue(Collections.unmodifiableList(entry.getValue()));
+            }
+            this.viewLinks = Collections.unmodifiableList(viewLinks);
+            this.entityAliasFieldMap = Collections.unmodifiableMap(aliasEntityFieldMap);
+            Map<String, List<String>> requiredEntityAliasFieldMap = new LinkedHashMap<>();
+            Map<String, List<String>> optionalEntityAliasFieldMap = new LinkedHashMap<>();
+            for(Map.Entry<String, List<String>> entry : aliasEntityFieldMap.entrySet()) {
+                if (viewEntity.isRequiredEntityAlias(entry.getKey())) {
+                    requiredEntityAliasFieldMap.put(entry.getKey(), entry.getValue());
+                } else if (viewEntity.isOptionalEntityAlias(entry.getKey())) {
+                    optionalEntityAliasFieldMap.put(entry.getKey(), entry.getValue());
+                }
+            }
+            this.requiredEntityAliasFieldMap = Collections.unmodifiableMap(requiredEntityAliasFieldMap);
+            this.optionalEntityAliasFieldMap = Collections.unmodifiableMap(optionalEntityAliasFieldMap);
+        }
+
+        private static void addAliasEntityField(Map<String, List<String>> aliasEntityFieldMap, String entityAlias, String fieldName) {
+            List<String> fields = aliasEntityFieldMap.get(entityAlias);
+            if (fields != null) {
+                if (!fields.contains(fieldName)) {
+                    fields.add(fieldName);
+                }
+            } else {
+                fields = new ArrayList<>();
+                fields.add(fieldName);
+                aliasEntityFieldMap.put(entityAlias, fields);
+            }
+        }
+
+        public ModelAlias getAlias() {
+            return alias;
+        }
+
+        public List<ModelViewLink> getViewLinks() {
+            return viewLinks;
+        }
+
+        public Map<String, List<String>> getEntityAliasFieldMap() {
+            return entityAliasFieldMap;
+        }
+
+        public List<String> getEntityAliasFields(String entityAlias) {
+            return getEntityAliasFieldMap().get(entityAlias);
+        }
+
+        public Map<String, List<String>> getRequiredEntityAliasFieldMap() {
+            return requiredEntityAliasFieldMap;
+        }
+
+        public Map<String, List<String>> getOptionalEntityAliasFieldMap() {
+            return optionalEntityAliasFieldMap;
+        }
+
+        public String getName() {
+            return alias.getName();
+        }
+
+        public String getField() {
+            return alias.getField() != null ? alias.getField() : getName();
+        }
+    }
+
+    public Map<String, AliasMappings> getAliasMappings() {
+        Map<String, AliasMappings> aliasMappings = this.aliasMappings;
+        if (aliasMappings == null) {
+            aliasMappings = new LinkedHashMap<>();
+            for(ModelAlias alias : getAliases()) {
+                aliasMappings.put(alias.getName(), new AliasMappings(alias, this));
+            }
+            aliasMappings = Collections.unmodifiableMap(aliasMappings);
+            this.aliasMappings = aliasMappings;
+        }
+        return aliasMappings;
+    }
+
+    public AliasMappings getAliasMappings(String aliasName) {
+        return getAliasMappings().get(aliasName);
+    }
+
+    public AliasMappings getAliasMappingFromField(String entityAlias, String fieldName) {
+        for(Map.Entry<String, AliasMappings> entry : getAliasMappings().entrySet()) {
+            List<String> entityAliasFields = entry.getValue().getEntityAliasFields(entityAlias);
+            if (entityAliasFields != null && entityAliasFields.contains(fieldName)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    public boolean hasOptionalViewLink() {
+        Boolean hasOptionalViewLink = this.hasOptionalViewLink;
+        if (hasOptionalViewLink == null) {
+            hasOptionalViewLink = false;
+            for(ModelViewLink viewLink : getViewLinks()) {
+                if (viewLink.isRelOptional()) {
+                    hasOptionalViewLink = true;
+                    break;
+                }
+            }
+            this.hasOptionalViewLink = hasOptionalViewLink;
+        }
+        return hasOptionalViewLink;
     }
 }

@@ -745,10 +745,40 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         return true;
     }
 
+    public boolean isPkField(String fieldName) { // SCIPIO
+        if (fieldName == null) return false;
+        return fields.pkFieldNames.contains(fieldName);
+    }
+
+    public boolean arePkFields(Collection<String> fieldNames) { // SCIPIO
+        if (fieldNames == null) return false;
+        for (String fieldName: fieldNames) {
+            if (!isPkField(fieldName)) return false;
+        }
+        return true;
+    }
+
+    public boolean isNoPkField(String fieldName) { // SCIPIO
+        if (fieldName == null) return false;
+        return fields.noPkFieldNames.contains(fieldName);
+    }
+
+    public boolean areNoPkField(Collection<String> fieldNames) { // SCIPIO
+        if (fieldNames == null) return false;
+        for (String fieldName: fieldNames) {
+            if (!isNoPkField(fieldName)) return false;
+        }
+        return true;
+    }
+
     public int getPksSize() {
         //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
         return this.fields.pks.size(); // SCIPIO: 2018-09-29: fields member
         //}
+    }
+
+    public boolean isSinglePk() { // SCIPIO
+        return getPksSize() == 1;
     }
 
     public ModelField getOnlyPk() {

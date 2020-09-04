@@ -2043,6 +2043,50 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return true;
     }
 
+    /** Copies all fields preserving the field order defined by the entity (SCIPIO). If includeNull null, only copies nulls if containsKey. */
+    public <M extends Map<String, Object>> M copyFields(M out, Boolean includeNull, Collection<String> exclude) {
+        return copyNonPkFields(out, getModelEntity().getAllFieldNames(), includeNull, exclude);
+    }
+
+    /** Copies all fields preserving the field order defined by the entity (SCIPIO). If includeNull null, only copies nulls if containsKey. */
+    public <M extends Map<String, Object>> M copyFields(M out, Boolean includeNull) {
+        return copyNonPkFields(out, getModelEntity().getAllFieldNames(), includeNull, null);
+    }
+
+    /** Copies pk fields preserving the field order defined by the entity (SCIPIO). If includeNull null, only copies nulls if containsKey. */
+    public <M extends Map<String, Object>> M copyPkFields(M out, Boolean includeNull, Collection<String> exclude) {
+        return copyNonPkFields(out, getModelEntity().getPkFieldNames(), includeNull, exclude);
+    }
+
+    /** Copies pk fields preserving the field order defined by the entity (SCIPIO). If includeNull null, only copies nulls if containsKey. */
+    public <M extends Map<String, Object>> M copyPkFields(M out, Boolean includeNull) {
+        return copyNonPkFields(out, getModelEntity().getPkFieldNames(), includeNull, null);
+    }
+
+    /** Copies non-pk fields preserving the field order defined by the entity (SCIPIO). If includeNull null, only copies nulls if containsKey. */
+    public <M extends Map<String, Object>> M copyNonPkFields(M out, Boolean includeNull, Collection<String> exclude) {
+        return copyNonPkFields(out, getModelEntity().getNoPkFieldNames(), includeNull, exclude);
+    }
+
+    /** Copies non-pk fields preserving the field order defined by the entity (SCIPIO). If includeNull null, only copies nulls if containsKey. */
+    public <M extends Map<String, Object>> M copyNonPkFields(M out, Boolean includeNull) {
+        return copyNonPkFields(out, getModelEntity().getNoPkFieldNames(), includeNull, null);
+    }
+
+    /** Copies fields preserving the field order defined by the entity (SCIPIO). If includeNull null, only copies nulls if containsKey. */
+    private <M extends Map<String, Object>> M copyNonPkFields(M out, Collection<String> fieldNames, Boolean includeNull, Collection<String> exclude) {
+        if (exclude == null) {
+            exclude = Collections.emptySet();
+        }
+        for (String fieldName : fieldNames) {
+            Object value = fields.get(fieldName);
+            if ((Boolean.TRUE.equals(includeNull) || value != null || (includeNull == null && fields.containsKey(fieldName))) && !exclude.contains(fieldName)) {
+                out.put(fieldName, value);
+            }
+        }
+        return out;
+    }
+
     public static interface NULL {
     }
 

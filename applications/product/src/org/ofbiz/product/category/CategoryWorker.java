@@ -383,6 +383,25 @@ public final class CategoryWorker {
     }
 
     /**
+     * SCIPIO: Version that returns a copy of the trail without the ones listed in the exceptions parameter.
+     */
+    public static List<String> getCustomTrail(ServletRequest request, List<String> exceptions) {
+        List<String> fullTrail = getTrail(request);
+        List<String> res = null;
+        if (fullTrail != null) {
+            res = new ArrayList<>(fullTrail.size());
+            Iterator<String> it = fullTrail.iterator();
+            while (it.hasNext()) {
+                String next = it.next(); // check first
+                if (!exceptions.contains(next)) {
+                    res.add(next);
+                }
+            }
+        }
+        return res;
+    }
+
+    /**
      * Sets breadcrumbs trail to the exact given value.
      * <p>
      * SCIPIO: This is modified to accept a onlyIfNewInRequest boolean that will check to see

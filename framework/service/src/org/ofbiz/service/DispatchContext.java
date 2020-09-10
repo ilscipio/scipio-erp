@@ -57,6 +57,7 @@ public class DispatchContext implements Serializable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final UtilCache<String, Map<String, ModelService>> modelServiceMapByModel = UtilCache.createUtilCache("service.ModelServiceMapByModel", 0, 0, false);
+    private static final ThreadLocal<ModelService> currentModelService = new ThreadLocal<>(); // SCIPIO: Holds the last executing service model, managed with try-finally
 
     // these four fields represent the immutable state of a DispatchContext object
     private final String name;
@@ -239,6 +240,22 @@ public class DispatchContext implements Serializable {
             return getModelService(serviceName);
         } catch (GenericServiceException e) {
             return null;
+        }
+    }
+
+    /**
+     * Returns the model of the last invoked service, or null if no service executing (SCIPIO).
+     * @return the current service model, or null if no service executing
+     */
+    public ModelService getModelService() {
+        return currentModelService.get();
+    }
+
+    protected void setModelService(ModelService modelService) {
+        if (modelService != null) {
+            currentModelService.set(modelService);
+        } else {
+            currentModelService.remove();
         }
     }
 

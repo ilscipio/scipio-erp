@@ -421,7 +421,8 @@ public class ServiceDispatcher {
                     // ===== invoke the service =====
                     if (!isError && !isFailure) {
                         Map<String, Object> invokeResult = null;
-                        invokeResult = engine.runSync(localName, modelService, context);
+                        //invokeResult = engine.runSync(localName, modelService, context);
+                        invokeResult = runSync(localName, modelService, context, ctx, engine); // SCIPIO
                         engine.sendCallbacks(modelService, context, invokeResult, GenericEngine.SYNC_MODE);
                         if (invokeResult != null) {
                             result.putAll(invokeResult);
@@ -650,6 +651,16 @@ public class ServiceDispatcher {
             modelService.metrics.recordServiceRate(1, timeToRun);
         }
         return result;
+    }
+
+    private Map<String, Object> runSync(String localName, ModelService modelService, Map<String, Object> context, DispatchContext dctx, GenericEngine engine) throws GenericServiceException { // SCIPIO
+        ModelService prevModelService = dctx.getModelService();
+        try {
+            dctx.setModelService(modelService);
+            return engine.runSync(localName, modelService, context);
+        } finally {
+            dctx.setModelService(prevModelService);
+        }
     }
 
     /**
@@ -1070,7 +1081,8 @@ public class ServiceDispatcher {
         GenericEngine engine = getGenericEngine(model.engineName);
 
         // invoke the service and get the UserLogin value object
-        Map<String, Object> result = engine.runSync(localName, model, context);
+        //Map<String, Object> result = engine.runSync(localName, model, context); // SCIPIO
+        Map<String, Object> result = runSync(localName, model, context, dctx, engine); // SCIPIO
         return (GenericValue) result.get("userLogin");
     }
 

@@ -51,13 +51,16 @@ public interface GenericEngine {
 
     /**
      * Run the service synchronously and IGNORE the result.
+     * SCIPIO: Added default implementation (redundant).
      *
      * @param localName Name of the LocalDispatcher.
      * @param modelService Service model object.
      * @param context Map of name, value pairs composing the context.
      * @throws GenericServiceException
      */
-    public void runSyncIgnore(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException;
+    default void runSyncIgnore(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
+        runSync(localName, modelService, context);
+    }
 
     /**
      * Run the service asynchronously, passing an instance of GenericRequester that will receive the result.

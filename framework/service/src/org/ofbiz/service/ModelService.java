@@ -493,6 +493,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         return contextInfo.get(name);
     }
 
+    public boolean hasParam(String name) { return getParam(name) != null; }
+
     /**
      * Adds a parameter definition to this service; puts on list in order added
      * then sorts by order if specified.

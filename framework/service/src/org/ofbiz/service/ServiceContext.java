@@ -3,8 +3,8 @@ package org.ofbiz.service;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.security.Security;
 
-import javax.xml.ws.Dispatch;
 import java.util.Collection;
 import java.util.Locale;
 import java.util.Map;
@@ -140,5 +140,37 @@ public class ServiceContext implements Map<String, Object> {
     @Override
     public boolean remove(Object key, Object value) {
         return getContext().remove(key, value);
+    }
+
+    public Security getSecurity() {
+        return getDctx().getSecurity();
+    }
+
+    public Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ?> context) throws GenericServiceException {
+        return getDctx().makeValidContext(serviceName, mode, context);
+    }
+
+    public ModelService getModelService(String serviceName) throws GenericServiceException {
+        return getDctx().getModelService(serviceName);
+    }
+
+    public ModelService getModelServiceAlways(String serviceName) throws IllegalArgumentException {
+        return getDctx().getModelServiceAlways(serviceName);
+    }
+
+    public ModelService getModelServiceOrNull(String serviceName) {
+        return getDctx().getModelServiceOrNull(serviceName);
+    }
+
+    /**
+     * Returns the model of the last invoked service, or null if no service executing (SCIPIO).
+     * @return the current service model, or null if no service executing
+     */
+    public ModelService getModelService() {
+        return getDctx().getModelService();
+    }
+
+    public boolean isService(String serviceName) {
+        return getDctx().isService(serviceName);
     }
 }

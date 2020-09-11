@@ -2044,12 +2044,12 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
     }
 
     /** Copies all fields preserving the field order defined by the entity (SCIPIO). If includeNull null, only copies nulls if containsKey. */
-    public <M extends Map<String, Object>> M copyFields(M out, Boolean includeNull, Collection<String> exclude) {
+    public <M extends Map<String, Object>> M copyAllFields(M out, Boolean includeNull, Collection<String> exclude) {
         return copyFields(out, getModelEntity().getAllFieldNames(), includeNull, exclude);
     }
 
     /** Copies all fields preserving the field order defined by the entity (SCIPIO). If includeNull null, only copies nulls if containsKey. */
-    public <M extends Map<String, Object>> M copyFields(M out, Boolean includeNull) {
+    public <M extends Map<String, Object>> M copyAllFields(M out, Boolean includeNull) {
         return copyFields(out, getModelEntity().getAllFieldNames(), includeNull, null);
     }
 

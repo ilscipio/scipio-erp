@@ -727,7 +727,7 @@ public final class UtilProperties implements Serializable {
      * Added 2018-10-26.
      */
     public static Properties readMergedPropertiesFromAllComponents(String resource) {
-        if (!"resource".endsWith(".properties")) {
+        if (!resource.endsWith(".properties")) {
             resource = resource + ".properties";
         }
         Properties mergedProps = new ExtendedProperties();

@@ -3032,6 +3032,9 @@ code package.
           <key-map field-name="inventoryItemTypeId" rel-field-name="inventoryItemTypeId"/>
       </relation>
     </entity>
+    <extend-entity entity-name="Product"><!-- SCIPIO -->
+      <field name="imageProfile" type="id"><description>Name of a media profile for the main product image, either ImageSizePreset.presetId or media profile name from mediaprofiles.properties, defaults to IMAGE_PRODUCT (SCIPIO)</description></field>
+    </extend-entity>
     <entity entity-name="ProductAssoc"
             package-name="org.ofbiz.product.product"
             title="Product Association">

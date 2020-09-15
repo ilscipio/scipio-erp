@@ -10,12 +10,20 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.image.ContentImageServices;
+import org.ofbiz.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.ServiceValidationException;
 
 /**
  * SCIPIO: New product image services, alternatives to {@link org.ofbiz.product.imagemanagement.ImageManagementServices}
@@ -105,6 +113,178 @@ public abstract class ProductImageServices {
         Map<String, Object> result = ContentImageServices.contentImageFileScaleInAllSizeCore(dctx, contentCtx);
         result.put("productSizeTypeList", ScaleImage.sizeTypeList);
         return result;
+    }
+
+    public static Map<String, Object> productImageAutoRescale(DispatchContext dctx, Map<String, ?> context) throws ServiceValidationException { // SCIPIO
+        // NOTE: CMS images are identified byt contentTypeId="SCP_MEDIA"
+        ServiceContext ctx = ServiceContext.from(dctx, context);
+
+        String productId = ctx.getAttr("productId");
+        GenericValue product = ctx.getDelegator().from("Product").where("productId", productId).queryOneSafe();
+        if (product == null) {
+            return ServiceUtil.returnError("Could not find product [" + productId + "]");
+        }
+
+        String productContentTypeId = null;
+        GenericValue content = ctx.getAttr("content");
+        String contentId;
+        if (content != null) {
+            if (!content.isMutable()) {
+                throw new ServiceValidationException("content value is cached or read-only", ctx.getModelService());
+            }
+            contentId = content.getString("contentId");
+        } else {
+            contentId = ctx.getAttr("contentId");
+            if (UtilValidate.isNotEmpty(contentId)) {
+                try {
+                    content = dctx.getDelegator().from("Content").where("contentId", contentId).queryOne();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+                if (content == null) {
+                    Debug.logError("Content not found for contentId [" + contentId + "]", module);
+                    return ServiceUtil.returnError("Content not found for contentId [" + contentId + "]");
+                }
+            } else {
+                productContentTypeId = ctx.getAttr("productContentTypeId");
+            }
+        }
+        if (UtilValidate.isEmpty(contentId)) {
+            contentId = null;
+        }
+        if (UtilValidate.isEmpty(productContentTypeId)) {
+            productContentTypeId = null;
+        }
+        if (contentId == null && productContentTypeId == null) {
+            throw new ServiceValidationException("Missing contentId or productContentTypeId", ctx.getModelService());
+        }
+
+        GenericValue productContent = null;
+        if (contentId != null) {
+            try {
+                if (productContentTypeId == null) {
+                    productContent = ctx.getDelegator().from("ProductContent").where("productId", productId,
+                            "contentId", contentId).orderBy("-fromDate").filterByDate().queryFirst();
+                    if (productContent == null) {
+                        return ServiceUtil.returnError("Could not find ProductContent with productId [" + productId + "] contentId [" + contentId + "]");
+                    }
+                }
+                productContentTypeId = productContent.getString("productContentTypeId");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.toString());
+            }
+        } else {
+            try {
+                productContent = ctx.getDelegator().from("ProductContent").where("productId", productId,
+                        "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().queryFirst();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.toString());
+            }
+            if (productContent != null) {
+                contentId = productContent.getString("contentId");
+                try {
+                    content = productContent.getRelatedOne("Content");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.toString());
+                }
+            } else {
+                String productFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
+                ModelEntity productModel = dctx.getDelegator().getModelEntity("Product");
+                if (!productModel.isField(productFieldName)) {
+                    return ServiceUtil.returnError("Invalid productContentTypeId [" + productContentTypeId
+                            + "] for product [" + productId + "] for resize operation (parent products not consulted)");
+                }
+            }
+        }
+
+        // NOTE: this consults the parent product which we don't want, but in known cases should return right value
+        String imageUrl = ProductContentWrapper.getProductContentAsText(product, productContentTypeId,
+                ctx.getAttr("locale"), ctx.getDispatcher(), false, "raw");
+        if (UtilValidate.isEmpty(imageUrl)) {
+            String errMsg = "Could not get existing image URL for product [" + productId + "] productContentTypeId [" + productContentTypeId + "], resize impossible";
+            Debug.logError(errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+
+        /*
+        Boolean deleteOld = ctx.getAttr("deleteOld");
+        if (deleteOld == null) {
+            deleteOld = UtilProperties.getPropertyAsBoolean("content", "image.auto.rescale.deleteOld", false);
+        }
+        boolean force = Boolean.TRUE.equals(ctx.getAttr("force"));
+        boolean createInitial = Boolean.TRUE.equals(ctx.getAttr("createInitial"));
+         */
+
+        String mediaProfile;
+        if (content != null) {
+            mediaProfile = content.getString("mediaProfile");
+        } else {
+            mediaProfile = product.getString("imageProfile");
+        }
+        if (mediaProfile == null) {
+            mediaProfile = "IMAGE_PRODUCT"; // TODO?: better fallback default? don't use Product.imageProfile because it denotes the main product image (isMainImage)
+        }
+
+        // TODO: not yet supported here, file-based only
+        //GenericValue imageSizePreset;
+        //try {
+        //    imageSizePreset = ctx.getDelegator().from("ImageSizePreset").where("presetId", mediaProfile).cache().queryOne();
+        //    if ()
+        //} catch (GenericEntityException e) {
+        //    Debug.logError(e, module);
+        //    return ServiceUtil.returnError(e.toString());
+        //}
+
+        String mediaProfileLocation = ContentImageWorker.getImageMediaProfilePathOrDefault(mediaProfile);
+        if (UtilValidate.isEmpty(mediaProfileLocation)) {
+            Debug.logError("Could not determine media profile location for media profile [" + mediaProfile + "]", module);
+            return ServiceUtil.returnError("Could not determine media profile location for media profile [" + mediaProfile + "]");
+        }
+
+        String viewType = null;
+        Integer viewNumber;
+        if ("ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
+            viewType = "main";
+            viewNumber = null;
+        } else if (productContentTypeId.startsWith("ADDITIONAL_IMAGE_")) {
+            viewType = "additional";
+            try {
+                viewNumber = Integer.parseInt(productContentTypeId.substring("ADDITIONAL_IMAGE_".length()));
+                if (viewNumber <= 0) {
+                    throw new IllegalArgumentException("Invalid additional image number");
+                }
+            } catch(Exception e) {
+                return ServiceUtil.returnError("Unsupported productContentTypeId [" + productContentTypeId
+                        + "] product [" + productId + "]: should be ORIGINAL_IMAGE_URL or ADDITIONAL_IMAGE_x: " + e.toString());
+            }
+        } else {
+            // TODO: REVIEW: additional field support may be required
+            return ServiceUtil.returnError("Unsupported productContentTypeId [" + productContentTypeId
+                    + "] product [" + productId + "]: should be ORIGINAL_IMAGE_URL or ADDITIONAL_IMAGE_x");
+        }
+
+        Map<String, Object> resizeCtx = UtilMisc.toMap("productId", productId, "imageOrigUrl", imageUrl, "viewType", viewType, "viewNumber", viewNumber,
+                "locale", ctx.get("locale"), "userLogin", ctx.get("userLogin"), "timeZone", ctx.get("timeZone"), "imagePropXmlPath", mediaProfileLocation);
+        try {
+            Map<String, Object> resizeResult = productImageFileScaleInAllSize(dctx, resizeCtx);
+            if (!ServiceUtil.isSuccess(resizeResult)) {
+                String errMsg = "Could not resize image for product [" + productId + "] contentId [" + contentId
+                        + "] productContentTypeId [" + productContentTypeId + "]";
+                Debug.logError(errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
+        } catch (Exception e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.toString());
+        }
+
+        // TODO: If ProductContent existed for the original record, should create any missing ProductContent records for small/medium/large/detail
+
+        return ServiceUtil.returnSuccess();
     }
 
     private static boolean isStrArgEmpty(Map<String, ?> context, String argName) {

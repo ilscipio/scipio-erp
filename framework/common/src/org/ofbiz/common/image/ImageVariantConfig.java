@@ -581,7 +581,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         return getImagePropertiesFullPath(COMMON_IMAGEPROP_FILEPATH);
     }
 
-    public static String getCommonImagePropertiesPath() throws IOException {
+    public static String getCommonImagePropertiesPath() {
         return COMMON_IMAGEPROP_FILEPATH;
     }
 }

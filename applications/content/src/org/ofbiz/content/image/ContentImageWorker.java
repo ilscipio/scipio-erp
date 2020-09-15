@@ -20,15 +20,19 @@ package org.ofbiz.content.image;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -45,7 +49,7 @@ import org.ofbiz.entity.condition.EntityOperator;
  */
 public abstract class ContentImageWorker {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /**
      * Special image size type name designating the original (unscaled/unmodified) image.
@@ -85,7 +89,69 @@ public abstract class ContentImageWorker {
         RESIZEIMG_DATARESOURCE_FIELDEXPR = Collections.unmodifiableMap(drExprMap);
     }
 
+    private static final Map<String, String> MEDIA_PROFILE_PATHS = Collections.unmodifiableMap(readImageMediaProfilePaths(
+            UtilProperties.getMergedPropertiesFromAllComponents("mediaprofiles")));
+
     protected ContentImageWorker() {
+    }
+
+    public static Collection<String> getImageMediaProfileNames() {
+        return MEDIA_PROFILE_PATHS.keySet();
+    }
+
+    /**
+     * Gets a media profile path or null if not specifically defined, no default fallbacks, as defined in mediaprofiles.properties.
+     * The default is IMAGE_DEFAULT, not returned automatically.
+     */
+    public static String getImageMediaProfilePath(String mediaProfile) {
+        return MEDIA_PROFILE_PATHS.get(mediaProfile);
+    }
+
+    /**
+     * Gets a media profile path or IMAGE_DEFAULT if not specifically defined, as defined in mediaprofiles.properties.
+     */
+    public static String getImageMediaProfilePathOrDefault(String mediaProfile) {
+        String path = getImageMediaProfilePath(mediaProfile);
+        return (path != null) ? path : getImageMediaProfilePath("IMAGE_DEFAULT");
+    }
+
+    /**
+     * Gets Content.mediaProfile or an inferred default for the detected content type, as defined in mediaprofiles.properties.
+     * <p>Stock defaults: product-default, cms-default, default.</p>
+     * <p>NOTE: common-default also exists but is not returned by this method because it's the fallback default.</p>
+     */
+    public static String getContentImageMediaProfileOrDefault(GenericValue content, boolean useCache) throws GenericEntityException {
+        String mediaProfile = content.getString("mediaProfile");
+        if (mediaProfile != null) {
+            return mediaProfile;
+        }
+        // Infer default
+        String contentTypeId = content.getString("contentTypeId");
+        if ("SCP_MEDIA".equals(contentTypeId) || "SCP_MEDIA_VARIANT".equals(contentTypeId)) {
+            return "IMAGE_CMS";
+        }
+        if (content.getDelegator().from("ProductContent")
+                .where("contentId", content.get("contentId")).cache(useCache).queryCount() > 0) {
+            return "IMAGE_PRODUCT";
+        }
+        return "IMAGE_DEFAULT";
+    }
+
+    private static Map<String, String> readImageMediaProfilePaths(Properties mediaProfilesProps) {
+        Map<String, String> mpp = new LinkedHashMap<>();
+        Map<String, Map<String, Object>> profiles = UtilProperties.extractPropertiesWithPrefixAndId(new LinkedHashMap<>(), mediaProfilesProps, "mediaProfile.");
+        for(Map.Entry<String, Map<String, Object>> entry : profiles.entrySet()) {
+            String mediaProfile = entry.getKey();
+            String type = (String) entry.getValue().get("type");
+            if ("IMAGE_OBJECT".equals(type)) {
+                String location = (String) entry.getValue().get("location");
+                mpp.put(mediaProfile, UtilValidate.isNotEmpty(location) ? location : null);
+            }
+        }
+        if (mpp.get("IMAGE_DEFAULT") == null) { // default should always be defined
+            Debug.logError("No mediaProfile.IMAGE_DEFAULT.location defined in mediaprofiles.properties", module);
+        }
+        return mpp;
     }
 
     /**

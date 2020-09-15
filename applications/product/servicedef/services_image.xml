@@ -111,4 +111,18 @@
         <implements service="contentImageDbScaleInAllSizeCore"/>  
     </service>
     -->
+
+    <service name="productImageAutoRescale" engine="java"
+             location="org.ofbiz.product.image.ProductImageServices" invoke="productImageAutoRescale" auth="false" transaction-timeout="1800">
+        <description>Automatically rescales a product image</description>
+        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="productContentTypeId" mode="IN" type="String" optional="true">
+            <description>productContentTypeId of the ProductContent for the image - for main product image use ORIGINAL_IMAGE_URL,
+                otherwise ADDITIONAL_IMAGE_x [either contentId or productContentTypeId must be set]</description>
+        </attribute>
+        <attribute name="contentId" mode="IN" type="String" optional="true">
+            <description>contentId of the ProductContent for the image [either contentId or productContentTypeId must be set]</description>
+        </attribute>
+    </service>
+
 </services>

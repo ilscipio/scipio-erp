@@ -225,6 +225,9 @@ code package.
         <index-field name="localeString"/>
       </index>-->
     </entity>
+    <extend-entity entity-name="Content">
+      <field name="mediaProfile" type="id"><description>Name of a media profile for the image or media. For images: ImageSizePreset.presetId or media profile name from mediaprofiles.properties (SCIPIO)</description></field>
+    </extend-entity>
     <view-entity entity-name="ContentAndRole" package-name="org.ofbiz.content.content" title="Content And Role View">
         <member-entity entity-alias="CNT" entity-name="Content"/>
         <member-entity entity-alias="CRLE" entity-name="ContentRole"/>

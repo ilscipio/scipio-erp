@@ -34,6 +34,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.common.image.storer.ImageStorers;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
@@ -165,7 +166,7 @@ public class QRCodeEvents {
             Map<String, Object> results = dispatcher.runSync("generateQRCodeImage", context);
             if (ServiceUtil.isSuccess(results)) {
                 BufferedImage bufferedImage = (BufferedImage) results.get("bufferedImage");
-                if (!ImageIO.write(bufferedImage, format, os)) {
+                if (!ImageStorers.write(bufferedImage, format, os, delegator)) { // SCIPIO: ImageIO->ImageStorers
                     String errMsg = UtilProperties.getMessage("QRCodeUiLabels", "ErrorWriteFormatToFile", new Object[] { format }, locale);
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
                     return "error";

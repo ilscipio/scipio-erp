@@ -5,8 +5,17 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<!-- SCIPIO: Content/Generic global content image resizing/splitting discrete dimensions
-Duplicated from (original): component://product/config/ImageProperties.xml -->
+<!--
+    SCIPIO: Content/Generic global content image resizing/splitting discrete dimensions
+    Duplicated from (original): component://product/config/ImageProperties.xml
+    Entry format:
+
+    <size name="[string]">
+        <type name="format" value="[string, file format extension common name, e.g: jpg, webp)"/>
+        <dimension name="height" value="[int]"/>
+        <dimension name="width" value="[int]"/>
+    </size>
+-->
 <!-- 
     # The uploaded image is scaled in each size tye , you can descrease or increase size types ; size type name doesn't have to contain space
     # Just one configured dimension on two is allowed to restrict just one image dimension, whatever its proportions 

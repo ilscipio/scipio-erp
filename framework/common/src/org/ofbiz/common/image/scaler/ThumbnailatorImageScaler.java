@@ -79,7 +79,7 @@ public class ThumbnailatorImageScaler extends AbstractImageScaler {
 
     protected ThumbnailatorImageScaler(AbstractImageScalerFactory<? extends AbstractImageScaler> factory, String name,
             Map<String, Object> confOptions) {
-        super(factory, name, confOptions);
+        super(factory, name, confOptions, factory.getDefaultOptions());
     }
 
     public static class Factory extends AbstractImageScalerFactory<ThumbnailatorImageScaler> {

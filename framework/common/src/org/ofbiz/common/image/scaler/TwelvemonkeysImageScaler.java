@@ -65,7 +65,7 @@ public class TwelvemonkeysImageScaler extends AbstractImageScaler {
     }
 
     protected TwelvemonkeysImageScaler(AbstractImageScalerFactory<TwelvemonkeysImageScaler> factory, String name, Map<String, Object> confOptions) {
-        super(factory, name, confOptions);
+        super(factory, name, confOptions, factory.getDefaultOptions());
     }
 
     public static class Factory extends AbstractImageScalerFactory<TwelvemonkeysImageScaler> {

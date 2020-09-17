@@ -54,7 +54,7 @@ public class ComposedImageScaler extends AbstractImageScaler {
     protected Map<String, OptionSetEntry> compiledSets = null; // compiled on first run, optimization only
 
     protected ComposedImageScaler(AbstractImageScalerFactory<ComposedImageScaler> factory, String name, Map<String, Object> confOptions) {
-        super(factory, name, confOptions);
+        super(factory, name, confOptions, factory.getDefaultOptions());
     }
 
     public static class Factory extends AbstractImageScalerFactory<ComposedImageScaler> {

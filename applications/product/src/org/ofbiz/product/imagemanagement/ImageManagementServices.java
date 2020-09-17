@@ -45,6 +45,7 @@ import org.ofbiz.common.image.ImageTransform;
 import org.ofbiz.common.image.ImageType;
 import org.ofbiz.common.image.ImageUtil;
 import org.ofbiz.common.image.scaler.ImageScalers;
+import org.ofbiz.common.image.storer.ImageStorers;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -387,7 +388,7 @@ public class ImageManagementServices {
 
                     // write new image
                     try {
-                        ImageIO.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUse));
+                        ImageStorers.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUse), (Delegator) context.get("delegator")); // SCIPIO: ImageIO->ImageStorers
                         File deleteFile = new File(imageServerPath + "/"  + filenameToUse);
                         if (!deleteFile.delete()) {
                             Debug.logError("File :" + deleteFile.getName() + ", couldn't be deleted", module);
@@ -732,7 +733,7 @@ public class ImageManagementServices {
             if (dataResourceName.length() > 3) {
                 String mimeType = dataResourceName.substring(dataResourceName.length() - 3, dataResourceName.length());
                 Map<String, Object> resultResize = resizeImage(bufImg, imgHeight, imgWidth, resizeHeight, resizeWidth);
-                ImageIO.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse));
+                ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse), delegator); // SCIPIO: ImageIO->ImageStorers
 
                 Map<String, Object> contentThumb = new HashMap<>();
                 contentThumb.put("contentTypeId", "DOCUMENT");
@@ -796,7 +797,7 @@ public class ImageManagementServices {
             String filenameToUse = dataResourceName;
             String mimeType = dataResourceName.substring(dataResourceName.length() - 3, dataResourceName.length());
             Map<String, Object> resultResize = resizeImage(bufImg, imgHeight, imgWidth, resizeHeight, resizeWidth);
-            ImageIO.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse));
+            ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse), delegator); // SCIPIO: ImageIO->ImageStorers
         } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -829,7 +830,7 @@ public class ImageManagementServices {
                 if (bufImg == null) { // SCIPIO: may be null
                     return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
                 }
-                ImageIO.write(bufImg, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUse));
+                ImageStorers.write(bufImg, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUse), delegator); // SCIPIO: ImageIO->ImageStorers
 
                 File file = new File(imageServerPath + "/" + productId + "/" + dataResourceName);
                 if (!file.delete()) {
@@ -899,7 +900,7 @@ public class ImageManagementServices {
                         if (bufImgAssoc == null) { // SCIPIO: may be null
                             return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
                         }
-                        ImageIO.write(bufImgAssoc, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUseAssoc));
+                        ImageStorers.write(bufImgAssoc, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUseAssoc), delegator); // SCIPIO: ImageIO->ImageStorers
 
                         File fileAssoc = new File(imageServerPath + "/" + productId + "/" + drDataResourceNameAssoc);
                         if (!fileAssoc.delete()) {

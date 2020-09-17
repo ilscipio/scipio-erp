@@ -63,7 +63,7 @@ public class ImgscalrImageScaler extends AbstractImageScaler {
     }
 
     protected ImgscalrImageScaler(AbstractImageScalerFactory<ImgscalrImageScaler> factory, String name, Map<String, Object> confOptions) {
-        super(factory, name, confOptions);
+        super(factory, name, confOptions, factory.getDefaultOptions());
     }
 
     public static class Factory extends AbstractImageScalerFactory<ImgscalrImageScaler> {

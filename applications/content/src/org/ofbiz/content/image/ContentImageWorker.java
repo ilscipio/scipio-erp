@@ -89,30 +89,7 @@ public abstract class ContentImageWorker {
         RESIZEIMG_DATARESOURCE_FIELDEXPR = Collections.unmodifiableMap(drExprMap);
     }
 
-    private static final Map<String, String> MEDIA_PROFILE_PATHS = Collections.unmodifiableMap(readImageMediaProfilePaths(
-            UtilProperties.getMergedPropertiesFromAllComponents("mediaprofiles")));
-
     protected ContentImageWorker() {
-    }
-
-    public static Collection<String> getImageMediaProfileNames() {
-        return MEDIA_PROFILE_PATHS.keySet();
-    }
-
-    /**
-     * Gets a media profile path or null if not specifically defined, no default fallbacks, as defined in mediaprofiles.properties.
-     * The default is IMAGE_DEFAULT, not returned automatically.
-     */
-    public static String getImageMediaProfilePath(String mediaProfile) {
-        return MEDIA_PROFILE_PATHS.get(mediaProfile);
-    }
-
-    /**
-     * Gets a media profile path or IMAGE_DEFAULT if not specifically defined, as defined in mediaprofiles.properties.
-     */
-    public static String getImageMediaProfilePathOrDefault(String mediaProfile) {
-        String path = getImageMediaProfilePath(mediaProfile);
-        return (path != null) ? path : getImageMediaProfilePath("IMAGE_DEFAULT");
     }
 
     /**
@@ -135,23 +112,6 @@ public abstract class ContentImageWorker {
             return "IMAGE_PRODUCT";
         }
         return "IMAGE_DEFAULT";
-    }
-
-    private static Map<String, String> readImageMediaProfilePaths(Properties mediaProfilesProps) {
-        Map<String, String> mpp = new LinkedHashMap<>();
-        Map<String, Map<String, Object>> profiles = UtilProperties.extractPropertiesWithPrefixAndId(new LinkedHashMap<>(), mediaProfilesProps, "mediaProfile.");
-        for(Map.Entry<String, Map<String, Object>> entry : profiles.entrySet()) {
-            String mediaProfile = entry.getKey();
-            String type = (String) entry.getValue().get("type");
-            if ("IMAGE_OBJECT".equals(type)) {
-                String location = (String) entry.getValue().get("location");
-                mpp.put(mediaProfile, UtilValidate.isNotEmpty(location) ? location : null);
-            }
-        }
-        if (mpp.get("IMAGE_DEFAULT") == null) { // default should always be defined
-            Debug.logError("No mediaProfile.IMAGE_DEFAULT.location defined in mediaprofiles.properties", module);
-        }
-        return mpp;
     }
 
     /**

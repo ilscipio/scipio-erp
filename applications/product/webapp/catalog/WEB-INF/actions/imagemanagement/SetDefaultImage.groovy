@@ -30,6 +30,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.string.*;
 import org.ofbiz.product.image.ScaleImage;
+import org.ofbiz.common.image.storer.ImageStorers;
 
 module = "SetDefaultImage.groovy"
 
@@ -119,7 +120,7 @@ if (fileType) {
         bufImg = ImageIO.read(new File(productContentList.get(0).drObjectInfo));
     }
     if (bufImg != null) { // SCIPIO: may be null
-        ImageIO.write((RenderedImage) bufImg, "jpg", new File(imageManagementPath + "/" + productId + "/" + defaultFileName));
+        ImageStorers.write((RenderedImage) bufImg, "jpg", new File(imageManagementPath + "/" + productId + "/" + defaultFileName), delegator); // SCIPIO: ImageIO->ImageStorers
     }
 
     clientFileName = dataResourceName;

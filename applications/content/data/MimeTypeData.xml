@@ -118,6 +118,7 @@ code package.
     <!-- Scipio: Added this new MIME type -->
     <MimeType mimeTypeId="video/ogg" description="OGG Video"/>
     <MimeType mimeTypeId="video/webm" description="WebM Video"/>
+    <MimeType mimeTypeId="image/webp" description="WebP Image"/>
     <MimeType mimeTypeId="video/3gpp" description="3GPP Video"/>
     <MimeType mimeTypeId="video/x-matroska" description="Matroska Video"/>
 
@@ -164,6 +165,7 @@ code package.
     <FileExtension fileExtensionId="mp3" mimeTypeId="audio/mp3"/>
     <FileExtension fileExtensionId="ogv" mimeTypeId="video/ogg"/>
     <FileExtension fileExtensionId="webm" mimeTypeId="video/webm"/>
+    <FileExtension fileExtensionId="webp" mimeTypeId="image/webp"/>
     <FileExtension fileExtensionId="3gg" mimeTypeId="video/3gpp"/>
     <FileExtension fileExtensionId="3gp" mimeTypeId="video/3gpp"/>
     <FileExtension fileExtensionId="3g2" mimeTypeId="video/3gpp"/>

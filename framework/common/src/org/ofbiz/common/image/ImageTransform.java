@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,6 +45,7 @@ import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.common.image.ImageType.ImagePixelType;
 import org.ofbiz.common.image.ImageType.ImageTypeInfo;
@@ -145,15 +147,18 @@ public class ImageTransform {
     public static Map<String, Object> scaleImage(BufferedImage bufImg, double imgHeight, double imgWidth, Map<String, Map<String, String>> dimensionMap, String sizeType, Locale locale, Map<String, Object> scalingOptions) {
         double defaultHeight, defaultWidth;
 
+        // SCIPIO: improved
+        Map<String, String> infoMap = dimensionMap.get(sizeType);
+
         /* DIMENSIONS from ImageProperties */
         // A missed dimension is authorized
-        if (dimensionMap.get(sizeType).containsKey("height")) {
-            defaultHeight = Double.parseDouble(dimensionMap.get(sizeType).get("height"));
+        if (infoMap.containsKey("height")) {
+            defaultHeight = Double.parseDouble(infoMap.get("height"));
         } else {
             defaultHeight = -1;
         }
-        if (dimensionMap.get(sizeType).containsKey("width")) {
-            defaultWidth = Double.parseDouble(dimensionMap.get(sizeType).get("width"));
+        if (infoMap.containsKey("width")) {
+            defaultWidth = Double.parseDouble(infoMap.get("width"));
         } else {
             defaultWidth = -1;
         }

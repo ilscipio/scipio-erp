@@ -54,11 +54,6 @@ public abstract class AbstractImageOp implements ImageOp {
         this.confDefOptions = confDefOptions;
     }
 
-    protected AbstractImageOp(AbstractImageOpFactory<? extends AbstractImageOp, ? extends ImageOp> factory, String name,
-            Map<String, Object> confOptions) {
-        this(factory, name, confOptions, factory.getDefaultOptions());
-    }
-
     @Override
     public String getName() {
         return name;
@@ -115,15 +110,15 @@ public abstract class AbstractImageOp implements ImageOp {
     // NOTE: this needs two params otherwise the multiple inherit hierarchy breaks
     public static abstract class AbstractImageOpFactory<T extends AbstractImageOp, V extends ImageOp> implements ImageOpFactory<V> {
         @Override
-        public V getImageOpInst(String name, Map<String, Object> defaultScalingOptions) {
-            return getImageOpInstStrict(name, makeValidOptions(defaultScalingOptions));
+        public V getImageOpInst(String name, Map<String, Object> defaultOptions) {
+            return getImageOpInstStrict(name, makeValidOptions(defaultOptions));
         }
 
         @Override
-        public V getDerivedImageOpInst(String name, Map<String, Object> defaultScalingOptions, ImageOp other) {
+        public V getDerivedImageOpInst(String name, Map<String, Object> defaultOptions, ImageOp other) {
             Map<String, Object> mergedOptions = makeOptionsMap(other.getConfiguredOptions());
-            if (defaultScalingOptions != null) {
-                mergedOptions.putAll(defaultScalingOptions);
+            if (defaultOptions != null) {
+                mergedOptions.putAll(defaultOptions);
             }
             return getImageOpInst(name, mergedOptions);
         }

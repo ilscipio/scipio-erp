@@ -26,7 +26,7 @@ public class PreserveImageScaler extends AbstractImageScaler {
     }
 
     protected PreserveImageScaler(Factory factory, String name, Map<String, Object> confOptions) {
-        super(factory, name, confOptions, DEFAULT_OPTIONS);
+        super(factory, name, confOptions, factory.getDefaultOptions());
     }
 
     public static class Factory extends AbstractImageScalerFactory<PreserveImageScaler> {

@@ -37,6 +37,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
+import org.ofbiz.common.image.storer.ImageStorers;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.ModelService;
@@ -222,7 +223,7 @@ public class ScaleImage {
 
                     // write new image
                     try {
-                        ImageIO.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + newFileLocation + "." + imgExtension));
+                        ImageStorers.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + newFileLocation + "." + imgExtension), (Delegator) context.get("delegator")); // SCIPIO: ImageIO->ImageStorers
                     } catch (IllegalArgumentException e) {
                         String errMsg = UtilProperties.getMessage(resource, "ScaleImage.one_parameter_is_null", locale) + e.toString();
                         Debug.logError(errMsg, module);
@@ -392,7 +393,7 @@ public class ScaleImage {
 
                     // write new image
                     try {
-                        ImageIO.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + newFilePathPrefix + filenameToUse));
+                        ImageStorers.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + newFilePathPrefix + filenameToUse), (Delegator) context.get("delegator")); // SCIPIO: ImageIO->ImageStorers
                     } catch (IllegalArgumentException e) {
                         String errMsg = UtilProperties.getMessage(resource, "ScaleImage.one_parameter_is_null", locale) + e.toString();
                         Debug.logError(errMsg, module);

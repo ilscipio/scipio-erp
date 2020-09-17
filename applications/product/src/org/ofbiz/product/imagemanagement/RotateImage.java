@@ -36,6 +36,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageTransform;
 import org.ofbiz.common.image.ImageType.ImageTypeInfo;
+import org.ofbiz.common.image.storer.ImageStorers;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -123,13 +124,13 @@ public class RotateImage {
             g.dispose();
 
             String mimeType = imageName.substring(imageName.lastIndexOf('.') + 1);
-            ImageIO.write(bufNewImg, mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse));
+            ImageStorers.write(bufNewImg, mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse), delegator); // SCIPIO: ImageIO->ImageStorers
 
             double imgHeight = bufNewImg.getHeight();
             double imgWidth = bufNewImg.getWidth();
 
             Map<String, Object> resultResize = ImageManagementServices.resizeImageThumbnail(bufNewImg, imgHeight, imgWidth);
-            ImageIO.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameTouseThumb));
+            ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameTouseThumb), delegator); // SCIPIO: ImageIO->ImageStorers
 
             String imageUrlResource = imageServerUrl + "/" + productId + "/" + filenameToUse;
             String imageUrlThumb = imageServerUrl + "/" + productId + "/" + filenameTouseThumb;

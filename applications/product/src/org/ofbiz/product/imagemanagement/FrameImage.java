@@ -54,6 +54,7 @@ import org.ofbiz.common.image.ImageType.ImagePixelType;
 import org.ofbiz.common.image.ImageUtil;
 import org.ofbiz.common.image.scaler.ImageScaler;
 import org.ofbiz.common.image.scaler.ImageScalers;
+import org.ofbiz.common.image.storer.ImageStorers;
 import org.ofbiz.content.layout.LayoutWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -185,13 +186,13 @@ public class FrameImage {
 
             BufferedImage bufNewImg = combineBufferedImage(newImg1, newImg2, bufImg1);
             String mimeType = imageName.substring(imageName.lastIndexOf(".") + 1);
-            ImageIO.write(bufNewImg, mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse));
+            ImageStorers.write(bufNewImg, mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse), delegator); // SCIPIO: ImageIO->ImageStorers
 
             double imgHeight = bufNewImg.getHeight();
             double imgWidth = bufNewImg.getWidth();
 
             Map<String, Object> resultResize = ImageManagementServices.resizeImageThumbnail(bufNewImg, imgHeight, imgWidth);
-            ImageIO.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameTouseThumb));
+            ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameTouseThumb), delegator); // SCIPIO: ImageIO->ImageStorers
 
             String imageUrlResource = imageServerUrl + "/" + productId + "/" + filenameToUse;
             String imageUrlThumb = imageServerUrl + "/" + productId + "/" + filenameTouseThumb;
@@ -492,7 +493,7 @@ public class FrameImage {
 
             BufferedImage bufNewImg = combineBufferedImage(newImg1, newImg2, bufImg1); // SCIPIO
             String mimeType = imageName.substring(imageName.lastIndexOf(".") + 1);
-            ImageIO.write(bufNewImg, mimeType, new File(imageServerPath + "/preview/" + "/previewImage.jpg"));
+            ImageStorers.write(bufNewImg, mimeType, new File(imageServerPath + "/preview/" + "/previewImage.jpg"), delegator); // SCIPIO: ImageIO->ImageStorers
 
         } else {
             String errMsg = "Please select Image.";

@@ -34,20 +34,20 @@ public interface ImageOp {
          * Returns new ImageOp instance.
          * The defaultScalingOptions may be in non-validated format (e.g. strings instead of ints, where applicable).
          */
-        T getImageOpInst(String name, Map<String, Object> defaultScalingOptions);
+        T getImageOpInst(String name, Map<String, Object> defaultOptions);
 
         /**
          * Returns new ImageOp instance.
          * The defaultScalingOptions must be in validated format and types, in other words
          * must have been processed by {@link #makeValidOptions(Map)}.
          */
-        T getImageOpInstStrict(String name, Map<String, Object> defaultScalingOptions);
+        T getImageOpInstStrict(String name, Map<String, Object> defaultOptions);
 
         /**
          * Derives or extends the given op, usually simply replacing its default options.
          * The defaultScalingOptions may be in non-validated format.
          */
-        T getDerivedImageOpInst(String name, Map<String, Object> defaultScalingOptions, ImageOp other);
+        T getDerivedImageOpInst(String name, Map<String, Object> defaultOptions, ImageOp other);
 
         /**
          * Returns a new Map with options parsed in the format recognized by

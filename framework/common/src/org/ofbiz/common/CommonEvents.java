@@ -53,6 +53,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.common.image.storer.ImageStorers;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -489,7 +490,7 @@ public class CommonEvents {
             g.drawRect(0, 0, width - 1, height - 1);
             g.dispose();
             response.setContentType("image/jpeg");
-            ImageIO.write(bufferedImage, "jpg", response.getOutputStream());
+            ImageStorers.write(bufferedImage, "jpg", response.getOutputStream(), delegator); // SCIPIO: ImageIO->ImageStorers
             HttpSession session = request.getSession();
             Map<String, String> captchaCodeMap = UtilGenerics.checkMap(session.getAttribute("_CAPTCHA_CODE_"));
             if (captchaCodeMap == null) {

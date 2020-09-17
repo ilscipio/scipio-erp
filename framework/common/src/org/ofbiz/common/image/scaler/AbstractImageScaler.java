@@ -16,16 +16,14 @@ import org.ofbiz.common.image.ImageUtil;
 public abstract class AbstractImageScaler extends AbstractImageOp implements ImageScaler {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-
-
     protected AbstractImageScaler(AbstractImageScalerFactory<? extends AbstractImageScaler> factory, String name,
             Map<String, Object> confOptions, Map<String, Object> defOptions) {
         super(factory, name, confOptions, defOptions);
     }
 
-    protected AbstractImageScaler(AbstractImageScalerFactory<? extends AbstractImageScaler> factory, String name,
-            Map<String, Object> confOptions) {
-        super(factory, name, confOptions);
+    // NOTE: ugly 2 parameters required to keep hierarchy consistent
+    public static abstract class AbstractImageScalerFactory<T extends AbstractImageScaler> extends AbstractImageOpFactory<AbstractImageScaler, ImageScaler> implements ImageScalerFactory {
+        // (nothing scaling-specific yet)
     }
 
     @Override
@@ -89,13 +87,6 @@ public abstract class AbstractImageScaler extends AbstractImageOp implements Ima
             sb.append("\n");
         }
         return sb.toString();
-    }
-
-    // NOTE: ugly 2 parameters required to keep hierarchy consistent
-    public static abstract class AbstractImageScalerFactory<T extends AbstractImageScaler> extends AbstractImageOpFactory<AbstractImageScaler, ImageScaler> implements ImageScalerFactory {
-
-        // (nothing scaling-specific yet)
-
     }
 
 }

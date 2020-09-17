@@ -65,6 +65,9 @@
         <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
             <description>Path to ImageProperties.xml file containing size types, from ofbiz home root</description>
         </attribute>
+        <attribute name="imageProfile" mode="IN" type="org.ofbiz.common.image.ImageProfile" optional="true">
+            <description>Image profile, alternative to imagePropXmlPath</description>
+        </attribute>
         <attribute name="sizeTypeList" mode="IN" type="List" optional="true">
             <description>List of size types to generate and return (default: all types in file)</description>
         </attribute>
@@ -90,7 +93,12 @@
         <attribute name="scalingOptions" mode="IN" type="Map" optional="true">
             <description>Scaling options, notably the entry: scalerName (algorithm or library name)</description>
         </attribute>
-        
+
+        <!-- IMAGE VARIANT CONFIG
+             SCIPIO (18/12/2018): Passing custom image variant config, for custom image sizes
+        -->
+        <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
+
         <!-- OUTPUT -->
         <attribute name="imageUrlMap" mode="OUT" type="Map" optional="true">
             <description>Map of size types to URLs (relative to server root, with imageUrlPrefix); if copyOrig==true, also contains "original" (UNLESS found to already exist / same as input)

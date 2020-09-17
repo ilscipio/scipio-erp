@@ -93,19 +93,19 @@ public abstract class ImageUtil {
                     continue;
                 }
                 Map<String, Object> defaultOptions = readImagePropOptions(props, propPrefix+factoryEntry+".options.", new LinkedHashMap<String, Object>());
-                T scaler;
+                T op;
                 try {
-                    scaler = factory.getImageOpInst(name, defaultOptions);
-                    if (!imageOpCls.isAssignableFrom(scaler.getClass())) {
-                        throw new IllegalArgumentException("Invalid or broken image op factory: factory [" + scaler.getClass().getName()
+                    op = factory.getImageOpInst(name, defaultOptions);
+                    if (!imageOpCls.isAssignableFrom(op.getClass())) {
+                        throw new IllegalArgumentException("Invalid or broken image op factory: factory [" + op.getClass().getName()
                                 + "] did not produce image op instance of expected type [" + imageOpCls.getName()
-                                + "]; instead got instance of type [" + scaler.getClass().getName() + "]");
+                                + "]; instead got instance of type [" + op.getClass().getName() + "]");
                     }
                 } catch (Exception e) {
                     Debug.logError(e, "Unable to instantiate image op class from factory property " + propPrefix+factoryEntry+".factoryClass: " + e.getMessage(), module);
                     continue;
                 }
-                imageOpMap.put(name, scaler);
+                imageOpMap.put(name, op);
             }
         }
 
@@ -150,14 +150,14 @@ public abstract class ImageUtil {
             if (props == null) continue; // this skips the factories
             String aliasEntry = name;
             String aliasName = depMap.get(name).get(0);
-            T scaler = imageOpMap.get(aliasName);
-            if (scaler != null) {
+            T op = imageOpMap.get(aliasName);
+            if (op != null) {
                 Map<String, Object> defaultOptions = readImagePropOptions(props, propPrefix+aliasEntry+".options.", new LinkedHashMap<String, Object>());
                 try {
                     // TODO: REVIEW: currently passing the aliasName instance of name, not sure which is best
                     @SuppressWarnings("unchecked")
-                    T newScaler = (T) scaler.getFactory().getDerivedImageOpInst(name, defaultOptions, scaler);
-                    imageOpMap.put(name, newScaler);
+                    T newOp = (T) op.getFactory().getDerivedImageOpInst(name, defaultOptions, op);
+                    imageOpMap.put(name, newOp);
                 } catch(Exception e) {
                     Debug.logError("Could not instantiate image op instance " + aliasName + " for alias property " + propPrefix+aliasEntry+".alias: " + e.getMessage(), module);
                     continue;

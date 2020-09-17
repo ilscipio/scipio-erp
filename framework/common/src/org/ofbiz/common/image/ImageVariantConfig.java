@@ -38,7 +38,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final ImageVariantConfig FALLBACK = new ImageVariantConfig("dummy", null, null,
-            UtilMisc.toList(new VariantInfo("thumbnail", 100, 100)));
+            UtilMisc.toList(new VariantInfo("thumbnail", UtilMisc.toMap("width", 100, "height", 100))));
 
     private static final Factory FACTORY = new Factory();
     private static final Cache CACHE = new Cache();
@@ -57,7 +57,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     //protected transient VariantInfo smallestVariant;
     protected transient Map<String, VariantInfo> exactDimVariantMap; // maps "widthxheight" string to VariantInfo
 
-    public ImageVariantConfig(String name, String sourceType, String location, Collection<VariantInfo> variants) {
+    protected ImageVariantConfig(String name, String sourceType, String location, Collection<VariantInfo> variants) {
         this(name, sourceType, location, variants, null);
     }
 
@@ -119,7 +119,6 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     public static class Cache extends Factory {
 
         private static final UtilCache<String, ImageVariantConfig> imgPropsPathCache = UtilCache.createUtilCache("common.image.variant.imgpropxml");
-
 
         @Override
         public ImageVariantConfig fromImagePropertiesMap(String name, String sourceType, String location,
@@ -412,16 +411,15 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         private final String name;
         private final int width;
         private final int height;
-        public VariantInfo(String name, int width, int height) {
+        private final String format;
+
+        public VariantInfo(String name, Map<String, ?> map) throws NumberFormatException {
             this.name = name;
-            this.width = width;
-            this.height = height;
+            this.width = UtilMisc.toInteger(map.get("width"));
+            this.height = UtilMisc.toInteger(map.get("height"));
+            this.format = UtilValidate.nullIfEmpty((String) map.get("format"));
         }
-        private VariantInfo(String name, Map<String, String> map) throws NumberFormatException {
-            this.name = name;
-            this.width = Integer.parseInt(map.get("width"));
-            this.height = Integer.parseInt(map.get("height"));
-        }
+
         public String getName() {
             return name;
         }
@@ -442,6 +440,10 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
 
         public static String getDimString(int width, int height) {
             return width+"x"+height;
+        }
+
+        public String getFormat() {
+            return format;
         }
 
         @Override
@@ -474,6 +476,7 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         public void propsToStringMap(Map<String, ? super String> map) {
             map.put("width", ""+width);
             map.put("height", ""+height);
+            map.put("format", format);
         }
 
         public Map<String, String> propsToStringMap() {

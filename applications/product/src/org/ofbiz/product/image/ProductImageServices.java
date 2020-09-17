@@ -9,8 +9,9 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.common.image.ImageProfile;
+import org.ofbiz.common.image.MediaProfile;
 import org.ofbiz.content.image.ContentImageServices;
-import org.ofbiz.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -219,14 +220,14 @@ public abstract class ProductImageServices {
         boolean createInitial = Boolean.TRUE.equals(ctx.getAttr("createInitial"));
          */
 
-        String mediaProfile;
+        String mediaProfileName;
         if (content != null) {
-            mediaProfile = content.getString("mediaProfile");
+            mediaProfileName = content.getString("mediaProfile");
         } else {
-            mediaProfile = product.getString("imageProfile");
+            mediaProfileName = product.getString("imageProfile");
         }
-        if (mediaProfile == null) {
-            mediaProfile = "IMAGE_PRODUCT"; // TODO?: better fallback default? don't use Product.imageProfile because it denotes the main product image (isMainImage)
+        if (mediaProfileName == null) {
+            mediaProfileName = "IMAGE_PRODUCT"; // TODO?: better fallback default? don't use Product.imageProfile because it denotes the main product image (isMainImage)
         }
 
         // TODO: not yet supported here, file-based only
@@ -239,13 +240,13 @@ public abstract class ProductImageServices {
         //    return ServiceUtil.returnError(e.toString());
         //}
 
-        String mediaProfileLocation = ContentImageWorker.getImageMediaProfilePathOrDefault(mediaProfile);
-        if (UtilValidate.isEmpty(mediaProfileLocation)) {
-            Debug.logError("Could not determine media profile location for media profile [" + mediaProfile + "]", module);
-            return ServiceUtil.returnError("Could not determine media profile location for media profile [" + mediaProfile + "]");
+        ImageProfile imageProfile = ImageProfile.getImageProfile(ctx.getDelegator(), mediaProfileName);
+        if (imageProfile == null) {
+            Debug.logError("Could not find media profile [" + imageProfile + "]", module);
+            return ServiceUtil.returnError("Could not find media profile [" + imageProfile + "]");
         }
 
-        String viewType = null;
+        String viewType;
         Integer viewNumber;
         if ("ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
             viewType = "main";
@@ -268,7 +269,7 @@ public abstract class ProductImageServices {
         }
 
         Map<String, Object> resizeCtx = UtilMisc.toMap("productId", productId, "imageOrigUrl", imageUrl, "viewType", viewType, "viewNumber", viewNumber,
-                "locale", ctx.get("locale"), "userLogin", ctx.get("userLogin"), "timeZone", ctx.get("timeZone"), "imagePropXmlPath", mediaProfileLocation);
+                "locale", ctx.get("locale"), "userLogin", ctx.get("userLogin"), "timeZone", ctx.get("timeZone"), "imageProfile", imageProfile);
         try {
             Map<String, Object> resizeResult = productImageFileScaleInAllSize(dctx, resizeCtx);
             if (!ServiceUtil.isSuccess(resizeResult)) {

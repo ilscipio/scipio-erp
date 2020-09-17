@@ -2,6 +2,7 @@ package org.ofbiz.common.image.storer;
 
 import com.luciad.imageio.webp.WebPWriteParam;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 
 import javax.imageio.IIOImage;
@@ -11,10 +12,12 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,7 +46,11 @@ public class SedjaWebpStorer extends AbstractImageStorer {
 
         @Override
         public Map<String, Object> makeValidOptions(Map<String, Object> options) {
-            return options;
+            Map<String, Object> validOptions = new HashMap<>();
+            putCommonValidOptions(validOptions, options);
+            putOption(validOptions, "compressionType", options.get("compressionType"), options);
+            putOption(validOptions, "compressionQuality", UtilMisc.toFloat(options.get("compressionQuality"), null), options);
+            return validOptions;
         }
 
         @Override
@@ -78,20 +85,38 @@ public class SedjaWebpStorer extends AbstractImageStorer {
             writeParam.setCompressionType(writeParam.getCompressionTypes()[WebPWriteParam.LOSSLESS_COMPRESSION]);
         }
 
-        // Configure the output on the ImageWriter
-        if (output instanceof ImageOutputStream) {
-            writer.setOutput(output);
-        } else if (output instanceof OutputStream) {
-            writer.setOutput(output);
-        } else if (output instanceof File) {
-            writer.setOutput(new FileImageOutputStream((File) output));
-        } else {
-            throw new IOException("Unsupported output: " + (output != null ? output.getClass().getName() : output));
+        Float compressionQuality = UtilMisc.toFloat(options.get("compressionQuality"), null);
+        if (compressionQuality != null) {
+            writeParam.setCompressionQuality(compressionQuality);
         }
 
-        // Encode
-        writer.write(null, new IIOImage(im, null, null), writeParam);
+        // TODO: more writeParam settings
+
+        // Configure the output on the ImageWriter
+        ImageOutputStream tempStream = null;
+        try {
+            if (output instanceof ImageOutputStream) {
+                writer.setOutput(output);
+            } else if (output instanceof OutputStream) {
+                tempStream = ImageIO.createImageOutputStream(output);
+                writer.setOutput(tempStream);
+            } else if (output instanceof File) {
+                ((File) output).delete(); // see ImageIO.write
+                tempStream = ImageIO.createImageOutputStream(output);
+                writer.setOutput(tempStream);
+                //writer.setOutput(new FileImageOutputStream((File) output));
+            } else {
+                // It'll do it for us if needed
+                //throw new IOException("Unsupported output: " + (output != null ? output.getClass().getName() : output));
+                writer.setOutput(output);
+            }
+            // Encode
+            writer.write(null, new IIOImage(im, null, null), writeParam);
+        } finally {
+            if (tempStream != null) {
+                tempStream.close();
+            }
+        }
         return true;
     }
-
 }

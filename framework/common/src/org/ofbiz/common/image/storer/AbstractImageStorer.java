@@ -2,6 +2,7 @@ package org.ofbiz.common.image.storer;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.common.image.AbstractImageOp;
 import org.ofbiz.common.image.ImageOp;
 import org.ofbiz.common.image.scaler.AbstractImageScaler;
@@ -10,6 +11,7 @@ import org.ofbiz.entity.Delegator;
 
 import java.awt.image.RenderedImage;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +32,11 @@ public abstract class AbstractImageStorer extends AbstractImageOp implements Ima
 
     // NOTE: ugly 2 parameters required to keep hierarchy consistent
     public static abstract class AbstractImageStorerFactory<T extends AbstractImageStorer> extends AbstractImageOp.AbstractImageOpFactory<AbstractImageStorer, ImageStorer> implements ImageStorer.ImageStorerFactory {
-        // (nothing storer-specific yet)
+        public Map<String, Object> putCommonValidOptions(Map<String, Object> validOptions, Map<String, Object> options) {
+            putOption(validOptions, "sequenceNum", UtilMisc.toInteger(options.get("sequenceNum"), null), options);
+            putOption(validOptions, "formats", options.get("formats"), options);
+            return validOptions;
+        }
     }
 
     @Override

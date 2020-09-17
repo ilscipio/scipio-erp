@@ -324,7 +324,7 @@ public abstract class ContentImageServices {
                         // 2020-09: Support for specific storage format
                         ImageVariantConfig.VariantInfo variantInfo = imgPropCfg.getVariant(sizeType);
                         if (variantInfo != null && variantInfo.getFormat() != null) {
-                            targetFileType = variantInfo.getFormat();
+                            targetFileType = variantInfo.resolveFormat(delegator);
                         }
 
                         String newFileLocExt = newFileLocation + "." + targetFileType;
@@ -700,7 +700,7 @@ public abstract class ContentImageServices {
                 // 2020-09: Support for specific storage format
                 ImageVariantConfig.VariantInfo variantInfo = imgPropCfg.getVariant(sizeType);
                 if (variantInfo != null && variantInfo.getFormat() != null) {
-                    targetFormat = variantInfo.getFormat();
+                    targetFormat = variantInfo.resolveFormat(delegator);
                 }
                 imageCtx.put("ext", targetFormat);
 

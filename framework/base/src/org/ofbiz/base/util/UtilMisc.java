@@ -480,6 +480,17 @@ public final class UtilMisc {
     }
 
     /** Converts an <code>Object</code> to a <code>Double</code>. Returns
+     * defaultValue if conversion is not possible (SCIPIO).
+     * @param obj Object to convert
+     * @param defaultValue default value
+     * @return Double
+     */
+    public static Double toDouble(Object obj, Double defaultValue) {
+        Double result = toDoubleObject(obj);
+        return result == null ? defaultValue : result;
+    }
+
+    /** Converts an <code>Object</code> to a <code>Double</code>. Returns
      * <code>null</code> if conversion is not possible.
      * @param obj Object to convert
      * @return Double
@@ -501,6 +512,49 @@ public final class UtilMisc {
         return result;
     }
 
+    /** Converts an <code>Object</code> to a <code>float</code>. Returns
+     * zero if conversion is not possible (SCIPIO).
+     * @param obj Object to convert
+     * @return float value
+     */
+    public static float toFloat(Object obj) {
+        Float result = toFloatObject(obj);
+        return result == null ? 0.0f : result;
+    }
+
+    /** Converts an <code>Object</code> to a <code>Float</code>. Returns
+     * defaultValue if conversion is not possible (SCIPIO).
+     * @param obj Object to convert
+     * @param defaultValue default value
+     * @return Float
+     */
+    public static Float toFloat(Object obj, Float defaultValue) {
+        Float result = toFloatObject(obj);
+        return result == null ? defaultValue : result;
+    }
+
+    /** Converts an <code>Object</code> to a <code>Float</code>. Returns
+     * <code>null</code> if conversion is not possible (SCIPIO).
+     * @param obj Object to convert
+     * @return Float
+     */
+    public static Float toFloatObject(Object obj) {
+        if (obj == null) {
+            return null;
+        }
+        if (obj instanceof Float) {
+            return (Float) obj;
+        }
+        if (obj instanceof Number) {
+            return ((Number) obj).floatValue();
+        }
+        Float result = null;
+        try {
+            result = Float.parseFloat(obj.toString());
+        } catch (Exception e) {}
+        return result;
+    }
+
     /** Converts an <code>Object</code> to an <code>int</code>. Returns
      * zero if conversion is not possible.
      * @param obj Object to convert
@@ -511,10 +565,10 @@ public final class UtilMisc {
         return result == null ? 0 : result;
     }
 
-    /** Converts an <code>Object</code> to an <code>int</code>. Returns
+    /** Converts an <code>Object</code> to an <code>Integer</code>. Returns
      * default value if conversion is not possible (SCIPIO).
      * @param obj Object to convert
-     * @return int value
+     * @return Integer
      */
     public static Integer toInteger(Object obj, Integer defaultValue) {
         Integer result = toIntegerObject(obj);
@@ -553,10 +607,10 @@ public final class UtilMisc {
         return result == null ? 0 : result;
     }
 
-    /** Converts an <code>Object</code> to a <code>long</code>. Returns
+    /** Converts an <code>Object</code> to a <code>Long</code>. Returns
      * default value if conversion is not possible (SCIPIO).
      * @param obj Object to convert
-     * @return long value
+     * @return Long
      */
     public static Long toLong(Object obj, Long defaultValue) {
         Long result = toLongObject(obj);

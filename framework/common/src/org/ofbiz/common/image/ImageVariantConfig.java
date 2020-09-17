@@ -22,6 +22,9 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -445,6 +448,20 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         public String getFormat() {
             return format;
         }
+
+        public String resolveFormat(Delegator delegator) throws GenericEntityException {
+            String format = getFormat();
+            if (format != null && format.contains("/") && delegator != null) {
+                GenericValue mimeType = delegator.from("FileExtension").where("mimeTypeId", format).cache().queryFirst();
+                if (mimeType != null) {
+                    format = mimeType.getString("fileExtensionId");
+                } else {
+                    Debug.logError("FileExtension not found for mimeTypeId [" + format + "]", module);
+                }
+            }
+            return format;
+        }
+
 
         @Override
         public String toString() {

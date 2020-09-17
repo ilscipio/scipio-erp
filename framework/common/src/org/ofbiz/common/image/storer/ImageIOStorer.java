@@ -1,6 +1,7 @@
 package org.ofbiz.common.image.storer;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.common.image.scaler.AbstractImageScaler;
 import org.ofbiz.entity.Delegator;
 
@@ -11,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ImageIOStorer extends AbstractImageStorer {
@@ -29,7 +31,9 @@ public class ImageIOStorer extends AbstractImageStorer {
 
         @Override
         public Map<String, Object> makeValidOptions(Map<String, Object> options) {
-            return options;
+            Map<String, Object> validOptions = new HashMap<>();
+            putCommonValidOptions(validOptions, options);
+            return validOptions;
         }
 
         @Override

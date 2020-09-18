@@ -415,12 +415,24 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         private final int width;
         private final int height;
         private final String format;
+        private final UpscaleMode upscaleMode;
+        public enum UpscaleMode { ON, OFF, OMIT }
 
-        public VariantInfo(String name, Map<String, ?> map) throws NumberFormatException {
+        public VariantInfo(String name, Map<String, ?> map) {
             this.name = name;
             this.width = UtilMisc.toInteger(map.get("width"));
             this.height = UtilMisc.toInteger(map.get("height"));
             this.format = UtilValidate.nullIfEmpty((String) map.get("format"));
+            UpscaleMode upscaleMode = UpscaleMode.ON;
+            String upscaleStr = (String) map.get("upscaleMode");
+            if (UtilValidate.isNotEmpty(upscaleStr)) {
+                try {
+                    upscaleMode = UpscaleMode.valueOf(upscaleStr.toUpperCase());
+                } catch (Exception e) {
+                    Debug.logError("Invalid upscaleMode in ImageProperties.xml file: " + upscaleStr, module);
+                }
+            }
+            this.upscaleMode = upscaleMode;
         }
 
         public String getName() {
@@ -449,17 +461,21 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             return format;
         }
 
-        public String resolveFormat(Delegator delegator) throws GenericEntityException {
-            String format = getFormat();
-            if (format != null && format.contains("/") && delegator != null) {
-                GenericValue mimeType = delegator.from("FileExtension").where("mimeTypeId", format).cache().queryFirst();
+        public UpscaleMode getUpscaleMode() {
+            return upscaleMode;
+        }
+
+        public String resolveFormatExt(Delegator delegator) throws GenericEntityException {
+            String formatExt = getFormat();
+            if (formatExt != null && formatExt.contains("/") && delegator != null) {
+                GenericValue mimeType = delegator.from("FileExtension").where("mimeTypeId", formatExt).cache().queryFirst();
                 if (mimeType != null) {
-                    format = mimeType.getString("fileExtensionId");
+                    formatExt = mimeType.getString("fileExtensionId");
                 } else {
-                    Debug.logError("FileExtension not found for mimeTypeId [" + format + "]", module);
+                    Debug.logError("FileExtension not found for mimeTypeId [" + formatExt + "]", module);
                 }
             }
-            return format;
+            return formatExt;
         }
 
 

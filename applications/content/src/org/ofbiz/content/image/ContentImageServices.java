@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
@@ -56,9 +57,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.ServiceValidationException;
 
 /**
  * SCIPIO: Content/generic image services.
@@ -276,11 +275,30 @@ public abstract class ContentImageServices {
                         continue;
                     }
 
+                    boolean keepOrig = false;
+                    ImageVariantConfig.VariantInfo variantInfo = imgPropCfg.getVariant(sizeType);
+                    Integer targetWidth = variantInfo.getWidth();
+                    Integer targetHeight = variantInfo.getHeight();
+                    if (variantInfo.getUpscaleMode() != ImageVariantConfig.VariantInfo.UpscaleMode.ON) {
+                        if (targetWidth == (int) imgWidth || targetHeight == (int) imgHeight) {
+                            keepOrig = true;
+                        } else if (targetWidth > (int) imgWidth && targetHeight > (int) imgHeight) {
+                            if (variantInfo.getUpscaleMode() == ImageVariantConfig.VariantInfo.UpscaleMode.OMIT) {
+                                continue;
+                            } else if (variantInfo.getUpscaleMode() == ImageVariantConfig.VariantInfo.UpscaleMode.OFF) {
+                                keepOrig = true;
+                            }
+                        }
+                    }
+
                     // Scale
-                    Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropCfg.getVariantStringMap(), sizeType, locale, scalingOptions);
+                    Map<String, Object> resultScaleImgMap = Collections.emptyMap();
+                    if (!keepOrig) {
+                        resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, targetWidth.doubleValue(), targetHeight.doubleValue(), locale, scalingOptions);
+                    }
 
                     /* Write the new image file */
-                    if ("success".equals(resultScaleImgMap.get("responseMessage"))) {
+                    if (keepOrig || "success".equals(resultScaleImgMap.get("responseMessage"))) {
                         BufferedImage bufNewImg = (BufferedImage) resultScaleImgMap.get("bufferedImage");
 
                         // Build full path for the new scaled image
@@ -320,24 +338,30 @@ public abstract class ContentImageServices {
 
                         // write new image
                         String targetFileType = imgExtension;
-
-                        // 2020-09: Support for specific storage format
-                        ImageVariantConfig.VariantInfo variantInfo = imgPropCfg.getVariant(sizeType);
+                        // SCIPIO: 2020-09: Support for specific storage format
                         if (variantInfo != null && variantInfo.getFormat() != null) {
-                            targetFileType = variantInfo.resolveFormat(delegator);
+                            targetFileType = variantInfo.resolveFormatExt(delegator);
                         }
-
                         String newFileLocExt = newFileLocation + "." + targetFileType;
                         String newFileFullLoc = imageServerPath + "/" + newFileLocExt;
-                        try {
-                            ImageStorers.write(bufNewImg, targetFileType, new File(newFileFullLoc), delegator); // SCIPIO: ImageIO->ImageStorers
-                            scaledImageCount++;
-                        } catch (IllegalArgumentException e) {
-                            Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", LOG_LANG) + ": " + e.getMessage(), module);
-                            return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", locale));
-                        } catch (IOException e) {
-                            Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", LOG_LANG) + ": " + e.getMessage(), module);
-                            return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
+                        if (keepOrig && Objects.equals(targetFileType, imgExtension)) {
+                            try {
+                                FileUtils.copyFile(new File(bufImgPath), new File(newFileFullLoc));
+                            } catch (IOException e) {
+                                Debug.logError(e, logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", LOG_LANG) + ": " + e.getMessage(), module);
+                                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
+                            }
+                        } else {
+                            try {
+                                ImageStorers.write(keepOrig ? bufImg : bufNewImg, targetFileType, new File(newFileFullLoc), delegator); // SCIPIO: ImageIO->ImageStorers
+                                scaledImageCount++;
+                            } catch (IllegalArgumentException e) {
+                                Debug.logError(e, logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", LOG_LANG) + ": " + e.getMessage(), module);
+                                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", locale));
+                            } catch (IOException e) {
+                                Debug.logError(e, logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", LOG_LANG) + ": " + e.getMessage(), module);
+                                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
+                            }
                         }
 
                         // Save each Url
@@ -696,19 +720,37 @@ public abstract class ContentImageServices {
                     continue;
                 }
 
-                String targetFormat = targetFmtExt;
-                // 2020-09: Support for specific storage format
+                boolean keepOrig = false;
                 ImageVariantConfig.VariantInfo variantInfo = imgPropCfg.getVariant(sizeType);
+                Integer targetWidth = variantInfo.getWidth();
+                Integer targetHeight = variantInfo.getHeight();
+                if (variantInfo.getUpscaleMode() != ImageVariantConfig.VariantInfo.UpscaleMode.ON) {
+                    if (targetWidth == (int) imgWidth || targetHeight == (int) imgHeight) {
+                        keepOrig = true;
+                    } else if (targetWidth > (int) imgWidth && targetHeight > (int) imgHeight) {
+                        if (variantInfo.getUpscaleMode() == ImageVariantConfig.VariantInfo.UpscaleMode.OMIT) {
+                            continue;
+                        } else if (variantInfo.getUpscaleMode() == ImageVariantConfig.VariantInfo.UpscaleMode.OFF) {
+                            keepOrig = true;
+                        }
+                    }
+                }
+
+                String targetFormat = targetFmtExt;
+                // SCIPIO: 2020-09: Support for specific storage format
                 if (variantInfo != null && variantInfo.getFormat() != null) {
-                    targetFormat = variantInfo.resolveFormat(delegator);
+                    targetFormat = variantInfo.resolveFormatExt(delegator);
                 }
                 imageCtx.put("ext", targetFormat);
 
                 // Scale
-                Map<String, Object> resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, imgPropCfg.getVariantStringMap(), sizeType, locale, scalingOptions);
+                Map<String, Object> resultScaleImgMap = Collections.emptyMap();
+                if (!keepOrig) {
+                    resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, targetWidth.doubleValue(), targetHeight.doubleValue(), locale, scalingOptions);
+                }
 
                 /* Write the new image file */
-                if ("success".equals(resultScaleImgMap.get("responseMessage"))) {
+                if (keepOrig || "success".equals(resultScaleImgMap.get("responseMessage"))) {
                     BufferedImage bufNewImg = (BufferedImage) resultScaleImgMap.get("bufferedImage");
 
                     imageCtx.put("sizetype", sizeType);
@@ -724,8 +766,13 @@ public abstract class ContentImageServices {
 
                     // SCIPIO: 2017-08-11: now store width & height in new DataResource fields,
                     // due to very high probability we will need these, and with decent access speed.
-                    dataResource.put("scpWidth", (long) bufNewImg.getWidth());
-                    dataResource.put("scpHeight", (long) bufNewImg.getHeight());
+                    if (bufNewImg != null) {
+                        dataResource.put("scpWidth", (long) bufNewImg.getWidth());
+                        dataResource.put("scpHeight", (long) bufNewImg.getHeight());
+                    } else {
+                        dataResource.put("scpWidth", (long) bufImg.getWidth());
+                        dataResource.put("scpHeight", (long) bufImg.getHeight());
+                    }
 
                     Map<String, Object> customDrFields = new HashMap<>();
                     customDrFields.putAll(ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR);
@@ -742,19 +789,23 @@ public abstract class ContentImageServices {
                     String dataResourceId = dataResource.getString("dataResourceId");
 
                     byte[] byteout;
-                    ByteArrayOutputStream byteos = new ByteArrayOutputStream();
-                    try {
-                        ImageStorers.write(bufNewImg, targetFormat, byteos, delegator); // SCIPIO: ImageIO->ImageStorers
-                        byteout = byteos.toByteArray();
-                        scaledImageCount++;
-                    } catch (IllegalArgumentException e) {
-                        Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", LOG_LANG) + ": " + e.getMessage(), module);
-                        return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", locale));
-                    } catch (IOException e) {
-                        Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", LOG_LANG) + ": " + e.getMessage(), module);
-                        return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
-                    } finally {
-                        byteos.close();
+                    if (keepOrig && Objects.equals(targetFormat, targetFmtExt) && streamResult.get("streamBytes") != null) {
+                        byteout = (byte[]) streamResult.get("streamBytes");
+                    } else {
+                        ByteArrayOutputStream byteos = new ByteArrayOutputStream();
+                        try {
+                            ImageStorers.write(keepOrig ? bufImg : bufNewImg, targetFormat, byteos, delegator); // SCIPIO: ImageIO->ImageStorers
+                            byteout = byteos.toByteArray();
+                            scaledImageCount++;
+                        } catch (IllegalArgumentException e) {
+                            Debug.logError(e, logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", LOG_LANG) + ": " + e.getMessage(), module);
+                            return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", locale));
+                        } catch (IOException e) {
+                            Debug.logError(e, logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", LOG_LANG) + ": " + e.getMessage(), module);
+                            return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
+                        } finally {
+                            byteos.close();
+                        }
                     }
 
                     GenericValue imageDataResource = delegator.makeValue("ImageDataResource");

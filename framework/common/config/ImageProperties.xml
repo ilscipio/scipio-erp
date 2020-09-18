@@ -6,14 +6,13 @@ code package.
 -->
 
 <!--
-    SCIPIO: Content/Generic global content image resizing/splitting discrete dimensions
-    Duplicated from (original): component://product/config/ImageProperties.xml
+    SCIPIO: Default content image resizing/splitting discrete dimensions (see also: component://product/config/ImageProperties.xml)
     Entry format:
-
-    <size name="[string]">
-        <type name="format" value="[string, file format extension common name, e.g: jpg, webp)"/>
-        <dimension name="height" value="[int]"/>
-        <dimension name="width" value="[int]"/>
+    <size name="[((string)) Exact or abstracted size name, used in filename]">
+        <dimension name="height" value="[((int), required) Height]"/>
+        <dimension name="width" value="[((int), required) Width]"/>
+        <type name="format" value="[((string), default: same as original) File format extension, e.g: jpg, webp; see FileExtension entity]"/>
+        <config name="upscaleMode" value="[(on|off|omit, default: on) What to do when both dimensions are larger than original]"/>
     </size>
 -->
 <!-- 

@@ -879,6 +879,7 @@
         <attribute mode="IN" name="variantSizeHeight" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeSequenceNum" type="List" optional="true"/>
         <attribute mode="IN" name="presetName" type="String" optional="true"/>
+        <attribute mode="IN" name="presetId" type="String" optional="true"/>
     </service>
 
     <service name="cmsUpdateCustomImageSizePreset" default-entity-name="ImageSizePreset" engine="entity-auto" invoke="update" auth="true">

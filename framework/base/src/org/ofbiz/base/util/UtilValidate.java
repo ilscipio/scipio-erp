@@ -285,6 +285,14 @@ public final class UtilValidate {
         return isEmpty(value) ? null : value;
     }
 
+    public static String nullIfEmptyTrim(String value) { // SCIPIO
+        if (value == null) {
+            return null;
+        }
+        value = value.trim();
+        return value.isEmpty() ? null : value;
+    }
+
     /**
      * SCIPIO: If the value is non-empty, returns it as-is; otherwise (if empty or null) returns the altValue.
      * <p>

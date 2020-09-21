@@ -10,6 +10,7 @@
                         <@heading>${uiLabelMap.CmsCreateCustomImageSizePreset}</@heading>
                         <div class="cmsmedia-customvariantsize-area">
                             <form method="post" action="<@pageUrl>createCustomImageSizePreset</@pageUrl>" name="customVariantSizesForm">
+                                <@field type="text" label=uiLabelMap.CmsMediaCustomSizeVariantsPresetId required=false name="presetId" value="" maxlength=20/>
                                 <@field type="text" label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
                                 <hr/>
                                 <div class="cmsmedia-customvariantsize-method customVariantSizesForm">

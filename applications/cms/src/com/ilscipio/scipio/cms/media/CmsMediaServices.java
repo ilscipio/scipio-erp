@@ -324,10 +324,8 @@ public abstract class CmsMediaServices {
     public static Map<String, Object> uploadMediaFileImageCustomVariantSizes(DispatchContext dctx, Map<String, Object> context) throws GeneralServiceException {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Delegator delegator = dctx.getDelegator();
-        
-        
-        
-        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        Map<String, Object> result;
         try {
             String customVariantSizeMethod = (String) context.get("customVariantSizeMethod");
             ImageVariantConfig imageVariantConfig = null;
@@ -360,7 +358,7 @@ public abstract class CmsMediaServices {
                     imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap("CustomDimension", "", "", imgPropsMap);
                     if (context.containsKey("saveAsPreset") && ((boolean) context.get("saveAsPreset"))) {
                         String presetName = (context.containsKey("presetName")) ? (String) context.get("presetName") : "Preset " + UtilDateTime.nowDateString();
-                        customImageSizes = EntityUtil.filterByEntityName(saveCustomImageSizePreset(delegator, presetName, getImgPropsMap(context),
+                        customImageSizes = EntityUtil.filterByEntityName(saveCustomImageSizePreset(delegator, null, presetName, getImgPropsMap(context),
                                 (List<String>) context.get("variantSizeSequenceNum")), "ImageSizeDimension");
                     }
                 } else {
@@ -450,9 +448,10 @@ public abstract class CmsMediaServices {
     @SuppressWarnings("unchecked")
     public static Map<String, Object> createCustomImageSizePreset(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
+        String presetId = UtilValidate.nullIfEmptyTrim((String) context.get("presetId"));
         String presetName = (context.containsKey("presetName")) ? (String) context.get("presetName") : "Preset " + UtilDateTime.nowDateString();
         try {
-            saveCustomImageSizePreset(delegator, presetName, getImgPropsMap(context), (List<String>) context.get("variantSizeSequenceNum"));
+            saveCustomImageSizePreset(delegator, presetId, presetName, getImgPropsMap(context), (List<String>) context.get("variantSizeSequenceNum"));
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessageList());
         }
@@ -474,11 +473,15 @@ public abstract class CmsMediaServices {
         return imgPropsMap;
     }
     
-    private static List<GenericValue> saveCustomImageSizePreset(Delegator delegator, String presetName, Map<String, Map<String, String>> imgPropsMap, List<String> sequenceNums) throws GenericEntityException {
+    private static List<GenericValue> saveCustomImageSizePreset(Delegator delegator, String presetId, String presetName, Map<String, Map<String, String>> imgPropsMap, List<String> sequenceNums) throws GenericEntityException {
+        GenericValue imageSizePreset = delegator.makeValidValue("ImageSizePreset", UtilMisc.toMap("presetName", presetName));
+        if (presetId != null) {
+            imageSizePreset.put("presetId", presetId);
+            imageSizePreset = imageSizePreset.create();
+        } else {
+            imageSizePreset = imageSizePreset.createSetNextSeqId();
+        }
         List<GenericValue> toStore = UtilMisc.newList();
-        GenericValue imageSizePreset = delegator.makeValidValue("ImageSizePreset",
-                UtilMisc.toMap("presetId", delegator.getNextSeqId("ImageSizePreset"), "presetName", presetName));
-        toStore.add(imageSizePreset);
         int i = 0;
         for (String sizeName : imgPropsMap.keySet()) {
             Map<String, String> sizes = imgPropsMap.get(sizeName);
@@ -490,6 +493,7 @@ public abstract class CmsMediaServices {
             i++;
         }
         delegator.storeAll(toStore);
+        toStore.add(0, imageSizePreset);
         return toStore;
     }
 

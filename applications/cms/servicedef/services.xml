@@ -767,8 +767,9 @@
         <attribute mode="IN" name="statusId" type="String" optional="true"/>
         <attribute mode="IN" name="localeString" type="String" optional="true"/>
         <attribute mode="IN" name="isPublic" type="Boolean" optional="true"/>
-        <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/>        
-        
+        <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/>
+        <attribute mode="IN" name="mediaProfile" type="String" optional="true"/><!-- presetId -->
+
         <!-- SCIPIO (17/12/2018): Allowing custom image variant sizes config -->
         <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
         <attribute mode="OUT" name="contentId" type="String" optional="true"/>
@@ -796,10 +797,13 @@
         <attribute mode="IN" name="variantSizeName" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeWidth" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeHeight" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeFormat" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeUpscaleMode" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeSequenceNum" type="List" optional="true"/>
         <attribute mode="IN" name="saveAsPreset" type="Boolean" optional="true"/>
         <attribute mode="IN" name="presetName" type="String" optional="true"/>
-        
+        <attribute mode="IN" name="presetId" type="String" optional="true"/>
+
         <attribute mode="IN" name="srcsetModeEnumId" type="String" optional="true"/>
         <attribute mode="IN" name="viewPortMediaQuery" type="List" optional="true"/>
         <attribute mode="IN" name="viewPortLength" type="List" optional="true"/>

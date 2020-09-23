@@ -127,16 +127,14 @@ public abstract class ContentImageServices {
             ImageVariantConfig imgPropCfg;
             if (imageProfile != null) { // SCIPIO
                 imgPropCfg = imageProfile.getVariantConfig();
+            } else if (context.containsKey("imageVariantConfig")) {
+                imgPropCfg = (ImageVariantConfig) context.get("imageVariantConfig");
             } else {
                 if (UtilValidate.isEmpty(imagePropXmlPath)) {
                     imagePropXmlPath = ContentImageWorker.getContentImagePropertiesPath();
                 }
                 try {
-                    if (context.containsKey("imageVariantConfig")) { // SCIPIO
-                        imgPropCfg = (ImageVariantConfig) context.get("imageVariantConfig");
-                    } else {
-                        imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
-                    }
+                    imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
                 } catch (Exception e) {
                     Debug.logError(logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPath + " : " + e.getMessage(), module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());
@@ -492,18 +490,15 @@ public abstract class ContentImageServices {
             ImageVariantConfig imgPropCfg;
             if (imageProfile != null) { // SCIPIO
                 imgPropCfg = imageProfile.getVariantConfig();
+            } else if (context.containsKey("imageVariantConfig")) {
+                imgPropCfg = (ImageVariantConfig) context.get("imageVariantConfig");
             } else {
                 /* ImageProperties.xml */
                 if (UtilValidate.isEmpty(imagePropXmlPath)) {
                     imagePropXmlPath = ContentImageWorker.getContentImagePropertiesPath();
                 }
                 try {
-                    // SCIPIO (17/12/2018): variant config can be passed directly from the context in order to override the default XML config
-                    if (context.containsKey("imageVariantConfig")) {
-                        imgPropCfg = (ImageVariantConfig) context.get("imageVariantConfig");
-                    } else {
-                        imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
-                    }
+                    imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
                 } catch (Exception e) {
                     Debug.logError(logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPath + " : " + e.getMessage(), module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());

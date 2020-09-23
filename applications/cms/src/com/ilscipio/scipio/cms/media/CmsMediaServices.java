@@ -28,6 +28,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.FindServices;
+import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
@@ -169,6 +170,7 @@ public abstract class CmsMediaServices {
         String fileName = (String) context.get("_uploadedFile_fileName");
         String contentType = (String) context.get("_uploadedFile_contentType");
         boolean autoResize = Boolean.TRUE.equals(context.get("autoVariants"));
+        String mediaProfile = (String) context.get("mediaProfile");
 
         // USE SAME CREATED DATE FOR EVERYTHING RELATED
         Timestamp createdDate = UtilDateTime.nowTimestamp();
@@ -266,6 +268,9 @@ public abstract class CmsMediaServices {
                         content.put("contentName", contentName);
                         content.put("dataResourceId", dataResourceId);
                         content.put("createdDate", createdDate);
+                        if (mediaProfile != null) {
+                            content.put("mediaProfile", mediaProfile);
+                        }
                         content = delegator.createSetNextSeqId(content);
                         String contentId = content.getString("contentId");
                         result.put("contentId", contentId);
@@ -327,6 +332,7 @@ public abstract class CmsMediaServices {
 
         Map<String, Object> result;
         try {
+            String mediaProfile = (String) context.get("mediaProfile"); // overridden below
             String customVariantSizeMethod = (String) context.get("customVariantSizeMethod");
             ImageVariantConfig imageVariantConfig = null;
             List<GenericValue> customImageSizes = UtilMisc.newList();
@@ -339,16 +345,19 @@ public abstract class CmsMediaServices {
             } else if (customVariantSizeMethod.equals("customVariantSizesPreset")) {
                 if (context.containsKey("customVariantSizesPreset")) {
                     Map<String, Map<String, String>> imgPropsMap = UtilMisc.newMap();
+                    // TODO?: use ImageVariantConfig.fromImageSizePreset but customImageSizes is in the way of reuse
                     String presetId = (String) context.get("customVariantSizesPreset");
-                    List<GenericValue> imageSizes = EntityQuery.use(delegator).from("ImageSize").where(UtilMisc.toMap("presetId", presetId)).cache(false).queryList();
+                    List<GenericValue> imageSizes = EntityQuery.use(delegator).from("ImageSize").where(UtilMisc.toMap("presetId", presetId)).queryList();
                     GenericValue imagePreset = EntityQuery.use(delegator).from("ImageSizePreset").where(UtilMisc.toMap("presetId", presetId)).queryOne(); 
                     for (GenericValue imageSize : imageSizes) {
-                        GenericValue imageSizeDimension = imageSize.getRelatedOne("ImageSizeDimension", false);
+                        GenericValue imageSizeDimension = imageSize.getRelatedOne("ImageSizeDimension");
                         imgPropsMap.put(imageSizeDimension.getString("sizeName"),
-                                UtilMisc.toMap("width", imageSizeDimension.getString("dimensionWidth"), "height", imageSizeDimension.getString("dimensionHeight")));
+                                UtilMisc.toMap("width", imageSizeDimension.getString("dimensionWidth"), "height", imageSizeDimension.getString("dimensionHeight"),
+                                        "format", imageSizeDimension.getString("format"), "upscaleMode", imageSizeDimension.getString("upscaleMode")));
                         customImageSizes.add(imageSizeDimension);
                     }
                     imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap(imagePreset.getString("presetName"), "", "", imgPropsMap);
+                    mediaProfile = presetId;
                 } else {
                     Debug.logWarning("Custom image size dimension preset not found.", module);
                 }
@@ -358,8 +367,11 @@ public abstract class CmsMediaServices {
                     imageVariantConfig = ImageVariantConfig.fromImagePropertiesMap("CustomDimension", "", "", imgPropsMap);
                     if (context.containsKey("saveAsPreset") && ((boolean) context.get("saveAsPreset"))) {
                         String presetName = (context.containsKey("presetName")) ? (String) context.get("presetName") : "Preset " + UtilDateTime.nowDateString();
-                        customImageSizes = EntityUtil.filterByEntityName(saveCustomImageSizePreset(delegator, null, presetName, getImgPropsMap(context),
-                                (List<String>) context.get("variantSizeSequenceNum")), "ImageSizeDimension");
+                        String presetId = UtilValidate.nullIfEmpty((String) context.get("presetId"));
+                        List<GenericValue> storedPresetEntities = saveCustomImageSizePreset(delegator, presetId, presetName, getImgPropsMap(context),
+                                (List<String>) context.get("variantSizeSequenceNum"));
+                        mediaProfile = storedPresetEntities.get(0).getString("presetId");
+                        customImageSizes = EntityUtil.filterByEntityName(storedPresetEntities, "ImageSizeDimension");
                     }
                 } else {
                     Debug.logWarning("Custom image size dimensions not found.", module);
@@ -369,10 +381,11 @@ public abstract class CmsMediaServices {
                 context.put("imageVariantConfig", imageVariantConfig);
             }
 
-            result = dispatcher.runSync("cmsUploadMediaFile",
-                    ServiceUtil.setServiceFields(dispatcher, "cmsUploadMediaFile", context,
-                            (GenericValue) context.get("userLogin"), (TimeZone) context.get("timeZone"),
-                            (Locale) context.get("locale")));
+            Map<String, Object> umfCtx = ServiceUtil.setServiceFields(dispatcher, "cmsUploadMediaFile", context,
+                    (GenericValue) context.get("userLogin"), (TimeZone) context.get("timeZone"),
+                    (Locale) context.get("locale"));
+            umfCtx.put("mediaProfile", mediaProfile);
+            result = dispatcher.runSync("cmsUploadMediaFile", umfCtx);
 
             if (result.containsKey("contentId")) {
                 String contentId = (String) result.get("contentId");
@@ -394,14 +407,11 @@ public abstract class CmsMediaServices {
                                 dataResource.store();
                             }
                         }
-                    } catch (GenericEntityException e) {
-                        throw e;
                     } finally {
                         if (UtilValidate.isNotEmpty(eli)) {
                             eli.close();
                         }
                     }
-                    
 
                     if (context.containsKey("srcsetModeEnumId")) {
                         GenericValue imageViewPort = delegator.makeValidValue("ResponsiveImage", UtilMisc
@@ -429,12 +439,9 @@ public abstract class CmsMediaServices {
             }
         } catch (GenericServiceException e) {
             result = ServiceUtil.returnError(e.getMessageList());
-        } catch (IOException e) {
-            result = ServiceUtil.returnError(e.getMessage());
-        } catch (GenericEntityException e) {
+        } catch (Exception e) {
             result = ServiceUtil.returnError(e.getMessage());
         }
-        
         return result;
     }
 
@@ -751,13 +758,14 @@ public abstract class CmsMediaServices {
                     Debug.logInfo(logPrefix+"Beginning rebuildMediaVariants for all images", module);
                 }
                 // SCIPIO (01/19/2018): Get custom image sizes, if present
-                Map<String, GenericValue> customImageSizesByName = UtilMisc.newMap();
-                if (context.containsKey("customImageSizes")) {
-                    List<GenericValue> customImageSizes = (List<GenericValue>) context.get("customImageSizes");
-                    for (GenericValue customImageSize : customImageSizes) {
-                        customImageSizesByName.put(customImageSize.getString("sizeName"),  customImageSize);
-                    }
-                }
+                // not applicable
+                //Map<String, GenericValue> customImageSizesByName = UtilMisc.newMap();
+                //if (context.containsKey("customImageSizes")) {
+                //    List<GenericValue> customImageSizes = (List<GenericValue>) context.get("customImageSizes");
+                //    for (GenericValue customImageSize : customImageSizes) {
+                //        customImageSizesByName.put(customImageSize.getString("sizeName"),  customImageSize);
+                //    }
+                //}
                 
                 long imgCount = 0;
                 GenericValue contentDataResource;
@@ -766,6 +774,18 @@ public abstract class CmsMediaServices {
                     remainingContentIds.remove(contentId);
                     
                     if (force || CmsMediaWorker.hasVariantContent(delegator, contentId)) {
+                        ImageVariantConfig imageVariantConfig = null;
+                        String mediaProfile = contentDataResource.getString("mediaProfile");
+                        if (mediaProfile != null) {
+                            imageVariantConfig = ImageVariantConfig.fromImageSizePreset(delegator, mediaProfile, false);
+                            if (imageVariantConfig == null) {
+                                ImageProfile imageProfile = ImageProfile.getImageProfile(delegator, mediaProfile);
+                                if (imageProfile != null) {
+                                    imageVariantConfig = imageProfile.getVariantConfig();
+                                }
+                            }
+                        }
+
                         if (doLog) {
                             Debug.logInfo(logPrefix+"rebuildMediaVariants: Rebuilding variants for image [contentId: " + contentId + "] (" + (imgCount+1) + ")", module);
                         }
@@ -776,7 +796,11 @@ public abstract class CmsMediaServices {
                             if (!resizeCtx.containsKey("deleteOld")) {
                                 resizeCtx.put("deleteOld", Boolean.TRUE);
                             }
-                            resizeCtx.put("imagePropXmlPath", imagePropXmlPath);
+                            if (imageVariantConfig != null) {
+                                resizeCtx.put("imageVariantConfig", imageVariantConfig);
+                            } else {
+                                resizeCtx.put("imagePropXmlPath", imagePropXmlPath);
+                            }
                             resizeCtx.put("fileSizeDataResAttrName", FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME);
 
                             Map<String, Object> contentFields = new HashMap<>();
@@ -791,9 +815,10 @@ public abstract class CmsMediaServices {
                             dataResourceFields.put("isPublic", contentDataResource.get("drIsPublic"));
                             
                             // SCIPIO (01/19/2018): Add the custom dimension to the variant dataSource
-                            if (customImageSizesByName.containsKey(null)) {
-                                dataResourceFields.put("sizeId", customImageSizesByName.get(null).getString("sizedId"));
-                            }
+                            // TODO: REVIEW: should be unneeded
+                            //if (customImageSizesByName.containsKey(null)) {
+                            //    dataResourceFields.put("sizeId", customImageSizesByName.get(null).getString("sizedId"));
+                            //}
                             
                             resizeCtx.put("dataResourceFields", dataResourceFields);
                             resizeCtx.put("createdDate", createdDate);

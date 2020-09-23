@@ -25,6 +25,8 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -176,6 +178,26 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
 
     public static ImageVariantConfig fromImagePropertiesXml(String imgPropsPath) throws IOException {
         return getCache().fromImagePropertiesXml(imgPropsPath);
+    }
+
+    public static ImageVariantConfig fromImageSizePreset(Delegator delegator, String presetId, boolean useCache) throws GenericEntityException {
+        Map<String, Map<String, String>> imgPropsMap = new LinkedHashMap<>();
+        GenericValue imagePreset = EntityQuery.use(delegator).from("ImageSizePreset").where(UtilMisc.toMap("presetId", presetId)).cache(useCache).queryOne();
+        if (imagePreset == null) {
+            return null;
+        }
+        List<GenericValue> imageSizes = EntityQuery.use(delegator).from("ImageSize").where(UtilMisc.toMap("presetId", presetId)).cache(useCache).queryList();
+        List<GenericValue> imageSizeDimensions = new ArrayList<>(imagePreset.size());
+        for (GenericValue imageSize : imageSizes) {
+            imageSizeDimensions.add(imageSize.getRelatedOne("ImageSizeDimension", useCache));
+        }
+        imageSizeDimensions = EntityUtil.orderBy(imageSizeDimensions, UtilMisc.toList("sequenceNum"));
+        for (GenericValue imageSizeDimension : imageSizeDimensions) {
+            imgPropsMap.put(imageSizeDimension.getString("sizeName"),
+                    UtilMisc.toMap("width", imageSizeDimension.getString("dimensionWidth"), "height", imageSizeDimension.getString("dimensionHeight"),
+                            "format", imageSizeDimension.getString("format"), "upscaleMode", imageSizeDimension.getString("upscaleMode")));
+        }
+        return fromImagePropertiesMap(imagePreset.getString("presetName"), "", "", imgPropsMap);
     }
 
     private static List<VariantInfo> parseImagePropertiesMap(Map<String, Map<String, String>> map) throws NumberFormatException {

@@ -54,7 +54,7 @@
                                 <@td>${preset.presetId}</@td>
                                 <@td><@field type="text" name="presetName" value=preset.presetName! required=true /></@td>
                                 <@td>
-                                    <@modal id="modal_view_image_sizes" label=uiLabelMap.CommonView linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_edit!}">
+                                    <@modal id=("modal_view_image_sizes_"+(preset?index)) label=uiLabelMap.CommonView linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_edit!}">
                                         <@heading>${uiLabelMap.CmsMediaViewCustomSizeVariants}</@heading>
                                         <@table autoAltRows=true>
                                             <@thead>

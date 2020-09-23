@@ -845,11 +845,7 @@ code package.
       <!-- SCIPIO: NOTE: scpWidth & scpHeight are added to DataResource instead of as DataResourceAttribute because the latter is guaranteed to be too slow for future queries. -->
       <field name="scpWidth" type="numeric"><description>SCIPIO: 2017-08-11: image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes)</description></field>
       <field name="scpHeight" type="numeric"><description>SCIPIO: 2017-08-11: image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes)</description></field>
-      <!-- SCIPIO (12/31/2018): IMPORTANT NOTE: 
-        Represents an image dimension with its common fields (height & width) and other fields used for responsive images
-        Will replace all custom scp* fields above in the future, for now keeping them for backward compatibility.  
-      -->
-      <field name="sizeId" type="id-ne"></field>
+      <field name="sizeId" type="id-ne"><description>Represents an image dimension with its common fields (height and width) and other fields used for responsive images (SCIPIO 12/31/2018)</description></field>
       <prim-key field="dataResourceId"/>
       <relation type="one" fk-name="DTRSRC_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
@@ -1327,22 +1323,24 @@ code package.
     
   <!-- ========================================================= -->
   <!-- com.ilscipio.scipio.image -->
-  <!-- ========================================================= -->  
+  <!-- ========================================================= -->
     <entity entity-name="ImageSizePreset" package-name="com.ilscipio.scipio.image"
         title="Image sizes preset" author="Ilscipio GmbH" version="1.0">
-        <field name="presetId" type="id-ne"></field>
+        <field name="presetId" type="id-ne"><description>The preset ID, now stored as Content.mediaProfile for associated images (only since 2020-09-21)</description></field>
         <field name="presetName" type="name"></field>
         <prim-key field="presetId" />
     </entity>
-    
+
+    <!-- WARN: Despite schema, each ImageSizeDimension must be associated to a single ImageSizePreset only
+         otherwise image regeneration will not work for data created prior to 2020-09-21. -->
     <entity entity-name="ImageSize" package-name="com.ilscipio.scipio.image"
         title="Image size dimension preset" author="Ilscipio GmbH" version="1.0">
         <field name="presetId" type="id-ne"></field>
         <field name="sizeId" type="id-ne"></field>
-        
+
         <prim-key field="presetId" />
         <prim-key field="sizeId"/>
-        
+
         <relation type="one" fk-name="IS_PRESET" rel-entity-name="ImageSizePreset">
             <key-map field-name="presetId"/>
         </relation>
@@ -1357,8 +1355,10 @@ code package.
         <field name="sizeName" type="name"></field>
         <field name="dimensionWidth" type="numeric"></field>
         <field name="dimensionHeight" type="numeric"></field>
-        <field name="sequenceNum" type="numeric" not-null="true"/>        
-        <prim-key field="sizeId"/>                
+        <field name="sequenceNum" type="numeric" not-null="true"/>
+        <field name="format" type="name"><description>File format extension, e.g: jpg, webp; see FileExtension entity; default: same as original</description></field>
+        <field name="upscaleMode" type="id"><description>(on|off|omit, default: on) What to do when both dimensions are larger than original</description></field>
+        <prim-key field="sizeId"/>
     </entity>
 
     <entity entity-name="ResponsiveImage" package-name="com.ilscipio.scipio.image"

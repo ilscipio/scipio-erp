@@ -700,23 +700,36 @@
       <@row>
         <@cell columns=3>
           <label class="form-field-label">${uiLabelMap.ImageCustomVariantSizeName}</label>
-          <input type="text" name="variantSizeName" class="field-inline required" size="20" required="required">
+          <input type="text" name="variantSizeName" class="field-inline required" size="20" required="required"/>
           <#-- <@field type="input" inline=true name="variantSizeName" label=uiLabelMap.ImageCustomVariantSizeName labelArea=true required=true value="" id=""/> -->
         </@cell>
-        <@cell columns=3>
+        <@cell columns=1>
           <label class="form-field-label">${uiLabelMap.ImageCustomVariantSizeWidth}</label>
-          <input type="text" name="variantSizeWidth" class="field-inline required" size="20" required="required">
+          <input type="text" name="variantSizeWidth" class="field-inline required" size="5" required="required"/>
           <#-- <@field type="text" inline=true name="variantSizeWidth" labelArea=true label=uiLabelMap.ImageCustomVariantSizeWidth required=true value="" id=""/> -->
         </@cell>
-        <@cell columns=3>
+        <@cell columns=1>
           <label class="form-field-label">${uiLabelMap.ImageCustomVariantSizeHeight}</label>
-          <input type="text" name="variantSizeHeight" class="field-inline required" size="20" required="required">
+          <input type="text" name="variantSizeHeight" class="field-inline required" size="5" required="required"/>
           <#-- <@field type="text" inline=true name="variantSizeHeight" labelArea=true label=uiLabelMap.ImageCustomVariantSizeHeight required=true value="" id=""/> -->
+        </@cell>
+        <@cell columns=2>
+          <label class="form-field-label">${uiLabelMap.CommonFormat} (jpg, png)</label>
+          <#-- FIXME: due to server-side processing this can't be empty, so "original" represents empty instead, checked server-side -->
+          <input type="text" name="variantSizeFormat" class="field-inline" size="10" required="required" value="original"/>
+        </@cell>
+        <@cell columns=2>
+          <label class="form-field-label">${uiLabelMap.ImageCustomVariantSizeUpscaleMode}</label>
+          <@field type="select" name="variantSizeUpscaleMode" inline=true size="5" required=true>
+            <option value="on" selected="selected">on</option>
+            <option value="off">off</option>
+            <option value="omit">omit</option>
+          </@field>
         </@cell>
         <@cell columns=3>
           <input type="hidden" name="variantSizeSequenceNum" value="0"/>
         </@cell>
-      </@row>    
+      </@row>
   </@fields>
 </#macro>
 

@@ -877,6 +877,8 @@
         <attribute mode="IN" name="variantSizeName" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeWidth" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeHeight" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeFormat" type="List" optional="true"/>
+        <attribute mode="IN" name="variantSizeUpscaleMode" type="List" optional="true"/>
         <attribute mode="IN" name="variantSizeSequenceNum" type="List" optional="true"/>
         <attribute mode="IN" name="presetName" type="String" optional="true"/>
         <attribute mode="IN" name="presetId" type="String" optional="true"/>

@@ -59,20 +59,24 @@
                                         <@table autoAltRows=true>
                                             <@thead>
                                                 <@tr class="header-row">
-                                                    <@th width="80%">${uiLabelMap.ImageCustomVariantSizeName}</@th>
+                                                    <@th width="60%">${uiLabelMap.ImageCustomVariantSizeName}</@th>
                                                     <@th width="10%">${uiLabelMap.ImageCustomVariantSizeWidth}</@th>
                                                     <@th width="10%">${uiLabelMap.ImageCustomVariantSizeHeight}</@th>
+                                                    <@th width="10%">${uiLabelMap.CommonFormat}</@th>
+                                                    <@th width="10%">${uiLabelMap.ImageCustomVariantSizeUpscaleMode}</@th>
                                                 </@tr>
                                             </@thead>
                                             <@tbody>
-                                            <#assign imageSizes = preset.getRelated("ImageSize", {}, [], true)!>
+                                            <#assign imageSizes = preset.getRelated("ImageSize")!>
                                             <#if imageSizes?has_content>
                                                 <#list imageSizes as imageSize>
                                                     <@tr>
-                                                        <#assign imageSizeDimension = imageSize.getRelatedOne("ImageSizeDimension", true)!>
+                                                        <#assign imageSizeDimension = imageSize.getRelatedOne("ImageSizeDimension")!>
                                                         <@td>${imageSizeDimension.sizeName!}</@td>
                                                         <@td>${imageSizeDimension.dimensionWidth!}</@td>
                                                         <@td>${imageSizeDimension.dimensionHeight!}</@td>
+                                                        <@td>${imageSizeDimension.format!"original"}</@td>
+                                                        <@td>${imageSizeDimension.upscaleMode!"on"}</@td>
                                                     </@tr>
                                                 </#list>
                                             </#if>

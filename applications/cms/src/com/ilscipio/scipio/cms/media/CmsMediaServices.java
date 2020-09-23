@@ -463,11 +463,22 @@ public abstract class CmsMediaServices {
         Map<String, Map<String, String>> imgPropsMap = UtilMisc.newInsertOrderMap();    
         List<String> variantSizeNames = (List<String>) context.get("variantSizeName");
         List<String> variantSizeWidth = (List<String>) context.get("variantSizeWidth");
-        List<String> variantSizeHeight = (List<String>) context.get("variantSizeHeight");        
+        List<String> variantSizeHeight = (List<String>) context.get("variantSizeHeight");
+        List<String> variantSizeFormat = (List<String>) context.get("variantSizeFormat");
+        List<String> variantSizeUpscaleMode = (List<String>) context.get("variantSizeUpscaleMode");
         if (variantSizeNames.size() == variantSizeWidth.size() && variantSizeNames.size() == variantSizeHeight.size()) {
             for (int i = 0; i < variantSizeNames.size(); i++) {
+                String format = UtilValidate.nullIfEmptyTrim(variantSizeFormat.get(i));
+                if ("original".equals(format)) {
+                    format = null; // default - FIXME: this is a ui kludge, should accept empty
+                }
+                String upscaleMode = UtilValidate.nullIfEmpty(variantSizeUpscaleMode.get(i));
+                if ("on".equals(upscaleMode)) {
+                    upscaleMode = null;
+                }
                 if (UtilValidate.isNotEmpty(variantSizeNames.get(i)) && UtilValidate.isNotEmpty(variantSizeWidth.get(i)) && UtilValidate.isNotEmpty(variantSizeHeight.get(i)))
-                    imgPropsMap.put(variantSizeNames.get(i), UtilMisc.toMap("width", variantSizeWidth.get(i), "height", variantSizeHeight.get(i)));
+                    imgPropsMap.put(variantSizeNames.get(i), UtilMisc.toMap("width", variantSizeWidth.get(i), "height", variantSizeHeight.get(i),
+                            "format", format, "upscaleMode", upscaleMode));
             }
         }
         return imgPropsMap;
@@ -486,7 +497,8 @@ public abstract class CmsMediaServices {
         for (String sizeName : imgPropsMap.keySet()) {
             Map<String, String> sizes = imgPropsMap.get(sizeName);
             GenericValue imageSizeDimension = delegator.makeValidValue("ImageSizeDimension", UtilMisc.toMap("sizeId", delegator.getNextSeqId("ImageSizeDimension"), "sizeName",
-                    sizeName, "dimensionWidth", Long.parseLong(sizes.get("width")), "dimensionHeight", Long.parseLong(sizes.get("height")), "sequenceNum", Long.parseLong(sequenceNums.get(i))));
+                    sizeName, "dimensionWidth", Long.parseLong(sizes.get("width")), "dimensionHeight", Long.parseLong(sizes.get("height")), "sequenceNum", Long.parseLong(sequenceNums.get(i)),
+                    "format", sizes.get("format"), "upscaleMode", sizes.get("upscaleMode")));
             toStore.add(imageSizeDimension);
             toStore.add(delegator.makeValidValue("ImageSize",
                     UtilMisc.toMap("presetId", imageSizePreset.get("presetId"), "sizeId", imageSizeDimension.get("sizeId"))));

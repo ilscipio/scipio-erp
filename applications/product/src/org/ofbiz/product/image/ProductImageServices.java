@@ -10,7 +10,6 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageProfile;
-import org.ofbiz.common.image.MediaProfile;
 import org.ofbiz.content.image.ContentImageServices;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -120,14 +119,14 @@ public abstract class ProductImageServices {
         // NOTE: CMS images are identified byt contentTypeId="SCP_MEDIA"
         ServiceContext ctx = ServiceContext.from(dctx, context);
 
-        String productId = ctx.getAttr("productId");
-        GenericValue product = ctx.getDelegator().from("Product").where("productId", productId).queryOneSafe();
+        String productId = ctx.attr("productId");
+        GenericValue product = ctx.delegator().from("Product").where("productId", productId).queryOneSafe();
         if (product == null) {
             return ServiceUtil.returnError("Could not find product [" + productId + "]");
         }
 
         String productContentTypeId = null;
-        GenericValue content = ctx.getAttr("content");
+        GenericValue content = ctx.attr("content");
         String contentId;
         if (content != null) {
             if (!content.isMutable()) {
@@ -135,7 +134,7 @@ public abstract class ProductImageServices {
             }
             contentId = content.getString("contentId");
         } else {
-            contentId = ctx.getAttr("contentId");
+            contentId = ctx.attr("contentId");
             if (UtilValidate.isNotEmpty(contentId)) {
                 try {
                     content = dctx.getDelegator().from("Content").where("contentId", contentId).queryOne();
@@ -148,7 +147,7 @@ public abstract class ProductImageServices {
                     return ServiceUtil.returnError("Content not found for contentId [" + contentId + "]");
                 }
             } else {
-                productContentTypeId = ctx.getAttr("productContentTypeId");
+                productContentTypeId = ctx.attr("productContentTypeId");
             }
         }
         if (UtilValidate.isEmpty(contentId)) {
@@ -165,7 +164,7 @@ public abstract class ProductImageServices {
         if (contentId != null) {
             try {
                 if (productContentTypeId == null) {
-                    productContent = ctx.getDelegator().from("ProductContent").where("productId", productId,
+                    productContent = ctx.delegator().from("ProductContent").where("productId", productId,
                             "contentId", contentId).orderBy("-fromDate").filterByDate().queryFirst();
                     if (productContent == null) {
                         return ServiceUtil.returnError("Could not find ProductContent with productId [" + productId + "] contentId [" + contentId + "]");
@@ -178,7 +177,7 @@ public abstract class ProductImageServices {
             }
         } else {
             try {
-                productContent = ctx.getDelegator().from("ProductContent").where("productId", productId,
+                productContent = ctx.delegator().from("ProductContent").where("productId", productId,
                         "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().queryFirst();
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
@@ -204,7 +203,7 @@ public abstract class ProductImageServices {
 
         // NOTE: this consults the parent product which we don't want, but in known cases should return right value
         String imageUrl = ProductContentWrapper.getProductContentAsText(product, productContentTypeId,
-                ctx.getAttr("locale"), ctx.getDispatcher(), false, "raw");
+                ctx.attr("locale"), ctx.dispatcher(), false, "raw");
         if (UtilValidate.isEmpty(imageUrl)) {
             String errMsg = "Could not get existing image URL for product [" + productId + "] productContentTypeId [" + productContentTypeId + "], resize impossible";
             Debug.logError(errMsg, module);
@@ -240,7 +239,7 @@ public abstract class ProductImageServices {
         //    return ServiceUtil.returnError(e.toString());
         //}
 
-        ImageProfile imageProfile = ImageProfile.getImageProfile(ctx.getDelegator(), mediaProfileName);
+        ImageProfile imageProfile = ImageProfile.getImageProfile(ctx.delegator(), mediaProfileName);
         if (imageProfile == null) {
             Debug.logError("Could not find media profile [" + imageProfile + "]", module);
             return ServiceUtil.returnError("Could not find media profile [" + imageProfile + "]");

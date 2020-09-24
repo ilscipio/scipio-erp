@@ -40,126 +40,127 @@ public class ServiceContext implements Map<String, Object> {
     //public ScipioContext toScipioCtx() {
     //}
 
-    public DispatchContext getDctx() {
+    public DispatchContext dctx() {
         return dctx;
     }
 
-    public Delegator getDelegator() {
-        return getDctx().getDelegator();
-    }
-
-    public LocalDispatcher getDispatcher() {
-        return getDctx().getDispatcher();
-    }
-
-    public Map<String, Object> getContext() {
+    public Map<String, Object> context() {
         return context;
     }
 
-    public GenericValue getUserLogin() {
-        return (GenericValue) getContext().get("userLogin");
+    public Delegator delegator() {
+        return dctx().getDelegator();
     }
 
-    public Locale getLocale() {
-        return (Locale) getContext().get("locale");
+    public LocalDispatcher dispatcher() {
+        return dctx().getDispatcher();
     }
 
-    public TimeZone getTimeZone() {
-        return (TimeZone) getContext().get("timeZone");
+    public Security security() {
+        return dctx().getSecurity();
     }
 
-    @Override
-    public int size() {
-        return getContext().size();
+    public GenericValue userLogin() {
+        return (GenericValue) context().get("userLogin");
     }
 
-    @Override
-    public boolean isEmpty() {
-        return getContext().isEmpty();
+    public Locale locale() {
+        return (Locale) context().get("locale");
     }
 
-    @Override
-    public boolean containsKey(Object key) {
-        return getContext().containsKey(key);
+    public TimeZone timeZone() {
+        return (TimeZone) context().get("timeZone");
     }
 
-    @Override
-    public boolean containsValue(Object value) {
-        return getContext().containsValue(value);
+    @SuppressWarnings("unchecked")
+    public <T> T attr(Object key) {
+        return (T) get(key);
     }
 
-    @Override
-    public Object get(Object key) {
-        return getContext().get(key);
-    }
-
-    public <T> T getAttr(Object key) {
-        return UtilGenerics.cast(get(key));
-    }
-
-    public <T> T getAttr(Object key, T defaultValue) {
-        T value = getAttr(key);
+    public <T> T attr(Object key, T defaultValue) {
+        T value = attr(key);
         return (value != null) ? value : defaultValue;
     }
 
     @Override
+    public int size() {
+        return context().size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return context().isEmpty();
+    }
+
+    @Override
+    public boolean containsKey(Object key) {
+        return context().containsKey(key);
+    }
+
+    @Override
+    public boolean containsValue(Object value) {
+        return context().containsValue(value);
+    }
+
+    @Override
+    public Object get(Object key) {
+        return context().get(key);
+    }
+
+    @Override
     public Object put(String key, Object value) {
-        return getContext().put(key, value);
+        return context().put(key, value);
     }
 
     @Override
     public Object remove(Object key) {
-        return getContext().remove(key);
+        return context().remove(key);
     }
 
     @Override
     public void putAll(Map<? extends String, ?> m) {
-        getContext().putAll(m);
+        context().putAll(m);
     }
 
     @Override
     public void clear() {
-        getContext().clear();
+        context().clear();
     }
 
     @Override
     public Set<String> keySet() {
-        return getContext().keySet();
+        return context().keySet();
     }
 
     @Override
     public Collection<Object> values() {
-        return getContext().values();
+        return context().values();
     }
 
     @Override
     public Set<Entry<String, Object>> entrySet() {
-        return getContext().entrySet();
+        return context().entrySet();
     }
 
     @Override
     public boolean remove(Object key, Object value) {
-        return getContext().remove(key, value);
-    }
-
-    public Security getSecurity() {
-        return getDctx().getSecurity();
+        return context().remove(key, value);
     }
 
     public Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ?> context) throws GenericServiceException {
-        return getDctx().makeValidContext(serviceName, mode, context);
+        return dctx().makeValidContext(serviceName, mode, context);
     }
 
     public ModelService getModelService(String serviceName) throws GenericServiceException {
-        return getDctx().getModelService(serviceName);
+        return dctx().getModelService(serviceName);
     }
 
     public ModelService getModelServiceAlways(String serviceName) throws IllegalArgumentException {
-        return getDctx().getModelServiceAlways(serviceName);
+        return dctx().getModelServiceAlways(serviceName);
     }
 
     public ModelService getModelServiceOrNull(String serviceName) {
-        return getDctx().getModelServiceOrNull(serviceName);
+        return dctx().getModelServiceOrNull(serviceName);
     }
 
     /**
@@ -167,10 +168,10 @@ public class ServiceContext implements Map<String, Object> {
      * @return the current service model, or null if no service executing
      */
     public ModelService getModelService() {
-        return getDctx().getModelService();
+        return dctx().getModelService();
     }
 
     public boolean isService(String serviceName) {
-        return getDctx().isService(serviceName);
+        return dctx().isService(serviceName);
     }
 }

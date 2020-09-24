@@ -200,6 +200,78 @@ public class DispatchContext implements Serializable {
     }
 
     /**
+     * Uses an existing map of name value pairs and extracts the IN keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param serviceName The name of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidInContext(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException {
+        return makeValidContext(model, ModelService.IN_PARAM, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the IN keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidInContext(ModelService model, Map<String, ? extends Object> context) throws GenericServiceException {
+        return makeValidContext(model, ModelService.IN_PARAM, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the OUT keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param serviceName The name of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidOutContext(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException {
+        return makeValidContext(model, ModelService.OUT_PARAM, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the OUT keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidOutContext(ModelService model, Map<String, ? extends Object> context) throws GenericServiceException {
+        return makeValidContext(model, ModelService.OUT_PARAM, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the IN and OUT keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param serviceName The name of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidInOutContext(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException {
+        return makeValidContext(model, ModelService.IN_OUT_PARAM, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the IN and OUT keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidInOutContext(ModelService model, Map<String, ? extends Object> context) throws GenericServiceException {
+        return makeValidContext(model, ModelService.IN_OUT_PARAM, context);
+    }
+
+    /**
      * Gets the ModelService instance that corresponds to given the name
      * @param serviceName Name of the service
      * @return GenericServiceModel that corresponds to the serviceName

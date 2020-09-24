@@ -12,10 +12,10 @@ import java.util.Set;
 import java.util.TimeZone;
 
 /**
- * Helper service context accessor for common operations on {@link DispatchContext} and service contexts (SCIPIO).
- * Map interface methods affect the wrapped service context.
- * NOTE: May be reused as base class for common implementations, but more methods may be added, so not recommended
- * for client code.
+ * Helper service context accessor for common operations on {@link DispatchContext} and the service context map (SCIPIO).
+ * <p>Map interface methods affect the wrapped service context.</p>
+ * <p>NOTE: May be reused as base class for common implementations, but more methods may be added, so not recommended
+ * for client code.</p>
  */
 public class ServiceContext implements Map<String, Object> {
 
@@ -72,11 +72,17 @@ public class ServiceContext implements Map<String, Object> {
         return (TimeZone) context().get("timeZone");
     }
 
+    /**
+     * Returns a service attribute value from the service context map, or null.
+     */
     @SuppressWarnings("unchecked")
     public <T> T attr(Object key) {
         return (T) get(key);
     }
 
+    /**
+     * Returns a service attribute value from the service context map, or the given default value if null.
+     */
     public <T> T attr(Object key, T defaultValue) {
         T value = attr(key);
         return (value != null) ? value : defaultValue;
@@ -147,18 +153,127 @@ public class ServiceContext implements Map<String, Object> {
         return context().remove(key, value);
     }
 
+    /**
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param serviceName The name of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
     public Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ?> context) throws GenericServiceException {
         return dctx().makeValidContext(serviceName, mode, context);
     }
 
+    /**
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidContext(ModelService model, String mode, Map<String, ?> context) throws GenericServiceException {
+        return DispatchContext.makeValidContext(model, mode, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the IN keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param serviceName The name of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidInContext(String serviceName, Map<String, ?> context) throws GenericServiceException {
+        return dctx().makeValidInContext(serviceName, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the IN keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidInContext(ModelService model, Map<String, ?> context) throws GenericServiceException {
+        return dctx().makeValidInContext(model, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the OUT keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param serviceName The name of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidOutContext(String serviceName, Map<String, ?> context) throws GenericServiceException {
+        return dctx().makeValidOutContext(serviceName, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the OUT keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidOutContext(ModelService model, Map<String, ?> context) throws GenericServiceException {
+        return dctx().makeValidOutContext(model, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the IN and OUT keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param serviceName The name of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidInOutContext(String serviceName, Map<String, ?> context) throws GenericServiceException {
+        return dctx().makeValidInOutContext(serviceName, context);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the IN and OUT keys which are used in serviceName (SCIPIO)
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidInOutContext(ModelService model, Map<String, ?> context) throws GenericServiceException {
+        return dctx().makeValidInOutContext(model, context);
+    }
+
+    /**
+     * Gets the ModelService instance that corresponds to given the name
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
+     */
     public ModelService getModelService(String serviceName) throws GenericServiceException {
         return dctx().getModelService(serviceName);
     }
 
+    /**
+     * Gets the ModelService instance that corresponds to given the name, throwing IllegalArgumentException if not found (SCIPIO).
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
+     */
     public ModelService getModelServiceAlways(String serviceName) throws IllegalArgumentException {
         return dctx().getModelServiceAlways(serviceName);
     }
 
+    /**
+     * Gets the ModelService instance that corresponds to given the name, returning null and no logging if not found (SCIPIO).
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
+     */
     public ModelService getModelServiceOrNull(String serviceName) {
         return dctx().getModelServiceOrNull(serviceName);
     }
@@ -171,6 +286,11 @@ public class ServiceContext implements Map<String, Object> {
         return dctx().getModelService();
     }
 
+    /**
+     * Gets the ModelService instance that corresponds to given the name, returning null and no logging if not found (SCIPIO).
+     * @param serviceName Name of the service
+     * @return GenericServiceModel that corresponds to the serviceName
+     */
     public boolean isService(String serviceName) {
         return dctx().isService(serviceName);
     }

@@ -28,6 +28,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceDispatcher;
 
 /**
@@ -95,11 +96,21 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
 
         try {
             Class<?> c = cl.loadClass(this.getLocation(modelService));
-            Method m = c.getMethod(modelService.invoke, DispatchContext.class, Map.class);
-            if (Modifier.isStatic(m.getModifiers())) {
-                result = m.invoke(null, dctx, context);
-            } else {
-                result = m.invoke(c.newInstance(), dctx, context);
+            try {
+                Method m = c.getMethod(modelService.invoke, DispatchContext.class, Map.class);
+                if (Modifier.isStatic(m.getModifiers())) {
+                    result = m.invoke(null, dctx, context);
+                } else {
+                    result = m.invoke(c.newInstance(), dctx, context);
+                }
+            } catch(NoSuchMethodException e) {
+                // SCIPIO: Alternative form using ServiceContext (TODO?: cache method overload lookup?)
+                Method m = c.getMethod(modelService.invoke, ServiceContext.class);
+                if (Modifier.isStatic(m.getModifiers())) {
+                    result = m.invoke(null, ServiceContext.from(dctx, context));
+                } else {
+                    result = m.invoke(c.newInstance(), ServiceContext.from(dctx, context));
+                }
             }
         } catch (ClassNotFoundException cnfe) {
             throw new GenericServiceException("Cannot find service [" + modelService.name + "] location class", cnfe);

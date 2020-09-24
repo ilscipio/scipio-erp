@@ -2300,7 +2300,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                     try {
                         ClassLoader cl = Thread.currentThread().getContextClassLoader();
                         Class<?> c = cl.loadClass(location);
-                        c.getMethod(invoke, DispatchContext.class, Map.class);
+                        try {
+                            c.getMethod(invoke, DispatchContext.class, Map.class);
+                        } catch(NoSuchMethodException e) {
+                            c.getMethod(invoke, ServiceContext.class);
+                        }
                     } catch(ClassNotFoundException e) {
                         valid = false;
                         Debug.logError("java service '" + name + "' points to an invalid class (" + location + ") (" + e.toString() + ")", module);

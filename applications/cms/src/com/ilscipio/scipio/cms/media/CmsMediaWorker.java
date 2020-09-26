@@ -15,9 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
-import org.ofbiz.common.image.ImageVariantConfig;
-import org.ofbiz.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -32,35 +29,9 @@ public abstract class CmsMediaWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    /**
-     * NOTE: currently (2017-08-01) it is recommended to not use this file and to use
-     * /applications/content/config/ImageProperties.xml instead, so images everywhere are the same
-     * (there may currently be issues if they differ... TODO: REVIEW).
-     */
-    public static final String CMS_IMAGEPROP_FILEPATH = "/applications/cms/config/ImageProperties.xml";
-
-    public static final Map<String, FlexibleStringExpander> RESIZEIMG_CONTENT_FIELDEXPR = ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR;
-    public static final Map<String, FlexibleStringExpander> RESIZEIMG_DATARESOURCE_FIELDEXPR = ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR;
-
     public static final Set<String> VALID_DATA_RESOURCE_TYPE_LIST = Collections.unmodifiableSet(UtilMisc.toHashSet("AUDIO_OBJECT", "VIDEO_OBJECT", "IMAGE_OBJECT", "DOCUMENT_OBJECT"));
 
-    private static final ImageVariantConfig defaultCmsImgVariantCfg;
-    static {
-        ImageVariantConfig cfg = null;
-        try {
-            cfg = ImageVariantConfig.fromImagePropertiesXml(getCmsImagePropertiesPath());
-        } catch(Exception e) {
-            Debug.logError(e, "Cms: Media: Could not read ImageProperties.xml: " + e.getMessage(), module);
-        }
-        defaultCmsImgVariantCfg = cfg;
-    }
-
-
     protected CmsMediaWorker() {
-    }
-
-    public static ImageVariantConfig getDefaultCmsImageVariantConfig() {
-        return defaultCmsImgVariantCfg;
     }
 
     public static GenericValue getContentForMedia(Delegator delegator, String contentId, String dataResourceId) throws GenericEntityException, IllegalArgumentException, IllegalStateException {
@@ -122,7 +93,6 @@ public abstract class CmsMediaWorker {
                 EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, null);
     }
     
-    
     public static EntityListIterator getMediaContentDataResourceViewTo(Delegator delegator, String dataResourceTypeId, Collection<String> contentIdList, List<String> orderBy)
             throws GenericEntityException {
         List<EntityCondition> condList = new ArrayList<>();
@@ -137,30 +107,6 @@ public abstract class CmsMediaWorker {
                 EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, null);
     }
 
-    /**
-     * SCIPIO: Returns the full path to the ImageProperties.xml file to use for cms image size definitions.
-     * Uses the one from cms component if available; otherwise falls back on the generic one under content component.
-     * WARN: Currently recommend NOT to use the CMS-specific one until better tested.
-     * Added 2017-08-01.
-     */
-    public static String getCmsImagePropertiesFullPath() throws IOException {
-        String path = ImageVariantConfig.getImagePropertiesFullPath(CMS_IMAGEPROP_FILEPATH);
-        if (new java.io.File(path).exists()) {
-            return path;
-        } else {
-            return ContentImageWorker.getContentImagePropertiesFullPath();
-        }
-    }
-
-    public static String getCmsImagePropertiesPath() throws IOException {
-        String path = ImageVariantConfig.getImagePropertiesFullPath(CMS_IMAGEPROP_FILEPATH);
-        if (new java.io.File(path).exists()) {
-            return CMS_IMAGEPROP_FILEPATH;
-        } else {
-            return ContentImageWorker.getContentImagePropertiesPath();
-        }
-    }
-
     // TODO: REVIEW: for now we are intentionally ignoring the thruDate on ContentAssoc to simplify.
     // I don't see the point in keeping old records...
     
@@ -168,7 +114,6 @@ public abstract class CmsMediaWorker {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         return getVariantContentAssocTo(delegator, contentId);
     }
-    
     
     public static List<GenericValue> getVariantContentAssocTo(Delegator delegator, String contentId) throws GenericEntityException {
         EntityCondition cond = EntityCondition.makeCondition(

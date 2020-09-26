@@ -35,9 +35,11 @@ import java.util.TimeZone;
 
 import javax.imageio.ImageIO;
 
+import com.ilscipio.scipio.common.util.fileType.FileTypeUtil;
 import org.apache.commons.io.FileUtils;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -52,11 +54,14 @@ import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -914,4 +919,134 @@ public abstract class ContentImageServices {
         }
     }
 
+    public static Map<String, Object> contentImageAutoRescale(ServiceContext ctx) {
+        String contentId = ctx.attr("contentId");
+        GenericValue contentDataResource = ctx.attr("contentDataResource");
+        boolean requireProfile = ctx.attr("requireProfile", true);
+        boolean createNew = ctx.attr("createNew", true);
+        boolean nonFatal = ctx.attr("nonFatal", false);
+        boolean doLog = ctx.attr("doLog", false);
+        String progressInfo = ctx.attr("progressInfo");
+        Timestamp moment = ctx.attr("moment", UtilDateTime::nowTimestamp);
+
+        try {
+            if (contentDataResource == null) {
+                contentDataResource = ctx.delegator().findOne("ContentDataResourceRequiredView", UtilMisc.toMap("contentId", contentId), false);
+                if (contentDataResource == null) {
+                    throw new GeneralException("Content [" + contentId + "] not found");
+                }
+            }
+            GenericValue content = contentDataResource.extractViewMember("Content");
+            GenericValue dataResource = contentDataResource.extractViewMember("DataResource");
+
+            ImageVariantConfig imageVariantConfig = null;
+            String mediaProfile = content.getString("mediaProfile");
+            if (mediaProfile != null) {
+                imageVariantConfig = ImageVariantConfig.fromMediaProfile(ctx.delegator(), mediaProfile, false);
+                if (imageVariantConfig == null) {
+                    throw new GeneralException("Content [" + contentId + "] mediaProfile [" + mediaProfile + "] is undefined");
+                }
+            }
+
+            if (imageVariantConfig == null || !createNew) {
+                // Get the first variant (for default fields)
+                EntityCondition cond = EntityCondition.makeCondition(
+                        EntityCondition.makeCondition("contentIdStart", contentId),
+                        EntityOperator.AND,
+                        EntityCondition.makeCondition("caContentAssocTypeId", EntityOperator.LIKE, "IMGSZ_%"));
+                GenericValue variantContentAssoc = ctx.delegator().from("ContentAssocViewTo").where(cond).filterByDate(moment).queryFirst();
+
+                //GenericValue variantContent = null;
+                GenericValue variantDataResource = null;
+                if (variantContentAssoc != null) {
+                    if (imageVariantConfig == null) {
+                        //variantContent = variantContentAssoc.extractViewMember("Content");
+                        variantDataResource = ctx.delegator().from("DataResource").where("dataResourceId", variantContentAssoc.get("dataResourceId")).queryOne();
+                        if (variantDataResource == null) {
+                            throw new GenericEntityException("Could not find DataResource [" + variantContentAssoc.get("dataResourceId") + "] for variant image content [" + variantContentAssoc.get("contentId") + "]");
+                        }
+                    }
+                } else if (!createNew) {
+                    return ServiceUtil.returnFailure("No existing variant images for content [" + contentId + "], not regenerating image size variants");
+                }
+
+                if (imageVariantConfig == null && variantContentAssoc != null) {
+                    String variantSizeId = variantDataResource.getString("sizeId");
+                    if (variantSizeId != null) {
+                        GenericValue variantImageSize = ctx.delegator().from("ImageSize").where("sizeId", variantSizeId).queryFirst();
+                        if (variantImageSize == null) {
+                            throw new GenericEntityException("Content [" + contentId + "] variant content [" + variantContentAssoc.get("contentId") + "] has invalid sizeId [" + variantSizeId + "]");
+                        }
+                        imageVariantConfig = ImageVariantConfig.fromImageSizePreset(ctx.delegator(), variantImageSize.getString("presetId"), false);
+                        if (imageVariantConfig == null) {
+                            throw new GeneralException("Content [" + contentId + "] sizeId [" + variantSizeId + "] preset [" + variantImageSize.getString("presetId") + "] is undefined");
+                        }
+                    }
+                }
+            }
+
+            boolean implicitProfile = (imageVariantConfig == null);
+            if (implicitProfile) {
+                if (requireProfile) {
+                    return ServiceUtil.returnFailure("No explicit image media profile for content [" + contentId + "], not regenerating image size variants");
+                }
+                mediaProfile = ContentImageWorker.getContentImageMediaProfileOrDefault(content, true);
+                imageVariantConfig = ImageProfile.getVariantConfig(ImageProfile.getImageProfileOrDefault(ctx.delegator(), mediaProfile));
+                if (imageVariantConfig == null) {
+                    throw new GeneralException("Unable to determine image profile variant config for content [" + contentId + "]; is mediaprofiles.properties configured?");
+                }
+            }
+
+            Map<String, Object> contentFields = new HashMap<>();
+            Map<String, Object> dataResourceFields = new HashMap<>();
+
+            // TODO: Support for other Content and DataResource fields should be analyzed, but difficult to carry over automatically,
+            //  may need variantContent and variantDataResource
+            //if (variantContentAssoc != null) {
+            //
+            //} else {
+            //    Debug.logInfo("contentImageAutoRescale: No variant content images found for content [" + contentId
+            //            + "] to regenerate fields from for auto-resize; using default fields", module);
+            contentFields.putAll(ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR);
+            contentFields.put("contentTypeId", "SCP_MEDIA_VARIANT");
+
+            dataResourceFields.putAll(ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR);
+            dataResourceFields.put("dataResourceTypeId", "IMAGE_OBJECT");
+            dataResourceFields.put("statusId", dataResource.get("statusId"));
+            dataResourceFields.put("isPublic", dataResource.get("isPublic"));
+            //}
+
+            Map<String, Object> resizeCtx = ctx.makeValidInContext("contentImageDbScaleInAllSizeCore", ctx);
+            resizeCtx.put("imageOrigContentId", contentId);
+            resizeCtx.put("imageVariantConfig", imageVariantConfig);
+            resizeCtx.put("fileSizeDataResAttrName", FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME);
+            resizeCtx.put("deleteOld", Boolean.TRUE);
+            resizeCtx.put("createdDate", moment);
+            resizeCtx.put("contentFields", contentFields);
+            resizeCtx.put("dataResourceFields", dataResourceFields);
+
+            if (doLog) {
+                Debug.logInfo("contentImageAutoRescale: Rebuilding variants for image content [" + contentId + "]"
+                        + (progressInfo != null ? " (" + progressInfo + ")" : ""), module);
+            }
+
+            Map<String, Object> resizeResult;
+            if (nonFatal) {
+                resizeResult = ctx.dispatcher().runSync("contentImageDbScaleInAllSizeCore", resizeCtx, -1, true);
+                if (!ServiceUtil.isSuccess(resizeResult)) {
+                    return ServiceUtil.returnFailure("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
+                }
+            } else {
+                resizeResult = ctx.dispatcher().runSync("contentImageDbScaleInAllSizeCore", resizeCtx);
+                if (!ServiceUtil.isSuccess(resizeResult)) {
+                    throw new GeneralException("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
+                }
+            }
+        } catch (Exception e) {
+            String errMsg = "Could not auto-resize variant images for content [" + contentId + "]: " + e.getMessage();
+            Debug.logError(e, "contentImageAutoRescale: " + errMsg, module);
+            return ServiceUtil.returnError(errMsg);
+        }
+        return ServiceUtil.returnSuccess();
+    }
 }

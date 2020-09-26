@@ -2,7 +2,6 @@ package com.ilscipio.scipio.cms.media;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -28,7 +27,6 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.FindServices;
-import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
@@ -45,6 +43,7 @@ import org.ofbiz.service.GeneralServiceException;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.cms.CmsServiceUtil;
@@ -279,7 +278,7 @@ public abstract class CmsMediaServices {
                             try {
                                 Map<String, Object> resizeCtx = dctx.makeValidContext("cmsRebuildMediaVariants", ModelService.IN_PARAM, context);
                                 resizeCtx.put("contentIdList", UtilMisc.<String>toList(contentId));
-                                resizeCtx.put("force", Boolean.TRUE);
+                                resizeCtx.put("force", true);
                                 resizeCtx.put("createdDate", createdDate);
                                 Map<String, Object> resizeResult = dispatcher.runSync("cmsRebuildMediaVariants", resizeCtx);
                                 if (!ServiceUtil.isSuccess(resizeResult)) {
@@ -606,7 +605,7 @@ public abstract class CmsMediaServices {
 
                     if (UtilValidate.isNotEmpty(contentName)) {
                         // SPECIAL
-                        varContent.put("contentName", CmsMediaWorker.RESIZEIMG_CONTENT_FIELDEXPR.get("contentName").expandString(imageCtx, timeZone, locale));
+                        varContent.put("contentName", ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR.get("contentName").expandString(imageCtx, timeZone, locale));
                     }
                     varContent.store();
                     String varDataResourceId = varContent.getString("dataResourceId");
@@ -621,7 +620,7 @@ public abstract class CmsMediaServices {
                     }
                     if (UtilValidate.isNotEmpty(contentName)) {
                         // SPECIAL
-                        varDataResource.put("dataResourceName", CmsMediaWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR.get("dataResourceName").expandString(imageCtx, timeZone, locale));
+                        varDataResource.put("dataResourceName", ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR.get("dataResourceName").expandString(imageCtx, timeZone, locale));
                     }
                     if (UtilValidate.isNotEmpty(context.get("statusId"))) {
                         varDataResource.put("statusId", statusId);
@@ -712,147 +711,87 @@ public abstract class CmsMediaServices {
         return result;
     }
 
-    @SuppressWarnings("unchecked")
-    public static Map<String, Object> rebuildMediaVariants(DispatchContext dctx, Map<String, ?> context) {
-        Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
-        //Locale locale = (Locale) context.get("locale");
-        //GenericValue userLogin = (GenericValue) context.get("userLogin");
-        //TimeZone timeZone = (TimeZone) context.get("timeZone");
-        Map<String, Object> result = ServiceUtil.returnSuccess();
-
-        Collection<String> contentIdList = UtilGenerics.checkCollection(context.get("contentIdList"));
-        boolean force = Boolean.TRUE.equals(context.get("force"));
+    public static Map<String, Object> rebuildMediaVariants(ServiceContext ctx) {
+        Collection<String> contentIdList = ctx.attr("contentIdList");
+        boolean force = ctx.attr("force", false);
         // USE SAME CREATED DATE FOR EVERYTHING RELATED
-        Timestamp createdDate = (Timestamp) context.get("createdDate");
-        if (createdDate == null) createdDate = UtilDateTime.nowTimestamp();
-
-        EntityListIterator contentDataResourceList;
-
-        Boolean sepTrans = (Boolean) context.get("sepTrans");
-        if (sepTrans == null) sepTrans = (contentIdList == null);
+        Timestamp createdDate = ctx.attr("createdDate", UtilDateTime::nowTimestamp);
+        boolean sepTrans = ctx.attr("sepTrans", (contentIdList == null));
 
         Set<String> remainingContentIds = new HashSet<>();
         boolean doLog = false;
-        String imagePropXmlPath;
+        EntityListIterator contentDataResourceList = null;
         try {
             if (contentIdList == null) {
-                contentDataResourceList = CmsMediaWorker.getAllMediaContentDataResourceRequired(delegator, "IMAGE_OBJECT", null);
+                contentDataResourceList = CmsMediaWorker.getAllMediaContentDataResourceRequired(ctx.delegator(), "IMAGE_OBJECT", null);
                 doLog = true;
             } else {
                 contentIdList = new LinkedHashSet<>(contentIdList); // remove dups
                 remainingContentIds = new HashSet<>(contentIdList);
-                contentDataResourceList = CmsMediaWorker.getMediaContentDataResourceRequiredByContentId(delegator, "IMAGE_OBJECT", contentIdList, null);
+                contentDataResourceList = CmsMediaWorker.getMediaContentDataResourceRequiredByContentId(ctx.delegator(), "IMAGE_OBJECT", contentIdList, null);
             }
-
-            imagePropXmlPath = CmsMediaWorker.getCmsImagePropertiesPath();
-        } catch (Exception e) {
-            FormattedError err = errorFmt.format(e, "Error creating resized images", context);
-            Debug.logError(err.getEx(), err.getLogMsg(), module);
-            return err.returnError();
-        }
-
-        if (contentDataResourceList != null) {
-            try {
-                if (doLog) {
-                    Debug.logInfo(logPrefix+"Beginning rebuildMediaVariants for all images", module);
-                }
-                // SCIPIO (01/19/2018): Get custom image sizes, if present
-                // not applicable
-                //Map<String, GenericValue> customImageSizesByName = UtilMisc.newMap();
-                //if (context.containsKey("customImageSizes")) {
-                //    List<GenericValue> customImageSizes = (List<GenericValue>) context.get("customImageSizes");
-                //    for (GenericValue customImageSize : customImageSizes) {
-                //        customImageSizesByName.put(customImageSize.getString("sizeName"),  customImageSize);
-                //    }
-                //}
-                
-                long imgCount = 0;
-                GenericValue contentDataResource;
-                while((contentDataResource = contentDataResourceList.next()) != null) {
-                    String contentId = contentDataResource.getString("contentId");
-                    remainingContentIds.remove(contentId);
-                    
-                    if (force || CmsMediaWorker.hasVariantContent(delegator, contentId)) {
-                        ImageVariantConfig imageVariantConfig = null;
-                        String mediaProfile = contentDataResource.getString("mediaProfile");
-                        if (mediaProfile != null) {
-                            imageVariantConfig = ImageVariantConfig.fromImageSizePreset(delegator, mediaProfile, false);
-                            if (imageVariantConfig == null) {
-                                ImageProfile imageProfile = ImageProfile.getImageProfile(delegator, mediaProfile);
-                                if (imageProfile != null) {
-                                    imageVariantConfig = imageProfile.getVariantConfig();
-                                }
-                            }
+            if (contentDataResourceList == null) {
+                return ServiceUtil.returnSuccess();
+            }
+            if (doLog) {
+                Debug.logInfo(logPrefix+"Beginning rebuildMediaVariants for all images", module);
+            }
+            int imgCount = 0;
+            int errors = 0;
+            GenericValue contentDataResource;
+            while((contentDataResource = contentDataResourceList.next()) != null) {
+                String contentId = contentDataResource.getString("contentId");
+                remainingContentIds.remove(contentId);
+                try {
+                    Map<String, Object> resizeCtx = ctx.makeValidInContext("contentImageAutoRescale", ctx);
+                    resizeCtx.put("contentId", contentId);
+                    resizeCtx.put("contentDataResource", contentDataResource);
+                    resizeCtx.put("requireProfile", false);
+                    resizeCtx.put("createNew", force);
+                    resizeCtx.put("nonFatal", sepTrans);
+                    resizeCtx.put("moment", createdDate);
+                    resizeCtx.put("doLog", doLog);
+                    resizeCtx.put("progress", ""+(imgCount + 1));
+                    Map<String, Object> resizeResult = ctx.dispatcher().runSync("contentImageAutoRescale", resizeCtx);
+                    if (!ServiceUtil.isSuccess(resizeResult)) {
+                        if (sepTrans && ServiceUtil.isFailure(resizeResult)) {
+                            Debug.logError("Error creating resized images for image content [" + contentId + "]: " + ServiceUtil.getErrorMessage(resizeResult), module);
+                            errors++;
+                        } else {
+                            return ServiceUtil.returnError("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
                         }
-
-                        if (doLog) {
-                            Debug.logInfo(logPrefix+"rebuildMediaVariants: Rebuilding variants for image [contentId: " + contentId + "] (" + (imgCount+1) + ")", module);
-                        }
-
-                        try {
-                            Map<String, Object> resizeCtx = dctx.makeValidContext("contentImageDbScaleInAllSizeCore", ModelService.IN_PARAM, context);
-                            resizeCtx.put("imageOrigContentId", contentId);
-                            if (!resizeCtx.containsKey("deleteOld")) {
-                                resizeCtx.put("deleteOld", Boolean.TRUE);
-                            }
-                            if (imageVariantConfig != null) {
-                                resizeCtx.put("imageVariantConfig", imageVariantConfig);
-                            } else {
-                                resizeCtx.put("imagePropXmlPath", imagePropXmlPath);
-                            }
-                            resizeCtx.put("fileSizeDataResAttrName", FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME);
-
-                            Map<String, Object> contentFields = new HashMap<>();
-                            contentFields.putAll(CmsMediaWorker.RESIZEIMG_CONTENT_FIELDEXPR);
-                            contentFields.put("contentTypeId", "SCP_MEDIA_VARIANT");
-                            resizeCtx.put("contentFields", contentFields);
-
-                            Map<String, Object> dataResourceFields = new HashMap<>();
-                            dataResourceFields.putAll(CmsMediaWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR);
-                            dataResourceFields.put("dataResourceTypeId", "IMAGE_OBJECT");
-                            dataResourceFields.put("statusId", contentDataResource.get("drStatusId"));
-                            dataResourceFields.put("isPublic", contentDataResource.get("drIsPublic"));
-                            
-                            // SCIPIO (01/19/2018): Add the custom dimension to the variant dataSource
-                            // TODO: REVIEW: should be unneeded
-                            //if (customImageSizesByName.containsKey(null)) {
-                            //    dataResourceFields.put("sizeId", customImageSizesByName.get(null).getString("sizedId"));
-                            //}
-                            
-                            resizeCtx.put("dataResourceFields", dataResourceFields);
-                            resizeCtx.put("createdDate", createdDate);
-
-                            Map<String, Object> resizeResult;
-                            if (sepTrans) {
-                                resizeResult = dispatcher.runSync("contentImageDbScaleInAllSizeCore", resizeCtx, -1, true);
-                            } else {
-                                resizeResult = dispatcher.runSync("contentImageDbScaleInAllSizeCore", resizeCtx);
-                            }
-                            if (!ServiceUtil.isSuccess(resizeResult)) {
-                                return ServiceUtil.returnError("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
-                            }
-                        } catch (GenericServiceException e) {
-                            FormattedError err = errorFmt.format(e, "Error creating resized images", context);
-                            Debug.logError(err.getEx(), err.getLogMsg(), module);
-                            return err.returnError();
-                        }
-                        imgCount++;
                     }
+                } catch (GenericServiceException e) {
+                    FormattedError err = errorFmt.format(e, "Error creating resized images", ctx);
+                    Debug.logError(err.getEx(), err.getLogMsg(), module);
+                    return err.returnError();
                 }
-                if (remainingContentIds.size() > 0) {
-                    String errMsg = "Could not find valid image media records for contentIds: " + remainingContentIds.toString();
-                    Debug.logError(logPrefix + errMsg, module);
+                imgCount++;
+            }
+            if (remainingContentIds.size() > 0) {
+                String errMsg = "Could not find valid image media records for contentIds: " + remainingContentIds.toString();
+                Debug.logError(logPrefix + errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
+            if (doLog) {
+                Debug.logInfo(logPrefix+"Finished rebuildMediaVariants for " + imgCount + " images (having variants or forced)", module);
+            }
+            if (errors > 0) {
+                String errMsg = "Could not resize all images (errors: " + errors + ", total: " + (imgCount + 1) + ")";
+                if (sepTrans) {
+                    return ServiceUtil.returnFailure(errMsg);
+                } else {
                     return ServiceUtil.returnError(errMsg);
                 }
-                if (doLog) {
-                    Debug.logInfo(logPrefix+"Finished rebuildMediaVariants for " + imgCount + " images (having variants or forced)", module);
-                }
-            } catch (Exception e) {
-                FormattedError err = errorFmt.format(e, "Error creating resized images", context);
-                Debug.logError(err.getEx(), err.getLogMsg(), module);
-                return err.returnError();
-            } finally {
+            } else {
+                return ServiceUtil.returnSuccess("Resized images (total: " + (imgCount + 1) + ")");
+            }
+        } catch (Exception e) {
+            FormattedError err = errorFmt.format(e, "Error creating resized images", ctx);
+            Debug.logError(err.getEx(), err.getLogMsg(), module);
+            return err.returnError();
+        } finally {
+            if (contentDataResourceList != null) {
                 try {
                     contentDataResourceList.close();
                 } catch (GenericEntityException e) {
@@ -860,7 +799,6 @@ public abstract class CmsMediaServices {
                 }
             }
         }
-        return result;
     }
 
     // TODO: REVIEW: for now we are intentionally ignoring the thruDate on ContentAssoc to simplify.

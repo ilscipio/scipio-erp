@@ -13,6 +13,7 @@ import java.util.Map;
  * Image specialization of MediaProfile (SCIPIO).
  */
 public class ImageProfile extends MediaProfile {
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String TYPE = "IMAGE_OBJECT";
 
@@ -60,10 +61,14 @@ public class ImageProfile extends MediaProfile {
             try {
                 variantConfig = ImageVariantConfig.fromImagePropertiesXml(getLocation());
             } catch (IOException e) {
-                e.printStackTrace();
+                Debug.logError(e, module);
             }
             this.variantConfig = variantConfig;
         }
         return variantConfig;
+    }
+
+    public static ImageVariantConfig getVariantConfig(ImageProfile imageProfile) {
+        return (imageProfile != null) ? imageProfile.getVariantConfig() : null;
     }
 }

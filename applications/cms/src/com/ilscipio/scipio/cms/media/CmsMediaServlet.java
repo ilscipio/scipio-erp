@@ -18,8 +18,10 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.data.DataResourceWorker;
+import org.ofbiz.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
@@ -112,6 +114,7 @@ public class CmsMediaServlet extends HttpServlet {
 
         final boolean useCache = isUseCache(request);
 
+        GenericValue content;
         GenericValue dataResource;
         try {
             String isPublic;
@@ -125,7 +128,16 @@ public class CmsMediaServlet extends HttpServlet {
                  * images - there is no point fixing this here currently because can't solve this
                  * problem for the file-based storage elsewhere yet.
                  */
-                ImageVariantConfig imgVariantCfg = CmsMediaWorker.getDefaultCmsImageVariantConfig();
+                content = delegator.from("Content").where("contentId", contentId).cache().queryOne();
+                if (content == null) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND,"Media not found with contentId [" + contentId + "]");
+                    return;
+                }
+                String mediaProfile = ContentImageWorker.getContentImageMediaProfileOrDefault(content, true);
+                ImageVariantConfig imgVariantCfg = ImageVariantConfig.fromMediaProfile(delegator, mediaProfile, true);
+                if (imgVariantCfg == null) {
+                    imgVariantCfg = ImageProfile.getVariantConfig(ImageProfile.getImageProfileOrDefault(delegator, "IMAGE_CONTENT"));
+                }
                 if (imgVariantCfg != null) {
                     if (CmsUtil.verboseOn()) {
                         Debug.logInfo("Cms: Auto-selecting image variant [contentId: " + contentId + ", mode: " + autoVariantMode.getStrName() + "]", module);
@@ -144,7 +156,7 @@ public class CmsMediaServlet extends HttpServlet {
                         }
                     }
                 } else {
-                    if (CmsUtil.verboseOn()) { // don'
+                    if (CmsUtil.verboseOn()) {
                         Debug.logWarning("Cms: Cannot auto-select image variant - no image variant config (ImageProperties.xml) available for CMS", module);
                     }
                 }
@@ -153,14 +165,14 @@ public class CmsMediaServlet extends HttpServlet {
             if ((UtilValidate.isEmpty(variant) || "original".equals(variant))) {
                 // STANDARD CASE
                 if (UtilValidate.isNotEmpty(dataResourceId)) {
-                    dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("dataResourceId", dataResourceId).cache(useCache).queryList());
+                    dataResource = EntityUtil.getFirst(delegator.from("DataResourceContentRequiredView").where("dataResourceId", dataResourceId).cache(useCache).queryList());
                     if (dataResource == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                                 "Media not found with dataResourceId [" + dataResourceId + "]");
                         return;
                     }
                 } else if (UtilValidate.isNotEmpty(contentId)) {
-                    dataResource = EntityUtil.getFirst(EntityQuery.use(delegator).from("DataResourceContentRequiredView").where("coContentId", contentId).cache(useCache).queryList());
+                    dataResource = EntityUtil.getFirst(delegator.from("DataResourceContentRequiredView").where("coContentId", contentId).cache(useCache).queryList());
                     if (dataResource == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                                 "Media not found with contentId [" + contentId + "]");

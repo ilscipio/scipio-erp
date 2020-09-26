@@ -103,13 +103,13 @@ public abstract class ContentImageWorker {
             return mediaProfile;
         }
         // Infer default
-        String contentTypeId = content.getString("contentTypeId");
-        if ("SCP_MEDIA".equals(contentTypeId) || "SCP_MEDIA_VARIANT".equals(contentTypeId)) {
-            return "IMAGE_CMS";
-        }
         if (content.getDelegator().from("ProductContent")
                 .where("contentId", content.get("contentId")).cache(useCache).queryCount() > 0) {
             return "IMAGE_PRODUCT";
+        }
+        String contentTypeId = content.getString("contentTypeId");
+        if ("SCP_MEDIA".equals(contentTypeId) || "SCP_MEDIA_VARIANT".equals(contentTypeId)) {
+            return "IMAGE_CONTENT";
         }
         return "IMAGE_DEFAULT";
     }

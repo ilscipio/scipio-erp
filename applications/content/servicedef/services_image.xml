@@ -170,7 +170,8 @@
         
         <!-- ContentAssoc -->
         <attribute name="contentAssocTypeId" mode="IN" type="String" optional="true">
-            <description>Content assoc type, with support for flexible expressions (default: "IMGSZ_${sizetype}")
+            <description>DEPRECATED: 2020-09: Generally the default is assumed in most circumstances, so setting this to anything else should be avoided.
+                Content assoc type, with support for flexible expressions (default: "IMGSZ_${sizetype}")
                 NOTE: the entire string is automatically uppercased</description>
         </attribute>
     
@@ -186,6 +187,34 @@
         <attribute name="bufferedImage" mode="OUT" type="java.awt.image.BufferedImage" optional="true">
             <description>Original image contents, for reuse</description>
         </attribute>
+    </service>
+
+    <!-- NOTE: For product images, use productImageAutoRescale -->
+    <service name="contentImageAutoRescale" engine="java"
+             location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageAutoRescale" auth="false" transaction-timeout="1800">
+        <description>Automatically rescales a content image</description>
+        <attribute name="contentId" mode="IN" type="String" optional="false"/>
+        <attribute name="contentDataResource" mode="IN" type="GenericValue" optional="true">
+            <description>Optional ContentDataResourceRequiredView instance matching contentId, if provided (optimization)</description>
+        </attribute>
+        <attribute name="requireProfile" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, Content.mediaProfile or DataResource.sizeId (old) must be set;
+                if false, attempts to infer a profile from mediaprofiles.properties, either IMAGE_PRODUCT, IMAGE_CONTENT or IMAGE_DEFAULT</description>
+        </attribute>
+        <attribute name="createNew" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>If true, even if the image currently has no variants, attempts to generate new variants;
+                if false, only regenerates if variants already created;
+                WARN: If true, not guaranteed to reproduce original Content and DataResource fields</description>
+        </attribute>
+        <attribute name="nonFatal" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true, runs in separate transaction and returns failure on image resize fail;
+                if false, runs in current transaction and returns error on on image resize fail</description>
+        </attribute>
+        <attribute name="moment" mode="IN" type="Timestamp" optional="true">
+            <description>Specific createdDate for Content and DataResource</description>
+        </attribute>
+        <attribute name="doLog" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="progress" mode="IN" type="String" optional="true"/>
     </service>
 
 </services>

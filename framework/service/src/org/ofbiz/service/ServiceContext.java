@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.function.Supplier;
 
 /**
  * Helper service context accessor for common operations on {@link DispatchContext} and the service context map (SCIPIO).
@@ -86,6 +87,14 @@ public class ServiceContext implements Map<String, Object> {
     public <T> T attr(Object key, T defaultValue) {
         T value = attr(key);
         return (value != null) ? value : defaultValue;
+    }
+
+    /**
+     * Returns a service attribute value from the service context map, or the given default value callback if null.
+     */
+    public <T> T attr(Object key, Supplier<T> defaultValueSupplier) {
+        T value = attr(key);
+        return (value != null) ? value : defaultValueSupplier.get();
     }
 
     @Override

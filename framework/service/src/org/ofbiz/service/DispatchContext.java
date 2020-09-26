@@ -208,7 +208,7 @@ public class DispatchContext implements Serializable {
      * @throws GenericServiceException
      */
     public Map<String, Object> makeValidInContext(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException {
-        return makeValidContext(model, ModelService.IN_PARAM, context);
+        return makeValidContext(serviceName, ModelService.IN_PARAM, context);
     }
 
     /**
@@ -232,7 +232,7 @@ public class DispatchContext implements Serializable {
      * @throws GenericServiceException
      */
     public Map<String, Object> makeValidOutContext(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException {
-        return makeValidContext(model, ModelService.OUT_PARAM, context);
+        return makeValidContext(serviceName, ModelService.OUT_PARAM, context);
     }
 
     /**
@@ -256,7 +256,7 @@ public class DispatchContext implements Serializable {
      * @throws GenericServiceException
      */
     public Map<String, Object> makeValidInOutContext(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException {
-        return makeValidContext(model, ModelService.IN_OUT_PARAM, context);
+        return makeValidContext(serviceName, ModelService.IN_OUT_PARAM, context);
     }
 
     /**
@@ -278,8 +278,7 @@ public class DispatchContext implements Serializable {
      */
     public ModelService getModelService(String serviceName) throws GenericServiceException {
         Map<String, ModelService> serviceMap = getGlobalServiceMap();
-        ModelService retVal = null;
-        retVal = serviceMap.get(serviceName);
+        ModelService retVal = serviceMap.get(serviceName);
         if (retVal != null && !retVal.inheritedParameters()) {
             retVal.interfaceUpdate(this);
         }

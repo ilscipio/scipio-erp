@@ -18,6 +18,7 @@
  *******************************************************************************/
 package com.ilscipio.scipio.product.seo;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -141,6 +142,8 @@ public class SeoConfig {
     private final String productUrlTargetSeparator;
     private final boolean productSimpleIdLookup;
     private final boolean categorySimpleIdLookup;
+
+    private final List<UrlFilter> urlFilters;
 
     public enum TrailFormat {
         NAME("name"), // stock scipio default
@@ -283,6 +286,7 @@ public class SeoConfig {
         List<Pattern> userExceptionPatterns = new ArrayList<>();
         Set<String> allowedContextPaths = null;
         Map<String, String> specialProductIds = new HashMap<>();
+        ArrayList<UrlFilter> urlFilters = new ArrayList<>();
 
         // SCIPIO: new additions
         Integer categoryNameMaxLength = null;
@@ -578,6 +582,19 @@ public class SeoConfig {
                 }
             }
 
+            Element urlFiltersElem = UtilXml.firstChildElement(rootElem, "url-filters");
+            if (urlFiltersElem != null) {
+                List<? extends Element> urlFilterElems = UtilXml.childElementList(urlFiltersElem, "url-filter");
+                if (urlFilterElems != null) {
+                    for(Element urlFilterElem : urlFilterElems) {
+                        UrlFilter urlFilter = makeUrlFilter(urlFilterElem.getAttribute("type"), UtilXml.elementValue(urlFilterElem));
+                        if (urlFilter != null) {
+                            urlFilters.add(urlFilter);
+                        }
+                    }
+                }
+            }
+
             // required
             altUrlGenProcessors = urlProcessors.get("alt-url-gen");
             if (altUrlGenProcessors == null) {
@@ -637,6 +654,9 @@ public class SeoConfig {
 
         this.productUrlTrailFormat = (productUrlTrailFormat != null) ? productUrlTrailFormat : TrailFormat.NAME;
         this.categoryUrlTrailFormat = (categoryUrlTrailFormat != null) ? categoryUrlTrailFormat : TrailFormat.NAME;
+
+        urlFilters.trimToSize();
+        this.urlFilters = urlFilters.isEmpty() ? Collections.emptyList() : Collections.unmodifiableList(urlFilters);
 
         this.productUrlTargetPattern = FlexibleStringExpander.getInstance(productUrlTargetPattern);
         Map<String, Object> patCtx = UtilMisc.toMap("id", "", "name", "");
@@ -1093,6 +1113,10 @@ public class SeoConfig {
         return categorySimpleIdLookup;
     }
 
+    public List<UrlFilter> getUrlFilters() {
+        return urlFilters;
+    }
+
     // HELPERS
 
     static String stringSetting(Element parentElement, String settingName, String defaultValue, Set<String> specialNullValues) {
@@ -1170,5 +1194,35 @@ public class SeoConfig {
         if (value == null && defaultValue != null) value = UtilMisc.parseLocale(defaultValue);
         Debug.logInfo("  " + settingName + ": " + value, module);
         return value;
+    }
+
+    public static UrlFilter makeUrlFilter(String type, String expr) {
+        if ("regex".equals(type)) {
+            return new RegexUrlFilter(expr);
+        }
+        return null;
+    }
+
+    public static abstract class UrlFilter implements Serializable {
+        public abstract String getType();
+        public abstract boolean matches(String url);
+    }
+
+    public static class RegexUrlFilter extends UrlFilter {
+        private final Pattern regex;
+
+        public RegexUrlFilter(String regex) {
+            this.regex = Pattern.compile(regex);
+        }
+
+        @Override
+        public String getType() {
+            return "regex";
+        }
+
+        @Override
+        public boolean matches(String url) {
+            return regex.matcher(url).matches();
+        }
     }
 }

@@ -353,6 +353,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     public SeoCatalogUrlWorker getUrlWorker() { return urlWorker; }
 
+    public SeoConfig getSeoConfig() { return getUrlWorker().getConfig(); }
+
     @Override
     public void reset() throws GeneralException {
         super.reset();
@@ -573,7 +575,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         if (getSitemapConfig().isPreProcessTrail()) {
             for (Locale locale : locales) {
                 // NOTE: this is non-last - cannot reuse the one determined in previous call
-                SeoConfig.TrailFormat trailFormat = getUrlWorker().getConfig().getCategoryUrlTrailFormat(); // FIXME?: this is flawed and may violate configuration; we're forced to ignore product-url-trail-format
+                SeoConfig.TrailFormat trailFormat = getSeoConfig().getCategoryUrlTrailFormat(); // FIXME?: this is flawed and may violate configuration; we're forced to ignore product-url-trail-format
                 String trailName = getUrlWorker().getCategoryPathPart(getDelegator(), getDispatcher(), locale, productCategory, trailFormat, sanitizeCtx, isUseCache());
                 trailNames.get(locale).add(trailName); // no need copy, just remove after
             }
@@ -623,12 +625,17 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                         getWebappInfo(), isUseCache()).toString();
             }
 
-            url = postprocessElementLink(url);
-
-            if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing category url: " + url, module);
-
-            WebSitemapUrl libUrl = buildSitemapLibUrl(url, null);
-            getCategoryElemHandler().addUrl(libUrl);
+            String processedUrl = postprocessElementLink(url);
+            if (processedUrl == null || matchesUrlFilter(processedUrl)) {
+                Debug.logInfo("Filtered category url: " + (processedUrl != null ? processedUrl : url), module);
+                getStats().categoryFiltered++;
+            } else {
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose(getLogMsgPrefix() + "Adding category url: " + processedUrl, module);
+                }
+                WebSitemapUrl libUrl = buildSitemapLibUrl(processedUrl, null);
+                getCategoryElemHandler().addUrl(libUrl);
+            }
         } catch(Exception e) {
             getStats().categoryError++;
             Debug.logError(getLogErrorPrefix() + "Cannot build URL for category '" + productCategoryId + "': " + e.getMessage(), module);
@@ -654,17 +661,21 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                         getWebappInfo(), isUseCache()).toString();
             }
 
-            url = postprocessElementLink(url);
-
-            if (Debug.verboseOn()) Debug.logVerbose(getLogMsgPrefix()+"Processing product url: " + url, module);
-
-            WebSitemapUrl libUrl = buildSitemapLibUrl(url, sitemapConfig.isUseProductLastModDate() ? product.getTimestamp("lastModifiedDate") : null);
-            getProductElemHandler().addUrl(libUrl);
-
-            // TODO?: is there need to do variants (not explicitly associated to category)?
-            // usually don't want to advertise the variants unless attached to category for some reason?...
-            //if (config.doChildProduct) {
-            //}
+            String processedUrl = postprocessElementLink(url);
+            if (processedUrl == null || matchesUrlFilter(processedUrl)) {
+                Debug.logInfo("Filtered product url: " + (processedUrl != null ? processedUrl : url), module);
+                getStats().productFiltered++;
+            } else {
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose(getLogMsgPrefix() + "Adding product url: " + processedUrl, module);
+                }
+                WebSitemapUrl libUrl = buildSitemapLibUrl(processedUrl, sitemapConfig.isUseProductLastModDate() ? product.getTimestamp("lastModifiedDate") : null);
+                getProductElemHandler().addUrl(libUrl);
+                // TODO?: is there need to do variants (not explicitly associated to category)?
+                // usually don't want to advertise the variants unless attached to category for some reason?...
+                //if (config.doChildProduct) {
+                //}
+            }
         } catch(Exception e) {
             getStats().productError++;
             Debug.logError(getLogErrorPrefix() + "Cannot build URL for product '" + productId + "': " + e.getMessage(), module);
@@ -906,6 +917,19 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         if (url == null) return "";
         if (getUrlRewriter() == null) return url;
         return getUrlRewriter().processOutboundUrl(url, getWebappInfo(), getUrlRewriterCtx());
+    }
+
+    protected SeoConfig.UrlFilter matchUrlFilter(String url) {
+        for(SeoConfig.UrlFilter urlFilter : getSeoConfig().getUrlFilters()) {
+            if (urlFilter.matches(url)) {
+                return urlFilter;
+            }
+        }
+        return null;
+    }
+
+    protected boolean matchesUrlFilter(String url) {
+        return matchUrlFilter(url) != null;
     }
 
     /**

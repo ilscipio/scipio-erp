@@ -199,4 +199,10 @@
             <replacement>-</replacement>
         </char-filter>
     </char-filters>
+
+    <!-- URL filters, match against the full URL, matched entries are filtered out -->
+    <url-filters>
+        <!-- Skip jackets
+        <url-filter type="regex">^([^/]*//[^/]*)?(/control)?/shop.*mens-jacket.*$</url-filter>-->
+    </url-filters>
 </seo-config>

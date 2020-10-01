@@ -1040,9 +1040,9 @@ public class ServiceDispatcher {
                             // NOTE: DO NOT print the full exception in this case, because there may be a delay between the first
                             // time someone sees the bug in error.log and the time someone reports it, so we don't want to flood error.log
                             Debug.logError("Incoming context (in runSync : " + origService.name + ") does not match expected requirements"
-                                    + "; if this is a stock Scipio service, PLEASE REPORT THIS ERROR"
+                                    + "; if this is a stock Scipio service, please report this error"
                                     + "; compatibility mode for old services having permission services is enabled, so we will call makeValid"
-                                    + "and try again; the error was: " + e.getMessage(), module);
+                                    + " and try again; the error was: " + e.getMessage(), module);
                             context.putAll(permResp);
                             context = origService.makeValid(context, ModelService.IN_PARAM);
                         }

@@ -142,16 +142,20 @@ public class ProductIndexer extends EntityIndexer {
                                 Timestamp moment = UtilDateTime.nowTimestamp();
                                 data = docBuilder.makeProductDocBuilder(product, moment);
                                 doc = docBuilder.makeProductMapDoc(data, entry, null);
-                                status.increaseNumDocs(1);
-                                numLeft--;
-                                ProductDocEntry docEntry = makeDocEntry(entry, doc, data);
-                                docs.add(docEntry);
-                                for (IndexingHookHandler hookHandler : hookHandlers) {
-                                    try {
-                                        hookHandler.processDocAdd(status, docEntry);
-                                    } catch (Exception e) {
-                                        status.registerHookFailure(null, e, hookHandler, "processDocAdd");
+                                if (doc != null) {
+                                    status.increaseNumDocs(1);
+                                    numLeft--;
+                                    ProductDocEntry docEntry = makeDocEntry(entry, doc, data);
+                                    docs.add(docEntry);
+                                    for (IndexingHookHandler hookHandler : hookHandlers) {
+                                        try {
+                                            hookHandler.processDocAdd(status, docEntry);
+                                        } catch (Exception e) {
+                                            status.registerHookFailure(null, e, hookHandler, "processDocAdd");
+                                        }
                                     }
+                                } else {
+                                    status.increaseNumFiltered(1);
                                 }
                             } catch (Exception e) {
                                 status.registerGeneralFailure("Error reading product '" + productId + "'", e);
@@ -192,11 +196,10 @@ public class ProductIndexer extends EntityIndexer {
             }
         }
         if (status.getGeneralFailures() > 0) {
-            Debug.logError("Problems occurred processing product data: failures: " + status.getGeneralFailures() + "; success: " + status.getNumDocs(), module);
+            Debug.logError("Problems occurred processing product data: failures: " + status.getGeneralFailures() + "; success: " + status.getNumDocs() + "; filtered: " + status.getNumFiltered(), module);
         } else {
-            Debug.logInfo("Processing product data: success: " + status.getNumDocs() + "; fail: " + status.getGeneralFailures(), module);
+            Debug.logInfo("Processing product data: success: " + status.getNumDocs() + "; fail: " + status.getGeneralFailures() + "; filtered: " + status.getNumFiltered(), module);
         }
-
         return status;
     }
 
@@ -363,7 +366,7 @@ public class ProductIndexer extends EntityIndexer {
     public IndexingStatus runProductHooks(DispatchContext dctx, Map<String, ?> context,
                                           Object products, SolrDocBuilder docBuilder,
                                           IndexingHookHandler.HookType hookType, List<? extends IndexingHookHandler> hookHandlers,
-                                          SolrDocBuilder.ProductFilter productFilter, ProcessSignals processSignals,
+                                          List<SolrDocBuilder.ProductFilter> productFilters, ProcessSignals processSignals,
                                           int bufSize, String logPrefix, Object logger) {
         Iterator<? extends Map<String, Object>> productsIt = UtilMisc.asIterator(products);
         try {
@@ -407,22 +410,27 @@ public class ProductIndexer extends EntityIndexer {
 
                         Timestamp moment = UtilDateTime.nowTimestamp();
                         try {
-                            docEntry = docBuilder.asDocEntry(productObj, productFilter, moment);
-                            status.increaseNumDocs(1);
-                            numLeft--;
+                            docEntry = docBuilder.asDocEntry(productObj, productFilters, moment);
+                            if (docEntry != null) {
+                                status.increaseNumDocs(1);
+                                numLeft--;
 
-                            for(IndexingHookHandler hookHandler : hookHandlers) {
-                                try {
-                                    hookHandler.processDocAdd(status, docEntry);
-                                } catch (Exception e) {
-                                    status.registerHookFailure(null, e, hookHandler, "processDocAdd");
+                                for (IndexingHookHandler hookHandler : hookHandlers) {
+                                    try {
+                                        hookHandler.processDocAdd(status, docEntry);
+                                    } catch (Exception e) {
+                                        status.registerHookFailure(null, e, hookHandler, "processDocAdd");
+                                    }
                                 }
+                            } else {
+                                status.increaseNumFiltered(1);
                             }
                         } catch (Exception e) {
                             if (docEntry != null && docEntry.getShortPk() != null) {
-                                status.registerGeneralFailure("Error reading product '" + docEntry.getShortPk() + "'", e);
+                                status.registerGeneralFailure("Error reading product [" + docEntry.getShortPk() + "]", e);
                             } else {
-                                status.registerGeneralFailure("Error reading product", e);
+                                status.registerGeneralFailure("Error reading product [" +
+                                        (productObj instanceof GenericValue ? ((GenericValue) productObj).getPrimaryKey() : productObj) + "]", e);
                             }
                         }
                     } else {

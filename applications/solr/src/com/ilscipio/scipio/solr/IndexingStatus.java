@@ -21,6 +21,7 @@ public interface IndexingStatus {
     int getStartIndex();
     int getEndIndex();
     int getHookFailures();
+    int getNumFiltered();
     default int getTotalFailures() { return getGeneralFailures() + getHookFailures(); }
     default String getIndexProgressString() { return getStartIndex() + "-" + getEndIndex() + " / " + getMaxDocs(); }
 
@@ -38,6 +39,7 @@ public interface IndexingStatus {
         private int startIndex;
         private int endIndex;
         private int hookFailures;
+        private int numFiltered;
         private boolean aborted = false;
 
         public Standard(DispatchContext dctx, IndexingHookHandler.HookType hookType, SolrDocBuilder indexer, int maxDocs, int bufSize, String logPrefix) {
@@ -52,6 +54,7 @@ public interface IndexingStatus {
             this.startIndex = 1;
             this.endIndex = -1; // calculated on first loop
             this.hookFailures = 0;
+            this.numFiltered = 0;
         }
 
         public boolean isSuccess() {
@@ -122,5 +125,12 @@ public interface IndexingStatus {
         }
         public String getErrorLogSuffix() { return "; total general errors: " + getGeneralFailures() + "; total hook errors: " + getHookFailures(); }
 
+        public int getNumFiltered() {
+            return numFiltered;
+        }
+
+        public void increaseNumFiltered(int amount) {
+            this.numFiltered += amount;
+        }
     }
 }

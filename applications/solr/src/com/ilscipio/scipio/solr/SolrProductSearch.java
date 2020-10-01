@@ -1304,6 +1304,7 @@ public abstract class SolrProductSearch {
         int numDocs = 0;
         EntityListIterator prodIt = null;
         boolean executed = false;
+        IndexingStatus.Standard status = null;
         try {
             client = SolrUtil.getUpdateHttpSolrClient((String) context.get("core"));
             if (processSignals != null && processSignals.isSet("stop")) {
@@ -1358,14 +1359,19 @@ public abstract class SolrProductSearch {
             productContext.put("useCache", clearAndUseCache);
             SolrDocBuilder docBuilder = SolrDocBuilder.getInstance(dctx, productContext);
             numDocs = prodIt.getResultsSizeAfterPartialList();
-            IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, IndexingHookHandler.HookType.REINDEX, docBuilder,
+            status = new IndexingStatus.Standard(dctx, IndexingHookHandler.HookType.REINDEX, docBuilder,
                     numDocs, bufSize, "Solr: rebuildSolrIndex: ");
             // NOTE: use ArrayList instead of LinkedList (EntityListIterator) in buffered mode because it will use less total memory
             List<Map<String, Object>> docs = (bufSize > 0) ? new ArrayList<>(Math.min(bufSize, status.getMaxDocs())) : new LinkedList<>();
 
             Collection<String> includeMainStoreIds = UtilMisc.nullIfEmpty(UtilGenerics.<Collection<String>>cast(context.get("includeMainStoreIds")));
             Collection<String> includeAnyStoreIds = UtilMisc.nullIfEmpty(UtilGenerics.<Collection<String>>cast(context.get("includeAnyStoreIds")));
-            SolrDocBuilder.ProductFilter productFilter = docBuilder.makeStoreProductFilter(includeMainStoreIds, includeAnyStoreIds);
+            List<SolrDocBuilder.ProductFilter> productFilters = null;
+            SolrDocBuilder.ProductFilter storeProductFilter = docBuilder.makeStoreProductFilter(includeMainStoreIds, includeAnyStoreIds);
+            if (storeProductFilter != null) {
+                productFilters = (productFilters != null) ? new ArrayList<>(productFilters) : new ArrayList<>();
+                productFilters.add(storeProductFilter);
+            }
 
             List<? extends IndexingHookHandler> hookHandlers = IndexingHookHandler.Handlers.getHookHandlers(
                     IndexingHookHandler.Handlers.getHookHandlerFactories(IndexingHookHandler.HookType.REINDEX));
@@ -1407,17 +1413,21 @@ public abstract class SolrProductSearch {
                         docsConsumed++;
                         try {
                             Timestamp moment = UtilDateTime.nowTimestamp();
-                            ProductIndexer.ProductDocEntry docEntry = docBuilder.asDocEntry(product, productFilter, moment);
-                            docs.add(docEntry.getDoc());
-                            status.increaseNumDocs(1);
-                            numLeft--;
+                            ProductIndexer.ProductDocEntry docEntry = docBuilder.asDocEntry(product, productFilters, moment);
+                            if (docEntry != null) {
+                                docs.add(docEntry.getDoc());
+                                status.increaseNumDocs(1);
+                                numLeft--;
 
-                            for(IndexingHookHandler hookHandler : hookHandlers) {
-                                try {
-                                    hookHandler.processDocAdd(status, docEntry);
-                                } catch (Exception e) {
-                                    status.registerHookFailure(null, e, hookHandler, "processDocAdd");
+                                for (IndexingHookHandler hookHandler : hookHandlers) {
+                                    try {
+                                        hookHandler.processDocAdd(status, docEntry);
+                                    } catch (Exception e) {
+                                        status.registerHookFailure(null, e, hookHandler, "processDocAdd");
+                                    }
                                 }
+                            } else {
+                                status.increaseNumFiltered(1);
                             }
                         } catch (Exception e) {
                             //return ServiceUtil.returnError("Error reading product '" + productId + "': " + e.getMessage());
@@ -1466,9 +1476,9 @@ public abstract class SolrProductSearch {
                 String cacheStats = docBuilder.getLogStatsShort();
                 cacheStats = (cacheStats != null) ? " (caches: " + cacheStats + ")" : "";
                 Debug.logInfo("Solr: rebuildSolrIndex: Finished with " + status.getNumDocs() + " documents indexed; failures: " +
-                        status.getGeneralFailures() + "; hook failures: " + status.getHookFailures() + cacheStats, module);
+                        status.getGeneralFailures() + "; hook failures: " + status.getHookFailures() + "; filtered: " + status.getNumFiltered() + cacheStats, module);
                 final String statusMsg = "Cleared solr index and reindexed " + status.getNumDocs() + " documents; failures: " +
-                        status.getGeneralFailures() + "; hook failures: " + status.getHookFailures() + cacheStats;
+                        status.getGeneralFailures() + "; hook failures: " + status.getHookFailures() + "; filtered: " + status.getNumFiltered() + cacheStats;
                 result = (status.getGeneralFailures() > 0) ? ServiceUtil.returnFailure(statusMsg) : ServiceUtil.returnSuccess(statusMsg);
             }
         } catch (SolrServerException e) {
@@ -1519,7 +1529,9 @@ public abstract class SolrProductSearch {
             //SolrUtil.setSolrDataStatusIdSepTxSafe(delegator, "SOLR_DATA_OK", true);
             SolrUtil.setSolrDataStatusIdSafe(delegator, "SOLR_DATA_OK", true);
         }
-        result.put("numDocs", numDocs);
+        if (status != null) {
+            result.put("numDocs", status.getNumDocs());
+        }
         result.put("executed", executed);
         return result;
     }

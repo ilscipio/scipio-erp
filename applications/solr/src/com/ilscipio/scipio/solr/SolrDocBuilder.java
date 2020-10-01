@@ -503,8 +503,8 @@ public class SolrDocBuilder {
      * @return a document map representing the product - can then be passed to {@link #makeSolrDoc(Map)}
      */
     public Map<String, Object> makeProductMapDoc(ProductDocBuilder productDocBuilder, ProductIndexer.ProductEntry productEntry,
-                                                 ProductFilter productFilter) throws Exception {
-        if (productFilter != null && productFilter.allowProduct(productDocBuilder, productDocBuilder.getProduct(), productEntry)) {
+                                                 List<SolrDocBuilder.ProductFilter> productFilters) throws Exception {
+        if (!ProductFilter.allowProduct(getDctx(), productFilters, productDocBuilder.getProduct(), productDocBuilder, productEntry)) {
             if (SolrUtil.verboseOn()) {
                 Debug.logInfo("makeProductMapDoc: Filtered out product '" + productDocBuilder.getProductId() + "'", module);
             }
@@ -558,12 +558,23 @@ public class SolrDocBuilder {
     /**
      * If the given docValue is not already a ProductDocEntry, tries to create one, in other words auto-converting/normalizing.
      */
-    public ProductIndexer.ProductDocEntry asDocEntry(Object docValue, SolrDocBuilder.ProductFilter productFilter, Timestamp moment) throws Exception {
+    public ProductIndexer.ProductDocEntry asDocEntry(Object docValue, List<SolrDocBuilder.ProductFilter> productFilters, Timestamp moment) throws Exception {
         ProductIndexer entityIndexer = getProductIndexer();
         if (docValue instanceof ProductIndexer.ProductDocEntry) {
-            return (ProductIndexer.ProductDocEntry) docValue;
+            ProductIndexer.ProductDocEntry docEntry = (ProductIndexer.ProductDocEntry) docValue;
+            if (!ProductFilter.allowProduct(getDctx(), productFilters, docEntry.getDoc(), docEntry.getData())) {
+                return null;
+            }
+            return docEntry;
         } else if (docValue instanceof EntityIndexer.DocEntry) {
             EntityIndexer.DocEntry docEntry = (EntityIndexer.DocEntry) docValue;
+            ProductDocBuilder data = (ProductDocBuilder) docEntry.getData();
+            if (data == null) {
+                data = makeProductDocBuilder(docEntry.getPk(), moment);
+            }
+            if (!ProductFilter.allowProduct(getDctx(), productFilters, docEntry.getDoc(), data)) {
+                return null;
+            }
             return entityIndexer.makeDocEntry(docEntry.getPk(), docEntry.getDoc(), docEntry.getData());
             //} else if (docValue instanceof ProductEntry) { // TODO: REVIEW: what needed this?
             //    return makeDocEntry((ProductEntry) docValue, null, null);
@@ -575,38 +586,79 @@ public class SolrDocBuilder {
         if (docValue instanceof ProductIndexer.ProductEntry) {
             entry = (ProductIndexer.ProductEntry) docValue;
             pk = entry.getPk();
-            docValue = getProductData().getProduct(dctx, pk, false);
+            docValue = getProductData().getProduct(getDctx(), pk, false);
             if (docValue == null) {
                 throw new GenericEntityException("Could not find Product " + pk);
             }
             data = makeProductDocBuilder(docValue, moment);
-            doc = makeProductMapDoc(data, entry, productFilter);
+            doc = makeProductMapDoc(data, entry, productFilters);
         } else if (docValue instanceof GenericValue) {
             pk = ((GenericValue) docValue).getPrimaryKey();
             data = makeProductDocBuilder(docValue, moment);
-            doc = makeProductMapDoc(data, entry, productFilter);
+            doc = makeProductMapDoc(data, entry, productFilters);
         } else if (docValue instanceof GenericPK) {
             pk = (GenericPK) docValue;
-            docValue = getProductData().getProduct(dctx, pk, false);
+            docValue = getProductData().getProduct(getDctx(), pk, false);
             if (docValue == null) {
                 throw new GenericEntityException("Could not find Product " + pk);
             }
             data = makeProductDocBuilder(docValue, moment);
-            doc = makeProductMapDoc(data, entry, productFilter);
+            doc = makeProductMapDoc(data, entry, productFilters);
         } else if (docValue instanceof GenericEntity) {
             throw new IllegalArgumentException("Unsupported document type: " + docValue.getClass().getName());
         } else if (docValue instanceof Map) { // solr doc
             doc = UtilGenerics.cast(docValue);
-            pk = GenericPK.create(dctx.getDelegator(), dctx.getDelegator().getModelEntity(entityIndexer.getEntityName()), doc.get("id"));
+            pk = GenericPK.create(getDelegator(), getDelegator().getModelEntity(entityIndexer.getEntityName()), doc.get("id"));
             data = makeProductDocBuilder(pk, moment);
+            if (!ProductFilter.allowProduct(getDctx(), productFilters, doc, data)) {
+                return null;
+            }
         } else {
             throw new IllegalArgumentException("Unsupported document type: " + docValue.getClass().getName());
+        }
+        if (doc == null) { // filtered or otherwise null
+            return null;
         }
         return (entry != null) ? entityIndexer.makeDocEntry(entry, doc, data) : entityIndexer.makeDocEntry(pk, doc, data);
     }
 
     public interface ProductFilter {
-        boolean allowProduct(ProductDocBuilder productDocBuilder, GenericValue product, ProductIndexer.ProductEntry productEntry) throws Exception;
+        /**
+         * Returns true if product should be considered for indexing - using product entity as input.
+         * NOTE: You must implement both overrides.
+         * NOTE: productEntry is frequently null.
+         */
+        boolean allowProduct(DispatchContext dctx, GenericValue product, ProductDocBuilder productDocBuilder, ProductIndexer.ProductEntry productEntry) throws Exception;
+
+        /**
+         * Returns true if product should be considered for indexing - using solr document as input.
+         * NOTE: You must implement both overrides.
+         * NOTE: productEntry is frequently null.
+         */
+        boolean allowProduct(DispatchContext dctx, Map<String, Object> doc, ProductDocBuilder productDocBuilder) throws Exception;
+
+        static boolean allowProduct(DispatchContext dctx, Collection<? extends ProductFilter> productFilters, GenericValue product, ProductDocBuilder productDocBuilder,
+                                    ProductIndexer.ProductEntry productEntry) throws Exception {
+            if (productFilters != null) {
+                for(ProductFilter productFilter : productFilters) {
+                    if (!productFilter.allowProduct(dctx, product, productDocBuilder, productEntry)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        static boolean allowProduct(DispatchContext dctx, Collection<? extends ProductFilter> productFilters, Map<String, Object> doc, ProductDocBuilder productDocBuilder) throws Exception {
+            if (productFilters != null) {
+                for(ProductFilter productFilter : productFilters) {
+                    if (!productFilter.allowProduct(dctx, doc, productDocBuilder)) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 
     public ProductFilter makeStoreProductFilter(Collection<String> includeMainStoreIds, Collection<String> includeAnyStoreIds) {
@@ -641,8 +693,21 @@ public class SolrDocBuilder {
         }
 
         @Override
-        public boolean allowProduct(ProductDocBuilder productDocBuilder, GenericValue product, ProductIndexer.ProductEntry productEntry) throws Exception {
+        public boolean allowProduct(DispatchContext dctx, GenericValue product, ProductDocBuilder productDocBuilder, ProductIndexer.ProductEntry productEntry) throws Exception {
             Collection<String> productStoreIds = productDocBuilder.getProductStoreIds();
+            if (productStoreIds != null) {
+                for(String productStoreId : productStoreIds) {
+                    if (isIncludeStoreId(productStoreId)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public boolean allowProduct(DispatchContext dctx, Map<String, Object> doc, ProductDocBuilder productDocBuilder) throws Exception {
+            Collection<String> productStoreIds = UtilGenerics.cast(doc.get("productStore"));
             if (productStoreIds != null) {
                 for(String productStoreId : productStoreIds) {
                     if (isIncludeStoreId(productStoreId)) {
@@ -660,8 +725,13 @@ public class SolrDocBuilder {
         }
 
         @Override
-        public boolean allowProduct(ProductDocBuilder productDocBuilder, GenericValue product, ProductIndexer.ProductEntry productEntry) throws Exception {
+        public boolean allowProduct(DispatchContext dctx, GenericValue product, ProductDocBuilder productDocBuilder, ProductIndexer.ProductEntry productEntry) throws Exception {
             return isIncludeStoreId(productDocBuilder.getProductStoreId());
+        }
+
+        @Override
+        public boolean allowProduct(DispatchContext dctx, Map<String, Object> doc, ProductDocBuilder productDocBuilder) throws Exception {
+            return isIncludeStoreId(UtilMisc.getFirst(UtilGenerics.cast(doc.get("productStore"))));
         }
     }
 

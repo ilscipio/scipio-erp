@@ -18,17 +18,22 @@
  *******************************************************************************/
 package org.ofbiz.entity.condition;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.lang.IsEmpty;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.EntityFieldNotFoundException;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.config.model.Datasource;
 import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.util.EntityUtil;
 
 /**
  * <p>Represents the conditions to be used to constrain a query.</p>
@@ -100,6 +105,30 @@ public abstract class EntityCondition extends EntityConditionBase implements IsE
 
     public static EntityDateFilterCondition makeConditionDate(String fromDateName, String thruDateName) {
         return new EntityDateFilterCondition(fromDateName, thruDateName);
+    }
+
+    public static List<EntityCondition> makeConditionDateList(List<String> filterByFieldNames) { // SCIPIO
+        List<EntityCondition> conditions = new ArrayList<>();
+        for (int i = 0; i < filterByFieldNames.size();) {
+            String fromDateFieldName = filterByFieldNames.get(i++);
+            String thruDateFieldName = filterByFieldNames.get(i++);
+            conditions.add(new EntityDateFilterCondition(fromDateFieldName, thruDateFieldName));
+        }
+        return conditions;
+    }
+
+    public static List<EntityCondition> makeConditionDateList(Timestamp filterByDateMoment, List<String> filterByFieldNames) { // SCIPIO
+        List<EntityCondition> conditions = new ArrayList<>();
+        for (int i = 0; i < filterByFieldNames.size();) {
+            String fromDateFieldName = filterByFieldNames.get(i++);
+            String thruDateFieldName = filterByFieldNames.get(i++);
+            if (filterByDateMoment == null) {
+                conditions.add(EntityUtil.getFilterByDateExpr(fromDateFieldName, thruDateFieldName));
+            } else {
+                conditions.add(EntityUtil.getFilterByDateExpr(filterByDateMoment, fromDateFieldName, thruDateFieldName));
+            }
+        }
+        return conditions;
     }
 
     public static EntityWhereString makeConditionWhere(String sqlString) {

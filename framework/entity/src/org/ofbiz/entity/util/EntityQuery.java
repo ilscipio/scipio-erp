@@ -23,9 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -346,6 +344,28 @@ public class EntityQuery {
         this.filterByDate  = true;
         this.filterByDateMoment = null;
         this.filterByFieldNames = null;
+        return this;
+    }
+
+    /** Specifies whether the query should return only values that are currently active using from/thruDate fields (SCIPIO).
+     * <p>
+     * SCIPIO: 2018-09-29: This method no longer throws exception if the date field names
+     * are invalid for the entity; instead a detailed error is logged. This is an extremely
+     * easy error to make, and otherwise can cause needless critical failures on small errors
+     * during upgrades.
+     *
+     * @return this EntityQuery object, to enable chaining
+     */
+    public EntityQuery filterByDate(QueryDateFilter filter) {
+        if (filter != null) {
+            this.filterByDate = filter.isEnabled();
+            this.filterByDateMoment = filter.getMoment();
+            this.filterByFieldNames = filter.getFieldNames();
+        } else {
+            this.filterByDate = false;
+            this.filterByDateMoment = null;
+            this.filterByFieldNames = null;
+        }
         return this;
     }
 
@@ -1022,4 +1042,5 @@ public class EntityQuery {
     protected String toLogAppend() { // SCIPIO: Debugging help
         return " - " + this;
     }
+
 }

@@ -801,4 +801,21 @@ public final class EntityUtil {
         result.addAll(nullValues);
         return result;
     }
+
+    /**
+     * SCIPIO: For each record extracts a shortPk string that maps to it.
+     */
+    public static <M extends Map<String, Object>> Map<String, M> makeShortPkRecordMap(Collection<? extends M> records,
+                                                                                      Collection<String> pkFieldNames,
+                                                                                      Map<String, M> outMap) throws IllegalArgumentException {
+        return UtilMisc.makeShortKeyRecordMap(records, pkFieldNames, "::", outMap);
+    }
+
+    /**
+     * SCIPIO: For each record extracts a shortPk string that maps to it.
+     */
+    public static <M extends Map<String, Object>> Map<String, M> makeShortPkRecordMap(Collection<? extends M> records,
+                                                                                      Collection<String> pkFieldNames) throws IllegalArgumentException {
+        return makeShortPkRecordMap(records, pkFieldNames, new LinkedHashMap<>());
+    }
 }

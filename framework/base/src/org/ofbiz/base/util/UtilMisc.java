@@ -1093,6 +1093,13 @@ public final class UtilMisc {
     }
 
     /**
+     * SCIPIO: Returns the first element of collection or list using get() if possible.
+     */
+    public static <T> T first(Collection<T> values) {
+        return (values instanceof List) ? UtilGenerics.<List<T>>cast(values).get(0) : values.iterator().next();
+    }
+
+    /**
      * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE or "true", or Boolean.FALSE
      * if value is Boolean.FALSE or "false", or null if anything else (case-sensitive).
      */
@@ -2166,5 +2173,44 @@ public final class UtilMisc {
 
     public static <K, V> Map<K, V> subMapNonNull(Map<K, V> map, Collection<? extends K> keys) { // SCIPIO
         return subMapNonNull(new LinkedHashMap<>(), map, keys);
+    }
+
+    /**
+     * SCIPIO: For each record extracts a shortPk-like string that maps to it.
+     */
+    public static <M extends Map<String, Object>> Map<String, M> makeShortKeyRecordMap(Collection<? extends M> records,
+                                                                                       Collection<String> keyNames,
+                                                                                       String keyDelim,
+                                                                                       Map<String, M> outMap) throws IllegalArgumentException {
+        if (records == null) {
+            return null;
+        }
+        if (keyNames.size() == 1) {
+            String pkFieldName = UtilMisc.first(keyNames);
+            for (M record : records) {
+                outMap.put((String) record.get(pkFieldName), record);
+            }
+        } else {
+            for (M record : records) {
+                StringBuilder key = new StringBuilder();
+                for(String pkFieldName : keyNames) {
+                    if (key.length() > 0) {
+                        key.append(keyDelim);
+                    }
+                    key.append((String) record.get(pkFieldName));
+                }
+                outMap.put(key.toString(), record);
+            }
+        }
+        return outMap;
+    }
+
+    /**
+     * SCIPIO: For each record extracts a shortPk-like string that maps to it.
+     */
+    public static <M extends Map<String, Object>> Map<String, M> makeShortKeyRecordMap(Collection<? extends M> records,
+                                                                                       Collection<String> keyNames,
+                                                                                       String keyDelim) throws IllegalArgumentException {
+        return makeShortKeyRecordMap(records, keyNames, keyDelim, new LinkedHashMap<>());
     }
 }

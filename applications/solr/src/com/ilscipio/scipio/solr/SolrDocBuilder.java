@@ -55,23 +55,23 @@ public class SolrDocBuilder {
             UtilProperties.getPropertyAsInteger(SolrUtil.solrConfigName, "solr.index.rebuild.record.buffer.size", 1000));
 
     private final DispatchContext dctx;
-    private final Map<String, Object> serviceContext;
+    private final Map<String, Object> context;
     private final GenericValue userLogin;
     private final ProductDataReader productDataReader;
     private final boolean useEntityCache;
     private volatile long startTime = System.currentTimeMillis();
 
-    protected SolrDocBuilder(DispatchContext dctx, Map<String, Object> serviceContext, ProductDataReader productDataReader) {
+    protected SolrDocBuilder(DispatchContext dctx, Map<String, Object> context, ProductDataReader productDataReader) {
         this.dctx = dctx;
-        serviceContext = Collections.unmodifiableMap(new HashMap<>(serviceContext)); // TODO: REVIEW: precaution
-        this.serviceContext = serviceContext;
-        this.userLogin = (GenericValue) serviceContext.get("userLogin");
+        context = Collections.unmodifiableMap(new HashMap<>(context)); // TODO: REVIEW: precaution
+        this.context = context;
+        this.userLogin = (GenericValue) context.get("userLogin");
         this.productDataReader = productDataReader;
-        this.useEntityCache = isUseEntityCache(serviceContext);
+        this.useEntityCache = isUseEntityCache(context);
     }
 
-    protected SolrDocBuilder(DispatchContext dctx, Map<String, Object> serviceContext) {
-        this(dctx, serviceContext, DEFAULT_FACTORY.getProductDataReader(dctx, serviceContext));
+    protected SolrDocBuilder(DispatchContext dctx, Map<String, Object> context) {
+        this(dctx, context, DEFAULT_FACTORY.getProductDataReader(dctx, context));
     }
 
     /*
@@ -121,8 +121,8 @@ public class SolrDocBuilder {
     }
 
     /** Returns the map context passed to the indexer, normally derived from the service context received by rebuildSolrIndex and updateToSolr (eca). */
-    public Map<String, Object> getServiceContext() {
-        return serviceContext;
+    public Map<String, Object> getContext() {
+        return context;
     }
 
     public Delegator getDelegator() {
@@ -137,9 +137,9 @@ public class SolrDocBuilder {
         return userLogin;
     }
 
-    /** Returns the solr core intended for use - should be derived from {@link #getServiceContext()} and often null. */
+    /** Returns the solr core intended for use - should be derived from {@link #getContext()} and often null. */
     public String getCore() {
-        return (String) getServiceContext().get("core");
+        return (String) getContext().get("core");
     }
 
     /** NOTE: This will practically always be false due to risks enabling during Solr ECAs. */
@@ -1347,7 +1347,7 @@ public class SolrDocBuilder {
         public Map<String, Object> getStdPriceMap() throws Exception {
             Map<String, Object> stdPriceMap = this.stdPriceMap;
             if (stdPriceMap == null && !isConfigurableProduct()) {
-                stdPriceMap = getProductData().getProductStandardPrices(getDctx(), getServiceContext(), getUserLogin(), getProduct(),
+                stdPriceMap = getProductData().getProductStandardPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
                         getProductStore(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
                 if (!ServiceUtil.isSuccess(stdPriceMap)) {
                     Debug.logError("getProductStandardPrices: failed to get product prices for product '"
@@ -1361,7 +1361,7 @@ public class SolrDocBuilder {
         public ProductConfigWrapper getCfgPriceWrapper() throws Exception {
             ProductConfigWrapper cfgPriceWrapper = this.cfgPriceWrapper;
             if (cfgPriceWrapper == null && isConfigurableProduct()) {
-                cfgPriceWrapper = getProductData().getConfigurableProductStartingPrices(getDctx(), getServiceContext(), getUserLogin(), getProduct(),
+                cfgPriceWrapper = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
                         getProductStore(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
                 this.cfgPriceWrapper = cfgPriceWrapper;
             }

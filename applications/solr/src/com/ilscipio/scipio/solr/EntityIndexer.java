@@ -453,6 +453,19 @@ public class EntityIndexer implements Runnable {
         return result;
     }
 
+    public Object extractEntriesToDocs(DispatchContext dctx, Map<String, Object> context, long entryTime, Object properties,
+                                               List<DocEntry> docs, Set<Entry> docsToRemove) {
+        Collection<EntityIndexer.Entry> entries = extractEntries(dctx.getDelegator(), context, entryTime, properties);
+        if (UtilValidate.isEmpty(entries)) {
+            return null;
+        }
+        return readDocs(dctx, context, entries, docs, docsToRemove);
+    }
+
+    public Object extractEntriesToDocs(DispatchContext dctx, Map<String, Object> context, List<DocEntry> docs, Set<Entry> docsToRemove) {
+        return extractEntriesToDocs(dctx, context, System.currentTimeMillis(), null, docs, docsToRemove);
+    }
+
     /**
      * Returns the delegator, by default the default system delegator (not the "current").
      */

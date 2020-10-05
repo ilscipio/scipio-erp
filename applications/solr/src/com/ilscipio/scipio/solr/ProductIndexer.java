@@ -475,4 +475,12 @@ public class ProductIndexer extends EntityIndexer {
         }
     }
 
+    public IndexingStatus extractEntriesToDocs(DispatchContext dctx, Map<String, Object> context, long entryTime, Object properties,
+                                               List<DocEntry> docs, Set<Entry> docsToRemove) {
+        return (IndexingStatus) super.extractEntriesToDocs(dctx, context, entryTime, properties, docs, docsToRemove);
+    }
+
+    public IndexingStatus extractEntriesToDocs(DispatchContext dctx, Map<String, Object> context, List<DocEntry> docs, Set<Entry> docsToRemove) {
+        return extractEntriesToDocs(dctx, context, System.currentTimeMillis(), null, docs, docsToRemove);
+    }
 }

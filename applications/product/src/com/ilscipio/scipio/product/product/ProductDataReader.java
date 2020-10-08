@@ -243,22 +243,30 @@ public class ProductDataReader {
     }
 
     public String getProductContentText(DispatchContext dctx, GenericValue targetContent,
-                                        GenericValue product, GenericValue productContent, Locale locale, boolean useCache) throws GeneralException, IOException {
+                                        GenericValue product, GenericValue productContent, Locale locale, boolean useCache) throws GeneralException {
         Writer out = new StringWriter();
         Map<String, Object> inContext = new HashMap<>();
         inContext.put("product", product);
         inContext.put("productContent", productContent);
         boolean deepCache = useCache; // SPECIAL: only way to prevent all caching
-        ContentWorker.renderContentAsText(getDispatcher(dctx), getDelegator(dctx), targetContent, out, inContext, locale, "text/plain",
-                null, useCache, deepCache, null);
+        try {
+            ContentWorker.renderContentAsText(getDispatcher(dctx), getDelegator(dctx), targetContent, out, inContext, locale, "text/plain",
+                    null, useCache, deepCache, null);
+        } catch (IOException e) {
+            throw new GeneralException(e);
+        }
         return out.toString();
     }
 
     public Map<String, String> getLocalizedProductContentStringMap(DispatchContext dctx, GenericValue product, String productContentTypeId,
                                                                    Collection<Locale> locales, Locale defaultLocale, Function<Locale, String> langCodeFn, String generalKey,
-                                                                   List<ProductContentWrapper> pcwList, Timestamp moment, boolean useCache) throws GeneralException, IOException {
+                                                                   List<ProductContentWrapper> pcwList, Timestamp moment, boolean useCache) throws GeneralException {
         Map<String, String> contentMap = new HashMap<>();
-        contentMap.put(generalKey, ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, getDelegator(dctx), getDispatcher(dctx), useCache));
+        try {
+            contentMap.put(generalKey, ProductContentWrapper.getEntityFieldValue(product, productContentTypeId, getDelegator(dctx), getDispatcher(dctx), useCache));
+        } catch (IOException e) {
+            throw new GeneralException(e);
+        }
         getProductContentForLocales(contentMap, dctx, product, productContentTypeId, locales, defaultLocale, langCodeFn, generalKey, moment, useCache);
         refineLocalizedContentValues(contentMap, locales, defaultLocale, langCodeFn, generalKey);
         return contentMap;
@@ -300,7 +308,7 @@ public class ProductDataReader {
      */
     public void getProductContentForLocales(Map<String, String> contentMap, DispatchContext dctx, GenericValue product, String productContentTypeId,
                                             Collection<Locale> locales, Locale defaultLocale, Function<Locale, String> langCodeFn, String generalKey,
-                                            Timestamp moment, boolean useCache) throws GeneralException, IOException {
+                                            Timestamp moment, boolean useCache) throws GeneralException {
         Delegator delegator = getDelegator(dctx);
         String productId = product.getString("productId");
         List<GenericValue> productContentList = EntityQuery.use(delegator).from("ProductContent").where("productId", productId, "productContentTypeId", productContentTypeId).orderBy("-fromDate").cache(useCache).filterByDate(moment).queryList();

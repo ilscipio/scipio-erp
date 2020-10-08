@@ -610,6 +610,17 @@ code package.
         <key-map field-name="noteId"/>
       </view-link>
     </view-entity>
+    <view-entity entity-name="OrderHeaderNoteViewFull"
+            package-name="org.ofbiz.order.order"
+            title="Order Header Note View Full"><!-- SCIPIO -->
+      <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
+      <member-entity entity-alias="ND" entity-name="NoteData"/>
+      <alias-all entity-alias="OD"/>
+      <alias-all entity-alias="ND"/>
+      <view-link entity-alias="OD" rel-entity-alias="ND">
+        <key-map field-name="noteId"/>
+      </view-link>
+    </view-entity>
     <view-entity entity-name="OrderItemAndProductContentInfo"
         package-name="org.ofbiz.order.order"
         title="OrderItem And ProductContent Info View">

@@ -33,6 +33,10 @@ public class ServiceContext implements Map<String, Object> {
         return new ServiceContext(dctx, UtilGenerics.cast(context));
     }
 
+    public static ServiceContext from(LocalDispatcher dispatcher, Map<String, ?> context) {
+        return from(dispatcher.getDispatchContext(), context);
+    }
+
     // TODO
     //public static ServiceContext from(ScipioContext scipioContext) {
     //}
@@ -82,7 +86,7 @@ public class ServiceContext implements Map<String, Object> {
     }
 
     /**
-     * Returns a service attribute value from the service context map, or the given default value if null.
+     * Returns a service attribute value from the service context map, or if null, the given default value.
      */
     public <T> T attr(Object key, T defaultValue) {
         T value = attr(key);
@@ -90,7 +94,8 @@ public class ServiceContext implements Map<String, Object> {
     }
 
     /**
-     * Returns a service attribute value from the service context map, or the given default value callback if null.
+     * Returns a service attribute value from the service context map, or if null, the given default value supplied
+     * by the given supplier callback or lambda function.
      */
     public <T> T attr(Object key, Supplier<T> defaultValueSupplier) {
         T value = attr(key);

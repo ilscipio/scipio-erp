@@ -208,17 +208,18 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
             if (fieldNames instanceof Iterable) {
                 for (String fieldName : UtilGenerics.<Iterable<String>>cast(fieldNames)) {
                     Object value = fields.get(fieldName);
-                    if (value != null) {
-                        set(fieldName, value);
-                    }
+                    // TODO: REVIEW: 2020-10-11: Always set the key otherwise modifies existing behavior like #getPrimaryKey
+                    //if (value != null) {
+                    set(fieldName, value);
+                    //}
                 }
             } else if (fieldNames instanceof Map) {
                 for (Map.Entry<String, String> fieldNameMap : UtilGenerics.<Map<String, String>>cast(fieldNames).entrySet()) {
                     if (fieldNameMap.getValue() != null) {
                         Object value = fields.get(fieldNameMap.getValue());
-                        if (value != null) {
-                            set(fieldNameMap.getKey(), value);
-                        }
+                        //if (value != null) {
+                        set(fieldNameMap.getKey(), value);
+                        //}
                     }
                 }
             } else {
@@ -316,17 +317,18 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
             if (fieldNames instanceof Iterable) {
                 for(String fieldName : UtilGenerics.<Iterable<String>>cast(fieldNames)) {
                     Object value = fields.get(fieldName);
-                    if (value != null) {
-                        this.fields.put(fieldName, value);
-                    }
+                    // TODO: REVIEW: 2020-10-11: Always set the key otherwise modifies existing behavior like #getPrimaryKey
+                    //if (value != null) {
+                    this.fields.put(fieldName, value);
+                    //}
                 }
             } else if (fieldNames instanceof Map) {
                 for(Map.Entry<String, String> fieldNameMap : UtilGenerics.<Map<String, String>>cast(fieldNames).entrySet()) {
                     if (fieldNameMap.getValue() != null) {
                         Object value = fields.get(fieldNameMap.getValue());
-                        if (value != null) {
-                            this.fields.put(fieldNameMap.getKey(), value);
-                        }
+                        //if (value != null) {
+                        this.fields.put(fieldNameMap.getKey(), value);
+                        //}
                     }
                 }
             } else {

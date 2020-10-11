@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.ofbiz.base.lang.ThreadSafe;
+import org.ofbiz.base.util.NamedElement;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.jdbc.DatabaseUtil;
 import org.w3c.dom.Document;
@@ -36,7 +37,7 @@ import org.w3c.dom.Element;
  */
 @ThreadSafe
 @SuppressWarnings("serial")
-public final class ModelField extends ModelChild {
+public final class ModelField extends ModelChild implements NamedElement { // SCIPIO: implements NamedElement
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public enum EncryptMethod {

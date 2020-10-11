@@ -24,7 +24,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.NamedElement;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -52,7 +52,6 @@ import org.ofbiz.entity.condition.EntityDateFilterCondition;
 import org.ofbiz.entity.condition.OrderByList;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
-import org.ofbiz.entity.model.ModelViewEntity;
 
 /**
  * Helper methods when dealing with Entities, especially ones that follow certain conventions
@@ -834,5 +833,23 @@ public final class EntityUtil {
     public static <M extends Map<String, Object>> Map<String, M> makeShortPkRecordMap(Collection<? extends M> records,
                                                                                       Collection<String> pkFieldNames) throws IllegalArgumentException {
         return makeShortPkRecordMap(records, pkFieldNames, new LinkedHashMap<>());
+    }
+
+    public static String getShortPk(Map<String, ?> record, Collection<?> pkFields) { // SCIPIO
+        if (pkFields.size() == 1) {
+            return String.valueOf(record.get(NamedElement.getName(UtilMisc.first(pkFields))));
+        }
+        StringBuilder sb = new StringBuilder();
+        for(Object fieldNameObj : pkFields) {
+            if (sb.length() > 0) {
+                sb.append("::");
+            }
+            sb.append(record.get(NamedElement.getName(fieldNameObj)));
+        }
+        return sb.toString();
+    }
+
+    public static String getShortPk(Map<String, ?> pk, ModelEntity model) { // SCIPIO
+        return getShortPk(pk, model.getPkFields());
     }
 }

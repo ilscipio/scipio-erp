@@ -530,7 +530,11 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return true;
     }
 
-    public String getPkShortValueString() {
+    /**
+     * Returns a string of primary key field values delimited by "::" (none for single field primary keys).
+     * New alias for {@link #getPkShortValueString()}.
+     */
+    public String getShortPk() { // SCIPIO: Renamed from getPkShortValueString
         try { // SCIPIO: Try single-PK
             ModelField onlyPk = this.getModelEntity().getOnlyPk();
             Object pkValue = this.get(onlyPk.getName());
@@ -538,13 +542,21 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         } catch(IllegalArgumentException e) {
         }
         StringBuilder sb = new StringBuilder();
-        for (ModelField curPk: this.getModelEntity().getPkFieldsUnmodifiable()) {
+        for (ModelField curPk: this.getModelEntity().getPkFields()) {
             if (sb.length() > 0) {
                 sb.append("::");
             }
             sb.append(this.get(curPk.getName()));
         }
         return sb.toString();
+    }
+
+    /**
+     * Returns a string of primary key field values delimited by "::" (none for single field primary keys).
+     * Legacy alias for {@link #getShortPk()}.
+     */
+    public String getPkShortValueString() {
+        return getShortPk();
     }
 
     /** Sets the named field to the passed value, even if the value is null

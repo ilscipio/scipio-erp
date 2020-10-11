@@ -45,6 +45,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.EntityFieldNotFoundException;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityDateFilterCondition;
@@ -92,7 +93,7 @@ public final class EntityUtil {
 
     public static GenericValue getFirst(Collection<GenericValue> values) {
         if (UtilValidate.isNotEmpty(values)) {
-            return values.iterator().next();
+            return (values instanceof List) ? UtilGenerics.<List<GenericValue>>cast(values).get(0) : values.iterator().next(); // SCIPIO: optimized
         } else {
             return null;
         }
@@ -126,6 +127,22 @@ public final class EntityUtil {
             } else {
                 throw new IllegalArgumentException("Passed List had more than one value.");
             }
+        } else {
+            return null;
+        }
+    }
+
+    public static GenericPK getFirstPk(Collection<GenericValue> values) { // SCIPIO
+        if (UtilValidate.isNotEmpty(values)) {
+            return (values instanceof List) ? UtilGenerics.<List<GenericValue>>cast(values).get(0).getPrimaryKey() : values.iterator().next().getPrimaryKey(); // SCIPIO: optimized
+        } else {
+            return null;
+        }
+    }
+
+    public static GenericPK getFirstPk(List<GenericValue> values) { // SCIPIO
+        if (UtilValidate.isNotEmpty(values)) {
+            return values.get(0).getPrimaryKey();
         } else {
             return null;
         }

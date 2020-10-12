@@ -1,6 +1,5 @@
 package org.ofbiz.entity.util;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -169,18 +168,18 @@ public class ViewEntityUpdater {
     }
 
     public void setAllFields(Map<String, Object> fields) {
-        setAllFields(fields, null);
+        setFields(fields, null);
     }
 
     public void setPkFields(Map<String, Object> fields) {
-        setAllFields(fields, Boolean.TRUE);
+        setFields(fields, Boolean.TRUE);
     }
 
     public void setNonPkFields(Map<String, Object> fields) {
-        setAllFields(fields, Boolean.FALSE);
+        setFields(fields, Boolean.FALSE);
     }
 
-    protected void setAllFields(Map<String, Object> fields, Boolean pkMode) {
+    protected void setFields(Map<String, Object> fields, Boolean pkMode) {
         if (isMakeEmptyOptionals()) {
             Map<String, GenericValue> newOptionals = new HashMap<>();
             for (Map.Entry<String, Object> fieldEntry : fields.entrySet()) {
@@ -188,7 +187,9 @@ public class ViewEntityUpdater {
                 Object value = fieldEntry.getValue();
                 ModelViewEntity.AliasMappings alias = getModel().getAliasMappings(aliasName);
                 if (alias == null) {
-                    throw new IllegalArgumentException("Invalid field name [" + aliasName + "] for view-entity [" + getEntityName() + "]");
+                    // Forget this, ignore unrelated context
+                    //throw new IllegalArgumentException("Invalid field name [" + aliasName + "] for view-entity [" + getEntityName() + "]");
+                    continue;
                 }
                 for (Map.Entry<String, List<String>> aliasFieldsEntry : alias.getRequiredEntityAliasFieldMap().entrySet()) {
                     ModelEntity targetModel = getModel().getMemberModelEntity(aliasFieldsEntry.getKey());
@@ -239,7 +240,9 @@ public class ViewEntityUpdater {
                 Object value = fieldEntry.getValue();
                 ModelViewEntity.AliasMappings alias = getModel().getAliasMappings(aliasName);
                 if (alias == null) {
-                    throw new IllegalArgumentException("Invalid field name [" + aliasName + "] for view-entity [" + getEntityName() + "]");
+                    // Forget this, ignore unrelated context
+                    //throw new IllegalArgumentException("Invalid field name [" + aliasName + "] for view-entity [" + getEntityName() + "]");
+                    continue;
                 }
                 for (Map.Entry<String, List<String>> aliasFieldsEntry : alias.getEntityAliasFieldMap().entrySet()) {
                     ModelEntity targetModel = getModel().getMemberModelEntity(aliasFieldsEntry.getKey());

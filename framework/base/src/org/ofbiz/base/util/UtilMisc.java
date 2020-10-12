@@ -1100,6 +1100,13 @@ public final class UtilMisc {
     }
 
     /**
+     * SCIPIO: Returns the first element of collection or list using get() if possible, or null if empty.
+     */
+    public static <T> T firstSafe(Collection<T> values) {
+        return UtilValidate.isNotEmpty(values) ? first(values) : null;
+    }
+
+    /**
      * SCIPIO: Returns Boolean.TRUE if value is Boolean.TRUE or "true", or Boolean.FALSE
      * if value is Boolean.FALSE or "false", or null if anything else (case-sensitive).
      */

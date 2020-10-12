@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.NamedElement;
@@ -838,6 +839,8 @@ public final class EntityUtil {
     public static String getShortPk(Map<String, ?> record, Collection<?> pkFields) { // SCIPIO
         if (pkFields.size() == 1) {
             return String.valueOf(record.get(NamedElement.getName(UtilMisc.first(pkFields))));
+        } else if (pkFields.size() <= 0) {
+            return null;
         }
         StringBuilder sb = new StringBuilder();
         for(Object fieldNameObj : pkFields) {
@@ -851,5 +854,56 @@ public final class EntityUtil {
 
     public static String getShortPk(Map<String, ?> pk, ModelEntity model) { // SCIPIO
         return getShortPk(pk, model.getPkFields());
+    }
+
+    public static <M extends Map<String, Object>> M getPk(Object out, Map<String, ?> record, Collection<?> pkFields, boolean nonNull) { // SCIPIO
+        M outMap = null;
+        for(Object fieldNameObj : pkFields) {
+            String fieldName = NamedElement.getName(fieldNameObj);
+            Object value = record.get(fieldName);
+            if (!nonNull || value != null) {
+                if (outMap == null) {
+                    if (out instanceof Map) {
+                        outMap = UtilGenerics.cast(out);
+                    } else if (out instanceof Supplier) {
+                        outMap = UtilGenerics.<Supplier<M>>cast(out).get();
+                    } else {
+                        outMap = UtilGenerics.cast(new LinkedHashMap<>());
+                    }
+                }
+                outMap.put(fieldName, value);
+            }
+        }
+        return outMap;
+    }
+
+    public static <M extends Map<String, Object>> M getPk(M out, Map<String, ?> record, ModelEntity model, boolean nonNull) { // SCIPIO
+        return getPk(out, record, model.getPkFields(), nonNull);
+    }
+
+    public static <M extends Map<String, Object>> M getPk(Map<String, ?> record, Collection<?> pkFields, boolean nonNull) { // SCIPIO
+        return getPk(null, record, pkFields, nonNull);
+    }
+
+    public static <M extends Map<String, Object>> M getPk(Map<String, ?> record, ModelEntity model, boolean nonNull) { // SCIPIO
+        return getPk(null, record, model.getPkFields(), nonNull);
+    }
+
+    public static boolean hasPk(Map<String, ?> record, Collection<?> pkFields) { // SCIPIO
+        if (pkFields.size() == 1) {
+            return (record.get(NamedElement.getName(UtilMisc.first(pkFields))) != null);
+        } else if (pkFields.size() <= 0) {
+            return false;
+        }
+        for(Object fieldNameObj : pkFields) {
+            if (record.get(NamedElement.getName(fieldNameObj)) == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean hasPk(Map<String, ?> pk, ModelEntity model) { // SCIPIO
+        return hasPk(pk, model.getPkFields());
     }
 }

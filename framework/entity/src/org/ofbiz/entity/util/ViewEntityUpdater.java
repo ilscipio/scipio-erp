@@ -181,7 +181,7 @@ public class ViewEntityUpdater {
 
     protected void setFields(Map<String, Object> fields, Boolean pkMode) {
         if (isMakeEmptyOptionals()) {
-            Map<String, GenericValue> newOptionals = new HashMap<>();
+            Map<String, GenericValue> newOptionals = new LinkedHashMap<>();
             for (Map.Entry<String, Object> fieldEntry : fields.entrySet()) {
                 String aliasName = fieldEntry.getKey();
                 Object value = fieldEntry.getValue();
@@ -193,7 +193,7 @@ public class ViewEntityUpdater {
                 }
                 for (Map.Entry<String, List<String>> aliasFieldsEntry : alias.getRequiredEntityAliasFieldMap().entrySet()) {
                     ModelEntity targetModel = getModel().getMemberModelEntity(aliasFieldsEntry.getKey());
-                    Map<String, Object> newFields = new HashMap<>();
+                    Map<String, Object> newFields = new LinkedHashMap<>();
                     for (String field : aliasFieldsEntry.getValue()) {
                         if (pkMode == null || (Boolean.TRUE.equals(pkMode) && targetModel.isPkField(field)) ||
                                 (Boolean.FALSE.equals(pkMode) && targetModel.isNoPkField(field))) {
@@ -207,7 +207,7 @@ public class ViewEntityUpdater {
                 }
                 for (Map.Entry<String, List<String>> aliasFieldsEntry : alias.getOptionalEntityAliasFieldMap().entrySet()) {
                     ModelEntity targetModel = getModel().getMemberModelEntity(aliasFieldsEntry.getKey());
-                    Map<String, Object> newFields = new HashMap<>();
+                    Map<String, Object> newFields = new LinkedHashMap<>();
                     for (String field : aliasFieldsEntry.getValue()) {
                         if (pkMode == null || (Boolean.TRUE.equals(pkMode) && targetModel.isPkField(field)) ||
                                 (Boolean.FALSE.equals(pkMode) && targetModel.isNoPkField(field))) {
@@ -246,7 +246,7 @@ public class ViewEntityUpdater {
                 }
                 for (Map.Entry<String, List<String>> aliasFieldsEntry : alias.getEntityAliasFieldMap().entrySet()) {
                     ModelEntity targetModel = getModel().getMemberModelEntity(aliasFieldsEntry.getKey());
-                    Map<String, Object> newFields = new HashMap<>();
+                    Map<String, Object> newFields = new LinkedHashMap<>();
                     for (String field : aliasFieldsEntry.getValue()) {
                         if (pkMode == null || (Boolean.TRUE.equals(pkMode) && targetModel.isPkField(field)) ||
                                 (Boolean.FALSE.equals(pkMode) && targetModel.isNoPkField(field))) {
@@ -295,7 +295,7 @@ public class ViewEntityUpdater {
         List<String> entityAliases = getMissingSinglePkEntityAliases();
         for(String entityAlias : entityAliases) {
             GenericValue entity = getOrMakeEntity(entityAlias);
-            if (!entity.containsPrimaryKey(true)) {
+            if (!entity.containsPrimaryKey(true) && (getModel().isRequiredEntityAlias(entityAlias)) || !entity.isNonPkFieldsNull(false)) {
                 entity = entity.createSetNextSeqId();
                 setEntity(entityAlias, entity);
 

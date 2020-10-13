@@ -1863,6 +1863,75 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return tempResult;
     }
 
+    /**
+     * Returns true if all fields are null or unset (SCIPIO).
+     */
+    public boolean isAllFieldsNull(boolean includeInternal) {
+        if (includeInternal) {
+            for(ModelField field : getModelEntity().getFields()) {
+                if (get(field.getName()) != null) {
+                    return false;
+                }
+            }
+        } else {
+            for(ModelField field : getModelEntity().getFields()) {
+                if (field.getIsAutoCreatedInternal()) {
+                    continue;
+                }
+                if (get(field.getName()) != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns true if all (non-internal) pk fields are null or unset (SCIPIO).
+     */
+    public boolean isPkFieldsNull(boolean includeInternal) {
+        if (includeInternal) {
+            for(ModelField field : getModelEntity().getPkFields()) {
+                if (get(field.getName()) != null) {
+                    return false;
+                }
+            }
+        } else {
+            for(ModelField field : getModelEntity().getPkFields()) {
+                if (field.getIsAutoCreatedInternal()) {
+                    continue;
+                }
+                if (get(field.getName()) != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Returns true if all (non-internal) non-pk fields are null or unset (SCIPIO).
+     */
+    public boolean isNonPkFieldsNull(boolean includeInternal) {
+        if (includeInternal) {
+            for(ModelField field : getModelEntity().getNoPkFields()) {
+                if (get(field.getName()) != null) {
+                    return false;
+                }
+            }
+        } else {
+            for(ModelField field : getModelEntity().getNoPkFields()) {
+                if (field.getIsAutoCreatedInternal()) {
+                    continue;
+                }
+                if (get(field.getName()) != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     /** Clones this GenericEntity, this is a shallow clone and uses the default shallow HashMap clone
      *  @return Object that is a clone of this GenericEntity
      */

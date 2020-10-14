@@ -249,6 +249,7 @@ under the License.
             <xs:sequence>
                 <xs:element minOccurs="0" ref="description"/>
                 <xs:element maxOccurs="unbounded" ref="member-entity"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="member-entity-dependency"/><!-- SCIPIO -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="alias-all"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="alias"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="view-link"/>
@@ -291,6 +292,28 @@ under the License.
     <xs:attributeGroup name="attlist.member-entity">
         <xs:attribute name="entity-alias" type="xs:string" use="required"/>
         <xs:attribute name="entity-name" type="xs:string" use="required"/>
+    </xs:attributeGroup>
+    <xs:element name="member-entity-dependency">
+        <xs:annotation>
+            <xs:documentation>
+                Explicitly defines a member entity dependency order (SCIPIO).
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" ref="description"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="attlist.member-entity-dependency"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.member-entity-dependency">
+        <xs:attribute name="entity-alias-order" type="xs:string" use="required">
+            <xs:annotation>
+                <xs:documentation>
+                    Comma-separated list of entity-alias, starting with the least dependent or first created (SCIPIO).
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="alias-all">
         <xs:complexType>

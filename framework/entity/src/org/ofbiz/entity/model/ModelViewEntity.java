@@ -188,6 +188,21 @@ public class ModelViewEntity extends ModelEntity {
         ((ArrayList<ModelViewLink>) viewLinks).trimToSize();
         ((ArrayList<ModelField>) groupBys).trimToSize();
         ((ArrayList<String>) groupByFields).trimToSize();
+
+        ArrayList<String> memberEntityDependencyOrderByAlias = null;
+        Element medElement = UtilXml.firstChildElement(entityElement, "member-entity-dependency");
+        String memberEntityDependencyOrderByAliasStr = (medElement != null) ? UtilValidate.nullIfEmpty(medElement.getAttribute("entity-alias-order")) : null;
+        if (memberEntityDependencyOrderByAliasStr != null) {
+            memberEntityDependencyOrderByAlias = StringUtil.splitNames(new ArrayList<>(), memberEntityDependencyOrderByAliasStr);
+            if (memberEntityDependencyOrderByAlias.size() != allModelMemberEntities.size()) {
+                Debug.logError("In view-entity [" + getEntityName() + "] member-alias-dependency entity-alias-order has " + memberEntityDependencyOrderByAlias.size()
+                    + " entries but " + allModelMemberEntities.size() + " member-alias entities are defined; cannot use order", module);
+                memberEntityDependencyOrderByAlias = null;
+            } else {
+                memberEntityDependencyOrderByAlias.trimToSize();
+            }
+        }
+        this.memberEntityDependencyOrderByAlias = (memberEntityDependencyOrderByAlias != null) ? Collections.unmodifiableList(memberEntityDependencyOrderByAlias) : null;
     }
 
     public ModelViewEntity(DynamicViewEntity dynamicViewEntity, ModelReader modelReader) {

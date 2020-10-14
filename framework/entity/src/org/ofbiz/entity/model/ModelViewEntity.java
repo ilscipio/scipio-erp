@@ -838,7 +838,12 @@ public class ModelViewEntity extends ModelEntity {
                     }
                 }
             } catch(Exception e) {
-                Debug.logError(e,"Could not make member entity dependency map by alias for view-entity [" + getEntityName() + "]", module);
+                memberEntityDependencyOrderByAlias = new ArrayList<>(this.getAllModelMemberEntities().size());
+                for(ModelMemberEntity memberEntity : getAllModelMemberEntities()) {
+                    memberEntityDependencyOrderByAlias.add(memberEntity.getEntityAlias());
+                }
+                Debug.logWarning("Could not make member entity dependency map by alias for view-entity [" + getEntityName() + "]"
+                        + ", using default order (" + memberEntityDependencyOrderByAlias + "): " + e.getMessage(), module);
             }
             this.memberEntityDependencyOrderByAlias = memberEntityDependencyOrderByAlias;
         }

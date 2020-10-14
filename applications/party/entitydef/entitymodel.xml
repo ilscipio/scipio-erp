@@ -1971,6 +1971,7 @@ code package.
       <member-entity entity-alias="ULN" entity-name="UserLogin"/>
       <member-entity entity-alias="PER" entity-name="Person"/>
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
+      <member-entity-dependency entity-alias-order="PTY,ULN,PER,PR"/>
       <alias-all entity-alias="PTY"/>
       <alias-all entity-alias="ULN">
           <exclude field="partyId"/>

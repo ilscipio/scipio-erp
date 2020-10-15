@@ -30,6 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.ofbiz.base.util.UtilMisc;
@@ -826,43 +827,147 @@ public class ModelViewEntity extends ModelEntity {
     /**
      * Returns the member entity aliases in the order of the relational dependencies of their entities, with the least
      * dependent first (the alias for the entity that should be created first). (SCIPIO).
+     * <p>This order can be specified explicitly with element member-entity-dependency#entity-alias-order, otherwise
+     * it attempts to refine the order in which the member-entity aliases were defined using a view-link/relation-based
+     * heuristic. If a serious violation occurs, the order of definition of member-entity aliases is used.</p>
+     * TODO: REVIEW: Heuristic could be improved in {@link #findEntityAliasDependencies}.
      */
     public List<String> getMemberEntityDependencyOrderByAlias() {
         List<String> memberEntityDependencyOrderByAlias = this.memberEntityDependencyOrderByAlias;
         if (memberEntityDependencyOrderByAlias == null) {
-            memberEntityDependencyOrderByAlias = new ArrayList<>(this.getAllModelMemberEntities().size());
-            Set<ModelEntity> modelEntities = new LinkedHashSet<>();
-            Set<String> entityNames = new LinkedHashSet<>();
-            for(ModelMemberEntity memberEntity : getAllModelMemberEntities()) {
-                try {
-                    modelEntities.add(getModelReader().getModelEntity(memberEntity.getEntityName()));
-                    entityNames.add(memberEntity.getEntityName());
-                } catch (Exception e) {
-                    Debug.logError(e, "Entity [" + memberEntity.getEntityName() + "] not found in view-entity [" + getEntityName() + "]", module);
-                }
-            }
-            // TODO: REVIEW: In reality we may want to limit the resolution to the relations in the view-links, but in practice
-            //  this is not likely to make a difference.
             try {
-                List<String> entityNameDepMap = EntityInfoUtil.makeEntityNameDependencyOrder(modelEntities, entityNames);
-                for(String entityName : entityNameDepMap) {
-                    for(ModelMemberEntity memberEntity : getAllModelMemberEntities()) {
-                        if (entityName.equals(memberEntity.getEntityName())) {
-                            memberEntityDependencyOrderByAlias.add(memberEntity.getEntityAlias());
-                        }
-                    }
-                }
+                memberEntityDependencyOrderByAlias = EntityInfoUtil.getNameDependencyOrder(makeEntityAliasDependencyMap());
             } catch(Exception e) {
+                Debug.logWarning("Could not make member entity dependency map by alias for view-entity [" + getEntityName() + "]"
+                        + ", using default order (" + memberEntityDependencyOrderByAlias + "): " + e.getMessage(), module);
+            }
+            if (memberEntityDependencyOrderByAlias == null) {
                 memberEntityDependencyOrderByAlias = new ArrayList<>(this.getAllModelMemberEntities().size());
                 for(ModelMemberEntity memberEntity : getAllModelMemberEntities()) {
                     memberEntityDependencyOrderByAlias.add(memberEntity.getEntityAlias());
                 }
-                Debug.logWarning("Could not make member entity dependency map by alias for view-entity [" + getEntityName() + "]"
-                        + ", using default order (" + memberEntityDependencyOrderByAlias + "): " + e.getMessage(), module);
             }
-            this.memberEntityDependencyOrderByAlias = memberEntityDependencyOrderByAlias;
+            this.memberEntityDependencyOrderByAlias = Collections.unmodifiableList(memberEntityDependencyOrderByAlias);
         }
         return memberEntityDependencyOrderByAlias;
+    }
+
+    public Map<String, List<String>> makeEntityAliasDependencyMap() {
+        Map<String, List<String>> depMap = new LinkedHashMap<>();
+        for(ModelMemberEntity memberEntity : getAllModelMemberEntities()) {
+            depMap.put(memberEntity.getEntityAlias(), findEntityAliasDependencies(memberEntity.getEntityAlias()));
+        }
+        return depMap;
+    }
+
+    /**
+     * Best-effort determines which entity aliases this ones depends on by hard relations (SCIPIO).
+     * NOTE: This algorithm is an imperfect heuristic that tries to match all the relations of an entity
+     * with either side of view-links in a way that can partly handle transient dependencies.
+     * When this does not work, the order can be specified explicitly with element member-entity-dependency#entity-alias-order.
+     * TODO: REVIEW: Some known cases don't work and fail to generate a dependency: e.g. it is impossible currently to
+     *  exploit "many" relations due to their auto-creation and ambiguous usage, so entities like PartyContactMechPurpose
+     *  don't get their dependency on PartyContactMech here currently.
+     */
+    public List<String> findEntityAliasDependencies(String entityAlias) {
+        ModelEntity model = getMemberModelEntity(entityAlias);
+        List<ModelRelation> relationsList = model.getRelationsList(true, false, false);
+        List<String> depList = new ArrayList<>(getViewLinksSize());
+        for (ModelViewLink viewLink : getViewLinks()) {
+            // extract fields
+            Map<String, String> viewFields = new LinkedHashMap<>();
+            if (entityAlias.equals(viewLink.getEntityAlias())) {
+                for (ModelKeyMap keyMap : viewLink.getKeyMaps()) {
+                    viewFields.put(keyMap.getFieldName(), keyMap.getRelFieldName());
+                }
+            } else if (entityAlias.equals(viewLink.getRelEntityAlias())) {
+                for (ModelKeyMap keyMap : viewLink.getKeyMaps()) {
+                    viewFields.put(keyMap.getRelFieldName(), keyMap.getFieldName());
+                }
+            } else {
+                continue;
+            }
+            // For each field, field a bunch of potential candidate fields through transitional view-links, otherwise
+            // view-entities like ProductContentAndElectronicText will missing the implicit EL->DR dependence.
+            // For each of these, verify there's a one relation and if so, consider it a dependency - implements transitional.
+            for (String fieldName : viewFields.keySet()) {
+                List<EntityAliasAndField> relEntityFields = findRelatedEntityAliasFields(new EntityAliasAndField(entityAlias, fieldName), true, new ArrayList<>());
+                for(EntityAliasAndField relEntityField : relEntityFields) {
+                    ModelEntity relModel2 = getMemberModelEntity(relEntityField.getEntityAlias());
+                    for (ModelRelation relation : relationsList) {
+                        for (ModelKeyMap keyMap : relation.getKeyMaps()) {
+                            if (fieldName.equals(keyMap.getFieldName()) && relation.getRelEntityName().equals(relModel2.getEntityName()) &&
+                                    relEntityField.getField().equals(keyMap.getRelFieldName())) {
+                                if (!depList.contains(relEntityField.getEntityAlias())) {
+                                    depList.add(relEntityField.getEntityAlias());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return depList;
+    }
+
+    private List<EntityAliasAndField> findRelatedEntityAliasFields(EntityAliasAndField entityField, boolean recursive, List<EntityAliasAndField> out) {
+        for(ModelViewLink viewLink : getViewLinks()) {
+            EntityAliasAndField other = null;
+            for(ModelKeyMap keyMap : viewLink.getKeyMaps()) {
+                if (entityField.equals(viewLink.getEntityAlias(), keyMap.getFieldName())) {
+                    other = new EntityAliasAndField(viewLink.getRelEntityAlias(), keyMap.getRelFieldName());
+                    break;
+                } else if (entityField.equals(viewLink.getRelEntityAlias(), keyMap.getRelFieldName())) {
+                    other = new EntityAliasAndField(viewLink.getEntityAlias(), keyMap.getFieldName());
+                    break;
+                }
+            }
+            if (other != null) {
+                if (!out.contains(other)) {
+                    out.add(other);
+                    if (recursive) {
+                        findRelatedEntityAliasFields(other, recursive, out);
+                    }
+                }
+            }
+        }
+        return out;
+    }
+
+    private static class EntityAliasAndField implements Serializable {
+        protected final String entityAlias;
+        protected final String field;
+
+        public EntityAliasAndField(String entityAlias, String field) {
+            this.entityAlias = entityAlias;
+            this.field = field;
+        }
+
+        public String getEntityAlias() {
+            return entityAlias;
+        }
+
+        public String getField() {
+            return field;
+        }
+
+        public boolean equals(String entityAlias, String field) {
+            return this.entityAlias.equals(entityAlias) && this.field.equals(field);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            EntityAliasAndField that = (EntityAliasAndField) o;
+            return getEntityAlias().equals(that.getEntityAlias()) &&
+                    getField().equals(that.getField());
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(getEntityAlias(), getField());
+        }
     }
 
     public List<String> getRequiredEntityAliases() { // SCIPIO
@@ -1996,5 +2101,18 @@ public class ModelViewEntity extends ModelEntity {
             this.hasOptionalViewLink = hasOptionalViewLink;
         }
         return hasOptionalViewLink;
+    }
+
+    public <C extends Collection<String>> C getEntityAliasesForName(C out, String entityName) { // SCIPIO: TODO: Optimize
+        for(ModelMemberEntity mme : getAllModelMemberEntities()) {
+            if (entityName.equals(mme.getEntityName())) {
+                out.add(mme.getEntityAlias());
+            }
+        }
+        return out;
+    }
+
+    public List<String> getEntityAliasesForName(String entityName) { // SCIPIO: TODO: Optimize
+        return getEntityAliasesForName(new ArrayList<>(), entityName);
     }
 }

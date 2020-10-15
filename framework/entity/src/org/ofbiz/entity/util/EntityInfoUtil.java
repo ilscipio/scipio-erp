@@ -99,10 +99,22 @@ public abstract class EntityInfoUtil {
         return sb;
     }
 
+    public static DependencyGraph<String> makeNameDependencyGraph(Map<String, List<String>> depMap) throws IllegalArgumentException {
+        return new DependencyGraph<>(depMap);
+    }
+
+    public static List<String> getNameDependencyOrder(Map<String, List<String>> depMap) throws IllegalArgumentException {
+        return makeNameDependencyGraph(depMap).getResolvedDependenciesDfs();
+    }
+
     public static DependencyGraph<String> makeEntityNameDependencyGraph(Set<ModelEntity> modelEntities, Set<String> entityNames) {
         return new DependencyGraph<>(makeEntityNameDependencyMap(modelEntities, entityNames));
     }
 
+    /**
+     * @deprecated use {@link #getNameDependencyOrder(Map)}
+     */
+    @Deprecated
     public static List<String> makeEntityNameDependencyOrderFromDepMap(Map<String, List<String>> depMap) throws IllegalArgumentException {
         return new DependencyGraph<>(depMap).getResolvedDependenciesDfs();
     }

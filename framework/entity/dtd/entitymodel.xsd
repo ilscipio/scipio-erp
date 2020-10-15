@@ -311,6 +311,10 @@ under the License.
             <xs:annotation>
                 <xs:documentation>
                     Comma-separated list of entity-alias, starting with the least dependent or first created (SCIPIO).
+                    The number of entries must match the number of entity-alias elements in the definition.
+                    This is circumstantially required to specify if automatic dependency resolution cannot determine a
+                    good-enough order for entity dependency order of creation; in some cases not all relations can be
+                    automatically safely inferred.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>

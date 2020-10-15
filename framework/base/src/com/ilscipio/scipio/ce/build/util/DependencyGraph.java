@@ -121,7 +121,7 @@ public class DependencyGraph<T> {
             }
             //i++;
         }
-        return new DependencyGraph<String>(elements, dependencies, strict);
+        return new DependencyGraph<>(elements, dependencies, strict);
     }
 
     /**

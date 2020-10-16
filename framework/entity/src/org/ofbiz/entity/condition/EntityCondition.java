@@ -135,6 +135,30 @@ public abstract class EntityCondition extends EntityConditionBase implements IsE
         return new EntityWhereString(sqlString);
     }
 
+    /** Combines conditions using AND but skips any null (SCIPIO). */
+    public static EntityCondition append(EntityCondition... conditions) {
+        EntityCondition cond = conditions[0];
+        for(int i = 1; i < conditions.length; i++) {
+            if (conditions[i] != null) {
+                cond = (cond != null) ? makeCondition(cond, EntityOperator.AND, conditions[i]) : conditions[i];
+            }
+        }
+        return cond;
+    }
+
+    /** Combines conditions using AND but skips any null (SCIPIO). */
+    public static EntityCondition append(EntityCondition first, EntityCondition second) {
+        if (first != null) {
+            if (second != null) {
+                return EntityCondition.makeCondition(first, EntityOperator.AND, second);
+            } else {
+                return first;
+            }
+        } else {
+            return second;
+        }
+    }
+
     @Override
     public String toString() {
         return makeWhereString(null, new ArrayList<EntityConditionParam>(), null);

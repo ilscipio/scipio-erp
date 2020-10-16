@@ -11,7 +11,7 @@ code package.
         short-description="Create accounting preference settings for a party">
         <!-- permission checking is done in the services definition file (services_other.xml) -->
 
-        <!-- check that the party is an INTERNAL_ORGANIZATION, as defined in PartyRole -->
+        <!-- check that the party is an INTERNAL_ORGANIZATIO, as defined in PartyRole -->
         <set from-field="parameters.partyId" field="lookupParams.partyId"/>
         <set value="INTERNAL_ORGANIZATIO" field="lookupParams.roleTypeId"/>
         <find-by-primary-key use-cache="true" entity-name="PartyRole" value-field="partyRole" map="lookupParams"/>

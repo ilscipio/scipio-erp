@@ -1,5 +1,6 @@
 package org.ofbiz.entity.util;
 
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -167,6 +168,21 @@ public class ViewEntityUpdater {
         }
     }
 
+    protected void setField(String entityAlias, List<String> fields, Object value) {
+        GenericValue entity = getEntity(entityAlias);
+        if (entity == null) {
+            if (isMakeEmptyOptionals() || getModel().isRequiredEntityAlias(entityAlias)) {
+                entity = makeEntity(entityAlias);
+                setEntity(entityAlias, entity);
+            } else {
+                return;
+            }
+        }
+        for (String field : fields) {
+            entity.set(field, value);
+        }
+    }
+
     public void setAllFields(Map<String, Object> fields) {
         setFields(fields, null);
     }
@@ -267,7 +283,7 @@ public class ViewEntityUpdater {
         temp.setPkFields(fields);
         for(Map.Entry<String, GenericValue> entry : temp.getEntities().entrySet()) {
             GenericValue tempEntity = entry.getValue();
-            if (tempEntity.containsPrimaryKey(true)) {
+            if (tempEntity != null && tempEntity.containsPrimaryKey(true)) {
                 GenericValue entity = getDelegator().findOne(tempEntity.getEntityName(), tempEntity.getPrimaryKey(), false);
                 if (entity != null) {
                     setEntity(entry.getKey(), entity);
@@ -295,20 +311,22 @@ public class ViewEntityUpdater {
         List<String> entityAliases = getMissingSinglePkEntityAliases();
         for(String entityAlias : entityAliases) {
             GenericValue entity = getOrMakeEntity(entityAlias);
-            if (!entity.containsPrimaryKey(true) && (getModel().isRequiredEntityAlias(entityAlias)) || !entity.isNonPkFieldsNull(false)) {
+            if (!entity.containsPrimaryKey(true) && (getModel().isRequiredEntityAlias(entityAlias) || !entity.isNonPkFieldsNull(false))) {
                 entity = entity.createSetNextSeqId();
                 setEntity(entityAlias, entity);
-
                 // If needed, apply the newly created PK to the view-linked entities
                 String pkFieldName = entity.getModelEntity().getFirstPkFieldName();
                 Object pkValue = entity.get(pkFieldName);
                 ModelViewEntity.AliasMappings aliasMappings = getModel().getAliasMappingFromField(entityAlias, pkFieldName);
                 for(Map.Entry<String, List<String>> fieldMapEntry : aliasMappings.getEntityAliasFieldMap().entrySet()) {
-                    for(String fieldName : fieldMapEntry.getValue()) {
-                        if (entityAlias.equals(fieldMapEntry.getKey()) && pkFieldName.equals(fieldName)) {
-                            continue;
-                        }
-                        setField(aliasMappings, pkValue);
+                    String targetEntityAlias = fieldMapEntry.getKey();
+                    List<String> targetFields = fieldMapEntry.getValue();
+                    if (entityAlias.equals(targetEntityAlias)) {
+                        targetFields = new ArrayList<>(targetFields);
+                        targetFields.remove(pkFieldName);
+                    }
+                    if (!targetFields.isEmpty()) {
+                        setField(targetEntityAlias, targetFields, pkValue);
                     }
                 }
             }

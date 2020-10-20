@@ -176,6 +176,8 @@ public class ServiceMultiEventHandler implements EventHandler {
         }
 
         Set<String> urlOnlyParameterNames = UtilHttp.getUrlOnlyParameterMap(request).keySet();
+        // SCIPIO: application/json request body parameters
+        Map<String, Object> requestBodyMap = RequestBodyMapHandlerFactory.getRequestBodyMap(request);
 
         // big try/finally to make sure commit or rollback are run
         boolean beganTrans = false;
@@ -231,6 +233,10 @@ public class ServiceMultiEventHandler implements EventHandler {
                     } else {
                         // check attributes; do this before parameters so that attribute which can be changed by code can override parameters which can't
                         value = request.getAttribute(paramName + curSuffix);
+
+                        if (value == null) {
+                            value = requestBodyMap.get(paramName + curSuffix); // SCIPIO: application/json request body parameters
+                        }
 
                         // first check for request parameters
                         if (value == null) {

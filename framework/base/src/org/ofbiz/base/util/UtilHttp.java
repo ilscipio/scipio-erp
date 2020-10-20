@@ -50,6 +50,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.net.ssl.SSLContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -300,12 +301,22 @@ public final class UtilHttp {
 
         paramMap.putAll(getPathInfoOnlyParameterMap(request, nameSet, onlyIncludeOrSkip));
 
-        if (paramMap.size() == 0) {
+        // SCIPIO: Always put anything found in the multi-part map in case anything else received along with it, otherwise consistency issues.
+        //if (paramMap.size() == 0) {
+        {
             // nothing found in the parameters; maybe we read the stream instead
-            Map<String, Object> multiPartMap = UtilGenerics.checkMap(request.getAttribute("multiPartMap"));
+            // SCIPIO
+            //Map<String, Object> multiPartMap = UtilGenerics.checkMap(request.getAttribute("multiPartMap"));
+            Map<String, Object> multiPartMap = getMultiPartParameterMap(request);
             if (UtilValidate.isNotEmpty(multiPartMap)) {
                 paramMap.putAll(multiPartMap);
             }
+        }
+
+        // SCIPIO: Include JSON body parameters
+        Map<String, Object> requestBodyMap = getRequestBodyMap(request);
+        if (UtilValidate.isNotEmpty(requestBodyMap)) {
+            paramMap.putAll(requestBodyMap);
         }
 
         if (Debug.verboseOn()) {
@@ -352,6 +363,47 @@ public final class UtilHttp {
             }
         }
         return canonicalizeParameterMap(paramMap);
+    }
+
+    private static ScipioMethod getMultiPartParameterMapMethod = ScipioMethod.from("org.ofbiz.webapp.util.UtilHttpWeb",
+            "getMultiPartParameterMap", HttpServletRequest.class);
+    /**
+     * Reads to gets the last parsed multiPartMap.
+     * NOTE: This method swallows upload errors, so use {@link #readMultiPartParameterMap(HttpServletRequest)} for those locations
+     * that can handle them, otherwise reported errors may be incorrect.
+     */
+    public static Map<String, Object> getMultiPartParameterMap(HttpServletRequest request) { // SCIPIO: modified
+        return getMultiPartParameterMapMethod.invokeRuntime(null, request);
+    }
+
+    private static ScipioMethod readMultiPartParameterMapMethod = ScipioMethod.from("org.ofbiz.webapp.util.UtilHttpWeb",
+            "readMultiPartParameterMap", HttpServletRequest.class);
+    public static Map<String, Object> readMultiPartParameterMap(HttpServletRequest request) throws IOException { // SCIPIO: modified
+        return readMultiPartParameterMapMethod.invokeRuntime(null, request);
+    }
+
+    private static ScipioMethod getRequestBodyMapMethod = ScipioMethod.from("org.ofbiz.webapp.event.RequestBodyMapHandlerFactory",
+            "getRequestBodyMap", ServletRequest.class);
+    /**
+     * Returns the request body map, checking request attribute requestBodyMap to see if already parsed (SCIPIO).
+     */
+    public static Map<String, Object> getRequestBodyMap(ServletRequest request) {
+        return getRequestBodyMapMethod.invokeRuntime(null, request);
+    }
+
+    private static ScipioMethod extractMapFromRequestBodyMethod = ScipioMethod.from("org.ofbiz.webapp.event.RequestBodyMapHandlerFactory",
+            "extractMapFromRequestBody", ServletRequest.class);
+    /**
+     * Returns the request body map without going through any request attributes, with a new read (SCIPIO).
+     */
+    public static Map<String, Object> extractMapFromRequestBody(ServletRequest request) throws IOException {
+        try {
+            return extractMapFromRequestBodyMethod.invoke(null, request);
+        } catch (IOException e) {
+            throw e;
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -2093,7 +2145,7 @@ public final class UtilHttp {
      * SCIPIO: Get the given session attribute if the session exists, otherwise null.
      */
     public static <T> T getSessionAttribute(HttpSession session, String attrName) {
-        return (session != null) ? (T) session.getAttribute(attrName) : null;
+        return (session != null) ? UtilGenerics.cast(session.getAttribute(attrName)) : null;
     }
 
     /**

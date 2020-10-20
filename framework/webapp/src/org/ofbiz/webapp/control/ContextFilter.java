@@ -436,7 +436,12 @@ public class ContextFilter implements Filter {
         }
     }
 
+    /**
+     * SCIPIO: NOTE: 2020-10: This no longer runs on ContextFilter to set all attributes; rather integrated into service handlers and screen "parameters"
+     * map, while other exceptions must be managed by controller; this method sets the request attribute "requestBodyMap".
+     */
     public static void setAttributesFromRequestBody(ServletRequest request) {
+        /* SCIPIO: Do not do this
         // read the body (for JSON requests) and set the parameters as attributes:
         Map<String, Object> requestBodyMap = null;
         try {
@@ -450,6 +455,8 @@ public class ContextFilter implements Filter {
                 request.setAttribute(parameterName, requestBodyMap.get(parameterName));
             }
         }
+         */
+        RequestBodyMapHandlerFactory.getRequestBodyMap(request);
     }
 
     /** This method only sets up a dispatcher for the current webapp and passed in delegator, it does not save it to the ServletContext or anywhere else, just returns it */

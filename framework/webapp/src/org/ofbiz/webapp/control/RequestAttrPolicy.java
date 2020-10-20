@@ -594,7 +594,7 @@ public final class RequestAttrPolicy {
             static class Invoker extends SaveAttrPolicyInvoker<SavePolicy> {
                 // SCIPIO: 2018-07-10: Do not include multiPartMap, to prevent storing uploaded files in session;
                 // NOTE: This is a heuristic based on most common usage of multiPartMap - may be tweaked in future.
-                private static final Set<String> ATTR_NAME_EXCLUDES = UtilMisc.unmodifiableHashSet("multiPartMap");
+                private static final Set<String> ATTR_NAME_EXCLUDES = UtilMisc.unmodifiableHashSet("multiPartMap", "requestBodyMap");
                 protected Invoker(HttpServletRequest request) {
                     super(request);
                 }

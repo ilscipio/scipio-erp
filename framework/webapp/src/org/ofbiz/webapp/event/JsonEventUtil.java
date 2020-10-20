@@ -33,7 +33,7 @@ public abstract class JsonEventUtil {
         "_ERROR_MESSAGE_", "_ERROR_MESSAGE_LIST_", "_EVENT_MESSAGE_", "_EVENT_MESSAGE_LIST_"
     );
 
-    /** Attributes ignored by all collectOuAttributes calls. Originally found as CommonEvents.ignoreAttrs */
+    /** Attributes ignored by all collectOutAttributes calls. Originally found as CommonEvents.ignoreAttrs */
     private static final Set<String> DEFAULT_IGNORE_ATTRNAMES = UtilMisc.unmodifiableHashSet( // Attributes removed for security reason; _ERROR_MESSAGE_ is kept
             "javax.servlet.request.key_size",
             "_CONTEXT_ROOT_",
@@ -49,7 +49,8 @@ public abstract class JsonEventUtil {
             "org.apache.tomcat.util.net.secure_protocol_version",
             OUT_PARAMS,
             OUT_ATTR,
-            "cmsCtrlState"
+            "cmsCtrlState",
+            "reqBodyParamMap"
     );
 
     /** Attributes ignored only by collectOutAttributesRestricted. NOTE: There are more prefixed keys below. */

@@ -23,7 +23,9 @@ import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
-/** An handler that can extract a Map (typically used as a service input map) from the data in the body of a <code>ServletRequest</code>. */
+/**
+ * A handler that can extract a Map (typically used as a service input map) from the data in the body of a <code>ServletRequest</code>.
+ */
 public interface RequestBodyMapHandler {
     /** Extracts from the data in the body of the <code>ServletRequest</code> an instance of <code>Map&lt;String, Object&gt;</code>.
      *

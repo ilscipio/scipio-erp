@@ -28,6 +28,11 @@ public class ServiceContext implements Map<String, Object> {
         this.context = context;
     }
 
+    protected ServiceContext(ServiceContext other, DispatchContext dctx, Map<String, Object> context) {
+        this.dctx = (dctx != null) ? dctx : other.dctx();
+        this.context = (context != null) ? context : other.context();
+    }
+
     public static ServiceContext from(DispatchContext dctx, Map<String, ?> context) {
         // NOTE: ? should always be Object, this is for simplicity/compatibility, could be misused but never happens
         return new ServiceContext(dctx, UtilGenerics.cast(context));
@@ -37,12 +42,16 @@ public class ServiceContext implements Map<String, Object> {
         return from(dispatcher.getDispatchContext(), context);
     }
 
+    public ServiceContext from(Map<String, ?> newContext) {
+        return new ServiceContext(this, null, UtilGenerics.cast(newContext));
+    }
+
     // TODO
     //public static ServiceContext from(ScipioContext scipioContext) {
     //}
 
     // TODO
-    //public ScipioContext toScipioCtx() {
+    //public ScipioContext toScipioContext() {
     //}
 
     public DispatchContext dctx() {
@@ -99,6 +108,32 @@ public class ServiceContext implements Map<String, Object> {
      */
     public <T> T attr(Object key, Supplier<T> defaultValueSupplier) {
         T value = attr(key);
+        return (value != null) ? value : defaultValueSupplier.get();
+    }
+
+    /**
+     * Returns a service attribute value from the service context map and invokes toString() on it, or null.
+     */
+    @SuppressWarnings("unchecked")
+    public String getString(Object key) {
+        Object value = get(key);
+        return (value != null) ? value.toString() : null;
+    }
+
+    /**
+     * Returns a service attribute value from the service context map and invokes toString() on it, or if null, the given default value.
+     */
+    public String getString(Object key, String defaultValue) {
+        String value = getString(key);
+        return (value != null) ? value : defaultValue;
+    }
+
+    /**
+     * Returns a service attribute value from the service context map and invokes toString() on it, or if null, the given default value supplied
+     * by the given supplier callback or lambda function.
+     */
+    public String getString(Object key, Supplier<String> defaultValueSupplier) {
+        String value = getString(key);
         return (value != null) ? value : defaultValueSupplier.get();
     }
 

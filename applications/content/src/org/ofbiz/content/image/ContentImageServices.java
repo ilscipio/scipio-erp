@@ -93,6 +93,7 @@ public abstract class ContentImageServices {
      * FIXME: MISSING DELETION CODE LOGIC
      */
     public static Map<String, Object> contentImageFileScaleInAllSizeCore(DispatchContext dctx, Map<String, ?> context) {
+        //ServiceContext ctx = ServiceContext.from(dctx, context);
         Delegator delegator = dctx.getDelegator();
         String imageOrigPath = (String) context.get("imageOrigPath");
         String imageOrigUrl = (String) context.get("imageOrigUrl");
@@ -107,7 +108,7 @@ public abstract class ContentImageServices {
         }
         String imagePropXmlPath = (String) context.get("imagePropXmlPath");
         ImageProfile imageProfile = (ImageProfile) context.get("imageProfile");
-        Collection<String> sizeTypeList = UtilGenerics.checkList(context.get("sizeTypeList"));
+        Collection<String> sizeTypeList = UtilGenerics.cast(context.get("sizeTypeList"));
         boolean copyOrig = Boolean.TRUE.equals(context.get("copyOrig"));
         boolean deleteOld = Boolean.TRUE.equals(context.get("deleteOld"));
         Map<String, Object> scalingOptions = UtilGenerics.checkMap(context.get("scalingOptions"));
@@ -427,7 +428,7 @@ public abstract class ContentImageServices {
         }
     }
 
-    private static String expandImageFnFmt(FlexibleStringExpander exdr, String sizeType, Map<String, ?> context) {
+    public static String expandImageFnFmt(FlexibleStringExpander exdr, String sizeType, Map<String, ?> context) {
         Map<String, Object> fnContext = new HashMap<>(context);
         fnContext.put("sizetype", sizeType);
         fnContext.put("type", sizeType);
@@ -436,7 +437,7 @@ public abstract class ContentImageServices {
         return newFileLocation;
     }
 
-    private static String getExpandedFnFmtDirPrefix(String newFileLocation) {
+    public static String getExpandedFnFmtDirPrefix(String newFileLocation) {
         String newFilePathDirPrefix = "";
         if (newFileLocation.lastIndexOf("/") != -1) {
             newFilePathDirPrefix = newFileLocation.substring(0, newFileLocation.lastIndexOf("/") + 1); // adding 1 to include the trailing slash
@@ -460,7 +461,7 @@ public abstract class ContentImageServices {
         //String imageOrigPath = (String) context.get("imageOrigPath"); // TODO?
         String imagePropXmlPath = (String) context.get("imagePropXmlPath");
         ImageProfile imageProfile = (ImageProfile) context.get("imageProfile");
-        Collection<String> sizeTypeList = UtilGenerics.checkList(context.get("sizeTypeList"));
+        Collection<String> sizeTypeList = UtilGenerics.cast(context.get("sizeTypeList"));
         //boolean copyOrig = Boolean.TRUE.equals(context.get("copyOrig"));
         boolean deleteOld = Boolean.TRUE.equals(context.get("deleteOld"));
         Map<String, Object> scalingOptions = UtilGenerics.checkMap(context.get("scalingOptions"));

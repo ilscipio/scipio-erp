@@ -10,7 +10,9 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
 
@@ -160,6 +162,10 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
         return entityValue;
     }
 
+    public GenericPK getPk() { return getEntityValue().getPk(); }
+
+    public String getShortPk() { return getEntityValue().getShortPk(); }
+
     public LocalDispatcher getDispatcher() {
         LocalDispatcher dispatcher = this.dispatcher;
         if (dispatcher == null) {
@@ -167,6 +173,10 @@ public abstract class CommonContentWrapper implements ContentWrapper, Serializab
             this.dispatcher = dispatcher;
         }
         return dispatcher;
+    }
+
+    public DispatchContext getDctx() {
+        return getDispatcher().getDispatchContext();
     }
 
     public Locale getLocale() {

@@ -33,6 +33,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.content.content.CommonContentWrapper;
@@ -44,6 +45,8 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.image.ProductImageServices;
+import org.ofbiz.product.image.ProductImageWorker;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
@@ -58,6 +61,8 @@ public class ProductContentWrapper extends CommonContentWrapper {
     public static final String SEPARATOR = "::";    // cache key separator
 
     private static final UtilCache<String, String> productContentCache = UtilCache.createUtilCache("product.content.rendered", true);
+
+    private GenericValue lastProductContent; // SCIPIO
 
     public static ProductContentWrapper makeProductContentWrapper(GenericValue product, HttpServletRequest request) {
         return new ProductContentWrapper(product, request);
@@ -263,4 +268,22 @@ public class ProductContentWrapper extends CommonContentWrapper {
         return null;
     }
 
+    /**
+     * Same as {@link #get(String)} but also triggers missing image variant resizing asynchronously (SCIPIO).
+     */
+    public String getImageLink(String productContentTypeId) {
+        String imageLink = get(productContentTypeId);
+        if (UtilValidate.isNotEmpty(imageLink)) {
+            ProductImageWorker.ensureProductImage(getDctx(), getLocale(), getProduct(), productContentTypeId, imageLink, true, true);
+        }
+        return imageLink;
+    }
+
+    public GenericValue getProduct() { // SCIPIO
+        return getEntityValue();
+    }
+
+    public String getProductId() { // SCIPIO
+        return getShortPk();
+    }
 }

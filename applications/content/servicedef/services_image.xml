@@ -73,7 +73,7 @@
             <description>Image variant config, alternative to imagePropXmlPath</description>
         </attribute>
 
-        <attribute name="sizeTypeList" mode="IN" type="List" optional="true">
+        <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>List of size types to generate and return (default: all types in file)</description>
         </attribute>
         <attribute name="copyOrig" mode="IN" type="Boolean" optional="true">
@@ -130,7 +130,7 @@
             <description>Image variant config, alternative to imagePropXmlPath</description>
         </attribute>
 
-        <attribute name="sizeTypeList" mode="IN" type="List" optional="true">
+        <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>List of size types to generate and return (default: all types in file)</description>
         </attribute>
         <!-- not supporting this here: I think it will always be a negative
@@ -197,14 +197,17 @@
         <attribute name="contentDataResource" mode="IN" type="GenericValue" optional="true">
             <description>Optional ContentDataResourceRequiredView instance matching contentId, if provided (optimization)</description>
         </attribute>
-        <attribute name="requireProfile" mode="IN" type="Boolean" optional="true" default-value="true">
+        <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
+            <description>Optional list of size dimension names to restrict resizing to (e.g.: 320x240, small); unlisted are left unchanged</description>
+        </attribute>
+        <attribute name="requireProfile" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If true, Content.mediaProfile or DataResource.sizeId (old) must be set;
                 if false, attempts to infer a profile from mediaprofiles.properties, either IMAGE_PRODUCT, IMAGE_CONTENT or IMAGE_DEFAULT</description>
         </attribute>
         <attribute name="createNew" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true, even if the image currently has no variants, attempts to generate new variants;
                 if false, only regenerates if variants already created;
-                WARN: If true, not guaranteed to reproduce original Content and DataResource fields</description>
+                WARN: If true, not currently guaranteed to reproduce original Content and DataResource fields</description>
         </attribute>
         <attribute name="nonFatal" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If true, runs in separate transaction and returns failure on image resize fail;

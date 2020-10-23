@@ -8,17 +8,17 @@
     <#-- FIXME: these ?trim should be removed and handled elsewhere or differently because
         they cause coercion to string -->
     <#--
-    <#assign productAdditionalSmallImage1 = productContentWrapper.get("XTRA_IMG_1_SMALL","url")! />
-    <#assign productAdditionalSmallImage2 = productContentWrapper.get("XTRA_IMG_2_SMALL","url")! />
-    <#assign productAdditionalSmallImage3 = productContentWrapper.get("XTRA_IMG_3_SMALL","url")! />
-    <#assign productAdditionalSmallImage4 = productContentWrapper.get("XTRA_IMG_4_SMALL","url")! />-->
+    <#assign productAdditionalSmallImage1 = productContentWrapper.getImageLink("XTRA_IMG_1_SMALL")! />
+    <#assign productAdditionalSmallImage2 = productContentWrapper.getImageLink("XTRA_IMG_2_SMALL")! />
+    <#assign productAdditionalSmallImage3 = productContentWrapper.getImageLink("XTRA_IMG_3_SMALL")! />
+    <#assign productAdditionalSmallImage4 = productContentWrapper.getImageLink("XTRA_IMG_4_SMALL")! />-->
 
-    <#assign productAdditionalImage1 = productContentWrapper.get("ADDITIONAL_IMAGE_1","url")! />
-    <#assign productAdditionalImage2 = productContentWrapper.get("ADDITIONAL_IMAGE_2","url")! />
-    <#assign productAdditionalImage3 = productContentWrapper.get("ADDITIONAL_IMAGE_3","url")! />
-    <#assign productAdditionalImage4 = productContentWrapper.get("ADDITIONAL_IMAGE_4","url")! />
-    <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL","url")! /> 
-    <#assign productOriginalImage = productContentWrapper.get("ORIGINAL_IMAGE_URL","url")! />
+    <#assign productAdditionalImage1 = productContentWrapper.getImageLink("ADDITIONAL_IMAGE_1")! />
+    <#assign productAdditionalImage2 = productContentWrapper.getImageLink("ADDITIONAL_IMAGE_2")! />
+    <#assign productAdditionalImage3 = productContentWrapper.getImageLink("ADDITIONAL_IMAGE_3")! />
+    <#assign productAdditionalImage4 = productContentWrapper.getImageLink("ADDITIONAL_IMAGE_4")! />
+    <#assign productLargeImageUrl = productContentWrapper.getImageLink("LARGE_IMAGE_URL")! />
+    <#assign productOriginalImage = productContentWrapper.getImageLink("ORIGINAL_IMAGE_URL")! />
     
     <#if firstLargeImage?has_content>
         <#assign productLargeImageUrl = firstLargeImage />

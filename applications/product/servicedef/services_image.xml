@@ -68,7 +68,7 @@
         <attribute name="imageProfile" mode="IN" type="org.ofbiz.common.image.ImageProfile" optional="true">
             <description>Image profile, alternative to imagePropXmlPath</description>
         </attribute>
-        <attribute name="sizeTypeList" mode="IN" type="List" optional="true">
+        <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>List of size types to generate and return (default: all types in file)</description>
         </attribute>
         <attribute name="copyOrig" mode="IN" type="Boolean" optional="true">
@@ -85,8 +85,8 @@
         <attribute name="viewType" mode="IN" type="String" optional="false">
             <description>main|additional</description>
         </attribute>
-        <attribute name="viewNumber" mode="IN" type="Integer" optional="true">
-            <description>For additional</description>
+        <attribute name="viewNumber" mode="IN" type="Object" optional="true">
+            <description>For additional (String or Integer)</description>
         </attribute>
         
         <!-- SCALING OPTIONS -->
@@ -130,6 +130,9 @@
         </attribute>
         <attribute name="contentId" mode="IN" type="String" optional="true">
             <description>contentId of the ProductContent for the image [either contentId or productContentTypeId must be set]</description>
+        </attribute>
+        <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
+            <description>Optional list of size dimension names to restrict resizing to (e.g.: 320x240, small); unlisted are left unchanged</description>
         </attribute>
     </service>
 

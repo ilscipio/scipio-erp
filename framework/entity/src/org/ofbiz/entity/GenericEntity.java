@@ -1247,6 +1247,12 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return resourceValue;
     }
 
+    /** Returns the entity value's primary key as a GenericPK, alias for {@link #getPrimaryKey()} (SCIPIO). */
+    public GenericPK getPk() {
+        return getPrimaryKey();
+    }
+
+    /** Returns the entity value's primary key as a GenericPK. */
     public GenericPK getPrimaryKey() {
         // SCIPIO: Unnecessary overhead
         //return GenericPK.create(this.getDelegator(), getModelEntity(), getFields(getModelEntity().getPkFieldNames()));

@@ -16,4 +16,4 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<img src="<@pageUrl secure=request.isSecure()>stream?contentId=${contentId!}</@pageUrl>"/>
+<img src="<@pageUrl secure=(request.isSecure())!true>stream?contentId=${contentId!}</@pageUrl>"/>

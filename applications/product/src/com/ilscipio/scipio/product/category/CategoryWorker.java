@@ -25,6 +25,8 @@ import com.ilscipio.scipio.treeMenu.TreeDataItem;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem;
 import com.ilscipio.scipio.treeMenu.jsTree.JsTreeDataItem.JsTreeDataItemState;
 
+import javax.servlet.ServletRequest;
+
 /**
  * SCIPIO: Category worker for novel/extra functionality.
  */
@@ -305,5 +307,18 @@ public abstract class CategoryWorker {
             }
         }
     }
+
+    public static int getLevelFromTrail(ServletRequest request, String categoryId) {
+        List<String> crumb = org.ofbiz.product.category.CategoryWorker.getTrail(request);
+
+        int level = 0;
+        if (UtilValidate.isNotEmpty(crumb) && crumb.contains(categoryId)) {
+            return crumb.indexOf(categoryId);
+        }
+
+        return level;
+    }
+
+
 
 }

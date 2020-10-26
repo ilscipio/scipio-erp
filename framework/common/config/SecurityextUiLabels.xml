@@ -844,6 +844,21 @@
         <value xml:lang="zh">没有找到用户。</value>
         <value xml:lang="zh-TW">沒找到使用者.</value>
     </property>
+    <property key="loginservices.user_password_incorrect">
+        <value xml:lang="de">Benutzer oder Passwort falsch.</value>
+        <value xml:lang="en">User or password incorrect.</value>
+        <value xml:lang="es">Usuario o contraseña incorrectos.</value>
+        <value xml:lang="fr">Utilisateur ou mot de passe incorrect.</value>
+        <value xml:lang="it">Utente o password errati.</value>
+        <value xml:lang="ja">ユーザーまたはパスワードが正しくありません。</value>
+        <value xml:lang="nl">Gebruiker of wachtwoord onjuist.</value>
+        <value xml:lang="pt-BR">Usuário ou senha incorretos.</value>
+        <value xml:lang="ro">Utilizator sau parolă incorectă.</value>
+        <value xml:lang="ru">Неверный пользователь или пароль.</value>
+        <value xml:lang="th">ผู้ใช้หรือรหัสผ่านไม่ถูกต้อง</value>
+        <value xml:lang="zh">用户或密码不正确。</value>
+        <value xml:lang="zh-TW">用戶或密碼不正確。</value>
+    </property>
     <property key="loginservices.username_missing">
         <value xml:lang="de">Benutzername fehlt.</value>
         <value xml:lang="en">Username missing.</value>

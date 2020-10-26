@@ -266,7 +266,9 @@ public class LoginServices {
 
                             Debug.logInfo("[LoginServices.userLogin] : Password Incorrect", module);
                             // password invalid...
-                            errMsg = UtilProperties.getMessage(resource,"loginservices.password_incorrect", locale);
+                            // SCIPIO: Security: Minimum information principle
+                            //errMsg = UtilProperties.getMessage(resource,"loginservices.password_incorrect", locale);
+                            errMsg = UtilProperties.getMessage(resource,"loginservices.user_password_incorrect", locale);
 
                             // increment failed login count
                             Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
@@ -421,7 +423,9 @@ public class LoginServices {
                         //TODO: party + security information is needed; Userlogin will need to be stored
                     } else {
                         // userLogin record not found, user does not exist
-                        errMsg = UtilProperties.getMessage(resource, "loginservices.user_not_found", locale);
+                        // SCIPIO: Security: Minimum information principle
+                        //errMsg = UtilProperties.getMessage(resource, "loginservices.user_not_found", locale);
+                        errMsg = UtilProperties.getMessage(resource, "loginservices.user_password_incorrect", locale);
                         Debug.logInfo("[LoginServices.userLogin] Invalid User : '" + username + "'; " + errMsg, module);
                     }
                 }

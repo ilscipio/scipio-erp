@@ -67,6 +67,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceSynchronization;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.mail.MimeMessageWrapper;
@@ -255,6 +256,18 @@ public class CommonServices {
     public static Map<String, Object> returnErrorService(DispatchContext dctx, Map<String, ?> context) {
         Locale locale = (Locale) context.get("locale");
         return ServiceUtil.returnError(UtilProperties.getMessage(resource, "CommonServiceReturnError", locale));
+    }
+
+    /**
+     * Sleeps for specified number of milliseconds (SCIPIO).
+     */
+    public static Map<String, Object> sleepService(DispatchContext dctx, Map<String, ?> context) {
+
+        try {
+            Thread.sleep(UtilMisc.toLong(context.get("timeMs"), null));
+        } catch (InterruptedException e) {
+        }
+        return ServiceUtil.returnSuccess();
     }
 
     /**

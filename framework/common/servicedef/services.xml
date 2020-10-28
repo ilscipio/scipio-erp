@@ -37,6 +37,12 @@ code package.
         <description>Always returns error</description>
     </service>
 
+    <service name="sleepService" engine="java" validate="false"
+             location="org.ofbiz.common.CommonServices" invoke="sleepService">
+        <description>Sleeps for specified number of milliseconds (SCIPIO)</description>
+        <attribute name="timeMs" type="Object" mode="IN" optional="false"/>
+    </service>
+
     <service name="forceGarbageCollection" engine="java"
             location="org.ofbiz.common.CommonServices" invoke="forceGc">
        <description>Force the JVM to run the GC</description>

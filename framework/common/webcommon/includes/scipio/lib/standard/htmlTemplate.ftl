@@ -260,6 +260,11 @@
 <#if isStripeComponentPresent>
     <@(.get_optional_template("component://stripe/webapp/stripe/includes/scipio/lib/standard/htmlStripe.ftl").include!templateMissingFallback("htmlStripe.html")) />
 </#if>
+<#assign isMailChimpComponentPresent = Static["org.ofbiz.base.component.ComponentConfig"].isComponentPresent("mailchimp")!false>
+<#if isMailChimpComponentPresent>
+    <@(.get_optional_template("component://mailchimp/webapp/mailchimp/includes/scipio/lib/standard/htmlMailchimp.ftl").include!templateMissingFallback("htmlMailchimp.html")) />
+</#if>
+
 
 <#-- After everything included, create a copy of the namespace so that macros can access 
      their global variables without possibility of override (sometimes needed)

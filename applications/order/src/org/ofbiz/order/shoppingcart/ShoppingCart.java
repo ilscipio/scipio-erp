@@ -1918,6 +1918,11 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.lastListRestore = null;
             this.autoSaveListId = null;
         }
+
+        // SCIPIO (2020-10-28): Added missing fields (used in mPOS addon)
+        this.transactionId = null;
+        this.orderPartyId = null;
+        this.terminalId = null;
     }
 
     /** Sets the order type. */

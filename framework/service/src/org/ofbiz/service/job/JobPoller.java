@@ -202,8 +202,8 @@ public final class JobPoller implements ServiceConfigListener {
             }
         } else {
             List<Map<String, Object>> taskList = includeTaskList ? new ArrayList<>() : null;
-            Map<String, PoolTaskStats> poolStatsMap = new HashMap<>();
-            Map<String, ServiceTaskStats> serviceStatsMap = new HashMap<>();
+            Map<String, PoolTaskStats> poolStatsMap = new LinkedHashMap<>();
+            Map<String, ServiceTaskStats> serviceStatsMap = new LinkedHashMap<>();
             int index = 0;
             for (Runnable task : executor.getQueue()) {
                 Job job = (Job) task;
@@ -245,18 +245,30 @@ public final class JobPoller implements ServiceConfigListener {
             poolState.put("jobPoolTaskStats", jobPoolTaskStats);
 
             List<ServiceTaskStats> serviceStatsList = new ArrayList<>(serviceStatsMap.values());
-            Collections.sort(serviceStatsList, Collections.reverseOrder());
-            List<Map<String, Object>> serviceTaskStats = new ArrayList<>(debugJobStatsTopServiceCount);
+            poolState.put("serviceTaskCount", serviceStatsList.size());
+
+            List<Map<String, Object>> nextServiceTaskStats = new ArrayList<>(debugJobStatsTopServiceCount);
             int i = 0;
             for(ServiceTaskStats stats : serviceStatsList) {
-                serviceTaskStats.add(stats.toMap(new LinkedHashMap<>()));
+                nextServiceTaskStats.add(stats.toMap(new LinkedHashMap<>()));
                 i++;
                 if (i > debugJobStatsTopServiceCount) {
                     break;
                 }
             }
-            poolState.put("serviceTaskCount", serviceStatsList.size());
-            poolState.put("topServiceTaskStats", serviceTaskStats);
+            poolState.put("nextServiceTaskStats", nextServiceTaskStats);
+
+            serviceStatsList.sort(Collections.reverseOrder());
+            List<Map<String, Object>> popServiceTaskStats = new ArrayList<>(debugJobStatsTopServiceCount);
+            i = 0;
+            for(ServiceTaskStats stats : serviceStatsList) {
+                popServiceTaskStats.add(stats.toMap(new LinkedHashMap<>()));
+                i++;
+                if (i > debugJobStatsTopServiceCount) {
+                    break;
+                }
+            }
+            poolState.put("popServiceTaskStats", popServiceTaskStats);
 
             if (includeTaskList) {
                 poolState.put("taskList", taskList);

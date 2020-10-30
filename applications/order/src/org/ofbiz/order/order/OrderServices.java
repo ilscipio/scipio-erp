@@ -316,7 +316,7 @@ public class OrderServices {
             GenericValue product = null;
 
             try {
-                product = EntityQuery.use(delegator).from("Product").where("productId", currentProductId).cache().queryOne();
+                product = EntityQuery.use(delegator).from("Product").where("productId", currentProductId).queryOne();
             } catch (GenericEntityException e) {
                 String errMsg = UtilProperties.getMessage(resource_error, "product.not_found", new Object[] { currentProductId }, locale);
                 Debug.logError(e, errMsg, module);

@@ -224,7 +224,7 @@ code package.
     <screen name="CommonFixedAssetMaintDecorator">
         <section>
             <actions>
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="FixedAssetMaint" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="component://assetmaint/widget/AssetmaintMenus.xml#FixedAssetMaint" />
                 <!--<set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="ListFixedAssetMaints"/>-->
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">
                     <and>

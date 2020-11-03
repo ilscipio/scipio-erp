@@ -270,8 +270,7 @@ code package.
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
             </actions>
             <widgets>
-                <!-- SCIPIO: changed this from FixedAssetDecorator to CommonFixedAssetMaintDecorator so menu opens... -->
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
                             <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_add}">
@@ -288,24 +287,21 @@ code package.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditFixedAssetMaintenance"/>
-                <!--
+
                 <set field="activeSubMenuItem" value="ListFixedAssetMaints"/>
-                <set field="activeSubMenuItemFixedAssetMaint" value="EditFixedAssetMaint"/> -->
                 
                 <set field="labelTitleProperty" value="PageTitleEditFixedAssetMaintenance"/>
                 <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <set field="maintHistSeqId" from-field="parameters.maintHistSeqId"/>
                 <entity-one entity-name="FixedAsset" value-field="fixedAsset"/>
                 <entity-one entity-name="FixedAssetMaint" value-field="fixedAssetMaint"/>
-                
-                <set field="activeSubMenuItem" value="${groovy: context.fixedAssetMaint ? 'EditFixedAssetMaint':'NewFixedAssetMaint'}"/>
             </actions>
             <widgets>
                 <section>
                     <condition><if-empty field="maintHistSeqId"/></condition>
                     <actions><set field="titleProperty" value="AccountingAddFixedAssetMaintenance"/></actions>
                 </section>
-                <decorator-screen name="CommonFixedAssetMaintDecorator" location="component://assetmaint/widget/CommonScreens.xml">
+                <decorator-screen name="FixedAssetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>

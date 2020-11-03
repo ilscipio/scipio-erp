@@ -271,12 +271,12 @@ public class ProductContentWrapper extends CommonContentWrapper {
     /**
      * Same as {@link #get(String)} but also triggers missing image variant resizing asynchronously (SCIPIO).
      */
-    public String getImageLink(String productContentTypeId) {
-        String imageLink = get(productContentTypeId);
-        if (UtilValidate.isNotEmpty(imageLink)) {
-            ProductImageWorker.ensureProductImage(getDctx(), getLocale(), getProduct(), productContentTypeId, imageLink, true, true);
+    public String getImageUrl(String productContentTypeId) {
+        String imageUrl = get(productContentTypeId);
+        if (UtilValidate.isNotEmpty(imageUrl)) {
+            ProductImageWorker.ensureProductImage(getDctx(), getLocale(), getProduct(), productContentTypeId, imageUrl, true, true);
         }
-        return imageLink;
+        return imageUrl;
     }
 
     public GenericValue getProduct() { // SCIPIO

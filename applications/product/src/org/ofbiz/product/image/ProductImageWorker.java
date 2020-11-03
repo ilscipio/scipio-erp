@@ -73,14 +73,14 @@ public abstract class ProductImageWorker {
         }
     }
 
-    public static void ensureProductImage(DispatchContext dctx, Locale locale, GenericValue product, String productContentTypeId, String imageLink, boolean async, boolean useCache) {
+    public static void ensureProductImage(DispatchContext dctx, Locale locale, GenericValue product, String productContentTypeId, String imageUrl, boolean async, boolean useCache) {
         if (!productImageEnsureEnabled || Boolean.TRUE.equals(productImageEnsureCache.get(productContentTypeId))) {
             return;
         }
         try {
             // TODO: optimize the duplicate lookups (cached anyway)
             Map<String, String> sizeTypeMap = ProductImageServices.getProductImageMissingVariantSizeTypes(dctx, locale,
-                    product, productContentTypeId, null, imageLink, useCache);
+                    product, productContentTypeId, null, imageUrl, useCache);
             if (UtilValidate.isEmpty(sizeTypeMap)) {
                 productImageEnsureCache.put(productContentTypeId, Boolean.TRUE);
                 return;
@@ -92,14 +92,14 @@ public abstract class ProductImageWorker {
                 Map<String, Object> servResult = dctx.getDispatcher().runSync("productImageAutoRescale", ctx);
                 if (ServiceUtil.isError(servResult)) {
                     Debug.logError("Could not trigger image variant resizing for product [" + product.get("productId") + "] productContentTypeId ["
-                            + productContentTypeId + "] imageLink [" + imageLink + "]: " + ServiceUtil.getErrorMessage(servResult), module);
+                            + productContentTypeId + "] imageLink [" + imageUrl + "]: " + ServiceUtil.getErrorMessage(servResult), module);
                     return;
                 }
             }
             productImageEnsureCache.put(productContentTypeId, Boolean.TRUE);
         } catch(Exception e) {
             Debug.logError("Could not trigger image variant resizing for product [" + product.get("productId") + "] productContentTypeId ["
-                    + productContentTypeId + "] imageLink [" + imageLink + "]: " + e.toString(), module);
+                    + productContentTypeId + "] imageLink [" + imageUrl + "]: " + e.toString(), module);
         }
     }
 

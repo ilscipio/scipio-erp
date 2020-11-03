@@ -1,20 +1,24 @@
 package com.ilscipio.scipio.solr;
 
+import org.ofbiz.base.util.ContinueException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -50,12 +54,13 @@ public class ProductIndexer extends EntityIndexer {
     }
 
     @Override
-    public IndexingStatus readDocsAndCommit(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries) {
+    public IndexingStatus readDocsAndCommit(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries) throws GeneralException, InterruptedException, IOException {
         return (IndexingStatus) super.readDocsAndCommit(dctx, context, entries);
     }
 
     @Override
-    public IndexingStatus readDocs(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries, List<DocEntry> docs, Set<Entry> docsToRemove) {
+    public IndexingStatus readDocs(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries, List<DocEntry> docs,
+                                   Set<Entry> docsToRemove) throws GeneralException, InterruptedException, IOException {
         SolrDocBuilder docBuilder = SolrDocBuilder.getInstance(dctx, context);
 
         // Eliminate duplicates and read only the last Entry (action) for each product
@@ -83,7 +88,7 @@ public class ProductIndexer extends EntityIndexer {
         for(IndexingHookHandler hookHandler : hookHandlers) {
             try {
                 hookHandler.begin(status);
-            } catch (Exception e) {
+            } catch (ContinueException e) {
                 status.registerHookFailure(null, e, hookHandler, "begin");
             }
         }
@@ -96,7 +101,7 @@ public class ProductIndexer extends EntityIndexer {
             for(IndexingHookHandler hookHandler : hookHandlers) {
                 try {
                     hookHandler.beginBatch(status);
-                } catch (Exception e) {
+                } catch (ContinueException e) {
                     status.registerHookFailure(null, e, hookHandler, "beginBatch");
                 }
             }
@@ -119,58 +124,49 @@ public class ProductIndexer extends EntityIndexer {
                     for(IndexingHookHandler hookHandler : hookHandlers) {
                         try {
                             hookHandler.processDocRemove(status, entry);
-                        } catch (Exception e) {
+                        } catch (ContinueException e) {
                             status.registerHookFailure(null, e, hookHandler, "processDocRemove");
                         }
                     }
                 } else {
                     // IMPORTANT: 2020-05-13: Contrary to older code here we'll always force a new Product lookup due to risks of not doing and many cases doing that anyway
                     //Map<String, Object> product = UtilGenerics.cast(props.get("instance"));
-                    GenericValue product = null;
-                    boolean goodLookup = false;
-                    try {
-                        product = docBuilder.getProductData().getProduct(dctx, productId, false);
-                        goodLookup = true;
-                    } catch (GenericEntityException e) {
-                        status.registerGeneralFailure("Error reading product '" + productId + "'", e);
-                    }
-                    if (goodLookup) {
-                        if (product != null) {
-                            Map<String, Object> doc;
-                            SolrDocBuilder.ProductDocBuilder data;
-                            try {
-                                Timestamp moment = UtilDateTime.nowTimestamp();
-                                data = docBuilder.makeProductDocBuilder(product, moment);
-                                doc = docBuilder.makeProductMapDoc(data, entry, null);
-                                if (doc != null) {
-                                    status.increaseNumDocs(1);
-                                    numLeft--;
-                                    ProductDocEntry docEntry = makeDocEntry(entry, doc, data);
-                                    docs.add(docEntry);
-                                    for (IndexingHookHandler hookHandler : hookHandlers) {
-                                        try {
-                                            hookHandler.processDocAdd(status, docEntry);
-                                        } catch (Exception e) {
-                                            status.registerHookFailure(null, e, hookHandler, "processDocAdd");
-                                        }
-                                    }
-                                } else {
-                                    status.increaseNumFiltered(1);
-                                }
-                            } catch (Exception e) {
-                                status.registerGeneralFailure("Error reading product '" + productId + "'", e);
-                            }
-                        } else {
-                            if (entry.isExplicitAdd()) {
-                                status.registerGeneralFailure("Error reading product '" + productId + "' for indexing: invalid id or has been removed", null);
-                            } else {
-                                docsToRemove.add(entry);
+                    GenericValue product = docBuilder.getProductData().getProduct(dctx, productId, false);
+                    if (product != null) {
+                        Map<String, Object> doc;
+                        SolrDocBuilder.ProductDocBuilder data;
+                        try {
+                            Timestamp moment = UtilDateTime.nowTimestamp();
+                            data = docBuilder.makeProductDocBuilder(product, moment);
+                            doc = docBuilder.makeProductMapDoc(data, entry, null);
+                            if (doc != null) {
+                                status.increaseNumDocs(1);
+                                numLeft--;
+                                ProductDocEntry docEntry = makeDocEntry(entry, doc, data);
+                                docs.add(docEntry);
                                 for (IndexingHookHandler hookHandler : hookHandlers) {
                                     try {
-                                        hookHandler.processDocRemove(status, entry);
-                                    } catch (Exception e) {
-                                        status.registerHookFailure(null, e, hookHandler, "processDocRemove");
+                                        hookHandler.processDocAdd(status, docEntry);
+                                    } catch (ContinueException e) {
+                                        status.registerHookFailure(null, e, hookHandler, "processDocAdd");
                                     }
+                                }
+                            } else {
+                                status.increaseNumFiltered(1);
+                            }
+                        } catch (ContinueException e) {
+                            status.registerGeneralFailure("Error reading product '" + productId + "'", e);
+                        }
+                    } else {
+                        if (entry.isExplicitAdd()) {
+                            status.registerGeneralFailure("Error reading product '" + productId + "' for indexing: invalid id or has been removed", null);
+                        } else {
+                            docsToRemove.add(entry);
+                            for (IndexingHookHandler hookHandler : hookHandlers) {
+                                try {
+                                    hookHandler.processDocRemove(status, entry);
+                                } catch (ContinueException e) {
+                                    status.registerHookFailure(null, e, hookHandler, "processDocRemove");
                                 }
                             }
                         }
@@ -180,7 +176,7 @@ public class ProductIndexer extends EntityIndexer {
             for(IndexingHookHandler hookHandler : hookHandlers) {
                 try {
                     hookHandler.endBatch(status);
-                } catch (Exception e) {
+                } catch (ContinueException e) {
                     status.registerHookFailure(null, e, hookHandler, "endBatch");
                 }
             }
@@ -191,7 +187,7 @@ public class ProductIndexer extends EntityIndexer {
         for(IndexingHookHandler hookHandler : hookHandlers) {
             try {
                 hookHandler.end(status);
-            } catch (Exception e) {
+            } catch (ContinueException e) {
                 status.registerHookFailure(null, e, hookHandler, "end");
             }
         }
@@ -204,8 +200,8 @@ public class ProductIndexer extends EntityIndexer {
     }
 
     @Override
-    public ProductEntry makeEntry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, Map<String, Object> context, Object properties) {
-        return new ProductEntry(pk, entityRef, action, entryTime, topics, context);
+    public ProductEntry makeEntry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, String flush, Map<String, Object> context, Object properties) {
+        return new ProductEntry(pk, entityRef, action, entryTime, topics, flush, context);
     }
 
     public ProductEntry makeEntry(GenericPK pk, Action action, Collection<String> topics) {
@@ -226,17 +222,17 @@ public class ProductIndexer extends EntityIndexer {
         protected final Boolean updateVirtual;
         protected final Boolean updateVirtualDeep;
 
-        protected ProductEntry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, Map<String, Object> context) {
-            super(pk, entityRef, action, entryTime, topics, context);
-            this.updateVariants = (Boolean) context.get("updateVariants");
-            this.updateVariantsDeep = (Boolean) context.get("updateVariantsDeep");
-            this.updateVirtual = (Boolean) context.get("updateVirtual");
-            this.updateVirtualDeep = (Boolean) context.get("updateVirtualDeep");
+        protected ProductEntry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, String flush, Map<String, Object> context) {
+            super(pk, entityRef, action, entryTime, topics, flush, context);
+            this.updateVariants = (context != null) ? (Boolean) context.get("updateVariants") : null;
+            this.updateVariantsDeep = (context != null) ? (Boolean) context.get("updateVariantsDeep") : null;
+            this.updateVirtual = (context != null) ? (Boolean) context.get("updateVirtual") : null;
+            this.updateVirtualDeep = (context != null) ? (Boolean) context.get("updateVirtualDeep") : null;
         }
 
-        protected ProductEntry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, Map<String, Object> context,
+        protected ProductEntry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, String flush, Map<String, Object> context,
                                Boolean updateVariants, Boolean updateVariantsDeep, Boolean updateVirtual, Boolean updateVirtualDeep) {
-            super(pk, entityRef, action, entryTime, topics, context);
+            super(pk, entityRef, action, entryTime, topics, flush, context);
             this.updateVariants = updateVariants;
             this.updateVariantsDeep = updateVariantsDeep;
             this.updateVirtual = updateVirtual;
@@ -301,7 +297,21 @@ public class ProductIndexer extends EntityIndexer {
             } else {
                 topics = other.topics;
             }
-            return new ProductEntry(pk, entityRef, action, entryTime, topics, null,
+            String flush;
+            if (UtilValidate.isNotEmpty(this.flush)) {
+                if (UtilValidate.isNotEmpty(other.flush)) {
+                    if ("all".equals(this.flush) || "all".equals(other.flush)) {
+                        flush = "all";
+                    } else {
+                        flush = this.flush;
+                    }
+                } else {
+                    flush = this.flush;
+                }
+            } else {
+                flush = other.flush;
+            }
+            return new ProductEntry(pk, entityRef, action, entryTime, topics, flush, null,
                     updateVariants, updateVariantsDeep, updateVirtual, updateVirtualDeep);
         }
 
@@ -333,7 +343,7 @@ public class ProductIndexer extends EntityIndexer {
     /**
      * Processed document entry (commit).
      */
-    public static class ProductDocEntry extends DocEntry { // TODO: extend DocEntry in EntityIndexer
+    public class ProductDocEntry extends DocEntry { // TODO: extend DocEntry in EntityIndexer
         protected ProductDocEntry(ProductEntry entry, Map<String, Object> doc, SolrDocBuilder.ProductDocBuilder data) {
             super(entry, doc, data);
         }
@@ -353,6 +363,11 @@ public class ProductIndexer extends EntityIndexer {
         }
 
         @Override
+        public ProductEntry makeEntry(Action action, long entryTime, Collection<String> topics, String flush, Map<String, Object> context, Object properties) {
+            return ProductIndexer.this.makeEntry(getPk(), (getEntry() != null) ? getEntry().getEntityRef() : null, action, entryTime, topics, flush, context, properties);
+        }
+
+        @Override
         public SolrDocBuilder.ProductDocBuilder getData() {
             return (SolrDocBuilder.ProductDocBuilder) super.getData();
         }
@@ -367,16 +382,16 @@ public class ProductIndexer extends EntityIndexer {
                                           Object products, SolrDocBuilder docBuilder,
                                           IndexingHookHandler.HookType hookType, List<? extends IndexingHookHandler> hookHandlers,
                                           List<SolrDocBuilder.ProductFilter> productFilters, ProcessSignals processSignals,
-                                          int bufSize, String logPrefix, Object logger) {
+                                          int bufSize, String logPrefix, Object logger) throws GeneralException, InterruptedException, IOException {
         Iterator<? extends Map<String, Object>> productsIt = UtilMisc.asIterator(products);
         try {
             int numDocs = 0;
-            IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, IndexingHookHandler.HookType.REINDEX,
+            IndexingStatus.Standard status = new IndexingStatus.Standard(dctx, hookType,
                     docBuilder, numDocs, bufSize, logPrefix);
             for(IndexingHookHandler hookHandler : hookHandlers) {
                 try {
                     hookHandler.begin(status);
-                } catch (Exception e) {
+                } catch (ContinueException e) {
                     status.registerHookFailure(null, e, hookHandler, "begin");
                 }
             }
@@ -394,7 +409,7 @@ public class ProductIndexer extends EntityIndexer {
                 for(IndexingHookHandler hookHandler : hookHandlers) {
                     try {
                         hookHandler.beginBatch(status);
-                    } catch (Exception e) {
+                    } catch (ContinueException e) {
                         status.registerHookFailure(null, e, hookHandler, "beginBatch");
                     }
                 }
@@ -418,14 +433,14 @@ public class ProductIndexer extends EntityIndexer {
                                 for (IndexingHookHandler hookHandler : hookHandlers) {
                                     try {
                                         hookHandler.processDocAdd(status, docEntry);
-                                    } catch (Exception e) {
+                                    } catch (ContinueException e) {
                                         status.registerHookFailure(null, e, hookHandler, "processDocAdd");
                                     }
                                 }
                             } else {
                                 status.increaseNumFiltered(1);
                             }
-                        } catch (Exception e) {
+                        } catch (ContinueException e) {
                             if (docEntry != null && docEntry.getShortPk() != null) {
                                 status.registerGeneralFailure("Error reading product [" + docEntry.getShortPk() + "]", e);
                             } else {
@@ -441,7 +456,7 @@ public class ProductIndexer extends EntityIndexer {
                 for(IndexingHookHandler hookHandler : hookHandlers) {
                     try {
                         hookHandler.endBatch(status);
-                    } catch (Exception e) {
+                    } catch (ContinueException e) {
                         status.registerHookFailure(null, e, hookHandler, "endBatch");
                     }
                 }
@@ -453,7 +468,7 @@ public class ProductIndexer extends EntityIndexer {
             for(IndexingHookHandler hookHandler : hookHandlers) {
                 try {
                     hookHandler.end(status);
-                } catch (Exception e) {
+                } catch (ContinueException e) {
                     status.registerHookFailure(null, e, hookHandler, "end");
                 }
             }
@@ -476,11 +491,12 @@ public class ProductIndexer extends EntityIndexer {
     }
 
     public IndexingStatus extractEntriesToDocs(DispatchContext dctx, Map<String, Object> context, long entryTime, Object properties,
-                                               List<DocEntry> docs, Set<Entry> docsToRemove) {
+                                               List<DocEntry> docs, Set<Entry> docsToRemove) throws GeneralException, InterruptedException, IOException {
         return (IndexingStatus) super.extractEntriesToDocs(dctx, context, entryTime, properties, docs, docsToRemove);
     }
 
-    public IndexingStatus extractEntriesToDocs(DispatchContext dctx, Map<String, Object> context, List<DocEntry> docs, Set<Entry> docsToRemove) {
+    public IndexingStatus extractEntriesToDocs(DispatchContext dctx, Map<String, Object> context, List<DocEntry> docs,
+                                               Set<Entry> docsToRemove) throws GeneralException, InterruptedException, IOException {
         return extractEntriesToDocs(dctx, context, System.currentTimeMillis(), null, docs, docsToRemove);
     }
 }

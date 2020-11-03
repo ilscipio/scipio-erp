@@ -37,6 +37,9 @@ code package.
         <attribute mode="IN" name="entitiesToIndex" type="Object" optional="true">
             <description>Map of entity names to ordered maps of entity PKs to EntityIndexer.Entry instances, used for trans-commit event</description>
         </attribute>
+        <attribute mode="IN" name="flush" type="String" optional="true">
+            <description>Whether to force-flush any of the queued entities. Values: auto (default), all (flush all products in global queue a.s.a.p. including these)</description><!-- TODO: more modes possible later -->
+        </attribute>
     </service>
 
     <service name="runEntityIndexing" engine="java" location="com.ilscipio.scipio.solr.EntityIndexer" invoke="runEntityIndexing"
@@ -88,6 +91,10 @@ code package.
         <attribute mode="IN" name="refEntries" type="Collection" optional="true">
             <description>Collection of the original entity primary key PKs that triggered this consume, before expansion, for error handling</description>
         </attribute>
+        <attribute mode="IN" name="onError" type="String" optional="true">
+            <description>ignore (default), requeue-all (requeue products for all consumers - e.g. solr and google),
+                requeue-topic (requeue products for current consumer - solr or google)</description>
+        </attribute>
     </service>
 
     <service name="productIndexingConsumer" engine="interface">
@@ -97,6 +104,9 @@ code package.
         </attribute>
         <attribute mode="IN" name="docsToRemove" type="Collection" optional="true">
             <description>Collection of ProductIndexer.ProductEntry</description>
+        </attribute>
+        <attribute mode="IN" name="docs" type="Collection" optional="true">
+            <description>Collection of ProductIndexer.ProductDocEntry</description>
         </attribute>
     </service>
 

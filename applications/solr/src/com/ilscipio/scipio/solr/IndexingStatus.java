@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.solr;
 
+import org.ofbiz.base.util.ContinueException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.service.DispatchContext;
 
@@ -103,6 +104,9 @@ public interface IndexingStatus {
         public void setGeneralFailures(int generalFailures) { this.generalFailures = generalFailures; }
         public void registerGeneralFailure(String msg, Throwable t) {
             this.generalFailures++;
+            if (t instanceof ContinueException && t.getCause() != null) {
+                t = t.getCause();
+            }
             Debug.logError(t, getLogPrefix() + msg + getErrorLogSuffix(), module);
         }
         public void setStartIndex(int startIndex) { this.startIndex = startIndex; }
@@ -111,6 +115,9 @@ public interface IndexingStatus {
         public void setHookFailures(int hookFailures) { this.hookFailures = hookFailures; }
         public void registerHookFailure(String msg, Throwable t, IndexingHookHandler hookHandler, String methodName) {
             this.hookFailures++;
+            if (t instanceof ContinueException && t.getCause() != null) {
+                t = t.getCause();
+            }
             Debug.logError(t, getLogPrefix()+ "Error in hook handler " + hookHandler + " method [" + methodName + "]" +
                     (msg != null ? ": " + msg : "") + getErrorLogSuffix(), module);
         }

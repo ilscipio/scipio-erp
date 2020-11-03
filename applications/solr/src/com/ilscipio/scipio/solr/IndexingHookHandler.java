@@ -1,8 +1,11 @@
 package com.ilscipio.scipio.solr;
 
+import org.ofbiz.base.util.ContinueException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilProperties;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,6 +24,8 @@ import java.util.Set;
  * See SolrProductSearch.updateToSolrCoreMultiAdd for reference calls.
  * <p>DEV NOTE: This is a LEGACY hook system used before {@link EntityIndexer} was created which uses callback
  * async services as consumers instead of hooks, but IndexingHookHandler is still in use for now because the handlers are reusable.</p>
+ * <p>EXCEPTION HANDLING: All exceptions abort caller processing except for {@link ContinueException} which causes the caller
+ * to log a non-fatal error and continue its (product) loop processing - so hook handlers.</p>
  */
 public interface IndexingHookHandler {
 
@@ -31,18 +36,18 @@ public interface IndexingHookHandler {
         Class<? extends IndexingHookHandler> getHookHandlerClass();
     }
 
-    default void begin(IndexingStatus indexingStatus) throws Exception {}
+    default void begin(IndexingStatus indexingStatus) throws GeneralException, InterruptedException, IOException {}
 
-    default void beginBatch(IndexingStatus indexingStatus) throws Exception {}
+    default void beginBatch(IndexingStatus indexingStatus) throws GeneralException, InterruptedException, IOException {}
 
-    default void processDocAdd(IndexingStatus indexingStatus, EntityIndexer.DocEntry docEntry) throws Exception {}
+    default void processDocAdd(IndexingStatus indexingStatus, EntityIndexer.DocEntry docEntry) throws GeneralException, InterruptedException, IOException {}
 
-    default void processDocRemove(IndexingStatus indexingStatus, EntityIndexer.Entry entry) throws Exception {}
+    default void processDocRemove(IndexingStatus indexingStatus, EntityIndexer.Entry entry) throws GeneralException, InterruptedException, IOException {}
 
     /** Batch end commit, called after solr docs are sent to server. NOTE: endBatch may be called even if no docs added/removed */
-    default void endBatch(IndexingStatus indexingStatus) throws Exception {}
+    default void endBatch(IndexingStatus indexingStatus) throws GeneralException, InterruptedException, IOException {}
 
-    default void end(IndexingStatus indexingStatus) throws Exception {}
+    default void end(IndexingStatus indexingStatus) throws GeneralException, InterruptedException, IOException {}
 
     /** Loads handlers from solrhooks.properties. */
     abstract class Handlers {

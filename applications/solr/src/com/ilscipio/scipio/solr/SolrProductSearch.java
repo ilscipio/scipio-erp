@@ -31,6 +31,7 @@ import org.apache.solr.client.solrj.response.SpellCheckResponse.Collation;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.CommonParams;
+import org.ofbiz.base.util.ContinueException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.UtilDateTime;
@@ -1378,7 +1379,7 @@ public abstract class SolrProductSearch {
             for(IndexingHookHandler hookHandler : hookHandlers) {
                 try {
                     hookHandler.begin(status);
-                } catch (Exception e) {
+                } catch (ContinueException e) {
                     status.registerHookFailure(null, e, hookHandler, "begin");
                 }
             }
@@ -1399,7 +1400,7 @@ public abstract class SolrProductSearch {
                 for(IndexingHookHandler hookHandler : hookHandlers) {
                     try {
                         hookHandler.beginBatch(status);
-                    } catch (Exception e) {
+                    } catch (ContinueException e) {
                         status.registerHookFailure(null, e, hookHandler, "beginBatch");
                     }
                 }
@@ -1422,14 +1423,14 @@ public abstract class SolrProductSearch {
                                 for (IndexingHookHandler hookHandler : hookHandlers) {
                                     try {
                                         hookHandler.processDocAdd(status, docEntry);
-                                    } catch (Exception e) {
+                                    } catch (ContinueException e) {
                                         status.registerHookFailure(null, e, hookHandler, "processDocAdd");
                                     }
                                 }
                             } else {
                                 status.increaseNumFiltered(1);
                             }
-                        } catch (Exception e) {
+                        } catch (ContinueException e) {
                             //return ServiceUtil.returnError("Error reading product '" + productId + "': " + e.getMessage());
                             status.registerGeneralFailure("Error reading product '" + product.get("productId") + "'", e);
                         }
@@ -1442,7 +1443,7 @@ public abstract class SolrProductSearch {
                     for(IndexingHookHandler hookHandler : hookHandlers) {
                         try {
                             hookHandler.endBatch(status);
-                        } catch (Exception e) {
+                        } catch (ContinueException e) {
                             status.registerHookFailure(null, e, hookHandler, "endBatch");
                         }
                     }
@@ -1458,7 +1459,7 @@ public abstract class SolrProductSearch {
                 for(IndexingHookHandler hookHandler : hookHandlers) {
                     try {
                         hookHandler.endBatch(status);
-                    } catch (Exception e) {
+                    } catch (ContinueException e) {
                         status.registerHookFailure(null, e, hookHandler, "endBatch");
                     }
                 }
@@ -1467,7 +1468,7 @@ public abstract class SolrProductSearch {
             for(IndexingHookHandler hookHandler : hookHandlers) {
                 try {
                     hookHandler.end(status);
-                } catch (Exception e) {
+                } catch (ContinueException e) {
                     status.registerHookFailure(null, e, hookHandler, "end");
                 }
             }
@@ -1498,7 +1499,7 @@ public abstract class SolrProductSearch {
         } catch (Exception e) {
             if (e instanceof ScipioSolrException && ((ScipioSolrException) e).isLightweight()) {
                 // don't print the error itself, too verbose
-                Debug.logError("Solr: rebuildSolrIndex: Error: " + e.getMessage(), module);
+                Debug.logError("Solr: rebuildSolrIndex: Error: " + e.toString(), module);
             } else {
                 Debug.logError(e, "Solr: rebuildSolrIndex: Error: " + e.getMessage(), module);
             }

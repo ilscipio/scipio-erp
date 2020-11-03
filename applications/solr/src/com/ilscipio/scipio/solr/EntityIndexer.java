@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.solr;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -19,12 +20,12 @@ import org.ofbiz.service.ServiceOptions;
 import org.ofbiz.service.ServiceSyncRegistrations;
 import org.ofbiz.service.ServiceUtil;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -331,10 +332,14 @@ public class EntityIndexer implements Runnable {
 
     @Override
     public void run() {
-        run(getDefaultDctx(), Collections.emptyMap());
+        try {
+            run(getDefaultDctx(), Collections.emptyMap());
+        } catch(Exception e) {
+            Debug.logError(e, "Error during entity indexing: " + e.getMessage(), module);
+        }
     }
 
-    public void run(DispatchContext dctx, Map<String, Object> context) {
+    public void run(DispatchContext dctx, Map<String, Object> context) throws GeneralException, InterruptedException, IOException {
         long startTime = System.currentTimeMillis();
         long lastReadTime = 0;
         int numRead;
@@ -354,7 +359,8 @@ public class EntityIndexer implements Runnable {
             // TODO: REVIEW: At the very end unless maxRunTime reached we always do an extra poll() back here to minimize the number of
             //  times this thread gets reactivated, and combined with flush time this helps buffer JobManager overhead, however, but
             //  a few minor thread synchronization issues exist with the semaphore
-            while ((((System.currentTimeMillis()) - startTime) < getMaxRunTime()) &&
+            boolean flush = false;
+            while (!flush && (((System.currentTimeMillis()) - startTime) < getMaxRunTime()) &&
                     ((numRead = poll(entries, getBufSize())) > 0
                             || ((docs.size() > 0 || docsToRemove.size() > 0) && (System.currentTimeMillis() - lastReadTime) < getFlushTime()))) {
                 // commit if buffer full
@@ -380,15 +386,16 @@ public class EntityIndexer implements Runnable {
                     }
                     processedEntries += entries.size();
                     totalProcessedEntries += entries.size();
+                    for(Entry entry : entries) {
+                        if ("all".equals(entry.getFlush())) {
+                            flush = true;
+                            break;
+                        }
+                    }
                     readDocs(dctx, context, entries, docs, docsToRemove);
                     entries.clear();
-                } else {
-                    try {
-                        Thread.sleep(getSleepTime());
-                    } catch (InterruptedException e) {
-                        // TODO?: permanent storage exception?
-                        throw new IllegalStateException(e);
-                    }
+                } else if (!flush) {
+                    Thread.sleep(getSleepTime());
                 }
             }
             if (!docs.isEmpty() || !docsToRemove.isEmpty()) {
@@ -410,7 +417,7 @@ public class EntityIndexer implements Runnable {
         }
     }
 
-    public void tryRun(DispatchContext dctx, Map<String, Object> context) {
+    public void tryRun(DispatchContext dctx, Map<String, Object> context) throws GeneralException, InterruptedException, IOException {
         if (runSemaphore.tryAcquire()) {
             Debug.logInfo("Entity indexer [" + getName() + "]: beginning run (queued: " + getQueue().size() + ")", module);
             try {
@@ -431,7 +438,8 @@ public class EntityIndexer implements Runnable {
     /**
      * Main processing method, may be overridden; default implementation dispatches documents to consumers.
      */
-    public Object readDocs(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries, List<DocEntry> docs, Set<Entry> docsToRemove) {
+    public Object readDocs(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries, List<DocEntry> docs,
+                           Set<Entry> docsToRemove) throws GeneralException, InterruptedException, IOException {
         for(Entry entry : entries) {
             if (entry.isExplicitRemove()) {
                 docsToRemove.add(entry);
@@ -443,7 +451,7 @@ public class EntityIndexer implements Runnable {
         return null;
     }
 
-    public Object readDocsAndCommit(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries) { // special cases/reuse
+    public Object readDocsAndCommit(DispatchContext dctx, Map<String, Object> context, Iterable<Entry> entries) throws GeneralException, InterruptedException, IOException { // special cases/reuse
         List<DocEntry> docs = new ArrayList<>(getBufSize());
         Set<Entry> docsToRemove = new LinkedHashSet<>(getBufSize());
         Object result = readDocs(dctx, context, entries, docs, docsToRemove);
@@ -454,7 +462,7 @@ public class EntityIndexer implements Runnable {
     }
 
     public Object extractEntriesToDocs(DispatchContext dctx, Map<String, Object> context, long entryTime, Object properties,
-                                               List<DocEntry> docs, Set<Entry> docsToRemove) {
+                                               List<DocEntry> docs, Set<Entry> docsToRemove) throws GeneralException, InterruptedException, IOException {
         Collection<EntityIndexer.Entry> entries = extractEntries(dctx.getDelegator(), context, entryTime, properties);
         if (UtilValidate.isEmpty(entries)) {
             return null;
@@ -462,7 +470,8 @@ public class EntityIndexer implements Runnable {
         return readDocs(dctx, context, entries, docs, docsToRemove);
     }
 
-    public Object extractEntriesToDocs(DispatchContext dctx, Map<String, Object> context, List<DocEntry> docs, Set<Entry> docsToRemove) {
+    public Object extractEntriesToDocs(DispatchContext dctx, Map<String, Object> context, List<DocEntry> docs,
+                                       Set<Entry> docsToRemove) throws GeneralException, InterruptedException, IOException {
         return extractEntriesToDocs(dctx, context, System.currentTimeMillis(), null, docs, docsToRemove);
     }
 
@@ -520,8 +529,9 @@ public class EntityIndexer implements Runnable {
         }
         Collection<Entry> entries = new ArrayList<>(pks.size());
         Collection<String> topics = UtilGenerics.cast(context.get("topics"));
+        String flush = UtilGenerics.cast(context.get("flush"));
         for(GenericPK pk : pks) {
-            Entry entry = makeEntry(pk, entityRef, action, entryTime, topics, context, properties);
+            Entry entry = makeEntry(pk, entityRef, action, entryTime, topics, flush, context, properties);
             if (entry != null) {
                 entries.add(entry);
             }
@@ -634,12 +644,12 @@ public class EntityIndexer implements Runnable {
         }
     }
 
-    public Entry makeEntry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, Map<String, Object> context, Object properties) {
-        return new Entry(pk, entityRef, action, entryTime, topics, context);
+    public Entry makeEntry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, String flush, Map<String, Object> context, Object properties) {
+        return new Entry(pk, entityRef, action, entryTime, topics, flush, context);
     }
 
     public Entry makeEntry(Object pk, Action action, Collection<String> topics) {
-        return makeEntry(toPk(pk), null, action, System.currentTimeMillis(), topics, null, properties);
+        return makeEntry(toPk(pk), null, action, System.currentTimeMillis(), topics, null, null, properties);
     }
 
     public Entry makeEntry(Entry other, Object pk, Long entryTime) {
@@ -653,21 +663,24 @@ public class EntityIndexer implements Runnable {
         protected final Action action;
         protected long entryTime;
         protected final Collection<String> topics;
+        protected String flush;
 
-        protected Entry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, Map<String, Object> context) {
+        protected Entry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, String flush, Map<String, Object> context) {
             this.pk = pk;
             this.entityRef = entityRef;
             this.action = action;
             this.entryTime = entryTime;
             this.topics = (topics != null) ? topics : Collections.emptySet();
+            this.flush = flush;
         }
 
-        public Entry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics) {
+        public Entry(GenericPK pk, Object entityRef, Action action, long entryTime, Collection<String> topics, String flush) {
             this.pk = pk;
             this.entityRef = entityRef;
             this.action = action;
             this.entryTime = entryTime;
             this.topics = (topics != null) ? topics : Collections.emptySet();
+            this.flush = flush;
         }
 
         protected Entry(Entry other, GenericPK pk, Long entryTime) {
@@ -691,6 +704,10 @@ public class EntityIndexer implements Runnable {
             return shortPk;
         }
 
+        public Object getEntityRef() {
+            return entityRef;
+        }
+
         public Action getAction() {
             return action;
         }
@@ -708,6 +725,10 @@ public class EntityIndexer implements Runnable {
 
         public boolean hasTopic() {
             return !topics.isEmpty();
+        }
+
+        public String getFlush() {
+            return flush;
         }
 
         @Override
@@ -743,7 +764,7 @@ public class EntityIndexer implements Runnable {
     /**
      * Processed document entry (commit).
      */
-    public static class DocEntry implements Serializable {
+    public class DocEntry implements Serializable {
         private final GenericPK pk;
         private transient String shortPk;
         private final Entry entry;
@@ -767,6 +788,11 @@ public class EntityIndexer implements Runnable {
         /** The entry used to request this indexing, or null if generic event or callback. */
         public Entry getEntry() {
             return entry;
+        }
+
+        /** Makes a new Entry reflecting this DocEntry. */
+        public Entry makeEntry(Action action, long entryTime, Collection<String> topics, String flush, Map<String, Object> context, Object properties) {
+            return EntityIndexer.this.makeEntry(getPk(), (getEntry() != null) ? getEntry().getEntityRef() : null, action, entryTime, topics, flush, context, properties);
         }
 
         public Map<String, Object> getDoc() {
@@ -797,16 +823,18 @@ public class EntityIndexer implements Runnable {
         public boolean hasTopic() {
             return (entry != null) ? entry.hasTopic() : false;
         }
+
     }
 
-    public Object commit(DispatchContext dctx, Map<String, Object> context, Collection<? extends DocEntry> docs, Collection<? extends Entry> docsToRemove) {
+    public Object commit(DispatchContext dctx, Map<String, Object> context, Collection<? extends DocEntry> docs,
+                         Collection<? extends Entry> docsToRemove) {
         for(Consumer consumer : getConsumers()) {
             Collection<? extends DocEntry> consumerDocs = docs.stream().filter(consumer::acceptsDoc).collect(Collectors.toList());
             Collection<? extends Entry> consumerDocsToRemove = docsToRemove.stream().filter(consumer::acceptsDoc).collect(Collectors.toList());
             try {
                 Map<String, Object> servCtx = UtilMisc.toMap(
                         "userLogin", dctx.getDelegator().from("UserLogin").where("userLoginId", "system").cache().queryOneSafe(),
-                        "docs", consumerDocs, "docsToRemove", consumerDocsToRemove);
+                        "docs", consumerDocs, "docsToRemove", consumerDocsToRemove, "onError", consumer.getOnError());
                 if (consumer.isAsync()) {
                     dctx.getDispatcher().runAsync(consumer.getServiceName(), servCtx,
                             ServiceOptions.async(consumer.isPersist()).priority(consumer.getPriority()));
@@ -818,7 +846,7 @@ public class EntityIndexer implements Runnable {
                                 consumer + ": " + ServiceUtil.getErrorMessage(servResult), module);
                     }
                 }
-            } catch(Exception e) {
+            } catch(GeneralException e) {
                 Debug.logError(e, "Could not dispatch " + docs.size() + " documents to entity indexing consumer " + consumer, module);
             }
         }
@@ -865,11 +893,12 @@ public class EntityIndexer implements Runnable {
             return null;
         }
         long priority = UtilMisc.toLong(props.get("priority"), 99L);
-        return makeConsumer(name, UtilMisc.toInteger(props.get("sequenceNum"), 100), serviceName, topics, mode, persist, priority);
+        String onError = (String) props.get("onError");
+        return makeConsumer(name, UtilMisc.toInteger(props.get("sequenceNum"), 100), serviceName, topics, mode, persist, priority, onError);
     }
 
-    protected Consumer makeConsumer(String name, int sequenceNum, String serviceName, Set<String> topics, String mode, boolean persist, long priority) {
-        return new Consumer(name, sequenceNum, serviceName, topics, mode, persist, priority);
+    protected Consumer makeConsumer(String name, int sequenceNum, String serviceName, Set<String> topics, String mode, boolean persist, long priority, String onError) {
+        return new Consumer(name, sequenceNum, serviceName, topics, mode, persist, priority, onError);
     }
 
     protected static class Consumer {
@@ -880,8 +909,9 @@ public class EntityIndexer implements Runnable {
         private final String mode;
         private final boolean persist;
         private final long priority;
+        private final String onError;
 
-        protected Consumer(String name, int sequenceNum, String serviceName, Set<String> topics, String mode, boolean persist, long priority) {
+        protected Consumer(String name, int sequenceNum, String serviceName, Set<String> topics, String mode, boolean persist, long priority, String onError) {
             this.name = name;
             this.sequenceNum = sequenceNum;
             this.serviceName = serviceName;
@@ -889,6 +919,7 @@ public class EntityIndexer implements Runnable {
             this.mode = mode;
             this.persist = persist;
             this.priority = priority;
+            this.onError = onError;
         }
 
         public String getName() {
@@ -936,6 +967,10 @@ public class EntityIndexer implements Runnable {
             return priority;
         }
 
+        public String getOnError() {
+            return onError;
+        }
+
         @Override
         public String toString() {
             return "{" +
@@ -946,6 +981,7 @@ public class EntityIndexer implements Runnable {
                     ", mode='" + mode + '\'' +
                     ", persist=" + persist +
                     ", priority=" + priority +
+                    ", onError='" + onError + '\'' +
                     '}';
         }
     }
@@ -1115,6 +1151,76 @@ public class EntityIndexer implements Runnable {
     }
 
     /**
+     * Re-queues the given entity PKs for indexing in the appropriate {@link EntityIndexer} after failure.
+     * May be called directly by entityIndexingConsumer implementations.
+     * NOTE: Currently no service interface to avoid transaction handling.
+     */
+    public static Map<String, Object> requeueEntityIndexing(DispatchContext dctx, Map<String, Object> context) {
+        try {
+            Collection<? extends EntityIndexer.DocEntry> allDocs = UtilGenerics.cast(context.get("docs"));
+            Collection<String> topics = UtilGenerics.cast(context.get("topics"));
+            if (topics == null && !context.containsKey("topics")) {
+                String onError = UtilGenerics.cast(context.get("onError"));
+                Collection<String> srcTopics = UtilGenerics.cast(context.get("srcTopics"));
+                if ("ignore".equals(onError)) {
+                    return ServiceUtil.returnSuccess();
+                } else if ("requeue-topic".equals(onError)) {
+                    topics = srcTopics;
+                } else if ("requeue-all".equals(onError)) {
+                    topics = null;
+                }
+            }
+            if (UtilValidate.isEmpty(topics)) {
+                topics = null;
+            }
+            String entityName = (String) context.get("entityName");
+            int scheduled = 0;
+            StringBuilder pkList = new StringBuilder();
+            int pkCount = 0;
+            EntityIndexer targetIndexer = getIndexer(entityName);
+            if (targetIndexer == null) {
+                throw new IllegalArgumentException("Invalid entity indexer name: " + entityName);
+            }
+            if (pkList.length() > 0) {
+                pkList.append("; ");
+            }
+            pkList.append(targetIndexer.getEntityName());
+            pkList.append(": ");
+            boolean firstPk = true;
+            long entryTime = System.currentTimeMillis();
+            for(DocEntry docEntry : allDocs) {
+                Entry entry = docEntry.makeEntry(Action.ADD, entryTime, topics, null, null, null);
+                targetIndexer.add(entry);
+                if (pkCount < SolrProductSearch.getMaxLogIds()) {
+                    if (!firstPk) {
+                        pkList.append(", ");
+                    }
+                    pkList.append(entry.getShortPk());
+                    pkCount++;
+                } else if (pkCount == SolrProductSearch.getMaxLogIds()) {
+                    pkList.append("...");
+                    pkCount++;
+                }
+                scheduled++;
+                firstPk = false;
+            }
+            if (!targetIndexer.isRunning()) {
+                // Start the async service to create a new thread and prioritize in system at same time
+                dctx.getDispatcher().runAsync("runEntityIndexing",
+                        UtilMisc.toMap("userLogin", context.get("userLogin"), "entityName", targetIndexer.getName()),
+                        ServiceOptions.asyncMemory().priority(targetIndexer.getRunServicePriority()));
+            }
+            String msg = "Requeued entity indexing for " + scheduled + " entries: " + pkList;
+            Debug.logInfo("requeueEntityIndexing: " + msg, module);
+            return ServiceUtil.returnSuccess(msg);
+        } catch (Exception e) {
+            final String errMsg = "Could not requeue entity indexing";
+            Debug.logError(e, "requeueEntityIndexing: " + errMsg, module);
+            return ServiceUtil.returnError(errMsg + ": " + e.toString());
+        }
+    }
+
+    /**
      * Runs entity indexing for an entity/indexer IF not already started; if started does nothing for that indexer.
      * Must be run as an async service to let the job manager determine best time to run processing.
      * NOTE: This must strictly be an async service without transaction because the thread may get recycled up to
@@ -1134,9 +1240,14 @@ public class EntityIndexer implements Runnable {
         for(String entityName : entityNames) {
             EntityIndexer targetIndexer = getIndexer(entityName);
             if (targetIndexer != null) {
-                // Run with default dispatch context so everyone is equal
-                //targetIndexer.tryRun(dctx, context);
-                targetIndexer.tryRun(targetIndexer.getDefaultDctx(), context);
+                try {
+                    // Run with default dispatch context so everyone is equal
+                    //targetIndexer.tryRun(dctx, context);
+                    targetIndexer.tryRun(targetIndexer.getDefaultDctx(), context);
+                } catch(Exception e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.toString());
+                }
             }
         }
         return ServiceUtil.returnSuccess();

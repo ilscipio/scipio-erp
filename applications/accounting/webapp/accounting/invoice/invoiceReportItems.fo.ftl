@@ -103,7 +103,7 @@ code package.
           <#local cfgWrp = (productCfgMap[productId])!false>
         <#else>
           <#local product = invoiceItem.getRelatedOne("Product")!>
-          <#if Static["org.ofbiz.product.product.ProductWorker"].isConfigProductConfig(product)>
+          <#if product?has_content && Static["org.ofbiz.product.product.ProductWorker"].isConfigProductConfig(product)>
             <#if orderItemInfo.orderItemSeqId??>
               <#local orderId = raw(orderItemInfo.orderId)>
               <#local orderItemSeqId = raw(orderItemInfo.orderItemSeqId)>

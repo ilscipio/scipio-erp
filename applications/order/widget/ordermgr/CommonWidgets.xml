@@ -105,6 +105,16 @@ code package.
         </section>
     </screen>
 
+    <screen name="DashboardWSLiveOrdersTable">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/wsLiveOrdersTable.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="DashboardStatsReturnReasonWeek">
         <section>
             <actions>
@@ -125,6 +135,5 @@ code package.
             </widgets>
         </section>
     </screen>
-   
 </screens>
 

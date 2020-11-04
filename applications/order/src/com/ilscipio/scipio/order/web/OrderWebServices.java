@@ -11,6 +11,8 @@ import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.springframework.core.annotation.OrderUtils;
+import sun.net.www.content.text.Generic;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -133,6 +135,61 @@ public class OrderWebServices {
 
                 JSON obj = JSON.from(orderData);
                 SocketSessionManager.broadcastToChannel(obj.toString(),channel);
+
+        }catch(Exception e){
+            Debug.logError("Error while sending order data to websocket",module);
+            return ServiceUtil.returnError("Error while sending order data to websocket");
+        }
+
+        return result;
+    }
+
+    public static Map<String, Object> sendOrder(DispatchContext dctx, Map<String, ? extends Object> context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        String orderId = (String) context.get("orderId");
+        String channel = (String) context.get("channel");
+        OrderReadHelper orh = new OrderReadHelper(delegator, orderId);
+
+        try {
+
+            List<GenericValue> items = orh.getOrderItems();
+            List orderItems = new ArrayList();
+            for(GenericValue item : items){
+                Map itemMap = UtilMisc.toMap(
+                        "orderItemSeqId", item.getString("orderItemSeqId"),
+                        "productId",item.getString("productId"),
+                        "status",orh.getCurrentItemStatus(item),
+                        "workEffort",orh.getCurrentOrderItemWorkEffort(item),
+                        "pendingShipment", orh.getItemPendingShipmentQuantity(item),
+                        "pickedQuantity", orh.getItemPickedQuantityBd(item),
+                        "shipped",orh.getItemShippedQuantity(item),
+                        "total",orh.getOrderItemTotal(item)
+                );
+                orderItems.add(itemMap);
+            }
+
+
+            Map orderMap =  UtilMisc.toMap(
+                    "orderDate", orh.getOrderHeader().getTimestamp("orderDate"),
+                    "customerPartyId",orh.getBillToPartyId(),
+                    "orderId", orderId,
+                    "status",orh.getCurrentStatusString(),
+                    "statusId",orh.getOrderHeader().getString("statusId"),
+                    "affiliateId",orh.getAffiliateId(),
+                    "shippingLocations",orh.getShippingLocations(),
+                    "totalAmount", orh.getOrderGrandTotal(),
+                    "totalAdjustments",orh.getOrderAdjustmentsTotal(),
+                    "totalQuantity",orh.getTotalOrderItemsQuantity(),
+                    "orderItems",orderItems
+            );
+
+
+            JSON obj = JSON.from(orderMap);
+            SocketSessionManager.broadcastToChannel(obj.toString(),channel);
 
         }catch(Exception e){
             Debug.logError("Error while sending order data to websocket",module);

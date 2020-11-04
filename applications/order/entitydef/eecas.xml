@@ -53,12 +53,7 @@ code package.
     </eca>
     -->
     <eca entity="OrderHeader" operation="create-store" event="return">
-        <and>
-            <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
-            <not>
-                <condition field-name="statusId" operator="not-equals" value="ORDER_CREATED"/>
-            </not>
-        </and>
+        <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
         <set field-name="channel" value="orderdata"/>
         <action service="wsSendOrder" mode="sync" />
     </eca>

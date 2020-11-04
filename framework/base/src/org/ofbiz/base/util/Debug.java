@@ -140,6 +140,21 @@ public final class Debug {
         return (level != null) ? level : defaultLevel;
     }
 
+    /** Gets an Integer representing the level number from a Number or String representing the level name; will return null if not found (SCIPIO). */
+    public static Integer getLevel(Object levelName) {
+        if (levelName instanceof Number) {
+            return ((Number) levelName).intValue();
+        } else {
+            return getLevelFromString((String) levelName);
+        }
+    }
+
+    /** Gets an Integer representing the level number from a Number or String representing the level name; will return default value if not found (SCIPIO). */
+    public static Integer getLevel(Object levelName, Integer defaultLevel) {
+        Integer level = getLevel(levelName);
+        return (level != null) ? level : defaultLevel;
+    }
+
     public static void log(int level, Throwable t, String msg, String module) {
         log(level, t, msg, module, "org.ofbiz.base.util.Debug", emptyParams);
     }
@@ -170,6 +185,16 @@ public final class Debug {
 
     public static boolean isOn(int level) {
         return levelOnCache[level];
+    }
+
+    public static boolean isLowerEqualPrio(Object testLevel, int maxLevel) { // SCIPIO
+        Integer level = getLevel(testLevel);
+        return (level != null && level != TIMING) && (level <= maxLevel);
+    }
+
+    public static boolean isHigherEqualPrio(Object testLevel, int minLevel) { // SCIPIO
+        Integer level = getLevel(testLevel);
+        return (level != null && level != TIMING) && (level >= minLevel || level == ALWAYS);
     }
 
     // leaving these here

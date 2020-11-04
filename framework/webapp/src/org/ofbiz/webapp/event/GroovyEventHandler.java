@@ -87,6 +87,8 @@ public class GroovyEventHandler implements EventHandler {
             context.put("locale", UtilHttp.getLocale(request));
             context.put("timeZone", UtilHttp.getTimeZone(request));
             context.put("userLogin", session.getAttribute("userLogin"));
+            // SCIPIO: Added multiPartMap reading, which gets set in request and now always extracted by getCombinedMap
+            ServiceEventHandler.getMultiPartMap(request);
             context.put(ScriptUtil.PARAMETERS_KEY, UtilHttp.getCombinedMap(request, UtilMisc.toSet("delegator", "dispatcher", "security", "locale", "timeZone", "userLogin")));
             Object result = null;
             try {

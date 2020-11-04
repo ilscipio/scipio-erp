@@ -305,9 +305,10 @@ public final class UtilHttp {
         //if (paramMap.size() == 0) {
         {
             // nothing found in the parameters; maybe we read the stream instead
-            // SCIPIO
-            //Map<String, Object> multiPartMap = UtilGenerics.checkMap(request.getAttribute("multiPartMap"));
-            Map<String, Object> multiPartMap = getMultiPartParameterMap(request);
+            // SCIPIO: TODO: REVIEW: This is not an option due to file upload implementations and other things reading
+            //  the body, so leave it to service events still for now...
+            //Map<String, Object> multiPartMap = getMultiPartParameterMap(request);
+            Map<String, Object> multiPartMap = UtilGenerics.checkMap(request.getAttribute("multiPartMap"));
             if (UtilValidate.isNotEmpty(multiPartMap)) {
                 paramMap.putAll(multiPartMap);
             }

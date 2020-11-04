@@ -37,6 +37,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileUploadException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -140,17 +141,9 @@ public class ServiceEventHandler implements EventHandler {
             Debug.logVerbose("[Using delegator]: " + dispatcher.getDelegator().getDelegatorName(), module);
         }
 
-        Map<String, Object> multiPartMap; // SCIPIO: refactored
-        try {
-            multiPartMap = UtilHttp.readMultiPartParameterMap(request);
-            if (multiPartMap == null) {
-                multiPartMap = Collections.emptyMap();
-            }
-        } catch (IOException e) {
-            throw new EventHandlerException(e.getCause() instanceof FileUploadException ? e.getCause() : e);
-        }
-        // store the multi-part map as an attribute so we can access the parameters
-        request.setAttribute("multiPartMap", multiPartMap);
+        // SCIPIO: refactored multiPartMap reading
+        Map<String, Object> multiPartMap = getMultiPartMap(request);
+
         // SCIPIO: application/json request body parameters
         Map<String, Object> requestBodyMap = RequestBodyMapHandlerFactory.getRequestBodyMap(request);
 
@@ -395,5 +388,23 @@ public class ServiceEventHandler implements EventHandler {
             // NOTTODO: may want to allow parameters that map to entity PK fields to be in the URL, but that might be a big security hole since there are certain security sensitive entities that are made of only PK fields, or that only need PK fields to function (like UserLoginSecurityGroup)
             // NOTTODO: we could allow URL parameters when it is not a POST (ie when !request.getMethod().equalsIgnoreCase("POST")), but that would open a security hole where sensitive parameters can be passed on the URL in a GET/etc and bypass this security constraint
         }
+    }
+
+    public static Map<String, Object> getMultiPartMap(HttpServletRequest request) throws EventHandlerException { // SCIPIO: Refactored
+        Map<String, Object> multiPartMap = UtilGenerics.cast(request.getAttribute("multiPartMap"));
+        if (multiPartMap == null) {
+            try {
+                // SCIPIO: Prevent double-processing in chained requests
+                multiPartMap = UtilHttp.readMultiPartParameterMap(request);
+                if (multiPartMap == null) {
+                    multiPartMap = Collections.emptyMap();
+                }
+            } catch (IOException e) {
+                throw new EventHandlerException(e.getCause() instanceof FileUploadException ? e.getCause() : e);
+            }
+            // store the multi-part map as an attribute so we can access the parameters
+            request.setAttribute("multiPartMap", multiPartMap);
+        }
+        return multiPartMap;
     }
 }

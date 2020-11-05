@@ -248,13 +248,13 @@
         <!-- (none) -->
 
         <!-- media jars -->
-        <!-- SCIPIO: 2017-07-10: new image libs -->
         <dependency org="net.coobird" name="thumbnailator" rev="0.4.8" conf="base,media,sources"/>
         <dependency org="com.mortennobel" name="java-image-scaling" rev="0.8.6" conf="base,media,sources"/>
         <dependency org="com.jhlabs" name="filters" rev="2.0.235-1" conf="base,sources"/><!-- transitive dep for mortennobel (was outdated) -->
         <dependency org="org.imgscalr" name="imgscalr-lib" rev="4.2" conf="base,media,sources"/>
         <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.4.1" conf="base,media,sources"/>
         <dependency org="org.sejda.imageio" name="webp-imageio" rev="0.1.6" conf="base,media,sources"/>
+        <dependency org="com.tinify" name="tinify" rev="1.6.4" conf="base,media,sources"/>
 
         <!-- TODO?: Uncomment this for limited JPEG2000 and TIFF support
         <dependency org="com.github.jai-imageio" name="jai-imageio-core" rev="1.3.0" conf="base,media,sources"/>

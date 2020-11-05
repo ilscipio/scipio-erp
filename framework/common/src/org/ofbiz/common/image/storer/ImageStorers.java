@@ -6,7 +6,9 @@ import org.ofbiz.common.image.ImageUtil;
 import org.ofbiz.entity.Delegator;
 
 import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -70,6 +72,12 @@ public abstract class ImageStorers {
         return write(im, formatName, output, null, delegator);
     }
 
+    public static byte[] writeBytes(BufferedImage image, String formatName, Delegator delegator) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        write(image, formatName, baos, delegator);
+        return baos.toByteArray();
+    }
+
     /**
      * Gets the first applicable storer for the given format and options.
      */
@@ -87,6 +95,12 @@ public abstract class ImageStorers {
         return STORERS.get(name);
     }
 
+    /** Returns an image storer by name or the default storer if not found. */
+    public static ImageStorer getStorerOrDefault(String name) {
+        ImageStorer storer = getStorer(name);
+        return (storer != null) ? storer : getDefaultStorer();
+    }
+
     public static ImageStorer getDefaultStorer() {
         return DEFAULT_STORER;
     }
@@ -99,7 +113,13 @@ public abstract class ImageStorers {
         Map<String, ImageStorer> filtered = new LinkedHashMap<>(storerMap);
         filtered.remove("default");
         // TODO: REVIEW: should this remove the storer pointed by default? no need for now
-        ArrayList<ImageStorer> list = new ArrayList<>(filtered.values());
+        ArrayList<ImageStorer> list = new ArrayList<>(filtered.size());
+        for(ImageStorer storer : filtered.values()) {
+            int sequenceNum = UtilMisc.toInteger(storer.getConfiguredOptions().get("sequenceNum"), 9999);
+            if (sequenceNum >= 0) {
+                list.add(storer);
+            }
+        }
         Collections.sort(list, new Comparator<ImageStorer>() {
             @Override
             public int compare(ImageStorer o1, ImageStorer o2) {

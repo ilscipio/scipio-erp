@@ -1,5 +1,7 @@
 package org.ofbiz.common.image;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,6 +23,10 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageOp.ImageOpFactory;
 
 import com.ilscipio.scipio.ce.build.util.DependencyGraph;
+import org.ofbiz.common.image.storer.ImageStorers;
+import org.ofbiz.entity.Delegator;
+
+import javax.imageio.ImageIO;
 
 /**
  * SCIPIO: Generic image util.
@@ -125,7 +131,9 @@ public abstract class ImageUtil {
             for(String aliasEntry : aliasEntries) {
                 String name = aliasEntry;
                 String aliasName = props.getProperty(propPrefix+aliasEntry+".alias");
-                if (aliasName != null) aliasName = aliasName.trim();
+                if (aliasName != null) {
+                    aliasName = aliasName.trim();
+                }
                 if (UtilValidate.isEmpty(aliasName)) {
                     Debug.logWarning("Empty image op alias property: " + propPrefix+aliasEntry+".alias", module);
                     continue;
@@ -147,7 +155,9 @@ public abstract class ImageUtil {
 
         for(String name : allOrdered) {
             Properties props = aliasPropsMap.get(name);
-            if (props == null) continue; // this skips the factories
+            if (props == null) {
+                continue; // this skips the factories
+            }
             String aliasEntry = name;
             String aliasName = depMap.get(name).get(0);
             T op = imageOpMap.get(aliasName);

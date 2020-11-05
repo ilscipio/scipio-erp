@@ -52,6 +52,10 @@ public class ImageIOStorer extends AbstractImageStorer {
         return writeIO(im, formatName, output, options, delegator);
     }
 
+    /**
+     * Writes an image using hardcoded ImageIO.write() calls.
+     * WARN: Meant for implementations, do not use in client code - there use ImageStorers.write() instead.
+     */
     public static boolean writeIO(RenderedImage im, String formatName, Object output, Map<String, Object> options, Delegator delegator) throws IOException {
         if (output instanceof ImageOutputStream) {
             return ImageIO.write(im, formatName, (ImageOutputStream) output);

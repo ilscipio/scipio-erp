@@ -8,6 +8,7 @@
                 var msg = {
                 };
               webSocket.send(JSON.stringify(msg));
+              let dt = $("#wsOrderDataTable").DataTable();
       };
 
 
@@ -27,14 +28,15 @@
    function fillDataTable(dataSet){
       if(document.readyState === "complete") {
        let dt = $("#wsOrderDataTable").DataTable();
-       dt.order([[ 3, "asc" ]]);
-
        if(dataSet){
            let orderId = dataSet["orderId"];
+           console.log(dt.row('#'+orderId));
             dt.rows().nodes().to$().removeClass('wsnew').removeClass('wsupdate');
             if(orderId && dt.row('#'+orderId).length > 0){
                 if($.inArray(dataSet["statusId"],unlistedOrderIds)>=0){
-                    dt.row('#'+orderId).nodes()
+                    dt.row('#'+orderId).scrollTo();
+                    dt.row('#'+orderId)
+                    .nodes()
                     .to$().addClass('wsremove');
                     setTimeout(function(){
                         dt.row('#'+orderId).remove()
@@ -53,6 +55,7 @@
                     .attr('id', orderId)
                     .addClass( 'wsupdate' )
                     .addClass("ws-"+dataSet["statusId"]);
+                    dt.row('#'+orderId).scrollTo();
                 }
 
             }else{
@@ -71,6 +74,7 @@
                         .attr('id', orderId)
                         .addClass( 'wsnew' )
                         .addClass("ws-"+dataSet["statusId"]);
+                        dt.row('#'+orderId).scrollTo();
                 }
 
             }
@@ -123,8 +127,20 @@
 }
 </style>
 
+<#assign responsiveOptions = {
+"fixedHeader" : true,
+"info" : false,
+"paging" : false,
+"order" : [[3, "asc" ],[1, "desc" ]],
+"scrollY": '30vh',
+"scrollCollapse":  true,
+"deferRender":    true,
+"scroller": true
+}/>
+
+
 <@section title=title!"">
-    <@table type="data-list" id="wsOrderDataTable" autoAltRows=true scrollable=true responsive=true>
+    <@table type="data-list" id="wsOrderDataTable" responsiveOptions=responsiveOptions autoAltRows=true scrollable=true responsive=true >
         <@thead>
             <@tr>
                 <@th>${getLabel('OrderDate','OrderUiLabels')}</@th>
@@ -137,6 +153,20 @@
             </@tr>
         </@thead>
         <@tbody>
+            <#if orderList?has_content>
+                <#list orderList as order>
+                    <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(order)>
+                    <#assign statusItem = order.getRelatedOneCache("StatusItem")>
+                    <#assign displayParty = orh.getPlacingParty()?if_exists>
+                    <#assign partyId = displayParty.partyId?default("_NA_")>
+                    <@tr id=order.orderId!"">
+                        <@td>${order.orderDate!""}</@td>
+                        <@td>${order.orderId!""}</@td>
+                        <@td>${partyId!""}</@td>
+                        <@td>${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</@td>
+                    </@tr>
+                </#list>
+            </#if>
         </@tbody>
     </@table>
 </@section>

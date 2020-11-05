@@ -490,4 +490,16 @@ code package.
         <action service="sendOrderLiveData" mode="sync" />
     </eca>
 
+    <eca service="storeOrder" event="global-commit-post-run">
+        <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
+        <set field-name="channel" value="orderdata"/>
+        <action service="wsSendOrder" mode="sync" />
+    </eca>
+
+    <eca service="changeOrderStatus" event="global-commit-post-run">
+        <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
+        <set field-name="channel" value="orderdata"/>
+        <action service="wsSendOrder" mode="sync" ignore-error="true" priority="10" new-transaction="true" />
+    </eca>
+
 </service-eca>

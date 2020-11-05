@@ -107,6 +107,23 @@ code package.
 
     <screen name="DashboardWSLiveOrdersTable">
         <section>
+            <actions>
+                <set field="todayDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDate();}" type="Timestamp" />
+                <set field="inmap.minDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.getDayStart(todayDate,-1);}" type="String" />
+                <set field="inmap.orderStatusId" value="[ORDER_CREATED, ORDER_APPROVED, ORDER_PICKED, ORDER_PACKED,ORDER_SENT,ORDER_HOLD,ORDER_PROCESSING]"/>
+                <set field="inmap.orderTypeId" value="SALES_ORDER" type="String" />
+                <entity-condition entity-name="OrderHeader" list="orderList" use-cache="true" filter-by-date="true">
+                    <condition-list>
+                        <condition-expr field-name="lastUpdatedStamp" from-field="inmap.minDate" operator="greater-equals" />
+                        <condition-expr field-name="statusId" from-field="inmap.orderStatusId" operator="in" />
+                        <condition-expr field-name="orderTypeId" from-field="inmap.orderTypeId" operator="equals" />
+                    </condition-list>
+                    <order-by field-name="orderDate" />
+                </entity-condition>
+
+                <set field="layoutSettings.javaScriptsFooter[]" value="https://cdn.datatables.net/scroller/2.0.3/js/dataTables.scroller.min.js" global="true"/>
+                <set field="layoutSettings.styleSheets[+0]" value="https://cdn.datatables.net/scroller/2.0.3/css/scroller.dataTables.min.css" global="true"/>
+            </actions>
             <widgets>
                 <platform-specific>
                     <html><html-template location="component://order/webapp/ordermgr/dashboard/wsLiveOrdersTable.ftl"/></html>

@@ -174,7 +174,7 @@ public class OrderWebServices {
 
 
             Map orderMap =  UtilMisc.toMap(
-                    "orderDate", orh.getOrderHeader().getTimestamp("orderDate"),
+                    "orderDate", orh.getOrderHeader().getString("orderDate"),
                     "customerPartyId",orh.getBillToPartyId(),
                     "orderId", orderId,
                     "status",orh.getCurrentStatusString(),

@@ -52,9 +52,10 @@ code package.
         <action service="sendOrderPayChangeNotification" mode="sync"/>
     </eca>
     -->
+    <!--
     <eca entity="OrderHeader" operation="create-store" event="return">
         <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
         <set field-name="channel" value="orderdata"/>
         <action service="wsSendOrder" mode="sync" />
-    </eca>
+    </eca>-->
 </entity-eca>

@@ -38,6 +38,7 @@ import de.bripkens.gravatar.Gravatar;
 import de.bripkens.gravatar.Rating;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -2710,10 +2711,14 @@ public class PartyServices {
                     .setSize(size)
                     .setHttps(true)
                     .setRating(Rating.PARENTAL_GUIDANCE_SUGGESTED)
-                    .setStandardDefaultImage(DefaultImage.MONSTER)
+                    .setStandardDefaultImage(DefaultImage.MYSTERY_MAN)
                     .getUrl(emailAddress);
         }catch(Exception e){
 
+        }
+
+        if(gravarImageUrl.endsWith("/")){
+            gravarImageUrl = StringUtils.removeEnd(gravarImageUrl, "/");
         }
 
         result.put("gravatarImageUrl", gravarImageUrl);

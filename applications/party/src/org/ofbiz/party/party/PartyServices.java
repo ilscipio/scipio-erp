@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import de.bripkens.gravatar.DefaultImage;
+import de.bripkens.gravatar.Gravatar;
+import de.bripkens.gravatar.Rating;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.ofbiz.base.util.Debug;
@@ -2682,6 +2685,39 @@ public class PartyServices {
         }
 
         result = ServiceUtil.returnSuccess(UtilProperties.getMessage(resource, "PartyNewPartiesCreated", UtilMisc.toMap("partiesCreated", partiesCreated), locale));
+        return result;
+    }
+
+    /**
+     * Fetches a gravatar Image - relies on https://github.com/bripkens/Gravatar4Java.
+     * If no partyId is specified a numeric partyId is retrieved from the Party sequence.
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
+     */
+    public static Map<String, Object> getGravatarImage(DispatchContext ctx, Map<String, ? extends Object> context) {
+        Map<String, Object> result = new HashMap<>();
+        Delegator delegator = ctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String emailAddress = (String) context.get("emailAddress");
+        Integer size = 50;
+        if(UtilValidate.isNotEmpty(context.get("size"))){
+            size = (Integer) context.get("size");
+        }
+        String gravarImageUrl = null;
+        try {
+            gravarImageUrl = new Gravatar()
+                    .setSize(size)
+                    .setHttps(true)
+                    .setRating(Rating.PARENTAL_GUIDANCE_SUGGESTED)
+                    .setStandardDefaultImage(DefaultImage.MONSTER)
+                    .getUrl(emailAddress);
+        }catch(Exception e){
+
+        }
+
+        result.put("gravatarImageUrl", gravarImageUrl);
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
 }

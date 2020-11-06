@@ -1745,4 +1745,12 @@ code package.
             <description>Maps serverHostName to requests maps - only set if allServers true</description>
         </attribute>
     </service>
+
+    <service name="getGravatarImage" engine="java"
+             location="org.ofbiz.party.party.PartyServices" invoke="getGravatarImage" auth="true">
+        <description>Fetch the gravatar url from gravatar.com</description>
+        <attribute mode="IN" name="emailAddress" type="String" optional="false" />
+        <attribute mode="IN" name="size" type="Integer" optional="true" default-value="50"/>
+        <attribute mode="OUT" name="gravatarImageUrl" type="String" optional="false" />
+    </service>
 </services>

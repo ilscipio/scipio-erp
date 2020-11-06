@@ -1,4 +1,3 @@
-<#assign maxLiveOrderEntries = maxLiveOrderEntries!UtilMisc.toIntegerObject(parameters.maxLiveOrderEntries!60)!60>
 <style>
 .ws-ORDER_APPROVED{}
 .ws-ORDER_PICKED{
@@ -11,12 +10,12 @@
 
 
 .wsnew {
-  animation: added 0.8s ease forwards;
+  animation: wsadded 0.8s ease forwards;
   opacity: 0;
   filter: blur(4px);
 }
 
-@keyframes added {
+@keyframes wsadded {
    to {
      filter: blur(0);
      opacity:1;
@@ -24,27 +23,27 @@
 }
 
 .wsupdate {
-  animation: updated 5s linear forwards;
+  animation: wsupdated 5s linear forwards;
 }
 
-@keyframes updated {
+@keyframes wsupdated {
     0%   {color: #cae0c4; }
     100%   {color: inherit; }
 }
 
 .wsremove {
-  animation: remove 3s linear forwards;
+  animation: wsremove 3s linear forwards;
 }
 
-@keyframes remove {
+@keyframes wsremove {
     to {
     opacity: 0;
     filter: blur(4px);
+    display:none;
     }
 }
 </style>
 <@script>
-      var maxLiveOrderEntries = ${maxLiveOrderEntries};
       var unlistedOrderIds = ['ORDER_REJECTED','ORDER_CANCELLED','ORDER_COMPLETED','ORDER_PACKED'];
       $(function(){
             var webSocket = new WebSocket('wss://' + window.location.host + '<@appUrl fullPath="false">/ws/orderdata/subscribe</@appUrl>');
@@ -82,16 +81,19 @@
                     .nodes()
                     .to$().addClass('wsremove');
                     setTimeout(function(){
-                        dt.row('#'+orderId).remove().draw();
+                        dt.row('#'+orderId).remove();
+                        $("#wsOrderDataTable").find('.ws-undefined').remove();
+                        dt.draw();
                     },3000);
                 }else{
                     dt.row('#'+orderId).data([
-                        dataSet["orderDate"],
-                        orderId,
-                        dataSet["customerPartyId"],
                         dataSet["status"],
+                        orderId,
+                        dataSet["orderDate"],
+                        dataSet["customerPartyId"]
+                        <#--,
                         dataSet["totalAmount"],
-                        dataSet["totalQuantity"]
+                        dataSet["totalQuantity"]-->
                     ])
                     .draw().nodes()
                     .to$()
@@ -104,10 +106,10 @@
             }else{
                 if($.inArray(dataSet["statusId"],unlistedOrderIds)==-1){
                     dt.row.add([
-                            dataSet["status"]
+                            dataSet["status"],
                             orderId,
                             dataSet["orderDate"],
-                            dataSet["customerPartyId"],
+                            dataSet["customerPartyId"]
                             <#--,
                             dataSet["totalQuantity"],
                             dataSet["totalAmount"]-->
@@ -133,7 +135,6 @@
 "order" : [[3, "asc" ],[1, "desc" ]],
 "scrollY": '30vh',
 "scrollCollapse":  true,
-"deferRender":    true,
 "scroller": true
 }/>
 
@@ -160,8 +161,8 @@
                     <#assign partyId = displayParty.partyId?default("_NA_")>
                     <@tr id=order.orderId!"">
                         <@td>${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</@td>
-                        <@td>${order.orderDate!""}</@td>
                         <@td>${order.orderId!""}</@td>
+                        <@td>${order.orderDate!""}</@td>
                         <@td>${partyId!""}</@td>
                     </@tr>
                 </#list>

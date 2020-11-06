@@ -499,7 +499,16 @@ code package.
     <eca service="changeOrderStatus" event="global-commit-post-run">
         <condition field-name="orderTypeId" operator="equals" value="SALES_ORDER"/>
         <set field-name="channel" value="orderdata"/>
-        <action service="wsSendOrder" mode="sync" ignore-error="true" priority="10" new-transaction="true" />
+        <action service="wsSendOrder" mode="sync" ignore-error="true" priority="10" />
+    </eca>
+
+    <eca service="changeOrderItemStatus" event="global-commit-post-run">
+        <and>
+            <condition field-name="statusId" operator="not-equals" value="ITEM_CREATED"/>
+            <condition field-name="statusId" operator="not-equals" value="ITEM_APPROVED"/>
+        </and>
+        <set field-name="channel" value="orderitemdata"/>
+        <action service="wsSendOrderItem" mode="sync" ignore-error="true" priority="10" />
     </eca>
 
 </service-eca>

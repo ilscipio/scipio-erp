@@ -1,6 +1,9 @@
 package com.ilscipio.scipio.order.web;
 
 import com.ilscipio.scipio.web.SocketSessionManager;
+import de.bripkens.gravatar.DefaultImage;
+import de.bripkens.gravatar.Gravatar;
+import de.bripkens.gravatar.Rating;
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
@@ -159,10 +162,37 @@ public class OrderWebServices {
             List<GenericValue> items = orh.getOrderItems();
             List orderItems = new ArrayList();
             for(GenericValue item : items){
+
+                String changeByUserLoginId = item.getString("changeByUserLoginId");
+                String gravatarImageURL = null;
+
+                try{
+                    if(UtilValidate.isNotEmpty(changeByUserLoginId)){
+                        List<GenericValue> parties = delegator.findByAnd("PartyAndUserLogin",UtilMisc.toMap("userLoginId",changeByUserLoginId),null,true);
+                        if(UtilValidate.isNotEmpty(parties)){
+                            //Select first party from list
+                            GenericValue party = parties.get(0);
+                            Map<String,Object> userLoginEmail = dispatcher.runSync("getPartyEmail",UtilMisc.toMap("partyId",party.getString("partyId"),"userLogin",userLogin));
+                            if(UtilValidate.isNotEmpty(userLoginEmail)){
+                                String emailAddress = (String) userLoginEmail.get("emailAddress");
+                                Map<String, Object> gravatar = dispatcher.runSync("getGravatarImage",UtilMisc.toMap("emailAddress",emailAddress,"size",200,"userLogin",userLogin));
+                                if(UtilValidate.isNotEmpty(gravatar)){
+                                    gravatarImageURL = (String) gravatar.get("gravatarImageUrl");
+                                }
+                            }
+                        }
+
+                    }
+                }catch(Exception e){
+                    Debug.logWarning("Exception while fetching gravatar image",module);
+                }
+
                 Map itemMap = UtilMisc.toMap(
                         "orderItemSeqId", item.getString("orderItemSeqId"),
                         "productId",item.getString("productId"),
                         "status",orh.getCurrentItemStatus(item),
+                        "changeByUserLoginId", item.getString("changeByUserLoginId"),
+                        "gravatarImageURL",gravatarImageURL,
                         "workEffort",orh.getCurrentOrderItemWorkEffort(item),
                         "pendingShipment", orh.getItemPendingShipmentQuantity(item),
                         "pickedQuantity", orh.getItemPickedQuantityBd(item),
@@ -198,4 +228,67 @@ public class OrderWebServices {
 
         return result;
     }
+
+    public static Map<String, Object> sendOrderItem(DispatchContext dctx, Map<String, ? extends Object> context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
+
+        String orderId = (String) context.get("orderId");
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
+        String channel = (String) context.get("channel");
+
+        try {
+            GenericValue item = delegator.findOne("OrderItem",true,UtilMisc.toMap("orderId",orderId,"orderItemSeqId",orderItemSeqId));
+
+            if(UtilValidate.isNotEmpty(item)){
+
+                String changeByUserLoginId = item.getString("changeByUserLoginId");
+                String gravatarImageURL = null;
+                try{
+                    if(UtilValidate.isNotEmpty(changeByUserLoginId)){
+                        List<GenericValue> parties = delegator.findByAnd("PartyAndUserLogin",UtilMisc.toMap("userLoginId",changeByUserLoginId),null,true);
+                        if(UtilValidate.isNotEmpty(parties)){
+                            //Select first party from list
+                            GenericValue party = parties.get(0);
+                            Map<String,Object> userLoginEmail = dispatcher.runSync("getPartyEmail",UtilMisc.toMap("partyId",party.getString("partyId"),"userLogin",userLogin));
+                            if(UtilValidate.isNotEmpty(userLoginEmail)){
+                                String emailAddress = (String) userLoginEmail.get("emailAddress");
+                                Map<String, Object> gravatar = dispatcher.runSync("getGravatarImage",UtilMisc.toMap("emailAddress",emailAddress,"size",200,"userLogin",userLogin));
+                                if(UtilValidate.isNotEmpty(gravatar)){
+                                    gravatarImageURL = (String) gravatar.get("gravatarImageUrl");
+                                }
+                            }
+                        }
+
+                    }
+                }catch(Exception e){
+                    Debug.logWarning("Exception while fetching gravatar image",module);
+                }
+
+                GenericValue statusItem = item.getRelatedOneCache("StatusItem");
+                String statusStr = statusItem.getString("description",locale);
+
+                Map itemMap = UtilMisc.toMap(
+                        "orderId",orderId,
+                        "orderItemSeqId", orderItemSeqId,
+                        "productId",item.getString("productId"),
+                        "status",statusStr,
+                        "statusId",item.getString("statusId"),
+                        "changeByUserLoginId", item.getString("changeByUserLoginId"),
+                        "gravatarImageURL",gravatarImageURL
+                );
+                JSON obj = JSON.from(itemMap);
+                SocketSessionManager.broadcastToChannel(obj.toString(),channel);
+            }
+        }catch(Exception e){
+            Debug.logError("Error while sending order data to websocket",module);
+            return ServiceUtil.returnError("Error while sending order data to websocket");
+        }
+
+        return result;
+    }
+
 }

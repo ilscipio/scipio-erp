@@ -326,11 +326,20 @@ code package.
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
     </service>
 
-    <service name="wsSendOrder" engine="java" require-new-transaction="true" max-retry="3"
+    <service name="wsSendOrder" engine="java" require-new-transaction="true" max-retry="1"
              location="com.ilscipio.scipio.order.web.OrderWebServices" invoke="sendOrder">
         <description>Sends order data to listening websockets on channel.</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="channel" type="String" mode="IN" optional="false"/>
     </service>
+
+    <service name="wsSendOrderItem" engine="java" require-new-transaction="true" max-retry="1"
+             location="com.ilscipio.scipio.order.web.OrderWebServices" invoke="sendOrderItem">
+        <description>Sends order item data to listening websockets on channel.</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="channel" type="String" mode="IN" optional="false"/>
+    </service>
+
 
 </services>

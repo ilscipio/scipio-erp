@@ -112,7 +112,7 @@ code package.
                 <set field="inmap.minDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.getDayStart(todayDate,-1);}" type="String" />
                 <set field="inmap.orderStatusId" value="[ORDER_CREATED, ORDER_APPROVED, ORDER_PICKED, ORDER_PACKED,ORDER_SENT,ORDER_HOLD,ORDER_PROCESSING]"/>
                 <set field="inmap.orderTypeId" value="SALES_ORDER" type="String" />
-                <entity-condition entity-name="OrderHeader" list="orderList" use-cache="true" filter-by-date="true">
+                <entity-condition entity-name="OrderHeader" list="orderList" use-cache="true">
                     <condition-list>
                         <condition-expr field-name="lastUpdatedStamp" from-field="inmap.minDate" operator="greater-equals" />
                         <condition-expr field-name="statusId" from-field="inmap.orderStatusId" operator="in" />
@@ -127,6 +127,23 @@ code package.
             <widgets>
                 <platform-specific>
                     <html><html-template location="component://order/webapp/ordermgr/dashboard/wsLiveOrdersTable.ftl"/></html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="DashboardWSLiveOrderItem">
+        <section>
+            <actions>
+                <!--
+                <entity-condition entity-name="OrderItem" list="orderItem" use-cache="true">
+                    <order-by field-name="-lastUpdatedStamp" />
+                    <limit-range start="0" size="0"/>
+                </entity-condition>-->
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/wsLiveOrderItem.ftl"/></html>
                 </platform-specific>
             </widgets>
         </section>

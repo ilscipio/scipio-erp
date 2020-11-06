@@ -43,7 +43,7 @@
         oid.find('.oiditem').html(''+dataSet["orderItemSeqId"]);
         oid.find('.oidorder').html(''+dataSet["orderId"]);
         if(dataSet["gravatarImageURL"]){
-            oid.find('.oidgravatar').html('<img src='+dataSet["gravatarImageURL"]+'/>');
+            oid.find('.oidgravatar').html('<img src="'+dataSet["gravatarImageURL"]+'"/>');
         }else{
             oid.find('.oidgravatar').html('');
         }

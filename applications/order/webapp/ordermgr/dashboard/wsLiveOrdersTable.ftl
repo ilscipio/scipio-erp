@@ -104,10 +104,10 @@
             }else{
                 if($.inArray(dataSet["statusId"],unlistedOrderIds)==-1){
                     dt.row.add([
-                            dataSet["orderDate"],
-                            orderId,
-                            dataSet["customerPartyId"],
                             dataSet["status"]
+                            orderId,
+                            dataSet["orderDate"],
+                            dataSet["customerPartyId"],
                             <#--,
                             dataSet["totalQuantity"],
                             dataSet["totalAmount"]-->
@@ -142,10 +142,10 @@
     <@table type="data-list" id="wsOrderDataTable" responsiveOptions=responsiveOptions autoAltRows=true scrollable=true responsive=true >
         <@thead>
             <@tr>
-                <@th>${getLabel('OrderDate','OrderUiLabels')}</@th>
-                <@th>${getLabel("ProductOrderId",'ProductUiLabels')}</@th>
-                <@th>${getLabel("PartyPartyId",'PartyUiLabels')}</@th>
                 <@th>${getLabel("CommonStatus",'CommonUiLabels')}</@th>
+                <@th>${getLabel("ProductOrderId",'ProductUiLabels')}</@th>
+                <@th>${getLabel('OrderDate','OrderUiLabels')}</@th>
+                <@th>${getLabel("PartyPartyId",'PartyUiLabels')}</@th>
                 <#--
                 <@th>${getLabel("OrderGrandTotal",'OrderUiLabels')}</@th>
                 <@th>${getLabel("OrderQuantity",'OrderUiLabels')}</@th>-->
@@ -159,10 +159,10 @@
                     <#assign displayParty = orh.getPlacingParty()?if_exists>
                     <#assign partyId = displayParty.partyId?default("_NA_")>
                     <@tr id=order.orderId!"">
+                        <@td>${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</@td>
                         <@td>${order.orderDate!""}</@td>
                         <@td>${order.orderId!""}</@td>
                         <@td>${partyId!""}</@td>
-                        <@td>${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</@td>
                     </@tr>
                 </#list>
             </#if>

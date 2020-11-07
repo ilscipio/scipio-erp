@@ -59,6 +59,7 @@ code package.
     <service-resource type="model" loader="main" location="servicedef/services_cdyne.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_email.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_enum.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_media.xml"/><!-- SCIPIO -->
     <service-resource type="model" loader="main" location="servicedef/services_method.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_geo.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_qrcode.xml"/>

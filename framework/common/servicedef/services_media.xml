@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>SCIPIO Method Services</description>
+    <vendor>SCIPIO</vendor>
+    <version>1.0</version>
+
+    <service name="distributedClearMediaProfileCaches" engine="jms" location="serviceMessenger" invoke="clearMediaProfileCaches"
+             auth="true" use-transaction="false" log-eca="quiet" log="quiet" hideResultInLog="true">
+        <description>clearMediaProfileCaches for all Servers listening to the topic (SCIPIO)</description>
+    </service>
+    <service name="clearMediaProfileCaches" engine="java" location="org.ofbiz.common.image.MediaProfile" invoke="clearCaches">
+        <description>Clear media profile caches</description>
+        <attribute name="type" type="String" mode="IN" optional="true">
+            <description>TODO: currently ignored, but callers should still specify</description>
+        </attribute>
+        <attribute name="tenantOnly" type="Boolean" mode="IN" optional="true" default-value="false"/>
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
+    </service>
+    <service name="clearImageProfileCaches" engine="java" location="org.ofbiz.common.image.MediaProfile" invoke="clearCaches">
+        <description>Clear media profile caches</description>
+        <implements service="clearMediaProfileCaches"/>
+        <override name="type" default-value="IMAGE_OBJECT"/>
+    </service>
+
+</services>

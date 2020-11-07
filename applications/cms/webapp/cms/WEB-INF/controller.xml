@@ -457,19 +457,25 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="customImageSizePresets"/>
     </request-map>
-
     <request-map uri="createCustomImageSizePreset">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsCreateCustomImageSizePreset"/>
-        <response name="success" type="view" value="customImageSizePresets"/>
+        <response name="success" type="request" value="clearImageProfileCaches"/>
         <response name="error" type="view" value="customImageSizePresets"/>
     </request-map>
-
     <request-map uri="updateCustomImageSizePreset">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsUpdateCustomImageSizePreset"/>
-        <response name="success" type="view" value="customImageSizePresets"/>
+        <response name="success" type="request" value="clearImageProfileCaches"/>
         <response name="error" type="view" value="customImageSizePresets"/>
+    </request-map>
+    <request-map uri="clearImageProfileCaches">
+        <security auth="true" https="true"/>
+        <event type="groovy"><script><![CDATA[
+            return EventUtil.runServiceAsEvent(request, response, "clearImageProfileCaches", [distribute:true]);
+        ]]></script></event>
+        <response name="success" type="view" value="customImageSizePresets" />
+        <response name="error" type="view" value="customImageSizePresets" />
     </request-map>
 
     <request-map uri="updateMedia">

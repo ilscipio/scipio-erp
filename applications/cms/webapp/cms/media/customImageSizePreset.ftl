@@ -12,6 +12,12 @@
                             <form method="post" action="<@pageUrl>createCustomImageSizePreset</@pageUrl>" name="customVariantSizesForm">
                                 <@field type="text" label=uiLabelMap.CmsMediaCustomSizeVariantsPresetId required=false name="presetId" value="" maxlength=20/>
                                 <@field type="text" label=uiLabelMap.CmsMediaCustomSizeVariantsPresetName required=true name="presetName" value=""/>
+                                <@field type="select" label=uiLabelMap.CommonParentProfile required=false name="parentProfile">
+                                    <option></option>
+                                    <#list Static["org.ofbiz.common.image.ImageProfile"].getImageProfileNameList(delegator)?sort as name>
+                                        <option>${name}</option>
+                                    </#list>
+                                </@field>
                                 <hr/>
                                 <div class="cmsmedia-customvariantsize-method customVariantSizesForm">
                                     <@customVariantSizeForm />
@@ -41,6 +47,7 @@
                         <@tr class="header-row">
                             <@th>${uiLabelMap.CmsMediaCustomSizeVariantsPresetId}</@th>
                             <@th>${uiLabelMap.CmsMediaCustomSizeVariantsPresetName}</@th>
+                            <@th>${uiLabelMap.CommonParentProfile}</@th>
                             <@th width="10%">${uiLabelMap.CmsMediaViewCustomSizeVariants}</@th>
                             <@th width="10%">${uiLabelMap.CommonUpdate}</@th>
                         </@tr>
@@ -52,7 +59,22 @@
                                 <input type="hidden" name="VIEW_INDEX" value="${viewIndex!}"/>
                                 <input name="presetId" type="hidden" value="${preset.presetId}"/>
                                 <@td>${preset.presetId}</@td>
-                                <@td><@field type="text" name="presetName" value=preset.presetName! required=true /></@td>
+                                <@td><@field type="text" name="presetName" value=(preset.presetName!) required=true /></@td>
+                                <@td>
+                                    <@field type="select" label=uiLabelMap.CommonParentProfile required=false name="parentProfile">
+                                      <#assign parentProfileFound = false>
+                                      <#assign parentProfileOptions>
+                                        <option<#if !preset.parentProfile?has_content> selected="selected"<#assign parentProfileFound = true/></#if>></option>
+                                        <#list Static["org.ofbiz.common.image.ImageProfile"].getImageProfileNameList(delegator)?sort as name>
+                                            <option<#if raw(name) == raw(preset.parentProfile!)> selected="selected"<#assign parentProfileFound = true/></#if>>${name}</option>
+                                        </#list>
+                                      </#assign>
+                                      <#if !parentProfileFound>
+                                          <option selected="selected">${preset.parentProfile}</option>
+                                      </#if>
+                                      ${parentProfileOptions}
+                                    </@field>
+                                </@td>
                                 <@td>
                                     <@modal id=("modal_view_image_sizes_"+(preset?index)) label=uiLabelMap.CommonView linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_edit!}">
                                         <@heading>${uiLabelMap.CmsMediaViewCustomSizeVariants}</@heading>

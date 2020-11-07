@@ -803,6 +803,7 @@
         <attribute mode="IN" name="saveAsPreset" type="Boolean" optional="true"/>
         <attribute mode="IN" name="presetName" type="String" optional="true"/>
         <attribute mode="IN" name="presetId" type="String" optional="true"/>
+        <attribute mode="IN" name="parentProfile" type="String" optional="true"/>
 
         <attribute mode="IN" name="srcsetModeEnumId" type="String" optional="true"/>
         <attribute mode="IN" name="viewPortMediaQuery" type="List" optional="true"/>
@@ -886,6 +887,7 @@
         <attribute mode="IN" name="variantSizeSequenceNum" type="List" optional="true"/>
         <attribute mode="IN" name="presetName" type="String" optional="true"/>
         <attribute mode="IN" name="presetId" type="String" optional="true"/>
+        <attribute mode="IN" name="parentProfile" type="String" optional="true"/>
     </service>
 
     <service name="cmsUpdateCustomImageSizePreset" default-entity-name="ImageSizePreset" engine="entity-auto" invoke="update" auth="true">

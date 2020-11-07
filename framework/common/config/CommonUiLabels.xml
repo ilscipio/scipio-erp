@@ -9058,6 +9058,10 @@
         <value xml:lang="zh">上级</value>
         <value xml:lang="zh-TW">上層</value>
     </property>
+    <property key="CommonParentProfile">
+        <value xml:lang="de">Übergeordnetes Profil</value>
+        <value xml:lang="en">Parent Profile</value>
+    </property>
     <property key="CommonParties">
         <value xml:lang="de">Parties</value>
         <value xml:lang="en">Parties</value>

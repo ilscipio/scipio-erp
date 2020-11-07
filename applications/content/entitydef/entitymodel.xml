@@ -1328,6 +1328,7 @@ code package.
         title="Image sizes preset" author="Ilscipio GmbH" version="1.0">
         <field name="presetId" type="id-ne"><description>The preset ID, now stored as Content.mediaProfile for associated images (only since 2020-09-21)</description></field>
         <field name="presetName" type="name"></field>
+        <field name="parentProfile" type="id"><description>Parent mediaProfile or ImageSizePreset.presetId - used for type checking and specialization</description></field>
         <prim-key field="presetId" />
     </entity>
 

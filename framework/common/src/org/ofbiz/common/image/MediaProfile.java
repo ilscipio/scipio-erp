@@ -2,18 +2,26 @@ package org.ofbiz.common.image;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.entity.util.DistributedCacheClear;
+import org.ofbiz.service.ServiceContext;
+import org.ofbiz.service.ServiceUtil;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Represents media profile definitions, as defined in mediaprofiles.properties.
@@ -39,15 +47,18 @@ public abstract class MediaProfile implements Serializable {
 
     protected final String name;
     protected final String location;
+    protected final String parentProfile;
     protected final boolean defaultProfile;
     protected final Map<String, Object> properties;
 
     protected final String delegatorName;
     protected transient Delegator delegator;
+    protected Set<String> ancestorProfiles;
 
-    protected MediaProfile(Delegator delegator, String name, Map<String, Object> properties) {
+    protected MediaProfile(Delegator delegator, String name, String parentProfile, Map<String, Object> properties) {
         this.name = name;
-        this.properties = Collections.unmodifiableMap(new LinkedHashMap<>(properties));
+        this.properties = UtilValidate.isNotEmpty(properties) ? Collections.unmodifiableMap(new LinkedHashMap<>(properties)) : Collections.emptyMap();
+        this.parentProfile = UtilValidate.nullIfEmpty((parentProfile != null) ? parentProfile : (String) properties.get("parentProfile"));
         this.location = UtilValidate.nullIfEmpty((String) properties.get("location"));
         this.defaultProfile = UtilValidate.booleanValueVersatile(properties.get("defaultProfile"), false);
         this.delegatorName = delegator.getDelegatorName();
@@ -56,8 +67,7 @@ public abstract class MediaProfile implements Serializable {
 
     public static <M extends MediaProfile> M create(Delegator delegator, String name, String type, Map<String, Object> properties) {
         if ("IMAGE_OBJECT".equals(type)) {
-            // TODO: unhardcode
-            return UtilGenerics.cast(new ImageProfile(delegator, name, properties));
+            return UtilGenerics.cast(ImageProfile.createImageProfile(delegator, name, properties));
         } else {
             throw new UnsupportedOperationException("Unsupported media profile type: " + type);
         }
@@ -73,6 +83,23 @@ public abstract class MediaProfile implements Serializable {
         } else {
             CACHE.clear();
         }
+    }
+
+    public static Map<String, Object> clearCaches(ServiceContext ctx) {
+        if (Boolean.TRUE.equals(ctx.attr("tenantOnly"))) {
+            clearCaches(ctx.delegator());
+        } else {
+            clearCaches((Delegator) null);
+        }
+
+        if (Boolean.TRUE.equals(ctx.attr("distribute"))) {
+            DistributedCacheClear dcc = ctx.delegator().getDistributedCacheClear();
+            if (dcc != null) {
+                Map<String, Object> distCtx = UtilMisc.toMap("type", ctx.attr("type"));
+                dcc.runDistributedService("cmsDistributedClearMappingCaches", distCtx);
+            }
+        }
+        return ServiceUtil.returnSuccess();
     }
 
     /**
@@ -119,6 +146,10 @@ public abstract class MediaProfile implements Serializable {
         return (map != null) ? map.keySet() : Collections.emptySet();
     }
 
+    public static List<String> getMediaProfileNameList(Delegator delegator, String type) {
+        return new ArrayList<>(getMediaProfileNames(delegator, type));
+    }
+
     private static Profiles getProfiles(Delegator delegator) {
         Profiles profiles = CACHE.get(delegator.getDelegatorName());
         if (profiles == null) {
@@ -133,7 +164,12 @@ public abstract class MediaProfile implements Serializable {
         Map<String, MediaProfile> nameMap = new LinkedHashMap<>();
         Map<String, Map<String, MediaProfile>> typeMap = new LinkedHashMap<>();
         Map<String, MediaProfile> defaultsMap = new LinkedHashMap<>();
-        for(MediaProfile mediaProfile : readStaticMediaProfiles(delegator, UtilProperties.getMergedPropertiesFromAllComponents("mediaprofiles")).values()) {
+
+        List<MediaProfile> mediaProfiles = new ArrayList<>();
+        mediaProfiles.addAll(readStaticMediaProfiles(delegator, UtilProperties.getMergedPropertiesFromAllComponents("mediaprofiles")).values());
+        mediaProfiles.addAll(ImageProfile.loadStoredImageProfiles(delegator));
+
+        for(MediaProfile mediaProfile : mediaProfiles) {
             nameMap.put(mediaProfile.getName(), mediaProfile);
             Map<String, MediaProfile> typeProfiles = typeMap.get(mediaProfile.getType());
             if (typeProfiles == null) {
@@ -174,12 +210,40 @@ public abstract class MediaProfile implements Serializable {
         return name;
     }
 
-    public boolean isDefaultProfile() {
-        return defaultProfile;
-    }
-
     public String getLocation() {
         return location;
+    }
+
+    public String getParentProfile() {
+        return parentProfile;
+    }
+
+    public Set<String> getAncestorProfiles() {
+        Set<String> ancestorProfiles = this.ancestorProfiles;
+        if (ancestorProfiles == null) {
+            ancestorProfiles = new LinkedHashSet<>();
+            ancestorProfiles.add(getName());
+            MediaProfile profile = this;
+            String profileName;
+            while((profileName = profile.getParentProfile()) != null) {
+                ancestorProfiles.add(profileName);
+                profile = getMediaProfile(getDelegator(), profileName);
+                if (profile == null) {
+                    Debug.logError("Could not find media profile [" + profileName + "]", module);
+                    break;
+                }
+            }
+            this.ancestorProfiles = Collections.unmodifiableSet(ancestorProfiles);
+        }
+        return ancestorProfiles;
+    }
+
+    public boolean isProfileOrChild(String name) {
+        return getAncestorProfiles().contains(name);
+    }
+
+    public boolean isDefaultProfile() {
+        return defaultProfile;
     }
 
     public Map<String, Object> getProperties() {
@@ -193,6 +257,10 @@ public abstract class MediaProfile implements Serializable {
             this.delegator = delegator;
         }
         return delegator;
+    }
+
+    public boolean isDb() {
+        return (getDelegator().from("ImageSizePreset").where("presetId", getName()).queryCountSafe() > 0);
     }
 
 }

@@ -124,8 +124,16 @@ public final class UtilHttp {
      * -- this method will only use the skip names for session and servlet context attributes.
      */
     public static Map<String, Object> getCombinedMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
+        return getCombinedMap(request, null, null);
+    }
+
+    /**
+     * Create a combined map from servlet context, session, attributes and parameters
+     * -- this method will only use the skip names for session and servlet context attributes.
+     */
+    public static Map<String, Object> getCombinedMap(HttpServletRequest request, Set<? extends String> namesToSkip, Boolean readBody) {
         Map<String, Object> combinedMap = new HashMap<>();
-        combinedMap.putAll(getParameterMap(request));                   // parameters override nothing
+        combinedMap.putAll(getParameterMap(request, null, null, readBody));                   // parameters override nothing
         combinedMap.putAll(getServletContextMap(request, namesToSkip)); // bottom level application attributes
         combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
         combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
@@ -269,12 +277,22 @@ public final class UtilHttp {
         return getParameterMap(request, nameSet, null);
     }
 
+
     /**
      * Create a map from a HttpServletRequest (parameters) object
      * @param onlyIncludeOrSkip If true only include, if false skip, the named parameters in the nameSet. If this is null and nameSet is not null, default to skip.
      * @return The resulting Map
      */
     public static Map<String, Object> getParameterMap(HttpServletRequest request, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip) {
+        return getParameterMap(request, nameSet, onlyIncludeOrSkip, null);
+    }
+
+    /**
+     * Create a map from a HttpServletRequest (parameters) object
+     * @param onlyIncludeOrSkip If true only include, if false skip, the named parameters in the nameSet. If this is null and nameSet is not null, default to skip.
+     * @return The resulting Map
+     */
+    public static Map<String, Object> getParameterMap(HttpServletRequest request, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip, Boolean readBody) {
         boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip;
         Map<String, Object> paramMap = new HashMap<>();
 
@@ -315,7 +333,7 @@ public final class UtilHttp {
         }
 
         // SCIPIO: Include JSON body parameters
-        Map<String, Object> requestBodyMap = getRequestBodyMap(request);
+        Map<String, Object> requestBodyMap = !Boolean.FALSE.equals(readBody) ? getRequestBodyMap(request) : UtilGenerics.cast(request.getAttribute("requestBodyMap"));
         if (UtilValidate.isNotEmpty(requestBodyMap)) {
             paramMap.putAll(requestBodyMap);
         }
@@ -326,6 +344,7 @@ public final class UtilHttp {
 
         return canonicalizeParameterMap(paramMap);
     }
+
 
     /**
      * SCIPIO: Returns the named request parameter, using the same rules as {@link #getParameterMap(HttpServletRequest)}.

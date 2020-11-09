@@ -1771,7 +1771,7 @@
         <value xml:lang="de">Alles in den Warenkorb legen</value>
         <value xml:lang="en">Add All to Cart</value>
         <value xml:lang="en-GB">Add All to basket</value>
-        <value xml:lang="es">Añadir todo al carro</value>
+        <value xml:lang="es">Añadir todo a la cesta</value>
         <value xml:lang="fr">Ajouter tout au panier</value>
         <value xml:lang="hi-IN">सभी को टोकरी में डालें</value>
         <value xml:lang="it">Aggiungi Tutto al Carrello</value>
@@ -1792,7 +1792,7 @@
         <value xml:lang="de">Ausgewählte Artikel in den Warenkorb legen</value>
         <value xml:lang="en">Add Checked to Cart</value>
         <value xml:lang="en-GB">Add selected to basket</value>
-        <value xml:lang="es">Añadir selección al carro</value>
+        <value xml:lang="es">Añadir selección a la cesta</value>
         <value xml:lang="fr">Ajouter la sélection au panier</value>
         <value xml:lang="hi-IN">सही निशान वाले को टोकरी में डालें</value>
         <value xml:lang="it">Aggiungi Scelte al Carrello</value>
@@ -1892,7 +1892,7 @@
         <value xml:lang="de">In den Warenkorb legen</value>
         <value xml:lang="en">Add to Cart </value>
         <value xml:lang="en-GB">Add to basket</value>
-        <value xml:lang="es">Añadir al carro</value>
+        <value xml:lang="es">Añadir a la cesta</value>
         <value xml:lang="fr">Ajouter au panier </value>
         <value xml:lang="hi-IN">टोकरी में जोड़ें</value>
         <value xml:lang="it">Aggiungi al carrello</value>
@@ -2479,7 +2479,7 @@
         <value xml:lang="de">Zurück zum Warenkorb</value>
         <value xml:lang="en">Back to Shopping Cart</value>
         <value xml:lang="en-GB">Back to Shopping basket</value>
-        <value xml:lang="es">Volver al carro</value>
+        <value xml:lang="es">Volver a la cesta</value>
         <value xml:lang="fr">Retour au panier</value>
         <value xml:lang="hi-IN">ख़रीदारी टोकरी पर वापस जाऐं</value>
         <value xml:lang="it">Torna al carrello</value>
@@ -2859,7 +2859,7 @@
         <value xml:lang="ar">إجمالي العربة</value>
         <value xml:lang="de">Warenkorb Gesamtsumme</value>
         <value xml:lang="en">Cart Total</value>
-        <value xml:lang="es">Total del carro</value>
+        <value xml:lang="es">Total de la cesta</value>
         <value xml:lang="fr">Total du panier</value>
         <value xml:lang="it">Totale Carrello</value>
         <value xml:lang="ja">買い物かごの合計</value>
@@ -3594,7 +3594,7 @@
         <value xml:lang="de">Neues Angebot aus dem Warenkorb anlegen</value>
         <value xml:lang="de-CH">Neue Offerte aus dem Warenkorb anlegen</value>
         <value xml:lang="en">Create New Quote From Cart</value>
-        <value xml:lang="es">Crear nuevo presupuesto a partir del carro</value>
+        <value xml:lang="es">Crear nuevo presupuesto a partir de la cesta</value>
         <value xml:lang="fr">Créer une nouveau devis depuis le panier</value>
         <value xml:lang="it">Crea un nuovo preventivo dal carrello</value>
         <value xml:lang="ja">買い物かごから新規見積を作成</value>
@@ -4133,7 +4133,7 @@
     <property key="OrderDoNotHaveEnoughProducts">
         <value xml:lang="de">Nicht genügend vorhanden (Sie haben ${requestedQuantity}) vom Produkt ${productName} (Produkt ID: ${productId}) angegeben, Produkt nicht zum Warenkorb hinzugefügt. Reduzieren Sie die Menge oder nehmen Sie Kontakt mit dem Kundendienst auf.</value>
         <value xml:lang="en">Sorry, we do not have enough (you tried ${requestedQuantity}) of the product ${productName} (product ID: ${productId}) in stock, not adding to cart. Please try a lower quantity, try again later, or call customer service for more information.</value>
-        <value xml:lang="es">Lo sentimos pero no hay suficiente en stock del producto ${productName} [${productId}], el producto no se ha añadido al carro. Por favor reduzca la cantidad o póngase en contacto con atención al cliente.</value>
+        <value xml:lang="es">Lo sentimos pero no hay suficiente en stock del producto ${productName} [${productId}], el producto no se ha añadido a la cesta. Por favor reduzca la cantidad o póngase en contacto con atención al cliente.</value>
         <value xml:lang="fr">Désolé, nous n'en avons pas assez (vous avez essayé ${requestedQuantity} du produit ${productName}en stock (product ID: ${productId}), non ajouté au panier. SVP essayez une quantité inférieure, essayez de nouveau plus tard, ou appelez le service client pour plus d'information</value>
         <value xml:lang="it">Spiacente, al momento non disponiamo in magazzino di ${requestedQuantity} pezzi del prodotto ${productName} (product ID: ${productId}), questi non saranno aggiunti al carrello. Puoi provare a richiedere una quantità minore, a riprovare più tardi, o contattare il servizio assistenza clienti.</value>
         <value xml:lang="ja">申し訳ありません。製品 ${productName} (製品ID: ${productId}) の充分な在庫がありません( ${requestedQuantity} をご希望)。買い物かごに追加することができません。数を減らすか、後でお試しください。あるいは詳細な情報はカスタマサービスにご連絡ください。</value>
@@ -14137,7 +14137,7 @@
         <value xml:lang="de">Der Warenkorb ist leer</value>
         <value xml:lang="en">Shopping Cart Empty</value>
         <value xml:lang="en-GB">Shopping basket is empty</value>
-        <value xml:lang="es">El carro de compra está vacío</value>
+        <value xml:lang="es">La cesta de la compra está vacía</value>
         <value xml:lang="fr">Panier vide</value>
         <value xml:lang="hi-IN">टोकरी ख़ाली है</value>
         <value xml:lang="it">Carrello vuoto</value>
@@ -14684,7 +14684,7 @@
         <value xml:lang="de">Zum Warenkorb</value>
         <value xml:lang="en">To Cart</value>
         <value xml:lang="en-GB">to basket</value>
-        <value xml:lang="es">al carro</value>
+        <value xml:lang="es">a la cesta</value>
         <value xml:lang="fr">au panier</value>
         <value xml:lang="hi-IN">टोकरी में</value>
         <value xml:lang="it">al Carello</value>
@@ -16207,7 +16207,7 @@
         <value xml:lang="ar">عربة العرض</value>
         <value xml:lang="de">Warenkorb anzeigen</value>
         <value xml:lang="en">Show Cart</value>
-        <value xml:lang="es">Mostrar carro</value>
+        <value xml:lang="es">Mostrar cesta</value>
         <value xml:lang="fr">Montrer le panier</value>
         <value xml:lang="it">Mostra Carrello</value>
         <value xml:lang="ja">買い物かごの表示</value>

@@ -3556,7 +3556,7 @@
     <property key="FormFieldTitle_addToCartRemoveIncompat">
         <value xml:lang="de">Hinzufügen zum Warenkorb entfernt allfällige inkompatible Produkte</value>
         <value xml:lang="en">Add To Cart Remove Incompat</value>
-        <value xml:lang="es">Añadir a carro, quitar incompatibles</value>
+        <value xml:lang="es">Añadir a la cesta, quitar incompatibles</value>
         <value xml:lang="fr">L'ajout au panier retire les éventuels produits incompatibles</value>
         <value xml:lang="it">Aggiunta al Carrello Rimuove Incompatibilità</value>
         <value xml:lang="ja">非互換品を除き買い物かごに追加</value>
@@ -3569,7 +3569,7 @@
     <property key="FormFieldTitle_addToCartReplaceUpsell">
         <value xml:lang="de">Hinzufügen zum Warenkorb ersetzt Zusatzverkäufe (Upsell)</value>
         <value xml:lang="en">Add To Cart Replace Upsell</value>
-        <value xml:lang="es">Añadir a carro, reemplazar sobreventa</value>
+        <value xml:lang="es">Añadir a la cesta, reemplazar sobreventa</value>
         <value xml:lang="fr">L'ajout au panier retire les éventuels produits redondants (upsell)</value>
         <value xml:lang="it">Aggiunta al Carrello Sostituisce Upsell</value>
         <value xml:lang="ja">上位商品に交換して買い物かごに追加</value>
@@ -3914,7 +3914,7 @@
     <property key="FormFieldTitle_autoSaveCart">
         <value xml:lang="de">Automatisches Speichern des Warenkorbs</value>
         <value xml:lang="en">Auto Save Cart</value>
-        <value xml:lang="es">Guardar el carro automáticamente</value>
+        <value xml:lang="es">Guardar la cesta automáticamente</value>
         <value xml:lang="fr">Sauvegarde automatique du panier</value>
         <value xml:lang="it">Salvataggio Automatico Carrello</value>
         <value xml:lang="ja">買い物かごを自動保存</value>
@@ -8390,7 +8390,7 @@
     <property key="FormFieldTitle_viewCartOnAdd">
         <value xml:lang="de">Warenkorb anzeigen beim Hinzufügen</value>
         <value xml:lang="en">View Cart On Add</value>
-        <value xml:lang="es">Ver el carro al añadir</value>
+        <value xml:lang="es">Ver la cesta al añadir</value>
         <value xml:lang="fr">Voir le panier sur ajout</value>
         <value xml:lang="it">Mostra Carrello In Aggiunta</value>
         <value xml:lang="ja">追加時に買い物かごを表示</value>
@@ -12915,7 +12915,7 @@
         <value xml:lang="de">Produkte dieser Produktgruppe in der vorgegebenen Menge in den Warenkorb legen</value>
         <value xml:lang="en">Add Products in this Category to the Cart using Default Quantities</value>
         <value xml:lang="en-GB">Add Products in this Category to the basket using default quantities</value>
-        <value xml:lang="es">Agregue los productos en esta categoría al carro usando cantidades predeterminadas</value>
+        <value xml:lang="es">Agregue los productos en esta categoría la cesta usando cantidades predeterminadas</value>
         <value xml:lang="fr">Ajouter des articles de cette catégorie dans le panier avec les quantités par défaut</value>
         <value xml:lang="hi-IN">इस टोकरी मे सामान्य भार कि वस्तु डालिये</value>
         <value xml:lang="it">Aggiungi al carrello i prodotti di questa categoria usando la quantità di default</value>
@@ -19998,7 +19998,7 @@
     <property key="ProductIncludeFreeshipMessage">
         <value xml:lang="de">Auf N setzen um nicht anzuzeigen falls der Warenkorb NUR Produkte mit Gratis-Versand enthält</value>
         <value xml:lang="en">Set to N to hide when the cart contains ONLY free shipping items</value>
-        <value xml:lang="es">Poner a N para ocultar cuando el carro contiene SÓLO ítems libres de gastos de envío</value>
+        <value xml:lang="es">Poner a N para ocultar cuando la cesta contiene SÓLO ítems libres de gastos de envío</value>
         <value xml:lang="fr">Mettre à N pour masquer quand le panier contient SEULEMENT des articles à expédition gratuite</value>
         <value xml:lang="it">Impostato ad N per nascondere il carrrello quando contiene SOLO righe spedizioni gratuite</value>
         <value xml:lang="ja">買い物かごに無料配送アイテムしかない場合に隠すため N をセット</value>
@@ -26826,7 +26826,7 @@
     <property key="ProductPromoCodes">
         <value xml:lang="de">Aktionscodes</value>
         <value xml:lang="en">Promotion/Coupon Codes</value>
-        <value xml:lang="es">Códigos de Cupones/Promociones</value>
+        <value xml:lang="es">Código Promocional</value>
         <value xml:lang="fr">Codes de Promotion/Coupon</value>
         <value xml:lang="it">Codice di Promozione/Buono</value>
         <value xml:lang="ja">プロモーション/クーポンコード</value>

@@ -86,7 +86,7 @@
         <value xml:lang="de">Fügen Sie diese Liste mit Unterliste(n) zum Warenkorb hinzu</value>
         <value xml:lang="en">Add This List And Child List(s) To Cart</value>
         <value xml:lang="en-GB">Add This List And Child List(s) To basket</value>
-        <value xml:lang="es">Añadir listas hijas al carro</value>
+        <value xml:lang="es">Añadir listas hijas a la cesta</value>
         <value xml:lang="fr">Ajouter la liste et sous liste(s) au panier</value>
         <value xml:lang="hi-IN">इस पूरी सूची को टोकरी में डालें</value>
         <value xml:lang="it">Aggiungi questa lista e le liste figlie al Carrello</value>
@@ -107,7 +107,7 @@
         <value xml:lang="de">Liste zum Warenkorb hinzufügen</value>
         <value xml:lang="en">Add List To Cart</value>
         <value xml:lang="en-GB">Add List To basket</value>
-        <value xml:lang="es">Añadir lista al carro</value>
+        <value xml:lang="es">Añadir lista a la cesta</value>
         <value xml:lang="fr">Ajouter la liste au panier</value>
         <value xml:lang="hi-IN">सूची को टोकरी में डालें</value>
         <value xml:lang="it">Aggiungi la lista al carrello</value>
@@ -297,7 +297,7 @@
         <value xml:lang="de">Immer den Warenkorb prüfen, wenn ein neuer Artikel hineingelegt wurde.</value>
         <value xml:lang="en">Always View Cart After Adding An Item</value>
         <value xml:lang="en-GB">Always view basket after adding an item</value>
-        <value xml:lang="es">Verificar carro luego de añadir un item</value>
+        <value xml:lang="es">Verificar la cesta después de añadir un item</value>
         <value xml:lang="fr">Toujours voir le panier après l'ajout d'un article</value>
         <value xml:lang="hi-IN">हमेशा टोकरी देखें सामान जोडने के बाद</value>
         <value xml:lang="it">Visualizza sempre il carrello dopo aver aggiunto una riga</value>
@@ -2995,7 +2995,7 @@
         <value xml:lang="de">Neuberechnung der Gesamtsumme</value>
         <value xml:lang="en">Recalculate Cart</value>
         <value xml:lang="en-GB">Recalculate basket</value>
-        <value xml:lang="es">Recalcular carro</value>
+        <value xml:lang="es">Recalcular cesta</value>
         <value xml:lang="fr">Recalculer le panier</value>
         <value xml:lang="hi-IN">टोकरी कि गणना फिर करें</value>
         <value xml:lang="it">Ricalcola</value>
@@ -3876,7 +3876,7 @@
         <value xml:lang="da">For at bestille, opret kundeanmodning fra indkøbskurv</value>
         <value xml:lang="de">um einen Auftrag zu erstellen machen Sie eine Anfrage über den Warenkorb</value>
         <value xml:lang="en">To Order Create CustRequest From Cart</value>
-        <value xml:lang="es">Para pedir genere una petición desde el carro de compra</value>
+        <value xml:lang="es">Para pedir genere una petición desde la cesta de la compra</value>
         <value xml:lang="fr">pour créer une commande faites une demande depuis le panier</value>
         <value xml:lang="hi-IN">कोट उत्पन्न करने के लिए आग्रह</value>
         <value xml:lang="it">Per creare una richesta di preventivo per il carrello</value>
@@ -4041,7 +4041,7 @@
         <value xml:lang="de">von Variante in den Warenkorb</value>
         <value xml:lang="en">Variation To Cart</value>
         <value xml:lang="en-GB">of Variation to basket</value>
-        <value xml:lang="es">de variación al carro</value>
+        <value xml:lang="es">de variación a la cesta</value>
         <value xml:lang="fr">Option au panier</value>
         <value xml:lang="hi-IN">अन्तर को टोकरी में</value>
         <value xml:lang="it">di variante di carrello</value>

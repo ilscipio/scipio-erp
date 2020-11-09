@@ -3133,7 +3133,7 @@
         <value xml:lang="ar">إضافة القائمة المتفرعة للسلة</value>
         <value xml:lang="de">Untergeordnete Liste zum Warenkorb hinzufügen</value>
         <value xml:lang="en">Add Child List To Cart</value>
-        <value xml:lang="es">Añadir listas hijas al carro</value>
+        <value xml:lang="es">Añadir listas hijas a la cesta</value>
         <value xml:lang="fr">Ajouter des sous-listes au panier</value>
         <value xml:lang="it">Aggiungi Figlio all Lista del Carrello</value>
         <value xml:lang="ja">下位(子)の一覧を買い物かごに追加</value>
@@ -3197,7 +3197,7 @@
         <value xml:lang="ar">إضافة القائمة للسلة</value>
         <value xml:lang="de">Liste zum Einkaufswagen hinzufügen</value>
         <value xml:lang="en">Add List To Cart</value>
-        <value xml:lang="es">Añadir lista al carro</value>
+        <value xml:lang="es">Añadir lista a la cesta</value>
         <value xml:lang="fr">Ajouter une liste au panier</value>
         <value xml:lang="it">Aggiungi Lista Al Carrello</value>
         <value xml:lang="ja">一覧をかごに追加</value>
@@ -3268,7 +3268,7 @@
         <value xml:lang="ar">إضافة المنتج للقائمة</value>
         <value xml:lang="de">Produkt zur Liste hinzufügen</value>
         <value xml:lang="en">Add Product To List</value>
-        <value xml:lang="es">Añadir producto al carro</value>
+        <value xml:lang="es">Añadir producto a la cesta</value>
         <value xml:lang="fr">Ajouter un produit à la liste</value>
         <value xml:lang="hi-IN">सूची में उत्पाद जोड़ें</value>
         <value xml:lang="it">Aggiungi Prodotto Alla Lista</value>
@@ -9774,7 +9774,7 @@
         <value xml:lang="ar">لا توجد سلة تسوق محفوظة لهذا الطرف</value>
         <value xml:lang="de">Kein Warenkorb gespeichert für diesen Nutzer.</value>
         <value xml:lang="en">No shopping cart saved for user</value>
-        <value xml:lang="es">No se encontraron carros de compra</value>
+        <value xml:lang="es">No se encontraron cestas de la compra</value>
         <value xml:lang="fr">Aucun panier d'achats enregistré pour cet acteur</value>
         <value xml:lang="hi-IN">पार्टी के लिए शॉपिंग कार्ट नहीं बचाई|</value>
         <value xml:lang="it">Nessun carrello registrato per il Soggetto.</value>
@@ -13202,7 +13202,7 @@
         <value xml:lang="cs">Do košíku</value>
         <value xml:lang="de">Zum Warenkorb</value>
         <value xml:lang="en">To Cart</value>
-        <value xml:lang="es">Al carro</value>
+        <value xml:lang="es">A la cesta</value>
         <value xml:lang="fr">Panier</value>
         <value xml:lang="hi-IN">कार्ट को</value>
         <value xml:lang="it">Al Carrello</value>

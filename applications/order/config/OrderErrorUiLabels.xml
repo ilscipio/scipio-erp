@@ -239,7 +239,7 @@
         <value xml:lang="ar">لا يمكن إيجاد مجموعة شحن العربة [ ${groupIndex} ]</value>
         <value xml:lang="de">Warenkorb-Versandgruppe nicht gefunden [ ${groupIndex} ]</value>
         <value xml:lang="en">Cart ship group not found [ ${groupIndex} ]</value>
-        <value xml:lang="es">Grupo de envío del carro no encontrado [ ${groupIndex} ]</value>
+        <value xml:lang="es">Grupo de envío de la cesta no encontrado [ ${groupIndex} ]</value>
         <value xml:lang="fr">Groupe d'expédition non trouvé [ ${groupIndex} ]</value>
         <value xml:lang="it">Gruppo Spedizione Carrello non trovato [ ${groupIndex} ]</value>
         <value xml:lang="ja">買い物かご発送グループが見つかりません [ ${groupIndex} ]</value>
@@ -274,7 +274,7 @@
         <value xml:lang="ar">يوجد استثناء في تحديث العربة.</value>
         <value xml:lang="de">Fehler bei Änderung des Warenkorbs. </value>
         <value xml:lang="en">Caught exception on cart update. </value>
-        <value xml:lang="es">Excepción capturada en la actualización del carro.</value>
+        <value xml:lang="es">Excepción capturada en la actualización de la cesta.</value>
         <value xml:lang="fr">Exception attrapée dans la mise à jour du chariot. </value>
         <value xml:lang="it">Eccezione sull'aggiornamento carrello. </value>
         <value xml:lang="ja">買い物かごの更新中に例外が発生しました</value>
@@ -303,7 +303,7 @@
         <value xml:lang="ar">يوجد استثناء في صيغة الرقم على تحديث العربة</value>
         <value xml:lang="de">Ungültiges Zahlenformat bei Warenkorbänderung. </value>
         <value xml:lang="en">Caught number format exception on cart update. </value>
-        <value xml:lang="es">Excepción de formato de número capturada en la actualización del carro.</value>
+        <value xml:lang="es">Excepción de formato de número capturada en la actualización de la cesta.</value>
         <value xml:lang="fr">Exception du format de n° lors de la mise à jour du panier. </value>
         <value xml:lang="it">Eccezione formato numerico sull'aggiornamento carrello. </value>
         <value xml:lang="ja">買い物かごの更新中に数値書式例外が発生しました。</value>
@@ -320,7 +320,7 @@
         <value xml:lang="ar">يوجد استثناء تحليلي على تحديث العربة</value>
         <value xml:lang="de">Verarbeitungsfehler bei Warenkorbänderung. </value>
         <value xml:lang="en">Caught parse exception on cart update. </value>
-        <value xml:lang="es">Excepción del análisis sintáctico atrapada en la actualización del carro.</value>
+        <value xml:lang="es">Excepción del análisis sintáctico atrapada en la actualización de la cesta.</value>
         <value xml:lang="fr">Exception de l'analyse syntaxique attrapée de dans la mise à jour du chariot. </value>
         <value xml:lang="it">Eccezione parse sull'aggiornamento carrello.</value>
         <value xml:lang="ja">買い物かごの更新中に解析例外が発生しました。</value>
@@ -524,7 +524,7 @@
         <value xml:lang="ar">لا يمكن اختيار الهدية البديلة, لا يوجد بند خط العربة لرقم ${alternateGwpLine}.</value>
         <value xml:lang="de">Alternative Gratisbeigabe konnte nicht gewählt werden, es wurde keine Warenkorbposition für 'alternateGwpLine' gefunden. </value>
         <value xml:lang="en">Could not select alternate gift, no cart line item found for # ${alternateGwpLine}. </value>
-        <value xml:lang="es">No puede seleccionar el regalo suplementario, ninguna línea del carro encontrada para # ${alternateGwpLine}.</value>
+        <value xml:lang="es">No puede seleccionar el regalo suplementario, ninguna línea de la cesta encontrada para # ${alternateGwpLine}.</value>
         <value xml:lang="fr">Vous ne pouvez pas sélectionner un cadeau alternatif, aucune élément du panier trouvé pour le n°${alternateGwpLine}.</value>
         <value xml:lang="it">Non è possibile selezionare un'omaggio alternativo, nessuna riga prodotto carrello trovata per # ${alternateGwpLine}. </value>
         <value xml:lang="ja">代替のギフトが選択できません。No ${alternateGwpLine} に対する買い物かごのアイテム行が見つかりません。</value>
@@ -560,7 +560,7 @@
         <value xml:lang="ar">المرسل أو المفوض أو حجة العربة فارغا</value>
         <value xml:lang="de">Dispatcher, Delegator oder Warenkorb ist null</value>
         <value xml:lang="en">Dispatcher or Delegator or Cart argument is null</value>
-        <value xml:lang="es">El argumento del despachador, el delegador o el carro es nulo</value>
+        <value xml:lang="es">El argumento del despachador, el delegador o de la cesta es nulo</value>
         <value xml:lang="fr">L'argument du dispatcher, du delegator ou du panier est nul</value>
         <value xml:lang="it">Dispatcher o Delegator o Cart argomento è null</value>
         <value xml:lang="ja">ディスパッチャまたはデリゲータまたは買い物かごの引数が空です</value>
@@ -2838,7 +2838,7 @@
         <value xml:lang="ar">مشكلة في إضافة البند من القائمة إلى العربة</value>
         <value xml:lang="de">Problem beim Hinzufügen einer Position aus der Liste zum Warenkorb</value>
         <value xml:lang="en">Problems adding item from list to cart</value>
-        <value xml:lang="es">Problemas agregando ítem de una lista hacia el carro</value>
+        <value xml:lang="es">Problemas agregando ítem de una lista hacia de la cesta</value>
         <value xml:lang="fr">Problèmes en ajoutant un article dans le chariot</value>
         <value xml:lang="it">Problemi nella aggiunta riga dalla lista carrello</value>
         <value xml:lang="ja">買い物かごにリストからアイテム追加中にエラー</value>
@@ -2960,7 +2960,7 @@
         <value xml:lang="ar">مشاكل في إحضار بند العربة بالمؤشر</value>
         <value xml:lang="de">Problem beim Ermitteln der Warenkorb-Position per Index</value>
         <value xml:lang="en">Problems getting the cart item by index</value>
-        <value xml:lang="es">Problemas obteniendo el ítem del carro por el índice</value>
+        <value xml:lang="es">Problemas obteniendo el ítem de la cesta por el índice</value>
         <value xml:lang="fr">Problèmes en obtenant l'article du chariot par l'index</value>
         <value xml:lang="it">Problemi lettura la riga carrello dall'indice</value>
         <value xml:lang="ja">買い物かごのアイテムを索引で取得中にエラー</value>
@@ -4489,7 +4489,7 @@
         <value xml:lang="ar">عرض السعر [ ${quoteId} ] متواجد حاليا في العربة, لن يضاف</value>
         <value xml:lang="de">Das Angebot [ ${quoteId} ] ist schon im Warenkorb, wird nicht hinzugefügt. </value>
         <value xml:lang="en">The quote [ ${quoteId} ] is already in the cart, not adding. </value>
-        <value xml:lang="es">La cotización [ ${quoteId} ] ya está en el carro, no puede ser añadida.</value>
+        <value xml:lang="es">La cotización [ ${quoteId} ] ya está en de la cesta, no puede ser añadida.</value>
         <value xml:lang="fr">La citation [ ${quoteId} ]est déjà dans le chariot, ne peut ôtre ajoutée. </value>
         <value xml:lang="it">Il preventivo [ ${quoteId} ] è già nel carrello, non verrà aggiunto. </value>
         <value xml:lang="ja">見積 [ ${quoteId} ] は買い物かごにすでに存在します。追加できません。</value>
@@ -4505,7 +4505,7 @@
         <value xml:lang="ar">المتطلب [ ${requirementId} ] متواجد حاليا بالعربة, لن يضاف</value>
         <value xml:lang="de">Der Bedarf [ ${requirementId} ] ist schon im Warenkorb, wird nicht hinzugefügt. </value>
         <value xml:lang="en">The requirement [ ${requirementId} ] is already in the cart, not adding. </value>
-        <value xml:lang="es">El requerimiento [ ${requirementId} ] ya está en el carro, no puede ser añadido.</value>
+        <value xml:lang="es">El requerimiento [ ${requirementId} ] ya está en de la cesta, no puede ser añadido.</value>
         <value xml:lang="fr">Le besoin [ ${requirementId} ] est déjà dans le chariot, ne peut ôtre ajoutée. </value>
         <value xml:lang="it">Il fabbisogno [ ${requirementId} ] è già stato aggiunto nel carrello, non verrà aggiunto. </value>
         <value xml:lang="ja">要求 [ ${requirementId} ] は買い物かごにすでに存在します。追加できません。</value>
@@ -4863,7 +4863,7 @@
         <value xml:lang="ar">غير ممكن الحفظ الأوتوماتيكي للعربة</value>
         <value xml:lang="de">Fehler beim automatischen Speichern des Warenkorbes</value>
         <value xml:lang="en">Unable to store auto-save cart</value>
-        <value xml:lang="es">No se pudo almacenar el carro automáticamente</value>
+        <value xml:lang="es">No se pudo almacenar de la cesta automáticamente</value>
         <value xml:lang="fr">Impossible d'enregistrer la sauvegarde automatique du chariot</value>
         <value xml:lang="it">Non è possibile registrare sul negozio carrello con salvataggio automatico</value>
         <value xml:lang="ja">買い物かごが自動保存できません</value>
@@ -5124,7 +5124,7 @@
         <value xml:lang="ar">اختر التفريع قبل الإضافة للعربة</value>
         <value xml:lang="de">Wählen sie eine Variante bevor sie es zum Warenkorb hinzufügen</value>
         <value xml:lang="en">Choose variation before adding to cart</value>
-        <value xml:lang="es">Seleccione una variante antes de añadir al carro</value>
+        <value xml:lang="es">Seleccione una variante antes de añadir de la cesta</value>
         <value xml:lang="fr">Choisir la variante avant d'ajouter au panier</value>
         <value xml:lang="it">Scegli variante prima di aggiungerlo al carrello</value>
         <value xml:lang="ja">買い物かごに追加する前に別型を選択してください</value>
@@ -5138,7 +5138,7 @@
         <value xml:lang="ar">اضبط السلعة قبل الإضافة إلى العربة</value>
         <value xml:lang="de">Produkt Konfigurieren vor dem Hinzufügen zum Warenkorb</value>
         <value xml:lang="en">Configure product before adding to cart</value>
-        <value xml:lang="es">Configure el producto antes de añadir al carro</value>
+        <value xml:lang="es">Configure el producto antes de añadir de la cesta</value>
         <value xml:lang="fr">Configurer l'article avant de l'ajouter au panier</value>
         <value xml:lang="it">Configura prodotto prima di aggiungerlo al carrello</value>
         <value xml:lang="ja">買い物かごに追加する前に製品をカスタマイズしてください</value>
@@ -5174,7 +5174,7 @@
         <value xml:lang="ar">ادخل معلومات الحجز قبل الإضافة إلى العربة</value>
         <value xml:lang="de">Erfassen Sie die Buchungsinformation vor dem Hinzufügen zum Warenkorb</value>
         <value xml:lang="en">Enter Booking Information Before Adding to Cart</value>
-        <value xml:lang="es">Introduzca información de reserva antes de añadir al carro</value>
+        <value xml:lang="es">Introduzca información de reserva antes de añadir de la cesta</value>
         <value xml:lang="fr">Entrer la réservation avant d'ajouter au panier</value>
         <value xml:lang="it">Inserire informazioni prenotazione prima di aggiungerlo al carrello</value>
         <value xml:lang="ja">買い物かごに追加する前に注文情報を入力してください</value>
@@ -5199,7 +5199,7 @@
         <value xml:lang="ar">لم تمر معلومات السلعة, لن يتم إضافة أي شئ إلى العربة</value>
         <value xml:lang="de">Keine Produktinformationen übergeben. Warenkorb bleibt unverändert.</value>
         <value xml:lang="en">No product information passed, not adding anything to cart.</value>
-        <value xml:lang="es">No se ha proporcionado información de producto, no se añade nada al carro.</value>
+        <value xml:lang="es">No se ha proporcionado información de producto, no se añade nada de la cesta.</value>
         <value xml:lang="fr">Pas d'information article, pas d'ajout au panier.</value>
         <value xml:lang="it">Nessuna informazione sul prodotto, non è stato aggiunto niente al carrello.</value>
         <value xml:lang="ja">製品情報が渡されませんでした。買い物かごに追加できません。</value>
@@ -5260,7 +5260,7 @@
         <value xml:lang="ar">أضيفت البنود ${totalQuantity} إلى العربة</value>
         <value xml:lang="de">${totalQuantity} Produkte in Warenkorb gelegt</value>
         <value xml:lang="en">Added ${totalQuantity} items to the cart.</value>
-        <value xml:lang="es">Se han añadido ${totalQuantity} ítems al carro.</value>
+        <value xml:lang="es">Se han añadido ${totalQuantity} ítems de la cesta.</value>
         <value xml:lang="fr">Ajouter ${totalQuantity} article(s) dans le panier</value>
         <value xml:lang="it">Aggiunte ${totalQuantity} righe al carrello.</value>
         <value xml:lang="ja">買い物かごに ${totalQuantity} アイテム追加しました。</value>
@@ -5335,7 +5335,7 @@
         <value xml:lang="ar">لا يمكن إضافة السلعة ${productId} إلى العربة</value>
         <value xml:lang="de">Produkt ${productId} konnte dem Warenkorb NICHT hinzugefügt werden.</value>
         <value xml:lang="en">Could NOT add product ${productId} to cart.</value>
-        <value xml:lang="es">No se puede añadir el producto ${productId} al carro.</value>
+        <value xml:lang="es">No se puede añadir el artículo ${productId} a la cesta.</value>
         <value xml:lang="fr">Impossible d'ajouter l'article ${productId} au panier.</value>
         <value xml:lang="it">NON è Possibile aggiungere prodotto ${productId} al carrello.</value>
         <value xml:lang="ja">製品 ${productId} を買い物かごに追加できません。</value>
@@ -5369,7 +5369,7 @@
         <value xml:lang="ar">لا يمكن إضافة السلع من الفئة ${categorieId} إلى العربة {read error}</value>
         <value xml:lang="de">Produkt(e) aus Kategorie ${categorieId} konnten nicht zum Warenkorb hinzugefügt werden {read error}.</value>
         <value xml:lang="en">Could not get products in category ${categorieId} to add to cart {read error}.</value>
-        <value xml:lang="es">No se han obtenido productos para añadir al carro de la categoría ${categorieId} {read error}.</value>
+        <value xml:lang="es">No se han obtenido productos para añadir a la cesta de la categoría ${categorieId} {read error}.</value>
         <value xml:lang="fr">Impossible d'obtenir des articles de la catégorie ${categorieId} à ajouter au panier {read error}.</value>
         <value xml:lang="it">Non è possibile leggere i prodotti della categoria ${categorieId} per aggiungere al carrello {read error}.</value>
         <value xml:lang="ja">カテゴリ ${categorieId} の製品を取得できないため、買い物かごに追加できません {読み込みエラー}。</value>
@@ -5386,7 +5386,7 @@
         <value xml:lang="ar">ا يمكن إضافة السلع من الفئة ${categorieId} إلى العربة {read error}: ${message}.</value>
         <value xml:lang="de">Produkt(e) aus Kategorie ${categorieId} konnten nicht zum Warenkorb hinzugefügt werden {read error}: ${message}.</value>
         <value xml:lang="en">Could not get products in category ${categorieId} to add to cart {read error}: ${message}.</value>
-        <value xml:lang="es">No se pudo obtener productos de la categoría ${categorieId} para agregar al carro {read error}: ${message}.</value>
+        <value xml:lang="es">No se pudo obtener productos de la categoría ${categorieId} para agregar a la cesta{read error}: ${message}.</value>
         <value xml:lang="fr">Impossible d'obtenir des articles de la catégorie ${categorieId} à ajouter au panier {read error} : ${message}.</value>
         <value xml:lang="it">Non è possibile leggere i prodotti della categoria ${categorieId} per aggiungere al carrello {read error}: ${message}.</value>
         <value xml:lang="ja">カテゴリ ${categorieId} の製品を取得できないため、買い物かごに追加できません {読み込みエラー}: ${message}。</value>
@@ -5488,7 +5488,7 @@
         <value xml:lang="ar">العربة فارغة.</value>
         <value xml:lang="de">Warenkorb ist leer.</value>
         <value xml:lang="en">Cart is empty.</value>
-        <value xml:lang="es">El carro está vacío.</value>
+        <value xml:lang="es">La cesta  está vacía.</value>
         <value xml:lang="fr">Le panier est vide</value>
         <value xml:lang="it">Il carrello è vuoto.</value>
         <value xml:lang="ja">買い物かごは空です。</value>
@@ -5813,7 +5813,7 @@
         <value xml:lang="ar">لا يوجد بنود في العربة.</value>
         <value xml:lang="de">Es befinden sich keine Waren im Warenkorb.</value>
         <value xml:lang="en">There are no items in the cart.</value>
-        <value xml:lang="es">No hay ítems en el carro.</value>
+        <value xml:lang="es">No hay artículos en la cesta.</value>
         <value xml:lang="fr">Aucun article dans le panier.</value>
         <value xml:lang="it">Non ci sono righe nel carrello.</value>
         <value xml:lang="ja">買い物かごにアイテムがありません。</value>
@@ -6124,7 +6124,7 @@
         <value xml:lang="ar">حاولت إضافة السلعة ${productName} (productId: ${productId}) إلى العربة. هذه السلعة لم تعد متوفرة للبيع, لذلك لن تتم الإضافة.</value>
         <value xml:lang="de">Versuch, Produkt ${productName} (Produkt ID: ${productId}) zum Warenkorb hinzuzufügen. Das Produkt ist nicht mehr zum Verkauf verfügbar, nicht hinzugefügt.</value>
         <value xml:lang="en">Tried to add the Product ${productName} (productId: ${productId}) to the cart. This product is no longer available for sale, so not adding.</value>
-        <value xml:lang="es">Se ha intentado añadir el producto ${productName} (códgio: ${productId}) al carro. Este producto ya no está a la venta y no se añade.</value>
+        <value xml:lang="es">Se ha intentado añadir el artículo ${productName} (códgio: ${productId}) a la cesta. Este producto ya no está a la venta y no se añade.</value>
         <value xml:lang="fr">Vous avez essayé d'ajouter l'article ${productName} (productId : ${productId}) au panier. Ce produit n'est plus disponible à la vente, donc ne l'ajouter pas.</value>
         <value xml:lang="it">Tentativo di aggiungere il Prodotto ${productName} (prodotto: ${productId}) al carrello. Questo prodotto non è più disponibile per la vendita, così non sarà possibile aggiungerlo.</value>
         <value xml:lang="ja">買い物かごに製品 ${productName} (製品ID: ${productId}) を追加しようとしましたが、この製品はもう販売できません。追加できません。</value>
@@ -6140,7 +6140,7 @@
         <value xml:lang="ar">حاولت إضافة السلعة ${productName} (Produkt ID: ${productId}) إلى العربة, لن تتم الإضافة: التضبيطات للسلعة غير صحيحة.</value>
         <value xml:lang="de">Versuch, Produkt ${productName} (Produkt ID: ${productId}) zum Warenkorb hinzuzufügen, Das Produkt ist nicht korrekt konfiguriert, nicht zum Warenkorb hinzugefügt.</value>
         <value xml:lang="en">Tried to add the Product ${productName} (productId: ${productId}) to the cart, not adding: the product is not configured correctly.</value>
-        <value xml:lang="es">Se ha intentado añadir el producto ${productName} (códgio: ${productId}) al carro. Este producto no está configurado correctamente y no se añade.</value>
+        <value xml:lang="es">Se ha intentado añadir el artículo ${productName} (códgio: ${productId}) a la cesta. Este producto no está configurado correctamente y no se añade.</value>
         <value xml:lang="fr">Vous avez essayé d'ajouter l'article ${productName} (productId : ${productId}) au panier, ne pas ajouter: l'article n'est pas configuré correctement.</value>
         <value xml:lang="it">Tentativo di aggiungere il Prodotto ${productName} (prodotto: ${productId}) al carrello, non verrà aggiunto: il prodotto non è configurato correttamente.</value>
         <value xml:lang="ja">買い物かごに製品 ${productName} (製品ID: ${productId}) を追加しようとしましたが、追加できません。この製品は正しく設定されていません。</value>
@@ -6156,7 +6156,7 @@
         <value xml:lang="ar">حاولت إضافة السلعة ${productName} (productId: ${productId}) إلى العربة. هذه السلعة لم توفر للبيع حتى الآن, لذلك لن تتم الإضافة.</value>
         <value xml:lang="de">Versuch, Produkt ${productName} (Produkt ID: ${productId}) zum Warenkorb hinzuzufügen. Das Produkt ist noch nicht zum Verkauf freigegeben, nicht zum Warenkorb hinzugefügt.</value>
         <value xml:lang="en">Tried to add the Product ${productName} (productId: ${productId}) to the cart. This product has not yet been made available for sale, so not adding.</value>
-        <value xml:lang="es">Se ha intentado añadir el producto ${productName} (códgio: ${productId}) al carro. Este producto aún no está a la venta y no se añade.</value>
+        <value xml:lang="es">Se ha intentado añadir el artículo ${productName} (códgio: ${productId}) a la cesta. Este producto aún no está a la venta y no se añade.</value>
         <value xml:lang="fr">Vous avez essayé d'ajouter l'article ${productName} (productId : ${productId}) au panier. Ce produit n'a pas été encore mis à disposition à la vente, donc ne pas ajouter.</value>
         <value xml:lang="it">Tentativo di aggiungere il Prodotto ${productName} (prodotto: ${productId}) al carrello. Questo prodotto non è stato ancora reso disponibile per la vendita, così non sarà possibile aggiungerlo.</value>
         <value xml:lang="ja">買い物かごに製品 ${productName} (製品ID: ${productId}) を追加しようとしましたが、この製品はまだ販売できません。追加できません。</value>
@@ -6171,7 +6171,7 @@
     <property key="item.cannot_add_product_virtual">
         <value xml:lang="de">Versuch, Virtuelles Produkt ${productName} (Product ID: ${productId}) zum Warenkorb hinzuzufügen. Produkt wurde nicht hinzugefügt.</value>
         <value xml:lang="en">Tried to add the Virtual Product ${productName} (productId: ${productId}) to the cart, not adding.</value>
-        <value xml:lang="es">Se ha intentado añadir el producto virtual ${productName} (códgio: ${productId}) al carro. Este producto no se añade.</value>
+        <value xml:lang="es">Se ha intentado añadir el producto virtual ${productName} (códgio: ${productId}) a la cesta. Este tipo de productos no se pueden añadir, debe escoger una variante.</value>
         <value xml:lang="fr">Vous avez essayé l'article virtuel ${productName} (productId: ${productId}) au panier, ne pas ajouter.</value>
         <value xml:lang="it">Tentativo di aggiungere il Prodotto Virtuale ${productName} (prodotto: ${productId}) al carrello, non verrà aggiunto.</value>
         <value xml:lang="ja">買い物かごに仮想製品 ${productName} (製品ID: ${productId}) を追加しようとしましたが、追加できません。</value>
@@ -6251,7 +6251,7 @@
         <value xml:lang="ar">متأسف, غير متوفر في هذه التواريخ: ${resultMessage} لن يتم إضافة البند لعربة التسوق.....</value>
         <value xml:lang="de">Leider an den angegebenen Terminen nicht verfügbar: ${resultMessage}. Element nicht zum Warenkorb hinzugefügt.</value>
         <value xml:lang="en">I am sorry, not available at these dates: ${resultMessage} item not added to the shopping cart.....</value>
-        <value xml:lang="es">Lo siente no está disponible en estas fechas: ${resultMessage} ítem no añadido al carro ...</value>
+        <value xml:lang="es">Lo siente no está disponible en estas fechas: ${resultMessage} artículo no añadido a la cesta...</value>
         <value xml:lang="fr">je suis désolé, pas disponible à ces dates: ${resultMessage}, article non ajouté au panier d'achats...</value>
         <value xml:lang="it">Spiacente, nessuna disponibilità a queste date: ${resultMessage} prodotto non aggiunto al carrello.....</value>
         <value xml:lang="ja">申し訳ございませんが、この日付は有効ではありません: ${resultMessage} 買い物かごにアイテムを追加できません.....</value>
@@ -6299,7 +6299,7 @@
         <value xml:lang="ar">السلعة لم توجد, لن يتم الإضافة للعربة. [productId: ${productId}]</value>
         <value xml:lang="de">Das Produkt mit der Nummer ${productId} konnte nicht gefunden werden.</value>
         <value xml:lang="en">Product not found, not adding to cart. [productId: ${productId}]</value>
-        <value xml:lang="es">El producto no se ha encontrado, no se añade al carro. [código: ${productId}]</value>
+        <value xml:lang="es">El artículo no encontrado, no se añade a la cesta. [código: ${productId}]</value>
         <value xml:lang="fr">Article non trouvé, pas d'ajout dans le panier. [réf. : ${productId}]</value>
         <value xml:lang="it">Prodotto non trovato, non verrà aggiunto al carrello. [prodotto: ${productId}]</value>
         <value xml:lang="ja">製品が見つかりません。買い物かごに追加できません。[製品ID: ${productId}]</value>
@@ -6628,7 +6628,7 @@
         <value xml:lang="ar">تم إضافة السلعة ${productId} إلى العربة</value>
         <value xml:lang="de">Produkt ${productId} zum Warenkorb hinzugefügt.</value>
         <value xml:lang="en">Added product ${productId} to cart.</value>
-        <value xml:lang="es">El producto ${productId} se ha añadido al carro.</value>
+        <value xml:lang="es">El artículo ${productId} se ha añadido a la cesta.</value>
         <value xml:lang="fr">Ajout de l'article ${productId} au panier.</value>
         <value xml:lang="it">Aggiunto l'articolo ${productId} al carrello.</value>
         <value xml:lang="ja">買い物かごに製品 ${productId} を追加しました。</value>
@@ -6762,7 +6762,7 @@
         <value xml:lang="ar">لا يمكن إضافة السلعة ${productId} إلى العربة</value>
         <value xml:lang="de">Produkt ${productId} konnte nicht in den Warenkorb gelegt werden.</value>
         <value xml:lang="en">Could NOT add product ${productId} to cart.</value>
-        <value xml:lang="es">Imposible añadir el producto ${productid} al carro.</value>
+        <value xml:lang="es">Imposible añadir el artículo ${productid} a la cesta.</value>
         <value xml:lang="fr">Impossible d'ajouter l'article ${productId} au panier</value>
         <value xml:lang="it">NON è possibile aggiunge il prodotto ${productId} al carrello.</value>
         <value xml:lang="ja">買い物かごに製品 ${productId} を追加できません。</value>

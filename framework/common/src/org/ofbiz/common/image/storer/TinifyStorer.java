@@ -61,11 +61,11 @@ public class TinifyStorer extends AbstractImageStorer {
     }
 
     @Override
-    public boolean write(RenderedImage im, String formatName, Object output, Map<String, Object> options, Delegator delegator) throws IOException {
-        return writeCore(im, formatName, output, options, delegator);
+    public boolean write(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) throws IOException {
+        return writeCore(im, formatName, output, mediaProfile, options, delegator);
     }
 
-    protected boolean writeCore(RenderedImage im, String formatName, Object output, Map<String, Object> options, Delegator delegator) throws IOException {
+    protected boolean writeCore(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) throws IOException {
         options = getEffectiveOptions(options);
 
         String apiKey = (String) options.get("apiKey");
@@ -83,7 +83,7 @@ public class TinifyStorer extends AbstractImageStorer {
         long startTs = System.currentTimeMillis();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // Write original
-        storer.write(im, formatName, baos, options, delegator);
+        storer.write(im, formatName, baos, mediaProfile, options, delegator);
 
         long initialWriteTs = System.currentTimeMillis();
         // Optimize (remote call)
@@ -95,7 +95,7 @@ public class TinifyStorer extends AbstractImageStorer {
             String targetName = (output instanceof File) ? output.toString() : "stream";
             Debug.logError("tinify: could not optimize image (" + targetName + "): " + e.toString(), module);
             //return ImageStorers.getDefaultStorer().write(im, formatName, output, options, delegator);
-            return storer.write(im, formatName, output, options, delegator);
+            return storer.write(im, formatName, output, mediaProfile, options, delegator);
         }
         long optimizeTs = System.currentTimeMillis();
 

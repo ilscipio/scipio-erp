@@ -5,13 +5,10 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.common.image.ImageUtil;
 import org.ofbiz.entity.Delegator;
 
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -53,23 +50,21 @@ public abstract class ImageStorers {
      * @param options options for the ImageStorer and any additional options
      * @param delegator the delegator
      */
-    public static boolean write(RenderedImage im, String formatName, Object output, Map<String, Object> options, Delegator delegator) throws IOException {
+    public static boolean write(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) throws IOException {
         if (options == null) {
             options = Collections.emptyMap();
         }
-        return getStorer(im, formatName, output, options, delegator).write(im, formatName, output, options, delegator);
+        return getStorer(im, formatName, output, mediaProfile, options, delegator).write(im, formatName, output, mediaProfile, options, delegator);
     }
 
-    /**
-     * Writes the image to the given output, typically ImageOutputStream, OutputStream or File (as ImageIO.write).
-     *
-     * @param im the input image
-     * @param formatName the image format in short/extension format, as supported by ImageIO.write, usually "jpg", "webp", etc.
-     * @param output either ImageOutputStream, OutputStream or File, as supported by ImageIO.write and FileExtension entity
-     * @param delegator the delegator
-     */
+    @Deprecated
+    public static boolean write(RenderedImage im, String formatName, Object output, Map<String, Object> options, Delegator delegator) throws IOException {
+        return write(im, formatName, output, null, options, delegator);
+    }
+
+    @Deprecated
     public static boolean write(RenderedImage im, String formatName, Object output, Delegator delegator) throws IOException {
-        return write(im, formatName, output, null, delegator);
+        return write(im, formatName, output, null, null, delegator);
     }
 
     public static byte[] writeBytes(BufferedImage image, String formatName, Delegator delegator) throws IOException {
@@ -81,9 +76,9 @@ public abstract class ImageStorers {
     /**
      * Gets the first applicable storer for the given format and options.
      */
-    public static ImageStorer getStorer(RenderedImage im, String formatName, Object output, Map<String, Object> options, Delegator delegator) {
+    public static ImageStorer getStorer(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) {
         for(ImageStorer storer : STORER_LIST_PRIO) {
-            if (storer.isApplicable(im, formatName, output, options, delegator)) {
+            if (storer.isApplicable(im, formatName, output, mediaProfile, options, delegator)) {
                 return storer;
             }
         }

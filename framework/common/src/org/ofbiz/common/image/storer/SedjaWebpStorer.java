@@ -9,10 +9,8 @@ import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
-import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.RenderedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -60,7 +58,7 @@ public class SedjaWebpStorer extends AbstractImageStorer {
     }
 
     @Override
-    public boolean write(RenderedImage im, String formatName, Object output, Map<String, Object> options, Delegator delegator) throws IOException {
+    public boolean write(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) throws IOException {
         return writeCore(im, formatName, output, options, delegator);
     }
 

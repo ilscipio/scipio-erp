@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -65,6 +66,7 @@ public final class ServiceUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "ServiceErrorUiLabels"; // SCIPIO: 2018-08-29: keep public for backward-compat
+    private static final Map<String, Object> SUCCESS_READ_ONLY = Collections.unmodifiableMap(returnMessage(ModelService.RESPOND_SUCCESS, null)); // SCIPIO
 
     /** A little short-cut method to check to see if a service returned an error */
     public static boolean isError(Map<String, ? extends Object> results) {
@@ -174,6 +176,11 @@ public final class ServiceUtil {
     /** A small routine used all over to improve code efficiency, make a result map with the message and the success response code */
     public static Map<String, Object> returnSuccess() {
         return returnMessage(ModelService.RESPOND_SUCCESS, null);
+    }
+
+    /** A small routine used all over to improve code efficiency, make a result map with the message and the success response code (SCIPIO) */
+    public static Map<String, Object> returnSuccessReadOnly() {
+        return SUCCESS_READ_ONLY;
     }
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the success response code */

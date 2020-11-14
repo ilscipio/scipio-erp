@@ -3250,6 +3250,23 @@ code package.
         <key-map field-name="contentId" rel-field-name="contentIdStart"/>
       </relation>
     </view-entity>
+    <!-- SCIPIO: new entity that covers 3 entities, most useful for simple text content values e.g. ALTERNATE_TEXT -->
+    <view-entity entity-name="ProductContentAndDataResource"
+                package-name="org.ofbiz.product.product"
+                title="ProductContent And DataResource Required View">
+      <member-entity entity-alias="PC" entity-name="ProductContent"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <member-entity entity-alias="DR" entity-name="DataResource"/>
+      <alias-all entity-alias="PC"/>
+      <alias-all entity-alias="CO"/>
+      <alias-all entity-alias="DR" prefix="dr"/>
+      <view-link entity-alias="PC" rel-entity-alias="CO">
+        <key-map field-name="contentId"/>
+      </view-link>
+      <view-link entity-alias="CO" rel-entity-alias="DR" rel-optional="false">
+        <key-map field-name="dataResourceId"/>
+      </view-link>
+    </view-entity>
     <!-- SCIPIO: 2017-10-27: new entity that covers 4 entities, most useful for simple text content values e.g. ALTERNATE_TEXT -->
     <view-entity entity-name="ProductContentAndElectronicText"
                 package-name="org.ofbiz.product.product"

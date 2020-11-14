@@ -2,6 +2,7 @@ package org.ofbiz.product.image;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -14,6 +15,7 @@ import org.ofbiz.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -25,8 +27,13 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceValidationException;
 
 import java.io.File;
+import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -124,37 +131,89 @@ public abstract class ProductImageServices {
 
     public static Map<String, Object> productImageAutoRescale(ServiceContext ctx) throws ServiceValidationException { // SCIPIO
         // NOTE: CMS images are identified by contentTypeId="SCP_MEDIA"
-        String productId = ctx.attr("productId");
-        GenericValue product = ctx.delegator().from("Product").where("productId", productId).queryOneSafe();
-        if (product == null) {
-            return ServiceUtil.returnError("Could not find product [" + productId + "]");
+        GenericValue product = ctx.attr("product");
+        String productId;
+        if (product != null) {
+            productId = product.getString("productId");
+        } else {
+            productId = ctx.attr("productId");
+            product = ctx.delegator().from("Product").where("productId", productId).queryOneSafe();
+            if (product == null) {
+                return ServiceUtil.returnError("Could not find product [" + productId + "]");
+            }
         }
 
-        String productContentTypeId = null;
-        GenericValue content = ctx.attr("content");
-        String contentId;
-        if (content != null) {
-            if (!content.isMutable()) {
-                throw new ServiceValidationException("content value is cached or read-only", ctx.getModelService());
-            }
-            contentId = content.getString("contentId");
-        } else {
-            contentId = ctx.attr("contentId");
-            if (UtilValidate.isNotEmpty(contentId)) {
-                try {
-                    content = ctx.delegator().from("Content").where("contentId", contentId).queryOne();
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
-                    return ServiceUtil.returnError(e.getMessage());
-                }
-                if (content == null) {
-                    Debug.logError("Content not found for contentId [" + contentId + "]", module);
-                    return ServiceUtil.returnError("Content not found for contentId [" + contentId + "]");
-                }
-            } else {
-                productContentTypeId = ctx.attr("productContentTypeId");
+        boolean allImages = Boolean.TRUE.equals(ctx.attr("allImages"));
+
+        List<String> productContentTypeIdList = ctx.attr("productContentTypeIdList", Collections.emptyList());
+        List<String> contentIdList = ctx.attr("contentIdList", Collections.emptyList());
+        String productContentTypeIdParam = ctx.attr("productContentTypeId");
+        if (productContentTypeIdParam != null) {
+            productContentTypeIdList = new ArrayList<>(productContentTypeIdList);
+            productContentTypeIdList.add(productContentTypeIdParam);
+        }
+        String contentIdParam = ctx.attr("contentId");
+        if (contentIdParam != null) {
+            contentIdList = new ArrayList<>(contentIdList);
+            contentIdList.add(contentIdParam);
+        }
+
+        if (allImages) {
+            try {
+                productContentTypeIdList = new ArrayList<>(ProductImageWorker.getOriginalImageProductContentTypes(ctx.delegator()).keySet());
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.toString());
             }
         }
+
+        int successCount = 0;
+        int errorCount = 0;
+        int failCount = 0;
+        for(String productContentTypeId : productContentTypeIdList) {
+            Map<String, Object> res = productImageRescaleImage(ctx, product, productContentTypeId, null);
+            if (ServiceUtil.isError(res)) {
+                errorCount++;
+            } else if (ServiceUtil.isFailure(res)) {
+                failCount++;
+            } else {
+                successCount++;
+            }
+        }
+        for(String contentId : contentIdList) {
+            Map<String, Object> res = productImageRescaleImage(ctx, product, null, contentId);
+            if (ServiceUtil.isError(res)) {
+                errorCount++;
+            } else if (ServiceUtil.isFailure(res)) {
+                failCount++;
+            } else {
+                successCount++;
+            }
+        }
+        if (errorCount <= 0) {
+            return UtilMisc.put(ServiceUtil.returnSuccess(), "errorCount", errorCount, "failCount", failCount, "successCount", successCount);
+        } else {
+            return UtilMisc.put(ServiceUtil.returnError(errorCount + " errors auto-rescaling images for product [" + productId + "]"),
+                    "errorCount", errorCount, "failCount", failCount, "successCount", successCount);
+        }
+    }
+
+    private static Map<String, Object> productImageRescaleImage(ServiceContext ctx, GenericValue product, String productContentTypeId, String contentId) throws ServiceValidationException {
+        String productId = product.getString("productId");
+        GenericValue content = null;
+        if (UtilValidate.isNotEmpty(contentId)) {
+            try {
+                content = ctx.delegator().from("Content").where("contentId", contentId).queryOne();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+            if (content == null) {
+                Debug.logError("productImageRescaleImage: Content not found for contentId [" + contentId + "]", module);
+                return ServiceUtil.returnError("Content not found for contentId [" + contentId + "]");
+            }
+        }
+
         if (UtilValidate.isEmpty(contentId)) {
             contentId = null;
         }
@@ -162,9 +221,12 @@ public abstract class ProductImageServices {
             productContentTypeId = null;
         }
         if (contentId == null && productContentTypeId == null) {
-            throw new ServiceValidationException("Missing contentId or productContentTypeId", ctx.getModelService());
+            String errMsg = "Missing contentId or productContentTypeId for product [" + productId + "]";
+            Debug.logError("productImageRescaleImage: " + errMsg, module);
+            return ServiceUtil.returnError(errMsg);
         }
         GenericValue productContent = null;
+        String productFieldName = null;
         if (contentId != null) {
             try {
                 if (productContentTypeId == null) {
@@ -196,22 +258,56 @@ public abstract class ProductImageServices {
                     return ServiceUtil.returnError(e.toString());
                 }
             } else {
-                String productFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
+                productFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
                 ModelEntity productModel = ctx.delegator().getModelEntity("Product");
                 if (!productModel.isField(productFieldName)) {
-                    return ServiceUtil.returnError("Invalid productContentTypeId [" + productContentTypeId
-                            + "] for product [" + productId + "] for resize operation (parent products not consulted)");
+                    String msg = "Inapplicable productContentTypeId [" + productContentTypeId
+                            + "] for product [" + productId + "] for resize operation (parent products not consulted)";
+                    if (Debug.verboseOn()) {
+                        Debug.logInfo("productImageRescaleImage: " + msg, module);
+                    }
+                    return ServiceUtil.returnSuccess(msg);
                 }
             }
         }
 
-        // NOTE: this consults the parent product which we don't want, but in known cases should return right value
-        String imageUrl = ProductContentWrapper.getProductContentAsText(product, productContentTypeId,
-                ctx.attr("locale"), ctx.dispatcher(), false, "raw");
-        if (UtilValidate.isEmpty(imageUrl)) {
-            String errMsg = "Could not get existing image URL for product [" + productId + "] productContentTypeId [" + productContentTypeId + "], resize impossible";
-            Debug.logError(errMsg, module);
-            return ServiceUtil.returnError(errMsg);
+        // DON'T consult parent product because it complicates update logic
+        //// NOTE: this consults the parent product which we don't want, but in known cases should return right value
+        //String origImageUrl = ProductContentWrapper.getProductContentAsText(product, productContentTypeId,
+        //        ctx.attr("locale"), ctx.dispatcher(), false, "raw");
+        String origImageUrl = null;
+        GenericValue origElecText = null;
+        if (productContent != null) {
+            try {
+                GenericValue dataResource = (content != null) ? content.getRelatedOne("DataResource") : null;
+                if (dataResource != null && "SHORT_TEXT".equals(dataResource.get("dataResourceTypeId"))) {
+                    origImageUrl = dataResource.getString("objectInfo");
+                } else if (dataResource != null && "ELECTRONIC_TEXT".equals(dataResource.get("dataResourceTypeId"))) {
+                    origElecText = dataResource.getRelatedOne("ElectronicText");
+                    if (origElecText == null) {
+                        String msg = "Could not find ElectronicText for [" + productId + "] productContentTypeId [" + productContentTypeId + "], unexpected ProductContent format";
+                        Debug.logWarning("productImageRescaleImage: " + msg, module);
+                        return ServiceUtil.returnFailure(msg);
+                    }
+                    origImageUrl = origElecText.getString("textData");
+                } else {
+                    String msg = "Unexpected DataResource dataResourceTypeId for [" + productId + "] productContentTypeId [" + productContentTypeId + "], unexpected ProductContent format";
+                    Debug.logWarning("productImageRescaleImage: " + msg, module);
+                    return ServiceUtil.returnFailure(msg);
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.toString());
+            }
+        } else if (productFieldName != null) {
+            origImageUrl = product.getString(productFieldName);
+        }
+        if (UtilValidate.isEmpty(origImageUrl)) {
+            String msg = "No direct image URL for [" + productId + "] productContentTypeId [" + productContentTypeId + "], not resizing";
+            if (Debug.verboseOn()) {
+                Debug.logInfo("productImageRescaleImage: " + msg, module);
+            }
+            return ServiceUtil.returnSuccess(msg);
         }
 
         /*
@@ -233,16 +329,6 @@ public abstract class ProductImageServices {
             mediaProfileName = "IMAGE_PRODUCT"; // TODO?: better fallback default? don't use Product.imageProfile because it denotes the main product image (isMainImage)
         }
 
-        // TODO: not yet supported here, file-based only
-        //GenericValue imageSizePreset;
-        //try {
-        //    imageSizePreset = ctx.getDelegator().from("ImageSizePreset").where("presetId", mediaProfile).cache().queryOne();
-        //    if ()
-        //} catch (GenericEntityException e) {
-        //    Debug.logError(e, module);
-        //    return ServiceUtil.returnError(e.toString());
-        //}
-
         ImageProfile imageProfile = ImageProfile.getImageProfile(ctx.delegator(), mediaProfileName);
         if (imageProfile == null) {
             Debug.logError("Could not find media profile [" + imageProfile + "]", module);
@@ -259,7 +345,7 @@ public abstract class ProductImageServices {
         String viewType = imageViewType.getViewType();
         String viewNumber = imageViewType.getViewNumber();
 
-        Map<String, Object> resizeCtx = UtilMisc.toMap("productId", productId, "imageOrigUrl", imageUrl, "viewType", viewType, "viewNumber", viewNumber,
+        Map<String, Object> resizeCtx = UtilMisc.toMap("productId", productId, "imageOrigUrl", origImageUrl, "viewType", viewType, "viewNumber", viewNumber,
                 "locale", ctx.get("locale"), "userLogin", ctx.get("userLogin"), "timeZone", ctx.get("timeZone"), "imageProfile", imageProfile,
                 "sizeTypeList", ctx.get("sizeTypeList"));
         try {
@@ -270,15 +356,143 @@ public abstract class ProductImageServices {
                 Debug.logError(errMsg, module);
                 return ServiceUtil.returnError(errMsg);
             }
+
+            Map<String, String> imageUrlMap = UtilGenerics.cast(resizeResult.get("imageUrlMap"));
+            if (UtilValidate.isNotEmpty(imageUrlMap)) {
+                int imageNum = ProductImageWorker.getImageProductContentTypeNum(productContentTypeId);
+                Timestamp fromDate = UtilDateTime.nowTimestamp();
+                for(Map.Entry<String, String> entry : imageUrlMap.entrySet()) {
+                    String sizeType = entry.getKey();
+                    String url = entry.getValue();
+                    GenericValue pct = ProductImageWorker.getImageSizeTypeProductContentType(ctx.delegator(), imageNum, sizeType);
+                    if (pct == null) {
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("productImageRescaleImage: ProductContentType not found for image sizeType [" + sizeType + "]", module);
+                        }
+                        continue;
+                    }
+                    Map<String, Object> res = updateProductContentImageUrl(ctx, product, pct.getString("productContentTypeId"), url, productContentTypeId, fromDate);
+                    if (ServiceUtil.isError(res)) {
+                        return res;
+                    }
+                }
+            }
         } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.toString());
         }
+        return ServiceUtil.returnSuccessReadOnly();
+    }
 
-        // TODO: If ProductContent existed for the original record, should create any missing ProductContent records for small/medium/large/detail
-        // TODO: REVIEW: This TODO might not apply anymore, depends on future...
-
-        return ServiceUtil.returnSuccess();
+    /** Attempts to preserve previous data setup, best-effort. */
+    public static Map<String, Object> updateProductContentImageUrl(ServiceContext ctx, GenericValue product, String productContentTypeId, String imageUrl,
+                                                                   String origProductContentTypeId, Timestamp fromDate) {
+        GenericValue productContent;
+        try {
+            productContent = ctx.delegator().from("ProductContent").where("productId", product.get("productId"),
+                    "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().queryFirst();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.toString());
+        }
+        try {
+            if (productContent != null) {
+                GenericValue content = productContent.getRelatedOne("Content");
+                if (content == null) {
+                    String errMsg = "Could not find Content record for contentId [" + productContent.get("contentId") + "]";
+                    Debug.logError("updateProductContentImageUrl: " + errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+                GenericValue dataResource = content.getRelatedOne("DataResource");
+                if (dataResource == null) {
+                    String errMsg = "Could not find image DataResource record for product [" + product.get("productId") + "] productContentTypeId [" +
+                            productContentTypeId + "]";
+                    Debug.logError("updateProductContentImageUrl: " + errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+                if ("SHORT_TEXT".equals(dataResource.get("dataResourceTypeId"))) {
+                    String prevImageUrl = dataResource.getString("objectInfo");
+                    if (!imageUrl.equals(prevImageUrl)) {
+                        dataResource.set("objectInfo", imageUrl);
+                        dataResource.store();
+                        Debug.logInfo("updateProductContentImageUrl: Updated DataResource imageUrl from [" + prevImageUrl
+                                + "] to [" + imageUrl + "] for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
+                    }
+                } else if ("ELECTRONIC_TEXT".equals(dataResource.get("dataResourceTypeId"))) {
+                    GenericValue elecText = ctx.delegator().from("ElectronicText").where("dataResourceId", content.get("dataResourceId")).queryOne();
+                    if (elecText == null) {
+                        String msg = "Could not find image ElectronicText for product [" + product.get("productId") + "] productContentTypeId [" +
+                                productContentTypeId + "], unexpected ProductContent format";
+                        Debug.logWarning("updateProductContentImageUrl: " + msg, module);
+                        return ServiceUtil.returnFailure(msg);
+                    }
+                    String prevImageUrl = elecText.getString("textData");
+                    if (!imageUrl.equals(prevImageUrl)) {
+                        elecText.set("textData", imageUrl);
+                        elecText.store();
+                        Debug.logInfo("updateProductContentImageUrl: Updated ElectronicText imageUrl from [" + prevImageUrl
+                                + "] to [" + imageUrl + "] for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
+                    }
+                } else {
+                    String errMsg = "Invalid image DataResource record for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]";
+                    Debug.logError("updateProductContentImageUrl: " + errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+            } else {
+                // Check field
+                String productFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
+                ModelEntity productModel = ctx.delegator().getModelEntity("Product");
+                if (productModel.isField(productFieldName)) {
+                    String prevImageUrl = product.getString(productFieldName);
+                    if (!imageUrl.equals(prevImageUrl)) {
+                        product.set(productFieldName, imageUrl);
+                        product.store();
+                        Debug.logInfo("updateProductContentImageUrl: Updated Product field [" + productFieldName + "] imageUrl from [" + prevImageUrl
+                                + "] to [" + imageUrl + "] for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
+                    }
+                } else {
+                    // Try to find a ProductContent record to refer to
+                    GenericValue origProductContent = ctx.delegator().from("ProductContentAndDataResource").where(
+                                "productId", product.get("productId"), "productContentTypeId", origProductContentTypeId).orderBy("-fromDate").queryFirst();
+                    if (origProductContent == null) {
+                        if (!"ORIGINAL_IMAGE_URL".equals(origProductContentTypeId)) {
+                            origProductContent = ctx.delegator().from("ProductContentAndDataResource").where(
+                                    "productId", product.get("productId"), "productContentTypeId", "ORIGINAL_IMAGE_URL").orderBy("-fromDate").queryFirst();
+                        }
+                    }
+                    // DEV NOTE: I don't see a good reason not to create these, makes the service usable in more cases as long as the defaults are sane
+                    //if (origProductContent != null) {
+                    Debug.logInfo("updateProductContentImageUrl: No existing image record for product [" + product.get("productId")
+                            + "] productContentTypeId [" + productContentTypeId + "]; creating new DataResource/Content/ProductContent" +
+                            " using reference productContentTypeId [" + (origProductContent != null ? origProductContent.get("productContentTypeId") : "(none)") + "]", module);
+                    String dataResourceName = (origProductContent != null) ? origProductContent.getString("drDataResourceName") : null;
+                    if (dataResourceName == null) {
+                        int lastSlash = imageUrl.lastIndexOf('/');
+                        dataResourceName = (lastSlash >= 0) ? imageUrl.substring(lastSlash) : imageUrl;
+                    }
+                    String statusId = (origProductContent != null) ? origProductContent.getString("drStatusId") : "CTNT_IN_PROGRESS";
+                    GenericValue dataResource = ctx.delegator().makeValue("DataResource",
+                            "dataResourceTypeId", "SHORT_TEXT", "dataTemplateTypeId", "NONE", "statusId", statusId,
+                            "mimeTypeId", "text/html", "dataResourceName", dataResourceName, "objectInfo", imageUrl);
+                    dataResource = dataResource.createSetNextSeqId();
+                    statusId = (origProductContent != null) ? origProductContent.getString("statusId") : "CTNT_IN_PROGRESS";
+                    GenericValue content = ctx.delegator().makeValue("Content", "dataResourceId", dataResource.get("dataResourceId"),
+                            "statusId", statusId, "contentTypeId", "DOCUMENT");
+                    content = content.createSetNextSeqId();
+                    productContent = ctx.delegator().makeValue("ProductContent", "productId", product.get("productId"),
+                            "contentId", content.get("contentId"), "productContentTypeId", productContentTypeId, "fromDate", fromDate).create();
+                    //} else {
+                    //    Debug.logWarning("updateProductContentImageUrl: No existing image record for product [" + product.get("productId")
+                    //            + "] productContentTypeId [" + productContentTypeId + "]; not creating new DataResource/Content/ProductContent" +
+                    //            " because", module);
+                    //}
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.toString());
+        }
+        return ServiceUtil.returnSuccessReadOnly();
     }
 
     private static boolean isStrArgEmpty(Map<String, ?> context, String argName) {
@@ -450,4 +664,84 @@ public abstract class ProductImageServices {
             return null;
         }
     }
+
+    public static Map<String, Object> productImageAutoRescaleProducts(ServiceContext ctx) throws ServiceValidationException {
+        int productCount = 0;
+        int successCount = 0;
+        int errorCount = 0;
+        int failCount = 0;
+        Iterator<?> productsIt = (ctx.attr("products") != null) ? UtilMisc.asIterator(ctx.attr("products")) : null;
+        try {
+            Integer maxProducts = ctx.attr("maxProducts");
+            Integer maxErrorCount = ctx.attr("maxProducts");
+            boolean sepTrans = ctx.attr("sepTrans", true);
+            if (productsIt == null) {
+                if (Boolean.TRUE.equals(ctx.attr("allProducts"))) {
+                    try {
+                        productsIt = ctx.delegator().from("Product").where((EntityCondition) ctx.attr("allProductsCond"))
+                                .maxRows(maxProducts).queryIterator();
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.toString());
+                    }
+                } else {
+                    throw new ServiceValidationException("Missing products list/iterator or allProducts flag", ctx.getModelService());
+                }
+            }
+
+            Object productObj;
+            while ((productObj = UtilMisc.next(productsIt)) != null) {
+                productCount++;
+                try {
+                    Map<String, Object> servCtx = ctx.makeValidInContext("productImageAutoRescale", ctx);
+                    if (productObj instanceof GenericValue) {
+                        servCtx.put("product", productObj);
+                    } else if (productObj instanceof String) {
+                        servCtx.put("productId", productObj);
+                    } else {
+                        throw new ServiceValidationException("Invalid product, should be GenericValue or String: " + productObj.getClass(), ctx.getModelService());
+                    }
+                    Map<String, Object> servResult = ctx.dispatcher().runSync("productImageAutoRescale", servCtx, sepTrans);
+                    Integer servErrorCount = (Integer) servResult.get("errorCount");
+                    if (servErrorCount == null) {
+                        servErrorCount = ServiceUtil.isError(servResult) ? 1 : 0;
+                    }
+                    Integer servFailCount = (Integer) servResult.get("failCount");
+                    if (servFailCount == null) {
+                        servFailCount = ServiceUtil.isFailure(servResult) ? 1 : 0;
+                    }
+                    Integer servSuccessCount = (Integer) servResult.get("successCount");
+                    if (servSuccessCount == null) {
+                        servSuccessCount = ServiceUtil.isSuccess(servResult) ? 1 : 0;
+                    }
+                    errorCount += servErrorCount;
+                    failCount += servFailCount;
+                    successCount += servSuccessCount;
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "productImageAutoRescaleProducts: " + e.toString(), module);
+                    errorCount++;
+                }
+                if (maxErrorCount != null && errorCount >= maxErrorCount) {
+                    Debug.logError("productImageAutoRescaleProducts: max errors reached (" + maxErrorCount + ")", module);
+                    break;
+                }
+                if (maxProducts != null && productCount >= maxProducts) {
+                    Debug.logInfo("productImageAutoRescaleProducts: max products reached (" + maxProducts + ")", module);
+                    break;
+                }
+            }
+        } finally {
+            if (productsIt instanceof AutoCloseable) {
+                try {
+                    ((AutoCloseable) productsIt).close();
+                } catch(Exception e) {
+                    Debug.logError(e, module);
+                }
+            }
+        }
+        return UtilMisc.put((errorCount > 0) ? ServiceUtil.returnFailure(errorCount + " errors processing product images (" + productCount + " products)") :
+                ServiceUtil.returnSuccess("Processed products images (" + productCount + " products)"),
+                "errorCount", errorCount, "failCount", failCount, "successCount", successCount);
+    }
+
 }

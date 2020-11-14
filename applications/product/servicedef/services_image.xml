@@ -122,18 +122,63 @@
 
     <service name="productImageAutoRescale" engine="java"
              location="org.ofbiz.product.image.ProductImageServices" invoke="productImageAutoRescale" auth="false" transaction-timeout="1800">
-        <description>Automatically rescales a product image</description>
-        <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <description>Automatically rescales one or more product images for a product (does NOT consult parent/virtual products)</description>
+        <attribute name="productId" mode="IN" type="String" optional="true"/>
+        <attribute name="product" mode="IN" type="GenericValue" optional="true"/>
+        <attribute name="allImages" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true, automatically tries to apply to all the known associated images or all productContentTypeId</description>
+        </attribute>
         <attribute name="productContentTypeId" mode="IN" type="String" optional="true">
             <description>productContentTypeId of the ProductContent for the image - for main product image use ORIGINAL_IMAGE_URL,
-                otherwise ADDITIONAL_IMAGE_x [either contentId or productContentTypeId must be set]</description>
+                otherwise ADDITIONAL_IMAGE_x</description>
+        </attribute>
+        <attribute name="productContentTypeIdList" mode="IN" type="List" optional="true">
+            <description>List of productContentTypeId of the ProductContent for the image - for main product image use ORIGINAL_IMAGE_URL,
+                otherwise ADDITIONAL_IMAGE_x</description>
         </attribute>
         <attribute name="contentId" mode="IN" type="String" optional="true">
             <description>contentId of the ProductContent for the image [either contentId or productContentTypeId must be set]</description>
         </attribute>
+        <attribute name="contentIdList" mode="IN" type="List" optional="true">
+            <description>List of contentId of the ProductContent for the image [either contentId or productContentTypeId must be set]</description>
+        </attribute>
         <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>Optional list of size dimension names to restrict resizing to (e.g.: 320x240, small); unlisted are left unchanged</description>
         </attribute>
+        <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
     </service>
 
+    <service name="productImageAutoRescaleProducts" engine="java"
+             location="org.ofbiz.product.image.ProductImageServices" invoke="productImageAutoRescaleProducts" auth="false" transaction-timeout="144000">
+        <description>Automatically rescales one or more product images for multiple or all products (does NOT consult parent/virtual products)</description>
+        <attribute name="products" mode="IN" type="Object" optional="true">
+            <description>List of product values or IDs or EntityListIterator</description>
+        </attribute>
+        <attribute name="allProducts" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true, queries all products in the system instead of passing by list</description>
+        </attribute>
+        <attribute name="allImages" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>(For each image) If true, automatically tries to apply to the known associated image types</description>
+        </attribute>
+        <attribute name="productContentTypeId" mode="IN" type="String" optional="true">
+            <description>(For each image) productContentTypeId of the ProductContent for the image - for main product image use ORIGINAL_IMAGE_URL,
+                otherwise ADDITIONAL_IMAGE_x</description>
+        </attribute>
+        <attribute name="productContentTypeIdList" mode="IN" type="List" optional="true">
+            <description>(For each image) List of productContentTypeId of the ProductContent for the image - for main product image use ORIGINAL_IMAGE_URL,
+                otherwise ADDITIONAL_IMAGE_x</description>
+        </attribute>
+        <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
+            <description>(For each image) Optional list of size dimension names to restrict resizing to (e.g.: 320x240, small); unlisted are left unchanged</description>
+        </attribute>
+        <attribute name="maxProducts" mode="IN" type="Integer" optional="true"/>
+        <attribute name="maxErrorCount" mode="IN" type="Integer" optional="true"/>
+        <attribute name="sepTrans" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <attribute name="allProductsCond" mode="IN" type="org.ofbiz.entity.condition.EntityCondition" optional="true"/>
+        <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
+    </service>
 </services>

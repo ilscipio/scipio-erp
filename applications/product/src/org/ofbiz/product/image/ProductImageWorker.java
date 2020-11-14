@@ -20,6 +20,11 @@ package org.ofbiz.product.image;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -30,7 +35,12 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.image.ContentImageWorker;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -155,6 +165,124 @@ public abstract class ProductImageWorker {
 
         public String getViewNumber() {
             return viewNumber;
+        }
+    }
+
+    public static Map<String, GenericValue> getOriginalImageProductContentTypes(Delegator delegator) throws GenericEntityException, IllegalArgumentException {
+        Map<String, GenericValue> pctMap = new LinkedHashMap<>();
+        String origPctId = "ORIGINAL_IMAGE_URL";
+        GenericValue origPct = delegator.from("ProductContentType").where("productContentTypeId", origPctId).cache().queryOne();
+        if (origPct == null) {
+            throw new IllegalArgumentException("Could not find ProductContentType [" + origPctId + "]");
+        }
+        pctMap.put(origPctId, origPct);
+        List<GenericValue> pctList = delegator.from("ProductContentType")
+                .where(EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "ADDITIONAL_IMAGE_%")).cache().queryList();
+        if (pctList != null) {
+            for(GenericValue pct : pctList) {
+                pctMap.put(pct.getString("productContentTypeId"), pct);
+            }
+        }
+        return pctMap;
+    }
+
+    public static Map<String, GenericValue> getImageProductContentTypes(Delegator delegator, String productContentTypeId)
+            throws GenericEntityException, IllegalArgumentException {
+        Map<String, GenericValue> pctMap = new LinkedHashMap<>();
+        int imageNum = getImageProductContentTypeNum(productContentTypeId);
+        if (imageNum == 0) {
+            String origPctId = "ORIGINAL_IMAGE_URL";
+            GenericValue origPct = delegator.from("ProductContentType").where("productContentTypeId", origPctId).cache().queryOne();
+            if (origPct == null) {
+                throw new IllegalArgumentException("Could not find ProductContentType [" + origPctId + "]");
+            }
+            pctMap.put(origPctId, origPct);
+            List<GenericValue> pctList = delegator.from("ProductContentType")
+                    .where(EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "%_IMAGE_URL")).cache().queryList();
+            if (pctList != null) {
+                for(GenericValue pct : pctList) {
+                    if (!origPctId.equals(pct.getString("productContentTypeId"))) {
+                        pctMap.put(pct.getString("productContentTypeId"), pct);
+                    }
+                }
+            }
+        } else {
+            String origPctId = "ADDITIONAL_IMAGE_" + imageNum;
+            GenericValue origPct = delegator.from("ProductContentType").where("productContentTypeId", origPctId).cache().queryOne();
+            if (origPct == null) {
+                throw new IllegalArgumentException("Could not find ProductContentType [" + origPctId + "]");
+            }
+            pctMap.put(origPctId, origPct);
+            List<GenericValue> pctList = delegator.from("ProductContentType")
+                    .where(EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "XTRA_IMG_" + imageNum + "_%")).cache().queryList();
+            if (pctList != null) {
+                for(GenericValue pct : pctList) {
+                    if (!origPctId.equals(pct.getString("productContentTypeId"))) {
+                        pctMap.put(pct.getString("productContentTypeId"), pct);
+                    }
+                }
+            }
+        }
+        return pctMap;
+    }
+
+    public static Map<String, GenericValue> getImageSizeProductContentTypes(Delegator delegator, String productContentTypeId) throws GenericEntityException, IllegalArgumentException {
+        Map<String, GenericValue> sizePctMap = new LinkedHashMap<>();
+        for(Map.Entry<String, GenericValue> entry : getImageSizeProductContentTypes(delegator, productContentTypeId).entrySet()) {
+            sizePctMap.put(getProductContentTypeImageSizeType(entry.getValue()), entry.getValue());
+        }
+        return sizePctMap;
+    }
+
+    /**
+     * Gets a sizeType for an image size variant ProductContentType.
+     * TODO: ProductContentType should support this directly on the entity.
+     */
+    public static String getProductContentTypeImageSizeType(GenericValue pct) throws IllegalArgumentException {
+        String productContentTypeId = pct.getString("productContentTypeId");
+        if (productContentTypeId.equals("ORIGINAL_IMAGE_URL") || productContentTypeId.startsWith("ADDITIONAL_IMAGE_")) {
+            return "original";
+        } else if (productContentTypeId.endsWith("_IMAGE_URL")) {
+            return productContentTypeId.substring(0, productContentTypeId.length() - "_IMAGE_URL".length()).toLowerCase();
+        } else if (productContentTypeId.startsWith("XTRA_IMG_")) {
+            return productContentTypeId.substring(productContentTypeId.lastIndexOf('_')).toLowerCase();
+        } else {
+            throw new IllegalArgumentException("Unrecognized image productContentTypeId: " + productContentTypeId);
+        }
+    }
+
+    public static GenericValue getImageSizeTypeProductContentType(Delegator delegator, int imageNum, String sizeType) throws GenericEntityException, IllegalArgumentException {
+        return delegator.from("ProductContentType").where("productContentTypeId", getImageSizeTypeProductContentTypeId(imageNum, sizeType))
+                .cache().queryOne();
+    }
+
+    public static GenericValue getImageSizeTypeProductContentType(Delegator delegator, String productContentTypeId, String sizeType) throws GenericEntityException, IllegalArgumentException {
+        return getImageSizeTypeProductContentType(delegator, getImageProductContentTypeNum(productContentTypeId), sizeType);
+    }
+
+    protected static String getImageSizeTypeProductContentTypeId(int imageNum, String sizeType) throws IllegalArgumentException {
+        if (imageNum == 0) {
+            return sizeType.toUpperCase() + "_IMAGE_URL";
+        } else if (imageNum > 0) {
+            return "original".equalsIgnoreCase(sizeType) ? "ADDITIONAL_IMAGE_" + imageNum : "XTRA_IMG_" + imageNum + "_" + sizeType.toUpperCase();
+        } else {
+            throw new IllegalArgumentException("Invalid image number: " + imageNum);
+        }
+    }
+
+    public static int getImageProductContentTypeNum(String productContentTypeId) throws IllegalArgumentException {
+        if (productContentTypeId.endsWith("_IMAGE_URL")) {
+            return 0;
+        } else if (productContentTypeId.startsWith("ADDITIONAL_IMAGE_")) {
+            return Integer.parseInt(productContentTypeId.substring("ADDITIONAL_IMAGE_".length()));
+        } else if (productContentTypeId.startsWith("XTRA_IMG_")) {
+            int sepIndex = productContentTypeId.indexOf('_', "XTRA_IMG_".length());
+            if (sepIndex <= 0) {
+                throw new IllegalArgumentException("Unrecognized image productContentTypeId (expected format: XTRA_IMG_%_%): " + productContentTypeId);
+            }
+            return Integer.parseInt(productContentTypeId.substring("XTRA_IMG_".length(), sepIndex));
+        } else {
+            throw new IllegalArgumentException("Unrecognized image productContentTypeId (expected %_IMAGE_URL, ADDITIONAL_IMAGE_%, XTRA_IMG_%_%): " + productContentTypeId);
         }
     }
 

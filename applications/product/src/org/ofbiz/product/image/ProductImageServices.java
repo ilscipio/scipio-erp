@@ -2,6 +2,7 @@ package org.ofbiz.product.image;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -33,6 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -49,6 +51,7 @@ public abstract class ProductImageServices {
     private static final String resource = "ProductErrorUiLabels";
     private static final String resourceProduct = resource;
     private static final Locale LOG_LANG = Debug.getLogLocale();
+    private static final ProcessSignals productImageAutoRescaleAllSignals = ProcessSignals.make("productImageAutoRescaleAll", true);
 
     protected ProductImageServices() {
     }
@@ -371,7 +374,8 @@ public abstract class ProductImageServices {
                         }
                         continue;
                     }
-                    Map<String, Object> res = updateProductContentImageUrl(ctx, product, pct.getString("productContentTypeId"), url, productContentTypeId, fromDate);
+                    Map<String, Object> res = updateProductContentImageUrl(ctx, product, pct.getString("productContentTypeId"), url, productContentTypeId, fromDate,
+                            ctx.attr("createSizeTypeContent"));
                     if (ServiceUtil.isError(res)) {
                         return res;
                     }
@@ -386,7 +390,7 @@ public abstract class ProductImageServices {
 
     /** Attempts to preserve previous data setup, best-effort. */
     public static Map<String, Object> updateProductContentImageUrl(ServiceContext ctx, GenericValue product, String productContentTypeId, String imageUrl,
-                                                                   String origProductContentTypeId, Timestamp fromDate) {
+                                                                   String origProductContentTypeId, Timestamp fromDate, Boolean createSizeTypeContent) {
         GenericValue productContent;
         try {
             productContent = ctx.delegator().from("ProductContent").where("productId", product.get("productId"),
@@ -450,7 +454,7 @@ public abstract class ProductImageServices {
                         Debug.logInfo("updateProductContentImageUrl: Updated Product field [" + productFieldName + "] imageUrl from [" + prevImageUrl
                                 + "] to [" + imageUrl + "] for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
                     }
-                } else {
+                } else if (Boolean.TRUE.equals(createSizeTypeContent)) {
                     // Try to find a ProductContent record to refer to
                     GenericValue origProductContent = ctx.delegator().from("ProductContentAndDataResource").where(
                                 "productId", product.get("productId"), "productContentTypeId", origProductContentTypeId).orderBy("-fromDate").queryFirst();
@@ -665,21 +669,28 @@ public abstract class ProductImageServices {
         }
     }
 
-    public static Map<String, Object> productImageAutoRescaleProducts(ServiceContext ctx) throws ServiceValidationException {
+    public static Map<String, Object> productImageAutoRescaleProducts(ServiceContext ctx, ProcessSignals processSignals, boolean logFinal) throws ServiceValidationException {
+        String logPrefix = ctx.getModelService().name + ": ";
         int productCount = 0;
         int successCount = 0;
         int errorCount = 0;
         int failCount = 0;
         Iterator<?> productsIt = (ctx.attr("products") != null) ? UtilMisc.asIterator(ctx.attr("products")) : null;
+        int lastProductCount = ctx.attr("lastProductCount", 10);
+        List<String> lastProductIdList = new LinkedList<>();
         try {
             Integer maxProducts = ctx.attr("maxProducts");
             Integer maxErrorCount = ctx.attr("maxProducts");
             boolean sepTrans = ctx.attr("sepTrans", true);
+            Integer logBatch = ctx.attr("logBatch");
+            if (logBatch != null && logBatch <= 0) {
+                logBatch = null;
+            }
             if (productsIt == null) {
                 if (Boolean.TRUE.equals(ctx.attr("allProducts"))) {
                     try {
-                        productsIt = ctx.delegator().from("Product").where((EntityCondition) ctx.attr("allProductsCond"))
-                                .maxRows(maxProducts).queryIterator();
+                        productsIt = ctx.delegator().from("Product").where((EntityCondition) ctx.attr("allCond"))
+                                .maxRows(maxProducts).orderBy(ctx.<List<String>>attr("allOrderBy")).queryIterator();
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.toString());
@@ -689,14 +700,42 @@ public abstract class ProductImageServices {
                 }
             }
 
+            String allResumeId = ctx.attr("allResumeId");
+            int resumeSkipped = 0;
+
             Object productObj;
             while ((productObj = UtilMisc.next(productsIt)) != null) {
+                GenericValue product = (productObj instanceof GenericValue) ? (GenericValue) productObj : null;
+                String productId = (product != null) ? product.getString("productId") : (String) productObj;
+                if (allResumeId != null) {
+                    if (allResumeId.equals(productId)) {
+                        Debug.logInfo(logPrefix + "Resuming from product: " + productId + "(skipped: " + resumeSkipped + ")", module);
+                        allResumeId = null;
+                    } else {
+                        resumeSkipped++;
+                        continue;
+                    }
+                }
+                if (logBatch != null) {
+                    if ((productCount % logBatch) == 0) {
+                        Debug.logInfo(logPrefix + "Processing product " + ((productCount + 1)) + " [" + productId + "] (last: " + lastProductIdList + ")", module);
+                    }
+                    while(lastProductIdList.size() >= lastProductCount) {
+                        lastProductIdList.remove(0);
+                    }
+                    lastProductIdList.add(productId);
+                }
+                if (processSignals != null && processSignals.isSet("stop")) {
+                    Debug.logWarning(logPrefix + " aborted (products: " + productCount + ", last: " + lastProductIdList + ")", module);
+                    return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted (last: " + lastProductIdList + ")");
+                }
+
                 productCount++;
                 try {
                     Map<String, Object> servCtx = ctx.makeValidInContext("productImageAutoRescale", ctx);
-                    if (productObj instanceof GenericValue) {
-                        servCtx.put("product", productObj);
-                    } else if (productObj instanceof String) {
+                    if (product != null) {
+                        servCtx.put("product", product);
+                    } else if (UtilValidate.isNotEmpty(productId)) {
                         servCtx.put("productId", productObj);
                     } else {
                         throw new ServiceValidationException("Invalid product, should be GenericValue or String: " + productObj.getClass(), ctx.getModelService());
@@ -718,15 +757,15 @@ public abstract class ProductImageServices {
                     failCount += servFailCount;
                     successCount += servSuccessCount;
                 } catch (GenericServiceException e) {
-                    Debug.logError(e, "productImageAutoRescaleProducts: " + e.toString(), module);
+                    Debug.logError(e, logPrefix + e.toString(), module);
                     errorCount++;
                 }
                 if (maxErrorCount != null && errorCount >= maxErrorCount) {
-                    Debug.logError("productImageAutoRescaleProducts: max errors reached (" + maxErrorCount + ")", module);
+                    Debug.logError(logPrefix + "max errors reached (" + maxErrorCount + ")", module);
                     break;
                 }
                 if (maxProducts != null && productCount >= maxProducts) {
-                    Debug.logInfo("productImageAutoRescaleProducts: max products reached (" + maxProducts + ")", module);
+                    Debug.logInfo(logPrefix + "max products reached (" + maxProducts + ")", module);
                     break;
                 }
             }
@@ -739,9 +778,35 @@ public abstract class ProductImageServices {
                 }
             }
         }
-        return UtilMisc.put((errorCount > 0) ? ServiceUtil.returnFailure(errorCount + " errors processing product images (" + productCount + " products)") :
-                ServiceUtil.returnSuccess("Processed products images (" + productCount + " products)"),
+        if (logFinal && Debug.infoOn()) {
+            if (errorCount > 0) {
+                Debug.logWarning(logPrefix + errorCount + " errors processing product images (" + productCount + " products)" + " (last " + lastProductIdList.size() + " products: " + lastProductIdList + ")", module);
+            } else {
+                Debug.logInfo(logPrefix + "Processed products images (" + productCount + " products)" + " (last " + lastProductIdList.size() + " products: " + lastProductIdList + ")", module);
+            }
+        }
+        return UtilMisc.put((errorCount > 0) ? ServiceUtil.returnFailure(errorCount + " errors processing product images (" + productCount + " products)" +
+                        " (last " + lastProductIdList.size() + " products: " + lastProductIdList + ")") :
+                ServiceUtil.returnSuccess("Processed products images (" + productCount + " products)" +
+                        " (last " + lastProductIdList.size() + " products: " + lastProductIdList + ")"),
                 "errorCount", errorCount, "failCount", failCount, "successCount", successCount);
     }
 
+    public static Map<String, Object> productImageAutoRescaleProducts(ServiceContext ctx) throws ServiceValidationException {
+        return productImageAutoRescaleProducts(ctx, null, false);
+    }
+
+    public static Map<String, Object> productImageAutoRescaleAll(ServiceContext ctx) throws ServiceValidationException {
+        try {
+            productImageAutoRescaleAllSignals.clear();
+            return productImageAutoRescaleProducts(ctx, productImageAutoRescaleAllSignals, true);
+        } finally {
+            productImageAutoRescaleAllSignals.clear();
+        }
+    }
+
+    public static Map<String, Object> abortProductImageAutoRescaleAll(ServiceContext ctx) {
+        productImageAutoRescaleAllSignals.put("stop");
+        return ServiceUtil.returnSuccess();
+    }
 }

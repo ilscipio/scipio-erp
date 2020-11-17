@@ -145,6 +145,9 @@
         <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>Optional list of size dimension names to restrict resizing to (e.g.: 320x240, small); unlisted are left unchanged</description>
         </attribute>
+        <attribute name="createSizeTypeContent" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true (default), ProductContent/DataResource records are added to products for size types not previously defined</description>
+        </attribute>
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
@@ -173,12 +176,32 @@
         <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>(For each image) Optional list of size dimension names to restrict resizing to (e.g.: 320x240, small); unlisted are left unchanged</description>
         </attribute>
+        <attribute name="createSizeTypeContent" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true (default), ProductContent/DataResource records are added to products for size types not previously defined</description>
+        </attribute>
         <attribute name="maxProducts" mode="IN" type="Integer" optional="true"/>
         <attribute name="maxErrorCount" mode="IN" type="Integer" optional="true"/>
         <attribute name="sepTrans" mode="IN" type="Boolean" optional="true" default-value="true"/>
-        <attribute name="allProductsCond" mode="IN" type="org.ofbiz.entity.condition.EntityCondition" optional="true"/>
+        <attribute name="allCond" mode="IN" type="org.ofbiz.entity.condition.EntityCondition" optional="true"/>
+        <attribute name="allOrderBy" mode="IN" type="List" optional="true"/>
+        <attribute name="allResumeId" mode="IN" type="String" optional="true"/>
+        <attribute name="logBatch" mode="IN" type="Integer" optional="true"/>
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
+    </service>
+
+    <service name="productImageAutoRescaleAll" engine="java"
+             location="org.ofbiz.product.image.ProductImageServices" invoke="productImageAutoRescaleAll" auth="false" transaction-timeout="172800" semaphore="fail">
+        <description>Automatically rescales one or more product images for multiple or all products (does NOT consult parent/virtual products)</description>
+        <implements service="productImageAutoRescaleProducts"/>
+        <override name="allProducts" default-value="true"/>
+        <override name="allOrderBy" default-value="[productId]"/>
+        <override name="logBatch" default-value="100"/>
+    </service>
+
+    <service name="abortProductImageAutoRescaleAll" engine="java"
+             location="org.ofbiz.product.image.ProductImageServices" invoke="abortProductImageAutoRescaleAll" use-transaction="false">
+        <description>Aborts productImageAutoRescaleAll if possible</description>
     </service>
 </services>

@@ -1329,6 +1329,7 @@ code package.
             <check-errors/>
         </if-empty>
         <set field="productId" from-field="inventoryItem.productId"/>
+        <field-to-result field="productId"/><!-- SCIPIO -->
         <entity-one value-field="product" entity-name="Product" auto-field-map="false"><!-- SCIPIO -->
             <field-map field-name="productId" from-field="productId"/>
         </entity-one>

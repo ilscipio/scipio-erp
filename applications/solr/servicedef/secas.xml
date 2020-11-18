@@ -18,6 +18,17 @@ xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/service-eca.xsd">
         SEE ALSO ENTITY ECAs IN entitydef/eecas.xml
     -->
 
+    <eca service="setLastInventoryCount" event="return">
+        <condition field-name="productId" operator="is-not-empty"/>
+        <set field-name="updateVirtual" value="true"/>
+        <action service="scheduleProductIndexing" mode="sync"/>
+    </eca>
+    <eca service="setProductLastInventoryCount" event="return">
+        <condition field-name="productId" operator="is-not-empty"/>
+        <set field-name="updateVirtual" value="true"/>
+        <action service="scheduleProductIndexing" mode="sync"/>
+    </eca>
+
     <!-- (Insert any additional needed SECAs here) -->
 
 </service-eca>

@@ -1443,6 +1443,9 @@ code package.
         <attribute name="inventoryItemDetail" mode="IN" type="GenericValue" optional="true">
             <description>Optional InventoryItemDetail record to help implement entity cache configured in inventory.properties (SCIPIO)</description>
         </attribute>
+        <attribute name="productId" mode="OUT" type="String" optional="true">
+            <description>productId of the inventory item, for SECA and reuse (SCIPIO)</description>
+        </attribute>
     </service>
     <service name="setProductLastInventoryCount" engine="simple"
              location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="setProductLastInventoryCount">

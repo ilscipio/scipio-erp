@@ -1565,6 +1565,9 @@ code package.
         <field name="lastInventoryCount" type="fixed-point"><description>This field represents availableToPromiseTotal of a product at a certain point of time and is being updated regularly by a schedule service every hour (or ECA)</description></field>
         <field name="lastInventoryCountQoh" type="fixed-point"><description>This field represents quantityOnHandTotal of a product at a certain point of time and is being updated regularly by a schedule service every hour (or ECA) (SCIPIO)</description></field>
         <field name="updatesSinceLastCount" type="numeric"><description>Number of setLastInventoryCount calls below recount threshold left to trigger another recalc - see inventory.properties#inventory.cache.recountThreshold (SCIPIO)</description></field>
+        <field name="lastInvStamp" type="date-time"><description>Last time lastInventoryCount is updated (SCIPIO)</description></field>
+        <field name="lastInvMode" type="id"><description>Last way that lastInventoryCount updated: AUTO (DEFAULT), SCHEDULED, MANUAL (SCIPIO)</description></field>
+        <field name="lastInvModeCount" type="numeric"><description>Number of times lastInventoryCount has been updated using the value in lastInvMode, resets anytime mode changes (SCIPIO)</description></field>
         <prim-key field="productId"/>
         <prim-key field="facilityId"/>
         <relation type="one" fk-name="PROD_FAC_PROD" rel-entity-name="Product">

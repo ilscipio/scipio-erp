@@ -51,6 +51,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ibm.icu.util.Calendar;
@@ -1042,6 +1043,41 @@ public class InventoryServices {
             String msg = "Updated ProductFacility.lastInventoryCount for " + successCount + " products";
             Debug.logInfo("setAllProductsLastInventoryCount: " + msg, module);
             return ServiceUtil.returnSuccess(msg);
+        } catch (GeneralException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+    }
+
+    public static Map<String, Object> updateDirtyLastInventoryCounts(ServiceContext ctx) {
+        long expiryTime = ctx.attr("expiryTime", ()->UtilProperties.getPropertyAsLong("inventory",
+            "inventory.cache.updateDirtyLastInventoryCounts.expiryTime", 0));
+        if (expiryTime <= 0) {
+            return ServiceUtil.returnSuccess("expiryTime disabled, not running");
+        }
+        boolean sepTrans = ctx.attr("sepTrans", true);
+        Timestamp cutoffTime = UtilDateTime.addMillisecondsToTimestamp(UtilDateTime.nowTimestamp(), -((int) expiryTime));
+        try(EntityListIterator eli = ctx.delegator().from("ProductFacility").where(
+                EntityCondition.makeCondition("lastInvMode", "AUTO"),
+                EntityCondition.makeCondition("lastInvStamp", EntityOperator.LESS_THAN, cutoffTime)).queryIterator()) {
+            GenericValue product;
+            int successCount = 0;
+            int errorCount = 0;
+            while((product = eli.next()) != null) {
+                String productId = product.getString("productId");
+                Map<String, Object> servCtx = ctx.makeValidInContext("setProductLastInventoryCount", ctx);
+                servCtx.put("productId", productId);
+                servCtx.put("lastInvMode", "SCHEDULED");
+                Map<String, Object> res = ctx.dispatcher().runSyncNewTrans("setProductLastInventoryCount", servCtx);
+                if (!ServiceUtil.isSuccess(res)) {
+                    Debug.logError("updateDirtyLastInventoryCounts: error calling setProductLastInventoryCount: " + ServiceUtil.getErrorMessage(res), module);
+                    errorCount++;
+                }
+                successCount++;
+            }
+            String msg = "Updated ProductFacility.lastInventoryCount for " + successCount + " products (" + errorCount + " errors, cutoff time: " + cutoffTime + ")";
+            Debug.log((errorCount == 0) ? Debug.INFO : Debug.WARNING, "updateDirtyLastInventoryCounts: " + msg, module);
+            return (errorCount == 0) ? ServiceUtil.returnSuccess(msg) : ServiceUtil.returnFailure(msg);
         } catch (GeneralException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());

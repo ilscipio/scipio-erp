@@ -12,4 +12,11 @@ code package.
     <!--RecurrenceRule recurrenceRuleId="500" untilDateTime="" frequency="MINUTELY" intervalNumber="5" countNumber="-1"/>
     <RecurrenceInfo recurrenceInfoId="500" startDateTime="2006-06-06 01:10:00.000" recurrenceRuleId="500" recurrenceCount="0"/>
     <JobSandbox jobId="9000" jobName="Import Excel Sheet Minutely" runTime="2008-05-29 01:10:00.000" serviceName="productImportFromSpreadsheet" poolId="pool" runAsUser="admin" recurrenceInfoId="500"/-->
+
+    <!-- SCIPIO -->
+    <!-- Uncomment to enable updateDirtyLastInventoryCounts service
+    <TemporalExpression tempExprId="UPINVRECOUNTS" tempExprTypeId="FREQUENCY" description="Every 10 Minutes" integer1="12" integer2="10"/>
+    <JobSandbox jobId="UPINVRECOUNTS" jobName="Update Dirty Last Inventory Counts" runTime="2000-01-01 00:00:00.000" serviceName="updateDirtyLastInventoryCounts"
+                poolId="pool" runAsUser="system" tempExprId="UPINVRECOUNTS" maxRecurrenceCount="-1" maxRetry="0" priority="40"/>-->
+
 </entity-engine-xml>

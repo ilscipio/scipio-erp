@@ -1443,6 +1443,9 @@ code package.
         <attribute name="inventoryItemDetail" mode="IN" type="GenericValue" optional="true">
             <description>Optional InventoryItemDetail record to help implement entity cache configured in inventory.properties (SCIPIO)</description>
         </attribute>
+        <attribute name="lastInvMode" mode="IN" type="String" optional="true">
+            <description>Mode for setting last inventory count, or type/source of the call. Values: AUTO (default), MANUAL (SCIPIO)</description>
+        </attribute>
         <attribute name="productId" mode="OUT" type="String" optional="true">
             <description>productId of the inventory item, for SECA and reuse (SCIPIO)</description>
         </attribute>
@@ -1452,6 +1455,9 @@ code package.
         <description>Service which run as EECA (on InventoryItemDetail entity) and updates lastInventoryCount for products available in facility in ProductFacility entity
             - runs for specified productId</description>
         <attribute name="productId" mode="IN" type="String" optional="false"/>
+        <attribute name="lastInvMode" mode="IN" type="String" optional="true">
+            <description>Mode for setting last inventory count, or type/source of the call. Values: AUTO (default), MANUAL (SCIPIO)</description>
+        </attribute>
     </service>
     <service name="setAllProductsLastInventoryCount" engine="java"
              location="org.ofbiz.product.inventory.InventoryServices" invoke="setAllProductsLastInventoryCount" transaction-timeout="14400">
@@ -1459,6 +1465,17 @@ code package.
             - runs for all products in the system (SCIPIO)</description>
         <permission-service service-name="facilityGenericPermission" main-action="ADMIN"/>
     </service>
+    <service name="updateDirtyLastInventoryCounts" engine="java"
+             location="org.ofbiz.product.inventory.InventoryServices" invoke="updateDirtyLastInventoryCounts" transaction-timeout="14400">
+        <description>Checks all ProductFacility records for lastInventoryCount and those lastInvStamp greater than a configured or passed time
+            and who were last updated in a non-manual way (lastInvMode AUTO) are recounted - used to trigger delayed recounts to automatically correct
+            inventory cache amounts (SCIPIO)</description>
+        <attribute name="expiryTime" mode="IN" type="Long" optional="true">
+            <description>Expiry time in milliseconds</description>
+        </attribute>
+        <attribute name="sepTrans" mode="IN" type="Boolean" optional="true" default-value="true"/>
+    </service>
+
     <service name="createUpdateFacilityGeoPoint" engine="simple" default-entity-name="GeoPoint"
                 location="component://product/script/org/ofbiz/product/inventory/InventoryServices.xml" invoke="createUpdateFacilityGeoPoint">
         <description>Create or update GeoPoint assigned to facility</description>

@@ -1444,7 +1444,8 @@ code package.
             <clear-field field="serviceInMap"/>
             <set-service-fields service-name="updateProductFacility" map="productFacility" to-map="serviceInMap"/>
             <set field="serviceInMap.lastInventoryCount" from-field="availableToPromiseTotal"/>
-            <set field="serviceInMap.lastInventoryCountQoh" from-field="quantityOnHandTotal"/><!-- SCIPIO -->
+            <!-- SCIPIO -->
+            <set field="serviceInMap.lastInventoryCountQoh" from-field="quantityOnHandTotal"/>
             <if>
                 <condition>
                     <and>
@@ -1464,6 +1465,8 @@ code package.
                     <set field="serviceInMap.updatesSinceLastCount" type="Long" value="0"/><!-- SCIPIO: reset -->
                 </else>
             </if>
+            <call-simple-method method-name="setProductFacilityLastInvMode"/>
+
             <call-service service-name="updateProductFacility" in-map-name="serviceInMap"/>
             <log level="info" message="Updated product facility from InventoryItem (useEntityCache: ${useEntityCache}): ${serviceInMap}"/>
         </iterate>
@@ -1471,6 +1474,24 @@ code package.
         <if-compare field="useEntityCache" operator="equals" type="Boolean" value="false">
             <call-simple-method method-name="setRelatedProductLastInventoryCount"/>
         </if-compare>-->
+    </simple-method>
+    <simple-method method-name="setProductFacilityLastInvMode">
+        <now-timestamp field="serviceInMap.lastInvStamp"/>
+        <set field="serviceInMap.lastInvMode" from-field="parameters.lastInvMode" default-value="AUTO"/>
+        <if>
+            <condition>
+                <or>
+                    <if-empty field="productFacility.lastInvModeCount"/>
+                    <if-compare-field field="productFacility.lastInvMode" operator="not-equals" to-field="serviceInMap.lastInvMode"/>
+                </or>
+            </condition>
+            <then>
+                <set field="serviceInMap.lastInvModeCount" type="Long" value="1"/>
+            </then>
+            <else>
+                <set field="serviceInMap.lastInvModeCount" type="Long" value="${productFacility.lastInvModeCount+1}"/>
+            </else>
+        </if>
     </simple-method>
     <simple-method method-name="setRelatedProductLastInventoryCount"><!-- SCIPIO: TODO: REVIEW: This may be wrong logic for productTypeId, to be reviewed -->
         <entity-condition entity-name="ProductAndAssocAll" list="productAndAssocList">
@@ -1487,6 +1508,7 @@ code package.
                 <set field="serviceInMap.productId" from-field="productAndAssoc.productId"/>
                 <!-- FIXME?: not supported
                 <set field="serviceInMap.facilityId" from-field="productFacility.facilityId"/>-->
+                <set field="serviceInMap.lastInvMode" from-field="parameters.lastInvMode"/>
                 <call-service service-name="setProductLastInventoryCount" in-map-name="serviceInMap"/>
             </iterate>
         </if-not-empty>
@@ -1499,13 +1521,13 @@ code package.
         </entity-and>
         <property-to-field resource="inventory" property="inventory.cache.autoProductFacility.product" field="autoProdFacility"/>
         <if-compare field="autoProdFacility" operator="equals" type="Boolean" value="true">
-            <script lang="groovy">
+            <script lang="groovy"><![CDATA[
                 itemFacilityIds = from("InventoryItem").where("productId", parameters.productId).distinct().getFieldSet("facilityId");
                 productFacilities = context.productFacilities;
                 productFacilityIds = (productFacilities != null) ? productFacilities.collect{fac->fac.facilityId} : [] as Set;
                 itemFacilityIds.removeAll(productFacilityIds);
                 context.missingFacilityIds = itemFacilityIds;
-            </script>
+            ]]></script>
             <iterate list="missingFacilityIds" entry="facilityId">
                 <log level="warning" message="ProductFacility not found for product '${productId}' facility '${facilityId}' to update lastInventoryCount for inventory items; auto-creating"/>
                 <clear-field field="serviceInMap"/>
@@ -1553,6 +1575,7 @@ code package.
             <set field="serviceInMap.lastInventoryCount" from-field="availableToPromiseTotal"/>
             <set field="serviceInMap.lastInventoryCountQoh" from-field="quantityOnHandTotal"/><!-- SCIPIO -->
             <set field="serviceInMap.updatesSinceLastCount" type="Long" value="0"/><!-- SCIPIO: reset -->
+            <call-simple-method method-name="setProductFacilityLastInvMode"/>
             <call-service service-name="updateProductFacility" in-map-name="serviceInMap"/>
         </iterate>
     </simple-method>

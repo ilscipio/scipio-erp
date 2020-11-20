@@ -17482,6 +17482,12 @@
         <value xml:lang="zh">发送退货运输标签（联合包裹）的电子邮件</value>
         <value xml:lang="zh-TW">發送退貨運輸標籤(UPS)的電子郵件</value>
     </property>
+    <property key="ProductEmailSendAs">
+        <value xml:lang="de">Senden Als</value>
+        <value xml:lang="en">Send as</value>
+        <value xml:lang="fr">Envoyer comme</value>
+        <value xml:lang="es">Enviar como</value>
+    </property>
     <property key="ProductEntireCatalog">
         <value xml:lang="cs">Celý katalog</value>
         <value xml:lang="de">Gesamtkatalog</value>

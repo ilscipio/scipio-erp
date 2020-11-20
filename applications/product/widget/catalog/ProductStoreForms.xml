@@ -548,6 +548,7 @@
         <field name="emailType" title="${uiLabelMap.CommonEmailType}">
             <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}" cache="true" also-hidden="true"/>
         </field>
+        <field name="sendAs" title="${uiLabelMap.ProductEmailSendAs}"></field>
         <field name="bodyScreenLocation" title="${uiLabelMap.ProductBodyScreenLocation}"></field>
         <field name="xslfoAttachScreenLocation" title="${uiLabelMap.ProductAttachmentScreenLocation}"></field>
         <field name="subject" title="${uiLabelMap.ProductSubject}"></field>

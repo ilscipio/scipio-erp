@@ -4208,6 +4208,8 @@ code package.
       <field name="bodyScreenLocation" type="long-varchar"><description>if empty defaults to a screen based on the emailType</description></field>
       <field name="xslfoAttachScreenLocation" type="long-varchar"><description>if specified is used to generate XSL:FO that is transformed to a PDF via Apache FOP and attached to the email</description></field>
       <field name="fromAddress" type="email"></field>
+      <!-- SCIPIO: 11-19-2020: Added "send as" which serves as an alias for "From" field-->
+      <field name="sendAs" type="short-varchar"></field>
       <field name="ccAddress" type="email"></field>
       <field name="bccAddress" type="email"></field>
       <field name="subject" type="comment"></field>

@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -171,6 +172,8 @@ public class EmailServices {
         Boolean isStartTLSEnabled = (Boolean) context.get("startTLSEnabled");
         // SCIPIO: 03-31-2020: Flag used to check if custom headers are allowed
         Boolean isCustomHeadersAllowed = (Boolean) context.get("allowCustomHeaders");
+        // SCIPIO: 11-19-2020: Added "send as" which serves as an alias for "From" field
+        String sendAs = (String) context.get("sendAs");
 
         boolean useSmtpAuth = false;
 
@@ -267,7 +270,15 @@ public class EmailServices {
                 mail.setReplyTo(internetAddresses);
             }
 
-            mail.setFrom(new InternetAddress(sendFrom));
+            InternetAddress from = new InternetAddress(sendFrom);
+            if (UtilValidate.isNotEmpty(sendAs)) {
+                try {
+                    from.setPersonal(FlexibleStringExpander.expandString(sendAs, context), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    Debug.logError(e, "MessagingException when adding send as (alias) [" + sendAs + "] for from [" + sendFrom + "]", module);
+                }
+            }
+            mail.setFrom(from);
             mail.setSubject(subject, "UTF-8");
             mail.setHeader("X-Mailer", "SCIPIO ERP");
             mail.setSentDate(new Date());

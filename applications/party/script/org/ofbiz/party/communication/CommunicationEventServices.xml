@@ -683,6 +683,8 @@ code package.
             <set field="emailParams.bodyParameters.productStoreId" from-field="parameters.productStoreId"/>
             <!-- SCIPIO: 03-31-2020: Sending ReplyTo header -->
             <set field="emailParams.replyTo" from-field="parameters.replyTo" type="List" />
+            <!-- SCIPIO: 03-31-2020: Send as (From alias) -->
+            <set field="emailParams.sendAs" from-field="productStoreEmailSetting.sendAs"/>
 
             <!-- SCIPIO: 03-31-2020: Sending custom headers. Uncommnent to test them or add the desired ones -->
 <!--            <script lang="groovy"><![CDATA[-->
@@ -702,6 +704,10 @@ code package.
                 </entity-one>
                 <if-not-empty field="productStore.defaultLocaleString">
                     <set field="emailParams.locale" from-field="productStore.defaultLocaleString"/>
+                </if-not-empty>
+                <!-- SCIPIO: 03-31-2020: Setting product store name. Useful to use for the send as field (From alias) -->
+                <if-not-empty field="productStore.storeName">
+                    <set field="emailParams.storeName" from-field="productStore.storeName"/>
                 </if-not-empty>
             </if-not-empty>
             <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>

@@ -34,6 +34,10 @@ code package.
         <attribute name="replyTo" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="allowCustomHeaders" type="Boolean" mode="IN" optional="true" default-value="false" />
         <attribute name="customHeaders" type="java.util.Map" mode="IN" optional="true" />
+        <!-- SCIPIO: 11-19-2020: Added "send as" which serves as an alias for "From" field.
+            Also a storeName field has been added  to use it in any part of the email (very useful for sendAs) -->
+        <attribute name="sendAs" type="String" mode="IN" optional="true"/>
+        <attribute name="storeName" type="String" mode="IN" optional="true"/>
 
         <attribute name="subject" type="String" mode="INOUT" optional="true" allow-html="any"/>
         <attribute name="contentType" type="String" mode="INOUT" optional="true"/>

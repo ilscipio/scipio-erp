@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.service.job;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,12 +35,16 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.LongAccumulator;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.config.ServiceConfigListener;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.model.ServiceConfig;
@@ -68,6 +73,10 @@ public final class JobPoller implements ServiceConfigListener {
     private final long startupPollSleepWarnInterval = UtilProperties.getPropertyAsLong("service", "jobManager.debug.poll.startupPollSleepWarnInterval", -1);
     private final boolean startupPollSleepWarnIntervalVerbose = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.poll.startupPollSleepWarnInterval.verbose", false);
     private final int debugJobStatsTopServiceCount = UtilProperties.getPropertyAsInteger("service", "jobManager.debug.stats.topServiceCount", 10);
+
+    // SCIPIO: Global service stats, by service name
+    private final Map<String, Map<String, GlobalServiceStats>> globalServiceStats = new ConcurrentHashMap<>();
+    private final Object globalServiceStatsLock = new Object();
 
     /**
      * Returns the <code>JobPoller</code> instance.
@@ -513,6 +522,160 @@ public final class JobPoller implements ServiceConfigListener {
                 Thread.currentThread().interrupt();
             }
             Debug.logInfo("JobPoller thread stopped.", module);
+        }
+    }
+
+    protected GlobalServiceStats registerGlobalServiceCall(String serviceName, AbstractJob job,
+                                                           Map<String, Object> serviceResult, Throwable exception,
+                                                           long startTs, long runTime) {
+        Map<String, GlobalServiceStats> statsTypeMap = globalServiceStats.get(job.getJobType());
+        if (statsTypeMap == null) {
+            synchronized(globalServiceStatsLock) {
+                statsTypeMap = globalServiceStats.get(job.getJobType());
+                if (statsTypeMap == null) {
+                    statsTypeMap = new ConcurrentHashMap<>();
+                    globalServiceStats.put(job.getJobType(), statsTypeMap);
+                }
+            }
+        }
+        GlobalServiceStats serviceStats = statsTypeMap.get(serviceName);
+        if (serviceStats == null) {
+            synchronized (globalServiceStatsLock) {
+                serviceStats = statsTypeMap.get(serviceName);
+                if (serviceStats == null) {
+                    serviceStats = new GlobalServiceStats(serviceName);
+                    statsTypeMap.put(serviceName, serviceStats);
+                }
+            }
+        }
+        serviceStats.registerServiceCall(job, serviceResult, exception, startTs, runTime);
+        return serviceStats;
+    }
+
+    /**
+     * Returns global service stats for the given service and job type (persist, generic, purge).
+     */
+    public GlobalServiceStats getGlobalServiceStats(String serviceName, String jobType) {
+        Map<String, GlobalServiceStats> statsTypeMap = globalServiceStats.get(jobType);
+        if (statsTypeMap == null) {
+            return GlobalServiceStats.NONE;
+        }
+        GlobalServiceStats serviceStats = statsTypeMap.get(serviceName);
+        return (serviceStats != null) ? serviceStats : GlobalServiceStats.NONE;
+    }
+
+    public Map<String, GlobalServiceStats> getGlobalServiceStatsMap(String jobType) {
+        Map<String, GlobalServiceStats> statsTypeMap = globalServiceStats.get(jobType);
+        return (statsTypeMap != null) ? Collections.unmodifiableMap(statsTypeMap) : Collections.emptyMap();
+    }
+
+    public List<GlobalServiceStats> getGlobalServiceStatsListCopy(String jobType) {
+        Map<String, GlobalServiceStats> statsTypeMap = globalServiceStats.get(jobType);
+        return (statsTypeMap != null) ? new ArrayList<>(statsTypeMap.values()) : new ArrayList<>();
+    }
+
+    /**
+     * Service stats, updated from {@link GenericServiceJob#exec}.
+     * WARN: Implemented without synchronization between the fields, possible for some calls to get lost, best-effort.
+     */
+    public static class GlobalServiceStats implements Serializable {
+        public static final GlobalServiceStats NONE = new GlobalServiceStats(null);
+
+        protected final String serviceName;
+        protected AtomicLong totalCalls = new AtomicLong(0);
+        protected AtomicLong totalRuntime = new AtomicLong(0);
+        protected LongAccumulator minRuntime = new LongAccumulator(Long::min, 0);
+        protected LongAccumulator maxRuntime = new LongAccumulator(Long::max, 0);
+        protected AtomicLong successCount = new AtomicLong(0);
+        protected AtomicLong failCount = new AtomicLong(0);
+        protected AtomicLong errorCount = new AtomicLong(0);
+        protected AtomicLong exceptionCount = new AtomicLong(0);
+
+        protected GlobalServiceStats(String serviceName) {
+            this.serviceName = serviceName;
+        }
+
+        protected void registerServiceCall(AbstractJob job, Map<String, Object> serviceResult, Throwable exception,
+                                           long startTs, long runTime) {
+            totalCalls.addAndGet(1);
+            totalRuntime.addAndGet(runTime);
+            minRuntime.accumulate(runTime);
+            maxRuntime.accumulate(runTime);
+            if (exception != null) {
+                exceptionCount.addAndGet(1);
+            } else {
+                String response = ServiceUtil.getResponse(serviceResult);
+                if (ModelService.RESPOND_ERROR.equals(response)) {
+                    errorCount.addAndGet(1);
+                } else if (ModelService.RESPOND_FAIL.equals(response)) {
+                    failCount.addAndGet(1);
+                } else {
+                    successCount.addAndGet(1);
+                }
+            }
+        }
+
+        public boolean isDefined() {
+            return (getServiceName() != null);
+        }
+
+        public String getServiceName() {
+            return serviceName;
+        }
+
+        public long getTotalCalls() {
+            return totalCalls.get();
+        }
+
+        public long getTotalRuntime() {
+            return totalRuntime.get();
+        }
+
+        public long getMinRuntime() {
+            return minRuntime.get();
+        }
+
+        public long getMaxRuntime() {
+            return maxRuntime.get();
+        }
+
+        public long getAverageRuntime() {
+            long totalCalls = getTotalCalls();
+            return (totalCalls > 0) ? getTotalRuntime() / totalCalls : 0;
+        }
+
+        public long getSuccessCount() {
+            return successCount.get();
+        }
+
+        public long getFailCount() {
+            return failCount.get();
+        }
+
+        public long getErrorCount() {
+            return errorCount.get();
+        }
+
+        public long getExceptionCount() {
+            return exceptionCount.get();
+        }
+
+        public Map<String, Object> toMap() {
+            return toMap(new LinkedHashMap<>());
+        }
+
+        public <M extends Map<String, Object>> M toMap(M map) {
+            map.put("serviceName", getServiceName());
+            map.put("totalCalls", getTotalCalls());
+            map.put("totalRuntime", getTotalRuntime());
+            map.put("minRuntime", getMinRuntime());
+            map.put("maxRuntime", getMaxRuntime());
+            map.put("averageRuntime", getAverageRuntime());
+            map.put("successCount", getSuccessCount());
+            map.put("failCount", getFailCount());
+            map.put("errorCount", getErrorCount());
+            map.put("exceptionCount", getExceptionCount());
+            return map;
         }
     }
 }

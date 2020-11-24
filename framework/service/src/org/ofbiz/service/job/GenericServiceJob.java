@@ -77,11 +77,15 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
         init();
         Throwable thrown = null;
         Map<String, Object> result = null;
+        // SCIPIO: stats
+        long startTs = System.currentTimeMillis();
+        String serviceName = getServiceName();
         // no transaction is necessary since runSync handles this
         try {
             // get the dispatcher and invoke the service via runSync -- will run all ECAs
             LocalDispatcher dispatcher = dctx.getDispatcher();
-            result = dispatcher.runSync(getServiceName(), getContext());
+            result = dispatcher.runSync(serviceName, getContext());
+            JobPoller.getInstance().registerGlobalServiceCall(serviceName, this, result, null, startTs, System.currentTimeMillis() - startTs);
             // check for a failure
             if (ServiceUtil.isError(result)) {
                 thrown = new Exception(ServiceUtil.getErrorMessage(result));
@@ -90,6 +94,7 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
                 requester.receiveResult(result);
             }
         } catch (Throwable t) {
+            JobPoller.getInstance().registerGlobalServiceCall(serviceName, this, result, t, startTs, System.currentTimeMillis() - startTs);
             if (requester != null) {
                 // pass the exception back to the requester.
                 requester.receiveThrowable(t);

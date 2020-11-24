@@ -91,6 +91,15 @@ public final class ServiceUtil {
         return true;
     }
 
+    /** Returns the service result response message (SCIPIO). Returns success if null. */
+    public static String getResponse(Map<String, ?> results) {
+        if (results == null) {
+            return ModelService.RESPOND_SUCCESS;
+        }
+        String response = (String) results.get(ModelService.RESPONSE_MESSAGE);
+        return (response != null) ? response : ModelService.RESPOND_SUCCESS;
+    }
+
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map<String, Object> returnError(String errorMessage) {
         return returnProblem(ModelService.RESPOND_ERROR, errorMessage, null, null, null);

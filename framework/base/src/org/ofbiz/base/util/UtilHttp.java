@@ -328,14 +328,32 @@ public final class UtilHttp {
             //Map<String, Object> multiPartMap = getMultiPartParameterMap(request);
             Map<String, Object> multiPartMap = UtilGenerics.checkMap(request.getAttribute("multiPartMap"));
             if (UtilValidate.isNotEmpty(multiPartMap)) {
-                paramMap.putAll(multiPartMap);
+                if (nameSet != null) {
+                    for(Map.Entry<String, Object> entry : multiPartMap.entrySet()) {
+                        if (onlyIncludeOrSkipPrim ^ nameSet.contains(entry.getKey())) {
+                            continue;
+                        }
+                        paramMap.put(entry.getKey(), entry.getValue());
+                    }
+                } else {
+                    paramMap.putAll(multiPartMap);
+                }
             }
         }
 
         // SCIPIO: Include JSON body parameters
         Map<String, Object> requestBodyMap = !Boolean.FALSE.equals(readBody) ? getRequestBodyMap(request) : UtilGenerics.cast(request.getAttribute("requestBodyMap"));
         if (UtilValidate.isNotEmpty(requestBodyMap)) {
-            paramMap.putAll(requestBodyMap);
+            if (nameSet != null) {
+                for(Map.Entry<String, Object> entry : requestBodyMap.entrySet()) {
+                    if (onlyIncludeOrSkipPrim ^ nameSet.contains(entry.getKey())) {
+                        continue;
+                    }
+                    paramMap.put(entry.getKey(), entry.getValue());
+                }
+            } else {
+                paramMap.putAll(requestBodyMap);
+            }
         }
 
         if (Debug.verboseOn()) {

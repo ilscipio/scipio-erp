@@ -2220,4 +2220,42 @@ public final class UtilMisc {
                                                                                        String keyDelim) throws IllegalArgumentException {
         return makeShortKeyRecordMap(records, keyNames, keyDelim, new LinkedHashMap<>());
     }
+
+    /**
+     * SCIPIO: Attempts to optimize the given list.
+     * Currently simply trims ArrayLists.
+     * NOTE: future versions may return a different instance, so the result must be used.
+     */
+    public static <V> List<V> optimize(List<V> list) {
+        if (list instanceof ArrayList) {
+            UtilGenerics.<ArrayList<V>>cast(list).trimToSize();
+        }
+        return list;
+    }
+
+    /**
+     * SCIPIO: Attempts to optimize the given list and returns a read-only version.
+     */
+    public static <V> List<V> optimizeReadOnly(List<V> list) {
+        if (list == null) {
+            return null;
+        } else if (list.isEmpty()) {
+            return Collections.emptyList();
+        } else {
+            return Collections.unmodifiableList(optimize(list));
+        }
+    }
+
+    /**
+     * SCIPIO: Attempts to optimize the given list and returns a read-only version and produces null for empty.
+     */
+    public static <V> List<V> optimizeReadOnlyNull(List<V> list) {
+        if (list == null) {
+            return null;
+        } else if (list.isEmpty()) {
+            return null;
+        } else {
+            return Collections.unmodifiableList(optimize(list));
+        }
+    }
 }

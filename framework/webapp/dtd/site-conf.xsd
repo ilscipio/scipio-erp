@@ -724,6 +724,36 @@ under the License.
                     </xs:complexType>
                 </xs:element>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="synchronized"/><!-- SCIPIO: 2018-11-19 -->
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="param-to-attr">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Defines name or names of request parameters that should be transferred to request attributes
+                            before the event (SCIPIO). override attribute must be specified to indicate whether existing (non-null)
+                            request attributes may be overridden by parameters or not.
+                            The source parameters are by default from the parameters map (UtilHttp.getParameterMap)
+                            and support application/json body parameters this way.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="name" type="xs:string" use="required">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Comma-separated list of parameter names.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="to-name" type="xs:string" use="optional">
+                            <xs:annotation>
+                                <xs:documentation>
+                                    Comma-separated list of parameter names. If multiple, should correspond to list of names.
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:attribute>
+                        <xs:attribute name="override" type="xs:boolean" use="required"/>
+                        <xs:attribute name="set-if-null" type="xs:boolean" use="optional" default="true"/>
+                        <xs:attribute name="set-if-empty" type="xs:boolean" use="optional" default="true"/>
+                    </xs:complexType>
+                </xs:element>
                 <xs:element minOccurs="0" maxOccurs="1" name="script"><!-- SCIPIO: 2019-02-05 -->
                     <xs:annotation>
                         <xs:documentation>Inline script body (SCIPIO), alternative to script location.

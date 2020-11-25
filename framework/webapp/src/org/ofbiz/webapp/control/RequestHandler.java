@@ -1171,12 +1171,12 @@ public class RequestHandler {
                     @Override
                     public String invoke(Iterator<EventHandlerWrapper> handlers, Event event, RequestMap requestMap,
                             HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
-                        return eventHandler.invoke(event, requestMap, request, response);
+                        return invokeCore(eventHandler, event, requestMap, request, response);
                     }
                 };
                 return handlers.next().invoke(handlers, event, requestMap, request, response);
             }
-            return eventHandler.invoke(event, requestMap, request, response);
+            return invokeCore(eventHandler, event, requestMap, request, response);
         } else {
             Object synchronizeObj = synchronizeExprList.get(synchronizeObjIndex).getValue(request, response);
             if (synchronizeObj != null) {
@@ -1189,10 +1189,27 @@ public class RequestHandler {
             }
         }
     }
+
+    private String invokeCore(EventHandler eventHandler, Event event, RequestMap requestMap, HttpServletRequest request,
+                              HttpServletResponse response) throws EventHandlerException {
+        // SCIPIO: process param-to-attr
+        if (event.getParamToAttrList() != null) {
+            Map<String, Object> parameters = UtilHttp.getParameterMap(request, event.getParamToAttrNamesSet());
+            for(Event.ParamToAttr pta : event.getParamToAttrList()) {
+                Object param = parameters.get(pta.getName());
+                if ((!pta.isSetIfNull() && param == null) || (!pta.isSetIfEmpty() && UtilValidate.isEmpty(param))) {
+                    continue;
+                }
+                if (pta.isOverride() || request.getAttribute(pta.getToName()) == null) {
+                    request.setAttribute(pta.getToName(), param);
+                }
+            }
+        }
+        return eventHandler.invoke(event, requestMap, request, response);
+    }
     
     private static interface DelegatingEventWrapper extends Iterator<EventHandlerWrapper>, EventHandlerWrapper { // SCIPIO
     }
-    
     
     /** Returns the default error page for this request. */
     public String getDefaultErrorPage(HttpServletRequest request) {

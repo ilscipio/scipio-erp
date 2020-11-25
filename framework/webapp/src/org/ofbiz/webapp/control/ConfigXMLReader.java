@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -1766,11 +1767,14 @@ public class ConfigXMLReader {
         public final Metrics metrics; // = null;
         public final Boolean transaction; // = null; // SCIPIO: A generic transaction flag
         public final String abortTransaction; // = ""; // SCIPIO: Allow aborting transaction
-        protected final List<ValueExpr> synchronizedExprList; // SCIPIO
-        protected final String scriptBody; // SCIPIO
-        protected Object compiledScript; // SCIPIO: Optimization
-        protected final Map<String, Object> staticProperties; // SCIPIO
-        
+        // SCIPIO
+        protected final List<ValueExpr> synchronizedExprList;
+        protected final String scriptBody;
+        protected Object compiledScript;
+        protected final Map<String, Object> staticProperties;
+        protected final List<ParamToAttr> paramToAttrList;
+        protected final Set<String> paramToAttrNamesSet;
+
         public Event(Element eventElement) {
             this.type = eventElement.getAttribute("type");
             this.path = eventElement.getAttribute("path");
@@ -1844,6 +1848,38 @@ public class ConfigXMLReader {
                 }
             }
             this.staticProperties = (properties != null) ? Collections.unmodifiableMap(properties) : Collections.emptyMap();
+
+            List<ParamToAttr> paramToAttrList = null;
+            List<String> paramToAttrNamesList = null;
+            List<? extends Element> paramToAttrElements = UtilXml.childElementList(eventElement, "param-to-attr");
+            if (UtilValidate.isNotEmpty(paramToAttrElements)) {
+                paramToAttrList = new ArrayList<>();
+                paramToAttrNamesList = new ArrayList<>();
+                for(Element element : paramToAttrElements) {
+                    String nameStr = element.getAttribute("name");
+                    if (nameStr.length() == 0) {
+                        Debug.logError("param-to-attr: missing name attribute; ignoring directive", module);
+                        continue;
+                    }
+                    String toNameStr = element.getAttribute("to-name");
+                    String[] names = nameStr.split(",");
+                    String[] toNames = toNameStr.length() > 0 ? toNameStr.split(",") : null;
+                    if (toNames != null && toNames.length != names.length) {
+                        Debug.logError("param-to-attr: to-name comma-separated list has different number of names than name attribute; ignoring directive", module);
+                        continue;
+                    }
+                    boolean override = UtilMisc.booleanValue(element.getAttribute("override"), false);
+                    boolean setIfNull = UtilMisc.booleanValue(element.getAttribute("set-if-null"), true);
+                    boolean setIfEmpty = UtilMisc.booleanValue(element.getAttribute("set-if-empty"), true);
+                    for(int i = 0; i < names.length; i++) {
+                        paramToAttrList.add(new ParamToAttr(names[i], toNames != null && i < toNames.length ? toNames[i] : names[i], override, setIfNull, setIfEmpty));
+                        paramToAttrNamesList.add(names[i]);
+                    }
+                }
+            }
+            this.paramToAttrList = UtilMisc.optimizeReadOnlyNull(paramToAttrList);
+            this.paramToAttrNamesSet = UtilValidate.isNotEmpty(paramToAttrNamesList) ?
+                    Collections.unmodifiableSet(new LinkedHashSet<>(paramToAttrNamesList)) : null;
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction) {
@@ -1859,6 +1895,8 @@ public class ConfigXMLReader {
             this.synchronizedExprList = null;
             this.scriptBody = null;
             this.staticProperties = Collections.emptyMap();
+            this.paramToAttrList = null;
+            this.paramToAttrNamesSet = null;
         }
 
         public Event(String type, String path, String invoke, boolean globalTransaction, Metrics metrics,
@@ -1875,6 +1913,8 @@ public class ConfigXMLReader {
             this.synchronizedExprList = null;
             this.scriptBody = null;
             this.staticProperties = Collections.emptyMap();
+            this.paramToAttrList = null;
+            this.paramToAttrNamesSet = null;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -1948,6 +1988,50 @@ public class ConfigXMLReader {
 
         public Map<String, Object> getProperties(RequestMap requestMap, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context) {
             return getStaticProperties();
+        }
+
+        public List<ParamToAttr> getParamToAttrList() {
+            return paramToAttrList;
+        }
+
+        public Set<String> getParamToAttrNamesSet() {
+            return paramToAttrNamesSet;
+        }
+
+        public static class ParamToAttr {
+            private final String name;
+            private final String toName;
+            private final boolean override;
+            private final boolean setIfNull;
+            private final boolean setIfEmpty;
+
+            public ParamToAttr(String name, String toName, boolean override, boolean setIfNull, boolean setIfEmpty) {
+                this.name = name;
+                this.toName = UtilValidate.isNotEmpty(toName) ? toName : name;
+                this.override = override;
+                this.setIfNull = setIfNull;
+                this.setIfEmpty = setIfEmpty;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getToName() {
+                return toName;
+            }
+
+            public boolean isOverride() {
+                return override;
+            }
+
+            public boolean isSetIfNull() {
+                return setIfNull;
+            }
+
+            public boolean isSetIfEmpty() {
+                return setIfEmpty;
+            }
         }
     }
 

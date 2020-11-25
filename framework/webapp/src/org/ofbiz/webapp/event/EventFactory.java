@@ -52,6 +52,8 @@ public class EventFactory {
         try {
             ControllerConfig controllerConfig = ConfigXMLReader.getControllerConfig(controllerConfigURL);
             Map<String, EventHandler> handlers = new HashMap<>();
+            handlers.put("none", NoneEventHandler.DEFAULT); // SCIPIO
+
             for (Map.Entry<String,String> handlerEntry: controllerConfig.getEventHandlerMap().entrySet()) {
                 EventHandler handler = (EventHandler) ObjectType.getInstance(handlerEntry.getValue());
                 handler.init(context);

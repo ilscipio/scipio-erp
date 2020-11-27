@@ -90,12 +90,13 @@ public abstract class ProductImageWorker {
         try {
             // TODO: optimize the duplicate lookups (cached anyway)
             Map<String, String> sizeTypeMap = ProductImageServices.getProductImageMissingVariantSizeTypes(dctx, locale,
-                    product, productContentTypeId, null, imageUrl, useCache);
+                    product, productContentTypeId, null, imageUrl, null, useCache);
             if (UtilValidate.isEmpty(sizeTypeMap)) {
                 productImageEnsureCache.put(productContentTypeId, Boolean.TRUE);
                 return;
             }
-            Map<String, Object> ctx = UtilMisc.toMap("productId", product.get("productId"), "productContentTypeId", productContentTypeId, "sizeTypeList", sizeTypeMap.keySet());
+            Map<String, Object> ctx = UtilMisc.toMap("productId", product.get("productId"), "productContentTypeId", productContentTypeId,
+                    "sizeTypeList", sizeTypeMap.keySet(), "recreateExisting", true); // NOTE: the check above (for performance) already implements the recreateExisting logic
             if (async) {
                 dctx.getDispatcher().runAsync("productImageAutoRescale", ctx, false);
             } else {

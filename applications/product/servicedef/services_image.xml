@@ -130,11 +130,11 @@
         </attribute>
         <attribute name="productContentTypeId" mode="IN" type="String" optional="true">
             <description>productContentTypeId of the ProductContent for the image - for main product image use ORIGINAL_IMAGE_URL,
-                otherwise ADDITIONAL_IMAGE_x</description>
+                otherwise ADDITIONAL_IMAGE_x - NOTE: for products with no ORIGINAL_IMAGE_URL, DETAIL_IMAGE_URL is consulted instead</description>
         </attribute>
         <attribute name="productContentTypeIdList" mode="IN" type="List" optional="true">
             <description>List of productContentTypeId of the ProductContent for the image - for main product image use ORIGINAL_IMAGE_URL,
-                otherwise ADDITIONAL_IMAGE_x</description>
+                otherwise ADDITIONAL_IMAGE_x - NOTE: for products with no ORIGINAL_IMAGE_URL, DETAIL_IMAGE_URL is consulted instead</description>
         </attribute>
         <attribute name="contentId" mode="IN" type="String" optional="true">
             <description>contentId of the ProductContent for the image [either contentId or productContentTypeId must be set]</description>
@@ -148,9 +148,14 @@
         <attribute name="createSizeTypeContent" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If true (default), ProductContent/DataResource records are added to products for size types not previously defined</description>
         </attribute>
+        <attribute name="recreateExisting" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If false (default), existing files for the size types are ignored and not regenerated; if true, all or give size types are always regenerated (slow)</description>
+        </attribute>
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="reason" mode="OUT" type="String" optional="true"/>
     </service>
 
     <service name="productImageAutoRescaleProducts" engine="java"
@@ -167,17 +172,20 @@
         </attribute>
         <attribute name="productContentTypeId" mode="IN" type="String" optional="true">
             <description>(For each image) productContentTypeId of the ProductContent for the image - for main product image use ORIGINAL_IMAGE_URL,
-                otherwise ADDITIONAL_IMAGE_x</description>
+                otherwise ADDITIONAL_IMAGE_x - NOTE: for products with no ORIGINAL_IMAGE_URL, DETAIL_IMAGE_URL is consulted instead</description>
         </attribute>
         <attribute name="productContentTypeIdList" mode="IN" type="List" optional="true">
             <description>(For each image) List of productContentTypeId of the ProductContent for the image - for main product image use ORIGINAL_IMAGE_URL,
-                otherwise ADDITIONAL_IMAGE_x</description>
+                otherwise ADDITIONAL_IMAGE_x - NOTE: for products with no ORIGINAL_IMAGE_URL, DETAIL_IMAGE_URL is consulted instead</description>
         </attribute>
         <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>(For each image) Optional list of size dimension names to restrict resizing to (e.g.: 320x240, small); unlisted are left unchanged</description>
         </attribute>
         <attribute name="createSizeTypeContent" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If true (default), ProductContent/DataResource records are added to products for size types not previously defined</description>
+        </attribute>
+        <attribute name="recreateExisting" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If false (default), existing files for the size types are ignored and not regenerated; if true, all or give size types are always regenerated (slow)</description>
         </attribute>
         <attribute name="maxProducts" mode="IN" type="Integer" optional="true"/>
         <attribute name="maxErrorCount" mode="IN" type="Integer" optional="true"/>
@@ -187,6 +195,7 @@
         <attribute name="allResumeId" mode="IN" type="String" optional="true"/>
         <attribute name="logBatch" mode="IN" type="Integer" optional="true"/>
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
     </service>

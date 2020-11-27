@@ -651,6 +651,13 @@
         <value xml:lang="zh">缓存元素维护页面</value>
         <value xml:lang="zh-TW">快取元素維護頁面</value>
     </property>
+    <property key="PageTitleJobDetails">
+        <value xml:lang="de">Job Details</value>
+        <value xml:lang="en">Job Details</value>
+        <value xml:lang="fr">Détails du job</value>
+        <value xml:lang="zh">任务详情</value>
+        <value xml:lang="zh-TW">任務詳情</value>
+    </property>
     <property key="PageTitleJobList">
         <value xml:lang="de">Job Liste</value>
         <value xml:lang="en">Job List</value>
@@ -664,12 +671,10 @@
         <value xml:lang="zh">任务列表</value>
         <value xml:lang="zh-TW">任務清單</value>
     </property>
-    <property key="PageTitleJobDetails">
-        <value xml:lang="de">Job Details</value>
-        <value xml:lang="en">Job Details</value>
-        <value xml:lang="fr">Détails du job</value>
-        <value xml:lang="zh">任务详情</value>
-        <value xml:lang="zh-TW">任務詳情</value>
+    <property key="PageTitleJobStats">
+        <value xml:lang="de">Jobstatistiken</value>
+        <value xml:lang="en">Job Stats</value>
+        <value xml:lang="fr">Statistiques des jobs</value>
     </property>
     <property key="PageTitleLogConfiguration">
         <value xml:lang="de">Log Konfiguration</value>

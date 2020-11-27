@@ -332,6 +332,40 @@ code package.
         <response name="success" type="view" value="FindJobManagerLock"/>
         <response name="error" type="view" value="FindJobManagerLock"/>
     </request-map>
+    <!-- SCIPIO -->
+    <request-map uri="JobStats">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="JobStats"/>
+    </request-map>
+    <request-map uri="currentJobStatsJson">
+        <security https="true" auth="true"/>
+        <event type="groovy"><script><![CDATA[
+            request.setAttribute("data", org.ofbiz.service.job.JobPoller.getInstance().getCurrentServiceStatsMapList());
+        ]]></script></event>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="globalJobStatsJson">
+        <security https="true" auth="true"/>
+        <event type="groovy"><script><![CDATA[
+            def jobType = UtilHttp.getRequestAttrParam(request, "jobType");
+            request.setAttribute("data", org.ofbiz.service.job.JobPoller.getInstance().getGlobalServiceStatsMapList(jobType));
+        ]]></script></event>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+    <request-map uri="currentJobStats">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="currentJobStats"/>
+    </request-map>
+    <request-map uri="clearGlobalJobStats">
+        <security https="true" auth="true"/>
+        <event type="groovy"><script><![CDATA[
+            org.ofbiz.service.job.JobPoller.getInstance().clearGlobalServiceStats(null);
+            return "success";
+        ]]></script></event>
+        <response name="success" type="request-redirect" value="JobStats"/>
+    </request-map>
 
     <!-- Available services requests -->
     <request-map uri="serviceEcaDetail">
@@ -804,6 +838,8 @@ code package.
     <view-map name="serviceEcaDetail" type="screen" page="component://webtools/widget/AvailableServicesScreens.xml#ServiceEcaDetail"/>
     <view-map name="AddJobManagerLock" type="screen" page="component://webtools/widget/ServiceScreens.xml#AddJobManagerLock"/>
     <view-map name="FindJobManagerLock" type="screen" page="component://webtools/widget/ServiceScreens.xml#FindJobManagerLock"/>
+    <view-map name="JobStats" type="screen" page="component://webtools/widget/ServiceScreens.xml#JobStats"/>
+    <view-map name="currentJobStats" type="screen" page="component://webtools/widget/ServiceScreens.xml#currentJobStats"/>
 
     <view-map name="printStart" type="screen" page="component://webtools/widget/CommonScreens.xml#printStart"/>
     <view-map name="printDone" type="screen" page="component://webtools/widget/CommonScreens.xml#printDone"/>

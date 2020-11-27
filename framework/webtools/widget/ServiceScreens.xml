@@ -329,4 +329,108 @@ code package.
             </widgets>
         </section>
     </screen>
+
+    <!-- SCIPIO -->
+    <screen name="JobStats">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleJobStats"/>
+                <set field="activeSubMenuItem" value="jobStats"/>
+                <set field="jobCtx" from-field="parameters"/>
+                <!-- fields for ServerHour24HourFormatJs.ftl -->
+                <set field="clockField" value="FindJobs_clock_title"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonServiceDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_medium}9 ${styles.grid_cell}">
+                                <include-screen name="currentJobStats"/>
+                            </container>
+                            <container style="${styles.grid_medium}3 ${styles.grid_cell} ${styles.text_right}">
+                                <include-screen name="serverTimeClock"/>
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_medium}12 ${styles.grid_cell}">
+                                <platform-specific>
+                                    <html><html-template><![CDATA[
+                                        <form name="" action="<@pageUrl uri='clearGlobalJobStats'/>" method="post">
+                                            <input type="submit" value="Clear Global Stats"/>
+                                        </form>
+                                    ]]></html-template></html>
+                                </platform-specific>
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_medium}12 ${styles.grid_cell}">
+                                <section>
+                                    <actions>
+                                        <set field="jobType" value="generic"/>
+                                        <set field="title" value="Generic Jobs (non-persited)"/>
+                                    </actions>
+                                    <widgets><include-screen name="globalJobStats"/></widgets>
+                                </section>
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_medium}12 ${styles.grid_cell}">
+                                <section>
+                                    <actions>
+                                        <set field="jobType" value="persist"/>
+                                        <set field="title" value="Persisted Jobs"/>
+                                    </actions>
+                                    <widgets><include-screen name="globalJobStats"/></widgets>
+                                </section>
+                            </container>
+                        </container>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_medium}12 ${styles.grid_cell}">
+                                <section>
+                                    <actions>
+                                        <set field="jobType" value="purge"/>
+                                        <set field="title" value="Purge Jobs"/>
+                                    </actions>
+                                    <widgets><include-screen name="globalJobStats"/></widgets>
+                                </section>
+                            </container>
+                        </container>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="currentJobStats">
+        <section>
+            <actions>
+                <set field="title" value="Current Jobs"/>
+                <script lang="groovy"><![CDATA[
+                    context.jobList = org.ofbiz.service.job.JobPoller.getInstance().getCurrentServiceStatsMapList();
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://webtools/webapp/webtools/service/currentJobStats.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="globalJobStats">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    context.jobList = org.ofbiz.service.job.JobPoller.getInstance().getGlobalServiceStatsMapList(context.jobType ?: parameters.jobType);
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html>
+                        <html-template location="component://webtools/webapp/webtools/service/globalJobStats.ftl"/>
+                    </html>
+                </platform-specific>
+            </widgets>
+        </section>
+    </screen>
 </screens>

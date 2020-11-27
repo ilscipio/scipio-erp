@@ -78,14 +78,21 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
         Throwable thrown = null;
         Map<String, Object> result = null;
         // SCIPIO: stats
-        long startTs = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         String serviceName = getServiceName();
+        JobPoller jobPoller = JobPoller.getInstance();
+        JobPoller.CurrentServiceStats currentServiceStats = null;
         // no transaction is necessary since runSync handles this
         try {
-            // get the dispatcher and invoke the service via runSync -- will run all ECAs
-            LocalDispatcher dispatcher = dctx.getDispatcher();
-            result = dispatcher.runSync(serviceName, getContext());
-            JobPoller.getInstance().registerGlobalServiceCall(serviceName, this, result, null, startTs, System.currentTimeMillis() - startTs);
+            try {
+                currentServiceStats = jobPoller.registerCurrentServiceCall(serviceName, this, startTime);
+                // get the dispatcher and invoke the service via runSync -- will run all ECAs
+                LocalDispatcher dispatcher = dctx.getDispatcher();
+                result = dispatcher.runSync(serviceName, getContext());
+            } finally {
+                jobPoller.deregisterCurrentServiceCall(currentServiceStats);
+            }
+            jobPoller.registerGlobalServiceCall(serviceName, this, result, null, startTime, System.currentTimeMillis() - startTime);
             // check for a failure
             if (ServiceUtil.isError(result)) {
                 thrown = new Exception(ServiceUtil.getErrorMessage(result));
@@ -94,7 +101,7 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
                 requester.receiveResult(result);
             }
         } catch (Throwable t) {
-            JobPoller.getInstance().registerGlobalServiceCall(serviceName, this, result, t, startTs, System.currentTimeMillis() - startTs);
+            JobPoller.getInstance().registerGlobalServiceCall(serviceName, this, result, t, startTime, System.currentTimeMillis() - startTime);
             if (requester != null) {
                 // pass the exception back to the requester.
                 requester.receiveThrowable(t);

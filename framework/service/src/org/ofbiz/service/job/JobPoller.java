@@ -37,11 +37,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAccumulator;
+import java.util.stream.Collectors;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
@@ -49,6 +51,7 @@ import org.ofbiz.service.config.ServiceConfigListener;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.model.ServiceConfig;
 import org.ofbiz.service.config.model.ThreadPool;
+import org.omg.CORBA.Current;
 
 /**
  * Job poller. Queues and runs jobs.
@@ -77,6 +80,7 @@ public final class JobPoller implements ServiceConfigListener {
     // SCIPIO: Global service stats, by service name
     private final Map<String, Map<String, GlobalServiceStats>> globalServiceStats = new ConcurrentHashMap<>();
     private final Object globalServiceStatsLock = new Object();
+    private final Map<CurrentServiceStats, Boolean> currentServiceStats = new ConcurrentHashMap<>();
 
     /**
      * Returns the <code>JobPoller</code> instance.
@@ -351,7 +355,8 @@ public final class JobPoller implements ServiceConfigListener {
     }
 
     protected String toLogPoolConfigStr(boolean verbose) { // SCIPIO: Debug logging
-        return "; config: " + getThreadPoolConfigMap() + "; state: " + getPoolState(true, verbose, null);
+        return "; config: " + getThreadPoolConfigMap() + "; state: " + getPoolState(true, verbose, null)
+                + "; executing: " + getCurrentServiceStatsMapList();
     }
 
     @Override
@@ -525,6 +530,31 @@ public final class JobPoller implements ServiceConfigListener {
         }
     }
 
+    protected CurrentServiceStats registerCurrentServiceCall(String serviceName, AbstractJob job, long startTime) {
+        CurrentServiceStats serviceStats = new CurrentServiceStats(serviceName, job, startTime);
+        currentServiceStats.put(serviceStats, true);
+        return serviceStats;
+    }
+
+    protected void deregisterCurrentServiceCall(CurrentServiceStats serviceStats) {
+        if (serviceStats != null) {
+            currentServiceStats.remove(serviceStats);
+        }
+    }
+
+    public Collection<CurrentServiceStats> getCurrentServiceStats() {
+        return currentServiceStats.keySet();
+    }
+
+    public List<Map<String, Object>> getCurrentServiceStatsMapList() {
+        return currentServiceStats.keySet().stream().sorted(new Comparator<CurrentServiceStats>() {
+            @Override
+            public int compare(CurrentServiceStats o1, CurrentServiceStats o2) {
+                return o1.getServiceName().compareTo(o2.getServiceName());
+            }
+        }).map(CurrentServiceStats::toMap).collect(Collectors.toList());
+    }
+
     protected GlobalServiceStats registerGlobalServiceCall(String serviceName, AbstractJob job,
                                                            Map<String, Object> serviceResult, Throwable exception,
                                                            long startTs, long runTime) {
@@ -574,8 +604,100 @@ public final class JobPoller implements ServiceConfigListener {
         return (statsTypeMap != null) ? new ArrayList<>(statsTypeMap.values()) : new ArrayList<>();
     }
 
+    public List<Map<String, Object>> getGlobalServiceStatsMapList(String jobType) {
+        Map<String, GlobalServiceStats> statsTypeMap = globalServiceStats.get(jobType);
+        if (statsTypeMap == null) {
+            return Collections.emptyList();
+        }
+        return statsTypeMap.values().stream().sorted(new Comparator<GlobalServiceStats>() {
+            @Override
+            public int compare(GlobalServiceStats o1, GlobalServiceStats o2) {
+                return o1.getServiceName().compareTo(o2.getServiceName());
+            }
+        }).map(GlobalServiceStats::toMap).collect(Collectors.toList());
+    }
+
+    public void clearGlobalServiceStats(String jobType) {
+        if (jobType != null) {
+            Map<String, GlobalServiceStats> statsTypeMap = globalServiceStats.get(jobType);
+            if (statsTypeMap != null) {
+                statsTypeMap.clear();
+            }
+        } else {
+            globalServiceStats.clear();
+        }
+    }
+
     /**
-     * Service stats, updated from {@link GenericServiceJob#exec}.
+     * Global service stats, updated from {@link GenericServiceJob#exec}.
+     * WARN: Implemented without synchronization between the fields, possible for some calls to get lost, best-effort.
+     */
+    public static class CurrentServiceStats implements Serializable {
+        protected final String serviceName;
+        protected final AbstractJob job;
+        protected long startTime;
+
+        protected CurrentServiceStats(String serviceName, AbstractJob job, long startTime) {
+            this.serviceName = serviceName;
+            this.job = job;
+            this.startTime = startTime;
+        }
+
+        public boolean isDefined() {
+            return (getServiceName() != null);
+        }
+
+        public String getServiceName() {
+            return serviceName;
+        }
+
+        public String getJobType() {
+            return getJob().getJobType();
+        }
+
+        public String getJobId() {
+            return getJob().getJobId();
+        }
+
+        public String getJobName() {
+            return getJob().getJobName();
+        }
+
+        public AbstractJob getJob() {
+            return job;
+        }
+
+        public long getStartTime() {
+            return startTime;
+        }
+
+        public long getRunTime(long toTime) { return toTime - getStartTime(); }
+
+        public long getRunTime() { return getRunTime(System.currentTimeMillis()); }
+
+        public Map<String, Object> toMap() {
+            return toMap(new LinkedHashMap<>());
+        }
+
+        public <M extends Map<String, Object>> M toMap(M map) {
+            map.put("serviceName", getServiceName());
+            map.put("jobType", getJobType());
+            map.put("startTime", UtilDateTime.getTimestamp(getStartTime()));
+            map.put("runTime", getRunTime());
+            String jobId = getJobId();
+            if (jobId != null) {
+                map.put("jobId", jobId);
+            }
+            String jobName = getJobName();
+            if (jobName != null) {
+                map.put("jobName", jobName);
+            }
+            return map;
+        }
+    }
+
+    /**
+     * Global service stats, updated from {@link GenericServiceJob#exec}.
      * WARN: Implemented without synchronization between the fields, possible for some calls to get lost, best-effort.
      */
     public static class GlobalServiceStats implements Serializable {

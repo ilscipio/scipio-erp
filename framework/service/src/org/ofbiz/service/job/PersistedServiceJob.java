@@ -137,7 +137,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         try {
             jobValue.store();
         } catch (GenericEntityException e) {
-            throw new InvalidJobException("Unable to set the startDateTime and statusId on the current job [" + toLogId() + "]; not running!", e); // SCIPIO: improved logging
+            throw new InvalidJobException("Unable to set the startDateTime and statusId (SERVICE_QUEUED) on the current job [" + toLogId() + "]; not queueing", e); // SCIPIO: improved logging
         }
         if (Debug.verboseOn()) {
             Debug.logVerbose("Placing job [" + toLogId() + "] in queue", module); // SCIPIO: improved logging

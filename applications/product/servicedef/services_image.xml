@@ -151,6 +151,7 @@
         <attribute name="recreateExisting" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If false (default), existing files for the size types are ignored and not regenerated; if true, all or give size types are always regenerated (slow)</description>
         </attribute>
+        <attribute name="logDetail" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
@@ -194,6 +195,7 @@
         <attribute name="allOrderBy" mode="IN" type="List" optional="true"/>
         <attribute name="allResumeId" mode="IN" type="String" optional="true"/>
         <attribute name="logBatch" mode="IN" type="Integer" optional="true"/>
+        <attribute name="logDetail" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
@@ -207,6 +209,7 @@
         <override name="allProducts" default-value="true"/>
         <override name="allOrderBy" default-value="[productId]"/>
         <override name="logBatch" default-value="100"/>
+        <override name="logDetail" default-value="true"/>
     </service>
 
     <service name="abortProductImageAutoRescaleAll" engine="java"

@@ -89,6 +89,20 @@ code package.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="requirePasswordChange"/>
     </request-map>
+    <request-map uri="changePassword">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="changePassword"/>
+        <response name="success" type="view" value="requirePasswordChange"/>
+        <response name="error" type="view" value="login"/>
+    </request-map>
+    <request-map uri="updatePassword">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="updatePassword"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="requirePasswordChange"/>
+    </request-map>
+
+
     <request-map uri="view">
         <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
         <response name="success" type="request" value="main"/>

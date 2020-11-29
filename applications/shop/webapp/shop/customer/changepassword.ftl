@@ -18,11 +18,16 @@ code package.
 <@section menuContent=menuContent menuLayoutGeneral="bottom"><#--title=uiLabelMap.PartyChangePassword-->
     <#-- SCIPIO: NOTE: view-switch replaced with redirect -->
     <form id="changepasswordform" method="post" action="<@pageUrl>updatePassword?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</@pageUrl>">
-
-      <@field type="password" name="currentPassword" required=true id="currentPassword" maxlength="20" label=uiLabelMap.PartyOldPassword/>
-      <@field type="password" name="newPassword" required=true id="newPassword" maxlength="20" label=uiLabelMap.PartyNewPassword/>
-      <@field type="password" name="newPasswordVerify" required=true id="newPasswordVerify" maxlength="20" label=uiLabelMap.PartyNewPasswordVerify/>
-      <@field type="input" maxlength="100" name="passwordHint" id="passwordHint" value=(userLoginData.passwordHint!) label=uiLabelMap.PartyPasswordHint/>
-      
+        <#assign partyId = request.getAttribute("pwdRecoveryPartyId")!>
+        <#if partyId?has_content>
+            <#assign hash = request.getAttribute("hash")!>
+            <input type="hidden" name="pwdRecoveryPartyId" value="${partyId}">
+            <input type="hidden" name="hash" value="${hash}">
+        <#else>
+            <@field type="password" name="currentPassword" required=true id="currentPassword" maxlength="20" label=uiLabelMap.PartyOldPassword/>
+        </#if>
+        <@field type="password" name="newPassword" required=true id="newPassword" maxlength="20" label=uiLabelMap.PartyNewPassword/>
+        <@field type="password" name="newPasswordVerify" required=true id="newPasswordVerify" maxlength="20" label=uiLabelMap.PartyNewPasswordVerify/>
+        <@field type="input" maxlength="100" name="passwordHint" id="passwordHint" value=(userLoginData.passwordHint!) label=uiLabelMap.PartyPasswordHint/>
     </form>
 </@section>

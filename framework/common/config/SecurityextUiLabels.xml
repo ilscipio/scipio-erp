@@ -292,7 +292,7 @@
     <property key="loginevents.username_not_found_reenter">
         <value xml:lang="de">Benutzername konnte nicht gefunden werden. Bitte erneut eingeben.</value>
         <value xml:lang="en">The Username was not found, please re-enter.</value>
-        <value xml:lang="es">El usuario "${userLoginId}" no fue encontrado, por favor intente de nuevo.</value>
+        <value xml:lang="es">Usuario no encontrado, por favor intente de nuevo.</value>
         <value xml:lang="fr">Le nom d'utilisateur est inconnu, entrez le de nouveau, SVP.</value>
         <value xml:lang="it">L'utente non è stato trovato, prego inserirlo di nuovo.</value>
         <value xml:lang="ja">ユーザ名は見つかりません、再度入力してください。</value>
@@ -889,4 +889,29 @@
         <value xml:lang="zh">将重新启用 ${reEnableTime}。</value>
         <value xml:lang="zh-TW">將重新啟用 ${reEnableTime}.</value>
     </property>
+    <property key="loginevents.error_unable_generate_hash_customer_service">
+<!--        <value xml:lang="de"></value>-->
+        <value xml:lang="en">An error ocurred while generating the hash required for pasword recovery. Please, contact support.</value>
+        <value xml:lang="es">Se ha producido un error al generar el hash necesario para la recuperación de la contraseña. Por favor, póngase en contacto con el soporte técnico.</value>
+<!--        <value xml:lang="fr"></value>-->
+    </property>
+    <property key="loginevents.change_password_invalid_expired_hash">
+        <!--        <value xml:lang="de"></value>-->
+        <value xml:lang="en">Invalid or expired hash. Password cannot be recovered.</value>
+        <value xml:lang="es">Hash inválida o caducada. La contraseña no puede ser recuperada.</value>
+        <!--        <value xml:lang="fr"></value>-->
+    </property>
+    <property key="loginevents.change_password_missing_hash">
+        <!--        <value xml:lang="de"></value>-->
+        <value xml:lang="en">Hash not found. Password cannot be recovered.</value>
+        <value xml:lang="es">No se ha encontrado el hash. La contraseña no puede ser recuperada.</value>
+        <!--        <value xml:lang="fr"></value>-->
+    </property>
+    <property key="loginevents.password_reset_sent_check_email">
+<!--        <value xml:lang="de"></value>-->
+        <value xml:lang="en">An email has been sent.Please follow the instructions in order to reset your password.</value>
+        <value xml:lang="es">Se ha enviado un email. Por favor, siga las instrucciones para cambiar la contraseña.</value>
+<!--        <value xml:lang="fr"></value>-->
+    </property>
+
 </resource>

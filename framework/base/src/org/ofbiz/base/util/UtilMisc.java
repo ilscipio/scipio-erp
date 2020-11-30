@@ -40,7 +40,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.NavigableSet;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Supplier;
@@ -2222,40 +2226,94 @@ public final class UtilMisc {
     }
 
     /**
-     * SCIPIO: Attempts to optimize the given list.
+     * SCIPIO: Returns the Collections.unmodifiableXxx or Collections.emptyXxx instance corresponding to the underlying type of collection, best-effort.
+     */
+    public static <C extends Collection<V>, V> C unmodifiableAdapted(C collection) {
+        if (collection == null) {
+            return null;
+        } else if (collection instanceof List) {
+            return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableList(UtilGenerics.cast(collection)) : Collections.emptyList());
+        } else if (collection instanceof NavigableSet) {
+            return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableNavigableSet(UtilGenerics.cast(collection)) : Collections.emptyNavigableSet());
+        } else if (collection instanceof SortedSet) {
+            return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableSortedSet(UtilGenerics.cast(collection)) : Collections.emptySortedSet());
+        } else if (collection instanceof Set) {
+            return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableSet(UtilGenerics.cast(collection)) : Collections.emptySet());
+        } else {
+            // NOTE: Here instead of emptyList we could throw IllegalArgumentException
+            // but it's simpler to let the class cast to allow for a sane empty-collection default.
+            return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableCollection(collection) : Collections.emptyList());
+        }
+    }
+
+    /**
+     * SCIPIO: Returns the Collections.unmodifiableXxx or Collections.emptyXxx instance corresponding to the underlying type of map, best-effort.
+     */
+    public static <K, V> Map<K, V> unmodifiableAdapted(Map<K, V> map) {
+        if (map == null) {
+            return null;
+        } else if (map instanceof NavigableMap) {
+            return UtilGenerics.cast(map.isEmpty() ? Collections.unmodifiableNavigableMap(UtilGenerics.cast(map)) : Collections.emptyNavigableMap());
+        } else if (map instanceof SortedMap) {
+            return UtilGenerics.cast(map.isEmpty() ? Collections.unmodifiableSortedMap(UtilGenerics.cast(map)) : Collections.emptySortedMap());
+        } else {
+            return UtilGenerics.cast(map.isEmpty() ? Collections.unmodifiableMap(map) : Collections.emptyMap());
+        }
+    }
+
+    /**
+     * SCIPIO: Attempts to optimize the given collection.
      * Currently simply trims ArrayLists.
      * NOTE: future versions may return a different instance, so the result must be used.
      */
-    public static <V> List<V> optimize(List<V> list) {
-        if (list instanceof ArrayList) {
-            UtilGenerics.<ArrayList<V>>cast(list).trimToSize();
+    public static <C extends Collection<V>, V> C optimized(C collection) {
+        if (collection instanceof ArrayList) {
+            UtilGenerics.<ArrayList<V>>cast(collection).trimToSize();
         }
-        return list;
+        return collection;
     }
 
     /**
-     * SCIPIO: Attempts to optimize the given list and returns a read-only version.
+     * SCIPIO: Attempts to optimize the given collection and returns a read-only version.
      */
-    public static <V> List<V> optimizeReadOnly(List<V> list) {
-        if (list == null) {
+    public static <C extends Collection<V>, V> C unmodifiableOptimized(C collection) {
+        return unmodifiableAdapted(optimized(collection));
+    }
+
+    /**
+     * SCIPIO: Attempts to optimize the given collection and returns a read-only version and produces null for empty.
+     */
+    public static <C extends Collection<V>, V> C unmodifiableOptimizedOrNull(C collection) {
+        if (collection == null || collection.isEmpty()) {
             return null;
-        } else if (list.isEmpty()) {
-            return Collections.emptyList();
         } else {
-            return Collections.unmodifiableList(optimize(list));
+            return unmodifiableAdapted(optimized(collection));
         }
     }
 
     /**
-     * SCIPIO: Attempts to optimize the given list and returns a read-only version and produces null for empty.
+     * SCIPIO: Attempts to optimize the given map.
+     * NOTE: future versions may return a different instance, so the result must be used.
      */
-    public static <V> List<V> optimizeReadOnlyNull(List<V> list) {
-        if (list == null) {
-            return null;
-        } else if (list.isEmpty()) {
+    public static <K, V> Map<K, V> optimized(Map<K, V> map) {
+        return map;
+    }
+
+    /**
+     * SCIPIO: Attempts to optimize the given map and returns a read-only version.
+     */
+    public static <K, V> Map<K, V> unmodifiableOptimized(Map<K, V> map) {
+        return unmodifiableAdapted(optimized(map));
+    }
+
+    /**
+     * SCIPIO: Attempts to optimize the given map and returns a read-only version and produces null for empty.
+     */
+    public static <K, V> Map<K, V> unmodifiableOptimizedOrNull(Map<K, V> map) {
+        if (map == null || map.isEmpty()) {
             return null;
         } else {
-            return Collections.unmodifiableList(optimize(list));
+            return unmodifiableAdapted(optimized(map));
         }
     }
 }

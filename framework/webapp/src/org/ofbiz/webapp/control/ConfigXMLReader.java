@@ -1877,7 +1877,7 @@ public class ConfigXMLReader {
                     }
                 }
             }
-            this.paramToAttrList = UtilMisc.optimizeReadOnlyNull(paramToAttrList);
+            this.paramToAttrList = UtilMisc.unmodifiableOptimizedOrNull(paramToAttrList);
             this.paramToAttrNamesSet = UtilValidate.isNotEmpty(paramToAttrNamesList) ?
                     Collections.unmodifiableSet(new LinkedHashSet<>(paramToAttrNamesList)) : null;
         }

@@ -719,6 +719,9 @@ public abstract class ProductImageServices {
         int failCount = 0;
         int skipCount = 0;
         Iterator<?> productsIt = (ctx.attr("products") != null) ? UtilMisc.asIterator(ctx.attr("products")) : null;
+        if (productsIt == null) {
+            productsIt = (ctx.attr("productIdList") != null) ? UtilMisc.asIterator(ctx.attr("productIdList")) : null;
+        }
         int lastProductCount = ctx.attr("lastProductCount", 10);
         List<String> lastProductIdList = new LinkedList<>();
         try {

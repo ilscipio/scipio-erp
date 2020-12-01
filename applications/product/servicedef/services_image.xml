@@ -165,6 +165,9 @@
         <attribute name="products" mode="IN" type="Object" optional="true">
             <description>List of product values or IDs or EntityListIterator</description>
         </attribute>
+        <attribute name="productIdList" mode="IN" type="List" optional="true">
+            <description>List of product IDs (alias for "products", same functionality, for easier use with runService UI)</description>
+        </attribute>
         <attribute name="allProducts" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If true, queries all products in the system instead of passing by list</description>
         </attribute>

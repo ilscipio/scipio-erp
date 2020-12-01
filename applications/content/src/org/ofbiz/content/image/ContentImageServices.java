@@ -185,12 +185,24 @@ public abstract class ContentImageServices {
             FlexibleStringExpander imageOrigFnFmtExpander = FlexibleStringExpander.getInstance(imageOrigFnFmt);
 
             String bufImgPath;
+            String imageUrlPrefixPrefix = ""; // SCIPIO: for special case client data
             if (UtilValidate.isNotEmpty(imageOrigPath)) {
                 bufImgPath = imageOrigPath;
             } else if (UtilValidate.isNotEmpty(imageOrigUrl)) {
                 // TODO: improve this to support getting URL from any mount-point
-                if (!imageOrigUrl.startsWith(imageUrlPrefix + "/")) throw new IllegalArgumentException("imageOrigUrl '" + imageOrigUrl + "' does not begin with expected imageUrlPrefix '" + imageUrlPrefix + "'");
-                bufImgPath = imageServerPath + imageOrigUrl.substring(imageUrlPrefix.length());
+                if (imageUrlPrefix.startsWith("//") || imageUrlPrefix.contains("://")) {
+                    if (!imageOrigUrl.startsWith(imageUrlPrefix + "/")) {
+                        throw new IllegalArgumentException("imageOrigUrl [" + imageOrigUrl + "] does not begin with expected imageUrlPrefix [" + imageUrlPrefix + "]");
+                    }
+                    bufImgPath = imageServerPath + imageOrigUrl.substring(imageUrlPrefix.length());
+                } else {
+                    int i = imageOrigUrl.lastIndexOf(imageUrlPrefix + "/");
+                    if (i < 0) {
+                        throw new IllegalArgumentException("imageOrigUrl [" + imageOrigUrl + "] does not contain expected imageUrlPrefix [']" + imageUrlPrefix + "]");
+                    }
+                    imageUrlPrefixPrefix = imageOrigUrl.substring(0, i);
+                    bufImgPath = imageServerPath + imageOrigUrl.substring(i + imageUrlPrefix.length());
+                }
             } else {
                 bufImgPath = imageServerPath + "/" + expandImageFnFmt(imageOrigFnFmtExpander, origSizeType, imagePathArgs) + "." + imgExtension;
             }
@@ -223,7 +235,7 @@ public abstract class ContentImageServices {
                         Debug.logWarning(logPrefix+"copyOrig was requested, but output orig file would be same as input orig file (" + bufImgPath + ")", module);
 
                         // put this so the caller gets a URL to the original even if didn't change
-                        String imageUrl = imageUrlPrefix + "/" + newFileLocExt;
+                        String imageUrl = imageUrlPrefixPrefix + imageUrlPrefix + "/" + newFileLocExt;
                         imgUrlMap.put(sizeType, imageUrl);
                     } else {
                         targetDirectory = imageServerPath + "/" + getExpandedFnFmtDirPrefix(newFileLocation);
@@ -266,7 +278,7 @@ public abstract class ContentImageServices {
                             return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
                         }
 
-                        String imageUrl = imageUrlPrefix + "/" + newFileLocExt;
+                        String imageUrl = imageUrlPrefixPrefix + imageUrlPrefix + "/" + newFileLocExt;
                         imgUrlMap.put(sizeType, imageUrl);
                     }
                 }
@@ -369,7 +381,7 @@ public abstract class ContentImageServices {
                         }
 
                         // Save each Url
-                        String imageUrl = imageUrlPrefix + "/" + newFileLocExt;
+                        String imageUrl = imageUrlPrefixPrefix + imageUrlPrefix + "/" + newFileLocExt;
                         imgUrlMap.put(sizeType, imageUrl);
 
                     } else {

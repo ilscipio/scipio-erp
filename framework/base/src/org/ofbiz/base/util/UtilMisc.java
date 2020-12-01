@@ -2240,9 +2240,8 @@ public final class UtilMisc {
         } else if (collection instanceof Set) {
             return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableSet(UtilGenerics.cast(collection)) : Collections.emptySet());
         } else {
-            // NOTE: Here instead of emptyList we could throw IllegalArgumentException
-            // but it's simpler to let the class cast to allow for a sane empty-collection default.
-            return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableCollection(collection) : Collections.emptyList());
+            // NOTE: This may produce ClassCastException if wrong result type, but let's let caller handles this case, for simplicity
+            return UtilGenerics.cast(Collections.unmodifiableCollection(collection));
         }
     }
 

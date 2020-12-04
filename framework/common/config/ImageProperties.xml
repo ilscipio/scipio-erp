@@ -26,7 +26,7 @@ code package.
     </size>
     <size name="medium">
         <dimension name="height" value="480"/>
-        <dimension name="width" value="680"/>
+        <dimension name="width" value="640"/>
     </size>
     <size name="large">
         <dimension name="height" value="768"/>
@@ -71,5 +71,72 @@ code package.
     <size name="thumbnail">
         <dimension name="height" value="100"/>
         <dimension name="width" value="100"/>
+    </size>
+
+    <!-- WEBP -->
+    <size name="small-sc">
+        <dimension name="height" value="256"/>
+        <dimension name="width" value="256"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="medium-sc">
+        <dimension name="height" value="480"/>
+        <dimension name="width" value="640"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="large-sc">
+        <dimension name="height" value="768"/>
+        <dimension name="width" value="1024"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="detail-sc">
+        <dimension name="height" value="900"/>
+        <dimension name="width" value="1440"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="100x75-sc">
+        <dimension name="height" value="75"/>
+        <dimension name="width" value="100"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="150x112-sc">
+        <dimension name="height" value="112"/>
+        <dimension name="width" value="150"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="320x240-sc">
+        <dimension name="height" value="240"/>
+        <dimension name="width" value="320"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="640x480-sc">
+        <dimension name="height" value="480"/>
+        <dimension name="width" value="640"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="800x600-sc">
+        <dimension name="height" value="600"/>
+        <dimension name="width" value="800"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="1024x768-sc">
+        <dimension name="height" value="768"/>
+        <dimension name="width" value="1024"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="1280x1024-sc">
+        <dimension name="height" value="1024"/>
+        <dimension name="width" value="1280"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="1600x1200-sc">
+        <dimension name="height" value="1200"/>
+        <dimension name="width" value="1600"/>
+        <type name="format" value="webp"/>
+    </size>
+    <size name="thumbnail-sc">
+        <dimension name="height" value="100"/>
+        <dimension name="width" value="100"/>
+        <type name="format" value="webp"/>
     </size>
 </imageSize>

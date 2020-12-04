@@ -31,6 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -905,5 +906,17 @@ public final class EntityUtil {
 
     public static boolean hasPk(Map<String, ?> pk, ModelEntity model) { // SCIPIO
         return hasPk(pk, model.getPkFields());
+    }
+
+    public static GenericValue getFirstMatchingField(Collection<GenericValue> values, String fieldName, Object fieldValue) { // SCIPIO
+        if (values == null) {
+            return null;
+        }
+        for(GenericValue value : values) {
+            if (Objects.equals(fieldValue, value.get(fieldName))) {
+                return value;
+            }
+        }
+        return null;
     }
 }

@@ -32,6 +32,11 @@ userLoginData = userLogin;
 if (!tryEntity) userLoginData = UtilHttp.getParameterMap(request);
 if (!userLoginData) userLoginData = [:];
 
+// SCIPIO: 20-12-04: Introduced a new flag in order to allow changepassword screen visualization
+if (!userLogin) {
+    context.hasVerifyHash = parameters.containsKey("h");
+}
+
 context.donePage = donePage;
 context.userLoginData = userLoginData;
 

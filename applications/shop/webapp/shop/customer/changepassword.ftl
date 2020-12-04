@@ -16,9 +16,16 @@ code package.
     </@menu>
 </#macro>
 <@section menuContent=menuContent menuLayoutGeneral="bottom"><#--title=uiLabelMap.PartyChangePassword-->
+    <#assign partyId = request.getAttribute("pwdRecoveryPartyId")!>
+    <#if partyId?has_content>
+        <#assign updatePwdUrl><@pageUrl>updatePasswordFromHash?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</@pageUrl></#assign>
+    <#else>
+        <#assign updatePwdUrl><@pageUrl>updatePassword?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</@pageUrl></#assign>
+    </#if>
+
+
     <#-- SCIPIO: NOTE: view-switch replaced with redirect -->
-    <form id="changepasswordform" method="post" action="<@pageUrl>updatePassword?DONE_PAGE=${donePage}&amp;targetPageResponse=redirect-done</@pageUrl>">
-        <#assign partyId = request.getAttribute("pwdRecoveryPartyId")!>
+    <form id="changepasswordform" method="post" action="${updatePwdUrl}">
         <#if partyId?has_content>
             <#assign hash = request.getAttribute("hash")!>
             <input type="hidden" name="pwdRecoveryPartyId" value="${partyId}">

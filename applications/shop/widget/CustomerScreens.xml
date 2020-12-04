@@ -234,7 +234,10 @@ code package.
                     <decorator-section name="body">
                         <section>
                             <condition>
-                                <if-true field="userHasAccount" />
+                                <or>
+                                    <if-true field="userHasAccount" />
+                                    <if-true field="hasVerifyHash" />
+                                </or>
                             </condition>
                             <widgets>
                                 <platform-specific><html><html-template location="component://shop/webapp/shop/customer/changepassword.ftl"/></html></platform-specific>

@@ -14,10 +14,10 @@ code package.
       "${password}"
     <p>
 <#elseif verifyHash?has_content>
-    <p>${uiLabelMap.SecurityExtThisEmailIsInResponseToYourRequestToHave} </p>
+    <p>${uiLabelMap.SecurityExtThisEmailIsInResponseToYourRequestToResetPwd}</p>
     <p>
         <a href="${makePageUrl("changePassword?h=" + verifyHash)}" target="_blank" class="" style="display: block; padding: 13px 20px; text-decoration:none; color:#000001;">
-            <span class="" style="text-decoration:none; color:#000001;"><strong>${uiLabelMap.SecurityResetYourPassword}</strong></span>
+            <span class="" style="text-decoration:none; color:#000001;"><strong>${uiLabelMap.SecurityExtResetYourPassword}</strong></span>
         </a>
     <p>
 </#if>

@@ -92,6 +92,8 @@ code package.
     </eca>
 
     <eca service="createEmailAddressVerification" event="commit">
+        <!-- SCIPIO: 20-12-04: Added new condition to prevent verification in certain circumstances -->
+        <condition field-name="sendVerificationEmail" operator="equals" value="true"/>
         <action service="sendVerifyEmailAddressNotification" mode="async"/>
     </eca>
     

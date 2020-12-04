@@ -308,6 +308,7 @@ public class LoginEvents {
 //        calendar.add(Calendar.HOUR, 24);
 //        createEmailAddressVerificationCtx.put("expireDate", UtilDateTime.toTimestamp(calendar.getTime()));
             Map<String, Object> createEmailAddressVerificationResult = UtilMisc.newMap();
+            createEmailAddressVerificationCtx.put("sendVerificationEmail", false);
             createEmailAddressVerificationCtx.put("emailAddress", firstEmail);
             try {
                 GenericValue pwdHashPartyAttribute = delegator.findOne("PartyAttribute",

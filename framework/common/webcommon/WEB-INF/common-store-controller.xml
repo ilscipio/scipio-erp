@@ -122,6 +122,20 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="success" type="view" value="changepassword"/>
         <response name="error" type="view" value="changepassword"/>
     </request-map>
+    <!-- SCIPIO: 20-12-04: Introduced new password recovery related request-maps that operate
+        without requiring a user logged in but a verification hash being passed. -->
+    <request-map uri="changePassword">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="changePassword"/>
+        <response name="success" type="view" value="changepassword" save-last-view="true"/>
+        <response name="error" type="view" value="login"/>
+    </request-map>
+    <request-map uri="updatePasswordFromHash">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="updatePassword"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view-last" value="changepassword"/>
+    </request-map>
     
     <!-- SCIPIO: Do NOT allow this for frontend stores for now 
     <request-map uri="view">

@@ -1232,6 +1232,8 @@ code package.
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
         <attribute name="verifyHash" type="String" mode="OUT" optional="false"/>
         <attribute name="expireDate" type="String" mode="IN" optional="true"/>
+        <!-- SCIPIO: 20-12-04: new flag used to condition the seca triggering -->
+        <attribute name="sendVerificationEmail" type="Boolean" mode="INOUT" optional="true" default-value="true"/>
     </service>
     <service name="sendVerifyEmailAddressNotification" engine="simple"
         location="component://party/script/org/ofbiz/party/contact/ContactMechServices.xml" invoke="sendVerifyEmailAddressNotification">

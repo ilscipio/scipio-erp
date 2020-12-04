@@ -101,4 +101,18 @@
         <value xml:lang="zh">你的</value>
         <value xml:lang="zh-TW">你的</value>
     </property>
+    <property key="SecurityExtThisEmailIsInResponseToYourRequestToResetPwd">
+<!--        <value xml:lang="de"></value>-->
+        <value xml:lang="en">This email is in response to your request to reset your password. Please, follow the link below:</value>
+        <value xml:lang="es">Se ha enviado este email en respuesta a su solicitud de cambio de contraseña. Por favor, haga click sobre el siguiente enlace:</value>
+<!--        <value xml:lang="fr"></value>-->
+    </property>
+    <property key="SecurityExtResetYourPassword">
+<!--        <value xml:lang="de"></value>-->
+        <value xml:lang="en">Reset your password</value>
+<!--        <value xml:lang="fr"></value>-->
+        <value xml:lang="es">Restablece tu contraseña</value>
+    </property>
+
+
 </resource>

@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -61,6 +62,12 @@ public class ReplaceImage {
         String dataResourceNameExist = (String) context.get("dataResourceNameExist");
         String dataResourceNameReplace = (String) context.get("dataResourceNameReplace");
 
+        String imageProfile = (String) context.get("imageProfile"); // SCIPIO: TODO?: if ever needed again
+        if (UtilValidate.isEmpty(imageProfile)) {
+            imageProfile = "IMAGE_PRODUCT";
+        }
+        Map<String, Object> imageWriteOptions = UtilGenerics.cast(context.get("imageWriteOptions"));
+
         if (UtilValidate.isNotEmpty(dataResourceNameExist)) {
             if (UtilValidate.isNotEmpty(contentIdReplace)) {
                 if (contentIdExist.equals(contentIdReplace)) {
@@ -86,7 +93,8 @@ public class ReplaceImage {
             if (bufImg == null) { // SCIPIO: may be null
                 return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
             }
-            ImageStorers.write(bufImg, "jpg", new File(imageServerPath + "/" + productId + "/" + dataResourceNameExist), delegator); // SCIPIO: ImageIO->ImageStorers
+            ImageStorers.write(bufImg, "jpg", new File(imageServerPath + "/" + productId + "/" + dataResourceNameExist),
+                    imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
 
             List<GenericValue> contentAssocReplaceList = EntityQuery.use(delegator).from("ContentAssoc").where("contentId", contentIdReplace, "contentAssocTypeId", "IMAGE_THUMBNAIL").queryList();
             if (contentAssocReplaceList.size() > 0) {
@@ -104,14 +112,16 @@ public class ReplaceImage {
                         if (bufImgAssocReplace == null) { // SCIPIO: may be null
                             return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
                         }
-                        ImageStorers.write(bufImgAssocReplace, "jpg", new File(imageServerPath + "/" + productId + "/" + dataResourceAssocExist.get("drDataResourceName")), delegator); // SCIPIO: ImageIO->ImageStorers
+                        ImageStorers.write(bufImgAssocReplace, "jpg", new File(imageServerPath + "/" + productId + "/" + dataResourceAssocExist.get("drDataResourceName")),
+                                imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
                     }
                     else{
                         BufferedImage bufImgAssocReplace = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + dataResourceAssocReplace.get("drDataResourceName")));
                         if (bufImgAssocReplace == null) { // SCIPIO: may be null
                             return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
                         }
-                        ImageStorers.write(bufImgAssocReplace, "jpg", new File(imageServerPath + "/" + productId + "/" + dataResourceNameExist.substring(0, dataResourceNameExist.length() - 4) + "-" + contentAssocReplace.get("mapKey") + ".jpg"), delegator); // SCIPIO: ImageIO->ImageStorers
+                        ImageStorers.write(bufImgAssocReplace, "jpg", new File(imageServerPath + "/" + productId + "/" + dataResourceNameExist.substring(0, dataResourceNameExist.length() - 4) + "-" + contentAssocReplace.get("mapKey") + ".jpg"),
+                                imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
                     }
                 }
             }

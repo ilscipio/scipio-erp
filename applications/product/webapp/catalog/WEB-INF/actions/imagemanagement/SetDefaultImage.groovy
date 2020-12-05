@@ -120,7 +120,8 @@ if (fileType) {
         bufImg = ImageIO.read(new File(productContentList.get(0).drObjectInfo));
     }
     if (bufImg != null) { // SCIPIO: may be null
-        ImageStorers.write((RenderedImage) bufImg, "jpg", new File(imageManagementPath + "/" + productId + "/" + defaultFileName), delegator); // SCIPIO: ImageIO->ImageStorers
+        ImageStorers.write((RenderedImage) bufImg, "jpg", new File(imageManagementPath + "/" + productId + "/" + defaultFileName),
+                "IMAGE_PRODUCT", null, delegator); // SCIPIO: ImageIO->ImageStorers
     }
 
     clientFileName = dataResourceName;
@@ -175,7 +176,7 @@ if (fileType) {
             // call scaleImageInAllSize
             if (fileType.equals("original")) {
                 context.delegator = delegator;
-                result = ScaleImage.scaleImageInAllSize(context, filenameToUse, "main", "0");
+                result = ScaleImage.scaleImageInAllSize(context, filenameToUse, "main", "0", "IMAGE_PRODUCT", null);
 
                 if (result.containsKey("responseMessage") && result.get("responseMessage").equals("success")) {
                     imgMap = result.get("imageUrlMap");

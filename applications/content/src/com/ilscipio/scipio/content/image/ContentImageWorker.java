@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.ofbiz.content.image;
+package com.ilscipio.scipio.content.image;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -182,14 +182,14 @@ public abstract class ContentImageWorker {
     }
 
     public static Set<String> getResizedImageContentAssocContentIdTo(Delegator delegator, String contentId, boolean useCache) throws GenericEntityException {
-        Set<String> contentIdListToRemove = new LinkedHashSet<>();
-        List<GenericValue> contentAssocToRemove = getResizedImageContentAssocRecords(delegator, contentId, useCache);
-        if (UtilValidate.isNotEmpty(contentAssocToRemove)) {
-            for(GenericValue contentAssoc : contentAssocToRemove) {
-                contentIdListToRemove.add(contentAssoc.getString("contentIdTo"));
+        Set<String> contentIdListTo = new LinkedHashSet<>();
+        List<GenericValue> contentAssocTo = getResizedImageContentAssocRecords(delegator, contentId, useCache);
+        if (UtilValidate.isNotEmpty(contentAssocTo)) {
+            for(GenericValue contentAssoc : contentAssocTo) {
+                contentIdListTo.add(contentAssoc.getString("contentIdTo"));
             }
         }
-        return contentIdListToRemove;
+        return contentIdListTo;
     }
 
     public static Map<String, Object> parseMapFieldExpr(Map<String, Object> map, Map<String, Object> imageCtx, TimeZone timeZone, Locale locale) {

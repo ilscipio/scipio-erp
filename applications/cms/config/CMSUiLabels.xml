@@ -872,13 +872,37 @@
         <value xml:lang="de">Automatische Größenänderung</value>
         <value xml:lang="en">Auto Resize</value>
     </property>
+    <property key="CmsMediaAutoResizeDesc">
+        <value xml:lang="de">Generiert optimierte Varianten der Media-Datei.</value>
+        <value xml:lang="en">Automatically creates resized copies of the media, for optimization.</value>
+    </property>
     <property key="CmsMediaCreateAutoResizedImageVariants">
         <value xml:lang="de">Bildvarianten erzeugen</value>
         <value xml:lang="en">Create Auto-Resized Image Variants</value>
     </property>
-    <property key="CmsMediaAutoResizeDesc">
-        <value xml:lang="de">Generiert optimierte Varianten der Media-Datei.</value>
-        <value xml:lang="en">Automatically creates resized copies of the media, for optimization.</value>
+    <property key="CmsMediaDeleteOld">
+        <value xml:lang="de">Delete Old</value>
+        <value xml:lang="en">Delete Old</value>
+    </property>
+    <property key="CmsMediaDeleteOldTrueExpl">
+        <value xml:lang="de">Delete old ContentAssoc/Content/DataResource/ImageDataResource records and recreate variant data</value>
+        <value xml:lang="en">Delete old ContentAssoc/Content/DataResource/ImageDataResource records and recreate variant data</value>
+    </property>
+    <property key="CmsMediaDeleteOldFalseExpl">
+        <value xml:lang="de">Update existing ContentAssoc/Content/DataResource/ImageDataResource records in-place</value>
+        <value xml:lang="en">Update existing ContentAssoc/Content/DataResource/ImageDataResource records in-place</value>
+    </property>
+    <property key="CmsMediaRecreateExisting">
+        <value xml:lang="de">Recreate Existing Variants</value>
+        <value xml:lang="en">Recreate Existing Variants</value>
+    </property>
+    <property key="CmsMediaRecreateExistingTrueExpl">
+        <value xml:lang="de">Recreate existing image size variants (in-place)</value>
+        <value xml:lang="en">Recreate existing image size variants (in-place)</value>
+    </property>
+    <property key="CmsMediaRecreateExistingFalseExpl">
+        <value xml:lang="de">Only create missing or modified image size variants</value>
+        <value xml:lang="en">Only create missing or modified image size variants</value>
     </property>
     <property key="CmsMediaHasResizedVariants">
         <value xml:lang="de">Optimierte Varianten verfügbar?</value>
@@ -902,7 +926,7 @@
     </property>
     <property key="CmsFunctionAsyncBackground">
         <value xml:lang="de">Diese Funktion wird asynchron ausgelöst und läuft im Hintergrund ab (langsam); Weitere Informationen zum Fortschritt sind im Log verfügbar.</value>
-        <value xml:lang="en">This function is triggered asynchronously and will run in the background (slow); check logs for progress.</value>
+        <value xml:lang="en">This function is triggered asynchronously and will run in the background (slow); check logs and admin application job list for progress.</value>
     </property>
     <property key="CmsMediaRecreateOnlyImagesWithExistingVariants">
         <value xml:lang="de">Nur Bilder mit Varianten</value>

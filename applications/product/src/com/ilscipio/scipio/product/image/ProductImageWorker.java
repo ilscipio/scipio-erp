@@ -16,13 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.ofbiz.product.image;
+package com.ilscipio.scipio.product.image;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -34,13 +31,12 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.common.image.ImageVariantConfig;
-import org.ofbiz.content.image.ContentImageWorker;
+import com.ilscipio.scipio.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -48,7 +44,7 @@ import org.ofbiz.service.ServiceUtil;
  * SCIPIO: Image utilities for product (specifically) image handling.
  * Added 2017-07-04.
  *
- * @see org.ofbiz.content.image.ContentImageWorker
+ * @see com.ilscipio.scipio.content.image.ContentImageWorker
  * @see org.ofbiz.product.image.ScaleImage
  */
 public abstract class ProductImageWorker {

@@ -50,11 +50,11 @@ public abstract class ImageStorers {
      * @param options options for the ImageStorer and any additional options
      * @param delegator the delegator
      */
-    public static boolean write(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) throws IOException {
+    public static boolean write(RenderedImage im, String formatName, Object output, String imageProfile, Map<String, Object> options, Delegator delegator) throws IOException {
         if (options == null) {
             options = Collections.emptyMap();
         }
-        return getStorer(im, formatName, output, mediaProfile, options, delegator).write(im, formatName, output, mediaProfile, options, delegator);
+        return getStorer(im, formatName, output, imageProfile, options, delegator).write(im, formatName, output, imageProfile, options, delegator);
     }
 
     @Deprecated
@@ -67,18 +67,23 @@ public abstract class ImageStorers {
         return write(im, formatName, output, null, null, delegator);
     }
 
-    public static byte[] writeBytes(BufferedImage image, String formatName, Delegator delegator) throws IOException {
+    public static byte[] writeBytes(BufferedImage image, String formatName, String imageProfile, Map<String, Object> options, Delegator delegator) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        write(image, formatName, baos, delegator);
+        write(image, formatName, baos, imageProfile, options, delegator);
         return baos.toByteArray();
+    }
+
+    @Deprecated
+    public static byte[] writeBytes(BufferedImage image, String formatName, Delegator delegator) throws IOException {
+        return writeBytes(image, formatName, null, null, delegator);
     }
 
     /**
      * Gets the first applicable storer for the given format and options.
      */
-    public static ImageStorer getStorer(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) {
+    public static ImageStorer getStorer(RenderedImage im, String formatName, Object output, String imageProfile, Map<String, Object> options, Delegator delegator) {
         for(ImageStorer storer : STORER_LIST_PRIO) {
-            if (storer.isApplicable(im, formatName, output, mediaProfile, options, delegator)) {
+            if (storer.isApplicable(im, formatName, output, imageProfile, options, delegator)) {
                 return storer;
             }
         }

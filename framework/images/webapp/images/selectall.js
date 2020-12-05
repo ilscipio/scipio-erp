@@ -1940,6 +1940,7 @@ function ScipioUploadProgress(options) {
                 var timerId = timerId;
                 jQuery.ajax({
                     url: getOfbizUrl('getFileUploadProgressStatus'),
+                    type: 'POST',
                     dataType: 'json',
                     success: function(data) {
                         if (data._ERROR_MESSAGE_LIST_ != undefined) {

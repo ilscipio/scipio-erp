@@ -58,11 +58,11 @@ public class SedjaWebpStorer extends AbstractImageStorer {
     }
 
     @Override
-    public boolean write(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) throws IOException {
-        return writeCore(im, formatName, output, options, delegator);
+    public boolean write(RenderedImage im, String formatName, Object output, String imageProfile, Map<String, Object> options, Delegator delegator) throws IOException {
+        return writeCore(im, formatName, output, imageProfile, options, delegator);
     }
 
-    protected boolean writeCore(RenderedImage im, String formatName, Object output, Map<String, Object> options, Delegator delegator) throws IOException {
+    protected boolean writeCore(RenderedImage im, String formatName, Object output, String imageProfile, Map<String, Object> options, Delegator delegator) throws IOException {
         options = getEffectiveOptions(options);
 
         // Obtain a WebP ImageWriter instance

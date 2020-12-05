@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.imageio.ImageIO;
-
+import com.ilscipio.scipio.content.image.ContentImageServices;
+import com.ilscipio.scipio.product.image.ProductImageWorker;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
  * Scale the original image into 4 different size Types (small, medium, large, detail)
  * <p>
  * SCIPIO: 2017-07-04: DEV NOTE: WARN: There will unfortunately be some more duplication
- * of the code here to the class {@link org.ofbiz.content.image.ContentImageServices}.
+ * of the code here to the class {@link ContentImageServices}.
  * Maintenance fixes may need to be applied in double to that class.
  * <p>
  * SCIPIO: WARN: In addition to the scale methods below, in stock ofbiz a third method existed
@@ -83,8 +83,8 @@ public class ScaleImage {
      * @throws  ImagingOpException          The transform is non-invertible
      * @throws  IOException                 Error prevents the document from being fully parsed
      */
-    public static Map<String, Object> scaleImageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber)
-        throws IllegalArgumentException, ImagingOpException, IOException {
+    public static Map<String, Object> scaleImageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber,
+            String imageProfile, Map<String, Object> imageWriteOptions) throws IllegalArgumentException, ImagingOpException, IOException {
 
         /* VARIABLES */
         Locale locale = (Locale) context.get("locale");
@@ -100,7 +100,7 @@ public class ScaleImage {
         Map<String, Object> result = new HashMap<>();
 
         /* ImageProperties.xml */
-        String imgPropertyFullPath = ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
+        String imgPropertyFullPath = com.ilscipio.scipio.product.image.ProductImageWorker.getProductImagePropertiesFullPath(); // SCIPIO
         resultXMLMap.putAll(ImageTransform.getXMLValue(imgPropertyFullPath, locale));
         if (resultXMLMap.containsKey("responseMessage") && "success".equals(resultXMLMap.get("responseMessage"))) {
             imgPropertyMap.putAll(UtilGenerics.<Map<String, Map<String, String>>>cast(resultXMLMap.get("xml")));
@@ -223,7 +223,8 @@ public class ScaleImage {
 
                     // write new image
                     try {
-                        ImageStorers.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + newFileLocation + "." + imgExtension), (Delegator) context.get("delegator")); // SCIPIO: ImageIO->ImageStorers
+                        ImageStorers.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + newFileLocation + "." + imgExtension),
+                                imageProfile, imageWriteOptions, (Delegator) context.get("delegator")); // SCIPIO: ImageIO->ImageStorers
                     } catch (IllegalArgumentException e) {
                         String errMsg = UtilProperties.getMessage(resource, "ScaleImage.one_parameter_is_null", locale) + e.toString();
                         Debug.logError(errMsg, module);
@@ -258,6 +259,12 @@ public class ScaleImage {
         }
     }
 
+    @Deprecated
+    public static Map<String, Object> scaleImageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber)
+            throws IllegalArgumentException, ImagingOpException, IOException {
+        return scaleImageInAllSize(context, filenameToUse, viewType, viewNumber, null, null);
+    }
+
     /**
      * scaleImageManageInAllSize.
      * <p>
@@ -266,8 +273,8 @@ public class ScaleImage {
      * <p>
      * SCIPIO: NOTE: No code in ofbiz appears to be using this method. It is yet unknown why it is here.
      */
-    public static Map<String, Object> scaleImageManageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber , String imageType)
-        throws IllegalArgumentException, ImagingOpException, IOException {
+    public static Map<String, Object> scaleImageManageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType,
+                                                                String viewNumber , String imageType, String imageProfile, Map<String, Object> imageWriteOptions) throws IllegalArgumentException, ImagingOpException, IOException {
 
         /* VARIABLES */
         Locale locale = (Locale) context.get("locale");
@@ -393,7 +400,8 @@ public class ScaleImage {
 
                     // write new image
                     try {
-                        ImageStorers.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + newFilePathPrefix + filenameToUse), (Delegator) context.get("delegator")); // SCIPIO: ImageIO->ImageStorers
+                        ImageStorers.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + newFilePathPrefix + filenameToUse),
+                                imageProfile, imageWriteOptions, (Delegator) context.get("delegator")); // SCIPIO: ImageIO->ImageStorers
                     } catch (IllegalArgumentException e) {
                         String errMsg = UtilProperties.getMessage(resource, "ScaleImage.one_parameter_is_null", locale) + e.toString();
                         Debug.logError(errMsg, module);
@@ -423,5 +431,11 @@ public class ScaleImage {
         Debug.logError(errMsg, module);
         result.put(ModelService.ERROR_MESSAGE, errMsg);
         return ServiceUtil.returnError(errMsg);
+    }
+
+    @Deprecated
+    public static Map<String, Object> scaleImageManageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType,
+                                                                String viewNumber, String imageType) throws IllegalArgumentException, ImagingOpException, IOException {
+        return scaleImageManageInAllSize(context, filenameToUse, viewType, viewNumber, imageType, null, null);
     }
 }

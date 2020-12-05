@@ -166,7 +166,7 @@ public class QRCodeEvents {
             Map<String, Object> results = dispatcher.runSync("generateQRCodeImage", context);
             if (ServiceUtil.isSuccess(results)) {
                 BufferedImage bufferedImage = (BufferedImage) results.get("bufferedImage");
-                if (!ImageStorers.write(bufferedImage, format, os, delegator)) { // SCIPIO: ImageIO->ImageStorers
+                if (!ImageStorers.write(bufferedImage, format, os, "IMAGE_QRCODE", null, delegator)) { // SCIPIO: ImageIO->ImageStorers
                     String errMsg = UtilProperties.getMessage("QRCodeUiLabels", "ErrorWriteFormatToFile", new Object[] { format }, locale);
                     request.setAttribute("_ERROR_MESSAGE_", errMsg);
                     return "error";

@@ -26,7 +26,7 @@
         and should not be called directly as controller events (assume all except where otherwise noted) -->
 
     <service name="contentImageFileScaleInAllSizeCore" engine="java"
-            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageFileScaleInAllSizeCore" auth="false" transaction-timeout="1800">
+             location="com.ilscipio.scipio.content.image.ContentImageServices" invoke="contentImageFileScaleInAllSizeCore" auth="false" transaction-timeout="1800">
         <description>Scales a content/generic image file according to size types in ImageProperties.xml - core implementation (caller specifies locations/filenames); also supports component:// and file:// prefixes</description>
         <!-- INPUT IMAGE -->
         <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
@@ -63,15 +63,19 @@
         </attribute>
 
         <!-- IMAGE PROFILE -->
+        <attribute name="imageProfile" mode="IN" type="Object" optional="true">
+            <description>Image profile, now generally required (name or org.ofbiz.common.image.ImageProfile)</description>
+        </attribute>
+        <attribute name="defaultImageProfile" mode="IN" type="Object" optional="true" default-value="IMAGE_CONTENT">
+            <description>Default image profile, for wrapping services (name or org.ofbiz.common.image.ImageProfile)</description>
+        </attribute>
+        <attribute name="imageVariantConfig" mode="IN" type="org.ofbiz.common.image.ImageVariantConfig" optional="true">
+            <description>Image variant config, alternative to imagePropXmlPath</description>
+        </attribute>
         <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
             <description>Path to ImageProperties.xml file containing size types, from ofbiz home root</description>
         </attribute>
-        <attribute name="imageProfile" mode="IN" type="org.ofbiz.common.image.ImageProfile" optional="true">
-            <description>Image profile, alternative to imagePropXmlPath</description>
-        </attribute>
-        <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true">
-            <description>Image variant config, alternative to imagePropXmlPath</description>
-        </attribute>
+        <attribute mode="IN" name="imageWriteOptions" type="Map" optional="true"/>
 
         <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>List of size types to generate and return (default: all types in file)</description>
@@ -95,10 +99,13 @@
         <attribute name="bufferedImage" mode="OUT" type="java.awt.image.BufferedImage" optional="true">
             <description>Original image contents, for reuse</description>
         </attribute>
+        <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/><!-- FIXME: currently always zero for this service -->
     </service>
     
     <service name="contentImageDbScaleInAllSizeCore" engine="java"
-            location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageDbScaleInAllSizeCore" auth="false" transaction-timeout="1800">
+             location="com.ilscipio.scipio.content.image.ContentImageServices" invoke="contentImageDbScaleInAllSizeCore" auth="false" transaction-timeout="1800">
         <description>Scales a content/generic database image according to size types in ImageProperties.xml - core implementation (caller specifies all locations/filenames)</description>    
         
         <!-- INPUT IMAGE -->
@@ -120,15 +127,19 @@
         </attribute>
 
         <!-- IMAGE PROFILE -->
-        <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
-            <description>Path to ImageProperties.xml file containing size types, from ofbiz home root</description>
+        <attribute name="imageProfile" mode="IN" type="Object" optional="true">
+            <description>Image profile, now generally required (name or org.ofbiz.common.image.ImageProfile)</description>
         </attribute>
-        <attribute name="imageProfile" mode="IN" type="org.ofbiz.common.image.ImageProfile" optional="true">
-            <description>Image profile, alternative to imagePropXmlPath</description>
+        <attribute name="defaultImageProfile" mode="IN" type="Object" optional="true" default-value="IMAGE_CONTENT">
+            <description>Default image profile, for wrapping services (name or org.ofbiz.common.image.ImageProfile)</description>
         </attribute>
         <attribute name="imageVariantConfig" mode="IN" type="org.ofbiz.common.image.ImageVariantConfig" optional="true">
             <description>Image variant config, alternative to imagePropXmlPath</description>
         </attribute>
+        <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
+            <description>Path to ImageProperties.xml file containing size types, from ofbiz home root</description>
+        </attribute>
+        <attribute mode="IN" name="imageWriteOptions" type="Map" optional="true"/>
 
         <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>List of size types to generate and return (default: all types in file)</description>
@@ -138,7 +149,12 @@
             <description>If true, also creates copy of the original under the size type "original" (default: false)</description>
         </attribute>-->
         <attribute name="deleteOld" mode="IN" type="Boolean" optional="true">
-            <description>If true, removes all existing related images before creating new ones (default: false)</description>
+            <description>If true, removes all existing related images before creating new ones (default: false)
+                2020-11: AVOID USE: recreateExisting should be specified as true instead, which will update records in-place, which is a lot faster
+                and more friendly toward frontend behavior.</description>
+        </attribute>
+        <attribute name="recreateExisting" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If false (default), existing files for the size types are ignored and not regenerated; if true, all or give size types are always regenerated (slow)</description>
         </attribute>
         <attribute name="createdDate" mode="IN" type="Timestamp" optional="true">
             <description>Optional createdDate for Content and DataResource</description>
@@ -187,11 +203,14 @@
         <attribute name="bufferedImage" mode="OUT" type="java.awt.image.BufferedImage" optional="true">
             <description>Original image contents, for reuse</description>
         </attribute>
+        <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
     </service>
 
     <!-- NOTE: For product images, use productImageAutoRescale -->
     <service name="contentImageAutoRescale" engine="java"
-             location="org.ofbiz.content.image.ContentImageServices" invoke="contentImageAutoRescale" auth="false" transaction-timeout="1800">
+             location="com.ilscipio.scipio.content.image.ContentImageServices" invoke="contentImageAutoRescale" auth="false" transaction-timeout="1800">
         <description>Automatically rescales a content image</description>
         <attribute name="contentId" mode="IN" type="String" optional="false"/>
         <attribute name="contentDataResource" mode="IN" type="GenericValue" optional="true">
@@ -209,6 +228,12 @@
                 if false, only regenerates if variants already created;
                 WARN: If true, not currently guaranteed to reproduce original Content and DataResource fields</description>
         </attribute>
+        <attribute name="recreateExisting" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If false (default), existing files for the size types are ignored and not regenerated; if true, all or give size types are always regenerated (slow)</description>
+        </attribute>
+        <attribute mode="IN" name="deleteOld" type="Boolean" optional="true" default-value="false">
+            <description>Not recommended unless corruption: delete the old ContentAssoc/Content/DataResource before creating new ones (old behavior)</description>
+        </attribute>
         <attribute name="nonFatal" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If true, runs in separate transaction and returns failure on image resize fail;
                 if false, runs in current transaction and returns error on on image resize fail</description>
@@ -218,6 +243,10 @@
         </attribute>
         <attribute name="doLog" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <attribute name="progress" mode="IN" type="String" optional="true"/>
+        <attribute name="reason" mode="OUT" type="String" optional="true"/>
+        <attribute name="variantSuccessCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="variantFailCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="variantSkipCount" mode="OUT" type="Integer" optional="true"/>
     </service>
 
 </services>

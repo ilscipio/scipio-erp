@@ -88,6 +88,12 @@ public class FrameImage {
         String imageHeight = (String) context.get("imageHeight");
         Locale locale = (Locale) context.get("locale");
 
+        String imageProfile = (String) context.get("imageProfile"); // SCIPIO: TODO?: if ever needed again
+        if (UtilValidate.isEmpty(imageProfile)) {
+            imageProfile = "IMAGE_PRODUCT";
+        }
+        Map<String, Object> imageWriteOptions = UtilGenerics.cast(context.get("imageWriteOptions"));
+
         if (UtilValidate.isEmpty(context.get("frameContentId")) || UtilValidate.isEmpty(context.get("frameDataResourceId"))) {
             result = ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "ProductImageFrameContentIdRequired", locale));
@@ -186,13 +192,15 @@ public class FrameImage {
 
             BufferedImage bufNewImg = combineBufferedImage(newImg1, newImg2, bufImg1);
             String mimeType = imageName.substring(imageName.lastIndexOf(".") + 1);
-            ImageStorers.write(bufNewImg, mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse), delegator); // SCIPIO: ImageIO->ImageStorers
+            ImageStorers.write(bufNewImg, mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse),
+                    imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
 
             double imgHeight = bufNewImg.getHeight();
             double imgWidth = bufNewImg.getWidth();
 
             Map<String, Object> resultResize = ImageManagementServices.resizeImageThumbnail(bufNewImg, imgHeight, imgWidth);
-            ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameTouseThumb), delegator); // SCIPIO: ImageIO->ImageStorers
+            ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameTouseThumb),
+                    imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
 
             String imageUrlResource = imageServerUrl + "/" + productId + "/" + filenameToUse;
             String imageUrlThumb = imageServerUrl + "/" + productId + "/" + filenameTouseThumb;
@@ -416,6 +424,12 @@ public class FrameImage {
         String productId = request.getParameter("productId");
         String imageName = request.getParameter("imageName");
 
+        String imageProfile = request.getParameter("imageProfile"); // SCIPIO: TODO?: if ever needed again
+        if (UtilValidate.isEmpty(imageProfile)) {
+            imageProfile = "IMAGE_PRODUCT";
+        }
+        Map<String, Object> imageWriteOptions = null; //UtilGenerics.cast(context.get("imageWriteOptions"));
+
         String dirPath = "/preview/";
         File dir = new File(imageServerPath + dirPath);
         if (!dir.exists()) {
@@ -493,7 +507,7 @@ public class FrameImage {
 
             BufferedImage bufNewImg = combineBufferedImage(newImg1, newImg2, bufImg1); // SCIPIO
             String mimeType = imageName.substring(imageName.lastIndexOf(".") + 1);
-            ImageStorers.write(bufNewImg, mimeType, new File(imageServerPath + "/preview/" + "/previewImage.jpg"), delegator); // SCIPIO: ImageIO->ImageStorers
+            ImageStorers.write(bufNewImg, mimeType, new File(imageServerPath + "/preview/" + "/previewImage.jpg"), imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
 
         } else {
             String errMsg = "Please select Image.";

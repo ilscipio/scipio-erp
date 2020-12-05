@@ -27,7 +27,7 @@
         and should not be called directly as controller events (assume all except where otherwise noted) -->
 
     <service name="productImageFileScaleInAllSize" engine="java"
-            location="org.ofbiz.product.image.ProductImageServices" invoke="productImageFileScaleInAllSize" auth="false">
+             location="com.ilscipio.scipio.product.image.ProductImageServices" invoke="productImageFileScaleInAllSize" auth="false">
         <description>Scales a product image file according to size types in product config ImageProperties.xml and using filename formats from catalog.properties</description>
         <!-- INPUT IMAGE -->
         <attribute name="imageOrigPath" mode="IN" type="String" optional="true">
@@ -62,11 +62,11 @@
         <attribute name="imagePathArgs" mode="IN" type="Map" optional="true">
             <description>Additional args for parameterized paths</description>
         </attribute>
+        <attribute name="imageProfile" mode="IN" type="Object" optional="true">
+            <description>Image profile, now generally required (name or org.ofbiz.common.image.ImageProfile)</description>
+        </attribute>
         <attribute name="imagePropXmlPath" mode="IN" type="String" optional="true">
             <description>Path to ImageProperties.xml file containing size types, from ofbiz home root</description>
-        </attribute>
-        <attribute name="imageProfile" mode="IN" type="org.ofbiz.common.image.ImageProfile" optional="true">
-            <description>Image profile, alternative to imagePropXmlPath</description>
         </attribute>
         <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>List of size types to generate and return (default: all types in file)</description>
@@ -77,6 +77,7 @@
         <attribute name="deleteOld" mode="IN" type="Boolean" optional="true">
             <description>[TODO: NOT IMPLEMENTED] If true, also deletes old files in target directory (default: false)</description>
         </attribute>
+        <attribute mode="IN" name="imageWriteOptions" type="Map" optional="true"/>
         
         <!-- PRODUCT-SPECIFIC -->
         <attribute name="productId" mode="IN" type="String" optional="false">
@@ -110,18 +111,20 @@
         <attribute name="bufferedImage" mode="OUT" type="java.awt.image.BufferedImage" optional="true">
             <description>Original image contents, for reuse</description>
         </attribute>
+        <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
     </service>
     
     <!-- TODO? Products don't currently support this?
     <service name="productImageDbScaleInAllSize" engine="java"
-            location="org.ofbiz.content.image.ContentImageServices" invoke="productImageDbScaleInAllSize" auth="false">
+            location="com.ilscipio.scipio.product.image.ProductImageServices" invoke="productImageDbScaleInAllSize" auth="false">
         <description>(TODO) Scales a content/generic database image according to size types in ImageProperties.xml - core implementation (caller specifies all locations/filenames)</description>
         <implements service="contentImageDbScaleInAllSizeCore"/>  
     </service>
     -->
 
     <service name="productImageAutoRescale" engine="java"
-             location="org.ofbiz.product.image.ProductImageServices" invoke="productImageAutoRescale" auth="false" transaction-timeout="1800">
+             location="com.ilscipio.scipio.product.image.ProductImageServices" invoke="productImageAutoRescale" auth="false" transaction-timeout="1800">
         <description>Automatically rescales one or more product images for a product (does NOT consult parent/virtual products)</description>
         <attribute name="productId" mode="IN" type="String" optional="true"/>
         <attribute name="product" mode="IN" type="GenericValue" optional="true"/>
@@ -151,16 +154,24 @@
         <attribute name="recreateExisting" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If false (default), existing files for the size types are ignored and not regenerated; if true, all or give size types are always regenerated (slow)</description>
         </attribute>
+        <attribute name="nonFatal" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>If true, runs in separate transaction and returns failure on image resize fail;
+                if false, runs in current transaction and returns error on on image resize fail</description>
+        </attribute>
         <attribute name="logDetail" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <!-- per-image counts -->
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
+        <!-- per-variant counts -->
+        <attribute name="variantSuccessCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="variantFailCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="reason" mode="OUT" type="String" optional="true"/>
     </service>
 
     <service name="productImageAutoRescaleProducts" engine="java"
-             location="org.ofbiz.product.image.ProductImageServices" invoke="productImageAutoRescaleProducts" auth="false" transaction-timeout="144000">
+             location="com.ilscipio.scipio.product.image.ProductImageServices" invoke="productImageAutoRescaleProducts" auth="false" transaction-timeout="144000">
         <description>Automatically rescales one or more product images for multiple or all products (does NOT consult parent/virtual products)</description>
         <attribute name="products" mode="IN" type="Object" optional="true">
             <description>List of product values or IDs or EntityListIterator</description>
@@ -193,20 +204,27 @@
         </attribute>
         <attribute name="maxProducts" mode="IN" type="Integer" optional="true"/>
         <attribute name="maxErrorCount" mode="IN" type="Integer" optional="true"/>
-        <attribute name="sepTrans" mode="IN" type="Boolean" optional="true" default-value="true"/>
+        <attribute name="sepProductTrans" mode="IN" type="Boolean" optional="true" default-value="true">
+            <description>NOTE: For safety this is left true by default, but in addition each image may also get a separate transaction through nonFatal (TODO: clarify)</description>
+        </attribute>
         <attribute name="allCond" mode="IN" type="org.ofbiz.entity.condition.EntityCondition" optional="true"/>
         <attribute name="allOrderBy" mode="IN" type="List" optional="true"/>
         <attribute name="allResumeId" mode="IN" type="String" optional="true"/>
         <attribute name="logBatch" mode="IN" type="Integer" optional="true"/>
         <attribute name="logDetail" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <!-- per-image counts -->
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
+        <!-- per-variant counts -->
+        <attribute name="variantSuccessCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="variantFailCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="failProductIdList" mode="OUT" type="List" optional="true"/>
     </service>
 
     <service name="productImageAutoRescaleAll" engine="java"
-             location="org.ofbiz.product.image.ProductImageServices" invoke="productImageAutoRescaleAll" auth="false" transaction-timeout="172800" semaphore="fail">
+             location="com.ilscipio.scipio.product.image.ProductImageServices" invoke="productImageAutoRescaleAll" auth="false" transaction-timeout="172800" semaphore="fail">
         <description>Automatically rescales one or more product images for multiple or all products (does NOT consult parent/virtual products)</description>
         <implements service="productImageAutoRescaleProducts"/>
         <override name="allProducts" default-value="true"/>
@@ -216,7 +234,7 @@
     </service>
 
     <service name="abortProductImageAutoRescaleAll" engine="java"
-             location="org.ofbiz.product.image.ProductImageServices" invoke="abortProductImageAutoRescaleAll" use-transaction="false">
+             location="com.ilscipio.scipio.product.image.ProductImageServices" invoke="abortProductImageAutoRescaleAll" use-transaction="false">
         <description>Aborts productImageAutoRescaleAll if possible</description>
     </service>
 </services>

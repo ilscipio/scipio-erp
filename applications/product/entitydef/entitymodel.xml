@@ -3253,6 +3253,18 @@ code package.
         <key-map field-name="contentId" rel-field-name="contentIdStart"/>
       </relation>
     </view-entity>
+    <!-- SCIPIO: new entity that covers 2 entities -->
+    <view-entity entity-name="ProductContentAndContent"
+                package-name="org.ofbiz.product.product"
+                title="ProductContent And Content Required View">
+      <member-entity entity-alias="PC" entity-name="ProductContent"/>
+      <member-entity entity-alias="CO" entity-name="Content"/>
+      <alias-all entity-alias="PC"/>
+      <alias-all entity-alias="CO"/>
+      <view-link entity-alias="PC" rel-entity-alias="CO">
+        <key-map field-name="contentId"/>
+      </view-link>
+    </view-entity>
     <!-- SCIPIO: new entity that covers 3 entities, most useful for simple text content values e.g. ALTERNATE_TEXT -->
     <view-entity entity-name="ProductContentAndDataResource"
                 package-name="org.ofbiz.product.product"

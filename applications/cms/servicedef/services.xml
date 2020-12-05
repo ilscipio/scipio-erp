@@ -824,17 +824,23 @@
         <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceTypeId" type="String" optional="true"/>
     </service>
-    <!-- TODO: should make a single cmsRebuildMediaVariantsSingle -->
+    <!-- TODO: cmsRebuildMediaVariants will probably be replaced by more generic content version -->
     <service name="cmsRebuildMediaVariants" engine="java"
-        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="rebuildMediaVariants" auth="true" transaction-timeout="14400">
+        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="rebuildMediaVariants" auth="true" transaction-timeout="144000" semaphore="fail">
         <description>Recreates (deletes + creates) auto-resized images for specified or all images</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute mode="IN" name="contentIdList" type="List" optional="true">
             <description>contentId of images for which to recreate their variants; if omitted, applies to all images (slow)</description>
         </attribute>
-        <attribute mode="IN" name="force" type="Boolean" optional="true">
+        <attribute mode="IN" name="forceCreate" type="Boolean" optional="true" default-value="false">
             <description>If contentIdList omitted, if true, forces recreation of resized images for those that had none (default: false);
                 by default, only recreates for those that already had resized images</description>
+        </attribute>
+        <attribute mode="IN" name="recreateExisting" type="Boolean" optional="true" default-value="true">
+            <description>If true (default), recreates existing, if false, only creates missing sizes</description>
+        </attribute>
+        <attribute mode="IN" name="deleteOld" type="Boolean" optional="true" default-value="false">
+            <description>Not recommended unless corruption: delete the old ContentAssoc/Content/DataResource before creating new ones (old behavior)</description>
         </attribute>
         <attribute mode="IN" name="sepTrans" type="Boolean" optional="true">
             <description>If true, each contentId gets its own transaction (default: true if contentIdList is omitted, false if contentIdList is specified)</description>
@@ -842,10 +848,24 @@
         <attribute name="createdDate" mode="IN" type="Timestamp" optional="true">
             <description>Optional createdDate for Content and DataResource</description>
         </attribute>
+        <attribute name="doLog" mode="IN" type="Boolean" optional="true"/>
         <!-- SCIPIO (12/17/2018): Allowing custom image variant sizes config -->
         <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
         <!-- SCIPIO (01/19/2019): Passing custom image sizes for responsive images -->
         <attribute mode="IN" name="customImageSizes" type="List" optional="true"/>
+        <attribute name="imgCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="errorCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="variantSuccessCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="variantFailCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="variantSkipCount" mode="OUT" type="Integer" optional="true"/>
+    </service>
+    <service name="cmsAbortRebuildMediaVariants" engine="java"
+             location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="abortRebuildMediaVariants" auth="true">
+        <description>Aborts cmsRebuildMediaVariants at the next iterated image</description>
+        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
     </service>
     <service name="cmsRemoveMediaVariants" engine="java"
         location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="removeMediaVariants" auth="true" transaction-timeout="14400">
@@ -1025,7 +1045,7 @@
         <attribute name="menuJson" type="String" mode="INOUT" optional="false"/>
     </service>
 
-        <service name="cmsDeleteMenu" engine="java"
+    <service name="cmsDeleteMenu" engine="java"
         location="com.ilscipio.scipio.cms.menu.CmsMenuServices" invoke="deleteMenu" auth="true" transaction-timeout="7200">
         <permission-service service-name="cmsGenericPermission" main-action="DELETE"/>
         <attribute mode="IN" name="menuId" type="String" optional="false"/>

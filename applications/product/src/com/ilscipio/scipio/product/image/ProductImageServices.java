@@ -1,7 +1,8 @@
-package org.ofbiz.product.image;
+package com.ilscipio.scipio.product.image;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -11,7 +12,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
-import org.ofbiz.content.image.ContentImageServices;
+import com.ilscipio.scipio.content.image.ContentImageServices;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -19,6 +20,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.product.image.ScaleImage;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -33,6 +35,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -63,16 +66,15 @@ public abstract class ProductImageServices {
      * TODO?: reconcile with ScaleImage.scaleImageInAllSize eventually... for now, leaving separate to avoid
      * breaking product screens.
      */
-    public static Map<String, Object> productImageFileScaleInAllSize(ServiceContext ctx) {
-        Map<String, Object> context = ctx.context();
+    public static Map<String, Object> productImageFileScaleInAllSize(ServiceContext ctx) throws ServiceValidationException {
         Delegator delegator = ctx.delegator();
         String viewType = ctx.attr("viewType");
         String viewNumber = ctx.getString("viewNumber");
-        Locale locale = ctx.attr("locale", Locale::getDefault);
+        Locale locale = ctx.locale();
 
         Map<String, Object> contentCtx;
         try {
-            contentCtx = ctx.makeValidInContext("contentImageFileScaleInAllSizeCore", context);
+            contentCtx = ctx.makeValidInContext("contentImageFileScaleInAllSizeCore", ctx.context());
         } catch (GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
@@ -88,24 +90,23 @@ public abstract class ProductImageServices {
 
         Map<String, Object> imagePathArgs = new HashMap<>();
 
-        String type = null;
-        String id = (String) context.get("productId");
+        String productId = (String) ctx.get("productId");
         if (viewType.toLowerCase().contains("main")) {
             if (isStrArgEmpty(contentCtx, "imageFnFmt")) {
                 contentCtx.put("imageFnFmt", EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", delegator));
             }
-            imagePathArgs.putAll(UtilMisc.toMap("location", "products", "id", id, "type", "original"));
+            imagePathArgs.putAll(UtilMisc.toMap("location", "products", "id", productId, "type", "original"));
         } else if (viewType.toLowerCase().contains("additional") && viewNumber != null && !"0".equals(viewNumber)) {
             if (isStrArgEmpty(contentCtx, "imageFnFmt")) {
                 contentCtx.put("imageFnFmt", EntityUtilProperties.getPropertyValue("catalog", "image.filename.additionalviewsize.format", delegator));
             }
             String filenameFormat = (String) contentCtx.get("imageFnFmt");
             if (filenameFormat.endsWith("${id}")) { // TODO: REVIEW: I don't get this
-                id = id + "_View_" + viewNumber;
+                productId = productId + "_View_" + viewNumber;
             } else {
                 viewType = "additional" + viewNumber;
             }
-            imagePathArgs.putAll(UtilMisc.toMap("location", "products", "id", id, "viewtype", viewType, "sizetype", "original"));
+            imagePathArgs.putAll(UtilMisc.toMap("location", "products", "id", productId, "viewtype", viewType, "sizetype", "original"));
         } else {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ProductImageViewType", UtilMisc.toMap("viewType", viewType), locale));
         }
@@ -115,23 +116,18 @@ public abstract class ProductImageServices {
             imagePathArgs.putAll(imagePathArgsRcvd); // explicit args crush ours
         }
         contentCtx.put("imagePathArgs", imagePathArgs);
-        if (isStrArgEmpty(contentCtx, "imagePropXmlPath")) {
-            try {
-                contentCtx.put("imagePropXmlPath", ProductImageWorker.getProductImagePropertiesPath());
-            } catch (Exception e) {
-                Debug.logError("Product image configuration error: " + e.getMessage(), module);
-                return ServiceUtil.returnError("Product image configuration error: " + e.getMessage());
-            }
-        }
+        contentCtx.put("defaultImageProfile", "IMAGE_PRODUCT");
 
         // TODO/FIXME: currently provides no deletion of the old images...
 
-        Map<String, Object> result = ContentImageServices.contentImageFileScaleInAllSizeCore(ctx.dctx(), contentCtx);
+        Map<String, Object> result = ContentImageServices.contentImageFileScaleInAllSizeCore(ctx.from(contentCtx));
         result.put("productSizeTypeList", ScaleImage.sizeTypeList);
         return result;
     }
 
     public static Map<String, Object> productImageAutoRescale(ServiceContext ctx) throws ServiceValidationException { // SCIPIO
+        boolean nonFatal = ctx.attr("nonFatal", false);
+
         // NOTE: CMS images are identified by contentTypeId="SCP_MEDIA"
         GenericValue product = ctx.attr("product");
         String productId;
@@ -176,37 +172,69 @@ public abstract class ProductImageServices {
                     + (UtilValidate.isNotEmpty(contentIdList) ? " contentIdList " + contentIdList : ""), module);
         }
 
-        Map<String, Object> stats = UtilMisc.toMap("errorCount", 0, "failCount", 0, "successCount", 0, "skipCount", 0);
+        Map<String, Object> stats = UtilMisc.put(new LinkedHashMap<>(), "successCount", 0, "failCount", 0, "errorCount", 0, "skipCount", 0,
+                "variantSuccessCount", 0, "variantFailCount", 0);
         for(String productContentTypeId : productContentTypeIdList) {
-            Map<String, Object> res = productImageRescaleImage(ctx, product, productContentTypeId, null);
+            Map<String, Object> res = productImageRescaleImage(ctx, product, productContentTypeId, null, nonFatal);
             if ("no-image-url".equals(res.get("reason")) && "ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
                 // SPECIAL: stock Scipio and other products don't always have ORIGINAL_IMAGE_URL but sometimes only DETAIL_IMAGE_URL
-                Map<String, Object> res2 = productImageRescaleImage(ctx, product, "DETAIL_IMAGE_URL", null);
+                Map<String, Object> res2 = productImageRescaleImage(ctx, product, "DETAIL_IMAGE_URL", null, nonFatal);
                 if (!"no-image-url".equals(res2.get("reason"))) {
                     res = res2;
                 }
             }
-            productImageAutoRescaleRegisterResult(ctx, res, stats);
+            if (!productImageAutoRescaleRegisterResult(ctx, product, res, stats, nonFatal)) {
+                Map<String, Object> result = ServiceUtil.returnError(((int) stats.get("errorCount")) + " errors auto-rescaling images for product [" + productId + "]" + " (stats: " + stats + ")");
+                result.putAll(stats);
+                return result;
+            }
         }
         for(String contentId : contentIdList) {
-            Map<String, Object> res = productImageRescaleImage(ctx, product, null, contentId);
-            productImageAutoRescaleRegisterResult(ctx, res, stats);
+            Map<String, Object> res = productImageRescaleImage(ctx, product, null, contentId, nonFatal);
+            if (!productImageAutoRescaleRegisterResult(ctx, product, res, stats, nonFatal)) {
+                Map<String, Object> result = ServiceUtil.returnError(((int) stats.get("errorCount")) + " errors auto-rescaling images for product [" + productId + "]" + " (stats: " + stats + ")");
+                result.putAll(stats);
+                return result;
+            }
         }
         Map<String, Object> result;
-        if (((int) stats.get("errorCount")) <= 0) {
-            result = ServiceUtil.returnSuccess("Rescaled " + ((int) stats.get("successCount")) + " images for product [" + productId + "]" + " (stats: " + stats + ")");
+        int successCount = ((int) stats.get("successCount"));
+        int errorCount = ((int) stats.get("errorCount"));
+        int failCount = ((int) stats.get("failCount"));
+
+        String msg = "Rescaled " + ((int) stats.get("successCount")) + " images for product [" + productId + "]" + " (stats: " + stats + ")";
+        if (errorCount > 0 || failCount > 0) {
+            if (nonFatal) {
+                result = ServiceUtil.returnFailure(msg);
+            } else {
+                result = ServiceUtil.returnError(msg);
+            }
         } else {
-            result = ServiceUtil.returnError(((int) stats.get("errorCount")) + " errors auto-rescaling images for product [" + productId + "]" + " (stats: " + stats + ")");
+            result = ServiceUtil.returnSuccess(msg);
         }
         result.putAll(stats);
         return result;
     }
 
-    private static void productImageAutoRescaleRegisterResult(ServiceContext ctx, Map<String, Object> res, Map<String, Object> stats) {
+    private static boolean productImageAutoRescaleRegisterResult(ServiceContext ctx, GenericValue product, Map<String, Object> res, Map<String, Object> stats, boolean nonFatal) {
+        Integer variantSuccessCount = (Integer) res.get("variantSuccessCount");
+        if (variantSuccessCount != null) {
+            stats.put("variantSuccessCount", ((int) stats.get("variantSuccessCount")) + variantSuccessCount);
+        }
+        Integer variantFailCount = (Integer) res.get("variantFailCount");
+        if (variantFailCount != null) {
+            stats.put("variantFailCount", ((int) stats.get("variantFailCount")) + variantFailCount);
+        }
         if (ServiceUtil.isError(res)) {
             stats.put("errorCount", ((int) stats.get("errorCount")) + 1);
+            if (!nonFatal) {
+                return false;
+            }
         } else if (ServiceUtil.isFailure(res)) {
             stats.put("failCount", ((int) stats.get("failCount")) + 1);
+            if (!nonFatal) {
+                return false;
+            }
         } else {
             if ("no-image-url".equals(res.get("reason"))) {
                 stats.put("skipCount", ((int) stats.get("skipCount")) + 1);
@@ -218,9 +246,12 @@ public abstract class ProductImageServices {
                 stats.put("successCount", ((int) stats.get("successCount")) + 1);
             }
         }
+        return true;
     }
 
-    private static Map<String, Object> productImageRescaleImage(ServiceContext ctx, GenericValue product, String productContentTypeId, String contentId) throws ServiceValidationException {
+    private static Map<String, Object> productImageRescaleImage(ServiceContext ctx, GenericValue product, String productContentTypeId, String contentId, boolean nonFatal) throws ServiceValidationException {
+        int variantSuccessCount = 0;
+        int variantFailCount = 0;
         boolean logDetail = ctx.attr("logDetail", false);
         String productId = product.getString("productId");
         GenericValue content = null;
@@ -390,12 +421,33 @@ public abstract class ProductImageServices {
                 "locale", ctx.get("locale"), "userLogin", ctx.get("userLogin"), "timeZone", ctx.get("timeZone"), "imageProfile", imageProfile,
                 "sizeTypeList", sizeTypeList);
         try {
-            Map<String, Object> resizeResult = productImageFileScaleInAllSize(ctx.from(resizeCtx));
-            if (!ServiceUtil.isSuccess(resizeResult)) {
+            Map<String, Object> resizeResult;
+            if (nonFatal) {
+                resizeResult = ctx.dispatcher().runSync("productImageFileScaleInAllSize", resizeCtx, true);
+            } else {
+                resizeResult = ctx.dispatcher().runSync("productImageFileScaleInAllSize", resizeCtx);
+            }
+            if (resizeResult.get("successCount") != null) {
+                variantSuccessCount += (Integer) resizeResult.get("successCount");
+            }
+            if (resizeResult.get("failCount") != null) {
+                variantFailCount += (Integer) resizeResult.get("failCount");
+            }
+            if (!nonFatal) {
+                if (!ServiceUtil.isSuccess(resizeResult)) {
+                    throw new GeneralException("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
+                }
+            }
+
+            if (ServiceUtil.isError(resizeResult)) {
                 String errMsg = "Could not resize image for product [" + productId + "] contentId [" + contentId
-                        + "] productContentTypeId [" + productContentTypeId + "]";
+                        + "] productContentTypeId [" + productContentTypeId + "]: " + ServiceUtil.getErrorMessage(resizeResult);
                 Debug.logError("productImageRescaleImage: " + errMsg, module);
-                return ServiceUtil.returnError(errMsg);
+                return UtilMisc.put(ServiceUtil.returnError(errMsg), "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount);
+            } else if (ServiceUtil.isFailure(resizeResult)) {
+                String errMsg = "Could not resize image for product [" + productId + "] contentId [" + contentId
+                        + "] productContentTypeId [" + productContentTypeId + "]: " + ServiceUtil.getErrorMessage(resizeResult);
+                Debug.logError("productImageRescaleImage: " + errMsg, module);
             }
 
             Map<String, String> imageUrlMap = UtilGenerics.cast(resizeResult.get("imageUrlMap"));
@@ -413,18 +465,23 @@ public abstract class ProductImageServices {
                         }
                         continue;
                     }
+                    if (url.startsWith(".") || url.contains("/.")) { // SPECIAL: detect bug (missing filename)
+                        throw new IllegalStateException("Internal error: invalid url [" + url + "] for sizeType [" + sizeType + "], not updating");
+                    }
                     Map<String, Object> res = updateProductContentImageUrl(ctx, product, pct.getString("productContentTypeId"), url, productContentTypeId, fromDate,
                             ctx.attr("createSizeTypeContent"));
                     if (ServiceUtil.isError(res)) {
-                        return res;
+                        return UtilMisc.put(new HashMap<>(res), "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount);
                     }
                 }
             }
         } catch (Exception e) {
             Debug.logError(e, "productImageRescaleImage: Error resizing images for product [" + productId + "]: " + e.toString(), module);
-            return ServiceUtil.returnError(e.toString());
+            return UtilMisc.put(ServiceUtil.returnError(e.toString()), "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount);
         }
-        return UtilMisc.put(ServiceUtil.returnSuccess(), "reason", "success");
+        String msg = variantSuccessCount + " variant success, " + variantFailCount + " variant failures";
+        return UtilMisc.put(variantFailCount > 0 ? ServiceUtil.returnFailure(msg) : ServiceUtil.returnSuccess(msg), "reason", "success",
+                "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount);
     }
 
     /** Attempts to preserve previous data setup, best-effort. */
@@ -718,16 +775,19 @@ public abstract class ProductImageServices {
         int errorCount = 0;
         int failCount = 0;
         int skipCount = 0;
+        int variantSuccessCount = 0;
+        int variantFailCount = 0;
         Iterator<?> productsIt = (ctx.attr("products") != null) ? UtilMisc.asIterator(ctx.attr("products")) : null;
         if (productsIt == null) {
             productsIt = (ctx.attr("productIdList") != null) ? UtilMisc.asIterator(ctx.attr("productIdList")) : null;
         }
         int lastProductCount = ctx.attr("lastProductCount", 10);
         List<String> lastProductIdList = new LinkedList<>();
+        List<String> failProductIdList = new ArrayList<>();
         try {
             Integer maxProducts = ctx.attr("maxProducts");
             Integer maxErrorCount = ctx.attr("maxProducts");
-            boolean sepTrans = ctx.attr("sepTrans", true);
+            boolean sepProductTrans = ctx.attr("sepProductTrans", true);
             Integer logBatch = ctx.attr("logBatch");
             if (logBatch != null && logBatch <= 0) {
                 logBatch = null;
@@ -737,9 +797,10 @@ public abstract class ProductImageServices {
                     try {
                         // REMOVED: orderBy even with cursorScrollInsensitive caused child transaction updates of Product to block.
                         //productsIt = ctx.delegator().from("Product").where((EntityCondition) ctx.attr("allCond"))
-                        //        .maxRows(maxProducts).orderBy(ctx.<List<String>>attr("allOrderBy")).cursorScrollInsensitive().queryIterator();
+                        //        orderBy(ctx.<List<String>>attr("allOrderBy")).cursorScrollInsensitive().queryIterator();
+                        // NOTE: REMOVED maxRows() because of allResumeId support
                         productsIt = ctx.delegator().from("Product").where((EntityCondition) ctx.attr("allCond"))
-                                .maxRows(maxProducts).orderBy(ctx.<List<String>>attr("allOrderBy")).getFieldList("productId").iterator();
+                                .orderBy(ctx.<List<String>>attr("allOrderBy")).getFieldList("productId").iterator();
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
                         return ServiceUtil.returnError(e.toString());
@@ -775,8 +836,9 @@ public abstract class ProductImageServices {
                     lastProductIdList.add(productId);
                 }
                 if (processSignals != null && processSignals.isSet("stop")) {
-                    Debug.logWarning(logPrefix + " aborted (products: " + productCount + ", last: " + lastProductIdList + ")", module);
-                    return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted (last: " + lastProductIdList + ")");
+                    String abortMsg = processSignals.getProcess() + " aborted (products: " + productCount + ", last: " + lastProductIdList + ")";
+                    Debug.logWarning(logPrefix + abortMsg, module);
+                    return ServiceUtil.returnFailure(abortMsg);
                 }
 
                 productCount++;
@@ -791,7 +853,11 @@ public abstract class ProductImageServices {
                     } else {
                         throw new ServiceValidationException("Invalid product, should be GenericValue or String: " + productObj.getClass(), ctx.getModelService());
                     }
-                    Map<String, Object> servResult = ctx.dispatcher().runSync("productImageAutoRescale", servCtx, sepTrans);
+                    servCtx.put("nonFatal", true); // TODO: unhardcode (NOTE: causes extra separate transactions per-image)
+                    Map<String, Object> servResult = ctx.dispatcher().runSync("productImageAutoRescale", servCtx, sepProductTrans);
+                    if (!ServiceUtil.isSuccess(servResult)) {
+                        failProductIdList.add(productId);
+                    }
                     Integer servErrorCount = (Integer) servResult.get("errorCount");
                     if (servErrorCount == null) {
                         servErrorCount = ServiceUtil.isError(servResult) ? 1 : 0;
@@ -811,6 +877,14 @@ public abstract class ProductImageServices {
                     if (servSkipCount != null) {
                         skipCount += servSkipCount;
                     }
+                    Integer servVariantSuccessCount = (Integer) servResult.get("variantSuccessCount");
+                    if (servVariantSuccessCount != null) {
+                        variantSuccessCount += servVariantSuccessCount;
+                    }
+                    Integer servVariantFailCount = (Integer) servResult.get("variantFailCount");
+                    if (servVariantFailCount != null) {
+                        variantFailCount += servVariantFailCount;
+                    }
                 } catch (GenericServiceException e) {
                     Debug.logError(e, logPrefix + e.toString(), module);
                     errorCount++;
@@ -824,6 +898,9 @@ public abstract class ProductImageServices {
                     break;
                 }
             }
+            if (allResumeId != null) {
+                Debug.logWarning(logPrefix + "Did not reach allResumeId product [" + allResumeId + "]; either no products or wrong productId", module);
+            }
         } finally {
             if (productsIt instanceof AutoCloseable) {
                 try {
@@ -833,22 +910,25 @@ public abstract class ProductImageServices {
                 }
             }
         }
-        Map<String, Object> stats = UtilMisc.toMap("errorCount", errorCount, "failCount", failCount, "successCount", successCount, "skipCount", skipCount);
+        Map<String, Object> stats = UtilMisc.put(new LinkedHashMap<>(), "successCount", successCount, "failCount", failCount, "errorCount", errorCount,
+                "skipCount", skipCount, "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount);
+        String failProductsStr = " (failed products: " + failProductIdList + ")";
         if (logFinal && Debug.infoOn()) {
             if (errorCount > 0) {
-                Debug.logWarning(logPrefix + errorCount + " errors processing product images (" + productCount + " products)"
-                        + " (last " + lastProductIdList.size() + " products: " + lastProductIdList + ")" + " (stats: " + stats + ")", module);
+                Debug.logError(logPrefix + errorCount + " errors processing product images (" + productCount + " products)"
+                        + " (last " + lastProductIdList.size() + " products: " + lastProductIdList + ")" + " (stats: " + stats + ")" + failProductsStr, module);
             } else {
                 Debug.logInfo(logPrefix + "Processed products images (" + productCount + " products)" + " (last "
-                        + lastProductIdList.size() + " products: " + lastProductIdList + ")" + " (stats: " + stats + ")", module);
+                        + lastProductIdList.size() + " products: " + lastProductIdList + ")" + " (stats: " + stats + ")" + failProductsStr, module);
             }
         }
         Map<String, Object> result = (errorCount > 0) ?
                 ServiceUtil.returnFailure(errorCount + " errors processing product images (" + productCount + " products)" +
-                        " (last " + lastProductIdList.size() + " products: " + lastProductIdList + ")") :
+                        " (last " + lastProductIdList.size() + " products: " + lastProductIdList + ")" + failProductsStr) :
                 ServiceUtil.returnSuccess("Processed products images (" + productCount + " products)" +
-                        " (last " + lastProductIdList.size() + " products: " + lastProductIdList + ")");
+                        " (last " + lastProductIdList.size() + " products: " + lastProductIdList + ")" + failProductsStr);
         result.putAll(stats);
+        result.put("failProductIdList", failProductIdList);
         return result;
     }
 

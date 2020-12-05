@@ -20,6 +20,7 @@ import javax.imageio.ImageIO;
 import org.ofbiz.base.conversion.ConversionException;
 import org.ofbiz.base.conversion.NumberConverters.StringToInteger;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
@@ -28,7 +29,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.FindServices;
 import org.ofbiz.common.image.ImageVariantConfig;
-import org.ofbiz.content.image.ContentImageWorker;
+import com.ilscipio.scipio.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -59,6 +60,7 @@ public abstract class CmsMediaServices {
     static final String logPrefix = "Cms: Media: ";
     private static final ServiceErrorFormatter errorFmt =
             CmsServiceUtil.getErrorFormatter().specialize().setDefaultLogMsgGeneral("Media Error").build();
+    private static final ProcessSignals rebuildMediaVariantsSignals = ProcessSignals.make("cmsAbortRebuildMediaVariants", true);
 
     protected CmsMediaServices() {
     }
@@ -278,7 +280,7 @@ public abstract class CmsMediaServices {
                             try {
                                 Map<String, Object> resizeCtx = dctx.makeValidContext("cmsRebuildMediaVariants", ModelService.IN_PARAM, context);
                                 resizeCtx.put("contentIdList", UtilMisc.<String>toList(contentId));
-                                resizeCtx.put("force", true);
+                                resizeCtx.put("forceCreate", true);
                                 resizeCtx.put("createdDate", createdDate);
                                 Map<String, Object> resizeResult = dispatcher.runSync("cmsRebuildMediaVariants", resizeCtx);
                                 if (!ServiceUtil.isSuccess(resizeResult)) {
@@ -714,14 +716,27 @@ public abstract class CmsMediaServices {
     }
 
     public static Map<String, Object> rebuildMediaVariants(ServiceContext ctx) {
+        try {
+            rebuildMediaVariantsSignals.clear();
+            return rebuildMediaVariants(ctx, rebuildMediaVariantsSignals);
+        } finally {
+            rebuildMediaVariantsSignals.clear();
+        }
+    }
+
+    public static Map<String, Object> rebuildMediaVariants(ServiceContext ctx, ProcessSignals processSignals) {
+        // TODO: delegate to ContentImageServices
         Collection<String> contentIdList = ctx.attr("contentIdList");
-        boolean force = ctx.attr("force", false);
+        boolean forceCreate = ctx.attr("forceCreate", false);
+        boolean deleteOld = ctx.attr("deleteOld", false);
+        boolean recreateExisting = ctx.attr("recreateExisting", true);
+
         // USE SAME CREATED DATE FOR EVERYTHING RELATED
         Timestamp createdDate = ctx.attr("createdDate", UtilDateTime::nowTimestamp);
         boolean sepTrans = ctx.attr("sepTrans", (contentIdList == null));
 
         Set<String> remainingContentIds = new HashSet<>();
-        boolean doLog = false;
+        Boolean doLog = ctx.attr("doLog");
         EntityListIterator contentDataResourceList = null;
         try {
             if (contentIdList == null) {
@@ -735,59 +750,112 @@ public abstract class CmsMediaServices {
             if (contentDataResourceList == null) {
                 return ServiceUtil.returnSuccess();
             }
+            if (doLog == null) {
+                doLog = false;
+            }
             if (doLog) {
-                Debug.logInfo(logPrefix+"Beginning rebuildMediaVariants for all images", module);
+                Debug.logInfo(logPrefix+"Beginning rebuildMediaVariants for images " + (contentIdList != null ? contentIdList : "[all]")
+                        + " with forceCreate [" + forceCreate + "] recreateExisting ["
+                        + recreateExisting + "] deleteOld [" + deleteOld + "] sepTrans [" + sepTrans + "] createdDate [" + createdDate + "]", module);
             }
             int imgCount = 0;
-            int errors = 0;
+            int successCount = 0;
+            int skipCount = 0;
+            int failCount = 0;
+            int errorCount = 0;
+            int variantSuccessCount = 0;
+            int variantFailCount = 0;
+            int variantSkipCount = 0;
             GenericValue contentDataResource;
             while((contentDataResource = contentDataResourceList.next()) != null) {
                 String contentId = contentDataResource.getString("contentId");
                 remainingContentIds.remove(contentId);
+
+                if (processSignals != null && processSignals.isSet("stop")) {
+                    String abortMsg = processSignals.getProcess() + " aborted (imgCount: " + imgCount + ", last contentId: " + contentId + ")";
+                    Debug.logWarning(logPrefix + abortMsg, module);
+                    return ServiceUtil.returnFailure(abortMsg);
+                }
+
                 try {
                     Map<String, Object> resizeCtx = ctx.makeValidInContext("contentImageAutoRescale", ctx);
                     resizeCtx.put("contentId", contentId);
                     resizeCtx.put("contentDataResource", contentDataResource);
                     resizeCtx.put("requireProfile", false);
-                    resizeCtx.put("createNew", force);
+                    resizeCtx.put("createNew", forceCreate);
+                    resizeCtx.put("recreateExisting", recreateExisting);
                     resizeCtx.put("nonFatal", sepTrans);
                     resizeCtx.put("moment", createdDate);
                     resizeCtx.put("doLog", doLog);
                     resizeCtx.put("progress", ""+(imgCount + 1));
+                    resizeCtx.put("deleteOld", deleteOld);
                     Map<String, Object> resizeResult = ctx.dispatcher().runSync("contentImageAutoRescale", resizeCtx);
-                    if (!ServiceUtil.isSuccess(resizeResult)) {
-                        if (sepTrans && ServiceUtil.isFailure(resizeResult)) {
-                            Debug.logError("Error creating resized images for image content [" + contentId + "]: " + ServiceUtil.getErrorMessage(resizeResult), module);
-                            errors++;
+                    Integer servVariantSuccessCount = (Integer) resizeResult.get("variantSuccessCount");
+                    if (servVariantSuccessCount != null) {
+                        variantSuccessCount += servVariantSuccessCount;
+                    }
+                    Integer servVariantFailCount = (Integer) resizeResult.get("variantFailCount");
+                    if (servVariantFailCount != null) {
+                        variantFailCount += servVariantFailCount;
+                    }
+                    Integer servVariantSkipCount = (Integer) resizeResult.get("variantSkipCount");
+                    if (servVariantSkipCount != null) {
+                        variantSkipCount += servVariantSkipCount;
+                    }
+                    if ("no-variants".equals(resizeResult.get("reason"))) {
+                        skipCount++;
+                        Debug.logInfo(logPrefix + "Skipped image rescale for contentId [" + contentId + "]: no variants (forceCreate/createNew false)", module);
+                    } else if (ServiceUtil.isSuccess(resizeResult)) {
+                        successCount++;
+                    } else {
+                        if (sepTrans) { // TODO: REVIEW: && ServiceUtil.isFailure(resizeResult)
+                            Debug.logError(logPrefix + "Error creating resized images for image content [" + contentId + "]: " + ServiceUtil.getErrorMessage(resizeResult), module);
+                            if (ServiceUtil.isFailure(resizeResult)) {
+                                failCount++;
+                            } else {
+                                errorCount++;
+                            }
                         } else {
+                            // TODO: REVIEW
                             return ServiceUtil.returnError("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
                         }
                     }
-                } catch (GenericServiceException e) {
+                } catch (Exception e) {
                     FormattedError err = errorFmt.format(e, "Error creating resized images", ctx);
                     Debug.logError(err.getEx(), err.getLogMsg(), module);
                     return err.returnError();
                 }
                 imgCount++;
             }
+            Map<String, Object> stats = UtilMisc.put(new LinkedHashMap<>(), "imgCount", imgCount, "successCount", successCount,
+                    "skipCount", skipCount, "failCount", failCount, "errorCount", errorCount, "variantSuccessCount", variantSuccessCount,
+                    "variantFailCount", variantFailCount, "variantSkipCount", variantSkipCount);
             if (remainingContentIds.size() > 0) {
                 String errMsg = "Could not find valid image media records for contentIds: " + remainingContentIds.toString();
                 Debug.logError(logPrefix + errMsg, module);
-                return ServiceUtil.returnError(errMsg);
+                Map<String, Object> result = ServiceUtil.returnError(errMsg);
+                result.putAll(stats);
+                return result;
             }
-            if (doLog) {
-                Debug.logInfo(logPrefix+"Finished rebuildMediaVariants for " + imgCount + " images (having variants or forced)", module);
-            }
-            if (errors > 0) {
-                String errMsg = "Could not resize all images (errors: " + errors + ", total: " + (imgCount + 1) + ")";
+            String msg = "Finished rebuildMediaVariants for " + imgCount + " images (stats: " + stats + ")";
+            Map<String, Object> result;
+            if (failCount > 0 || errorCount > 0) {
                 if (sepTrans) {
-                    return ServiceUtil.returnFailure(errMsg);
+                    result = ServiceUtil.returnFailure(msg);
                 } else {
-                    return ServiceUtil.returnError(errMsg);
+                    result = ServiceUtil.returnError(msg);
+                }
+                if (doLog) {
+                    Debug.logError(logPrefix + msg, module);
                 }
             } else {
-                return ServiceUtil.returnSuccess("Resized images (total: " + (imgCount + 1) + ")");
+                result = ServiceUtil.returnSuccess(msg);
+                if (doLog) {
+                    Debug.logInfo(logPrefix + msg, module);
+                }
             }
+            result.putAll(stats);
+            return result;
         } catch (Exception e) {
             FormattedError err = errorFmt.format(e, "Error creating resized images", ctx);
             Debug.logError(err.getEx(), err.getLogMsg(), module);
@@ -803,9 +871,15 @@ public abstract class CmsMediaServices {
         }
     }
 
+    public static Map<String, Object> abortRebuildMediaVariants(ServiceContext ctx) {
+        rebuildMediaVariantsSignals.put("stop");
+        return ServiceUtil.returnSuccess();
+    }
+
     // TODO: REVIEW: for now we are intentionally ignoring the thruDate on ContentAssoc to simplify.
     // I don't see the point in keeping old records...
     public static Map<String, Object> removeMediaVariants(DispatchContext dctx, Map<String, ?> context) {
+        // TODO: delegate to ContentImageServices
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");

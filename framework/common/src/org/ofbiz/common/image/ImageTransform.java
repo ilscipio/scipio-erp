@@ -249,6 +249,83 @@ public class ImageTransform {
         return result;
     }
 
+    // SCIPIO: FIXME: copy-paste from above
+    public static Map<String, Object> getScaleImageDimensions(double imgHeight, double imgWidth, Double maxHeight, Double maxWidth, Locale locale) {
+
+        /* VARIABLES */
+        double defaultHeight, defaultWidth, scaleFactor;
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        defaultHeight = (maxHeight != null) ? maxHeight : -1;
+        defaultWidth = (maxWidth != null) ? maxWidth : -1;
+
+        if (defaultHeight == 0.0 || defaultWidth == 0.0) {
+            String errMsg = UtilProperties.getMessage(resource, "ImageTransform.one_default_dimension_is_null", locale) + " : defaultHeight = " + defaultHeight + " ; defaultWidth = " + defaultWidth;
+            Debug.logError(errMsg, module);
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
+            return result;
+        }
+
+        /* SCALE FACTOR */
+        // find the right Scale Factor related to the Image Dimensions
+        if (defaultHeight == -1) {
+            scaleFactor = defaultWidth / imgWidth;
+            if (scaleFactor == 0.0) {
+                String errMsg = UtilProperties.getMessage(resource, "ImageTransform.width_scale_factor_is_null", locale) + "  (defaultWidth = " + defaultWidth + "; imgWidth = " + imgWidth;
+                Debug.logError(errMsg, module);
+                result.put(ModelService.ERROR_MESSAGE, errMsg);
+                return result;
+            }
+        } else if (defaultWidth == -1) {
+            scaleFactor = defaultHeight / imgHeight;
+            if (scaleFactor == 0.0) {
+                String errMsg = UtilProperties.getMessage(resource, "ImageTransform.height_scale_factor_is_null", locale) + "  (defaultHeight = " + defaultHeight + "; imgHeight = " + imgHeight;
+                Debug.logError(errMsg, module);
+                result.put(ModelService.ERROR_MESSAGE, errMsg);
+                return result;
+            }
+        } else if (imgHeight > imgWidth) {
+            scaleFactor = defaultHeight / imgHeight;
+            if (scaleFactor == 0.0) {
+                String errMsg = UtilProperties.getMessage(resource, "ImageTransform.height_scale_factor_is_null", locale) + "  (defaultHeight = " + defaultHeight + "; imgHeight = " + imgHeight;
+                Debug.logError(errMsg, module);
+                result.put(ModelService.ERROR_MESSAGE, errMsg);
+                return result;
+            }
+            // get scaleFactor from the smallest width
+            if (defaultWidth < (imgWidth * scaleFactor)) {
+                scaleFactor = defaultWidth / imgWidth;
+            }
+        } else {
+            scaleFactor = defaultWidth / imgWidth;
+            if (scaleFactor == 0.0) {
+                String errMsg = UtilProperties.getMessage(resource, "ImageTransform.width_scale_factor_is_null", locale) + "  (defaultWidth = " + defaultWidth + "; imgWidth = " + imgWidth;
+                Debug.logError(errMsg, module);
+                result.put(ModelService.ERROR_MESSAGE, errMsg);
+                return result;
+            }
+            // get scaleFactor from the smallest height
+            if (defaultHeight < (imgHeight * scaleFactor)) {
+                scaleFactor = defaultHeight / imgHeight;
+            }
+        }
+
+        if (scaleFactor == 0.0) {
+            String errMsg = UtilProperties.getMessage(resource, "ImageTransform.final_scale_factor_is_null", locale) + " = " + scaleFactor;
+            Debug.logError(errMsg, module);
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
+            return result;
+        }
+
+        //bufNewImg = scaleImageExactToBufferedImage(bufImg, (int) (imgHeight * scaleFactor), (int) (imgWidth * scaleFactor), locale, scalingOptions);
+
+        result.put("responseMessage", "success");
+        result.put("scaleFactor", scaleFactor);
+        result.put("width", (int) (imgWidth * scaleFactor));
+        result.put("height", (int) (imgHeight * scaleFactor));
+        return result;
+    }
+
     /**
      * scaleImage
      * <p>

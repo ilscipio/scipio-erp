@@ -150,7 +150,7 @@ if (fileType) {
             // call scaleImageInAllSize
             if ("original".equals(fileType)) {
                 context.delegator = delegator;
-                result = ScaleImage.scaleImageInAllSize(context, filenameToUse, "main", "0");
+                result = ScaleImage.scaleImageInAllSize(context, filenameToUse, "main", "0", "IMAGE_PRODUCT", null);
 
                 if (result.containsKey("responseMessage") && "success".equals(result.get("responseMessage"))) {
                     imgMap = result.get("imageUrlMap");

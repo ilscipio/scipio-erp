@@ -46,7 +46,7 @@ public class ImageIOStorer extends AbstractImageStorer {
     }
 
     @Override
-    public boolean write(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) throws IOException {
+    public boolean write(RenderedImage im, String formatName, Object output, String imageProfile, Map<String, Object> options, Delegator delegator) throws IOException {
         return writeIO(im, formatName, output, options, delegator);
     }
 
@@ -67,7 +67,7 @@ public class ImageIOStorer extends AbstractImageStorer {
     }
 
     @Override
-    public boolean isApplicable(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) {
+    public boolean isApplicable(RenderedImage im, String formatName, Object output, String imageProfile, Map<String, Object> options, Delegator delegator) {
         return true; // supports any format, in theory
     }
 }

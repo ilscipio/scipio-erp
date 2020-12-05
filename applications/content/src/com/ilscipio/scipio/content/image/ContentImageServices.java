@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.ofbiz.content.image;
+package com.ilscipio.scipio.content.image;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -57,12 +57,14 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.ServiceValidationException;
 
 /**
  * SCIPIO: Content/generic image services.
@@ -90,10 +92,12 @@ public abstract class ContentImageServices {
     /**
      * Core image file resizing service.
      * See contentImageFileScaleInAllSizeCore service interface for context params.
+     * SCIPIO: NOTE: This was originally a stock service, highly modified.
      * FIXME: MISSING DELETION CODE LOGIC
      */
-    public static Map<String, Object> contentImageFileScaleInAllSizeCore(DispatchContext dctx, Map<String, ?> context) {
-        //ServiceContext ctx = ServiceContext.from(dctx, context);
+    public static Map<String, Object> contentImageFileScaleInAllSizeCore(ServiceContext ctx) throws ServiceValidationException {
+        DispatchContext dctx = ctx.dctx();
+        Map<String, Object> context = ctx.context();
         Delegator delegator = dctx.getDelegator();
         String imageOrigPath = (String) context.get("imageOrigPath");
         String imageOrigUrl = (String) context.get("imageOrigUrl");
@@ -107,16 +111,31 @@ public abstract class ContentImageServices {
             imagePathArgs = new HashMap<>();
         }
         String imagePropXmlPath = (String) context.get("imagePropXmlPath");
-        ImageProfile imageProfile = (ImageProfile) context.get("imageProfile");
         Collection<String> sizeTypeList = UtilGenerics.cast(context.get("sizeTypeList"));
         boolean copyOrig = Boolean.TRUE.equals(context.get("copyOrig"));
         boolean deleteOld = Boolean.TRUE.equals(context.get("deleteOld"));
         Map<String, Object> scalingOptions = UtilGenerics.checkMap(context.get("scalingOptions"));
         Locale locale = (Locale) context.get("locale");
         if (locale == null) locale = Locale.getDefault();
+        Map<String, Object> imageWriteOptions = UtilGenerics.cast(context.get("imageWriteOptions"));
+        final String logPrefix = "contentImageFileScaleInAllSizeCore: ";
+
+        Object imageProfileObj = context.get("imageProfile");
+        ImageProfile imageProfile = null;
+        if (imageProfileObj instanceof ImageProfile) {
+            imageProfile = (ImageProfile) imageProfileObj;
+        } else if (imageProfileObj instanceof String) {
+            imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj);
+            if (imageProfile == null) {
+                String errMsg = "Could not find mediaProfile [" + imageProfileObj + "]";
+                Debug.logError(logPrefix + errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
+        } else if (imageProfileObj != null) {
+            throw new ServiceValidationException("Invalid imageProfile parameter: " + imageProfileObj.getClass().getName(), ctx.getModelService());
+        }
 
         final String origSizeType = ContentImageWorker.ORIGINAL_SIZETYPE;
-        final String logPrefix = "contentImageFileScaleInAllSizeCore: ";
 
         long startTime = System.nanoTime();
 
@@ -129,21 +148,34 @@ public abstract class ContentImageServices {
                 imageServerPath = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageServerPath, imageServerPath);
             }
 
-            /* ImageProperties.xml */
-            ImageVariantConfig imgPropCfg;
-            if (imageProfile != null) { // SCIPIO
-                imgPropCfg = imageProfile.getVariantConfig();
-            } else if (context.containsKey("imageVariantConfig")) {
-                imgPropCfg = (ImageVariantConfig) context.get("imageVariantConfig");
-            } else {
-                if (UtilValidate.isEmpty(imagePropXmlPath)) {
-                    imagePropXmlPath = ContentImageWorker.getContentImagePropertiesPath();
+            if (imageProfile == null) {
+                imageProfileObj = context.get("defaultImageProfile");
+                if (imageProfileObj instanceof ImageProfile) {
+                    imageProfile = (ImageProfile) imageProfileObj;
+                } else if (imageProfileObj instanceof String) {
+                    imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj);
+                    if (imageProfile == null) {
+                        String errMsg = "Could not find mediaProfile [" + imageProfileObj + "]";
+                        Debug.logError(logPrefix + errMsg, module);
+                        return ServiceUtil.returnError(errMsg);
+                    }
+                } else {
+                    throw new ServiceValidationException("Invalid or missing defaultImageProfile parameter: " + imageProfileObj.getClass().getName(), ctx.getModelService());
                 }
-                try {
-                    imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
-                } catch (Exception e) {
-                    Debug.logError(logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPath + " : " + e.getMessage(), module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());
+            }
+
+            /* ImageProperties.xml */
+            ImageVariantConfig imgPropCfg = (ImageVariantConfig) context.get("imageVariantConfig");
+            if (imgPropCfg == null) {
+                if (UtilValidate.isNotEmpty(imagePropXmlPath)) {
+                    try {
+                        imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
+                    } catch (Exception e) {
+                        Debug.logError(logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPath + " : " + e.getMessage(), module);
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());
+                    }
+                } else { // SCIPIO
+                    imgPropCfg = imageProfile.getVariantConfig();
                 }
             }
             if (sizeTypeList == null) {
@@ -229,6 +261,18 @@ public abstract class ContentImageServices {
                 if (copyOrig) {
                     String sizeType = origSizeType;
                     String newFileLocation = expandImageFnFmt(imageOrigFnFmtExpander, sizeType, imagePathArgs);
+
+                    // SCIPIO: Make sure we have a filename
+                    if (newFileLocation.isEmpty()) {
+                        throw new IllegalArgumentException("Cannot determine newFileLocation for sizeType [" + sizeType + "] using expander [" + imageOrigFnFmtExpander +
+                                "] and imagePathArgs " + imagePathArgs + "; empty result");
+                    }
+                    int lastSlashIndex = newFileLocation.lastIndexOf('/');
+                    if (lastSlashIndex < 0 || lastSlashIndex >= (newFileLocation.length() - 1)) {
+                        throw new IllegalArgumentException("Cannot determine newFileLocation for sizeType [" + sizeType + "] using expander [" + imageOrigFnFmtExpander +
+                                "] and imagePathArgs " + imagePathArgs + "; no filename part: newFileLocation: [" + newFileLocation + "]");
+                    }
+
                     String newFileLocExt = newFileLocation + "." + imgExtension;
                     String newFileFullLoc = imageServerPath + "/" + newFileLocExt;
                     if (bufImgPath.equals(newFileFullLoc)) {
@@ -284,7 +328,10 @@ public abstract class ContentImageServices {
                 }
 
                 /* Scale image for each size from ImageProperties.xml */
-                int scaledImageCount = 0;
+                int successCount = 0;
+                int scaleErrorCount = 0;
+                int writeErrorCount = 0;
+                int skipCount = 0; // TODO: currently implemented by caller
                 for (String sizeType : sizeTypeList) {
                     if (!imgPropCfg.hasVariant(sizeType)) {
                         Debug.logError(logPrefix+"sizeType " + sizeType + " is not part of ImageProperties.xml; ignoring", module);
@@ -310,7 +357,22 @@ public abstract class ContentImageServices {
                     // Scale
                     Map<String, Object> resultScaleImgMap = Collections.emptyMap();
                     if (!keepOrig) {
-                        resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, targetWidth.doubleValue(), targetHeight.doubleValue(), locale, scalingOptions);
+                        try {
+                            resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, targetHeight.doubleValue(), targetWidth.doubleValue(), locale, scalingOptions);
+                            if (!ServiceUtil.isSuccess(resultScaleImgMap)) {
+                                String errMsg = "Error scaling image for file [" + bufImgPath + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                                        + ": " + ServiceUtil.getErrorMessage(resultScaleImgMap);
+                                Debug.logError(logPrefix + errMsg, module);
+                                scaleErrorCount++;
+                                continue;
+                            }
+                        } catch(Exception e) {
+                            String errMsg = "Error scaling image for file [" + bufImgPath + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                                    + ": " + e.toString();
+                            Debug.logError(logPrefix + errMsg, module);
+                            scaleErrorCount++;
+                            continue;
+                        }
                     }
 
                     /* Write the new image file */
@@ -369,14 +431,15 @@ public abstract class ContentImageServices {
                             }
                         } else {
                             try {
-                                ImageStorers.write(keepOrig ? bufImg : bufNewImg, targetFileType, new File(newFileFullLoc), delegator); // SCIPIO: ImageIO->ImageStorers
-                                scaledImageCount++;
-                            } catch (IllegalArgumentException e) {
-                                Debug.logError(e, logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", LOG_LANG) + ": " + e.getMessage(), module);
-                                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", locale));
-                            } catch (IOException e) {
-                                Debug.logError(e, logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", LOG_LANG) + ": " + e.getMessage(), module);
-                                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
+                                ImageStorers.write(keepOrig ? bufImg : bufNewImg, targetFileType, new File(newFileFullLoc),
+                                        (imageProfile != null) ? imageProfile.getName() : null, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
+                                successCount++;
+                            } catch (Exception e) {
+                                String errMsg = "Error writing image for file [" + bufImgPath + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                                        + ": " + e.toString();
+                                Debug.logError(logPrefix + errMsg, module);
+                                writeErrorCount++;
+                                continue;
                             }
                         }
 
@@ -397,8 +460,8 @@ public abstract class ContentImageServices {
                 StringBuilder logSb = new StringBuilder(logPrefix);
                 logSb.append("In ");
                 logSb.append((endTime - startTime) / 1000000);
-                logSb.append("ms created ");
-                logSb.append(scaledImageCount);
+                logSb.append("ms processed ");
+                logSb.append(successCount);
                 logSb.append(" scaled and ");
                 logSb.append(imageCopyCount);
                 logSb.append(" original copies of image ");
@@ -422,12 +485,38 @@ public abstract class ContentImageServices {
                     logSb.setLength(logSb.length() - sizeSep.length());
                     logSb.append(")");
                 }
-                Debug.logInfo(logSb.toString(), module);
+                logSb.append(" (success: ");
+                logSb.append(successCount);
+                logSb.append(", scaling errors: ");
+                logSb.append(scaleErrorCount);
+                logSb.append(", write errors: ");
+                logSb.append(writeErrorCount);
+                logSb.append(", skipped: ");
+                logSb.append(skipCount);
+                logSb.append(")");
+                String msg = logSb.toString();
                 //}
 
-                Map<String, Object> result = ServiceUtil.returnSuccess();
+                int failCount = scaleErrorCount + writeErrorCount;
+                Map<String, Object> result;
+                if (failCount > 0) {
+                    if (successCount > 0) {
+                        result = ServiceUtil.returnFailure(msg);
+                    } else {
+                        // TODO: REVIEW: for now let caller decide to abort trans
+                        //result = ServiceUtil.returnError(msg);
+                        result = ServiceUtil.returnFailure(msg);
+                    }
+                    Debug.logError(logPrefix + msg, module);
+                } else {
+                    result = ServiceUtil.returnSuccess(msg);
+                    Debug.logInfo(logPrefix + msg, module);
+                }
                 result.put("imageUrlMap", imgUrlMap);
                 result.put("bufferedImage", resultBufImgMap.get("bufferedImage"));
+                result.put("successCount", successCount);
+                result.put("failCount", failCount);
+                result.put("skipCount", skipCount);
                 return result;
             } else {
                 Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", LOG_LANG) + ": " + imageOrigFn, module);
@@ -440,12 +529,23 @@ public abstract class ContentImageServices {
         }
     }
 
-    public static String expandImageFnFmt(FlexibleStringExpander exdr, String sizeType, Map<String, ?> context) {
+    public static String expandImageFnFmt(FlexibleStringExpander exdr, String sizeType, Map<String, ?> context) throws IllegalArgumentException {
         Map<String, Object> fnContext = new HashMap<>(context);
         fnContext.put("sizetype", sizeType);
         fnContext.put("type", sizeType);
         String newFileLocation = exdr.expandString(fnContext);
         if (newFileLocation.startsWith("/")) newFileLocation = newFileLocation.substring(1); // SCIPIO
+
+        if (newFileLocation.isEmpty()) {
+            throw new IllegalArgumentException("Cannot determine file location for sizeType [" + sizeType + "] using expander [" + exdr +
+                    "] and imagePathArgs " + context + "; empty result; service call or configuration may be incomplete");
+        }
+        int lastSlashIndex = newFileLocation.lastIndexOf('/');
+        if (lastSlashIndex >= 0 && lastSlashIndex >= (newFileLocation.length() - 1)) {
+            throw new IllegalArgumentException("Cannot determine file location [" + newFileLocation + "] for sizeType [" + sizeType + "] using expander [" + exdr +
+                    "] and imagePathArgs " + context + "; no filename part; service call or configuration may be incomplete");
+        }
+
         return newFileLocation;
     }
 
@@ -457,13 +557,16 @@ public abstract class ContentImageServices {
         return newFilePathDirPrefix;
     }
 
+
     /**
      * Core database image resizing service.
      * See contentImageDbScaleInAllSizeCore service interface for context params.
      * <p>
      * TODO: missing support to automatically reuse records for sizeTypes having same dimensions (yes happens)
      */
-    public static Map<String, Object> contentImageDbScaleInAllSizeCore(DispatchContext dctx, Map<String, ?> context) {
+    public static Map<String, Object> contentImageDbScaleInAllSizeCore(ServiceContext ctx) throws ServiceValidationException {
+        DispatchContext dctx = ctx.dctx();
+        Map<String, Object> context = ctx.context();
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -472,10 +575,10 @@ public abstract class ContentImageServices {
         String imageOrigFullFn = (String) context.get("imageOrigFn");
         //String imageOrigPath = (String) context.get("imageOrigPath"); // TODO?
         String imagePropXmlPath = (String) context.get("imagePropXmlPath");
-        ImageProfile imageProfile = (ImageProfile) context.get("imageProfile");
         Collection<String> sizeTypeList = UtilGenerics.cast(context.get("sizeTypeList"));
         //boolean copyOrig = Boolean.TRUE.equals(context.get("copyOrig"));
         boolean deleteOld = Boolean.TRUE.equals(context.get("deleteOld"));
+        boolean recreateExisting = Boolean.TRUE.equals(context.get("recreateExisting"));
         Map<String, Object> scalingOptions = UtilGenerics.checkMap(context.get("scalingOptions"));
         Map<String, Object> contentFields = UtilGenerics.checkMap(context.get("contentFields"));
         Map<String, Object> dataResourceFields = UtilGenerics.checkMap(context.get("dataResourceFields"));
@@ -488,9 +591,25 @@ public abstract class ContentImageServices {
         String contentAssocTypeIdExprStr = (String) context.get("contentAssocTypeId");
         Locale locale = (Locale) context.get("locale");
         if (locale == null) locale = Locale.getDefault();
+        Map<String, Object> imageWriteOptions = UtilGenerics.cast(context.get("imageWriteOptions"));
+        final String logPrefix = "contentImageDbScaleInAllSizeCore: ";
+
+        Object imageProfileObj = context.get("imageProfile");
+        ImageProfile imageProfile = null;
+        if (imageProfileObj instanceof ImageProfile) {
+            imageProfile = (ImageProfile) imageProfileObj;
+        } else if (imageProfileObj instanceof String) {
+            imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj);
+            if (imageProfile == null) {
+                String errMsg = "Could not find mediaProfile [" + imageProfileObj + "] for content image [" + imageOrigContentId + "]";
+                Debug.logError(logPrefix + errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
+        } else if (imageProfileObj != null) {
+            throw new ServiceValidationException("Invalid imageProfile parameter: " + imageProfileObj.getClass().getName(), ctx.getModelService());
+        }
 
         //final String origSizeType = ContentImageWorker.ORIGINAL_SIZETYPE;
-        final String logPrefix = "contentImageDbScaleInAllSizeCore: ";
 
         long startTime = System.nanoTime();
 
@@ -499,27 +618,56 @@ public abstract class ContentImageServices {
         if (createdDate == null) createdDate = UtilDateTime.nowTimestamp();
 
         try {
-            // SCIPIO: for these we now support component:// and file:// prefix in addition to plain absolute file location
-//            if (UtilValidate.isNotEmpty(imageOrigPath)) {
-//                imageOrigPath = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageOrigPath, imageOrigPath);
-//            }
-
-            
-            ImageVariantConfig imgPropCfg;
-            if (imageProfile != null) { // SCIPIO
-                imgPropCfg = imageProfile.getVariantConfig();
-            } else if (context.containsKey("imageVariantConfig")) {
-                imgPropCfg = (ImageVariantConfig) context.get("imageVariantConfig");
-            } else {
-                /* ImageProperties.xml */
-                if (UtilValidate.isEmpty(imagePropXmlPath)) {
-                    imagePropXmlPath = ContentImageWorker.getContentImagePropertiesPath();
+            GenericValue origContent = delegator.findOne("Content", UtilMisc.toMap("contentId", imageOrigContentId), false);
+            if (origContent == null) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : Content: contentId: " + imageOrigContentId, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : Content: contentId: " + imageOrigContentId);
+            }
+            String origMediaProfileName = origContent.getString("mediaProfile");
+            if (imageProfile == null && origMediaProfileName != null) {
+                imageProfile = ImageProfile.getImageProfile(delegator, origMediaProfileName);
+                if (imageProfile == null) {
+                    Debug.logError(logPrefix + "Could not find mediaProfile [" + origMediaProfileName + "] for content image [" + imageOrigContentId + "], using IMAGE_CONTENT default", module);
                 }
-                try {
-                    imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
-                } catch (Exception e) {
-                    Debug.logError(logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPath + " : " + e.getMessage(), module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());
+            }
+            if (imageProfile == null) {
+                imageProfileObj = context.get("defaultImageProfile");
+                if (imageProfileObj instanceof ImageProfile) {
+                    imageProfile = (ImageProfile) imageProfileObj;
+                } else if (imageProfileObj instanceof String) {
+                    imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj);
+                    if (imageProfile == null) {
+                        String errMsg = "Could not find mediaProfile [" + imageProfileObj + "] for content image [" + imageOrigContentId + "]";
+                        Debug.logError(logPrefix + errMsg, module);
+                        return ServiceUtil.returnError(errMsg);
+                    }
+                } else {
+                    throw new ServiceValidationException("Invalid or missing defaultImageProfile parameter: " + imageProfileObj.getClass().getName(), ctx.getModelService());
+                }
+            }
+
+            String origImageDataResourceId = origContent.getString("dataResourceId");
+            GenericValue origDataResource = delegator.findOne("DataResource", UtilMisc.toMap("dataResourceId", origImageDataResourceId), false);
+            if (origDataResource == null) {
+                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : DataResource: dataResourceId: " + origImageDataResourceId + " (contentId: " + imageOrigContentId + ")", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : DataResource: dataResourceId: " + origImageDataResourceId + " (contentId: " + imageOrigContentId + ")");
+            }
+
+            // SCIPIO: for these we now support component:// and file:// prefix in addition to plain absolute file location
+            //if (UtilValidate.isNotEmpty(imageOrigPath)) {
+            //    imageOrigPath = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageOrigPath, imageOrigPath);
+            //}
+            ImageVariantConfig imgPropCfg = (ImageVariantConfig) context.get("imageVariantConfig");
+            if (imgPropCfg == null) {
+                if (UtilValidate.isNotEmpty(imagePropXmlPath)) {
+                    try {
+                        imgPropCfg = ImageVariantConfig.fromImagePropertiesXml(imagePropXmlPath, locale);
+                    } catch (Exception e) {
+                        Debug.logError(logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : " + imagePropXmlPath + " : " + e.getMessage(), module);
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());
+                    }
+                } else { // SCIPIO
+                    imgPropCfg = imageProfile.getVariantConfig();
                 }
             }
             if (sizeTypeList == null) {
@@ -527,18 +675,6 @@ public abstract class ContentImageServices {
             }
 
             /* IMAGE */
-
-            GenericValue origContent = delegator.findOne("Content", UtilMisc.toMap("contentId", imageOrigContentId), false);
-            if (origContent == null) {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : Content: contentId: " + imageOrigContentId, module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : Content: contentId: " + imageOrigContentId);
-            }
-            String origImageDataResourceId = origContent.getString("dataResourceId");
-            GenericValue origDataResource = delegator.findOne("DataResource", UtilMisc.toMap("dataResourceId", origImageDataResourceId), false);
-            if (origDataResource == null) {
-                Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", LOG_LANG) + " : DataResource: dataResourceId: " + origImageDataResourceId + " (contentId: " + imageOrigContentId + ")", module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : DataResource: dataResourceId: " + origImageDataResourceId + " (contentId: " + imageOrigContentId + ")");
-            }
 
             // old code: use getDataResourceStream for this instead, much more versatile
 //            // FIXME: we should support images stored in filesystem here, but only ImageDataResource for now
@@ -595,7 +731,7 @@ public abstract class ContentImageServices {
             } else {
                 imageOrigFullFn = origDataResource.getString("objectInfo");
                 if (UtilValidate.isEmpty(imageOrigFullFn)) {
-                    Debug.logWarning(logPrefix+"no original image filename available (dataResourceId: " + origImageDataResourceId + ")", module);
+                    Debug.logWarning(logPrefix+"No original image filename available (dataResourceId: " + origImageDataResourceId + ")", module);
                     imageOrigFullFn = "";
                 }
                 if (imageOrigFullFn != null && imageOrigFullFn.lastIndexOf(".") >= 1) {
@@ -610,62 +746,64 @@ public abstract class ContentImageServices {
             }
 
             // get target type (assumed same as extension)
-            String mimeTypeId;
+            String origMimeTypeId;
             if (UtilValidate.isEmpty(targetFmtExt)) {
-                mimeTypeId = origDataResource.getString("mimeTypeId");
-                if (UtilValidate.isEmpty(mimeTypeId)) {
-                    Debug.logError(logPrefix+"can't determine output format (no targetFormatName or DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + ")", module);
-                    return ServiceUtil.returnError("can't determine output format (no targetFormatName or DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + ")");
+                origMimeTypeId = origDataResource.getString("mimeTypeId");
+                if (UtilValidate.isEmpty(origMimeTypeId)) {
+                    Debug.logError(logPrefix+"Can't determine output format (no targetFormatName or DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + ")", module);
+                    return ServiceUtil.returnError("Can't determine output format (no targetFormatName or DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + ")");
                 }
 
                 List<GenericValue> fileExtValues;
                 try {
-                    fileExtValues = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", mimeTypeId).queryList();
+                    fileExtValues = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", origMimeTypeId).queryList();
                     if (UtilValidate.isNotEmpty(fileExtValues)) {
                         targetFmtExt = fileExtValues.get(0).getString("fileExtensionId");
                         if (fileExtValues.size() > 1) {
-                            Debug.logWarning(logPrefix+"multiple FileExtension found for mimeTypeId '" + mimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                            Debug.logWarning(logPrefix+"Multiple FileExtension found for mimeTypeId '" + origMimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
                         }
                     } else {
                         targetFmtExt = EntityUtilProperties.getPropertyValue("content", "image.thumbs.fileType.default", "jpg", delegator);
-                        Debug.logWarning(logPrefix+"can't determine thumbnail output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId 
+                        Debug.logWarning(logPrefix+"can't determine thumbnail output format from mimeTypeId '" + origMimeTypeId + "' (dataResourceId: " + origImageDataResourceId
                                 + "); unknown?; using system default: " + targetFmtExt, module);
                         GenericValue fileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", targetFmtExt).queryOne();
                         if (UtilValidate.isEmpty(fileExt)) {
-                            Debug.logError(logPrefix+"can't determine thumbnail output format from file type '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
-                            return ServiceUtil.returnError("can't determine thumbnail output format from file type '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")");
+                            Debug.logError(logPrefix+"Can't determine thumbnail output format from file type '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                            return ServiceUtil.returnError("Can't determine thumbnail output format from file type '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")");
                         }
-                        mimeTypeId = fileExt.getString("mimeTypeId");
+                        origMimeTypeId = fileExt.getString("mimeTypeId");
                     }
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, logPrefix+"can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
-                    return ServiceUtil.returnError("can't determine output format from mimeTypeId '" + mimeTypeId + "' (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage());
+                    Debug.logError(e, logPrefix+"Can't determine output format from mimeTypeId '" + origMimeTypeId + "' (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
+                    return ServiceUtil.returnError("Can't determine output format from mimeTypeId '" + origMimeTypeId + "' (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage());
                 }
             } else {
                 try {
-                    GenericValue fileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", targetFmtExt).queryOne();
+                    GenericValue fileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", targetFmtExt).cache().queryOne();
                     if (UtilValidate.isEmpty(fileExt)) {
-                        Debug.logError(logPrefix+"no FileExtension (mime-type assoc) record for extension: " + targetFmtExt, module);
+                        Debug.logError(logPrefix+"No FileExtension (mime-type assoc) record for extension: " + targetFmtExt, module);
                         return ServiceUtil.returnError("No FileExtension (mime-type assoc) record for extension: " + targetFmtExt);
                     }
-                    mimeTypeId = fileExt.getString("mimeTypeId");
+                    origMimeTypeId = fileExt.getString("mimeTypeId");
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, logPrefix+"can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
-                    return ServiceUtil.returnError("can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage());
+                    Debug.logError(e, logPrefix+"Can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage(), module);
+                    return ServiceUtil.returnError("Can't determine output format from DataResource.mimeTypeId) (dataResourceId: " + origImageDataResourceId + "): " + e.getMessage());
                 }
             }
 
             Map<String, String> imageContentIdMap = new HashMap<>();
 
+            List<GenericValue> prevContentAssocList = ContentImageWorker.getResizedImageContentAssocRecords(delegator, imageOrigContentId, false);
+
             int imageDeleteCount = 0;
             if (deleteOld) {
-                for(String contentIdToRemove : ContentImageWorker.getResizedImageContentAssocContentIdTo(delegator, imageOrigContentId, false)) {
+                for(GenericValue contentAssoc : prevContentAssocList) {
                     // NOTE: this automatically removes the ContentAssoc
                     Map<String, Object> servCtx = new HashMap<>();
                     servCtx.put("userLogin", userLogin);
                     servCtx.put("locale", locale);
                     servCtx.put("timeZone", timeZone);
-                    servCtx.put("contentId", contentIdToRemove);
+                    servCtx.put("contentId", contentAssoc.get("contentIdTo"));
                     try {
                         Map<String, Object> contentResult = dispatcher.runSync("removeContentAndRelated", servCtx);
                         if (!ServiceUtil.isSuccess(contentResult)) {
@@ -676,6 +814,7 @@ public abstract class ContentImageServices {
                         return ServiceUtil.returnError(e.getMessage());
                     }
                 }
+                prevContentAssocList = Collections.emptyList();
             }
 
             int imageCopyCount = 0;
@@ -726,50 +865,146 @@ public abstract class ContentImageServices {
                 contentAssocTypeIdExdr = ContentImageWorker.IMGSZ_CNTASSTYPEID_EXPR;
             }
 
-            int scaledImageCount = 0;
+            int successCount = 0;
+            int scaleErrorCount = 0;
+            int writeErrorCount = 0;
+            int skipCount = 0;
             for (String sizeType : sizeTypeList) {
                 if (!imgPropCfg.hasVariant(sizeType)) {
                     Debug.logError(logPrefix+"sizeType " + sizeType + " is not part of ImageProperties.xml; ignoring", module);
                     continue;
                 }
 
-                boolean keepOrig = false;
+                // Check if dimensions are equal to the original image or resizing is prohibited by the ImageProperties.xml upscale mode
+                boolean useOrigImage = false;
                 ImageVariantConfig.VariantInfo variantInfo = imgPropCfg.getVariant(sizeType);
                 Integer targetWidth = variantInfo.getWidth();
                 Integer targetHeight = variantInfo.getHeight();
                 if (variantInfo.getUpscaleMode() != ImageVariantConfig.VariantInfo.UpscaleMode.ON) {
                     if (targetWidth == (int) imgWidth || targetHeight == (int) imgHeight) {
-                        keepOrig = true;
+                        useOrigImage = true;
                     } else if (targetWidth > (int) imgWidth && targetHeight > (int) imgHeight) {
                         if (variantInfo.getUpscaleMode() == ImageVariantConfig.VariantInfo.UpscaleMode.OMIT) {
                             continue;
                         } else if (variantInfo.getUpscaleMode() == ImageVariantConfig.VariantInfo.UpscaleMode.OFF) {
-                            keepOrig = true;
+                            useOrigImage = true;
                         }
                     }
                 }
 
                 String targetFormat = targetFmtExt;
+                String mimeTypeId = origMimeTypeId;
                 // SCIPIO: 2020-09: Support for specific storage format
                 if (variantInfo != null && variantInfo.getFormat() != null) {
                     targetFormat = variantInfo.resolveFormatExt(delegator);
+                    GenericValue fileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", targetFormat).cache().queryOne();
+                    if (UtilValidate.isEmpty(fileExt)) {
+                        Debug.logError(logPrefix+"No FileExtension (mime-type assoc) record for extension: " + targetFormat, module);
+                        return ServiceUtil.returnError("No FileExtension (mime-type assoc) record for extension: " + targetFormat);
+                    }
+                    mimeTypeId = fileExt.getString("mimeTypeId");
                 }
+
                 imageCtx.put("ext", targetFormat);
+                imageCtx.put("sizetype", sizeType);
+                imageCtx.put("type", sizeType);
+                String contentAssocTypeId = contentAssocTypeIdExdr.expandString(imageCtx).toUpperCase();
+
+                GenericValue contentAssoc = EntityUtil.getFirstMatchingField(prevContentAssocList, "contentAssocTypeId", contentAssocTypeId);
+                GenericValue dataResource = null;
+                GenericValue imageDataResource = null;
+                GenericValue content = null;
+                if (contentAssoc != null) {
+                    content = delegator.findOne("Content", UtilMisc.toMap("contentId", contentAssoc.get("contentIdTo")), false);
+                    if (content == null) {
+                        Debug.logError("Could not find Content [" + contentAssoc.get("contentIdTo") + "] for contentAssocTypeId [" + contentAssocTypeId + "]", module);
+                        return ServiceUtil.returnError("Could not find content [" + contentAssoc.get("contentIdTo") + "] for contentAssocTypeId [" + contentAssocTypeId + "]");
+                    }
+                    dataResource = delegator.findOne("DataResource", UtilMisc.toMap("dataResourceId", content.get("dataResourceId")), false);
+                    if (dataResource == null) {
+                        Debug.logError("Could not find DataResource [" + content.get("dataResourceId") + "] for Content [" + contentAssoc.get("contentIdTo") + "] for contentAssocTypeId [" + contentAssocTypeId + "]", module);
+                        return ServiceUtil.returnError("Could not find DataResource [" + content.get("dataResourceId") + "] for Content [" + contentAssoc.get("contentIdTo") + "] for contentAssocTypeId [" + contentAssocTypeId + "]");
+                    }
+                    if (!recreateExisting) {
+                        Long prevWidth = dataResource.getLong("scpWidth");
+                        Long prevHeight = dataResource.getLong("scpHeight");
+                        String prevMimeTypeId = dataResource.getString("mimeTypeId");
+                        long effWidth;
+                        long effHeight;
+                        if (useOrigImage) {
+                            effWidth = bufImg.getWidth();
+                            effHeight = bufImg.getHeight();
+                        } else {
+                            Map<String, Object> scaleDims = ImageTransform.getScaleImageDimensions(imgHeight, imgWidth, targetHeight.doubleValue(), targetWidth.doubleValue(), locale);
+                            if (!ServiceUtil.isSuccess(scaleDims) || scaleDims.get("width") == null || scaleDims.get("height") == null) {
+                                String errMsg = "Error getting scaled image dimensions for contentId [" + imageOrigContentId + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                                        + ": " + ServiceUtil.getErrorMessage(scaleDims);
+                                Debug.logError(logPrefix + errMsg, module);
+                                scaleErrorCount++;
+                                continue;
+                            }
+                            effWidth = (int) scaleDims.get("width");
+                            effHeight = (int) scaleDims.get("height");
+                        }
+                        if (Objects.equals(prevWidth, effWidth) && Objects.equals(prevHeight, effHeight) && Objects.equals(prevMimeTypeId, mimeTypeId)) {
+                            if (Debug.verboseOn()) {
+                                Debug.logInfo(logPrefix + "contentAssocTypeId [" + contentAssocTypeId + "] has same dimensions and mimeType, not recreating image variant", module);
+                            }
+                            skipCount++;
+                            continue;
+                        }
+                    }
+                }
 
                 // Scale
                 Map<String, Object> resultScaleImgMap = Collections.emptyMap();
-                if (!keepOrig) {
-                    resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, targetWidth.doubleValue(), targetHeight.doubleValue(), locale, scalingOptions);
+                if (!useOrigImage) {
+                    try {
+                        resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, targetHeight.doubleValue(), targetWidth.doubleValue(), locale, scalingOptions);
+                        if (!ServiceUtil.isSuccess(resultScaleImgMap)) {
+                            String errMsg = "Error scaling image for contentId [" + imageOrigContentId + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                                    + ": " + ServiceUtil.getErrorMessage(resultScaleImgMap);
+                            Debug.logError(logPrefix + errMsg, module);
+                            scaleErrorCount++;
+                            continue;
+                        }
+                    } catch(Exception e) {
+                        String errMsg = "Error scaling image for contentId [" + imageOrigContentId + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                                + ": " + e.toString();
+                        Debug.logError(logPrefix + errMsg, module);
+                        scaleErrorCount++;
+                        continue;
+                    }
                 }
 
                 /* Write the new image file */
-                if (keepOrig || "success".equals(resultScaleImgMap.get("responseMessage"))) {
+                if (useOrigImage || "success".equals(resultScaleImgMap.get("responseMessage"))) {
                     BufferedImage bufNewImg = (BufferedImage) resultScaleImgMap.get("bufferedImage");
 
-                    imageCtx.put("sizetype", sizeType);
-                    imageCtx.put("type", sizeType);
+                    byte[] byteout;
+                    if (useOrigImage && Objects.equals(targetFormat, targetFmtExt) && streamResult.get("streamBytes") != null) {
+                        byteout = (byte[]) streamResult.get("streamBytes");
+                    } else {
+                        ByteArrayOutputStream byteos = new ByteArrayOutputStream();
+                        try {
+                            ImageStorers.write(useOrigImage ? bufImg : bufNewImg, targetFormat, byteos,
+                                    (imageProfile != null) ? imageProfile.getName() : null, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
+                            byteout = byteos.toByteArray();
+                        } catch (Exception e) {
+                            String errMsg = "Error writing image for contentId [" + imageOrigContentId + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                                    + ": " + e.toString();
+                            Debug.logError(logPrefix + errMsg, module);
+                            writeErrorCount++;
+                            continue;
+                        } finally {
+                            byteos.close();
+                        }
+                    }
 
-                    GenericValue dataResource = delegator.makeValue("DataResource");
+                    boolean newDataResource = (dataResource == null);
+                    if (newDataResource) {
+                        dataResource = delegator.makeValue("DataResource");
+                    }
                     dataResource.put("dataResourceTypeId", "IMAGE_OBJECT");
                     dataResource.put("createdDate", createdDate);
                     dataResource.put("mimeTypeId", mimeTypeId);
@@ -798,44 +1033,35 @@ public abstract class ContentImageServices {
                     customDrFields = ContentImageWorker.parseMapFieldExpr(customDrFields, imageCtx, timeZone, locale);
 
                     dataResource.setNonPKFields(customDrFields);
-                    dataResource = delegator.createSetNextSeqId(dataResource);
+                    if (newDataResource) {
+                        dataResource = delegator.createSetNextSeqId(dataResource);
+                    } else {
+                        dataResource.store();
+                    }
                     String dataResourceId = dataResource.getString("dataResourceId");
 
-                    byte[] byteout;
-                    if (keepOrig && Objects.equals(targetFormat, targetFmtExt) && streamResult.get("streamBytes") != null) {
-                        byteout = (byte[]) streamResult.get("streamBytes");
-                    } else {
-                        ByteArrayOutputStream byteos = new ByteArrayOutputStream();
-                        try {
-                            ImageStorers.write(keepOrig ? bufImg : bufNewImg, targetFormat, byteos, delegator); // SCIPIO: ImageIO->ImageStorers
-                            byteout = byteos.toByteArray();
-                            scaledImageCount++;
-                        } catch (IllegalArgumentException e) {
-                            Debug.logError(e, logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", LOG_LANG) + ": " + e.getMessage(), module);
-                            return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_parameter_is_null", locale));
-                        } catch (IOException e) {
-                            Debug.logError(e, logPrefix + UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", LOG_LANG) + ": " + e.getMessage(), module);
-                            return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.error_occurs_during_writing", locale));
-                        } finally {
-                            byteos.close();
-                        }
-                    }
-
-                    GenericValue imageDataResource = delegator.makeValue("ImageDataResource");
+                    imageDataResource = delegator.makeValue("ImageDataResource");
                     imageDataResource.put("imageData", byteout);
                     imageDataResource.put("dataResourceId", dataResource.get("dataResourceId"));
-                    imageDataResource.create();
+                    if (newDataResource) {
+                        imageDataResource = imageDataResource.create();
+                    } else {
+                        imageDataResource.store();
+                    }
 
                     if (UtilValidate.isNotEmpty(fileSizeDataResAttrName)) {
                         GenericValue fileSizeDataResourceAttr = delegator.makeValue("DataResourceAttribute");
                         fileSizeDataResourceAttr.put("dataResourceId", dataResourceId);
                         fileSizeDataResourceAttr.put("attrName", fileSizeDataResAttrName);
                         fileSizeDataResourceAttr.put("attrValue", String.valueOf(byteout.length));
-                        fileSizeDataResourceAttr = fileSizeDataResourceAttr.create();
+                        fileSizeDataResourceAttr = fileSizeDataResourceAttr.createOrStore();
                     }
 
-                    GenericValue content = delegator.makeValue("Content");
-                    content.put("createdDate", createdDate);
+                    boolean newContent = (content == null);
+                    if (newContent) {
+                        content = delegator.makeValue("Content");
+                        content.put("createdDate", createdDate);
+                    }
 
                     Map<String, Object> customCoFields = new HashMap<>();
                     customCoFields.putAll(ContentImageWorker.RESIZEIMG_CONTENT_FIELDEXPR);
@@ -849,10 +1075,13 @@ public abstract class ContentImageServices {
 
                     content.setNonPKFields(customCoFields);
                     content.put("dataResourceId", dataResourceId);
-                    content = delegator.createSetNextSeqId(content);
+                    if (newContent) {
+                        content = delegator.createSetNextSeqId(content);
+                    } else {
+                        content.store();
+                    }
                     String resContentId = content.getString("contentId");
 
-                    String contentAssocTypeId = contentAssocTypeIdExdr.expandString(imageCtx).toUpperCase();
                     if (delegator.findOne("ContentAssocType", UtilMisc.toMap("contentAssocTypeId", contentAssocTypeId), false) == null) {
                         Debug.logInfo(logPrefix+"ContentAssocType for contentAssocTypeId '" + contentAssocTypeId
                                 + "' does not yet exist; automatically creating...", module);
@@ -862,15 +1091,18 @@ public abstract class ContentImageServices {
                         contentAssocType = contentAssocType.create();
                     }
 
-                    GenericValue contentAssoc = delegator.makeValue("ContentAssoc");
-                    contentAssoc.put("contentId", imageOrigContentId);
-                    contentAssoc.put("contentIdTo", resContentId);
-                    contentAssoc.put("contentAssocTypeId", contentAssocTypeId);
-                    contentAssoc.put("fromDate", createdDate);
-                    contentAssoc.put("mapKey", sizeType);
-                    contentAssoc = contentAssoc.create();
+                    if (contentAssoc == null) {
+                        contentAssoc = delegator.makeValue("ContentAssoc");
+                        contentAssoc.put("contentId", imageOrigContentId);
+                        contentAssoc.put("contentIdTo", resContentId);
+                        contentAssoc.put("contentAssocTypeId", contentAssocTypeId);
+                        contentAssoc.put("fromDate", createdDate);
+                        contentAssoc.put("mapKey", sizeType);
+                        contentAssoc = contentAssoc.create();
+                    }
 
                     imageContentIdMap.put(sizeType, resContentId);
+                    successCount++;
                 } else {
                     // SCIPIO: new
                     Debug.logError(logPrefix+ServiceUtil.getErrorMessage(resultScaleImgMap), module);
@@ -879,6 +1111,7 @@ public abstract class ContentImageServices {
             } // Loop over sizeType
 
             // save the name of the image props def we used
+            // NOTE: 2020-11: These are now moot because of Content.mediaProfile, but doesn't hurt
             GenericValue contentAttr = delegator.findOne("ContentAttribute",
                     UtilMisc.toMap("contentId", imageOrigContentId, "attrName", ContentImageWorker.CONTENTATTR_VARIANTCFG), false);
             if (contentAttr == null) {
@@ -896,12 +1129,13 @@ public abstract class ContentImageServices {
             StringBuilder logSb = new StringBuilder(logPrefix);
             logSb.append("In ");
             logSb.append((endTime - startTime) / 1000000);
-            logSb.append("ms created ");
-            logSb.append(scaledImageCount);
+            logSb.append("ms processed ");
+            logSb.append(successCount);
             logSb.append(" scaled and ");
             logSb.append(imageCopyCount);
-            logSb.append(" original copies of image for contentId ");
+            logSb.append(" original copies of image for contentId [");
             logSb.append(imageOrigContentId);
+            logSb.append("]");
             if (deleteOld) {
                 logSb.append(" (");
                 logSb.append(imageDeleteCount);
@@ -917,14 +1151,40 @@ public abstract class ContentImageServices {
                 logSb.setLength(logSb.length() - sizeSep.length());
                 logSb.append(")");
             }
-            Debug.logInfo(logSb.toString(), module);
+            logSb.append(" (success: ");
+            logSb.append(successCount);
+            logSb.append(", scaling errors: ");
+            logSb.append(scaleErrorCount);
+            logSb.append(", write errors: ");
+            logSb.append(writeErrorCount);
+            logSb.append(", skipped: ");
+            logSb.append(skipCount);
+            logSb.append(")");
+
+            String msg = logSb.toString();
             //}
 
-            Map<String, Object> result = ServiceUtil.returnSuccess();
+            int failCount = scaleErrorCount + writeErrorCount;
+            Map<String, Object> result;
+            if (failCount > 0) {
+                if (successCount > 0) {
+                    result = ServiceUtil.returnFailure(msg);
+                } else {
+                    // TODO: REVIEW: for now let caller decide to abort trans
+                    //result = ServiceUtil.returnError(msg);
+                    result = ServiceUtil.returnFailure(msg);
+                }
+                Debug.logError(logPrefix + msg, module);
+            } else {
+                result = ServiceUtil.returnSuccess(msg);
+                Debug.logInfo(logPrefix + msg, module);
+            }
             result.put("imageContentIdMap", imageContentIdMap);
             result.put("bufferedImage", bufImg);
+            result.put("successCount", successCount);
+            result.put("failCount", failCount);
+            result.put("skipCount", skipCount);
             return result;
-
         } catch(Exception e) {
             // FIXME?: more generic err msg
             Debug.logError(e, logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_scale_original_image", LOG_LANG) + ": " + imageOrigContentId + ": " + e.getMessage(), module);
@@ -937,11 +1197,16 @@ public abstract class ContentImageServices {
         GenericValue contentDataResource = ctx.attr("contentDataResource");
         boolean requireProfile = ctx.attr("requireProfile", true);
         boolean createNew = ctx.attr("createNew", true);
+        boolean deleteOld = ctx.attr("deleteOld", false);
+        boolean recreateExisting = ctx.attr("recreateExisting", false);
         boolean nonFatal = ctx.attr("nonFatal", false);
         boolean doLog = ctx.attr("doLog", false);
         String progressInfo = ctx.attr("progressInfo");
         Timestamp moment = ctx.attr("moment", UtilDateTime::nowTimestamp);
 
+        int variantSuccessCount = 0;
+        int variantFailCount = 0;
+        int variantSkipCount = 0;
         try {
             if (contentDataResource == null) {
                 contentDataResource = ctx.delegator().findOne("ContentDataResourceRequiredView", UtilMisc.toMap("contentId", contentId), false);
@@ -980,7 +1245,8 @@ public abstract class ContentImageServices {
                         }
                     }
                 } else if (!createNew) {
-                    return ServiceUtil.returnFailure("No existing variant images for content [" + contentId + "], not regenerating image size variants");
+                    return UtilMisc.put(ServiceUtil.returnSuccess("No existing variant images for content [" + contentId + "], not regenerating image size variants"),
+                            "reason", "no-variants");
                 }
 
                 if (imageVariantConfig == null && variantContentAssoc != null) {
@@ -1031,9 +1297,11 @@ public abstract class ContentImageServices {
 
             Map<String, Object> resizeCtx = ctx.makeValidInContext("contentImageDbScaleInAllSizeCore", ctx);
             resizeCtx.put("imageOrigContentId", contentId);
+            resizeCtx.put("imageProfile", mediaProfile);
             resizeCtx.put("imageVariantConfig", imageVariantConfig);
             resizeCtx.put("fileSizeDataResAttrName", FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME);
-            resizeCtx.put("deleteOld", Boolean.TRUE);
+            resizeCtx.put("deleteOld", deleteOld); // NOTE: NOT RECOMMENDED anymore
+            resizeCtx.put("recreateExisting", recreateExisting);
             resizeCtx.put("createdDate", moment);
             resizeCtx.put("contentFields", contentFields);
             resizeCtx.put("dataResourceFields", dataResourceFields);
@@ -1043,14 +1311,22 @@ public abstract class ContentImageServices {
                         + (progressInfo != null ? " (" + progressInfo + ")" : ""), module);
             }
 
-            Map<String, Object> resizeResult;
+            Map<String, Object> resizeResult = ctx.dispatcher().runSync("contentImageDbScaleInAllSizeCore", resizeCtx, nonFatal);
+            if (resizeResult.get("successCount") != null) {
+                variantSuccessCount += (Integer) resizeResult.get("successCount");
+            }
+            if (resizeResult.get("failCount") != null) {
+                variantFailCount += (Integer) resizeResult.get("failCount");
+            }
+            if (resizeResult.get("skipCount") != null) {
+                variantSkipCount += (Integer) resizeResult.get("skipCount");
+            }
             if (nonFatal) {
-                resizeResult = ctx.dispatcher().runSync("contentImageDbScaleInAllSizeCore", resizeCtx, -1, true);
                 if (!ServiceUtil.isSuccess(resizeResult)) {
-                    return ServiceUtil.returnFailure("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
+                    return UtilMisc.put(ServiceUtil.returnFailure("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult)),
+                            "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount, "variantSkipCount", variantSkipCount);
                 }
             } else {
-                resizeResult = ctx.dispatcher().runSync("contentImageDbScaleInAllSizeCore", resizeCtx);
                 if (!ServiceUtil.isSuccess(resizeResult)) {
                     throw new GeneralException("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
                 }
@@ -1058,8 +1334,8 @@ public abstract class ContentImageServices {
         } catch (Exception e) {
             String errMsg = "Could not auto-resize variant images for content [" + contentId + "]: " + e.getMessage();
             Debug.logError(e, "contentImageAutoRescale: " + errMsg, module);
-            return ServiceUtil.returnError(errMsg);
+            return UtilMisc.put(ServiceUtil.returnError(errMsg), "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount, "variantSkipCount", variantSkipCount);
         }
-        return ServiceUtil.returnSuccess();
+        return UtilMisc.put(ServiceUtil.returnSuccess(), "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount, "variantSkipCount", variantSkipCount);
     }
 }

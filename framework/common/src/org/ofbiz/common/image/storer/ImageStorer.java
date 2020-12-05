@@ -14,9 +14,9 @@ import java.util.Map;
  */
 public interface ImageStorer extends ImageOp {
 
-    boolean write(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) throws IOException;
+    boolean write(RenderedImage im, String formatName, Object output, String imageProfile, Map<String, Object> options, Delegator delegator) throws IOException;
 
-    boolean isApplicable(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator);
+    boolean isApplicable(RenderedImage im, String formatName, Object output, String imageProfile, Map<String, Object> options, Delegator delegator);
 
     interface ImageStorerFactory extends ImageOp.ImageOpFactory<ImageStorer> {
     }

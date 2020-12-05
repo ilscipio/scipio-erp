@@ -21,7 +21,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.content.data.DataResourceWorker;
-import org.ofbiz.content.image.ContentImageWorker;
+import com.ilscipio.scipio.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;

@@ -52,7 +52,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
-import org.ofbiz.product.image.ProductImageWorker;
+import com.ilscipio.scipio.product.image.ProductImageWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -84,6 +84,12 @@ public class ImageManagementServices {
         String uploadFileName = (String) context.get("_uploadedFile_fileName");
         String imageResize = (String) context.get("imageResize");
         Locale locale = (Locale) context.get("locale");
+
+        String imageProfile = (String) context.get("imageProfile"); // SCIPIO: TODO?: if ever needed again
+        if (UtilValidate.isEmpty(imageProfile)) {
+            imageProfile = "IMAGE_PRODUCT";
+        }
+        Map<String, Object> imageWriteOptions = UtilGenerics.cast(context.get("imageWriteOptions"));
 
         if (UtilValidate.isNotEmpty(uploadFileName)) {
             String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
@@ -307,8 +313,8 @@ public class ImageManagementServices {
      * SCIPIO: NOTE: 2017-07-04: This appears to have been a modified copy-paste of the methods in
      * {@link org.ofbiz.product.image.ScaleImage#scaleImageManageInAllSize}.
      */
-    public static Map<String, Object> scaleImageMangementInAllSize(Map<String, ? extends Object> context, String filenameToUse, String resizeType, String productId)
-        throws IllegalArgumentException, ImagingOpException, IOException {
+    public static Map<String, Object> scaleImageMangementInAllSize(Map<String, ? extends Object> context, String filenameToUse, String resizeType, String productId,
+                                                                   String imageProfile, Map<String, Object> imageWriteOptions) throws IllegalArgumentException, ImagingOpException, IOException {
 
         /* VARIABLES */
         Locale locale = (Locale) context.get("locale");
@@ -388,7 +394,8 @@ public class ImageManagementServices {
 
                     // write new image
                     try {
-                        ImageStorers.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUse), (Delegator) context.get("delegator")); // SCIPIO: ImageIO->ImageStorers
+                        ImageStorers.write(bufNewImg, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUse),
+                                imageProfile, imageWriteOptions, (Delegator) context.get("delegator")); // SCIPIO: ImageIO->ImageStorers
                         File deleteFile = new File(imageServerPath + "/"  + filenameToUse);
                         if (!deleteFile.delete()) {
                             Debug.logError("File :" + deleteFile.getName() + ", couldn't be deleted", module);
@@ -423,6 +430,11 @@ public class ImageManagementServices {
         Debug.logError(errMsg, module);
         result.put(ModelService.ERROR_MESSAGE, errMsg);
         return ServiceUtil.returnError(errMsg);
+    }
+
+    @Deprecated
+    public static Map<String, Object> scaleImageMangementInAllSize(Map<String, ? extends Object> context, String filenameToUse, String resizeType, String productId) throws IllegalArgumentException, ImagingOpException, IOException {
+        return scaleImageMangementInAllSize(context, filenameToUse, resizeType, productId, null, null);
     }
 
     public static Map<String, Object> createContentAndDataResource(DispatchContext dctx, GenericValue userLogin, String filenameToUse, String imageUrl, String contentId, String fileContentType){
@@ -717,6 +729,12 @@ public class ImageManagementServices {
         int resizeWidth = Integer.parseInt(width);
         int resizeHeight = resizeWidth;
 
+        String imageProfile = (String) context.get("imageProfile"); // SCIPIO: TODO?: if ever needed again
+        if (UtilValidate.isEmpty(imageProfile)) {
+            imageProfile = "IMAGE_PRODUCT";
+        }
+        Map<String, Object> imageWriteOptions = UtilGenerics.cast(context.get("imageWriteOptions"));
+
         try {
             BufferedImage bufImg = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + dataResourceName));
             if (bufImg == null) { // SCIPIO: may be null
@@ -733,7 +751,8 @@ public class ImageManagementServices {
             if (dataResourceName.length() > 3) {
                 String mimeType = dataResourceName.substring(dataResourceName.length() - 3, dataResourceName.length());
                 Map<String, Object> resultResize = resizeImage(bufImg, imgHeight, imgWidth, resizeHeight, resizeWidth);
-                ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse), delegator); // SCIPIO: ImageIO->ImageStorers
+                ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse),
+                        imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
 
                 Map<String, Object> contentThumb = new HashMap<>();
                 contentThumb.put("contentTypeId", "DOCUMENT");
@@ -787,6 +806,12 @@ public class ImageManagementServices {
         int resizeWidth = Integer.parseInt(width);
         int resizeHeight = resizeWidth;
 
+        String imageProfile = (String) context.get("imageProfile"); // SCIPIO: TODO?: if ever needed again
+        if (UtilValidate.isEmpty(imageProfile)) {
+            imageProfile = "IMAGE_PRODUCT";
+        }
+        Map<String, Object> imageWriteOptions = UtilGenerics.cast(context.get("imageWriteOptions"));
+
         try {
             BufferedImage bufImg = ImageIO.read(new File(imageServerPath + "/" + productId + "/" + dataResourceName));
             if (bufImg == null) { // SCIPIO: may be null
@@ -797,7 +822,8 @@ public class ImageManagementServices {
             String filenameToUse = dataResourceName;
             String mimeType = dataResourceName.substring(dataResourceName.length() - 3, dataResourceName.length());
             Map<String, Object> resultResize = resizeImage(bufImg, imgHeight, imgWidth, resizeHeight, resizeWidth);
-            ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse), delegator); // SCIPIO: ImageIO->ImageStorers
+            ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse),
+                    imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
         } catch (Exception e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -820,6 +846,12 @@ public class ImageManagementServices {
         String imgExtension = filenameToUse.substring(filenameToUse.length() - 3, filenameToUse.length());
         String imageUrl = imageServerUrl + "/" + productId + "/" + filenameToUse;
 
+        String imageProfile = (String) context.get("imageProfile"); // SCIPIO: TODO?: if ever needed again
+        if (UtilValidate.isEmpty(imageProfile)) {
+            imageProfile = "IMAGE_PRODUCT";
+        }
+        Map<String, Object> imageWriteOptions = UtilGenerics.cast(context.get("imageWriteOptions"));
+
         try {
             GenericValue productContent = EntityQuery.use(delegator).from("ProductContentAndInfo").where("productId", productId, "contentId", contentId, "productContentTypeId", "IMAGE").queryFirst();
             String dataResourceName = (String) productContent.get("drDataResourceName");
@@ -830,7 +862,8 @@ public class ImageManagementServices {
                 if (bufImg == null) { // SCIPIO: may be null
                     return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
                 }
-                ImageStorers.write(bufImg, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUse), delegator); // SCIPIO: ImageIO->ImageStorers
+                ImageStorers.write(bufImg, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUse),
+                        imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
 
                 File file = new File(imageServerPath + "/" + productId + "/" + dataResourceName);
                 if (!file.delete()) {
@@ -900,7 +933,8 @@ public class ImageManagementServices {
                         if (bufImgAssoc == null) { // SCIPIO: may be null
                             return ServiceUtil.returnError(UtilProperties.getMessage("CommonErrorUiLabels", "ImageTransform.unable_to_read_image", locale));
                         }
-                        ImageStorers.write(bufImgAssoc, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUseAssoc), delegator); // SCIPIO: ImageIO->ImageStorers
+                        ImageStorers.write(bufImgAssoc, imgExtension, new File(imageServerPath + "/" + productId + "/" + filenameToUseAssoc),
+                                imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
 
                         File fileAssoc = new File(imageServerPath + "/" + productId + "/" + drDataResourceNameAssoc);
                         if (!fileAssoc.delete()) {

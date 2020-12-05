@@ -1117,7 +1117,7 @@ public class ProductServices {
             /* scale Image in different sizes */
             Map<String, Object> resultResize = new HashMap<>();
             try {
-                resultResize.putAll(ScaleImage.scaleImageInAllSize(imageContext, filenameToUse, "additional", viewNumber));
+                resultResize.putAll(ScaleImage.scaleImageInAllSize(imageContext, filenameToUse, "additional", viewNumber, "IMAGE_PRODUCT", null));
             } catch (IOException e) {
                 Debug.logError(e, "Scale additional image in all different sizes is impossible : " + e.toString(), module);
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource,

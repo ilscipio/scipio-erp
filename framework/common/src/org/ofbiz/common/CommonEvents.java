@@ -490,7 +490,7 @@ public class CommonEvents {
             g.drawRect(0, 0, width - 1, height - 1);
             g.dispose();
             response.setContentType("image/jpeg");
-            ImageStorers.write(bufferedImage, "jpg", response.getOutputStream(), delegator); // SCIPIO: ImageIO->ImageStorers
+            ImageStorers.write(bufferedImage, "jpg", response.getOutputStream(), "IMAGE_CAPTCHA", null, delegator); // SCIPIO: ImageIO->ImageStorers
             HttpSession session = request.getSession();
             Map<String, String> captchaCodeMap = UtilGenerics.checkMap(session.getAttribute("_CAPTCHA_CODE_"));
             if (captchaCodeMap == null) {

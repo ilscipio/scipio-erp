@@ -20,9 +20,17 @@
                           <em>${uiLabelMap.CommonNote}: ${uiLabelMap.CmsFunctionAsyncBackground}</em></p>
                         <@fields type="default-compact">
                           <form method="post" action="<@pageUrl>rebuildAllMediaVariants</@pageUrl>">
-                            <@field type="select" label=uiLabelMap.CmsTargetImages name="force" size="20">
-                              <@field type="option" value="false">${uiLabelMap.CmsMediaRecreateOnlyImagesWithExistingVariants}</@field>
-                              <@field type="option" value="true">${uiLabelMap.CmsMediaRecreateAllImagesForce}</@field>
+                            <@field type="select" label=uiLabelMap.CmsTargetImages name="forceCreate" size="20">
+                              <@field type="option" value="false">N - ${uiLabelMap.CmsMediaRecreateOnlyImagesWithExistingVariants}</@field>
+                              <@field type="option" value="true">Y - ${uiLabelMap.CmsMediaRecreateAllImagesForce}</@field>
+                            </@field>
+                            <@field type="select" label=uiLabelMap.CmsMediaRecreateExisting name="recreateExisting" size="20">
+                                <@field type="option" value="false">N - ${uiLabelMap.CmsMediaRecreateExistingFalseExpl}</@field>
+                                <@field type="option" value="true">Y - ${uiLabelMap.CmsMediaRecreateExistingTrueExpl}</@field>
+                            </@field>
+                            <@field type="select" label=uiLabelMap.CmsMediaDeleteOld name="deleteOld" size="20">
+                                <@field type="option" value="false">N - ${uiLabelMap.CmsMediaDeleteOldFalseExpl}</@field>
+                                <@field type="option" value="true">Y - ${uiLabelMap.CmsMediaDeleteOldTrueExpl}</@field>
                             </@field>
                             <@field type="submit" />
                           </form>

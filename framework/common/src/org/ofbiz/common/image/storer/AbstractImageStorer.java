@@ -5,6 +5,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.AbstractImageOp;
+import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.MediaProfile;
 import org.ofbiz.entity.Delegator;
 
@@ -41,12 +42,12 @@ public abstract class AbstractImageStorer extends AbstractImageOp implements Ima
     }
 
     @Override
-    public boolean isApplicable(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) {
-        return isApplicableCommon(im, formatName, output, mediaProfile, options, delegator);
+    public boolean isApplicable(RenderedImage im, String formatName, Object output, String imageProfile, Map<String, Object> options, Delegator delegator) {
+        return isApplicableCommon(im, formatName, output, imageProfile, options, delegator);
     }
 
-    public boolean isApplicableCommon(RenderedImage im, String formatName, Object output, String mediaProfile, Map<String, Object> options, Delegator delegator) {
-        return isFormatApplicable(formatName, delegator) && isMediaProfileApplicable(mediaProfile, delegator);
+    public boolean isApplicableCommon(RenderedImage im, String formatName, Object output, String imageProfile, Map<String, Object> options, Delegator delegator) {
+        return isFormatApplicable(formatName, delegator) && isImageProfileApplicable(imageProfile, delegator);
     }
 
     public Set<String> getFormats() {
@@ -57,8 +58,8 @@ public abstract class AbstractImageStorer extends AbstractImageOp implements Ima
         return (getFormats().isEmpty()) ? true : getFormats().contains(formatName);
     }
 
-    protected boolean isMediaProfileApplicable(String mediaProfile, Delegator delegator) {
-        return getProfileMatch().isMediaProfileApplicable(mediaProfile, delegator);
+    protected boolean isImageProfileApplicable(String imageProfile, Delegator delegator) {
+        return getProfileMatch().isImageProfileApplicable(imageProfile, delegator);
     }
 
     @Override
@@ -70,7 +71,7 @@ public abstract class AbstractImageStorer extends AbstractImageOp implements Ima
     public ProfileMatchInfo getProfileMatch() {
         ProfileMatchInfo profileMatch = this.profileMatch;
         if (profileMatch == null) {
-            profileMatch = ProfileMatchInfo.fromExpr((String) getConfiguredAndDefaultOptions().get("mediaProfiles"));
+            profileMatch = ProfileMatchInfo.fromExpr((String) getConfiguredAndDefaultOptions().get("imageProfiles"));
             this.profileMatch = profileMatch;
         }
         return profileMatch;
@@ -112,14 +113,14 @@ public abstract class AbstractImageStorer extends AbstractImageOp implements Ima
 
         public boolean isAll() { return matchExactProfiles == null && matchParentProfiles == null; }
 
-        public boolean isMediaProfileApplicable(String mediaProfile, Delegator delegator) {
-            if (isAll() || (matchExactProfiles != null && matchExactProfiles.contains(mediaProfile))) {
+        public boolean isImageProfileApplicable(String imageProfile, Delegator delegator) {
+            if (isAll() || (matchExactProfiles != null && matchExactProfiles.contains(imageProfile))) {
                 return true;
             }
             if (matchParentProfiles == null) {
                 return false;
             }
-            MediaProfile profile = MediaProfile.getMediaProfile(delegator, mediaProfile);
+            ImageProfile profile = ImageProfile.getImageProfile(delegator, imageProfile);
             if (profile == null) {
                 return false;
             }

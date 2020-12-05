@@ -30,6 +30,7 @@ import javax.imageio.ImageIO;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -63,6 +64,12 @@ public class CropImage {
         String imageY = (String) context.get("imageY");
         String imageW = (String) context.get("imageW");
         String imageH = (String) context.get("imageH");
+
+        String imageProfile = (String) context.get("imageProfile"); // SCIPIO: TODO?: if ever needed again
+        if (UtilValidate.isEmpty(imageProfile)) {
+            imageProfile = "IMAGE_PRODUCT";
+        }
+        Map<String, Object> imageWriteOptions = UtilGenerics.cast(context.get("imageWriteOptions"));
 
         if (UtilValidate.isNotEmpty(imageName)) {
             Map<String, Object> contentCtx = new HashMap<>();
@@ -112,13 +119,13 @@ public class CropImage {
 
             BufferedImage bufNewImg = bufImg.getSubimage(x, y, w, h);
             String mimeType = imageName.substring(imageName.lastIndexOf('.') + 1);
-            ImageStorers.write(bufNewImg, mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse), delegator); // SCIPIO: ImageIO->ImageStorers
+            ImageStorers.write(bufNewImg, mimeType, new File(imageServerPath + "/" + productId + "/" + filenameToUse), imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
 
             double imgHeight = bufNewImg.getHeight();
             double imgWidth = bufNewImg.getWidth();
 
             Map<String, Object> resultResize = ImageManagementServices.resizeImageThumbnail(bufNewImg, imgHeight, imgWidth);
-            ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameTouseThumb), delegator); // SCIPIO: ImageIO->ImageStorers
+            ImageStorers.write((RenderedImage) resultResize.get("bufferedImage"), mimeType, new File(imageServerPath + "/" + productId + "/" + filenameTouseThumb), imageProfile, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
 
             String imageUrlResource = imageServerUrl + "/" + productId + "/" + filenameToUse;
             String imageUrlThumb = imageServerUrl + "/" + productId + "/" + filenameTouseThumb;

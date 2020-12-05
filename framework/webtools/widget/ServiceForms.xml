@@ -127,6 +127,7 @@ code package.
     </form>
     <form name="JobDetails" type="single">
         <auto-fields-entity entity-name="JobSandbox" map-name="job" default-field-type="display"/>
+        <field name="jobResult"><textarea read-only="true"/></field><!-- SCIPIO -->
     </form>
     <form name="JobRuntimeDataInfo" type="list" list-name="runtimeInfoList" paginate="false"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="key"><display/></field>

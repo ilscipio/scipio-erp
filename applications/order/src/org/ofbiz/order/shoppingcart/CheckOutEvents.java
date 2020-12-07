@@ -1756,9 +1756,12 @@ public class CheckOutEvents {
     public static String resolveEventReturn(ShoppingCart cart, String returnResponse) {
         String returnResponseResolved = returnResponse;
         for (String paymentMethodTypeId : returnAsJsonForPaymentMethodTypeIds) {
-            if (cart.isPaymentSelected(paymentMethodTypeId)) {
-                returnResponseResolved = returnResponse.concat("Json");
-                break;
+            for (ShoppingCart.CartPaymentInfo inf : cart.getPaymentInfos()) {
+                if (inf.paymentMethodTypeId.equals(paymentMethodTypeId)) {
+                    returnResponseResolved = returnResponse.concat("Json");
+                    break;
+                }
+
             }
         }
         return returnResponseResolved;

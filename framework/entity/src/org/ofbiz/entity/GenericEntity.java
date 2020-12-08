@@ -912,7 +912,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      * Added 2019-09-24/2.1.0.
      */
     public <K, V> Map<K, V> getJsonAsMap(String name) {
-        return (Map<K, V>) getJson(name, Map.class);
+        return UtilGenerics.cast(getJson(name, Map.class));
     }
 
     /**
@@ -920,7 +920,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      * Added 2020-04-01/2.1.0.
      */
     public <K, V> Map<K, V> getJsonAsMapOrEmpty(String name) {
-        Map<K, V> result = (Map<K, V>) getJson(name, Map.class);
+        Map<K, V> result = UtilGenerics.cast(getJson(name, Map.class));
         return (result != null) ? result : Collections.emptyMap();
     }
 
@@ -929,7 +929,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      * Added 2020-04-01/2.1.0.
      */
     public <K, V> Map<K, V> getJsonAsMapOrNew(String name) {
-        Map<K, V> result = (Map<K, V>) getJson(name, Map.class);
+        Map<K, V> result = UtilGenerics.cast(getJson(name, Map.class));
         return (result != null) ? result : createJsonMap();
     }
 
@@ -938,7 +938,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      * Added 2019-09-24/2.1.0.
      */
     public <E> List<E> getJsonAsList(String name) {
-        return (List<E>) getJson(name, List.class);
+        return UtilGenerics.cast(getJson(name, List.class));
     }
 
     /**
@@ -946,7 +946,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      * Added 2019-09-24/2.1.0.
      */
     public <E> List<E> getJsonAsListOrEmpty(String name) {
-        List<E> result = (List<E>) getJson(name, List.class);
+        List<E> result = UtilGenerics.cast(getJson(name, List.class));
         return (result != null) ? result : Collections.<E>emptyList();
     }
 
@@ -955,7 +955,7 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
      * Added 2020-04-01/2.1.0.
      */
     public <E> List<E> getJsonAsListOrNew(String name) {
-        List<E> result = (List<E>) getJson(name, List.class);
+        List<E> result = UtilGenerics.cast(getJson(name, List.class));
         return (result != null) ? result : createJsonList();
     }
 

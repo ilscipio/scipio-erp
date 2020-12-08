@@ -46,7 +46,7 @@ public abstract class MediaProfile implements Serializable {
     }
 
     protected final String name;
-    protected final String location;
+    protected final String variantConfigLocation;
     protected final String parentProfile;
     protected final boolean defaultProfile;
     protected final Map<String, Object> properties;
@@ -59,7 +59,12 @@ public abstract class MediaProfile implements Serializable {
         this.name = name;
         this.properties = UtilValidate.isNotEmpty(properties) ? Collections.unmodifiableMap(new LinkedHashMap<>(properties)) : Collections.emptyMap();
         this.parentProfile = UtilValidate.nullIfEmpty((parentProfile != null) ? parentProfile : (String) properties.get("parentProfile"));
-        this.location = UtilValidate.nullIfEmpty((String) properties.get("location"));
+        String variantConfigLocation = UtilValidate.nullIfEmpty((String) properties.get("variantConfigLocation"));
+        if (variantConfigLocation == null) {
+            // FIXME: REMOVE: backward-compat for now, name "location" may be reused...
+            variantConfigLocation = UtilValidate.nullIfEmpty((String) properties.get("location"));
+        }
+        this.variantConfigLocation = variantConfigLocation;
         this.defaultProfile = UtilValidate.booleanValueVersatile(properties.get("defaultProfile"), false);
         this.delegatorName = delegator.getDelegatorName();
         this.delegator = delegator;
@@ -210,8 +215,8 @@ public abstract class MediaProfile implements Serializable {
         return name;
     }
 
-    public String getLocation() {
-        return location;
+    public String getVariantConfigLocation() {
+        return variantConfigLocation;
     }
 
     public String getParentProfile() {

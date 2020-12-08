@@ -1,16 +1,13 @@
 package org.ofbiz.common.image;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -87,7 +84,7 @@ public class ImageProfile extends MediaProfile {
             try {
                 variantConfig = ImageVariantConfig.fromImageSizePreset(getDelegator(), getName(), false);
                 if (variantConfig == null) {
-                    variantConfig = ImageVariantConfig.fromImagePropertiesXml(getLocation());
+                    variantConfig = ImageVariantConfig.fromImagePropertiesXml(getVariantConfigLocation());
                     if (variantConfig == null) {
                         Debug.logError("Could not find ImageSizePreset with presetId [" + getName() +
                                 "] or ImageVariantConfig for mediaProfile [" + getName() + "]", module);

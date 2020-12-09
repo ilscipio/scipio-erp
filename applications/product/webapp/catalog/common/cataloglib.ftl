@@ -92,3 +92,15 @@
   <#return uiLabelMap[(typeInfoMap.label)!("FormFieldTitle_"+fieldName)]>
 </#function>
 
+<#macro imageProfileSelect profileName="" fieldName="imageProfile" defaultProfileName="">
+  <#local profiles = Static["org.ofbiz.common.image.ImageProfile"].getImageProfileMap(delegator)!>
+  <@field type="select" name=fieldName label=getLabel('CommonImageProfile', 'CommonUiLabels') tooltip=getLabel('CommonImageProfileDesc', 'CommonUiLabels')>
+      <#local profile = profiles[raw(defaultProfileName)]!false>
+      <option value=""<#if !profileName?has_content> selected="selected"</#if>>${getLabel('CommonDefault', 'CommonUiLabels')}<#if !profile?is_boolean> - ${defaultProfileName}<#rt/>
+        <#lt/><#if profile.variantConfigLocation?has_content> (${profile.variantConfigLocation})<#elseif profile.stored> (CMS)</#if></#if></option>
+      <#list toSimpleMap(profiles) as name, profile>
+        <option value="${name}"<#if raw(profileName) == raw(name)> selected="selected"</#if>>${name}<#if profile.description?has_content> - ${profile.description}</#if><#rt/>
+          <#lt/><#if profile.variantConfigLocation?has_content> (${profile.variantConfigLocation})<#elseif profile.stored> (CMS)</#if></option>
+      </#list>
+  </@field>
+</#macro>

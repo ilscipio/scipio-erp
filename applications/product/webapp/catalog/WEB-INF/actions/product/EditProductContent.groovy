@@ -22,6 +22,9 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.string.*;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.image.ScaleImage;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.entity.transaction.*;
+import javax.transaction.Transaction;
 
 module = "EditProductContent.groovy"
 
@@ -136,7 +139,7 @@ if (fileType) {
                     }
                 }
             } catch (Exception e) {
-                Debug.logError(e, "error deleting existing file (not neccessarily a problem)", module);
+                Debug.logError(e, "error deleting existing file (not necessarily a problem)", module);
             }
             file.renameTo(file1);
         } catch (Exception e) {
@@ -145,22 +148,82 @@ if (fileType) {
 
         if (imageUrl && imageUrl.length() > 0) {
             context.imageUrl = imageUrl;
-            product.set(fileType + "ImageUrl", imageUrl);
 
-            // call scaleImageInAllSize
-            if ("original".equals(fileType)) {
-                context.delegator = delegator;
-                result = ScaleImage.scaleImageInAllSize(context, filenameToUse, "main", "0", "IMAGE_PRODUCT", null);
+            // SCIPIO: Fixed transaction breaking screen - PUT ENTITY CHANGES HERE
+            Transaction suspendedTransaction = null;
+            boolean beganTransaction = false;
+            try {
+                if (TransactionUtil.isTransactionInPlace()) {
+                    suspendedTransaction = TransactionUtil.suspend();
+                }
+                try {
+                    beganTransaction = TransactionUtil.begin();
 
-                if (result.containsKey("responseMessage") && "success".equals(result.get("responseMessage"))) {
-                    imgMap = result.get("imageUrlMap");
-                    imgMap.each() { key, value ->
-                        product.set(key + "ImageUrl", value);
+                    product.set(fileType + "ImageUrl", imageUrl);
+
+                    // SCIPIO: mediaProfile on Product (only)
+                    // FIXME: if ORIGINAL_IMAGE_URL is defined as ProductContent, this will be ignored
+                    def imageProfile = parameters.imageProfile;
+                    if (imageProfile == null) {
+                        imageProfile = uploadObject.getFieldValue("imageProfile");
+                    }
+                    if (imageProfile instanceof String) {
+                        product.set("imageProfile", imageProfile ? imageProfile : null);
+                    }
+
+                    // call scaleImageInAllSize
+                    if ("original".equals(fileType)) {
+                        /* SCIPIO: Use auto service - NOTE: the auto service creates more ProductContent/Content/DataResource records (this is good)
+                        context.delegator = delegator;
+                        result = ScaleImage.scaleImageInAllSize(context, filenameToUse, "main", "0", "IMAGE_PRODUCT", null);
+
+                        if (result.containsKey("responseMessage") && "success".equals(result.get("responseMessage"))) {
+                            imgMap = result.get("imageUrlMap");
+                            imgMap.each() { key, value ->
+                                product.set(key + "ImageUrl", value);
+                            }
+                        }
+                         */
+                        product.store();
+                        try {
+                            def servCtx = dispatcher.runSync("productImageAutoRescale", [userLogin:context.userLogin,
+                                locale:context.locale, product:product, productContentTypeId:"ORIGINAL_IMAGE_URL", createSizeTypeContent:true]);
+                            if (!ServiceUtil.isSuccess(servCtx)) {
+                                def errorMessageList = context.errorMessageList ?: [];
+                                errorMessageList.addAll("productImageAutoRescale: " + ServiceUtil.getErrorMessage(servCtx));
+                                context.errorMessageList = errorMessageList;
+                                context.isError = true;
+                            }
+                        } catch(Exception e) {
+                            Debug.logError(e, module);
+                            def errorMessageList = context.errorMessageList ?: [];
+                            errorMessageList.addAll("productImageAutoRescale: " + e.toString());
+                            context.errorMessageList = errorMessageList;
+                            context.isError = true;
+                        }
+                    } else {
+                        product.store();
+                    }
+
+                    TransactionUtil.commit(beganTransaction);
+                } catch (Exception e) {
+                    String errMsg = e.toString();
+                    Debug.logError(e, errMsg, module);
+                    try {
+                        TransactionUtil.rollback(beganTransaction, errMsg, e);
+                    } catch (GenericTransactionException e2) {
+                        Debug.logError(e2, "Unable to rollback transaction", module);
+                    }
+                }
+            } finally {
+                if (suspendedTransaction != null) {
+                    try {
+                        TransactionUtil.resume(suspendedTransaction);
+                    } catch (GenericTransactionException e) {
+                        Debug.logError(e, "Error resuming suspended transaction", module);
                     }
                 }
             }
-
-            product.store();
         }
     }
 }

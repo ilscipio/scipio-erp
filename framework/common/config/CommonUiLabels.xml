@@ -5994,6 +5994,14 @@
         <value xml:lang="zh">图片</value>
         <value xml:lang="zh-TW">圖片</value>
     </property>
+    <property key="CommonImageProfile">
+        <value xml:lang="de">Bildprofil</value>
+        <value xml:lang="en">Image Profile</value>
+    </property>
+    <property key="CommonImageProfileDesc">
+        <value xml:lang="de">Bildprofile, konfiguriert in mediaprofiles.properties und benutzerdefinierten CMS-Varianten</value>
+        <value xml:lang="en">Image profiles, configured in mediaprofiles.properties and CMS custom variant image sizes</value>
+    </property>
     <property key="CommonImport">
         <value xml:lang="de">Import</value>
         <value xml:lang="en">Import</value>

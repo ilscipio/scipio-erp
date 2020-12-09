@@ -463,10 +463,37 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
                 try {
                     upscaleMode = UpscaleMode.valueOf(upscaleStr.toUpperCase());
                 } catch (Exception e) {
-                    Debug.logError("Invalid upscaleMode in ImageProperties.xml file: " + upscaleStr, module);
+                    Debug.logError("Invalid upscaleMode [" + upscaleStr + "] in variant config name [" + name + "]", module);
                 }
             }
             this.upscaleMode = upscaleMode;
+        }
+
+        protected VariantInfo(String name, Number width, Number height, String format, UpscaleMode upscaleMode) {
+            this.name = name;
+            this.width = width.intValue();
+            this.height = height.intValue();
+            this.format = format;
+            this.upscaleMode = upscaleMode;
+        }
+
+        public static VariantInfo fromImageSizeDimension(GenericValue imageSizeDimension) {
+            UpscaleMode upscaleMode = null;
+            String upscaleStr = imageSizeDimension.getString("upscaleStr");
+            if (upscaleStr != null) {
+                try {
+                    upscaleMode = UpscaleMode.valueOf(upscaleStr.toUpperCase());
+                } catch (Exception e) {
+                    Debug.logError("Invalid upscaleMode in ImageSizeDimension [" + upscaleStr, module);
+                }
+            }
+            return new VariantInfo(imageSizeDimension.getString("sizeName"),
+                    imageSizeDimension.getLong("dimensionWidth"), imageSizeDimension.getLong("dimensionHeight"),
+                    imageSizeDimension.getString("format"), upscaleMode);
+        }
+
+        public static VariantInfo fromMap(String name, Map<String, ?> map) {
+            return new VariantInfo(name, map);
         }
 
         public String getName() {
@@ -544,12 +571,27 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             map.put("width", ""+width);
             map.put("height", ""+height);
             map.put("format", format);
+            if (upscaleMode != null) {
+                map.put("upscaleMode", upscaleMode.toString());
+            }
         }
 
         public Map<String, String> propsToStringMap() {
-            Map<String, String> map = new HashMap<>();
+            Map<String, String> map = new LinkedHashMap<>();
             propsToStringMap(map);
             return map;
+        }
+
+        public Map<String, Object> configToMap(Map<String, Object> out) {
+            out.put("width", getWidth());
+            out.put("height", getHeight());
+            out.put("format", getFormat());
+            out.put("upscaleMode", getUpscaleMode() != null ? getUpscaleMode().toString() : null);
+            return out;
+        }
+
+        public Map<String, Object> configToMap() {
+            return configToMap(new LinkedHashMap<>());
         }
     }
 

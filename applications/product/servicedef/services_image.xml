@@ -113,6 +113,7 @@
         </attribute>
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/><!-- FIXME: currently always zero for this service -->
     </service>
     
     <!-- TODO? Products don't currently support this?

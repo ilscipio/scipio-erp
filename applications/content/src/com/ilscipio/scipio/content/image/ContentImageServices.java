@@ -760,7 +760,7 @@ public abstract class ContentImageServices {
                     if (UtilValidate.isNotEmpty(fileExtValues)) {
                         targetFmtExt = fileExtValues.get(0).getString("fileExtensionId");
                         if (fileExtValues.size() > 1) {
-                            Debug.logWarning(logPrefix+"Multiple FileExtension found for mimeTypeId '" + origMimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
+                            Debug.logInfo(logPrefix+"Multiple FileExtension found for mimeTypeId '" + origMimeTypeId + "'; using first: '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
                         }
                     } else {
                         targetFmtExt = EntityUtilProperties.getPropertyValue("content", "image.thumbs.fileType.default", "jpg", delegator);
@@ -870,14 +870,14 @@ public abstract class ContentImageServices {
             int writeErrorCount = 0;
             int skipCount = 0;
             for (String sizeType : sizeTypeList) {
-                if (!imgPropCfg.hasVariant(sizeType)) {
+                ImageVariantConfig.VariantInfo variantInfo = imgPropCfg.getVariant(sizeType);
+                if (variantInfo == null) {
                     Debug.logError(logPrefix+"sizeType " + sizeType + " is not part of ImageProperties.xml; ignoring", module);
                     continue;
                 }
 
                 // Check if dimensions are equal to the original image or resizing is prohibited by the ImageProperties.xml upscale mode
                 boolean useOrigImage = false;
-                ImageVariantConfig.VariantInfo variantInfo = imgPropCfg.getVariant(sizeType);
                 Integer targetWidth = variantInfo.getWidth();
                 Integer targetHeight = variantInfo.getHeight();
                 if (variantInfo.getUpscaleMode() != ImageVariantConfig.VariantInfo.UpscaleMode.ON) {
@@ -1021,6 +1021,7 @@ public abstract class ContentImageServices {
                         dataResource.put("scpWidth", (long) bufImg.getWidth());
                         dataResource.put("scpHeight", (long) bufImg.getHeight());
                     }
+                    dataResource.setJson("srcPresetJson", variantInfo.configToMap());
 
                     Map<String, Object> customDrFields = new HashMap<>();
                     customDrFields.putAll(ContentImageWorker.RESIZEIMG_DATARESOURCE_FIELDEXPR);

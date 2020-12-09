@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Represents media profile definitions, as defined in mediaprofiles.properties.
@@ -46,17 +47,20 @@ public abstract class MediaProfile implements Serializable {
     }
 
     protected final String name;
+    protected final String description;
     protected final String variantConfigLocation;
     protected final String parentProfile;
     protected final boolean defaultProfile;
     protected final Map<String, Object> properties;
+    protected volatile Boolean stored; // NOTE: this only reflects load time, may change until cache clear
 
     protected final String delegatorName;
     protected transient Delegator delegator;
     protected Set<String> ancestorProfiles;
 
-    protected MediaProfile(Delegator delegator, String name, String parentProfile, Map<String, Object> properties) {
+    protected MediaProfile(Delegator delegator, String name, String description, String parentProfile, Map<String, Object> properties, Boolean stored) {
         this.name = name;
+        this.description = description;
         this.properties = UtilValidate.isNotEmpty(properties) ? Collections.unmodifiableMap(new LinkedHashMap<>(properties)) : Collections.emptyMap();
         this.parentProfile = UtilValidate.nullIfEmpty((parentProfile != null) ? parentProfile : (String) properties.get("parentProfile"));
         String variantConfigLocation = UtilValidate.nullIfEmpty((String) properties.get("variantConfigLocation"));
@@ -68,6 +72,7 @@ public abstract class MediaProfile implements Serializable {
         this.defaultProfile = UtilValidate.booleanValueVersatile(properties.get("defaultProfile"), false);
         this.delegatorName = delegator.getDelegatorName();
         this.delegator = delegator;
+        this.stored = stored;
     }
 
     public static <M extends MediaProfile> M create(Delegator delegator, String name, String type, Map<String, Object> properties) {
@@ -155,6 +160,15 @@ public abstract class MediaProfile implements Serializable {
         return new ArrayList<>(getMediaProfileNames(delegator, type));
     }
 
+    public static <M extends MediaProfile> Map<String, M> getMediaProfileTypeMap(Delegator delegator, String type) {
+        Profiles profiles = getProfiles(delegator);
+        Map<String, MediaProfile> map = profiles.typeMap.get(type);
+        if (UtilValidate.isEmpty(map)) {
+            return Collections.emptyMap();
+        }
+        return UtilGenerics.cast(map);
+    }
+
     private static Profiles getProfiles(Delegator delegator) {
         Profiles profiles = CACHE.get(delegator.getDelegatorName());
         if (profiles == null) {
@@ -178,7 +192,7 @@ public abstract class MediaProfile implements Serializable {
             nameMap.put(mediaProfile.getName(), mediaProfile);
             Map<String, MediaProfile> typeProfiles = typeMap.get(mediaProfile.getType());
             if (typeProfiles == null) {
-                typeProfiles = new LinkedHashMap<>();
+                typeProfiles = new TreeMap<>();
                 typeMap.put(mediaProfile.getType(), typeProfiles);
             }
             typeProfiles.put(mediaProfile.getName(), mediaProfile);
@@ -187,7 +201,7 @@ public abstract class MediaProfile implements Serializable {
             }
         }
         for(Map.Entry<String, Map<String, MediaProfile>> entry : typeMap.entrySet()) {
-            entry.setValue(Collections.unmodifiableMap(entry.getValue()));
+            entry.setValue(Collections.unmodifiableMap(new LinkedHashMap<>(entry.getValue())));
         }
         return new Profiles(nameMap, typeMap, defaultsMap);
     }
@@ -213,6 +227,10 @@ public abstract class MediaProfile implements Serializable {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getVariantConfigLocation() {
@@ -264,8 +282,8 @@ public abstract class MediaProfile implements Serializable {
         return delegator;
     }
 
-    public boolean isDb() {
-        return (getDelegator().from("ImageSizePreset").where("presetId", getName()).queryCountSafe() > 0);
+    public boolean isStored() { // may be overridden
+        Boolean stored = this.stored;
+        return (stored != null) ? stored : false;
     }
-
 }

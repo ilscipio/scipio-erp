@@ -1,6 +1,7 @@
 package org.ofbiz.common.image;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -8,6 +9,7 @@ import org.ofbiz.entity.GenericValue;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -21,13 +23,23 @@ public class ImageProfile extends MediaProfile {
 
     protected volatile ImageVariantConfig variantConfig;
 
-    protected ImageProfile(Delegator delegator, String name, String parentProfile, Map<String, Object> properties, ImageVariantConfig variantConfig) {
-        super(delegator, name, parentProfile, properties);
+    protected ImageProfile(Delegator delegator, String name, String description, String parentProfile, Map<String, Object> properties, ImageVariantConfig variantConfig, Boolean stored) {
+        super(delegator, name, description, parentProfile, properties, stored);
         this.variantConfig = variantConfig;
+        this.stored = stored;
+    }
+
+    public static ImageProfile createImageProfile(Delegator delegator, String name, String description, Map<String, Object> properties, Boolean stored) {
+        return new ImageProfile(delegator, name, description, null, properties, null, stored);
     }
 
     public static ImageProfile createImageProfile(Delegator delegator, String name, Map<String, Object> properties) {
-        return new ImageProfile(delegator, name, null, properties, null);
+        return createImageProfile(delegator, name, null, properties, false);
+    }
+
+    public static ImageProfile createImageProfileFromPreset(GenericValue imageSizePreset) {
+        return new ImageProfile(imageSizePreset.getDelegator(), imageSizePreset.getString("presetId"), imageSizePreset.getString("presetName"),
+                imageSizePreset.getString("parentProfile"), Collections.emptyMap(), null, true);
     }
 
     /**
@@ -60,14 +72,16 @@ public class ImageProfile extends MediaProfile {
         return getMediaProfileNameList(delegator, TYPE);
     }
 
+    public static Map<String, ImageProfile> getImageProfileMap(Delegator delegator) {
+        return getMediaProfileTypeMap(delegator, TYPE);
+    }
+
     static List<ImageProfile> loadStoredImageProfiles(Delegator delegator) {
         List<ImageProfile> imageProfiles = new ArrayList<>();
         List<GenericValue> imageSizePresets = delegator.from("ImageSizePreset").queryListSafe();
         if (UtilValidate.isNotEmpty(imageSizePresets)) {
-            for(GenericValue isp : imageSizePresets) {
-                ImageProfile imageProfile = createImageProfile(delegator, isp.getString("presetId"),
-                        UtilMisc.toMap("parentProfile", isp.getString("parentProfile")));
-                imageProfiles.add(imageProfile);
+            for(GenericValue imageSizePreset : imageSizePresets) {
+                imageProfiles.add(createImageProfileFromPreset(imageSizePreset));
             }
         }
         return imageProfiles;
@@ -76,6 +90,15 @@ public class ImageProfile extends MediaProfile {
     @Override
     public String getType() {
         return TYPE;
+    }
+
+    @Override
+    public boolean isStored() {
+        Boolean stored = this.stored;
+        if (stored != null) {
+            return stored;
+        }
+        return (getDelegator().from("ImageSizePreset").where("presetId", getName()).cache().queryCountSafe() > 0);
     }
 
     public ImageVariantConfig getVariantConfig() {

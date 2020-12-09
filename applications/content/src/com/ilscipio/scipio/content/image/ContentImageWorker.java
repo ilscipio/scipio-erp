@@ -33,9 +33,11 @@ import java.util.Set;
 import java.util.TimeZone;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -181,6 +183,14 @@ public abstract class ContentImageWorker {
                 EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, useCache);
     }
 
+    public static List<GenericValue> getResizedImageContentAssocDataResourceRecords(Delegator delegator, String contentId, boolean useCache) throws GenericEntityException {
+        List<EntityCondition> condList = new ArrayList<>();
+        condList.add(EntityCondition.makeCondition("contentIdStart", contentId));
+        condList.add(EntityCondition.makeCondition("caContentAssocTypeId", EntityOperator.LIKE, "IMGSZ_%"));
+        return delegator.findList("ContentAssocDataResourceViewToReq",
+                EntityCondition.makeCondition(condList, EntityOperator.AND), null, null, null, useCache);
+    }
+
     public static Set<String> getResizedImageContentAssocContentIdTo(Delegator delegator, String contentId, boolean useCache) throws GenericEntityException {
         Set<String> contentIdListTo = new LinkedHashSet<>();
         List<GenericValue> contentAssocTo = getResizedImageContentAssocRecords(delegator, contentId, useCache);
@@ -199,5 +209,111 @@ public abstract class ContentImageWorker {
             }
         }
         return map;
+    }
+
+    public static Map<String, Object> getImageContentVariantDetails(GenericValue content, boolean useCache) throws GenericEntityException {
+        if (content == null) {
+            return null;
+        }
+        Delegator delegator = content.getDelegator();
+        String contentId = content.getString("contentId");
+        Map<String, Object> icvd = new LinkedHashMap<>();
+        String mediaProfileName = getContentImageMediaProfileOrDefault(content, useCache);
+        String contentMediaProfileName = content.getString("mediaProfile");
+        icvd.put("mediaProfileName", mediaProfileName);
+        icvd.put("contentMediaProfileName", contentMediaProfileName);
+        ImageProfile mediaProfile = ImageProfile.getImageProfile(delegator, mediaProfileName);
+        if (mediaProfile == null) {
+            Debug.logWarning("getImageContentVariantDetails: Could not find mediaProfile [" + mediaProfileName + "]; configuration changed?", module);
+        } else {
+            icvd.put("mediaProfile", mediaProfile);
+        }
+        if (contentMediaProfileName != null) {
+            ImageProfile contentMediaProfile = ImageProfile.getImageProfile(delegator, contentMediaProfileName);
+            if (mediaProfile == null) {
+                Debug.logWarning("getImageContentVariantDetails: Could not find mediaProfile [" + mediaProfileName + "]; configuration changed?", module);
+            } else {
+                icvd.put("contentMediaProfile", contentMediaProfile);
+            }
+        }
+
+        List<GenericValue> variantRecordList = getResizedImageContentAssocDataResourceRecords(delegator, contentId, useCache);
+        if (UtilValidate.isNotEmpty(variantRecordList)) {
+            icvd.put("variantRecordList", variantRecordList);
+        }
+
+        Map<String, Map<String, Object>> variants = new LinkedHashMap<>();
+        if (UtilValidate.isNotEmpty(variantRecordList)) {
+            for(GenericValue variantRecord : variantRecordList) {
+                String sizeType = variantRecord.getString("caMapKey");
+                Map<String, Object> variantMap = new LinkedHashMap<>();
+                variantMap.put("sizeType", sizeType);
+                variantMap.put("contentAssocTypeId", variantRecord.get("caContentAssocTypeId"));
+                variantMap.put("variantRecord", variantRecord);
+                Long imageWidth = variantRecord.getLong("drScpWidth");
+                if (imageWidth != null) {
+                    variantMap.put("imageWidth", imageWidth.intValue());
+                }
+                Long imageHeight = variantRecord.getLong("drScpHeight");
+                if (imageHeight != null) {
+                    variantMap.put("imageHeight", imageHeight.intValue());
+                }
+                ImageVariantConfig.VariantInfo variantConfig = null;
+                String sizeId = variantRecord.getString("drSizeId");
+                if (sizeId != null) {
+                    GenericValue imageSizeDimension = delegator.findOne("ImageSizeDimension", UtilMisc.toMap("sizeId", sizeId), true);
+                    if (imageSizeDimension != null) {
+                        variantConfig = ImageVariantConfig.VariantInfo.fromImageSizeDimension(imageSizeDimension);
+                    }
+                }
+                if (variantConfig == null && mediaProfile != null) {
+                    variantConfig = mediaProfile.getVariantConfig().getVariant(sizeType);
+                    if (variantConfig == null) {
+                        Debug.logWarning("getImageContentVariantDetails: Could not find sizeType [" + sizeType
+                                + "] in media profile [" + mediaProfile.getName() + "] for variant content [" + variantRecord.get("contentId") + "]; configuration changed?", module);
+                    }
+                }
+                if (variantConfig != null) {
+                    variantMap.put("variantConfig", variantConfig);
+                    variantMap.put("presetWidth", variantConfig.getWidth());
+                    variantMap.put("presetHeight", variantConfig.getHeight());
+                } else {
+                    Debug.logWarning("getImageContentVariantDetails: No variant config found for variant content [" + variantRecord.get("contentId") + "]", module);
+                }
+                // Get the effective preset data used to generate the media, IF available (not always)
+                Map<String, Object> srcPreset = variantRecord.getJsonAsMap("drSrcPresetJson");
+                if (srcPreset != null) {
+                    ImageVariantConfig.VariantInfo srcVariantConfig = ImageVariantConfig.VariantInfo.fromMap(sizeType, srcPreset);
+                    variantMap.put("srcVariantConfig", srcVariantConfig);
+                    variantMap.put("srcPresetWidth", srcVariantConfig.getWidth());
+                    variantMap.put("srcPresetHeight", srcVariantConfig.getHeight());
+                }
+                variants.put(sizeType, variantMap);
+            }
+            icvd.put("variants", variants);
+        }
+        return icvd;
+    }
+
+    public static Map<String, Object> getImageContentVariantDetails(Delegator delegator, String contentId, boolean useCache) throws GenericEntityException {
+        return getImageContentVariantDetails(delegator.findOne("Content", UtilMisc.toMap("contentId", contentId), useCache), useCache);
+    }
+
+    public static Map<String, Object> getImageContentVariantDetailsSafe(GenericValue content, boolean useCache) {
+        try {
+            return getImageContentVariantDetails(content, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+    }
+
+    public static Map<String, Object> getImageContentVariantDetailsSafe(Delegator delegator, String contentId, boolean useCache) {
+        try {
+            return getImageContentVariantDetails(delegator, contentId, useCache);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return null;
+        }
     }
 }

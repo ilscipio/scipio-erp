@@ -22,6 +22,7 @@ context.styles = [
   /* Generic */
     "framework" : "foundation",
     "customSideBar" : false,
+    "render_section_html" : true, //renders wrapping html elements around all sections
     //"printStyleClassesOnPage" : true,
     "disabled" : "disabled",
     "active" : "active",

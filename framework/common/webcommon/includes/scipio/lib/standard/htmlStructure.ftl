@@ -1266,14 +1266,14 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
         <#local class = addClassArgDefault(class, (styles.grid_large!"") + "12")>
         <#-- NOTE: this is same as calling class=("=" + compileClassArg(class)) to override non-essential @cell class defaults -->
         <@cell open=true close=false class=compileClassArg(class) />
-          <#if styles.render_section_html!true>
-          <#-- FIXME: This should not be prerendered like this, should be delegated, due to container heuristic issues and other -->
           <@contentArgRender content=menuTitleContent args=menuTitleContentArgs />
-          <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
-          <#local contentClass = addClassArg(contentClass, "section-screenlet-content")>
-          <#local contentClass = addClassArg(contentClass, contentFlagClasses)>
-          <div<#if contentId?has_content> id="${escapeVal(contentId, 'html')}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${escapeVal(contentStyle, 'html')}"</#if><#rt>
-          <#lt><#if contentAttribs?has_content><@commonElemAttribStr attribs=contentAttribs exclude=contentExcludeAttribs/></#if>>
+          <#if styles.render_section_html!true>
+            <#-- FIXME: This should not be prerendered like this, should be delegated, due to container heuristic issues and other -->
+            <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
+            <#local contentClass = addClassArg(contentClass, "section-screenlet-content")>
+            <#local contentClass = addClassArg(contentClass, contentFlagClasses)>
+            <div<#if contentId?has_content> id="${escapeVal(contentId, 'html')}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${escapeVal(contentStyle, 'html')}"</#if><#rt>
+            <#lt><#if contentAttribs?has_content><@commonElemAttribStr attribs=contentAttribs exclude=contentExcludeAttribs/></#if>>
           </#if>
   </#if>
             <#nested>
@@ -1281,7 +1281,7 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
           <#if styles.render_section_html!true>
           </div>
           </#if>
-          
+
           <#if menuLayoutGeneral == "bottom" || menuLayoutGeneral == "top-bottom">
             <@contentArgRender content=menuContent args=menuContentArgs />
           </#if>

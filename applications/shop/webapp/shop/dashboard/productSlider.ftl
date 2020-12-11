@@ -11,6 +11,7 @@ code package.
             dots: true,
             respondTo : 'window',
             mobileFirst : false,
+            rows:0,
             focusOnSelect: true,
             lazyLoad: 'progressive',
             adaptiveHeight: false,

@@ -22,8 +22,8 @@ public interface ImageVariantSelector {
 
     public interface VariantInfo {
         String getName();
-        int getWidth();
-        int getHeight();
+        Integer getWidth();
+        Integer getHeight();
     }
 
     public interface Factory {

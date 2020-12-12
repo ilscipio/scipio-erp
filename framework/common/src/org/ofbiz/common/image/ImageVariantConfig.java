@@ -445,9 +445,11 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
     }
 
     public static class VariantInfo implements Serializable, ImageVariantSelector.VariantInfo { // TODO: move elsewhere
+        public static final VariantInfo NULL = new VariantInfo(null, null, null, null, null);
+
         private final String name;
-        private final int width;
-        private final int height;
+        private final Integer width;
+        private final Integer height;
         private final String format;
         private final UpscaleMode upscaleMode;
         public enum UpscaleMode { ON, OFF, OMIT }
@@ -469,10 +471,10 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
             this.upscaleMode = upscaleMode;
         }
 
-        protected VariantInfo(String name, Number width, Number height, String format, UpscaleMode upscaleMode) {
+        public VariantInfo(String name, Number width, Number height, String format, UpscaleMode upscaleMode) {
             this.name = name;
-            this.width = width.intValue();
-            this.height = height.intValue();
+            this.width = (width != null) ? width.intValue() : null;
+            this.height = (height != null) ? height.intValue() : null;
             this.format = format;
             this.upscaleMode = upscaleMode;
         }
@@ -499,10 +501,10 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         public String getName() {
             return name;
         }
-        public int getWidth() {
+        public Integer getWidth() {
             return width;
         }
-        public int getHeight() {
+        public Integer getHeight() {
             return height;
         }
 

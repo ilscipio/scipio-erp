@@ -885,6 +885,10 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return (BigDecimal) value;
     }
 
+    public Number getNumber(String name) { // SCIPIO
+        return (Number) get(name);
+    }
+
     /**
      * SCIPIO: Interprets the given field as a JSON object, or null if the field is null/empty.
      * Added 2019-09-24/2.1.0.

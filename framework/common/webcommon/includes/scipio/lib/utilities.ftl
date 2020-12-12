@@ -1874,7 +1874,54 @@ Joins style names in a proper style string of class names.
   <#-- this is imperfect but fast and works fine in most cases, except cases where empty strings in middle, like
     ["asdf", "", "asdf"], adds extra spaces there, but rare -->
   <#return styleNames?join(" ")?trim>
-</#function> 
+</#function>
+
+<#--
+*************
+* getImageVariants
+************
+Returns an instanceof com.ilscipio.scipio.content.image.ImageVariants, a common interface bean-like class used to
+represent file and database-stored images.
+
+Instances:
+* com.ilscipio.scipio.content.image.ContentImageVariants (contentId)
+* com.ilscipio.scipio.product.image.ProductImageVariants (productId + productContentTypeId)
+
+It is highly recommended to write generic code using the public ImageVariants bean methods, but it's also possible
+to access public methods on the implementations.
+
+This is similar to doing:
+
+    <#if productId?has_content && productContentTypeId?has_content>
+      <#local imageVariants = Static["com.ilscipio.scipio.product.image.ProductImageVariants"].from(productId, productContentTypeId, delegator, dispatcher, locale, useUtilCache)!>
+    <#elseif contentId?has_content>
+      <#local imageVariants = Static["com.ilscipio.scipio.content.image.ContentImageVariants"].from(contentId, delegator, dispatcher, locale, useUtilCache)!>
+    </#if>
+
+NOTE: Parameters are passed as an args hash, but a shorthand version is also supported:
+
+  * Usage Examples *
+    <#assign imageVariants = getImageVariants({"contentId":"10000"})!>
+    <#assign imageVariants = getImageVariants({"productId":"PH-1000", "productContentTypeId":"ORIGINAL_IMAGE_URL", "useCache":false})!>
+    <#assign imageVariants = getImageVariants("content", "10000")!>
+    <#assign imageVariants = getImageVariants("product", "PH-1000", "ORIGINAL_IMAGE_URL", false)!>
+
+  * Parameters *
+    type                    = ((content|product|) Type, only needed as first argument if not passing args hash
+    productId               = ((string)) Product ID, for product images
+    productContentTypeId    = ((string)) Product content type ID, for product images
+                              Normally this is one of: ORIGINAL_IMAGE_URL, ADDITIONAL_IMAGE1, ADDITIONAL_IMAGE2, ADDITIONAL_IMAGE3, ADDITIONAL_IMAGE4...
+    contentId               = ((string)) Content ID, for content images
+    useCache                = ((boolean, default: true)) Whether to use the dedicated image variants caches (true) or re-load from entities (false)
+                              In shorthand format this is the parameter following the IDs.
+
+  * Return Value *
+    instance of com.ilscipio.scipio.content.image.ImageVariants
+-->
+<#-- IMPLEMENTED AS TRANSFORM
+<#function getImageVariants args>
+</#function>
+-->
 
 <#-- 
 *************

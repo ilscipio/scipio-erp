@@ -1,0 +1,506 @@
+package com.ilscipio.scipio.product.image;
+
+import com.ilscipio.scipio.content.image.ImageVariants;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.common.image.ImageVariantConfig;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelUtil;
+import org.ofbiz.product.product.ProductWorker;
+import org.ofbiz.service.LocalDispatcher;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
+/**
+ * Product image and variants accessor and dedicated cache (SCIPIO).
+ */
+public class ProductImageVariants extends ImageVariants {
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    public static final ProductImageVariants NULL = new ProductImageVariants();
+    private static final UtilCache<String, ProductImageVariants> CACHE = UtilCache.createUtilCache("product.image.variants", true);
+
+    protected final GenericValue product;
+    protected final String productContentTypeId;
+    protected final GenericValue productContentView;
+    protected final ProductVariant original;
+    protected Map<String, ProductVariant> variantMap;
+    protected List<ProductVariant> variantList;
+    protected List<GenericValue> variantRecords;
+
+    protected ProductImageVariants(GenericValue product, String productContentTypeId, GenericValue productContentView, Delegator delegator, LocalDispatcher dispatcher, Locale locale, boolean useEntityCache) {
+        super(delegator, dispatcher, locale, useEntityCache);
+        this.product = product;
+        this.productContentTypeId = productContentTypeId;
+        this.productContentView = productContentView;
+        if (productContentView != null) {
+            Long imageWidth = productContentView.getLong("drScpWidth");
+            Long imageHeight = productContentView.getLong("drScpHeight");
+            ImageVariantConfig.VariantInfo variantInfo = new ImageVariantConfig.VariantInfo("original",
+                    (imageWidth != null) ? imageWidth : -1, (imageHeight != null) ? imageHeight : -1, null, null);
+            this.original = new ProductVariant(variantInfo, productContentView);
+        } else {
+            // FIXME: CANNOT GET ORIGINAL IMAGE DIMENSIONS YET
+            ImageVariantConfig.VariantInfo variantInfo = new ImageVariantConfig.VariantInfo("original",
+                    -1, -1, null, null);
+            this.original = new InlineProductVariant(variantInfo, productContentTypeId);
+        }
+    }
+
+    protected ProductImageVariants() {
+        this.product = null;
+        this.productContentTypeId = null;
+        this.productContentView = null;
+        this.original = null;
+    }
+
+    /** Main factory method with util cache support. */
+    public static ProductImageVariants from(String productId, String productContentTypeId, Delegator delegator, LocalDispatcher dispatcher, Locale locale, boolean useUtilCache)  {
+        if (UtilValidate.isEmpty(productId) || UtilValidate.isEmpty(productContentTypeId)) {
+            return null;
+        }
+        ProductImageVariants civ;
+        String cacheKey = null;
+        if (useUtilCache) {
+            cacheKey = productId + "::" + productContentTypeId + "::" + delegator.getDelegatorName() + "::" + locale;
+            civ = CACHE.get(cacheKey);
+            if (civ != null) {
+                return civ != NULL ? civ : null;
+            }
+        }
+        civ = from(productId, productContentTypeId, delegator, dispatcher, locale);
+        if (useUtilCache) {
+            CACHE.put(cacheKey, civ != null ? civ : NULL);
+        }
+        //if (civ == null) {
+        //    Debug.logWarning("Could not load product image records for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]", module);
+        //}
+        return civ;
+    }
+
+    /** Uncached factory method. */
+    public static ProductImageVariants from(String productId, String productContentTypeId, Delegator delegator, LocalDispatcher dispatcher, Locale locale) {
+        GenericValue product;
+        GenericValue productContentView;
+        try {
+            product = delegator.findOne("Product", UtilMisc.toMap("productId", productId), false);
+            if (product == null) {
+                Debug.logWarning("Could not find product [" + productId + "]", module);
+                return null;
+            }
+            productContentView = delegator.from("ProductContentAndDataResource").where("productId", productId, "productContentTypeId", productContentTypeId)
+                    .orderBy("-fromDate").filterByDate().queryFirst();
+            if (productContentView == null && (Boolean.TRUE.equals(product.getBoolean("isVariant")))) {
+                GenericValue parent = ProductWorker.getParentProduct(productId, delegator, false);
+                if (parent != null) {
+                    productContentView = delegator.from("ProductContentAndDataResource").where("productId", parent.get("productId"),
+                            "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().queryFirst();
+                }
+            }
+        } catch (GeneralException e) {
+            Debug.logError(e, module);
+            return null;
+        }
+        if (productContentView == null && !"ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
+            return null;
+        }
+        ProductImageVariants imageVariants = new ProductImageVariants(product, productContentTypeId, productContentView, delegator, dispatcher, locale, false);
+        String originalImageUrl = imageVariants.getOriginal().getBaseImageUrl();
+        if (UtilValidate.isNotEmpty(originalImageUrl)) {
+            // See also ProductContentWrapper.getImageUrl
+            ProductImageWorker.ensureProductImage(dispatcher.getDispatchContext(), locale, product, productContentTypeId, originalImageUrl, true, true);
+        }
+        return imageVariants;
+    }
+
+    @Override
+    public String getType() {
+        return "product";
+    }
+
+    @Override
+    public String getContentId() {
+        return getOriginal().getContentId();
+    }
+
+    @Override
+    public String getProfileName() {
+        String profileName = getExplicitProfileName();
+        if (profileName != null) {
+            return profileName;
+        }
+        // FIXME: hardcoded default, should be based on productContentTypeId, see ContentImageWorker.getContentImageMediaProfileOrDefault
+        return "IMAGE_PRODUCT";
+    }
+
+    @Override
+    public String getExplicitProfileName() {
+        GenericValue productContentView = getProductContentView();
+        if (productContentView != null) {
+            return productContentView.getString("mediaProfile");
+        } else {
+            return getProduct().getString("imageProfile");
+        }
+    }
+
+    @Override
+    public ProductVariant getOriginal() {
+        return original;
+    }
+
+    public GenericValue getRecord() {
+        return getOriginal().getRecord();
+    }
+
+    public GenericValue getProduct() {
+        return product;
+    }
+
+    public String getProductId() {
+        return product.getString("productId");
+    }
+
+    public GenericValue getProductContentView() {
+        return productContentView;
+    }
+
+    public String getProductContentTypeId() {
+        return productContentTypeId;
+    }
+
+    @Override
+    public Map<String, ProductVariant> getVariantMap() {
+        Map<String, ProductVariant> variants = this.variantMap;
+        if (variants == null) {
+            variants = new LinkedHashMap<>();
+            variants = makeVariants(variants);
+            variants = variants.isEmpty() ? Collections.emptyMap() : Collections.unmodifiableMap(variants);
+            this.variantMap = variants;
+        }
+        return variants;
+    }
+
+    @Override
+    public List<ProductVariant> getVariantList() {
+        List<ProductVariant> variantList = this.variantList;
+        if (variantList == null) {
+            Map<String, ProductVariant> variants = getVariantMap();
+            variantList = variants.isEmpty() ? Collections.emptyList() : Collections.unmodifiableList(new ArrayList<>(variants.values()));
+            this.variantList = variantList;
+        }
+        return variantList;
+    }
+
+    protected Map<String, ProductVariant> makeVariants(Map<String, ProductVariant> variants) {
+        Map<String, GenericValue> sizeTypeRecordMap;
+        try {
+            sizeTypeRecordMap = ProductImageWorker.getVariantProductContentDataResourceRecordsBySizeType(getDelegator(),
+                    getProductId(), getProductContentTypeId(), UtilDateTime.nowTimestamp(), false, isUseEntityCache());
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            sizeTypeRecordMap = Collections.emptyMap(); // this can sometimes proceed, sometimes not
+        }
+        for(ImageVariantConfig.VariantInfo config : getVariantConfig().getVariantList()) {
+            String sizeType = config.getName();
+            ProductVariant variant;
+            GenericValue variantRecord = sizeTypeRecordMap.get(sizeType);
+            if (variantRecord != null) {
+                variant = makeVariant(config, variantRecord);
+            } else {
+                // TODO: REVIEW: NOT ALL SIZE TYPES POSSESS ProductContent records, and may not be on Product either,
+                //  so we have to infer from Product fields and then filenames...
+                String pctId = ProductImageWorker.getImageSizeTypeProductContentTypeId(getProductContentTypeId(), sizeType);
+                variant = makeInlineVariant(config, pctId);
+            }
+            variants.put(config.getName(), variant);
+        }
+        return variants;
+    }
+
+    protected ProductVariant makeVariant(ImageVariantConfig.VariantInfo config, GenericValue record) {
+        return new ProductVariant(config, record);
+    }
+
+    public class ProductVariant extends Variant {
+        protected final GenericValue record;
+        protected String baseImageUrl;
+        protected String mimeTypeId;
+
+        protected ProductVariant(ImageVariantConfig.VariantInfo config, GenericValue record) {
+            super(config);
+            this.record = record;
+        }
+
+        @Override
+        public String getContentId() {
+            return getRecord().getString("contentId");
+        }
+
+        @Override
+        public String getAssocId() {
+            return getRecord().getString("productContentTypeId");
+        }
+
+        @Override
+        public GenericValue getRecord() {
+            return record;
+        }
+
+        @Override
+        public String getImageUrl(Map<String, Object> context, Map<String, Object> args) {
+            // FIXME: INCOMPLETE AND MISSING ENCODING
+            String uri = getBaseImageUrl();
+            if (uri == null) {
+                return null;
+            }
+            return appendUrlParams(uri, UtilGenerics.cast(args.get("params")));
+        }
+
+        @Override
+        public String getBaseImageUrl() {
+            String baseImageUrl = this.baseImageUrl;
+            if (baseImageUrl == null) {
+                baseImageUrl = readBaseImageUrl();
+                if (baseImageUrl == null) {
+                    Debug.logWarning("Could not determine an imageUrl for product [" + getProductId()
+                            + "] productContentTypeId [" + ProductImageVariants.this.getProductContentTypeId()
+                            + "] variant [" + getName () + "]", module);
+                    baseImageUrl = "";
+                }
+                this.baseImageUrl = baseImageUrl;
+            }
+            return baseImageUrl.isEmpty() ? null : baseImageUrl;
+        }
+
+        protected String readBaseImageUrl() {
+            return getStoredImageUrl();
+        }
+
+        public String getStoredImageUrl() {
+            return getRecordImageUrl();
+        }
+
+        public String getRecordImageUrl() {
+            String dataResourceTypeId = getRecord().getString("drDataResourceTypeId");
+            if ("SHORT_TEXT".equals(dataResourceTypeId)) {
+                return getRecord().getString("drObjectInfo");
+            } else if ("ELECTRONIC_TEXT".equals(dataResourceTypeId)) {
+                String dataResourceId = getRecord().getString("dataResourceId");
+                GenericValue elecText = null;
+                try {
+                    elecText = getDelegator().findOne("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId), isUseEntityCache());
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+                if (elecText != null) {
+                    return elecText.getString("textData");
+                }
+            }
+            return null;
+        }
+
+        /** Gets the Product xxxImageUrl field: originalImageUrl, detailImageUrl, largeImageUrl, mediumImageUrl, smallImageUrl, ... */
+        public String getFieldImageUrl() {
+            // Based on ProductContentWrapper
+            String candidateFieldName = ModelUtil.dbNameToVarName(getAssocId());
+            ModelEntity productModel = getDelegator().getModelEntity("Product");
+            if (productModel.isField(candidateFieldName)) {
+                String candidateValue = getProduct().getString(candidateFieldName);
+                if (UtilValidate.isNotEmpty(candidateValue)) {
+                    return candidateValue;
+                } else if ("Y".equals(getProduct().getString("isVariant"))) {
+                    GenericValue parent = ProductWorker.getParentProduct(getProductId(), getDelegator(), isUseEntityCache());
+                    if (parent != null) {
+                        candidateValue = parent.getString(candidateFieldName);
+                        if (UtilValidate.isNotEmpty(candidateValue)) {
+                            return candidateValue;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Attempts to heuristically determine an image url from one of the other size image urls.
+         * Original image url is consulted last because sometimes it was uploaded at a different location than its variants.
+         */
+        public String getSubstitutedImageUrl() {
+            for(ProductVariant variant : getVariantList()) {
+                if (variant != this && !"original".equals(variant.getName())) { // NOTE: original should already be excluded, just in case
+                    String imageUrl = substituteVariantInImageUrl(variant.getStoredImageUrl());
+                    if (imageUrl != null) {
+                        return imageUrl;
+                    }
+                }
+            }
+            return substituteVariantInImageUrl(getOriginal().getStoredImageUrl());
+        }
+
+        protected String substituteVariantInImageUrl(String imageUrl) {
+            if (UtilValidate.isEmpty(imageUrl)) {
+                return null;
+            }
+            int lastDot = imageUrl.lastIndexOf('.');
+            int lastSlash = imageUrl.lastIndexOf('/');
+            if (lastDot > 0 && lastSlash >= 0 && lastDot < (imageUrl.length() - 1) && lastSlash < (lastDot - 1)) {
+                String path = imageUrl.substring(0, lastSlash + 1);
+                String ext = imageUrl.substring(lastDot + 1);
+                if (UtilValidate.isNotEmpty(getConfig().getFormat())) {
+                    ext = getConfig().getFormat();
+                }
+                return path + getName().toLowerCase() + "." + ext; // NOTE: should already be lowercase
+            } else {
+                Debug.logWarning("Invalid url for image for product [" + getProductId() + "] productContentTypeId ["
+                        + ProductImageVariants.this.getProductContentTypeId() + "] variant [" + getName()
+                        + "]; bad slash or extension separator: " + imageUrl, module);
+            }
+            return null;
+        }
+
+        @Override
+        public Integer getImageWidth() {
+            Number width = getRecord().getNumber("drScpWidth");
+            return (width != null) ? width.intValue() : null;
+        }
+
+        @Override
+        public Integer getImageHeight() {
+            Number height = getRecord().getNumber("drScpHeight");
+            return (height != null) ? height.intValue() : null;
+        }
+
+        @Override
+        public String getMimeTypeId() {
+            String mimeTypeId = this.mimeTypeId;
+            if (mimeTypeId == null) {
+                mimeTypeId = readMimeTypeId();
+                if (mimeTypeId == null) {
+                    mimeTypeId = "";
+                }
+                this.mimeTypeId = mimeTypeId;
+            }
+            return mimeTypeId.isEmpty() ? null : mimeTypeId;
+        }
+
+        protected String readMimeTypeId() {
+            String mimeTypeId = getExplicitMimeTypeId();
+            if (mimeTypeId == null) {
+                mimeTypeId = getMimeTypeIdFromExtension();
+            }
+            return mimeTypeId;
+        }
+
+        @Override
+        public String getExplicitMimeTypeId() {
+            return getRecord().getString("drMimeTypeId");
+        }
+
+        public String getMimeTypeIdFromExtension() {
+            return getMimeTypeIdFromExtension(getBaseImageUrl());
+        }
+
+        protected String getMimeTypeIdFromExtension(String path) {
+            if (UtilValidate.isEmpty(path)) {
+                Debug.logWarning("Could not determine mimeTypeId for product [" + getProductId() + "] productContentTypeId ["
+                        + ProductImageVariants.this.getProductContentTypeId() + "] variant [" + getName() + "]; no image path", module);
+                return null;
+            }
+            int lastDot = path.lastIndexOf('.');
+            if (lastDot < 0 || lastDot >= (path.length() - 1)) {
+                Debug.logWarning("Could not determine mimeTypeId for product [" + getProductId() + "] productContentTypeId ["
+                        + ProductImageVariants.this.getProductContentTypeId() + "] variant [" + getName() + "]; no extension in path [" + path + "]", module);
+                return null;
+            }
+            String ext = path.substring(lastDot + 1);
+            GenericValue fileExt = getDelegator().from("FileExtension").where("fileExtensionId", ext).cache().queryOneSafe();
+            if (fileExt == null) {
+                Debug.logWarning("Could not determine mimeTypeId for product [" + getProductId() + "] productContentTypeId ["
+                        + ProductImageVariants.this.getProductContentTypeId() + "] variant [" + getName() + "]; unrecognized file extension [" + path + "]", module);
+                return null;
+            }
+            return fileExt.getString("mimeTypeId");
+        }
+
+    }
+
+    protected InlineProductVariant makeInlineVariant(ImageVariantConfig.VariantInfo config, String productContentTypeId) {
+        return new InlineProductVariant(config, productContentTypeId);
+    }
+
+    public class InlineProductVariant extends ProductVariant {
+        protected final String productContentTypeId;
+
+        protected InlineProductVariant(ImageVariantConfig.VariantInfo config, String productContentTypeId) {
+            super(config, null);
+            this.productContentTypeId = productContentTypeId;
+        }
+
+        @Override
+        public String getContentId() {
+            return null;
+        }
+
+        @Override
+        public String getAssocId() {
+            return productContentTypeId;
+        }
+
+        @Override
+        public GenericValue getRecord() {
+            return getProduct();
+        }
+
+        @Override
+        protected String readBaseImageUrl() {
+            String baseImageUrl = getStoredImageUrl();
+            if (baseImageUrl == null) {
+                // heuristic
+                baseImageUrl = getSubstitutedImageUrl();
+            }
+            return baseImageUrl;
+        }
+
+        @Override
+        public String getStoredImageUrl() {
+            return getFieldImageUrl();
+        }
+
+        @Override
+        public String getRecordImageUrl() {
+            return null;
+        }
+
+        @Override
+        public Integer getImageWidth() {
+            return null; // TODO
+        }
+
+        @Override
+        public Integer getImageHeight() {
+            return null; // TODO
+        }
+
+        @Override
+        public String readMimeTypeId() {
+            return getMimeTypeIdFromExtension();
+        }
+
+        @Override
+        public String getExplicitMimeTypeId() {
+            return null;
+        }
+    }
+}

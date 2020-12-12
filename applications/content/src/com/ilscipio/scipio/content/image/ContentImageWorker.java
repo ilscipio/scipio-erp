@@ -107,6 +107,7 @@ public abstract class ContentImageWorker {
         // Infer default
         if (content.getDelegator().from("ProductContent")
                 .where("contentId", content.get("contentId")).cache(useCache).queryCount() > 0) {
+            // FIXME: this should be based on productContentTypeId
             return "IMAGE_PRODUCT";
         }
         String contentTypeId = content.getString("contentTypeId");
@@ -211,6 +212,7 @@ public abstract class ContentImageWorker {
         return map;
     }
 
+    @Deprecated
     public static Map<String, Object> getImageContentVariantDetails(GenericValue content, boolean useCache) throws GenericEntityException {
         if (content == null) {
             return null;
@@ -295,10 +297,12 @@ public abstract class ContentImageWorker {
         return icvd;
     }
 
+    @Deprecated
     public static Map<String, Object> getImageContentVariantDetails(Delegator delegator, String contentId, boolean useCache) throws GenericEntityException {
         return getImageContentVariantDetails(delegator.findOne("Content", UtilMisc.toMap("contentId", contentId), useCache), useCache);
     }
 
+    @Deprecated
     public static Map<String, Object> getImageContentVariantDetailsSafe(GenericValue content, boolean useCache) {
         try {
             return getImageContentVariantDetails(content, useCache);
@@ -308,6 +312,7 @@ public abstract class ContentImageWorker {
         }
     }
 
+    @Deprecated
     public static Map<String, Object> getImageContentVariantDetailsSafe(Delegator delegator, String contentId, boolean useCache) {
         try {
             return getImageContentVariantDetails(delegator, contentId, useCache);

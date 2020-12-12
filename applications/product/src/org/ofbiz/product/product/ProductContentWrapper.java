@@ -272,6 +272,7 @@ public class ProductContentWrapper extends CommonContentWrapper {
     public String getImageUrl(String productContentTypeId) {
         String imageUrl = get(productContentTypeId);
         if (UtilValidate.isNotEmpty(imageUrl)) {
+            // See also ProductImageVariants.from
             ProductImageWorker.ensureProductImage(getDctx(), getLocale(), getProduct(), productContentTypeId, imageUrl, true, true);
         }
         return imageUrl;

@@ -114,7 +114,7 @@ Chart.pluginService.register({
           <#assign reasonId = obj["returnReasonId"]/>
           <#assign returnReasonDescr = returnReasonMap[reasonId] />
           <#assign retTotal=retTotal+(obj["totalQuantity"])!0/>
-          <@chartdata value=(obj["totalQuantity"]) title=returnReasonDescr/>
+          <@chartdata value=(obj["totalQuantity"]!0) title=returnReasonDescr/>
         </#list>
     </#if>
 

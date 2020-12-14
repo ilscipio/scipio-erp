@@ -1353,7 +1353,7 @@ It can be used in the nested content initialization, but there the variable "cha
                             chartData.pieFillColor4,
                             chartData.pieFillColor5,
                             chartData.pieFillColor6
-                        ]
+                        ],
                       </#if>
                       data: []
                     }           
@@ -1377,7 +1377,15 @@ It can be used in the nested content initialization, but there the variable "cha
             <#-- escapeVal unsafe outside quotes and other issues
             ${escapeVal(id, 'js')} = chart; -->
             ${nestedContent}
-            chart.update();
+
+            // SCIPIO: 20-12-04: Don't really like it but workaround for now
+            if (config.data.datasets[0].data.length > 0) {
+              try {
+                chart.update();
+              } catch (error) {
+                console.error("Chart Update Error", error);
+              }
+            }
         });
     </@script>
   </#if>
@@ -1452,9 +1460,12 @@ to be a Javascript-valid number), which may not be secure or portable, depending
       <li data-value="${escapeVal(value, 'html')}">${escapeVal(title, 'htmlmarkup')}</li>
     </#if>
   <#else>
-      config.data.labels.push('${escapeVal(title, 'js')}');
-      <#if value?has_content>config.data.datasets[0].data.push(${escapeVal(value, 'js')});</#if>
-      <#if value2?has_content>config.data.datasets[1].data.push(${escapeVal(value2, 'js')});</#if>
+      ${Debug.log("title =============> " + title)}
+      config.data.labels.push('${escapeVal(title!"NA", 'js')}');
+      var chartValue1 = <#if value?has_content>${escapeVal(value, 'js')}<#else>0</#if>;
+      var chartValue2 = <#if value2?has_content>${escapeVal(value2, 'js')}<#else>0</#if>;
+      config.data.datasets[0].data.push(chartValue1);
+      config.data.datasets[1].data.push(chartValue2);
   </#if>
 </#macro>
 

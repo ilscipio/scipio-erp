@@ -3038,6 +3038,31 @@ code package.
     <extend-entity entity-name="Product"><!-- SCIPIO -->
       <field name="imageProfile" type="id"><description>Name of a media profile for the main product image, either ImageSizePreset.presetId or media profile name from mediaprofiles.properties, defaults to IMAGE_PRODUCT (SCIPIO)</description></field>
     </extend-entity>
+    <!-- SCIPIO: Product inline image equivalents of DataResource fields scpWidth, scpHeight, srcPresetJson, ... -->
+    <entity entity-name="ProductMediaDetails"
+            package-name="org.ofbiz.product.product"
+            title="Inline Product Media Details">
+        <field name="productId" type="id-ne"></field>
+        <field name="smallImageWidth" type="numeric"></field>
+        <field name="smallImageHeight" type="numeric"></field>
+        <field name="smallImagePresetJson" type="very-long"></field>
+        <field name="mediumImageWidth" type="numeric"></field>
+        <field name="mediumImageHeight" type="numeric"></field>
+        <field name="mediumImagePresetJson" type="very-long"></field>
+        <field name="largeImageWidth" type="numeric"></field>
+        <field name="largeImageHeight" type="numeric"></field>
+        <field name="largeImagePresetJson" type="very-long"></field>
+        <field name="detailImageWidth" type="numeric"></field>
+        <field name="detailImageHeight" type="numeric"></field>
+        <field name="detailImagePresetJson" type="very-long"></field>
+        <field name="originalImageWidth" type="numeric"></field>
+        <field name="originalImageHeight" type="numeric"></field>
+        <field name="originalImagePresetJson" type="very-long"></field>
+        <prim-key field="productId"/>
+        <relation type="one" fk-name="PROD_TYPE" rel-entity-name="Product">
+            <key-map field-name="productId"/>
+        </relation>
+    </entity>
     <entity entity-name="ProductAssoc"
             package-name="org.ofbiz.product.product"
             title="Product Association">

@@ -40,6 +40,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * SCIPIO: New product image services, alternatives to {@link org.ofbiz.product.imagemanagement.ImageManagementServices}
@@ -202,7 +204,7 @@ public abstract class ProductImageServices {
         int errorCount = ((int) stats.get("errorCount"));
         int failCount = ((int) stats.get("failCount"));
 
-        String msg = "Rescaled " + ((int) stats.get("successCount")) + " images for product [" + productId + "]" + " (stats: " + stats + ")";
+        String msg = "Rescaled " + successCount + " images for product [" + productId + "]" + " (stats: " + stats + ")";
         if (errorCount > 0 || failCount > 0) {
             if (nonFatal) {
                 result = ServiceUtil.returnFailure(msg);
@@ -450,13 +452,14 @@ public abstract class ProductImageServices {
                 Debug.logError("productImageRescaleImage: " + errMsg, module);
             }
 
-            Map<String, String> imageUrlMap = UtilGenerics.cast(resizeResult.get("imageUrlMap"));
-            if (UtilValidate.isNotEmpty(imageUrlMap)) {
+            Map<String, Map<String, Object>> imageInfoMap = UtilGenerics.cast(resizeResult.get("imageInfoMap"));
+            if (UtilValidate.isNotEmpty(imageInfoMap)) {
                 int imageNum = ProductImageWorker.getImageProductContentTypeNum(productContentTypeId);
                 Timestamp fromDate = UtilDateTime.nowTimestamp();
-                for(Map.Entry<String, String> entry : imageUrlMap.entrySet()) {
+                for(Map.Entry<String, Map<String, Object>> entry : imageInfoMap.entrySet()) {
                     String sizeType = entry.getKey();
-                    String url = entry.getValue();
+                    Map<String, Object> sizeTypeInfo = entry.getValue();
+                    String url = (String) sizeTypeInfo.get("url");
                     GenericValue pct = ProductImageWorker.getImageSizeTypeProductContentType(ctx.delegator(), imageNum, sizeType);
                     if (pct == null) {
                         if (Debug.verboseOn()) {
@@ -465,11 +468,11 @@ public abstract class ProductImageServices {
                         }
                         continue;
                     }
-                    if (url.startsWith(".") || url.contains("/.")) { // SPECIAL: detect bug (missing filename)
+                    if (url != null && url.startsWith(".") || url.contains("/.")) { // SPECIAL: detect bug (missing filename)
                         throw new IllegalStateException("Internal error: invalid url [" + url + "] for sizeType [" + sizeType + "], not updating");
                     }
                     Map<String, Object> res = updateProductContentImageUrl(ctx, product, pct.getString("productContentTypeId"), url, productContentTypeId, fromDate,
-                            ctx.attr("createSizeTypeContent"));
+                            ctx.attr("createSizeTypeContent"), sizeTypeInfo);
                     if (ServiceUtil.isError(res)) {
                         return UtilMisc.put(new HashMap<>(res), "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount);
                     }
@@ -486,7 +489,8 @@ public abstract class ProductImageServices {
 
     /** Attempts to preserve previous data setup, best-effort. */
     public static Map<String, Object> updateProductContentImageUrl(ServiceContext ctx, GenericValue product, String productContentTypeId, String imageUrl,
-                                                                   String origProductContentTypeId, Timestamp fromDate, Boolean createSizeTypeContent) {
+                                                                   String origProductContentTypeId, Timestamp fromDate, Boolean createSizeTypeContent,
+                                                                   Map<String, Object> sizeTypeInfo) {
         GenericValue productContent;
         try {
             productContent = ctx.delegator().from("ProductContent").where("productId", product.get("productId"),
@@ -510,33 +514,72 @@ public abstract class ProductImageServices {
                     Debug.logError("updateProductContentImageUrl: " + errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
-                if ("SHORT_TEXT".equals(dataResource.get("dataResourceTypeId"))) {
-                    String prevImageUrl = dataResource.getString("objectInfo");
-                    if (!imageUrl.equals(prevImageUrl)) {
-                        dataResource.set("objectInfo", imageUrl);
-                        dataResource.store();
-                        Debug.logInfo("updateProductContentImageUrl: Updated DataResource imageUrl from [" + prevImageUrl
-                                + "] to [" + imageUrl + "] for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
+
+                boolean drModified = false;
+                Integer width = (Integer) sizeTypeInfo.get("width");
+                Integer height = (Integer)  sizeTypeInfo.get("height");
+                if (width != null) {
+                    Long prevWidth = dataResource.getLong("scpWidth");
+                    if (prevWidth == null || prevWidth != width.longValue()) {
+                        dataResource.set("scpWidth", width.longValue());
+                        drModified = true;
                     }
-                } else if ("ELECTRONIC_TEXT".equals(dataResource.get("dataResourceTypeId"))) {
-                    GenericValue elecText = ctx.delegator().from("ElectronicText").where("dataResourceId", content.get("dataResourceId")).queryOne();
-                    if (elecText == null) {
-                        String msg = "Could not find image ElectronicText for product [" + product.get("productId") + "] productContentTypeId [" +
-                                productContentTypeId + "], unexpected ProductContent format";
-                        Debug.logWarning("updateProductContentImageUrl: " + msg, module);
-                        return ServiceUtil.returnFailure(msg);
+                }
+                if (height != null) {
+                    Long prevHeight = dataResource.getLong("scpHeight");
+                    if (prevHeight == null || prevHeight != height.longValue()) {
+                        dataResource.set("scpHeight", height.longValue());
+                        drModified = true;
                     }
-                    String prevImageUrl = elecText.getString("textData");
-                    if (!imageUrl.equals(prevImageUrl)) {
-                        elecText.set("textData", imageUrl);
-                        elecText.store();
-                        Debug.logInfo("updateProductContentImageUrl: Updated ElectronicText imageUrl from [" + prevImageUrl
-                                + "] to [" + imageUrl + "] for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
+                }
+                if (!"ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
+                    ImageVariantConfig.VariantInfo variantInfo = (ImageVariantConfig.VariantInfo) sizeTypeInfo.get("variantInfo");
+                    if (variantInfo != null) {
+                        Map<String, Object> prevJsonMap = dataResource.getJsonAsMapOrEmpty("srcPresetJson");
+                        Map<String, Object> newJsonMap = variantInfo.configToMap();
+                        if (!new TreeMap<>(newJsonMap).equals(new TreeMap<>(prevJsonMap))) {
+                            dataResource.setJson("srcPresetJson", newJsonMap);
+                            drModified = true;
+                        }
                     }
-                } else {
-                    String errMsg = "Invalid image DataResource record for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]";
-                    Debug.logError("updateProductContentImageUrl: " + errMsg, module);
-                    return ServiceUtil.returnError(errMsg);
+                }
+                if (imageUrl != null) {
+                    if ("SHORT_TEXT".equals(dataResource.get("dataResourceTypeId"))) {
+                        String prevImageUrl = dataResource.getString("objectInfo");
+                        if (!imageUrl.equals(prevImageUrl)) {
+                            dataResource.set("objectInfo", imageUrl);
+                            dataResource.store();
+                            drModified = false;
+                            Debug.logInfo("updateProductContentImageUrl: Updated DataResource imageUrl from [" + prevImageUrl
+                                    + "] to [" + imageUrl + "] for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
+                        }
+                    } else if ("ELECTRONIC_TEXT".equals(dataResource.get("dataResourceTypeId"))) {
+                        if (drModified) {
+                            dataResource.store();
+                            drModified = false;
+                        }
+                        GenericValue elecText = ctx.delegator().from("ElectronicText").where("dataResourceId", content.get("dataResourceId")).queryOne();
+                        if (elecText == null) {
+                            String msg = "Could not find image ElectronicText for product [" + product.get("productId") + "] productContentTypeId [" +
+                                    productContentTypeId + "], unexpected ProductContent format";
+                            Debug.logWarning("updateProductContentImageUrl: " + msg, module);
+                            return ServiceUtil.returnFailure(msg);
+                        }
+                        String prevImageUrl = elecText.getString("textData");
+                        if (!imageUrl.equals(prevImageUrl)) {
+                            elecText.set("textData", imageUrl);
+                            elecText.store();
+                            Debug.logInfo("updateProductContentImageUrl: Updated ElectronicText imageUrl from [" + prevImageUrl
+                                    + "] to [" + imageUrl + "] for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
+                        }
+                    } else {
+                        String errMsg = "Invalid image DataResource record for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]";
+                        Debug.logError("updateProductContentImageUrl: " + errMsg, module);
+                        return ServiceUtil.returnError(errMsg);
+                    }
+                }
+                if (drModified) {
+                    dataResource.store();
                 }
             } else {
                 // Check field
@@ -544,14 +587,61 @@ public abstract class ProductImageServices {
                 ModelEntity productModel = ctx.delegator().getModelEntity("Product");
                 if (productModel.isField(productFieldName)) {
                     String prevImageUrl = product.getString(productFieldName);
-                    if (!imageUrl.equals(prevImageUrl)) {
+                    if (imageUrl != null && !imageUrl.equals(prevImageUrl)) {
                         product.set(productFieldName, imageUrl);
-                        Debug.logInfo("updateProductContentImageUrl: updating Product entity [" + product.get("productId") + "] productFieldName [" + productFieldName + "] imageUrl [" + imageUrl + "]", module);
                         product.store();
                         Debug.logInfo("updateProductContentImageUrl: Updated Product field [" + productFieldName + "] imageUrl from [" + prevImageUrl
                                 + "] to [" + imageUrl + "] for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
                     }
-                } else if (Boolean.TRUE.equals(createSizeTypeContent)) {
+
+                    if (productFieldName.endsWith("Url")) {
+                        String fieldPrefix = productFieldName.substring(0, productFieldName.length() - "Url".length());
+                        GenericValue details = ctx.delegator().findOne("ProductMediaDetails",
+                                UtilMisc.toMap("productId", product.get("productId")), false);
+                        boolean detailsCreated = (details == null);
+                        if (detailsCreated) {
+                            details = ctx.delegator().makeValue("ProductMediaDetails", "productId", product.get("productId"));
+                        }
+                        boolean detailsModified = detailsCreated;
+
+                        Integer width = (Integer) sizeTypeInfo.get("width");
+                        Integer height = (Integer)  sizeTypeInfo.get("height");
+                        if (width != null) {
+                            Long prevWidth = details.getLong(fieldPrefix + "Width");
+                            if (prevWidth == null || width.longValue() != prevWidth) {
+                                details.put(fieldPrefix + "Width", width.longValue());
+                                detailsModified = true;
+                            }
+                        }
+                        if (height != null) {
+                            Long prevHeight = details.getLong(fieldPrefix + "Height");
+                            if (prevHeight == null || height.longValue() != prevHeight) {
+                                details.put(fieldPrefix + "Height", height.longValue());
+                                detailsModified = true;
+                            }
+                        }
+                        if (!"ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
+                            ImageVariantConfig.VariantInfo variantInfo = (ImageVariantConfig.VariantInfo) sizeTypeInfo.get("variantInfo");
+                            if (variantInfo != null) {
+                                Map<String, Object> prevJsonMap = details.getJsonAsMapOrEmpty(fieldPrefix + "PresetJson");
+                                Map<String, Object> newJsonMap = variantInfo.configToMap();
+                                if (!new TreeMap<>(newJsonMap).equals(new TreeMap<>(prevJsonMap))) {
+                                    details.setJson(fieldPrefix + "PresetJson", newJsonMap);
+                                    detailsModified = true;
+                                }
+                            }
+                        }
+
+                        if (detailsCreated) {
+                            details.create();
+                        } else if (detailsModified) {
+                            details.store();
+                        }
+                    } else {
+                        Debug.logWarning("updateProductContentImageUrl: Cannot store InlineProductImageDetails for image field unrecognized field name ["
+                                + productFieldName + "]; width/height/preset will not be saved for product [" + product.get("productId") + "]", module);
+                    }
+                } else if (Boolean.TRUE.equals(createSizeTypeContent) && !"ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
                     // Try to find a ProductContent record to refer to
                     GenericValue origProductContent = ctx.delegator().from("ProductContentAndDataResource").where(
                                 "productId", product.get("productId"), "productContentTypeId", origProductContentTypeId).orderBy("-fromDate").queryFirst();
@@ -572,10 +662,26 @@ public abstract class ProductImageServices {
                         dataResourceName = (lastSlash >= 0) ? imageUrl.substring(lastSlash) : imageUrl;
                     }
                     String statusId = (origProductContent != null) ? origProductContent.getString("drStatusId") : "CTNT_IN_PROGRESS";
+
                     GenericValue dataResource = ctx.delegator().makeValue("DataResource",
                             "dataResourceTypeId", "SHORT_TEXT", "dataTemplateTypeId", "NONE", "statusId", statusId,
                             "mimeTypeId", "text/html", "dataResourceName", dataResourceName, "objectInfo", imageUrl);
+
+                    Integer width = (Integer) sizeTypeInfo.get("width");
+                    Integer height = (Integer)  sizeTypeInfo.get("height");
+                    if (width != null) {
+                        dataResource.set("scpWidth", width.longValue());
+                    }
+                    if (height != null) {
+                        dataResource.set("scpHeight", height.longValue());
+                    }
+                    ImageVariantConfig.VariantInfo variantInfo = (ImageVariantConfig.VariantInfo) sizeTypeInfo.get("variantInfo");
+                    if (variantInfo != null) {
+                        dataResource.setJson("srcPresetJson", variantInfo.configToMap());
+                    }
+
                     dataResource = dataResource.createSetNextSeqId();
+
                     statusId = (origProductContent != null) ? origProductContent.getString("statusId") : "CTNT_IN_PROGRESS";
                     GenericValue content = ctx.delegator().makeValue("Content", "dataResourceId", dataResource.get("dataResourceId"),
                             "statusId", statusId, "contentTypeId", "DOCUMENT");

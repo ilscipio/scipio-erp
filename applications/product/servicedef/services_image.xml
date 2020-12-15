@@ -105,6 +105,9 @@
             <description>Map of size types to URLs (relative to server root, with imageUrlPrefix); if copyOrig==true, also contains "original" (UNLESS found to already exist / same as input)
                 NOTE: Unlike stock ofbiz functions, this returns ALL generated. Use productSizeTypeList to iterate the common size types.</description>
         </attribute>
+        <attribute name="imageInfoMap" mode="OUT" type="Map" optional="true">
+            <description>Map of maps describing url, width, height and variantInfo for each sizeType; also contains "original" which contains copyOrig boolean</description>
+        </attribute>
         <attribute name="productSizeTypeList" mode="OUT" type="List" optional="true">
             <description>The list of typical product size types: [small, medium, large, detail]</description>
         </attribute>

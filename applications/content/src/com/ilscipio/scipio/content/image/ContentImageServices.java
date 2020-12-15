@@ -27,6 +27,7 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -253,8 +254,11 @@ public abstract class ContentImageServices {
                     Debug.logError(logPrefix+UtilProperties.getMessage(resourceProduct, "ScaleImage.one_current_image_dimension_is_null", LOG_LANG) + " : imgHeight = " + imgHeight + " ; imgWidth = " + imgWidth, module);
                     return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.one_current_image_dimension_is_null", locale) + " : imgHeight = " + imgHeight + " ; imgWidth = " + imgWidth);
                 }
+                ImageVariantConfig.VariantInfo originalVariantInfo = new ImageVariantConfig.VariantInfo("original",
+                        (int) imgWidth, (int) imgHeight, null, null);
 
-                Map<String, String> imgUrlMap = new HashMap<>();
+                Map<String, String> imgUrlMap = new LinkedHashMap<>();
+                Map<String, Map<String, Object>> imgInfoMap = new LinkedHashMap<>(); // SCIPIO
 
                 int imageDeleteCount = 0;
                 int imageCopyCount = 0;
@@ -281,6 +285,15 @@ public abstract class ContentImageServices {
                         // put this so the caller gets a URL to the original even if didn't change
                         String imageUrl = imageUrlPrefixPrefix + imageUrlPrefix + "/" + newFileLocExt;
                         imgUrlMap.put(sizeType, imageUrl);
+
+                        Map<String, Object> sizeTypeInfo = new LinkedHashMap<>();
+                        sizeTypeInfo.put("sizeType", sizeType);
+                        sizeTypeInfo.put("url", imageUrl);
+                        sizeTypeInfo.put("variantInfo", originalVariantInfo);
+                        sizeTypeInfo.put("width", (int) imgWidth);
+                        sizeTypeInfo.put("height", (int) imgHeight);
+                        sizeTypeInfo.put("copyOrig", copyOrig);
+                        imgInfoMap.put(sizeType, sizeTypeInfo);
                     } else {
                         targetDirectory = imageServerPath + "/" + getExpandedFnFmtDirPrefix(newFileLocation);
                         try {
@@ -324,7 +337,28 @@ public abstract class ContentImageServices {
 
                         String imageUrl = imageUrlPrefixPrefix + imageUrlPrefix + "/" + newFileLocExt;
                         imgUrlMap.put(sizeType, imageUrl);
+
+                        Map<String, Object> sizeTypeInfo = new LinkedHashMap<>();
+                        sizeTypeInfo.put("sizeType", sizeType);
+                        sizeTypeInfo.put("url", imageUrl);
+                        sizeTypeInfo.put("variantInfo", originalVariantInfo);
+                        sizeTypeInfo.put("width", (int) imgWidth);
+                        sizeTypeInfo.put("height", (int) imgHeight);
+                        sizeTypeInfo.put("copyOrig", copyOrig);
+                        imgInfoMap.put(sizeType, sizeTypeInfo);
                     }
+                } else {
+                    String sizeType = "original";
+                    Map<String, Object> sizeTypeInfo = new LinkedHashMap<>();
+                    sizeTypeInfo.put("sizeType", sizeType);
+                    if (imageOrigUrl != null) {
+                        sizeTypeInfo.put("url", imageOrigUrl);
+                    }
+                    sizeTypeInfo.put("variantInfo", originalVariantInfo);
+                    sizeTypeInfo.put("width", (int) imgWidth);
+                    sizeTypeInfo.put("height", (int) imgHeight);
+                    sizeTypeInfo.put("copyOrig", copyOrig);
+                    imgInfoMap.put(sizeType, sizeTypeInfo);
                 }
 
                 /* Scale image for each size from ImageProperties.xml */
@@ -333,13 +367,13 @@ public abstract class ContentImageServices {
                 int writeErrorCount = 0;
                 int skipCount = 0; // TODO: currently implemented by caller
                 for (String sizeType : sizeTypeList) {
-                    if (!imgPropCfg.hasVariant(sizeType)) {
+                    ImageVariantConfig.VariantInfo variantInfo = imgPropCfg.getVariant(sizeType);
+                    if (variantInfo == null) {
                         Debug.logError(logPrefix+"sizeType " + sizeType + " is not part of ImageProperties.xml; ignoring", module);
                         continue;
                     }
 
                     boolean keepOrig = false;
-                    ImageVariantConfig.VariantInfo variantInfo = imgPropCfg.getVariant(sizeType);
                     Integer targetWidth = variantInfo.getWidth();
                     Integer targetHeight = variantInfo.getHeight();
                     if (variantInfo.getUpscaleMode() != ImageVariantConfig.VariantInfo.UpscaleMode.ON) {
@@ -447,6 +481,15 @@ public abstract class ContentImageServices {
                         String imageUrl = imageUrlPrefixPrefix + imageUrlPrefix + "/" + newFileLocExt;
                         imgUrlMap.put(sizeType, imageUrl);
 
+                        // SCIPIO
+                        Map<String, Object> sizeTypeInfo = new LinkedHashMap<>();
+                        sizeTypeInfo.put("sizeType", sizeType);
+                        sizeTypeInfo.put("url", imageUrl);
+                        sizeTypeInfo.put("variantInfo", variantInfo);
+                        sizeTypeInfo.put("width", targetHeight);
+                        sizeTypeInfo.put("height", targetHeight);
+                        imgInfoMap.put(sizeType, sizeTypeInfo);
+
                     } else {
                         // SCIPIO: new
                         Debug.logError(logPrefix+ServiceUtil.getErrorMessage(resultScaleImgMap), module);
@@ -513,6 +556,7 @@ public abstract class ContentImageServices {
                     Debug.logInfo(logPrefix + msg, module);
                 }
                 result.put("imageUrlMap", imgUrlMap);
+                result.put("imageInfoMap", imgInfoMap); // SCIPIO
                 result.put("bufferedImage", resultBufImgMap.get("bufferedImage"));
                 result.put("successCount", successCount);
                 result.put("failCount", failCount);

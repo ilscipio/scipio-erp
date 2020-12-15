@@ -96,6 +96,9 @@
         <attribute name="imageUrlMap" mode="OUT" type="Map" optional="true">
             <description>Map of size types to URLs (relative to server root, with imageUrlPrefix); if copyOrig==true, also contains "original"</description>
         </attribute>
+        <attribute name="imageInfoMap" mode="OUT" type="Map" optional="true">
+            <description>Map of maps describing url, width, height and variantInfo for each sizeType; also contains "original" which contains copyOrig boolean (SCIPIO)</description>
+        </attribute>
         <attribute name="bufferedImage" mode="OUT" type="java.awt.image.BufferedImage" optional="true">
             <description>Original image contents, for reuse</description>
         </attribute>

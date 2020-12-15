@@ -7,9 +7,8 @@ code package.
 
 <!-- SCIPIO: See component://product/config/ImageProperties.xml for file format and options -->
 <!-- 
-    # The uploaded image is scaled in each size tye , you can descrease or increase size types ; size type name doesn't have to contain space
+    # The uploaded image is scaled in each size type; you can decrease or increase size types; size type name shouldn't contain space
     # Just one configured dimension on two is allowed to restrict just one image dimension, whatever its proportions
-    # WARNING: Keep size names to 14 characters or less (generated database ID size limit).
 -->
 <imageSize xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <size name="small">

@@ -27,8 +27,8 @@ code package.
     <field-type-def type="floating-point" sql-type="Double" java-type="Double"/>
     <field-type-def type="numeric" sql-type="Numeric(20,0)" java-type="Long"/>
 
-    <field-type-def type="id" sql-type="Char(20)" java-type="String"/>
-    <field-type-def type="id-long" sql-type="Char(60)" java-type="String"/>
+    <field-type-def type="id" sql-type="Char(255)" java-type="String"/>
+    <field-type-def type="id-long" sql-type="Char(255)" java-type="String"/>
     <field-type-def type="id-vlong" sql-type="Char(255)" java-type="String"/>
 
     <field-type-def type="indicator" sql-type="Char(1)" java-type="String"/>
@@ -39,7 +39,7 @@ code package.
 
     <field-type-def type="comment" sql-type="Char(255)" java-type="String"/>
     <field-type-def type="description" sql-type="Char(255)" java-type="String"/>
-    <field-type-def type="name" sql-type="Char(100)" java-type="String"/>
+    <field-type-def type="name" sql-type="Char(255)" java-type="String"/>
     <field-type-def type="value" sql-type="Char(255)" java-type="String"/>
 
     <!-- Specialized Types -->
@@ -47,8 +47,8 @@ code package.
     <field-type-def type="credit-card-date" sql-type="Char(7)" java-type="String"/>
     <field-type-def type="email" sql-type="Char(320)" java-type="String"/>
     <field-type-def type="url" sql-type="Char(2000)" java-type="String"/>
-    <field-type-def type="id-ne" sql-type="Char(20)" java-type="String"/>
-    <field-type-def type="id-long-ne" sql-type="Char(60)" java-type="String"/>
+    <field-type-def type="id-ne" sql-type="Char(255)" java-type="String"/>
+    <field-type-def type="id-long-ne" sql-type="Char(255)" java-type="String"/>
     <field-type-def type="id-vlong-ne" sql-type="Char(255)" java-type="String"/>
     <field-type-def type="tel-number" sql-type="Char(60)" java-type="String"/>
 </fieldtypemodel>

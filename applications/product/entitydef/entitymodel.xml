@@ -3059,7 +3059,7 @@ code package.
         <field name="originalImageHeight" type="numeric"></field>
         <field name="originalImagePresetJson" type="very-long"></field>
         <prim-key field="productId"/>
-        <relation type="one" fk-name="PROD_TYPE" rel-entity-name="Product">
+        <relation type="one" fk-name="PRODMEDDET_PRODID" rel-entity-name="Product">
             <key-map field-name="productId"/>
         </relation>
     </entity>

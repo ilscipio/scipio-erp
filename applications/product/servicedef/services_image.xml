@@ -152,7 +152,7 @@
         <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>Optional list of size dimension names to restrict resizing to (e.g.: 320x240, small); unlisted are left unchanged</description>
         </attribute>
-        <attribute name="createSizeTypeContent" mode="IN" type="Boolean" optional="true" default-value="false">
+        <attribute name="createSizeTypeContent" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true (default), ProductContent/DataResource records are added to products for size types not previously defined</description>
         </attribute>
         <attribute name="recreateExisting" mode="IN" type="Boolean" optional="true" default-value="false">
@@ -200,7 +200,7 @@
         <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>(For each image) Optional list of size dimension names to restrict resizing to (e.g.: 320x240, small); unlisted are left unchanged</description>
         </attribute>
-        <attribute name="createSizeTypeContent" mode="IN" type="Boolean" optional="true" default-value="false">
+        <attribute name="createSizeTypeContent" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true (default), ProductContent/DataResource records are added to products for size types not previously defined</description>
         </attribute>
         <attribute name="recreateExisting" mode="IN" type="Boolean" optional="true" default-value="false">

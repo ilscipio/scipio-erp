@@ -40,7 +40,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -319,7 +318,7 @@ public abstract class ProductImageServices {
                 if (!productModel.isField(productFieldName)) {
                     String msg = "Inapplicable productContentTypeId [" + productContentTypeId
                             + "] for product [" + productId + "] for resize operation (parent products not consulted)";
-                    if (logDetail || Debug.verboseOn()) {
+                    if (Debug.verboseOn()) { // typically not relevant: (logDetail || Debug.verboseOn())
                         Debug.logInfo("productImageRescaleImage: " + msg, module);
                     }
                     return UtilMisc.put(ServiceUtil.returnSuccess(msg), "reason", "inapplicable");
@@ -460,13 +459,19 @@ public abstract class ProductImageServices {
                     String sizeType = entry.getKey();
                     Map<String, Object> sizeTypeInfo = entry.getValue();
                     String url = (String) sizeTypeInfo.get("url");
-                    GenericValue pct = ProductImageWorker.getImageSizeTypeProductContentType(ctx.delegator(), imageNum, sizeType);
+                    String pctId = ProductImageWorker.getImageSizeTypeProductContentTypeId(imageNum, sizeType);
+                    GenericValue pct = ctx.delegator().from("ProductContentType").where("productContentTypeId", pctId).cache().queryOne();
                     if (pct == null) {
-                        if (Debug.verboseOn()) {
-                            Debug.logVerbose("productImageRescaleImage: ProductContentType not found for image sizeType [" + sizeType + "]"
-                                    + " for product [" + productId + "]", module);
+                        pct = ctx.delegator().from("ProductContentType").where("productContentTypeId", pctId).queryOne();
+                        if (pct == null) {
+                            if (Boolean.TRUE.equals(ctx.attr("createSizeTypeContent"))) {
+                                Debug.logWarning("productImageRescaleImage: ProductContentType not found for image sizeType [" + sizeType + "]"
+                                        + " for product [" + productId + "]; creating new type with productContentTypeId [" + pctId + "]", module);
+                                pct = ProductImageWorker.createProductContentTypeImageUrlRecord(ctx.delegator(), pctId, "IMAGE_URL_VARIANT", sizeType);
+                            } else {
+                                continue;
+                            }
                         }
-                        continue;
                     }
                     if (url != null && url.startsWith(".") || url.contains("/.")) { // SPECIAL: detect bug (missing filename)
                         throw new IllegalStateException("Internal error: invalid url [" + url + "] for sizeType [" + sizeType + "], not updating");

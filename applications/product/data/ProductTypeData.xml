@@ -245,39 +245,47 @@ code package.
     <ProductContentType description="Directions" hasTable="N" parentTypeId="" productContentTypeId="DIRECTIONS"/>
     <ProductContentType description="Terms and Conditions" hasTable="N" parentTypeId="" productContentTypeId="TERMS_AND_CONDS"/>
     <ProductContentType description="Delivery Info" hasTable="N" parentTypeId="" productContentTypeId="DELIVERY_INFO"/>
-    <ProductContentType description="Image - Small" hasTable="N" parentTypeId="" productContentTypeId="SMALL_IMAGE_URL"/>
-    <ProductContentType description="Image - Medium" hasTable="N" parentTypeId="" productContentTypeId="MEDIUM_IMAGE_URL"/>
-    <ProductContentType description="Image - Large" hasTable="N" parentTypeId="" productContentTypeId="LARGE_IMAGE_URL"/>
-    <ProductContentType description="Image - Detail" hasTable="N" parentTypeId="" productContentTypeId="DETAIL_IMAGE_URL"/>
-    <ProductContentType description="Image - Original" hasTable="N" parentTypeId="" productContentTypeId="ORIGINAL_IMAGE_URL"/>
+
+    <!-- SCIPIO: IMAGE_URL_BASE is the new parent type for all the image URL types -->
+    <ProductContentType description="Image - Base" hasTable="N" parentTypeId="" productContentTypeId="IMAGE_URL_BASE"/>
+    <ProductContentType description="Image - Full" hasTable="N" parentTypeId="IMAGE_URL_BASE" productContentTypeId="IMAGE_URL_FULL"/>
+    <ProductContentType description="Image - Variant" hasTable="N" parentTypeId="IMAGE_URL_BASE" productContentTypeId="IMAGE_URL_VARIANT"/>
+
+    <ProductContentType description="Image - Small" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="SMALL_IMAGE_URL"/>
+    <ProductContentType description="Image - Medium" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="MEDIUM_IMAGE_URL"/>
+    <ProductContentType description="Image - Large" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="LARGE_IMAGE_URL"/>
+    <ProductContentType description="Image - Detail" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="DETAIL_IMAGE_URL"/>
+    <ProductContentType description="Image - Original" hasTable="N" parentTypeId="IMAGE_URL_FULL" productContentTypeId="ORIGINAL_IMAGE_URL"/>
+    <ProductContentType description="Image - Additional View 1" hasTable="N" parentTypeId="IMAGE_URL_FULL" productContentTypeId="ADDITIONAL_IMAGE_1"/>
+    <ProductContentType description="Image - Additional View 2" hasTable="N" parentTypeId="IMAGE_URL_FULL" productContentTypeId="ADDITIONAL_IMAGE_2"/>
+    <ProductContentType description="Image - Additional View 3" hasTable="N" parentTypeId="IMAGE_URL_FULL" productContentTypeId="ADDITIONAL_IMAGE_3"/>
+    <ProductContentType description="Image - Additional View 4" hasTable="N" parentTypeId="IMAGE_URL_FULL" productContentTypeId="ADDITIONAL_IMAGE_4"/>
+    <ProductContentType description="Image - Additional View 1 Small" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_1_SMALL"/>
+    <ProductContentType description="Image - Additional View 1 Medium" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_1_MEDIUM"/>
+    <ProductContentType description="Image - Additional View 1 Large" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_1_LARGE"/>
+    <ProductContentType description="Image - Additional View 1 Detail" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_1_DETAIL"/>
+    <ProductContentType description="Image - Additional View 2 Small" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_2_SMALL"/>
+    <ProductContentType description="Image - Additional View 2 Medium" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_2_MEDIUM"/>
+    <ProductContentType description="Image - Additional View 2 Large" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_2_LARGE"/>
+    <ProductContentType description="Image - Additional View 2 Detail" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_2_DETAIL"/>
+    <ProductContentType description="Image - Additional View 3 Small" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_3_SMALL"/>
+    <ProductContentType description="Image - Additional View 3 Medium" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_3_MEDIUM"/>
+    <ProductContentType description="Image - Additional View 3 Large" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_3_LARGE"/>
+    <ProductContentType description="Image - Additional View 3 Detail" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_3_DETAIL"/>
+    <ProductContentType description="Image - Additional View 4 Small" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_4_SMALL"/>
+    <ProductContentType description="Image - Additional View 4 Medium" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_4_MEDIUM"/>
+    <ProductContentType description="Image - Additional View 4 Large" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_4_LARGE"/>
+    <ProductContentType description="Image - Additional View 4 Detail" hasTable="N" parentTypeId="IMAGE_URL_VARIANT" productContentTypeId="XTRA_IMG_4_DETAIL"/>
+
     <ProductContentType description="Image Alt Text - Small" hasTable="N" parentTypeId="" productContentTypeId="SMALL_IMAGE_ALT"/>
     <ProductContentType description="Image Alt Text - Medium" hasTable="N" parentTypeId="" productContentTypeId="MEDIUM_IMAGE_ALT"/>
     <ProductContentType description="Image Alt Text - Large" hasTable="N" parentTypeId="" productContentTypeId="LARGE_IMAGE_ALT"/>
     <ProductContentType description="Image Alt Text - Detail" hasTable="N" parentTypeId="" productContentTypeId="DETAIL_IMAGE_ALT"/>
-    <ProductContentType description="Image - Additional View 1" hasTable="N" parentTypeId="" productContentTypeId="ADDITIONAL_IMAGE_1"/>
-    <ProductContentType description="Image - Additional View 2" hasTable="N" parentTypeId="" productContentTypeId="ADDITIONAL_IMAGE_2"/>
-    <ProductContentType description="Image - Additional View 3" hasTable="N" parentTypeId="" productContentTypeId="ADDITIONAL_IMAGE_3"/>
-    <ProductContentType description="Image - Additional View 4" hasTable="N" parentTypeId="" productContentTypeId="ADDITIONAL_IMAGE_4"/>
-    <ProductContentType description="Image - Additional View 1 Small" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_1_SMALL"/>
-    <ProductContentType description="Image - Additional View 1 Medium" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_1_MEDIUM"/>
-    <ProductContentType description="Image - Additional View 1 Large" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_1_LARGE"/>
-    <ProductContentType description="Image - Additional View 1 Detail" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_1_DETAIL"/>
-    <ProductContentType description="Image - Additional View 2 Small" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_2_SMALL"/>
-    <ProductContentType description="Image - Additional View 2 Medium" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_2_MEDIUM"/>
-    <ProductContentType description="Image - Additional View 2 Large" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_2_LARGE"/>
-    <ProductContentType description="Image - Additional View 2 Detail" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_2_DETAIL"/>
-    <ProductContentType description="Image - Additional View 3 Small" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_3_SMALL"/>
-    <ProductContentType description="Image - Additional View 3 Medium" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_3_MEDIUM"/>
-    <ProductContentType description="Image - Additional View 3 Large" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_3_LARGE"/>
-    <ProductContentType description="Image - Additional View 3 Detail" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_3_DETAIL"/>
-    <ProductContentType description="Image - Additional View 4 Small" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_4_SMALL"/>
-    <ProductContentType description="Image - Additional View 4 Medium" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_4_MEDIUM"/>
-    <ProductContentType description="Image - Additional View 4 Large" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_4_LARGE"/>
-    <ProductContentType description="Image - Additional View 4 Detail" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_4_DETAIL"/>
     <ProductContentType description="Image - Additional View Small" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_L_SMALL"/>
     <ProductContentType description="Image - Additional View Medium" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_L_MEDIUM"/>
     <ProductContentType description="Image - Additional View Large" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_L_LARGE"/>
     <ProductContentType description="Image - Additional View Detail" hasTable="N" parentTypeId="" productContentTypeId="XTRA_IMG_L_DETAIL"/>
+
     <ProductContentType description="Add To Cart Label" hasTable="N" parentTypeId="" productContentTypeId="ADDTOCART_LABEL"/>
     <ProductContentType description="Add To Cart Image" hasTable="N" parentTypeId="" productContentTypeId="ADDTOCART_IMAGE"/>
     <ProductContentType description="Short Sales Pitch" hasTable="N" parentTypeId="" productContentTypeId="SHORT_SALES_PITCH"/>

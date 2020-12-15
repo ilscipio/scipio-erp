@@ -349,4 +349,33 @@ public abstract class ProductImageWorker {
             throw new IllegalArgumentException("Unrecognized image productContentTypeId (expected %_IMAGE_URL, ADDITIONAL_IMAGE_%, XTRA_IMG_%_%): " + productContentTypeId);
         }
     }
+
+    /** Migration and backward-compatibility, see ProductTypeData.xml */
+    public static void ensureParentProductContentTypeImageUrlRecords(Delegator delegator) throws GenericEntityException {
+        GenericValue imageUrl = delegator.findOne("ProductContentType", UtilMisc.toMap("productContentTypeId", "IMAGE_URL_BASE"), false);
+        if (imageUrl == null) {
+            delegator.makeValue("ProductContentType", "productContentTypeId", "IMAGE_URL_BASE",
+                    "hasTable", "N", "description", "Image - Base").create();
+        }
+        GenericValue fullImageUrl = delegator.findOne("ProductContentType", UtilMisc.toMap("productContentTypeId", "IMAGE_URL_FULL"), false);
+        if (fullImageUrl == null) {
+            delegator.makeValue("ProductContentType", "productContentTypeId", "IMAGE_URL_FULL",
+                    "hasTable", "N", "description", "Image - Full", "parentTypeId", "IMAGE_URL_BASE").create();
+        }
+        GenericValue variantImageUrl = delegator.findOne("ProductContentType", UtilMisc.toMap("productContentTypeId", "IMAGE_URL_VARIANT"), false);
+        if (variantImageUrl == null) {
+            delegator.makeValue("ProductContentType", "productContentTypeId", "IMAGE_URL_VARIANT",
+                    "hasTable", "N", "description", "Image - Variant", "parentTypeId", "IMAGE_URL_BASE").create();
+        }
+    }
+
+    /** Migration and backward-compatibility, see ProductTypeData.xml */
+    public static GenericValue createProductContentTypeImageUrlRecord(Delegator delegator, String productContentTypeId, String parentTypeId, String sizeType) throws GenericEntityException {
+        ensureParentProductContentTypeImageUrlRecords(delegator);
+        int imageNum = getImageProductContentTypeNum(productContentTypeId);
+        String sizeTypeName = sizeType.substring(0, 1).toUpperCase() + sizeType.substring(1);
+        String description = (imageNum >= 1) ? "Image - Additional View " + imageNum + " " + sizeTypeName : "Image - " + sizeTypeName;
+        return delegator.makeValue("ProductContentType", "productContentTypeId", productContentTypeId,
+                "hasTable", "N", "description", description, "parentTypeId", parentTypeId).create();
+    }
 }

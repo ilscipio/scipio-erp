@@ -9,38 +9,6 @@ code package.
 <#assign price = priceMap! />
 <#-- end variable setup -->
 
-
-<#macro testVariants contentId="" productId="" productContentTypeId="" useCache=true>
-    <#-- imageVariants is com.ilscipio.scipio.content.image.ImageVariants, see utilities.ftl -->
-    <#if productId?has_content && productContentTypeId?has_content>
-        <#local imageVariants = getImageVariants("product", productId, productContentTypeId, useCache)!false>
-    <#elseif contentId?has_content>
-        <#local imageVariants = getImageVariants("content", contentId, useCache)!false>
-    </#if>
-
-    <#if !imageVariants?is_boolean>
-        <#-- here the ImageVariants interface is same for both, but in emergency you can use public methods on ContentImageVariants/ProductImageVariants directly -->
-
-        <#-- NOTE: not all types support variant.imageWidth currently -->
-        <#local variant = imageVariants.original>
-        <h2>${imageVariants.type}</h2>
-        <p>original (${variant.mimeTypeId!"n/a"}): ${variant.configWidth}x${variant.configHeight} (physical: ${variant.imageWidth!-1}x${variant.imageHeight!-1}) - ${variant.getImageUrl(context, {"params":{"extraParam1":"value1"}})!"missing url"}</p>
-
-        <#list imageVariants.variantList as variant>
-            <p>${variant.name} (${variant.mimeTypeId!"n/a"}): ${variant.configWidth}x${variant.configHeight} (physical: ${variant.imageWidth!-1}x${variant.imageHeight!-1}) - ${variant.getImageUrl(context, {"params":{"extraParam1":"value1"}})!"missing url"}</p>
-        </#list>
-    </#if>
-
-</#macro>
-<#--<@testVariants contentId="10310"/>
-<@testVariants contentId="10418"/>
-<@testVariants contentId="10337"/>-->
-<@testVariants productId="PH-1000" productContentTypeId="ORIGINAL_IMAGE_URL"/>
-<@testVariants productId="PH-1000" productContentTypeId="ADDITIONAL_IMAGE_1"/>
-<@testVariants productId="VH-9943" productContentTypeId="ORIGINAL_IMAGE_URL"/>
-<@testVariants productId="VH-9943" productContentTypeId="ADDITIONAL_IMAGE_1"/>
-
-
 <@script>
     var featureCount = 0; <#-- NOTE: This is overridden further below -->
     var featureIdList = [];

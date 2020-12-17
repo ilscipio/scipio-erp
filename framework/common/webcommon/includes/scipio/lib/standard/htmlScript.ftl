@@ -95,7 +95,7 @@ NOTE: This is NOT associated with any HTML element nor does it define any.
     htmlwrap                = Default arguments for child script calls; see @script
 -->
 <#assign scripts_defaultArgs = {
-  "scriptType" : "text/javascript", "output" : "", "htmlwrap" : true, "cdata" : true, "merge" : true, "compress" : true, "passArgs":{}
+  "scriptType" : "text/javascript", "output" : "", "htmlwrap" : true, "cdata" : true, "merge" : styles.script_merge!false, "compress" : styles.script_compress!true, "passArgs":{}
 }>
 <#macro scripts args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.scripts_defaultArgs)>
@@ -137,7 +137,7 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
     compress                = ((boolean), default: false) if true strip whitespace from inline scripts
 -->
 <#assign script_defaultArgs = {
-  "type" : "text/javascript", "src" : "", "output" : "", "htmlwrap" : true, "cdata" : true, "merge" : false, "compress" : true, "passArgs":{}
+  "type" : "text/javascript", "src" : "", "output" : "", "htmlwrap" : true, "cdata" : true, "merge" : styles.script_merge!false, "compress" : styles.script_compress!true, "passArgs":{}
 }>
 <#macro script args={} inlineArgs...>
   <#local scriptsInfo = getRequestVar("scipioScriptsInfo")!{}>

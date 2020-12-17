@@ -23,6 +23,8 @@ context.styles = [
     "framework" : "foundation",
     "customSideBar" : false,
     "render_section_html" : true, //renders wrapping html elements around all sections
+    "script_merge"  : true, //merge inline-scripts together and print in footer
+    "script_compress"  : true, //compress inline scripts and remove unneccessary whitespace
     //"printStyleClassesOnPage" : true,
     "disabled" : "disabled",
     "active" : "active",

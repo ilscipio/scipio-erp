@@ -106,6 +106,9 @@ code package.
     </#if>
 
     <#-- New in scipio; always-bottom guaranteed-last javascripts -->
+    <#if readRequestStack("scipioScriptBuffer")?has_content><#-- output of merged inline scripts -->
+      <@script merge=false>${popRequestStack("scipioScriptBuffer")}</@script>
+    </#if>
     <#if layoutSettings.VT_BTM_JAVASCRIPT?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#-- use a Set to make sure each javascript is declared only once, but iterate the list to maintain the correct order -->

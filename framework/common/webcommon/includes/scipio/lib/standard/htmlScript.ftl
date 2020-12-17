@@ -90,10 +90,12 @@ NOTE: This is NOT associated with any HTML element nor does it define any.
     scriptType,
     output,
     data,
+    merge,
+    compress,
     htmlwrap                = Default arguments for child script calls; see @script
 -->
 <#assign scripts_defaultArgs = {
-  "scriptType" : "text/javascript", "output" : "", "htmlwrap" : true, "cdata" : true, "passArgs":{}
+  "scriptType" : "text/javascript", "output" : "", "htmlwrap" : true, "cdata" : true, "merge" : true, "compress" : true, "passArgs":{}
 }>
 <#macro scripts args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.scripts_defaultArgs)>
@@ -131,9 +133,11 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
                               TODO: code to accumulate at footer.
     htmlwrap                = ((boolean), default: true) If false don't include HTML wrapper (or cdata)
     cdata                   = ((boolean), default: true) If false don't include CDATA guard (only used if htmlwrap true)
+    merge                   = ((boolean), default: false) if true merge inline script elements together and render in footer
+    compress                = ((boolean), default: false) if true strip whitespace from inline scripts
 -->
 <#assign script_defaultArgs = {
-  "type" : "text/javascript", "src" : "", "output" : "", "htmlwrap" : true, "cdata" : true, "passArgs":{}
+  "type" : "text/javascript", "src" : "", "output" : "", "htmlwrap" : true, "cdata" : true, "merge" : false, "compress" : true, "passArgs":{}
 }>
 <#macro script args={} inlineArgs...>
   <#local scriptsInfo = getRequestVar("scipioScriptsInfo")!{}>
@@ -143,27 +147,41 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
     "src" : "",
     "output" : scriptsInfo.output!script_defaultArgs.output,
     "htmlwrap" : scriptsInfo.htmlwrap!script_defaultArgs.htmlwrap,
-    "cdata" : scriptsInfo.cdata!script_defaultArgs.cdata
+    "cdata" : scriptsInfo.cdata!script_defaultArgs.cdata,
+    "merge" : scriptsInfo.merge!script_defaultArgs.merge,
+    "compress": scriptsInfo.compress!script_defaultArgs.compress
   }>
   <#local args = mergeArgMaps(args, inlineArgs, defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@script_markup type=type src=src output=output htmlwrap=htmlwrap cdata=cdata origArgs=origArgs passArgs=passArgs><#nested></@script_markup>
+  <@script_markup type=type src=src output=output htmlwrap=htmlwrap cdata=cdata merge=merge compress=compress origArgs=origArgs passArgs=passArgs><#nested></@script_markup>
 </#macro>
 
 <#-- @script main markup - theme override -->
-<#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} passArgs={} catchArgs...>
+<#macro script_markup type="" src="" output="" htmlwrap=true cdata=true merge=false compress=true origArgs={} passArgs={} catchArgs...>
   <#if src?has_content>
     <script type="${escapeVal(type, 'html')}" src="${escapeFullUrl(src, 'html')}"></script>
   <#else>
-    <#if htmlwrap>
-      <script type="${escapeVal(type, 'html')}">
-      <#if cdata>//<![CDATA[</#if>
+    <#local nested>
+    <#if compress>
+      <#compress><#nested></#compress>
+    <#else>
+      <#nested>
     </#if>
-        <#nested>
-    <#if htmlwrap>
-      <#if cdata>//]]></#if>
-      </script>
+  </#local>
+    <#if merge>
+      <#local scriptBuffer = popRequestStack("scipioScriptBuffer")!"">
+      <#local dummy = pushRequestStack("scipioScriptBuffer",scriptBuffer+nested!)>
+    <#else>
+      <#if htmlwrap>
+        <script type="${escapeVal(type, 'html')}">
+        <#if cdata>//<![CDATA[</#if>
+      </#if>
+          ${nested!""}
+      <#if htmlwrap>
+        <#if cdata>//]]></#if>
+        </script>
+      </#if>
     </#if>
   </#if>
 </#macro>

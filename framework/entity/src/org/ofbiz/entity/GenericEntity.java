@@ -485,6 +485,10 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         return fields.get(name);
     }
 
+    public boolean hasModelField(String name) { // SCIPIO
+        return getModelEntity().getField(name) != null;
+    }
+
     /** Returns true if the entity contains all of the primary key fields, but NO others. */
     public boolean isPrimaryKey() {
         return isPrimaryKey(false);

@@ -26,24 +26,23 @@ import java.util.TreeMap;
 
 /**
  * Represents media profile definitions, as defined in mediaprofiles.properties.
- * TODO: ImageSizePreset is currently directly used as entity storage, but it only makes sense for images,
- *  so may want a dedicated MediaProfile (and even ImageProfile) entity.
+ * <p>TODO: ImageSizePreset is currently directly used as entity storage, but it only makes sense for images,
+ *  so may want a dedicated MediaProfile (and even ImageProfile) entity eventually.</p>
  */
 public abstract class MediaProfile implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private static final UtilCache<String, Profiles> CACHE = UtilCache.createUtilCache("scipio.mediaProfile");
+    private static final UtilCache<String, MediaProfile> NAME_CACHE = UtilCache.createUtilCache("scipio.mediaProfile.name"); // key: name + delegator name
+    private static final UtilCache<String, Profiles> STATIC_CACHE = UtilCache.createUtilCache("scipio.mediaProfile.static"); // key: delegator name
 
-    private static class Profiles implements Serializable {
+    private static class Profiles implements Serializable { // for static properties (never change after load)
         final Map<String, MediaProfile> nameMap;
         final Map<String, Map<String, MediaProfile>> typeMap;
-        final Map<String, MediaProfile> defaultsMap;
 
-        Profiles(Map<String, MediaProfile> nameMap, Map<String, Map<String, MediaProfile>> typeMap, Map<String, MediaProfile> defaultsMap) {
+        Profiles(Map<String, MediaProfile> nameMap, Map<String, Map<String, MediaProfile>> typeMap) {
             this.nameMap = Collections.unmodifiableMap(nameMap);
             this.typeMap = Collections.unmodifiableMap(typeMap);
-            this.defaultsMap = Collections.unmodifiableMap(defaultsMap);
         }
     }
 
@@ -52,7 +51,6 @@ public abstract class MediaProfile implements Serializable {
     protected final String parentProfile;
     protected final String variantConfigProfile;
     protected final String variantConfigLocation;
-    protected final boolean defaultProfile;
     protected final Map<String, Object> properties;
     protected volatile Boolean stored; // NOTE: this only reflects load time, may change until cache clear
 
@@ -67,7 +65,6 @@ public abstract class MediaProfile implements Serializable {
         this.parentProfile = UtilValidate.nullIfEmpty((String) properties.get("parentProfile"));
         this.variantConfigProfile = UtilValidate.nullIfEmpty((String) properties.get("variantConfigProfile"));
         this.variantConfigLocation = UtilValidate.nullIfEmpty((String) properties.get("variantConfigLocation"));
-        this.defaultProfile = UtilValidate.booleanValueVersatile(properties.get("defaultProfile"), false);
         this.delegatorName = delegator.getDelegatorName();
         this.delegator = delegator;
         this.stored = stored;
@@ -85,141 +82,64 @@ public abstract class MediaProfile implements Serializable {
         return create(delegator, name, (String) properties.get("type"), properties);
     }
 
-    public static void clearCaches(Delegator delegator) {
-        if (delegator != null) {
-            CACHE.remove(delegator.getDelegatorName());
-        } else {
-            CACHE.clear();
-        }
-    }
-
-    public static Map<String, Object> clearCaches(ServiceContext ctx) {
-        if (Boolean.TRUE.equals(ctx.attr("tenantOnly"))) {
-            clearCaches(ctx.delegator());
-        } else {
-            clearCaches((Delegator) null);
-        }
-
-        if (Boolean.TRUE.equals(ctx.attr("distribute"))) {
-            DistributedCacheClear dcc = ctx.delegator().getDistributedCacheClear();
-            if (dcc != null) {
-                Map<String, Object> distCtx = UtilMisc.toMap("type", ctx.attr("type"));
-                dcc.runDistributedService("cmsDistributedClearMappingCaches", distCtx);
-            }
-        }
-        return ServiceUtil.returnSuccess();
-    }
-
     /**
      * Gets a media profile by name or null if not specifically defined, no default fallbacks, as defined in mediaprofiles.properties.
-     * NOTE: This overload does not require the type as by convention the profile names imply it ("IMAGE_DEFAULT", "IMAGE_PRODUCT", etc.).
+     * <p>NOTE: This overload does not require the type as by convention the profile names imply it ("IMAGE_DEFAULT", "IMAGE_PRODUCT", etc.).</p>
      */
-    public static <M extends MediaProfile> M getMediaProfile(Delegator delegator, String name) {
-        Profiles profiles = getProfiles(delegator);
-        return UtilGenerics.cast(profiles.nameMap.get(name));
+    public static <M extends MediaProfile> M getMediaProfile(Delegator delegator, String name, boolean useUtilCache) {
+        if (UtilValidate.isEmpty(name)) {
+            return null;
+        }
+        MediaProfile profile = null;
+        String cacheKey = name + "::" + delegator.getDelegatorName();
+        if (useUtilCache) {
+            profile = NAME_CACHE.get(cacheKey);
+            if (profile != null) {
+                return UtilGenerics.cast(profile);
+            }
+        }
+        if (name.startsWith("IMAGE_")) {
+            profile = ImageProfile.createImageProfileFromPreset(delegator, name);
+        }
+        if (profile == null) {
+            Profiles staticProfiles = getStaticProfiles(delegator);
+            profile = staticProfiles.nameMap.get(name);
+        }
+        if (profile != null) {
+            NAME_CACHE.put(cacheKey, profile); // NOTE: Always update the cache
+        }
+        return UtilGenerics.cast(profile);
     }
 
     /**
      * Gets a media profile by name and type or null if not specifically defined, no default fallbacks, as defined in mediaprofiles.properties.
      */
-    public static <M extends MediaProfile> M getMediaProfile(Delegator delegator, String name, String type) {
-        Profiles profiles = getProfiles(delegator);
-        Map<String, MediaProfile> map = profiles.typeMap.get(type);
-        return (map != null) ? UtilGenerics.cast(map.get(name)) : null;
+    public static <M extends MediaProfile> M getMediaProfile(Delegator delegator, String name, String type, boolean useUtilCache) {
+        MediaProfile profile = getMediaProfile(delegator, name, useUtilCache);
+        return (profile != null && type != null && type.equals(profile.getType())) ? UtilGenerics.cast(profile) : null;
     }
 
-    /**
-     * Gets a media profile by name and type or null if not specifically defined, or default profile for the type, as defined in mediaprofiles.properties.
-     */
-    public static <M extends MediaProfile> M getMediaProfileOrDefault(Delegator delegator, String name, String type) {
-        M mediaProfile = getMediaProfile(delegator, name, type);
-        return (mediaProfile != null) ? mediaProfile : getDefaultMediaProfile(delegator, type);
-    }
-
-    /**
-     * Gets a default media profile by type, as defined in mediaprofiles.properties.
-     */
-    public static <M extends MediaProfile> M getDefaultMediaProfile(Delegator delegator, String type) {
-        Profiles profiles = getProfiles(delegator);
-        M mediaProfile = UtilGenerics.cast(profiles.defaultsMap.get(type));
-        if (mediaProfile == null) {
-            Debug.logError("No default media profile exists for media type [" + type + "] in mediaprofiles.properties; default must be defined (defaultProfile=true)", module);
+    public static <M extends MediaProfile> Map<String, M> getMediaProfileMap(Delegator delegator, String type) {
+        Profiles profiles = getStaticProfiles(delegator);
+        Map<String, MediaProfile> map = (type != null) ? profiles.typeMap.get(type) : profiles.nameMap;
+        if (type == null || "IMAGE_OBJECT".equals(type)) {
+            map = new TreeMap<>(map);
+            map.putAll(ImageProfile.readImageProfileMapFromPresets(delegator));
         }
-        return mediaProfile;
-    }
-
-    public static Collection<String> getMediaProfileNames(Delegator delegator, String type) {
-        Profiles profiles = getProfiles(delegator);
-        Map<String, MediaProfile> map = profiles.typeMap.get(type);
-        return (map != null) ? map.keySet() : Collections.emptySet();
-    }
-
-    public static List<String> getMediaProfileNameList(Delegator delegator, String type) {
-        return new ArrayList<>(getMediaProfileNames(delegator, type));
-    }
-
-    public static <M extends MediaProfile> Map<String, M> getMediaProfileTypeMap(Delegator delegator, String type) {
-        Profiles profiles = getProfiles(delegator);
-        Map<String, MediaProfile> map = profiles.typeMap.get(type);
         if (UtilValidate.isEmpty(map)) {
             return Collections.emptyMap();
         }
         return UtilGenerics.cast(map);
     }
 
-    private static Profiles getProfiles(Delegator delegator) {
-        Profiles profiles = CACHE.get(delegator.getDelegatorName());
-        if (profiles == null) {
-            profiles = loadProfiles(delegator);
-            CACHE.put(delegator.getDelegatorName(), profiles);
-        }
-        return profiles;
+    public static Collection<String> getMediaProfileNames(Delegator delegator, String type) {
+        Map<String, MediaProfile> map = getMediaProfileMap(delegator, type);
+        return (map != null) ? map.keySet() : Collections.emptySet();
     }
 
-    private static Profiles loadProfiles(Delegator delegator) {
-        // TODO: load from ImageSizePreset entities
-        Map<String, MediaProfile> nameMap = new LinkedHashMap<>();
-        Map<String, Map<String, MediaProfile>> typeMap = new LinkedHashMap<>();
-        Map<String, MediaProfile> defaultsMap = new LinkedHashMap<>();
-
-        List<MediaProfile> mediaProfiles = new ArrayList<>();
-        mediaProfiles.addAll(readStaticMediaProfiles(delegator, UtilProperties.getMergedPropertiesFromAllComponents("mediaprofiles")).values());
-        mediaProfiles.addAll(ImageProfile.loadStoredImageProfiles(delegator));
-
-        for(MediaProfile mediaProfile : mediaProfiles) {
-            nameMap.put(mediaProfile.getName(), mediaProfile);
-            Map<String, MediaProfile> typeProfiles = typeMap.get(mediaProfile.getType());
-            if (typeProfiles == null) {
-                typeProfiles = new TreeMap<>();
-                typeMap.put(mediaProfile.getType(), typeProfiles);
-            }
-            typeProfiles.put(mediaProfile.getName(), mediaProfile);
-            if (mediaProfile.isDefaultProfile()) {
-                defaultsMap.put(mediaProfile.getType(), mediaProfile);
-            }
-        }
-        for(Map.Entry<String, Map<String, MediaProfile>> entry : typeMap.entrySet()) {
-            entry.setValue(Collections.unmodifiableMap(new LinkedHashMap<>(entry.getValue())));
-        }
-        return new Profiles(nameMap, typeMap, defaultsMap);
+    public static List<String> getMediaProfileNameList(Delegator delegator, String type) {
+        return new ArrayList<>(getMediaProfileNames(delegator, type));
     }
-
-    private static Map<String, MediaProfile> readStaticMediaProfiles(Delegator delegator, Properties mediaProfilesProps) {
-        Map<String, MediaProfile> mpp = new LinkedHashMap<>();
-        Map<String, Map<String, Object>> profiles = UtilProperties.extractPropertiesWithPrefixAndId(new LinkedHashMap<>(), mediaProfilesProps, "mediaProfile.");
-        for(Map.Entry<String, Map<String, Object>> entry : profiles.entrySet()) {
-            String name = entry.getKey();
-            String type = (String) entry.getValue().get("type");
-            try {
-                MediaProfile mediaProfile = create(delegator, name, type, entry.getValue());
-                mpp.put(name, mediaProfile);
-            } catch(Exception e) {
-                Debug.logError("Error initializing mediaprofile.properties profile [" + name + "] definition " + entry.getValue() + ": " + e.toString(), module);
-            }
-        }
-        return mpp;
-    }
-
 
     public abstract String getType();
 
@@ -239,10 +159,11 @@ public abstract class MediaProfile implements Serializable {
         return variantConfigProfile;
     }
 
+    /** NOTE: uncached */
     public MediaProfile getResolvedVariantConfigProfile() {
         String variantConfigProfile = getVariantConfigProfile();
         if (variantConfigProfile != null) {
-            MediaProfile nextProfile = MediaProfile.getMediaProfile(getDelegator(), variantConfigProfile);
+            MediaProfile nextProfile = MediaProfile.getMediaProfile(getDelegator(), variantConfigProfile, false);
             if (nextProfile == null) {
                 Debug.logError("Could not resolve mediaProfile [" + variantConfigProfile + "] referenced from profile [" + getName() + "]", module);
             } else {
@@ -271,7 +192,7 @@ public abstract class MediaProfile implements Serializable {
             String profileName;
             while((profileName = profile.getParentProfile()) != null) {
                 ancestorProfiles.add(profileName);
-                profile = getMediaProfile(getDelegator(), profileName);
+                profile = getMediaProfile(getDelegator(), profileName, false);
                 if (profile == null) {
                     Debug.logError("Could not find media profile [" + profileName + "]", module);
                     break;
@@ -284,10 +205,6 @@ public abstract class MediaProfile implements Serializable {
 
     public boolean isProfileOrChild(String name) {
         return getAncestorProfiles().contains(name);
-    }
-
-    public boolean isDefaultProfile() {
-        return defaultProfile;
     }
 
     public Map<String, Object> getProperties() {
@@ -306,5 +223,74 @@ public abstract class MediaProfile implements Serializable {
     public boolean isStored() { // may be overridden
         Boolean stored = this.stored;
         return (stored != null) ? stored : false;
+    }
+
+    public static void clearCaches(Delegator delegator) {
+        if (delegator != null) {
+            NAME_CACHE.remove(delegator.getDelegatorName());
+        } else {
+            NAME_CACHE.clear();
+        }
+    }
+
+    public static Map<String, Object> clearCaches(ServiceContext ctx) {
+        if (Boolean.TRUE.equals(ctx.attr("tenantOnly"))) {
+            clearCaches(ctx.delegator());
+        } else {
+            clearCaches((Delegator) null);
+        }
+        if (Boolean.TRUE.equals(ctx.attr("distribute"))) {
+            DistributedCacheClear dcc = ctx.delegator().getDistributedCacheClear();
+            if (dcc != null) {
+                Map<String, Object> distCtx = UtilMisc.toMap("type", ctx.attr("type"));
+                dcc.runDistributedService("cmsDistributedClearMappingCaches", distCtx);
+            }
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
+    private static Profiles getStaticProfiles(Delegator delegator) {
+        Profiles profiles = STATIC_CACHE.get(delegator.getDelegatorName());
+        if (profiles == null) {
+            profiles = readStaticProfiles(delegator);
+            STATIC_CACHE.put(delegator.getDelegatorName(), profiles);
+        }
+        return profiles;
+    }
+
+    private static Profiles readStaticProfiles(Delegator delegator) {
+        Map<String, MediaProfile> nameMap = new LinkedHashMap<>();
+        Map<String, Map<String, MediaProfile>> typeMap = new LinkedHashMap<>();
+        List<MediaProfile> mediaProfiles = new ArrayList<>();
+        mediaProfiles.addAll(readMediaProfileMapFromStatic(delegator, UtilProperties.getMergedPropertiesFromAllComponents("mediaprofiles")).values());
+        for(MediaProfile mediaProfile : mediaProfiles) {
+            nameMap.put(mediaProfile.getName(), mediaProfile);
+            Map<String, MediaProfile> typeProfiles = typeMap.get(mediaProfile.getType());
+            if (typeProfiles == null) {
+                typeProfiles = new TreeMap<>();
+                typeMap.put(mediaProfile.getType(), typeProfiles);
+            }
+            typeProfiles.put(mediaProfile.getName(), mediaProfile);
+        }
+        for(Map.Entry<String, Map<String, MediaProfile>> entry : typeMap.entrySet()) {
+            entry.setValue(Collections.unmodifiableMap(new LinkedHashMap<>(entry.getValue())));
+        }
+        return new Profiles(nameMap, typeMap);
+    }
+
+    private static Map<String, MediaProfile> readMediaProfileMapFromStatic(Delegator delegator, Properties mediaProfilesProps) {
+        Map<String, MediaProfile> mpp = new LinkedHashMap<>();
+        Map<String, Map<String, Object>> profiles = UtilProperties.extractPropertiesWithPrefixAndId(new LinkedHashMap<>(), mediaProfilesProps, "mediaProfile.");
+        for(Map.Entry<String, Map<String, Object>> entry : profiles.entrySet()) {
+            String name = entry.getKey();
+            String type = (String) entry.getValue().get("type");
+            try {
+                MediaProfile mediaProfile = create(delegator, name, type, entry.getValue());
+                mpp.put(name, mediaProfile);
+            } catch(Exception e) {
+                Debug.logError("Error initializing mediaprofile.properties profile [" + name + "] definition " + entry.getValue() + ": " + e.toString(), module);
+            }
+        }
+        return mpp;
     }
 }

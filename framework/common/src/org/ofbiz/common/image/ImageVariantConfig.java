@@ -213,18 +213,6 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         return fromImagePropertiesMap(imagePreset.getString("presetName"), "", "", imgPropsMap);
     }
 
-    public static ImageVariantConfig fromMediaProfile(Delegator delegator, String mediaProfile, boolean useCache) throws GenericEntityException {
-        if (UtilValidate.isEmpty(mediaProfile)) {
-            return null;
-        }
-        ImageVariantConfig config = fromImageSizePreset(delegator, mediaProfile, useCache);
-        if (config != null) {
-            return config;
-        }
-        ImageProfile imageProfile = ImageProfile.getImageProfile(delegator, mediaProfile);
-        return (imageProfile != null) ? imageProfile.getVariantConfig() : null;
-    }
-
     private static List<VariantInfo> parseImagePropertiesMap(Map<String, Map<String, String>> map) throws NumberFormatException {
         List<VariantInfo> res = new ArrayList<>();
         for(Map.Entry<String, Map<String, String>> entry : map.entrySet()) {

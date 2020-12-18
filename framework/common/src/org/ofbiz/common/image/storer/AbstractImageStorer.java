@@ -120,7 +120,7 @@ public abstract class AbstractImageStorer extends AbstractImageOp implements Ima
             if (matchParentProfiles == null) {
                 return false;
             }
-            ImageProfile profile = ImageProfile.getImageProfile(delegator, imageProfile);
+            ImageProfile profile = ImageProfile.getImageProfile(delegator, imageProfile, true);
             if (profile == null) {
                 return false;
             }

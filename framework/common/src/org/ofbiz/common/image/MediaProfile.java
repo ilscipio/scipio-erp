@@ -26,7 +26,8 @@ import java.util.TreeMap;
 
 /**
  * Represents media profile definitions, as defined in mediaprofiles.properties.
- * TODO: integrate ImageSizePreset (where mediaProfile name doubles as presetId)
+ * TODO: ImageSizePreset is currently directly used as entity storage, but it only makes sense for images,
+ *  so may want a dedicated MediaProfile (and even ImageProfile) entity.
  */
 public abstract class MediaProfile implements Serializable {
 
@@ -48,8 +49,9 @@ public abstract class MediaProfile implements Serializable {
 
     protected final String name;
     protected final String description;
-    protected final String variantConfigLocation;
     protected final String parentProfile;
+    protected final String variantConfigProfile;
+    protected final String variantConfigLocation;
     protected final boolean defaultProfile;
     protected final Map<String, Object> properties;
     protected volatile Boolean stored; // NOTE: this only reflects load time, may change until cache clear
@@ -58,17 +60,13 @@ public abstract class MediaProfile implements Serializable {
     protected transient Delegator delegator;
     protected Set<String> ancestorProfiles;
 
-    protected MediaProfile(Delegator delegator, String name, String description, String parentProfile, Map<String, Object> properties, Boolean stored) {
+    protected MediaProfile(Delegator delegator, String name, String description, Map<String, Object> properties, Boolean stored) {
         this.name = name;
         this.description = description;
         this.properties = UtilValidate.isNotEmpty(properties) ? Collections.unmodifiableMap(new LinkedHashMap<>(properties)) : Collections.emptyMap();
-        this.parentProfile = UtilValidate.nullIfEmpty((parentProfile != null) ? parentProfile : (String) properties.get("parentProfile"));
-        String variantConfigLocation = UtilValidate.nullIfEmpty((String) properties.get("variantConfigLocation"));
-        if (variantConfigLocation == null) {
-            // FIXME: REMOVE: backward-compat for now, name "location" may be reused...
-            variantConfigLocation = UtilValidate.nullIfEmpty((String) properties.get("location"));
-        }
-        this.variantConfigLocation = variantConfigLocation;
+        this.parentProfile = UtilValidate.nullIfEmpty((String) properties.get("parentProfile"));
+        this.variantConfigProfile = UtilValidate.nullIfEmpty((String) properties.get("variantConfigProfile"));
+        this.variantConfigLocation = UtilValidate.nullIfEmpty((String) properties.get("variantConfigLocation"));
         this.defaultProfile = UtilValidate.booleanValueVersatile(properties.get("defaultProfile"), false);
         this.delegatorName = delegator.getDelegatorName();
         this.delegator = delegator;
@@ -233,12 +231,35 @@ public abstract class MediaProfile implements Serializable {
         return description;
     }
 
+    public String getParentProfile() {
+        return parentProfile;
+    }
+
+    public String getVariantConfigProfile() {
+        return variantConfigProfile;
+    }
+
+    public MediaProfile getResolvedVariantConfigProfile() {
+        String variantConfigProfile = getVariantConfigProfile();
+        if (variantConfigProfile != null) {
+            MediaProfile nextProfile = MediaProfile.getMediaProfile(getDelegator(), variantConfigProfile);
+            if (nextProfile == null) {
+                Debug.logError("Could not resolve mediaProfile [" + variantConfigProfile + "] referenced from profile [" + getName() + "]", module);
+            } else {
+                return nextProfile.getResolvedVariantConfigProfile();
+            }
+        }
+        return this;
+    }
+
+    /** Returns component:// variant config location for ImageProperties.xml or equivalent, or null if ImageSizePreset or other. */
     public String getVariantConfigLocation() {
         return variantConfigLocation;
     }
 
-    public String getParentProfile() {
-        return parentProfile;
+    /** Returns component:// variant config location for ImageProperties.xml or equivalent, or null if ImageSizePreset or other. */
+    public String getResolvedVariantConfigLocation() {
+        return getResolvedVariantConfigProfile().getVariantConfigLocation();
     }
 
     public Set<String> getAncestorProfiles() {

@@ -23,14 +23,14 @@ public class ImageProfile extends MediaProfile {
 
     protected volatile ImageVariantConfig variantConfig;
 
-    protected ImageProfile(Delegator delegator, String name, String description, String parentProfile, Map<String, Object> properties, ImageVariantConfig variantConfig, Boolean stored) {
-        super(delegator, name, description, parentProfile, properties, stored);
+    protected ImageProfile(Delegator delegator, String name, String description, Map<String, Object> properties, ImageVariantConfig variantConfig, Boolean stored) {
+        super(delegator, name, description, properties, stored);
         this.variantConfig = variantConfig;
         this.stored = stored;
     }
 
     public static ImageProfile createImageProfile(Delegator delegator, String name, String description, Map<String, Object> properties, Boolean stored) {
-        return new ImageProfile(delegator, name, description, null, properties, null, stored);
+        return new ImageProfile(delegator, name, description, properties, null, stored);
     }
 
     public static ImageProfile createImageProfile(Delegator delegator, String name, Map<String, Object> properties) {
@@ -39,7 +39,7 @@ public class ImageProfile extends MediaProfile {
 
     public static ImageProfile createImageProfileFromPreset(GenericValue imageSizePreset) {
         return new ImageProfile(imageSizePreset.getDelegator(), imageSizePreset.getString("presetId"), imageSizePreset.getString("presetName"),
-                imageSizePreset.getString("parentProfile"), Collections.emptyMap(), null, true);
+                imageSizePreset, null, true);
     }
 
     /**
@@ -105,23 +105,35 @@ public class ImageProfile extends MediaProfile {
         ImageVariantConfig variantConfig = this.variantConfig;
         if (variantConfig == null) {
             try {
-                variantConfig = ImageVariantConfig.fromImageSizePreset(getDelegator(), getName(), false);
+                ImageProfile effProfile = getResolvedVariantConfigProfile();
+                variantConfig = ImageVariantConfig.fromImageSizePreset(getDelegator(), effProfile.getName(), false);
                 if (variantConfig == null) {
-                    variantConfig = ImageVariantConfig.fromImagePropertiesXml(getVariantConfigLocation());
-                    if (variantConfig == null) {
-                        Debug.logError("Could not find ImageSizePreset with presetId [" + getName() +
-                                "] or ImageVariantConfig for mediaProfile [" + getName() + "]", module);
+                    String variantConfigLocation = effProfile.getVariantConfigLocation();
+                    if (variantConfigLocation != null) {
+                        variantConfig = ImageVariantConfig.fromImagePropertiesXml(variantConfigLocation);
+                        if (variantConfig == null) {
+                            Debug.logError("Could not find ImageSizePreset with presetId [" + getName() +
+                                    "] or ImageVariantConfig for mediaProfile [" + effProfile.getName() + "]", module);
+                        }
                     }
                 }
             } catch (Exception e) {
                 Debug.logError(e, module);
             }
+            if (variantConfig == null) {
+                variantConfig = ImageVariantConfig.NULL;
+            }
             this.variantConfig = variantConfig;
         }
-        return variantConfig;
+        return variantConfig.isNull() ? null : variantConfig;
     }
 
     public static ImageVariantConfig getVariantConfig(ImageProfile imageProfile) {
         return (imageProfile != null) ? imageProfile.getVariantConfig() : null;
     }
+
+    public ImageProfile getResolvedVariantConfigProfile() {
+        return (ImageProfile) super.getResolvedVariantConfigProfile();
+    }
+
 }

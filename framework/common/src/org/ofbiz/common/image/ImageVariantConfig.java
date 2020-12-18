@@ -39,6 +39,7 @@ import org.ofbiz.service.ServiceUtil;
  */
 @SuppressWarnings("serial")
 public class ImageVariantConfig implements Serializable, ImageVariantSelector {
+    public static final ImageVariantConfig NULL = new ImageVariantConfig();
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -84,6 +85,18 @@ public class ImageVariantConfig implements Serializable, ImageVariantSelector {
         this.variantMap = Collections.unmodifiableMap(variantMap);
         this.variantStringMap = (variantStringMap != null) ? Collections.unmodifiableMap(variantStringMap) : null;
         this.exactDimVariantMap = null;
+    }
+
+    protected ImageVariantConfig() {
+        this.name = null;
+        this.sourceType = null;
+        this.location = null;
+        this.variantMap = null;
+        this.variantList = null;
+    }
+
+    public boolean isNull() {
+        return name == null;
     }
 
     public static class Factory implements ImageVariantSelector.Factory {

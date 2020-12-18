@@ -1898,13 +1898,17 @@ This is similar to doing:
       <#local imageVariants = Static["com.ilscipio.scipio.content.image.ContentImageVariants"].from(contentId, delegator, dispatcher, locale, useUtilCache)!>
     </#if>
 
-NOTE: Parameters are passed as an args hash, but a shorthand version is also supported:
+NOTE: Parameters are passed as an args hash, but a shorthand version is also supported.
+If all ID parameters are empty or missing, the method will return null so you can use the default value operator and a
+special value such as boolean false which can be tested for presence. Note that if an ID is passed, however, it must
+be valid.
 
   * Usage Examples *
-    <#assign imageVariants = getImageVariants({"contentId":"10000"})!>
-    <#assign imageVariants = getImageVariants({"productId":"PH-1000", "productContentTypeId":"ORIGINAL_IMAGE_URL", "useCache":false})!>
-    <#assign imageVariants = getImageVariants("content", "10000")!>
-    <#assign imageVariants = getImageVariants("product", "PH-1000", "ORIGINAL_IMAGE_URL", false)!>
+    <#assign imageVariants = getImageVariants({"contentId":"10000"})!false>
+    <#assign imageVariants = getImageVariants({"productId":"PH-1000", "productContentTypeId":"ORIGINAL_IMAGE_URL", "useCache":false})!false>
+    <#assign imageVariants = getImageVariants("content", "10000")!false>
+    <#assign imageVariants = getImageVariants("product", "PH-1000", "ORIGINAL_IMAGE_URL", false)!false>
+    <#if !imageVariants?is_boolean>...</#if>
 
   * Parameters *
     type                    = ((content|product|) Type, only needed as first argument if not passing args hash

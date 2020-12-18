@@ -63,6 +63,7 @@ public class GetImageVariantsMethod implements TemplateMethodModelEx {
         }
         TemplateModel firstArg = args.get(0);
         Map<String, TemplateModel> mapArgs = Collections.emptyMap();
+        Map<String, Object> unwrappedMapArgs = Collections.emptyMap();
 
         String type = null;
         String contentId = null;
@@ -84,6 +85,7 @@ public class GetImageVariantsMethod implements TemplateMethodModelEx {
             }
         } else if (firstArg instanceof TemplateHashModelEx) {
             mapArgs = LangFtlUtil.adaptAsMap((TemplateHashModelEx) args.get(0));
+            unwrappedMapArgs = UtilGenerics.cast(LangFtlUtil.unwrapPermissive((TemplateHashModelEx) args.get(0)));
             //type = TransformUtil.getStringArg(mapArgs, "type");
             contentId = TransformUtil.getStringArg(mapArgs, "contentId");
             productId = TransformUtil.getStringArg(mapArgs, "productId");
@@ -98,12 +100,14 @@ public class GetImageVariantsMethod implements TemplateMethodModelEx {
         Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(mapArgs, "locale", env);
 
         if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(productContentTypeId)) {
-            return ProductImageVariants.from(productId, productContentTypeId, delegator, dispatcher, locale, useCache);
+            return ProductImageVariants.from(productId, productContentTypeId, true, delegator, dispatcher, locale, useCache, unwrappedMapArgs);
         } else if (UtilValidate.isNotEmpty(contentId)) {
             boolean useUtilCache = TransformUtil.getBooleanArg(args, "useUtilCache", 2, true);
-            return ContentImageVariants.from(contentId, delegator, dispatcher, locale, useUtilCache);
+            return ContentImageVariants.from(contentId, delegator, dispatcher, locale, useUtilCache, unwrappedMapArgs);
         } else {
-            throw new TemplateModelException("Invalid parameters: missing contentId or (productId + productContentTypeId)");
+            // Behave nicely to simplify usage
+            //throw new TemplateModelException("Invalid parameters: missing contentId or (productId + productContentTypeId)");
+            return null;
         }
     }
 }

@@ -243,7 +243,7 @@ public abstract class ProductImageWorker {
             List<GenericValue> pcdrList = delegator.from("ProductContentAndDataResource")
                     .where(EntityCondition.makeCondition("productId", productId),
                             EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "%_IMAGE_URL"))
-                    .filterByDate(moment).cache(useCache).queryList();
+                    .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
             if (pcdrList != null) {
                 if (includeOriginal) {
                     for (GenericValue pcdr : pcdrList) { // original first
@@ -266,7 +266,7 @@ public abstract class ProductImageWorker {
                 GenericValue origPcdr = delegator.from("ProductContentAndDataResource")
                         .where(EntityCondition.makeCondition("productId", productId),
                                 EntityCondition.makeCondition("productContentTypeId", origPctId))
-                        .filterByDate(moment).cache(useCache).queryFirst();
+                        .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryFirst();
                 if (origPcdr != null) {
                     sizeTypeMap.put("original", origPcdr);
                 }
@@ -274,7 +274,7 @@ public abstract class ProductImageWorker {
             List<GenericValue> pctList = delegator.from("ProductContentAndDataResource")
                     .where(EntityCondition.makeCondition("productId", productId),
                             EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "XTRA_IMG_" + imageNum + "_%"))
-                    .filterByDate(moment).cache(useCache).queryList();
+                    .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
             if (pctList != null) {
                 for(GenericValue pcdr : pctList) {
                     String pctId = pcdr.getString("productContentTypeId");

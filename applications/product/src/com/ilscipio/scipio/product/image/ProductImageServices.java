@@ -666,11 +666,11 @@ public abstract class ProductImageServices {
                 } else if (Boolean.TRUE.equals(createSizeTypeContent) && !"ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
                     // Try to find a ProductContent record to refer to
                     GenericValue origProductContent = ctx.delegator().from("ProductContentAndDataResource").where(
-                                "productId", product.get("productId"), "productContentTypeId", origProductContentTypeId).orderBy("-fromDate").queryFirst();
+                                "productId", product.get("productId"), "productContentTypeId", origProductContentTypeId).orderBy("-fromDate").filterByDate().queryFirst();
                     if (origProductContent == null) {
                         if (!"ORIGINAL_IMAGE_URL".equals(origProductContentTypeId)) {
                             origProductContent = ctx.delegator().from("ProductContentAndDataResource").where(
-                                    "productId", product.get("productId"), "productContentTypeId", "ORIGINAL_IMAGE_URL").orderBy("-fromDate").queryFirst();
+                                    "productId", product.get("productId"), "productContentTypeId", "ORIGINAL_IMAGE_URL").orderBy("-fromDate").filterByDate().queryFirst();
                         }
                     }
                     // DEV NOTE: I don't see a good reason not to create these, makes the service usable in more cases as long as the defaults are sane

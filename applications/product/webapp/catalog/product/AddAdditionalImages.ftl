@@ -11,10 +11,10 @@ code package.
   <#assign productAdditionalImage4 = (Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "ADDITIONAL_IMAGE_4", locale, dispatcher, "url"))! />
 
   <#-- SCIPIO -->
-  <#assign productContentAI1 = delegator.from("ProductContentAndContent").where("productId", product.productId, "productContentTypeId", "ADDITIONAL_IMAGE_1").filterByDate().queryFirst()!>
-  <#assign productContentAI2 = delegator.from("ProductContentAndContent").where("productId", product.productId, "productContentTypeId", "ADDITIONAL_IMAGE_2").filterByDate().queryFirst()!>
-  <#assign productContentAI3 = delegator.from("ProductContentAndContent").where("productId", product.productId, "productContentTypeId", "ADDITIONAL_IMAGE_3").filterByDate().queryFirst()!>
-  <#assign productContentAI4 = delegator.from("ProductContentAndContent").where("productId", product.productId, "productContentTypeId", "ADDITIONAL_IMAGE_4").filterByDate().queryFirst()!>
+  <#assign productContentAI1 = delegator.from("ProductContentAndDataResource").where("productId", product.productId, "productContentTypeId", "ADDITIONAL_IMAGE_1").orderBy("-fromDate").filterByDate().queryFirst()!>
+  <#assign productContentAI2 = delegator.from("ProductContentAndDataResource").where("productId", product.productId, "productContentTypeId", "ADDITIONAL_IMAGE_2").orderBy("-fromDate").filterByDate().queryFirst()!>
+  <#assign productContentAI3 = delegator.from("ProductContentAndDataResource").where("productId", product.productId, "productContentTypeId", "ADDITIONAL_IMAGE_3").orderBy("-fromDate").filterByDate().queryFirst()!>
+  <#assign productContentAI4 = delegator.from("ProductContentAndDataResource").where("productId", product.productId, "productContentTypeId", "ADDITIONAL_IMAGE_4").orderBy("-fromDate").filterByDate().queryFirst()!>
 </#if>
 <@row>
   <@cell>

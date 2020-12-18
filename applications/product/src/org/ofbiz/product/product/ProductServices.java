@@ -1220,7 +1220,7 @@ public class ProductServices {
                                 "productContentTypeId", productContentTypeId, "fromDate", fromDate).queryFirst();
                     } else {
                         productContent = delegator.from("ProductContent").where("productId", productId,
-                                "productContentTypeId", productContentTypeId).filterByDate().queryFirst();
+                                "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().queryFirst();
                     }
                     if (productContent != null) {
                         contentId = productContent.getString("contentId");

@@ -897,7 +897,8 @@ public abstract class ContextFtlUtil {
      * "current" webapp info, which can be retrieved using
      * {@link org.ofbiz.webapp.FullWebappInfo.Cache#getCurrentWebappInfo()}.
      */
-    public static FullWebappInfo.Cache getWebappInfoCacheAndCurrent(Environment env, HttpServletRequest request, RenderEnvType renderEnvType) throws TemplateModelException, IllegalArgumentException {
+    public static FullWebappInfo.Cache getWebappInfoCacheAndCurrent(Environment env, HttpServletRequest request,
+                                                                    RenderEnvType renderEnvType) throws TemplateModelException, IllegalArgumentException {
         FullWebappInfo.Cache cache;
         if (request != null) {
             cache = FullWebappInfo.Cache.fromRequest(request);
@@ -910,6 +911,25 @@ public abstract class ContextFtlUtil {
                         + " found in Freemarker environment; cannot determine current website or cache webapp info", module);
                 return FullWebappInfo.Cache.newCache(getDelegator(env));
             }
+            cache = FullWebappInfo.Cache.fromContext(context, renderEnvType);
+            FullWebappInfo.fromContext(context, renderEnvType, cache);
+            return cache;
+        }
+        return cache;
+    }
+
+    /**
+     * Gets the FullWebappInfo cache from request or context and pre-caches the
+     * "current" webapp info, which can be retrieved using
+     * {@link org.ofbiz.webapp.FullWebappInfo.Cache#getCurrentWebappInfo()}.
+     */
+    public static FullWebappInfo.Cache getWebappInfoCacheAndCurrent(HttpServletRequest request, Map<String, Object> context,
+                                                                    RenderEnvType renderEnvType) throws IllegalArgumentException {
+        FullWebappInfo.Cache cache;
+        if (request != null) {
+            cache = FullWebappInfo.Cache.fromRequest(request);
+            FullWebappInfo.fromRequest(request, cache);
+        } else {
             cache = FullWebappInfo.Cache.fromContext(context, renderEnvType);
             FullWebappInfo.fromContext(context, renderEnvType, cache);
             return cache;

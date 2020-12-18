@@ -28,7 +28,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.FtlTransformFactory;
@@ -133,7 +135,15 @@ public class ContentUrlDirective implements TemplateDirectiveModel {
             } else if (uri == null) {
                 throw new TemplateException("Cannot build URL: missing path/uri (null)", env);
             }
-            
+
+            // TODO: Map support
+            //Object paramsObj = args.get("params");
+            //if (paramsObj instanceof String) {
+            //    uri = TemplateFtlUtil.appendParamString(uri, (String) paramsObj);
+            //} else if (paramsObj instanceof Map) {
+            //    uri = appendUrlParams(uri, UtilGenerics.cast(paramsObj), paramDelim);
+            //}
+
             String ctxPrefix = getContentPathPrefix(ctxPrefixObj, rawParams, env); // SCIPIO: new
 
             // SCIPIO: delegated to our new methods
@@ -161,6 +171,65 @@ public class ContentUrlDirective implements TemplateDirectiveModel {
             throw new TemplateException(e, env);
         }
         out.write(url);
+    }
+
+    public String makeLinkForContext(Map<String, Object> context, Map<String, Object> args) {
+        return makeLinkForContext(context, args, null, null);
+    }
+
+    public String makeLinkForContext(Map<String, Object> context, Map<String, Object> args, String uri, String webSiteId) {
+        Boolean strict = (Boolean) args.get("strict");
+        if (strict == null) {
+            strict = true;
+        }
+        if (uri == null) {
+            uri = (String) args.get("uri");
+            if (uri == null) {
+                throw new IllegalArgumentException("Cannot build URL: missing path/uri (null)");
+            }
+        }
+        String imgSize = (String) args.get("variant");
+        Boolean urlDecode = (Boolean) args.get("urlDecode"); // SCIPIO: new
+        Object ctxPrefixObj = args.get("ctxPrefix"); // SCIPIO: new
+
+        // SCIPIO: autoVariant params: added 2017-08-08
+        String autoVariant = (String) args.get("autoVariant");
+        Integer imgWidth = (Integer) args.get("width");
+        Integer imgHeight = (Integer) args.get("height");
+        String imgVariantCfg = (String) args.get("variantCfg");
+
+        if (webSiteId == null) {
+            webSiteId = (String) args.get("webSiteId");
+        }
+        Boolean secure = (Boolean) args.get("secure"); // SCIPIO
+        String type = (String) args.get("type");
+
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+        HttpServletResponse response = (HttpServletResponse) context.get("response");
+        String ctxPrefix = getContentPathPrefix(ctxPrefixObj, context); // SCIPIO: new
+
+        String paramDelim = (String) args.get("paramDelim");
+        if (UtilValidate.isEmpty(paramDelim)) {
+            paramDelim = "&";
+        }
+        Object paramsObj = args.get("params");
+        if (paramsObj instanceof String) {
+            uri = TemplateFtlUtil.appendParamString(uri, (String) paramsObj);
+        } else if (paramsObj instanceof Map) {
+            uri = WebappUrlDirective.appendUrlParams(uri, UtilGenerics.cast(paramsObj), paramDelim);
+        }
+
+        // SCIPIO: delegated to our new methods
+        String url;
+        if (request != null) {
+            url = ContentRequestWorker.makeContentLink(request, response, uri, imgSize, webSiteId,
+                    ctxPrefix, urlDecode, strict, secure, type, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+        } else {
+            url = ContentRequestWorker.makeContentLink(context, uri, imgSize, webSiteId, ctxPrefix, urlDecode, strict,
+                    secure, type, autoVariant, imgWidth, imgHeight, imgVariantCfg);
+        }
+        url = WebappUrlDirective.checkForceHost(url, (Boolean) args.get("localhost"), secure, true);
+        return url;
     }
 
     public static class Method implements TemplateMethodModelEx {
@@ -233,6 +302,26 @@ public class ContentUrlDirective implements TemplateDirectiveModel {
     }
 
     /**
+     * Returns the contextPathPrefix from the environment or request
+     * or null if not found. May be empty string.
+     * @throws TemplateModelException
+     */
+    public static String getContentPathPrefix(Map<String, Object> context) {
+        String contentPathPrefix = (String) context.get("contentPathPrefix");
+        if (contentPathPrefix != null) {
+            return contentPathPrefix;
+        }
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+        if (request != null) {
+            Object res = request.getAttribute("contentPathPrefix");
+            if (res instanceof String) {
+                return (String) res;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Returns the string passed in ctxPrefix or the contextPathPrefix from the environment or request,
      * bypassing auto screen escaping,
      * or null if not found. May be empty string.
@@ -244,6 +333,22 @@ public class ContentUrlDirective implements TemplateDirectiveModel {
             ctxPrefix = (String) ctxPrefixObj;
         } else if (Boolean.TRUE.equals(ctxPrefixObj)) {
             ctxPrefix = getContentPathPrefix(nonEscaping, env);
+        }
+        return ctxPrefix;
+    }
+
+    /**
+     * Returns the string passed in ctxPrefix or the contextPathPrefix from the environment or request,
+     * bypassing auto screen escaping,
+     * or null if not found. May be empty string.
+     * @throws TemplateModelException
+     */
+    public static String getContentPathPrefix(Object ctxPrefixObj, Map<String, Object> context) {
+        String ctxPrefix = null;
+        if (ctxPrefixObj instanceof String) {
+            ctxPrefix = (String) ctxPrefixObj;
+        } else if (Boolean.TRUE.equals(ctxPrefixObj)) {
+            ctxPrefix = getContentPathPrefix(context);
         }
         return ctxPrefix;
     }

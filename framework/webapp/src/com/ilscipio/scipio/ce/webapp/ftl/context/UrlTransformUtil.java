@@ -19,6 +19,14 @@ public abstract class UrlTransformUtil {
      * and whether it should be forced or not, based on the rendering context.
      */
     public static Boolean determineFullPath(Boolean fullPathArg, RenderEnvType renderEnvType, Environment env) throws TemplateModelException {
+        return determineFullPath(fullPathArg, renderEnvType);
+    }
+
+    /**
+     * Tries to determine the fullPath Boolean value to use when generating the link,
+     * and whether it should be forced or not, based on the rendering context.
+     */
+    public static Boolean determineFullPath(Boolean fullPathArg, RenderEnvType renderEnvType) {
         return renderEnvType.isStatic() ? Boolean.TRUE : fullPathArg;
     }
 

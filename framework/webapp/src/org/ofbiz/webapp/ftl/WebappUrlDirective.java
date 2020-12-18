@@ -22,7 +22,9 @@ package org.ofbiz.webapp.ftl;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -33,7 +35,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.Debug.OfbizLogger;
+import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.base.util.template.FtlTransformFactory;
@@ -161,6 +165,13 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
                 throw new TemplateException("Cannot build URL: missing path/uri (null)", env);
             }
             uri = TemplateFtlUtil.appendParamString(uri, paramStr);
+            // TODO: Map support
+            //Object paramsObj = args.get("params");
+            //if (paramsObj instanceof String) {
+            //    uri = TemplateFtlUtil.appendParamString(uri, (String) paramsObj);
+            //} else if (paramsObj instanceof Map) {
+            //    uri = appendUrlParams(uri, UtilGenerics.cast(paramsObj), paramDelim);
+            //}
 
             HttpServletRequest request = FreeMarkerWorker.unwrap(env.getVariable("request"));
             HttpServletResponse response = FreeMarkerWorker.unwrap(env.getVariable("response"));
@@ -196,7 +207,7 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
                 //out.write(rh.makeLink(request, response, requestUrl, fullPath, secure, encode));
                 String link = RequestHandler.makeLinkAuto(request, response, requestUrl, absPath, interWebappEff, webSiteId, controller, fullPath, secure, encode);
                 if (link != null) {
-                    link = checkForceHost(link, UtilGenerics.cast(args), secure,false);
+                    link = checkForceHost(link, args, secure,false);
                     output(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env), out);
                 } else {
                     // If link is null, it means there was an error building link; write nothing, so that
@@ -208,7 +219,7 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
                 String link = RequestHandler.makeLinkAuto(ContextFtlUtil.getContext(env), delegator, locale, webSiteId, requestUrl, absPath,
                         interWebappEff, controller, fullPath, secure, encode);
                 if (link != null) {
-                    link = checkForceHost(link, UtilGenerics.cast(args), secure, false);
+                    link = checkForceHost(link, args, secure, false);
                     output(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env), out);
                 }
             } else {
@@ -247,6 +258,162 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
             Debug.logWarning("Exception in URL transform (uri=" + uri + "): " + e.toString(), getModule());
             throw new TemplateException(e, env);
         }
+    }
+
+    public String makeLinkForContext(Map<String, Object> context, Map<String, Object> args) {
+        return makeLinkForContext(context, args, null, null, null, getDefaultParams());
+    }
+
+    public String makeLinkForContext(Map<String, Object> context, Map<String, Object> args, String uri, String webSiteId, Map<String, Object> baseParams) {
+        return makeLinkForContext(context, args, uri, webSiteId, baseParams, getDefaultParams());
+    }
+
+    protected String makeLinkForContext(Map<String, Object> context, Map<String, Object> args, String uri, String webSiteId, Map<String, Object> baseParams, DefaultParams defaultParams) {
+        if (uri == null) {
+            uri = (String) args.get("uri");
+            if (uri == null) {
+                throw new IllegalArgumentException("Cannot build URL: missing path/uri (null)");
+            }
+        }
+        String type = (String) args.get("type");
+        Boolean absPath = (Boolean) args.get("absPath");
+        if (absPath == null) {
+            absPath = defaultParams.absPath;
+        }
+        Boolean interWebapp = (Boolean) args.get("interWebapp"); // Alias for type="inter-webapp"
+        if (interWebapp == null) {
+            interWebapp = defaultParams.interWebapp;
+        }
+        Boolean controller = (Boolean) args.get("controller");
+        if (controller == null) {
+            controller = defaultParams.controller;
+        }
+        Boolean extLoginKey = (Boolean) args.get("extLoginKey");
+        if (extLoginKey == null) {
+            extLoginKey = defaultParams.extLoginKey != null ? defaultParams.extLoginKey : false;
+        }
+        // NOTE: the default for paramDelim is highly heuristic... for now just follow rawParams (even though it's not its exact meaning)
+        String paramDelim = (String) args.get("paramDelim");
+        if (UtilValidate.isEmpty(paramDelim)) {
+            paramDelim = "&";
+        }
+        Object paramsObj = args.get("params");
+        if (paramsObj instanceof String) {
+            // FIXME: this doesn't merge string params with the baseParams properly
+            if (UtilValidate.isNotEmpty(baseParams)) {
+                uri = appendUrlParams(uri, baseParams, paramDelim);
+            }
+            uri = TemplateFtlUtil.appendParamString(uri, (String) paramsObj);
+        } else if (paramsObj instanceof Map) {
+            Map<String, Object> argsParams = UtilGenerics.cast(paramsObj);
+            Map<String, Object> params;
+            if (UtilValidate.isNotEmpty(baseParams)) {
+                if (UtilValidate.isNotEmpty(argsParams)) {
+                    params = new LinkedHashMap<>(baseParams);
+                    params.putAll(argsParams);
+                } else {
+                    params = UtilGenerics.cast(baseParams);
+                }
+            } else {
+                params = argsParams;
+            }
+            uri = appendUrlParams(uri, params, paramDelim);
+        }
+
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+        HttpServletResponse response = (HttpServletResponse) context.get("response");
+        RenderEnvType renderEnvType = RenderEnvType.fromRequestOrContext(request, context);
+        FullWebappInfo.Cache webappInfoCache = ContextFtlUtil.getWebappInfoCacheAndCurrent(request, context, renderEnvType);
+        Delegator delegator = (Delegator) ((request != null) ? request.getAttribute("delegator") : context.get("delegator"));
+
+        Boolean fullPath = UrlTransformUtil.determineFullPath((Boolean) args.get( "fullPath"), renderEnvType);
+        Boolean secure = (Boolean) args.get("secure");
+        Boolean encode = (Boolean) args.get("encode");
+        if (webSiteId == null) {
+            webSiteId = (String) args.get("webSiteId");
+        }
+
+        Boolean interWebappEff = interWebapp;
+        if (interWebappEff == null) {
+            if (type == null || type.isEmpty()) {
+                ; // leave it to method
+            } else if ("intra-webapp".equals(type)) {
+                interWebappEff = false;
+            } else if ("inter-webapp".equals(type)) {
+                interWebappEff = true;
+            }
+        }
+
+        String requestUrl = uri;
+        if (request != null) {
+            // If requested, add external login key
+            if (extLoginKey) {
+                requestUrl = RequestLinkUtil.checkAddExternalLoginKey(requestUrl, request, paramDelim);
+            }
+            // Now use more advanced method
+            //RequestHandler rh = (RequestHandler) request.getServletContext().getAttribute("_REQUEST_HANDLER_"); // reworked
+            //out.write(rh.makeLink(request, response, requestUrl, fullPath, secure, encode));
+            String link = RequestHandler.makeLinkAuto(request, response, requestUrl, absPath, interWebappEff, webSiteId, controller, fullPath, secure, encode);
+            if (link != null) {
+                link = checkForceHost(link, (Boolean) args.get("localhost"), secure,false);
+            }
+            return link;
+        } else if (webSiteId != null || webappInfoCache.getCurrentWebappWebSiteId() != null) {
+            Locale locale = null;
+            Object localeObj = args.get("locale");
+            if (localeObj != null) {
+                if (localeObj instanceof Locale) {
+                    locale = (Locale) localeObj;
+                } else {
+                    locale = UtilMisc.parseLocale((String) localeObj);
+                }
+            } else {
+                locale = (Locale) context.get("locale");
+            }
+            String link = RequestHandler.makeLinkAuto(context, delegator, locale, webSiteId, requestUrl, absPath,
+                    interWebappEff, controller, fullPath, secure, encode);
+            if (link != null) {
+                link = checkForceHost(link, (Boolean) args.get("localhost"), secure, false);
+            }
+            return link;
+        } else {
+            return null;
+        }
+    }
+
+    public static String appendUrlParams(String url, Map<String, Object> params, String delim) { // TODO: move, client code should not call
+        if (UtilValidate.isEmpty(params)) {
+            return url;
+        }
+        if (UtilValidate.isEmpty(delim)) {
+            delim = "&";
+        }
+        StringBuilder sb = new StringBuilder(url);
+        String effDelim = url.contains("?") ? delim : "?";
+        for(Map.Entry<String, Object> entry : params.entrySet()) {
+            String name = entry.getKey();
+            if (entry.getValue() instanceof Collection) {
+                for(Object value : UtilGenerics.<Collection<?>>cast(entry.getValue())) {
+                    sb.append(effDelim);
+                    sb.append(UtilCodec.getUrlEncoder().encode(name));
+                    sb.append('=');
+                    if (value != null) {
+                        sb.append(UtilCodec.getUrlEncoder().encode(value.toString()));
+                    }
+                    effDelim = delim;
+                }
+            } else {
+                Object value = entry.getValue();
+                sb.append(effDelim);
+                sb.append(UtilCodec.getUrlEncoder().encode(name));
+                sb.append('=');
+                if (value != null) {
+                    sb.append(UtilCodec.getUrlEncoder().encode(value.toString()));
+                }
+                effDelim = delim;
+            }
+        }
+        return sb.toString();
     }
 
     private static void output(String url, Writer out) throws EnvOutIOException {
@@ -509,9 +676,12 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
         return null;
     }
 
-    /** Workaround for force localhost integration. WARN: subject to change */
     public static String checkForceHost(String url, Map<String, TemplateModel> args, Boolean secure, boolean isContentUrl) throws TemplateModelException {
-        Boolean forceLocal = TransformUtil.getBooleanArg(args, "localhost");
+        return checkForceHost(url, TransformUtil.getBooleanArg(args, "localhost"), secure, isContentUrl);
+    }
+
+    /** Workaround for force localhost integration. WARN: subject to change */
+    public static String checkForceHost(String url, Boolean forceLocal, Boolean secure, boolean isContentUrl) {
         if (UtilValidate.isEmpty(url) || !Boolean.TRUE.equals(forceLocal)) {
             return url;
         }

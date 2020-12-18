@@ -616,4 +616,25 @@ public class ExtWebappInfo implements Serializable {
         }
         return null;
     }
+
+    public String getServletMappingMountPoint(String servletMapping) {
+        return getServletMappingMountPoint(getWebXml(), servletMapping);
+    }
+
+    public static String getServletMappingMountPoint(WebXml webXml, String servletMapping) {
+        if (webXml != null) {
+            Map<String, String> servletMappings = webXml.getServletMappings();
+            if (servletMappings != null) {
+                String servletPath = servletMappings.get(servletMapping);
+                if (UtilValidate.isNotEmpty(servletPath)) {
+                    if (servletPath.endsWith("/*")) {
+                        return servletPath.substring(0, servletPath.length() - "/*".length());
+                    } else {
+                        return servletPath;
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

@@ -794,4 +794,7 @@ public class FullWebappInfo {
         }
     }
 
+    public String getServletMappingMountPoint(String servletMapping) {
+        return extWebappInfo.getServletMappingMountPoint(servletMapping);
+    }
 }

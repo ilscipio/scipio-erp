@@ -170,8 +170,8 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
     </#if>
   </#local>
     <#if merge>
-      <#local scriptBuffer = popRequestStack("scipioScriptBuffer")!"">
-      <#local dummy = pushRequestStack("scipioScriptBuffer",scriptBuffer+nested!)>
+      <#local scriptBuffer = getRequestVar("scipioScriptBuffer")!"">
+      <#local dummy = setRequestVar("scipioScriptBuffer",scriptBuffer+nested!)>
     <#else>
       <#if htmlwrap>
         <script type="${escapeVal(type, 'html')}">

@@ -68,6 +68,10 @@ code package.
         </#list>
     </#if>
 
+      <#assign scpScriptBuffer = getRequestVar("scipioScriptBuffer")!"">
+      <#if scpScriptBuffer?has_content><#-- output of merged inline scripts -->
+          <@script merge=false>${scpScriptBuffer}</@script>
+      </#if>
     <#-- New in scipio; always-bottom guaranteed-last javascripts -->
     <#if layoutSettings.VT_BTM_JAVASCRIPT?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->

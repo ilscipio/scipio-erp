@@ -121,23 +121,40 @@ public class CmsMediaServlet extends HttpServlet {
 
             // AUTO VARIANT MODE - more difficult
             if (autoVariantMode != null) {
-                /**
-                 * Tries to find the best image variant name to use for the width & height.
-                 * WARN/FIXME: this has serious limitations in current form - we are forced to use
-                 * ImageProperties.xml to get the dimensions rather than the actual resized dims of the
-                 * images - there is no point fixing this here currently because can't solve this
-                 * problem for the file-based storage elsewhere yet.
-                 */
-                content = delegator.from("Content").where("contentId", contentId).cache().queryOne();
-                if (content == null) {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND,"Media not found with contentId [" + contentId + "]");
+                if (UtilValidate.isNotEmpty(contentId)) {
+
+
+                    /**
+                     * Tries to find the best image variant name to use for the width & height.
+                     * WARN/FIXME: this has serious limitations in current form - we are forced to use
+                     * ImageProperties.xml to get the dimensions rather than the actual resized dims of the
+                     * images - there is no point fixing this here currently because can't solve this
+                     * problem for the file-based storage elsewhere yet.
+                     */
+                    content = delegator.from("Content").where("contentId", contentId).cache().queryOne();
+                    if (content == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Media not found with contentId [" + contentId + "]");
+                        return;
+                    }
+                } else if (request.getPathInfo() != null && request.getPathInfo().length() > 1) {
+                    String contentPath = request.getPathInfo().substring(1); // no slash
+                    content = delegator.from("Content").where("contentPath", contentPath).cache().queryFirst();
+                    if (content == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                                "Media not found with contentPath [" + contentPath + "]");
+                        return;
+                    }
+                    contentId = content.getString("contentId");
+                } else {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Media not found");
                     return;
                 }
-                String mediaProfile = ContentImageWorker.getContentImageMediaProfileOrDefault(content, true);
-                ImageVariantConfig imgVariantCfg = ImageVariantConfig.fromMediaProfile(delegator, mediaProfile, true);
-                if (imgVariantCfg == null) {
-                    imgVariantCfg = ImageProfile.getVariantConfig(ImageProfile.getImageProfileOrDefault(delegator, "IMAGE_CONTENT"));
+                ImageProfile imageProfile = ContentImageWorker.getContentImageProfileOrDefault(delegator, content, true, true);
+                if (imageProfile == null) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND,"Invalid media with contentId [" + contentId + "]");
+                    return;
                 }
+                ImageVariantConfig imgVariantCfg = imageProfile.getVariantConfig(); // Now cached by ImageProfile
                 if (imgVariantCfg != null) {
                     if (CmsUtil.verboseOn()) {
                         Debug.logInfo("Cms: Auto-selecting image variant [contentId: " + contentId + ", mode: " + autoVariantMode.getStrName() + "]", module);
@@ -165,19 +182,29 @@ public class CmsMediaServlet extends HttpServlet {
             if ((UtilValidate.isEmpty(variant) || "original".equals(variant))) {
                 // STANDARD CASE
                 if (UtilValidate.isNotEmpty(dataResourceId)) {
-                    dataResource = EntityUtil.getFirst(delegator.from("DataResourceContentRequiredView").where("dataResourceId", dataResourceId).cache(useCache).queryList());
+                    dataResource = delegator.from("DataResourceContentRequiredView").where("dataResourceId", dataResourceId).cache(useCache).queryFirst();
                     if (dataResource == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                                 "Media not found with dataResourceId [" + dataResourceId + "]");
                         return;
                     }
+                    contentId = dataResource.getString("coContentId");
                 } else if (UtilValidate.isNotEmpty(contentId)) {
-                    dataResource = EntityUtil.getFirst(delegator.from("DataResourceContentRequiredView").where("coContentId", contentId).cache(useCache).queryList());
+                    dataResource = delegator.from("DataResourceContentRequiredView").where("coContentId", contentId).cache(useCache).queryFirst();
                     if (dataResource == null) {
                         response.sendError(HttpServletResponse.SC_NOT_FOUND,
                                 "Media not found with contentId [" + contentId + "]");
                         return;
                     }
+                } else if (request.getPathInfo() != null && request.getPathInfo().length() > 1) {
+                    String contentPath = request.getPathInfo().substring(1); // no slash
+                    dataResource = delegator.from("DataResourceContentRequiredView").where("coContentPath", contentPath).cache(useCache).queryFirst();
+                    if (dataResource == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                                "Media not found with contentPath [" + contentPath + "]");
+                        return;
+                    }
+                    contentId = dataResource.getString("coContentId");
                 } else {
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Missing or invalid dataResourceId or contentId parameter - cannot determine media");
                     return;
@@ -202,6 +229,15 @@ public class CmsMediaServlet extends HttpServlet {
                     // if contentId is passed, we can currently skip the original's lookup
                     // NOTE: this could change, but trying to avoid...
                     ;
+                } else if (request.getPathInfo() != null && request.getPathInfo().length() > 1) {
+                    String contentPath = request.getPathInfo().substring(1); // no slash
+                    dataResource = delegator.from("DataResourceContentRequiredView").where("coContentPath", contentPath).cache(useCache).queryFirst();
+                    if (dataResource == null) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND,
+                                "Media not found with contentPath [" + contentPath + "]");
+                        return;
+                    }
+                    contentId = dataResource.getString("coContentId");
                 } else {
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Missing or invalid dataResourceId or contentId parameter - cannot determine media");
                     return;
@@ -283,7 +319,7 @@ public class CmsMediaServlet extends HttpServlet {
 
                 // no service errors; now check the actual response
                 Boolean hasPermission = (Boolean) permSvcResp.get("hasPermission");
-                if (!hasPermission.booleanValue()) {
+                if (hasPermission == null || !hasPermission.booleanValue()) {
                     String errorMsg = (String) permSvcResp.get("failMessage");
                     Debug.logError(errorMsg, module);
                     //request.setAttribute("_ERROR_MESSAGE_", errorMsg);

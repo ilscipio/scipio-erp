@@ -77,6 +77,7 @@
                             <@field type="display" name="contentId" label=uiLabelMap.CommonId><a href="<@pageUrl>editMedia?contentId=${media.contentId}</@pageUrl>">${media.contentId}</a></@field>
                         </#if>
                         <@field type="text" name="contentName" label=uiLabelMap.CommonName value=contentName required=true />
+                        <@field type="text" name="contentPath" label=uiLabelMap.CmsMediaCustomPath value=((media.contentPath)!) required=false placeholder="mydir/myfile.jpg"/>
                         <#if media?has_content>
                             <#if media.dataResourceTypeId == "IMAGE_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.CommonImage></#if>
                             <#if media.dataResourceTypeId == "VIDEO_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.ContentResourceVideo></#if>
@@ -84,9 +85,16 @@
                             <#if media.dataResourceTypeId == "DOCUMENT_OBJECT"><#assign dataResourceTypeIdVal = uiLabelMap.CommonDocument></#if>
                             <@field type="hidden" name="contentId" value=media.contentId />
                             <@field type="hidden" name="dataResourceTypeId" value=media.dataResourceTypeId />
-                            <#assign mediaUrl=makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId!"")}) />
+
+                            <#if media.dataResourceTypeId == "IMAGE_OBJECT" && media.contentPath?has_content>
+                                <#assign origUri = "/media/" + raw(media.contentPath)>
+                            <#else>
+                                <#assign origUri = "/media?contentId=" + raw(media.contentId!"")>
+                            </#if>
+                            <#assign mediaUrl=makeAppUrl({"uri": origUri}) />
 
                             <@field type="display" label=uiLabelMap.CommonPath><a href="${escapeFullUrl(mediaUrl, 'html')}">${escapeFullUrl(mediaUrl, 'htmlmarkup')}</a></@field>
+
                             <#-- DEV NOTE: you must submit altValue otherwise the service didn't recognize properly -->
                             <@field type="checkbox" name="isPublic" label=uiLabelMap.FormFieldTitle_isPublic value="true" altValue="false" checked=((media.isPublic!)=="Y") />
                             <@field type="display" label=uiLabelMap.CommonMediaType value=(dataResourceTypeIdVal!"") />
@@ -105,19 +113,24 @@
                             </#if>
                             
                             <#if media.dataResourceTypeId == "IMAGE_OBJECT">
+                                <#if media.contentPath?has_content>
+                                    <#assign baseUri = origUri + "?">
+                                <#else>
+                                    <#assign baseUri = origUri + "&">
+                                </#if>
                                 <@field type="generic" label=uiLabelMap.CmsMediaResizedVariants>
                                   <#if hasVariantContent>
                                     <#list variantList as variant>
-                                        <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId!"") + "&variant=" + raw(variant)}) />
+                                        <#assign variantMediaUrl=makeAppUrl({"uri": baseUri + "variant=" + raw(variant)}) />
                                         <a href="${escapeFullUrl(variantMediaUrl, 'html')}">${variant}</a> <#t/>
                                     </#list>
                                     <br/><span class="media-resized-urls-label">URLs</span>:
                                     <@fields type="default" ignoreParentField=true>
-                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId!"") + "&variant=" + raw(variantList[0])}) />
+                                      <#assign variantMediaUrl=makeAppUrl({"uri": baseUri + "variant=" + raw(variantList[0])}) />
                                       <@field type="display" label="variant"><a href="${escapeFullUrl(variantMediaUrl, 'html')}">${escapeFullUrl(variantMediaUrl, 'htmlmarkup')}</a></@field>
-                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId!"") + "&autoVariant=min&width=600&height=400"}) />
+                                      <#assign variantMediaUrl=makeAppUrl({"uri": baseUri + "autoVariant=min&width=600&height=400"}) />
                                       <@field type="display" label="autoVariant min (css contain)"><a href="${escapeFullUrl(variantMediaUrl, 'html')}">${escapeFullUrl(variantMediaUrl, 'htmlmarkup')}</a></@field>
-                                      <#assign variantMediaUrl=makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId!"") + "&autoVariant=max&width=600&height=400"}) />
+                                      <#assign variantMediaUrl=makeAppUrl({"uri": baseUri + "autoVariant=max&width=600&height=400"}) />
                                       <@field type="display" label="autoVariant max"><a href="${escapeFullUrl(variantMediaUrl, 'html')}">${escapeFullUrl(variantMediaUrl, 'htmlmarkup')}</a></@field>
                                     </@fields>
                                   <#else>
@@ -267,7 +280,12 @@
             <#if media?has_content>
                 <@cell id="mediaPreview" columns=7>
                     <@section title=uiLabelMap.CmsMediaPreview>
-                        <#assign dataFile = makeAppUrl({"uri": "/media?contentId=" + raw(media.contentId)})!>
+                        <#if media.dataResourceTypeId == "IMAGE_OBJECT" && media.contentPath?has_content>
+                            <#assign origUri = "/media/" + raw(media.contentPath)>
+                        <#else>
+                            <#assign origUri = "/media?contentId=" + raw(media.contentId!"")>
+                        </#if>
+                        <#assign dataFile = makeAppUrl({"uri": origUri})!>
                         <#if media.dataResourceTypeId == "IMAGE_OBJECT">
                             <#if responsiveImage?has_content>
                                 <#if responsiveImageViewPortList?has_content>

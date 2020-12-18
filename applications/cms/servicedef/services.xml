@@ -769,6 +769,7 @@
         <attribute mode="IN" name="isPublic" type="Boolean" optional="true"/>
         <attribute mode="IN" name="autoVariants" type="Boolean" optional="true"/>
         <attribute mode="IN" name="mediaProfile" type="String" optional="true"/><!-- presetId -->
+        <attribute mode="IN" name="contentPath" type="String" optional="true"/><!-- presetId -->
 
         <!-- SCIPIO (17/12/2018): Allowing custom image variant sizes config -->
         <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
@@ -820,6 +821,7 @@
         <attribute mode="IN" name="contentName" type="String" optional="true"/>
         <attribute mode="IN" name="statusId" type="String" optional="true"/>
         <attribute mode="IN" name="isPublic" type="Boolean" optional="true"/>
+        <attribute mode="IN" name="contentPath" type="String" optional="true"/><!-- presetId -->
         <attribute mode="OUT" name="contentId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceTypeId" type="String" optional="true"/>

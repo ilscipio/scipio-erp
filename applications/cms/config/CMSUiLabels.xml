@@ -1010,7 +1010,9 @@
     <property key="CmsCreateCustomImageSizePreset">        
         <value xml:lang="en">Create Custom Image Size Preset</value>
     </property>
-    
+    <property key="CmsMediaCustomPath">
+        <value xml:lang="en">Custom Path</value>
+    </property>
     <property key="CmsMediaResponsiveImgSizesArea">
         <value xml:lang="en">Responsive Image Sizes</value>
     </property>

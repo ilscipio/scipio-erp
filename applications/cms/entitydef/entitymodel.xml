@@ -744,6 +744,7 @@
       <alias entity-alias="CNT" name="contentId"/>
       <alias entity-alias="CNT" name="contentName"/>
       <alias entity-alias="CNT" name="contentTypeId"/>
+      <alias entity-alias="CNT" name="contentPath"/>
 
       <view-link entity-alias="CNT" rel-entity-alias="DR" rel-optional="false"><!-- NOTE: 2017-07-31: the Content is now REQUIRED -->
           <key-map field-name="dataResourceId"/>

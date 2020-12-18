@@ -160,6 +160,8 @@ code package.
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <field name="mediaProfile" type="id"><description>Name of a media profile for the image or media. For images: ImageSizePreset.presetId or media profile name from mediaprofiles.properties (SCIPIO)</description></field>
+      <field name="contentPath" type="url"><description>Optional media path (SCIPIO)</description></field>
       <prim-key field="contentId"/>
       <relation type="one" fk-name="CONTENT_TO_TYPE" rel-entity-name="ContentType">
         <key-map field-name="contentTypeId"/>
@@ -224,10 +226,10 @@ code package.
         <index-field name="dataResourceId"/>
         <index-field name="localeString"/>
       </index>-->
+      <index name="CONTENT_PATH_SCP">
+        <index-field name="contentPath"/>
+      </index>
     </entity>
-    <extend-entity entity-name="Content">
-      <field name="mediaProfile" type="id"><description>Name of a media profile for the image or media. For images: ImageSizePreset.presetId or media profile name from mediaprofiles.properties (SCIPIO)</description></field>
-    </extend-entity>
     <view-entity entity-name="ContentAndRole" package-name="org.ofbiz.content.content" title="Content And Role View">
         <member-entity entity-alias="CNT" entity-name="Content"/>
         <member-entity entity-alias="CRLE" entity-name="ContentRole"/>
@@ -1374,7 +1376,7 @@ code package.
         title="Image sizes preset" author="Ilscipio GmbH" version="1.0">
         <field name="presetId" type="id-ne"><description>The preset ID, now stored as Content.mediaProfile for associated images (only since 2020-09-21)</description></field>
         <field name="presetName" type="name"></field>
-        <field name="parentProfile" type="id"><description>Parent mediaProfile or ImageSizePreset.presetId - used for type checking and specialization</description></field>
+        <field name="parentProfile" type="id"><description>Parent mediaProfile or ImageSizePreset.presetId - used for type checking and specialization (default: IMAGE_MEDIA)</description></field>
         <field name="variantConfigProfile" type="id"><description>Name of another profile to use for base ImageVariantConfig (even if no ImageSize definitions) (TODO)</description></field>
         <field name="variantConfigLocation" type="id"><description>Location of an ImageProperties.xml file (TODO)</description></field>
         <prim-key field="presetId" />

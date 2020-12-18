@@ -189,6 +189,14 @@ public abstract class CmsMediaServices {
             fileSizeConverted = byteBuffer.limit();
         }
 
+        String contentPath = (String) context.get("contentPath");
+        if (contentPath != null && contentPath.startsWith("/")) {
+            contentPath = contentPath.substring(1);
+            if (contentPath.isEmpty()) {
+                contentPath = null;
+            }
+        }
+
         try {
             GenericValue mimeType = null;
             if (UtilValidate.isNotEmpty(contentType)) {
@@ -272,6 +280,7 @@ public abstract class CmsMediaServices {
                         if (mediaProfile != null) {
                             content.put("mediaProfile", mediaProfile);
                         }
+                        content.put("contentPath", contentPath);
                         content = delegator.createSetNextSeqId(content);
                         String contentId = content.getString("contentId");
                         result.put("contentId", contentId);
@@ -313,6 +322,13 @@ public abstract class CmsMediaServices {
             return err.returnError();
         }
 
+        if (ServiceUtil.isSuccess(result)) {
+            try {
+                dispatcher.runSync("contentImageVariantsClearCaches", UtilMisc.toMap("userLogin", context.get("userLogin"), "distribute", true));
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+            }
+        }
         // result.put("organizationPartyId", null);
 
         return result;
@@ -546,6 +562,13 @@ public abstract class CmsMediaServices {
         String contentName = (String) context.get("contentName");
         Boolean isPublic = (Boolean) context.get("isPublic");
         String statusId = (String) context.get("statusId");
+        String contentPath = (String) context.get("contentPath");
+        if (contentPath != null && contentPath.startsWith("/")) {
+            contentPath = contentPath.substring(1);
+            if (contentPath.isEmpty()) {
+                contentPath = null;
+            }
+        }
 
         try {
             GenericValue content = CmsMediaWorker.getContentForMedia(delegator, contentId, dataResourceId);
@@ -555,6 +578,7 @@ public abstract class CmsMediaServices {
             if (UtilValidate.isNotEmpty(contentName)) {
                 content.put("contentName", contentName);
             }
+            content.put("contentPath", contentPath);
             content.store();
             result.put("contentId", contentId);
 
@@ -636,6 +660,14 @@ public abstract class CmsMediaServices {
             FormattedError err = errorFmt.format(e, "Error updating media file", context);
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnError();
+        }
+
+        if (ServiceUtil.isSuccess(result)) {
+            try {
+                dctx.getDispatcher().runSync("contentImageVariantsClearCaches", UtilMisc.toMap("userLogin", context.get("userLogin"), "distribute", true));
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+            }
         }
 
         result.put("contentId", contentId);
@@ -781,7 +813,6 @@ public abstract class CmsMediaServices {
                     Map<String, Object> resizeCtx = ctx.makeValidInContext("contentImageAutoRescale", ctx);
                     resizeCtx.put("contentId", contentId);
                     resizeCtx.put("contentDataResource", contentDataResource);
-                    resizeCtx.put("requireProfile", false);
                     resizeCtx.put("createNew", forceCreate);
                     resizeCtx.put("recreateExisting", recreateExisting);
                     resizeCtx.put("nonFatal", sepTrans);

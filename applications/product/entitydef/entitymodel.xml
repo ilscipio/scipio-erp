@@ -3036,7 +3036,7 @@ code package.
       </relation>
     </entity>
     <extend-entity entity-name="Product"><!-- SCIPIO -->
-      <field name="imageProfile" type="id"><description>Name of a media profile for the main product image, either ImageSizePreset.presetId or media profile name from mediaprofiles.properties, defaults to IMAGE_PRODUCT (SCIPIO)</description></field>
+      <field name="imageProfile" type="id"><description>Name of a media profile for the main product image, either ImageSizePreset.presetId or media profile name from mediaprofiles.properties, defaults to IMAGE_PRODUCT-ORIGINAL_IMAGE_URL (SCIPIO)</description></field>
     </extend-entity>
     <!-- SCIPIO: Product inline image equivalents of DataResource fields scpWidth, scpHeight, srcPresetJson, ... -->
     <entity entity-name="ProductMediaDetails"
@@ -3045,19 +3045,25 @@ code package.
         <field name="productId" type="id-ne"></field>
         <field name="smallImageWidth" type="numeric"></field>
         <field name="smallImageHeight" type="numeric"></field>
+        <field name="smallImageMimeTypeId" type="id-vlong"></field>
         <field name="smallImagePresetJson" type="very-long"></field>
         <field name="mediumImageWidth" type="numeric"></field>
         <field name="mediumImageHeight" type="numeric"></field>
+        <field name="mediumImageMimeTypeId" type="id-vlong"></field>
         <field name="mediumImagePresetJson" type="very-long"></field>
         <field name="largeImageWidth" type="numeric"></field>
         <field name="largeImageHeight" type="numeric"></field>
+        <field name="largeImageMimeTypeId" type="id-vlong"></field>
         <field name="largeImagePresetJson" type="very-long"></field>
         <field name="detailImageWidth" type="numeric"></field>
         <field name="detailImageHeight" type="numeric"></field>
+        <field name="detailImageMimeTypeId" type="id-vlong"></field>
         <field name="detailImagePresetJson" type="very-long"></field>
         <field name="originalImageWidth" type="numeric"></field>
         <field name="originalImageHeight" type="numeric"></field>
+        <field name="originalImageMimeTypeId" type="id-vlong"></field>
         <field name="originalImagePresetJson" type="very-long"></field>
+        <field name="originalImageFileName" type="value"></field><!-- TODO: not currently populated by inconsistent upload functions -->
         <prim-key field="productId"/>
         <relation type="one" fk-name="PRODMEDDET_PRODID" rel-entity-name="Product">
             <key-map field-name="productId"/>

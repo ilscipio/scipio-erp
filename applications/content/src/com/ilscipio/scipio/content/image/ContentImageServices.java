@@ -138,7 +138,7 @@ public abstract class ContentImageServices {
 
         final String origSizeType = ContentImageWorker.ORIGINAL_SIZETYPE;
 
-        long startTime = System.nanoTime();
+        long startTime = System.currentTimeMillis();
 
         try {
             // SCIPIO: for these we now support component:// and file:// prefix in addition to plain absolute file location
@@ -204,6 +204,13 @@ public abstract class ContentImageServices {
                 throw new IllegalArgumentException("Original image filename [" + imageOrigFn + "] has missing or improper file extension (image type)");
             }
             String imgExtension = imageOrigFn.substring(imageOrigFn.lastIndexOf(".") + 1);
+            GenericValue origFileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", imgExtension).cache().queryOne();
+            String origMimeTypeId = null;
+            if (origFileExt == null) {
+                Debug.logWarning(logPrefix+"Could not find mimeTypeId for file extension [" + imgExtension + "]", module);
+            } else {
+                origMimeTypeId = origFileExt.getString("mimeTypeId");
+            }
 
             // paths
             Map<String, Object> imageContext = new HashMap<>(context);
@@ -293,6 +300,7 @@ public abstract class ContentImageServices {
                         sizeTypeInfo.put("width", (int) imgWidth);
                         sizeTypeInfo.put("height", (int) imgHeight);
                         sizeTypeInfo.put("copyOrig", copyOrig);
+                        sizeTypeInfo.put("mimeTypeId", origMimeTypeId);
                         imgInfoMap.put(sizeType, sizeTypeInfo);
                     } else {
                         targetDirectory = imageServerPath + "/" + getExpandedFnFmtDirPrefix(newFileLocation);
@@ -345,6 +353,7 @@ public abstract class ContentImageServices {
                         sizeTypeInfo.put("width", (int) imgWidth);
                         sizeTypeInfo.put("height", (int) imgHeight);
                         sizeTypeInfo.put("copyOrig", copyOrig);
+                        sizeTypeInfo.put("mimeTypeId", origMimeTypeId);
                         imgInfoMap.put(sizeType, sizeTypeInfo);
                     }
                 } else {
@@ -358,6 +367,7 @@ public abstract class ContentImageServices {
                     sizeTypeInfo.put("width", (int) imgWidth);
                     sizeTypeInfo.put("height", (int) imgHeight);
                     sizeTypeInfo.put("copyOrig", copyOrig);
+                    sizeTypeInfo.put("mimeTypeId", origMimeTypeId);
                     imgInfoMap.put(sizeType, sizeTypeInfo);
                 }
 
@@ -450,9 +460,17 @@ public abstract class ContentImageServices {
 
                         // write new image
                         String targetFileType = imgExtension;
+                        String mimeTypeId = origMimeTypeId;
                         // SCIPIO: 2020-09: Support for specific storage format
                         if (variantInfo != null && variantInfo.getFormat() != null) {
                             targetFileType = variantInfo.resolveFormatExt(delegator);
+                            mimeTypeId = null;
+                            GenericValue fileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", targetFileType).cache().queryOne();
+                            if (fileExt == null) {
+                                Debug.logWarning(logPrefix+"Could not find mimeTypeId for file extension [" + targetFileType + "]", module);
+                            } else {
+                                mimeTypeId = fileExt.getString("mimeTypeId");
+                            }
                         }
                         String newFileLocExt = newFileLocation + "." + targetFileType;
                         String newFileFullLoc = imageServerPath + "/" + newFileLocExt;
@@ -486,10 +504,10 @@ public abstract class ContentImageServices {
                         sizeTypeInfo.put("sizeType", sizeType);
                         sizeTypeInfo.put("url", imageUrl);
                         sizeTypeInfo.put("variantInfo", variantInfo);
-                        sizeTypeInfo.put("width", targetHeight);
-                        sizeTypeInfo.put("height", targetHeight);
+                        sizeTypeInfo.put("width", keepOrig ? (int) imgWidth : bufNewImg.getWidth());
+                        sizeTypeInfo.put("height", keepOrig ? (int) imgHeight : bufNewImg.getHeight());
+                        sizeTypeInfo.put("mimeTypeId", mimeTypeId);
                         imgInfoMap.put(sizeType, sizeTypeInfo);
-
                     } else {
                         // SCIPIO: new
                         Debug.logError(logPrefix+ServiceUtil.getErrorMessage(resultScaleImgMap), module);
@@ -499,8 +517,8 @@ public abstract class ContentImageServices {
 
                 // this is helpful info and doesn't do much harm
                 //if (ImageUtil.verboseOn()) {
-                long endTime = System.nanoTime();
-                StringBuilder logSb = new StringBuilder(logPrefix);
+                long endTime = System.currentTimeMillis();
+                StringBuilder logSb = new StringBuilder();
                 logSb.append("In ");
                 logSb.append((endTime - startTime) / 1000000);
                 logSb.append("ms processed ");
@@ -589,7 +607,6 @@ public abstract class ContentImageServices {
             throw new IllegalArgumentException("Cannot determine file location [" + newFileLocation + "] for sizeType [" + sizeType + "] using expander [" + exdr +
                     "] and imagePathArgs " + context + "; no filename part; service call or configuration may be incomplete");
         }
-
         return newFileLocation;
     }
 
@@ -655,7 +672,7 @@ public abstract class ContentImageServices {
 
         //final String origSizeType = ContentImageWorker.ORIGINAL_SIZETYPE;
 
-        long startTime = System.nanoTime();
+        long startTime = System.currentTimeMillis();
 
         // USE SAME CREATED DATE FOR EVERYTHING RELATED
         Timestamp createdDate = (Timestamp) context.get("createdDate");
@@ -800,7 +817,7 @@ public abstract class ContentImageServices {
 
                 List<GenericValue> fileExtValues;
                 try {
-                    fileExtValues = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", origMimeTypeId).queryList();
+                    fileExtValues = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", origMimeTypeId).cache().queryList();
                     if (UtilValidate.isNotEmpty(fileExtValues)) {
                         targetFmtExt = fileExtValues.get(0).getString("fileExtensionId");
                         if (fileExtValues.size() > 1) {
@@ -810,7 +827,7 @@ public abstract class ContentImageServices {
                         targetFmtExt = EntityUtilProperties.getPropertyValue("content", "image.thumbs.fileType.default", "jpg", delegator);
                         Debug.logWarning(logPrefix+"can't determine thumbnail output format from mimeTypeId '" + origMimeTypeId + "' (dataResourceId: " + origImageDataResourceId
                                 + "); unknown?; using system default: " + targetFmtExt, module);
-                        GenericValue fileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", targetFmtExt).queryOne();
+                        GenericValue fileExt = EntityQuery.use(delegator).from("FileExtension").where("fileExtensionId", targetFmtExt).cache().queryOne();
                         if (UtilValidate.isEmpty(fileExt)) {
                             Debug.logError(logPrefix+"Can't determine thumbnail output format from file type '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")", module);
                             return ServiceUtil.returnError("Can't determine thumbnail output format from file type '" + targetFmtExt + "' (dataResourceId: " + origImageDataResourceId + ")");
@@ -1170,8 +1187,8 @@ public abstract class ContentImageServices {
 
             // this is helpful info and doesn't do much harm
             //if (ImageUtil.verboseOn()) {
-            long endTime = System.nanoTime();
-            StringBuilder logSb = new StringBuilder(logPrefix);
+            long endTime = System.currentTimeMillis();
+            StringBuilder logSb = new StringBuilder();
             logSb.append("In ");
             logSb.append((endTime - startTime) / 1000000);
             logSb.append("ms processed ");

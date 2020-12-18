@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -33,6 +32,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
 import com.ilscipio.scipio.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
@@ -40,6 +40,8 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
@@ -88,14 +90,15 @@ public abstract class ProductImageWorker {
         }
         try {
             // TODO: optimize the duplicate lookups (cached anyway)
-            Map<String, String> sizeTypeMap = ProductImageServices.getProductImageMissingVariantSizeTypes(dctx, locale,
-                    product, productContentTypeId, null, imageUrl, null, useCache);
-            if (UtilValidate.isEmpty(sizeTypeMap)) {
+            ProductImageLocationInfo pili = ProductImageLocationInfo.from(dctx, locale,
+                    product, productContentTypeId, imageUrl, null, true, useCache);
+            List<String> sizeTypeList = (pili != null) ? pili.getMissingVariantNames() : null;
+            if (UtilValidate.isEmpty(sizeTypeList)) {
                 productImageEnsureCache.put(productContentTypeId, Boolean.TRUE);
                 return;
             }
             Map<String, Object> ctx = UtilMisc.toMap("productId", product.get("productId"), "productContentTypeId", productContentTypeId,
-                    "sizeTypeList", sizeTypeMap.keySet(), "recreateExisting", true); // NOTE: the check above (for performance) already implements the recreateExisting logic
+                    "sizeTypeList", sizeTypeList, "recreateExisting", true); // NOTE: the check above (for performance) already implements the recreateExisting logic
             if (async) {
                 dctx.getDispatcher().runAsync("productImageAutoRescale", ctx, false);
             } else {
@@ -378,4 +381,51 @@ public abstract class ProductImageWorker {
         return delegator.makeValue("ProductContentType", "productContentTypeId", productContentTypeId,
                 "hasTable", "N", "description", description, "parentTypeId", parentTypeId).create();
     }
+
+    public static String getDataResourceImageUrl(GenericValue dataResource, boolean useCache) throws GenericEntityException { // SCIPIO
+        if (dataResource == null) {
+            return null;
+        }
+        String dataResourceTypeId = dataResource.hasModelField("drDataResourceTypeId") ?
+                dataResource.getString("drDataResourceTypeId") : dataResource.getString("dataResourceTypeId");
+        if ("SHORT_TEXT".equals(dataResourceTypeId)) {
+            return dataResource.hasModelField("drObjectInfo") ?
+                    dataResource.getString("drObjectInfo") : dataResource.getString("objectInfo");
+        } else if ("ELECTRONIC_TEXT".equals(dataResourceTypeId)) {
+            String dataResourceId = dataResource.hasModelField("drDataResourceId") ?
+                    dataResource.getString("drDataResourceId") : dataResource.getString("dataResourceId");
+            GenericValue elecText = dataResource.getDelegator().findOne("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId), useCache);
+            if (elecText != null) {
+                return elecText.getString("textData");
+            }
+        }
+        return null;
+    }
+
+    public static String getProductInlineImageFieldPrefix(Delegator delegator, String productContentTypeId) {
+        String candidateFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
+        ModelEntity productModel = delegator.getModelEntity("Product");
+        if (productModel.isField(candidateFieldName) && candidateFieldName.endsWith("Url")) {
+            return candidateFieldName.substring(0, candidateFieldName.length() - "Url".length());
+        }
+        return null;
+    }
+
+    // TODO: not used yet due to logging concerns
+    public static ImageProfile getImageProfileOrDefault(GenericValue product, String productContentTypeId, GenericValue content) {
+        String mediaProfileName;
+        if (content != null) {
+            mediaProfileName = content.getString("mediaProfile");
+            if (mediaProfileName == null) {
+                mediaProfileName = "IMAGE_PRODUCT-" + productContentTypeId;
+            }
+        } else {
+            mediaProfileName = product.getString("imageProfile");
+            if (mediaProfileName == null) {
+                mediaProfileName = "IMAGE_PRODUCT-ORIGINAL_IMAGE_URL";
+            }
+        }
+        return ImageProfile.getImageProfile(product.getDelegator(), mediaProfileName);
+    }
+
 }

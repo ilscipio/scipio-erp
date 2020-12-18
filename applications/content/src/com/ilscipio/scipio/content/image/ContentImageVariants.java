@@ -13,12 +13,13 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.FullWebappInfo;
+import org.ofbiz.webapp.ftl.WebappUrlDirective;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -39,8 +40,9 @@ public class ContentImageVariants extends ImageVariants {
     protected List<ContentVariant> variantList;
     protected List<GenericValue> variantRecords;
 
-    protected ContentImageVariants(GenericValue contentView, Delegator delegator, LocalDispatcher dispatcher, Locale locale, boolean useEntityCache) {
-        super(delegator, dispatcher, locale, useEntityCache);
+    protected ContentImageVariants(GenericValue contentView, Delegator delegator, LocalDispatcher dispatcher, Locale locale,
+                                   boolean useEntityCache, Map<String, Object> options) {
+        super(delegator, dispatcher, locale, useEntityCache, options);
         this.contentView = contentView;
     }
 
@@ -49,7 +51,8 @@ public class ContentImageVariants extends ImageVariants {
     }
 
     /** Main factory method with util cache support. */
-    public static ContentImageVariants from(String contentId, Delegator delegator, LocalDispatcher dispatcher, Locale locale, boolean useUtilCache) {
+    public static ContentImageVariants from(String contentId, Delegator delegator, LocalDispatcher dispatcher, Locale locale,
+                                            boolean useUtilCache, Map<String, Object> options) {
         if (UtilValidate.isEmpty(contentId)) {
             return null;
         }
@@ -62,7 +65,7 @@ public class ContentImageVariants extends ImageVariants {
                 return civ != NULL ? civ : null;
             }
         }
-        civ = from(contentId, delegator, dispatcher, locale);
+        civ = from(contentId, delegator, dispatcher, locale, options);
         if (useUtilCache) {
             CACHE.put(cacheKey, civ != null ? civ : NULL);
         }
@@ -73,7 +76,7 @@ public class ContentImageVariants extends ImageVariants {
     }
 
     /** Uncached factory method. */
-    public static ContentImageVariants from(String contentId, Delegator delegator, LocalDispatcher dispatcher, Locale locale) {
+    public static ContentImageVariants from(String contentId, Delegator delegator, LocalDispatcher dispatcher, Locale locale, Map<String, Object> options) {
         GenericValue record;
         try {
             record = EntityUtil.getFirst(delegator.findByAnd("ContentDataResourceRequiredView",
@@ -86,7 +89,7 @@ public class ContentImageVariants extends ImageVariants {
             Debug.logWarning("Could not find content image [" + contentId + "]", module);
             return null;
         }
-        return new ContentImageVariants(record, delegator, dispatcher, locale, false);
+        return new ContentImageVariants(record, delegator, dispatcher, locale, false, options);
     }
 
     @Override
@@ -171,13 +174,14 @@ public class ContentImageVariants extends ImageVariants {
         for (GenericValue variantRecord : variantRecords) {
             String name = variantRecord.getString("caMapKey");
             if (name == null) {
-                Debug.logError("Variant record [" + variantRecord.get("contentId") + "] missing mapKey/sizeType", module);
+                Debug.logError("Variant record [" + variantRecord.get("contentId") + "] missing sizeType name (caMapKey, ContentAssoc.mapKey)", module);
                 continue;
             }
             ImageVariantConfig.VariantInfo variantConfig = getVariantConfig().getVariant(name);
             if (variantConfig == null) {
-                Debug.logError("Variant record [" + variantRecord.get("contentId") + "] mapKey/sizeType ["
-                        + name + "] not found in variant config [" + variantConfig.getName() + "]", module);
+                Debug.logWarning("Variant record [" + variantRecord.get("contentId") + "] sizeType/caMapKey [" +
+                        name + "] not found in variant config [" + name + "]; discarding variant; data may be out of date" +
+                        " with image properties config (contentImageAutoRescale/productImageAutoRescale needed?)", module);
                 continue;
             }
             ContentVariant variant = makeVariant(variantConfig, variantRecord);
@@ -240,26 +244,67 @@ public class ContentImageVariants extends ImageVariants {
 
         @Override
         public String getImageUrl(Map<String, Object> context, Map<String, Object> args) {
-            // FIXME: INCOMPLETE/HARDCODED
-            HttpServletRequest request = UtilGenerics.cast(context.get("request"));
-            HttpServletResponse response = UtilGenerics.cast(context.get("response"));
-            Boolean fullPath = (Boolean) args.get("fullPath");
-            Boolean secure = (Boolean) args.get("secure");
-            Boolean encode = (Boolean) args.get("encode");
-            String uri = appendUrlParams("media"+ getBaseImageUrl(), UtilGenerics.cast(args.get("params")));
-            String url = null;
             try {
-                url = RequestHandler.makeLinkAuto(request, response, uri, false, false, null,
-                        false, fullPath, secure, encode);
+                // TODO: REVIEW: may not 100% coincide with RequestHandler.makeLink yet, close enough for now
+                if (args == null) {
+                    args = Collections.emptyMap();
+                }
+                String webSiteId = (String) args.get("webSiteId");
+                FullWebappInfo targetWebappInfo = getUrlTargetWebapp(context, args, webSiteId);
+                String uri = getMediaServletPath(targetWebappInfo) + getMediaImageBaseParams(context, args);
+                return WebappUrlDirective.AppUrlDirective.getInstance().makeLinkForContext(context, args, uri, webSiteId, null);
             } catch(Exception e) {
-                Debug.logError("Error building URL for image variant content [" + getContentId() + "] uri [" + uri + "]", module);
+                Debug.logError("Error building URL for image variant content [" + getContentId() + "]", module);
+                return null;
             }
-            return url;
         }
 
         @Override
-        public String getBaseImageUrl() {
-            return "?content=" + UtilCodec.getUrlEncoder().encode(getContentId());
+        public String getPlainImageUrl(Map<String, Object> context, Map<String, Object> args) {
+            try {
+                // TODO: REVIEW: may not 100% coincide with RequestHandler.makeLink yet, close enough for now
+                if (args == null) {
+                    args = Collections.emptyMap();
+                }
+                String webSiteId = (String) args.get("webSiteId");
+                FullWebappInfo targetWebappInfo = getUrlTargetWebapp(context, args, webSiteId);
+                String uri = getMediaServletPath(targetWebappInfo) + getMediaImageBaseParams(context, args);
+                args = new HashMap<>(args);
+                args.putIfAbsent("fullPath", false);
+                args.putIfAbsent("secure", false);
+                args.putIfAbsent("encode", false);
+                return WebappUrlDirective.AppUrlDirective.getInstance().makeLinkForContext(context, args, uri, webSiteId, null);
+            } catch(Exception e) {
+                Debug.logError("Error building URL for image variant content [" + getContentId() + "]", module);
+                return null;
+            }
+        }
+
+        protected String getMediaImageBaseParams(Map<String, Object> context, Map<String, Object> args) {
+            String paramStr = getStaticImageUrl(); // contentId
+            if (isOriginal()) {
+                return paramStr;
+            }
+            Map<String, Object> params = UtilGenerics.cast(args.get("params"));
+            if (params == null) {
+                params = Collections.emptyMap();
+            }
+            if (params.containsKey("autoVariant") || params.containsKey("variant")) {
+                // don't add variant
+                return paramStr;
+            }
+            paramStr += "&variant=" + UtilCodec.getUrlEncoder().encode(getName());
+            return paramStr;
+        }
+
+        protected String getMediaServletPath(FullWebappInfo targetWebappInfo) {
+            String mediaPath = (targetWebappInfo != null) ? targetWebappInfo.getServletMappingMountPoint("CmsMediaServlet") : null;
+            return (mediaPath != null) ? mediaPath : "/media";
+        }
+
+        @Override
+        public String getStaticImageUrl() {
+            return "?contentId=" + UtilCodec.getUrlEncoder().encode(getContentId());
         }
 
         @Override
@@ -298,5 +343,77 @@ public class ContentImageVariants extends ImageVariants {
         public String getAssocId() {
             return null;
         }
+    }
+
+    @Override
+    public Map<String, Object> getResponsiveVariantMap(String targetMimeTypeId, Map<String, ? extends Number> sizeDefs,
+                                                       Map<String, Object> context, Map<String, Object> urlArgs) {
+        /* Example:
+        <#local sizeMap = getImageVariants("content", contentId)!false/><#-- now accepts empty contentId, will return null/false -->
+        <#if !sizeMap?is_boolean>
+          <#local responsiveMap = sizeMap.getResponsiveVariantMap("image/webp", sizeDefs, context, {})/>
+        </#if>
+         */
+        List<? extends Variant> variantList = getVariantList();
+        if (UtilValidate.isEmpty(variantList) || UtilValidate.isEmpty(sizeDefs)) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, Object> srcset = new LinkedHashMap<>();
+        Map<String, Object> srcsetTarget = new LinkedHashMap<>();
+        Map<String, Object> srcsetSize = new LinkedHashMap<>();
+        Map<String, Object> srcsetSizeTarget = new LinkedHashMap<>();
+
+        variantList = new ArrayList<>(variantList);
+        variantList.sort(new Comparator<Variant>() {
+            @Override
+            public int compare(Variant o1, Variant o2) {
+                // NOTE: imageWidth is physical width, it *could* be missing for old data (and non-updated product images),
+                // so may want configWidth instead...
+                Integer width1 = o1.getImageWidth();
+                Integer width2 = o2.getImageWidth();
+                if (width1 == null || width2 == null) {
+                    return 0;
+                }
+                return Integer.compare(width2, width1); // reversed
+            }
+        });
+
+        for(Map.Entry<String, ? extends Number> sizeDefEntry : sizeDefs.entrySet()) {
+            Variant bestSize = null;
+            Variant bestSizeTarget = null;
+
+            String sizeDefKey = sizeDefEntry.getKey();
+            Number sizeDefNum = sizeDefEntry.getValue();
+            if (UtilValidate.isNotEmpty(sizeDefKey) && sizeDefNum != null) {
+                for (Variant variant : variantList) {
+                    if (variant.getImageWidth() != null && variant.getImageWidth() >= sizeDefNum.intValue()) {
+                        if (targetMimeTypeId.equals(variant.getMimeTypeId())) {
+                            bestSizeTarget = variant;
+                        } else {
+                            bestSize = variant;
+                        }
+                    }
+                }
+            }
+
+            if (bestSize != null) {
+                String url = bestSize.getImageUrl(context, urlArgs);
+                if (UtilValidate.isNotEmpty(url)) {
+                    srcset.put(url, bestSize.getImageWidth());
+                    srcsetSize.put(url, sizeDefKey);
+                }
+            }
+            if (bestSizeTarget != null) {
+                String url = bestSizeTarget.getImageUrl(context, urlArgs);
+                if (UtilValidate.isNotEmpty(url)) {
+                    srcsetTarget.put(url, bestSizeTarget.getImageWidth());
+                    srcsetSizeTarget.put(url, sizeDefKey);
+                }
+            }
+        }
+
+        return UtilMisc.toMap("srcset", srcset, "srcsetTarget", srcsetTarget,
+                "srcsetSize", srcsetSize, "srcsetSizeTarget", srcsetSizeTarget);
     }
 }

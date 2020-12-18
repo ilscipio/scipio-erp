@@ -105,10 +105,10 @@ public abstract class ContentImageWorker {
             return mediaProfile;
         }
         // Infer default
-        if (content.getDelegator().from("ProductContent")
-                .where("contentId", content.get("contentId")).cache(useCache).queryCount() > 0) {
-            // FIXME: this should be based on productContentTypeId
-            return "IMAGE_PRODUCT";
+        GenericValue productContent = content.getDelegator().from("ProductContent")
+                .where("contentId", content.get("contentId")).cache(useCache).queryFirst();
+        if (productContent != null) {
+            return "IMAGE_PRODUCT-" + productContent.get("productContentTypeId");
         }
         String contentTypeId = content.getString("contentTypeId");
         if ("SCP_MEDIA".equals(contentTypeId) || "SCP_MEDIA_VARIANT".equals(contentTypeId)) {

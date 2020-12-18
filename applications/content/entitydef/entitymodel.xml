@@ -887,10 +887,11 @@ code package.
       <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <!-- SCIPIO: NOTE: scpWidth & scpHeight are added to DataResource instead of as DataResourceAttribute because the latter is guaranteed to be too slow for future queries. -->
-      <field name="scpWidth" type="numeric"><description>SCIPIO: 2017-08-11: image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes)</description></field>
-      <field name="scpHeight" type="numeric"><description>SCIPIO: 2017-08-11: image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes)</description></field>
-      <field name="sizeId" type="id-ne"><description>Represents an image dimension with its common fields (height and width) and other fields used for responsive images. NOTE: configuration may not necessarily reflect current image (SCIPIO 12/31/2018)</description></field>
-      <field name="srcPresetJson" type="very-long"><description>SCIPIO: json map describing the preset/format data used to generate this media, regardless of whether the configuration presets were changed; for resized variant images, usually contains 'width', 'height', 'format', 'upscaleMode' (corresponds to ImageVariantConfig.VariantInfo without name)</description></field>
+      <field name="scpWidth" type="numeric"><description>Image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes) (SCIPIO)</description></field>
+      <field name="scpHeight" type="numeric"><description>Image or video width (px) (optimization; originally added for auto-resized images, contentAssocTypeId IMGSZ_*; may be null for other purposes) (SCIPIO)</description></field>
+      <field name="sizeId" type="id-ne"><description>Represents an image dimension with its common fields (height and width) and other fields used for responsive images. NOTE: configuration may not necessarily reflect current image (SCIPIO)</description></field>
+      <field name="srcPresetJson" type="very-long"><description>Json map describing the preset/format data used to generate this media, regardless of whether the configuration presets were changed; for resized variant images, usually contains 'width', 'height', 'format', 'upscaleMode' (corresponds to ImageVariantConfig.VariantInfo without name) (SCIPIO)</description></field>
+      <field name="srcMimeTypeId" type="id-vlong"><description>mimeTypeId for the source image, for product image URLs, as mimeTypeId is set to text/html for these by stock (SCIPIO)</description></field>
       <prim-key field="dataResourceId"/>
       <relation type="one" fk-name="DTRSRC_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
@@ -1374,6 +1375,8 @@ code package.
         <field name="presetId" type="id-ne"><description>The preset ID, now stored as Content.mediaProfile for associated images (only since 2020-09-21)</description></field>
         <field name="presetName" type="name"></field>
         <field name="parentProfile" type="id"><description>Parent mediaProfile or ImageSizePreset.presetId - used for type checking and specialization</description></field>
+        <field name="variantConfigProfile" type="id"><description>Name of another profile to use for base ImageVariantConfig (even if no ImageSize definitions) (TODO)</description></field>
+        <field name="variantConfigLocation" type="id"><description>Location of an ImageProperties.xml file (TODO)</description></field>
         <prim-key field="presetId" />
     </entity>
 

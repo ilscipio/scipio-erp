@@ -224,7 +224,7 @@
         </attribute>
         <attribute name="requireProfile" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If true, Content.mediaProfile or DataResource.sizeId (old) must be set;
-                if false, attempts to infer a profile from mediaprofiles.properties, either IMAGE_PRODUCT, IMAGE_CONTENT or IMAGE_DEFAULT</description>
+                if false, attempts to infer a profile from mediaprofiles.properties, either IMAGE_PRODUCT-ORIGINAL_IMAGE_URL, IMAGE_CONTENT or IMAGE_DEFAULT</description>
         </attribute>
         <attribute name="createNew" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true, even if the image currently has no variants, attempts to generate new variants;

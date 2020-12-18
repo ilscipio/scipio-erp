@@ -1,8 +1,6 @@
 package com.ilscipio.scipio.content.image;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCodec;
-import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
@@ -12,11 +10,12 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
-import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.ExtWebappInfo;
+import org.ofbiz.webapp.FullWebappInfo;
+import org.ofbiz.webapp.ftl.WebappUrlDirective;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -43,7 +42,7 @@ public abstract class ImageVariants implements Serializable {
     protected transient ImageProfile profile;
     protected transient ImageProfile explicitProfile;
 
-    protected ImageVariants(Delegator delegator, LocalDispatcher dispatcher, Locale locale, boolean useEntityCache) {
+    protected ImageVariants(Delegator delegator, LocalDispatcher dispatcher, Locale locale, boolean useEntityCache, Map<String, Object> options) {
         this.delegator = delegator;
         this.delegatorName = delegator.getDelegatorName();
         this.dispatcher = dispatcher;
@@ -133,12 +132,47 @@ public abstract class ImageVariants implements Serializable {
 
     public abstract Variant getOriginal();
 
-    /** Returns map of image variants by sizeType ("small", "800x600", ...), excluding "original" ({@link #getOriginal()}. */
+    /**
+     * Returns map of image variants by sizeType ("small", "800x600", ...), excluding "original" ({@link #getOriginal()}.
+     * NOTE: If cache.properties#product.image.variants.sourceCheck=true (product images only), this returns empty if no physically defined
+     * variants are detected.
+     */
     public abstract Map<String, ? extends Variant> getVariantMap();
 
     /** Returns list of image variants, excluding "original" ({@link #getOriginal()}. */
     public abstract List<? extends Variant> getVariantList();
 
+    /**
+     * Returns the source check setting, which controls whether Variant instances with or without checking for source
+     * (file) presence. Currently this may only be false for cache.properties#product.image.variants.sourceCheck=false
+     * for product images only.
+     */
+    public boolean isVariantSourceCheck() {
+        return true;
+    }
+
+    /**
+     * Checks if any Variant instances are defined.
+     * NOTE: If cache.properties#product.image.variants.sourceCheck=true (product images only), this returns false if no physically defined
+     * variants are detected.
+     */
+    public boolean hasVariants() {
+        return !getVariantMap().isEmpty();
+    }
+
+    /**
+     * Performs a DEEP (file-based) check to see if the image currently has physically available variants.
+     * IGNORES the cache.properties#product.image.variants.sourceCheck setting. Depends on implementation.
+     * See also {@link Variant#hasSource()}.
+     */
+    public boolean hasSourcedVariants() {
+        for(Map.Entry<String, ? extends Variant> entry : getVariantMap().entrySet()) {
+            if (entry.getValue().hasSource()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public Variant getVariant(String name) {
         if ("original".equals(name)) {
@@ -147,6 +181,15 @@ public abstract class ImageVariants implements Serializable {
         return getVariantMap().get(name);
     }
 
+    /**
+     * Represents an image variant, for the original image represented by {@link #getOriginal()} including itself.
+     *
+     * <p>NOTE: The presence of an instance does not necessarily guarantee that a file is immediately available.
+     * This is controlled by the setting cache.properties#product.image.variants.sourceCheck (currently only
+     * meaningful for product images). When sourceCheck=true, instances
+     * are returned only when the source/file is immediately available. It can be set to false so that instances are only
+     * created when source/file available. It can also be left to false and {@link #hasSource()} manually checked in code instead.</p>
+     */
     public abstract class Variant implements Serializable {
         protected final String name;
         protected ImageVariantConfig.VariantInfo config; // TODO: REVIEW: did not put this transient because some callers
@@ -164,6 +207,10 @@ public abstract class ImageVariants implements Serializable {
             return name;
         }
 
+        public boolean isOriginal() {
+            return this == getOriginal();
+        }
+
         /** Returns the associated contentId for the image variant or null if not applicable (implementation). */
         public abstract String getContentId();
 
@@ -175,24 +222,57 @@ public abstract class ImageVariants implements Serializable {
 
         /**
          * Returns the image URL of the original (non-resized) image, from context root (/images/..., /shop/media?contentId=xxxx, ...).
-         * context refers to the screen context or a wrapper context and typically should contain request, response and locale.
+         * This produces a URL equivalent to calling the @contentUrl or @pageUrl Freemarker utilities.ftl macros.
+         * <p>context refers to the screen context or a wrapper context and typically should contain request, response and locale.
          * For product images this returns the stored image url plus given params.
-         * Param values are url-encoded but the url is not html-encoded (screen concern).
+         * Param values are url-encoded but the url is not html-encoded (screen concern).</p>
+         * @see #getPlainImageUrl(Map, Map)
          */
         public abstract String getImageUrl(Map<String, Object> context, Map<String, Object> args);
 
         /**
          * Returns the image URL of the original (non-resized) image, from context root (/images/..., /shop/media?contentId=xxxx, ...).
-         * context refers to the screen context or a wrapper context and typically should contain request, response and locale.
+         * This produces a URL equivalent to calling the @contentUrl or @pageUrl Freemarker utilities.ftl macros.
+         * <p>context refers to the screen context or a wrapper context and typically should contain request, response and locale.
          * For product images this returns the stored image url plus given params.
-         * Param values are url-encoded but the url is not html-encoded (screen concern).
+         * Param values are url-encoded but the url is not html-encoded (screen concern).</p>
+         * @see #getImageUrl(Map, Map)
          */
         public String getImageUrl(Map<String, Object> context) {
             return getImageUrl(context, Collections.emptyMap());
         }
 
+        /**
+         * Returns the image URL of the original (non-resized) image, from context root (/images/..., /shop/media?contentId=xxxx, ...)
+         * without URL encoding or any extras other than URL parameters.
+         * <p>URLs returned from this method are not encoded with @contentUrl or @pageUrl and may need an extra call for URL encoding,
+         * but in such case it's preferable to call {@link #getImageUrl(Map, Map)} since the URL encoding method usually depends
+         * on the type of link (content, product, etc.).</p>
+         * <p>context refers to the screen context or a wrapper context and typically should contain request, response and locale.
+         * For product images this returns the stored image url plus given params.
+         * Param values are url-encoded but the url is not html-encoded (screen concern).</p>
+         * @see #getImageUrl(Map, Map)
+         */
+        public abstract String getPlainImageUrl(Map<String, Object> context, Map<String, Object> args);
+
+        /**
+         * Returns the image URL of the original (non-resized) image, from context root (/images/..., /shop/media?contentId=xxxx, ...)
+         * without URL encoding or any extras other than URL parameters.
+         * <p>URLs returned from this method are not encoded with @contentUrl or @pageUrl and may need an extra call for URL encoding,
+         * but in such case it's preferable to call {@link #getImageUrl(Map, Map)} since the URL encoding method usually depends
+         * on the type of link (content, product, etc.).</p>
+         * <p>context refers to the screen context or a wrapper context and typically should contain request, response and locale.
+         * For product images this returns the stored image url plus given params.
+         * Param values are url-encoded but the url is not html-encoded (screen concern).</p>
+         * @see #getPlainImageUrl(Map, Map)
+         * @see #getImageUrl(Map, Map)
+         */
+        public String getPlainImageUrl(Map<String, Object> context) {
+            return getPlainImageUrl(context, Collections.emptyMap());
+        }
+
         /** Returns the stored image URL of the original (non-resized) image or null if cannot be determined without parameters or context. */
-        public abstract String getBaseImageUrl();
+        public abstract String getStaticImageUrl();
 
         /** Returns the physical variant image width, or null if missing on the record. */
         public abstract Integer getImageWidth();
@@ -256,43 +336,45 @@ public abstract class ImageVariants implements Serializable {
             }
             return null;
         }
-    }
 
-    protected String makeUrl(String uri, Map<String, Object> context, Map<String, Object> args) {
-        // TODO
-        throw new UnsupportedOperationException();
-    }
-
-    protected String appendUrlParams(String url, Map<String, Object> params) {
-        if (UtilValidate.isEmpty(params)) {
-            return url;
+        /**
+         * Performs a DEEP (file-based) check to see if this variant has a physically available variant source file.
+         * IGNORES the cache.properties#product.image.variants.sourceCheck setting. Depends on implementation.
+         * NOTE: When sourceCheck=true, this ImageVariant instance will not be available to begin with as
+         * it will be omitted from {@link #getVariantMap()}. See also {@link #hasSourcedVariants()}.
+         */
+        public boolean hasSource() {
+            return true;
         }
-        // TODO: util
-        StringBuilder sb = new StringBuilder(url);
-        String delim = url.contains("?") ? "&" : "?";
-        for(Map.Entry<String, Object> entry : params.entrySet()) {
-            String name = entry.getKey();
-            if (entry.getValue() instanceof Collection) {
-                for(Object value : UtilGenerics.<Collection<?>>cast(entry.getValue())) {
-                    sb.append(delim);
-                    sb.append(UtilCodec.getUrlEncoder().encode(name));
-                    sb.append('=');
-                    if (value != null) {
-                        sb.append(UtilCodec.getUrlEncoder().encode(value.toString()));
-                    }
-                    delim = "&";
-                }
+    }
+
+    /** Abstracted function for FTL templates. See MimeType entity for list of target mimeTypeIds. e.g.: image/jpeg, image/png, image/webp. */
+    public abstract Map<String, Object> getResponsiveVariantMap(String targetMimeTypeId, Map<String, ? extends Number> sizeDefs,
+                                                                Map<String, Object> context, Map<String, Object> urlArgs);
+
+    protected String appendUrlParams(String url, Map<String, Object> params, String paramDelim) {
+        return WebappUrlDirective.appendUrlParams(url, params, paramDelim);
+    }
+
+    protected FullWebappInfo getUrlTargetWebapp(Map<String, Object> context, Map<String, Object> args, String webSiteId) {
+        if (webSiteId == null) {
+            webSiteId = (String) args.get("webSiteId");
+        }
+        // TODO: REVIEW: may not 100% coincide with RequestHandler.makeLink yet, close enough for now
+        if (UtilValidate.isNotEmpty(webSiteId)) {
+            HttpServletRequest request = (HttpServletRequest) context.get("request");
+            if (request != null) {
+                return FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), request);
             } else {
-                Object value = entry.getValue();
-                sb.append(delim);
-                sb.append(UtilCodec.getUrlEncoder().encode(name));
-                sb.append('=');
-                if (value != null) {
-                    sb.append(UtilCodec.getUrlEncoder().encode(value.toString()));
-                }
-                delim = "&";
+                return FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), context);
+            }
+        } else {
+            HttpServletRequest request = (HttpServletRequest) context.get("request");
+            if (request != null) {
+                return FullWebappInfo.fromRequest(request);
+            } else {
+                return FullWebappInfo.fromContext(context);
             }
         }
-        return sb.toString();
     }
 }

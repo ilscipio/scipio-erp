@@ -119,6 +119,7 @@ code package.
             <set field="addAdditionalViewForProductMap.productContentTypeId" value="ADDITIONAL_IMAGE_1"/>
             <set field="addAdditionalViewForProductMap._uploadedFile_fileName" from-field="parameters._additionalImageOne_fileName"/>
             <set field="addAdditionalViewForProductMap._uploadedFile_contentType" from-field="parameters._additionalImageOne_contentType"/>
+            <set field="addAdditionalViewForProductMap.imageProfile" from-field="parameters.additionalImageOne_imageProfile"/>
             <call-service service-name="addAdditionalViewForProduct" in-map-name="addAdditionalViewForProductMap"/>
             <clear-field field="addAdditionalViewForProductMap"/>
         </if-not-empty>
@@ -128,6 +129,7 @@ code package.
             <set field="addAdditionalViewForProductMap.productContentTypeId" value="ADDITIONAL_IMAGE_2"/>
             <set field="addAdditionalViewForProductMap._uploadedFile_fileName" from-field="parameters._additionalImageTwo_fileName"/>
             <set field="addAdditionalViewForProductMap._uploadedFile_contentType" from-field="parameters._additionalImageTwo_contentType"/>
+            <set field="addAdditionalViewForProductMap.imageProfile" from-field="parameters.additionalImageTwo_imageProfile"/>
             <call-service service-name="addAdditionalViewForProduct" in-map-name="addAdditionalViewForProductMap"/>
             <clear-field field="addAdditionalViewForProductMap"/>
         </if-not-empty>
@@ -137,6 +139,7 @@ code package.
             <set field="addAdditionalViewForProductMap.productContentTypeId" value="ADDITIONAL_IMAGE_3"/>
             <set field="addAdditionalViewForProductMap._uploadedFile_fileName" from-field="parameters._additionalImageThree_fileName"/>
             <set field="addAdditionalViewForProductMap._uploadedFile_contentType" from-field="parameters._additionalImageThree_contentType"/>
+            <set field="addAdditionalViewForProductMap.imageProfile" from-field="parameters.additionalImageThree_imageProfile"/>
             <call-service service-name="addAdditionalViewForProduct" in-map-name="addAdditionalViewForProductMap"/>
             <clear-field field="addAdditionalViewForProductMap"/>
         </if-not-empty>
@@ -146,6 +149,7 @@ code package.
             <set field="addAdditionalViewForProductMap.productContentTypeId" value="ADDITIONAL_IMAGE_4"/>
             <set field="addAdditionalViewForProductMap._uploadedFile_fileName" from-field="parameters._additionalImageFour_fileName"/>
             <set field="addAdditionalViewForProductMap._uploadedFile_contentType" from-field="parameters._additionalImageFour_contentType"/>
+            <set field="addAdditionalViewForProductMap.imageProfile" from-field="parameters.additionalImageFour_imageProfile"/>
             <call-service service-name="addAdditionalViewForProduct" in-map-name="addAdditionalViewForProductMap"/>
             <clear-field field="addAdditionalViewForProductMap"/>
         </if-not-empty>

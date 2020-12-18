@@ -133,7 +133,7 @@ code package.
             <#-- SCIPIO: mediaProfile
             <p><em>${uiLabelMap.ProductOriginalImageMessage} : &dollar;{ofbiz.home}/applications/product/config/ImageProperties.xml</em></p>-->
             <@fields type="default">
-              <@cataloglib.imageProfileSelect profileName=(parameters.mediaProfile!product.imageProfile!"") defaultProfileName="IMAGE_PRODUCT"/>
+              <@cataloglib.imageProfileSelect fieldName="imageProfile" profileName=(parameters.mediaProfile!product.imageProfile!"") defaultProfileName="IMAGE_PRODUCT-ORIGINAL_IMAGE_URL"/>
             </@fields>
             <@field type="file" size="50" name="fname"/>
             <@field type="generic">

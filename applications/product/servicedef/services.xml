@@ -448,6 +448,7 @@ code package.
         <auto-attributes include="pk" mode="IN" optional="true"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute mode="IN" name="contentId" optional="true" type="String"/>
+        <attribute mode="IN" name="imageProfile" optional="true" type="String"/><!-- SCIPIO -->
         <override name="productContentTypeId" optional="false"/>
         <override name="productId" optional="false"/>
     </service>
@@ -469,6 +470,11 @@ code package.
         <attribute name="additionalImageFour" type="java.nio.ByteBuffer" mode="IN" optional="true"/>
         <attribute name="_additionalImageFour_fileName" type="String" mode="IN" optional="true"/>
         <attribute name="_additionalImageFour_contentType" type="String" mode="IN" optional="true"/>
+        <!-- SCIPIO -->
+        <attribute name="additionalImageOne_imageProfile" type="String" mode="IN" optional="true"/>
+        <attribute name="additionalImageTwo_imageProfile" type="String" mode="IN" optional="true"/>
+        <attribute name="additionalImageThree_imageProfile" type="String" mode="IN" optional="true"/>
+        <attribute name="additionalImageFour_imageProfile" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="updateContentSEOForProduct" engine="simple"

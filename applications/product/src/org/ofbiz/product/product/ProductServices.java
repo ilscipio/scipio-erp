@@ -1114,19 +1114,54 @@ public class ProductServices {
                 Debug.logError(e,module);
             }
 
-            /* scale Image in different sizes */
-            Map<String, Object> resultResize = new HashMap<>();
-            try {
-                resultResize.putAll(ScaleImage.scaleImageInAllSize(imageContext, filenameToUse, "additional", viewNumber, "IMAGE_PRODUCT", null));
-            } catch (IOException e) {
-                Debug.logError(e, "Scale additional image in all different sizes is impossible : " + e.toString(), module);
-                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                        "ProductImageViewScaleImpossible", UtilMisc.toMap("errorString", e.toString()), locale));
-            }
-
-            if( ServiceUtil.isError(resultResize)) { // SCIPIO: added 2018-03-27
-                return resultResize;
-            }
+            // SCIPIO: use productAutoImageRescale
+//            /* scale Image in different sizes */
+//            Map<String, Object> resultResize = new HashMap<>();
+//            try {
+//                resultResize.putAll(ScaleImage.scaleImageInAllSize(imageContext, filenameToUse, "additional", viewNumber, "IMAGE_PRODUCT", null));
+//            } catch (IOException e) {
+//                Debug.logError(e, "Scale additional image in all different sizes is impossible : " + e.toString(), module);
+//                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+//                        "ProductImageViewScaleImpossible", UtilMisc.toMap("errorString", e.toString()), locale));
+//            }
+//
+//            if( ServiceUtil.isError(resultResize)) { // SCIPIO: added 2018-03-27
+//                return resultResize;
+//            }
+//
+//            String imageUrl = imageUrlPrefix + "/" + fileLocation + "." +  extension.getString("fileExtensionId");
+//            /* store the imageUrl version of the image, for backwards compatibility with code that does not use scaled versions */
+//            Map<String, Object> result = addImageResource(dispatcher, delegator, context, imageUrl, productContentTypeId);
+//
+//            if( ServiceUtil.isError(result)) {
+//                return result;
+//            }
+//
+//            /* now store the image versions created by ScaleImage.scaleImageInAllSize */
+//            /* have to shrink length of productContentTypeId, as otherwise value is too long for database field */
+//            Map<String,String> imageUrlMap = UtilGenerics.checkMap(resultResize.get("imageUrlMap"));
+//            for ( String sizeType : ScaleImage.sizeTypeList ) {
+//                imageUrl = imageUrlMap.get(sizeType);
+//                if( UtilValidate.isNotEmpty(imageUrl)) {
+//                    try {
+//                        GenericValue productContentType = EntityQuery.use(delegator)
+//                                .from("ProductContentType")
+//                                .where("productContentTypeId", "XTRA_IMG_" + viewNumber + "_" + sizeType.toUpperCase(Locale.getDefault()))
+//                                .cache()
+//                                .queryOne();
+//                        if (UtilValidate.isNotEmpty(productContentType)) {
+//                            result = addImageResource(dispatcher, delegator, context, imageUrl, "XTRA_IMG_" + viewNumber + "_" + sizeType.toUpperCase(Locale.getDefault()));
+//                            if( ServiceUtil.isError(result)) {
+//                                Debug.logError(ServiceUtil.getErrorMessage(result), module);
+//                                return result;
+//                            }
+//                        }
+//                    } catch(GenericEntityException e) {
+//                        Debug.logError(e,module);
+//                        return ServiceUtil.returnError(e.getMessage());
+//                    }
+//                }
+//            }
 
             String imageUrl = imageUrlPrefix + "/" + fileLocation + "." +  extension.getString("fileExtensionId");
             /* store the imageUrl version of the image, for backwards compatibility with code that does not use scaled versions */
@@ -1136,31 +1171,21 @@ public class ProductServices {
                 return result;
             }
 
-            /* now store the image versions created by ScaleImage.scaleImageInAllSize */
-            /* have to shrink length of productContentTypeId, as otherwise value is too long for database field */
-            Map<String,String> imageUrlMap = UtilGenerics.checkMap(resultResize.get("imageUrlMap"));
-            for ( String sizeType : ScaleImage.sizeTypeList ) {
-                imageUrl = imageUrlMap.get(sizeType);
-                if( UtilValidate.isNotEmpty(imageUrl)) {
-                    try {
-                        GenericValue productContentType = EntityQuery.use(delegator)
-                                .from("ProductContentType")
-                                .where("productContentTypeId", "XTRA_IMG_" + viewNumber + "_" + sizeType.toUpperCase(Locale.getDefault()))
-                                .cache()
-                                .queryOne();
-                        if (UtilValidate.isNotEmpty(productContentType)) {
-                            result = addImageResource(dispatcher, delegator, context, imageUrl, "XTRA_IMG_" + viewNumber + "_" + sizeType.toUpperCase(Locale.getDefault()));
-                            if( ServiceUtil.isError(result)) {
-                                Debug.logError(ServiceUtil.getErrorMessage(result), module);
-                                return result;
-                            }
-                        }
-                    } catch(GenericEntityException e) {
-                        Debug.logError(e,module);
-                        return ServiceUtil.returnError(e.getMessage());
-                    }
+            try {
+                Map<String, Object> rescaleResult = dispatcher.runSync("productImageAutoRescale", UtilMisc.toMap(
+                        "userLogin", context.get("userLogin"), "locale", context.get("locale"), "timeZone", context.get("timeZone"),
+                        "productId", productId, "productContentTypeId", productContentTypeId, "createSizeTypeContent", true
+                ));
+                if (ServiceUtil.isError(rescaleResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(rescaleResult));
+                } else if (ServiceUtil.isFailure(rescaleResult)) {
+                    return ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(rescaleResult));
                 }
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.toString());
             }
+
         }
         return ServiceUtil.returnSuccess();
     }
@@ -1170,7 +1195,7 @@ public class ProductServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String productId = (String) context.get("productId");
 
-        if (UtilValidate.isNotEmpty(imageUrl) && imageUrl.length() > 0) {
+        if (UtilValidate.isNotEmpty(imageUrl)) {
             String contentId = (String) context.get("contentId");
 
             Map<String, Object> dataResourceCtx = new HashMap<>();
@@ -1184,6 +1209,28 @@ public class ProductServices {
             productContentCtx.put("fromDate", context.get("fromDate"));
             productContentCtx.put("thruDate", context.get("thruDate"));
             productContentCtx.put("userLogin", userLogin);
+
+            // SCIPIO: stock bug: if there's no contentId passed, check it otherwise we create new records all the time
+            if (UtilValidate.isEmpty(contentId)) {
+                try {
+                    GenericValue productContent;
+                    Object fromDate = context.get("fromDate");
+                    if (fromDate != null) {
+                        productContent = delegator.from("ProductContent").where("productId", productId,
+                                "productContentTypeId", productContentTypeId, "fromDate", fromDate).queryFirst();
+                    } else {
+                        productContent = delegator.from("ProductContent").where("productId", productId,
+                                "productContentTypeId", productContentTypeId).filterByDate().queryFirst();
+                    }
+                    if (productContent != null) {
+                        contentId = productContent.getString("contentId");
+                        productContentCtx.put("fromDate", productContent.get("fromDate"));
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.toString());
+                }
+            }
 
             if (UtilValidate.isNotEmpty(contentId)) {
                 GenericValue content = null;
@@ -1231,6 +1278,9 @@ public class ProductServices {
                         Map<String, Object> contentCtx = new HashMap<>();
                         contentCtx.put("contentId", contentId);
                         contentCtx.put("dataResourceId", dataResourceResult.get("dataResourceId"));
+                        if (context.containsKey("imageProfile")) { // SCIPIO
+                            contentCtx.put("mediaProfile", context.get("imageProfile"));
+                        }
                         contentCtx.put("userLogin", userLogin);
                         try {
                             Map<String, Object> serviceResult = dispatcher.runSync("updateContent", contentCtx);
@@ -1272,6 +1322,9 @@ public class ProductServices {
                 contentCtx.put("contentTypeId", "DOCUMENT");
                 contentCtx.put("dataResourceId", dataResourceResult.get("dataResourceId"));
                 contentCtx.put("userLogin", userLogin);
+                if (context.containsKey("imageProfile")) { // SCIPIO
+                    contentCtx.put("mediaProfile", context.get("imageProfile"));
+                }
                 Map<String, Object> contentResult;
                 try {
                     contentResult = dispatcher.runSync("createContent", contentCtx);

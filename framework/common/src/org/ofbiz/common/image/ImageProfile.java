@@ -39,7 +39,9 @@ public class ImageProfile extends MediaProfile {
 
     public static ImageProfile createImageProfileFromPreset(GenericValue imageSizePreset) {
         return new ImageProfile(imageSizePreset.getDelegator(), imageSizePreset.getString("presetId"), imageSizePreset.getString("presetName"),
-                imageSizePreset, null, true);
+                UtilMisc.toMap("parentProfile", imageSizePreset.get("parentProfile"),
+                        "variantConfigProfile", imageSizePreset.get("variantConfigProfile"),
+                        "variantConfigLocation", imageSizePreset.get("variantConfigLocation")), null, true);
     }
 
     /**

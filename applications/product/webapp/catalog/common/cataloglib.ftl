@@ -96,8 +96,9 @@
   <#local profiles = Static["org.ofbiz.common.image.ImageProfile"].getImageProfileMap(delegator)!>
   <@field type="select" name=fieldName label=getLabel('CommonImageProfile', 'CommonUiLabels') tooltip=getLabel('CommonImageProfileDesc', 'CommonUiLabels')>
       <#local profile = profiles[raw(defaultProfileName)]!false>
+      <#local variantLoc = profile?is_boolean?then({}, profile.resolvedVariantConfigLocation!)>
       <option value=""<#if !profileName?has_content> selected="selected"</#if>>${getLabel('CommonDefault', 'CommonUiLabels')}<#if !profile?is_boolean> - ${defaultProfileName}<#rt/>
-        <#lt/><#if profile.variantConfigLocation?has_content> (${profile.variantConfigLocation})<#elseif profile.stored> (CMS)</#if></#if></option>
+        <#lt/><#if variantLoc?has_content> (${variantLoc})<#elseif profile.stored> (CMS)</#if></#if></option>
       <#list toSimpleMap(profiles) as name, profile>
         <#local variantLoc = profile.resolvedVariantConfigLocation!>
         <option value="${name}"<#if raw(profileName) == raw(name)> selected="selected"</#if>>${name}<#if profile.description?has_content> - ${profile.description}</#if><#rt/>

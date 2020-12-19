@@ -1261,6 +1261,22 @@ public class ProductServices {
                             Debug.logError(e, module);
                             return ServiceUtil.returnError(e.getMessage());
                         }
+
+                        if (context.containsKey("imageProfile")) { // SCIPIO
+                            Map<String, Object> contentCtx = new HashMap<>();
+                            contentCtx.put("contentId", contentId);
+                            contentCtx.put("mediaProfile", context.get("imageProfile"));
+                            contentCtx.put("userLogin", userLogin);
+                            try {
+                                Map<String, Object> serviceResult = dispatcher.runSync("updateContent", contentCtx);
+                                if (ServiceUtil.isError(serviceResult)) {
+                                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+                                }
+                            } catch (GenericServiceException e) {
+                                Debug.logError(e, module);
+                                return ServiceUtil.returnError(e.getMessage());
+                            }
+                        }
                     } else {
                         dataResourceCtx.put("dataResourceTypeId", "SHORT_TEXT");
                         dataResourceCtx.put("mimeTypeId", "text/html");

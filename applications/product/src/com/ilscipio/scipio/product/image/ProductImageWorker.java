@@ -84,21 +84,30 @@ public abstract class ProductImageWorker {
         }
     }
 
-    public static void ensureProductImage(DispatchContext dctx, Locale locale, GenericValue product, String productContentTypeId, String imageUrl, boolean async, boolean useCache) {
-        if (!productImageEnsureEnabled || Boolean.TRUE.equals(productImageEnsureCache.get(productContentTypeId))) {
+    public static void ensureProductImage(DispatchContext dctx, Locale locale, GenericValue product, String productContentTypeId, String imageUrl, boolean async, boolean useUtilCache) {
+        if (!productImageEnsureEnabled) {
             return;
+        }
+        String cacheKey = null;
+        if (useUtilCache) {
+            cacheKey = product.get("productId") + "::" + productContentTypeId;
+            if (Boolean.TRUE.equals(productImageEnsureCache.get(cacheKey))) {
+                return;
+            }
         }
         try {
             // TODO: optimize the duplicate lookups (cached anyway)
             ProductImageLocationInfo pili = ProductImageLocationInfo.from(dctx, locale,
-                    product, productContentTypeId, imageUrl, null, true, useCache);
+                    product, productContentTypeId, imageUrl, null, true, false, useUtilCache);
             List<String> sizeTypeList = (pili != null) ? pili.getMissingVariantNames() : null;
             if (UtilValidate.isEmpty(sizeTypeList)) {
-                productImageEnsureCache.put(productContentTypeId, Boolean.TRUE);
+                if (useUtilCache) {
+                    productImageEnsureCache.put(cacheKey, Boolean.TRUE);
+                }
                 return;
             }
             Map<String, Object> ctx = UtilMisc.toMap("productId", product.get("productId"), "productContentTypeId", productContentTypeId,
-                    "sizeTypeList", sizeTypeList, "recreateExisting", true); // NOTE: the check above (for performance) already implements the recreateExisting logic
+                    "sizeTypeList", sizeTypeList, "recreateExisting", true); // NOTE: the getMissingVariantNames check above (for performance) already implements the recreateExisting logic
             if (async) {
                 dctx.getDispatcher().runAsync("productImageAutoRescale", ctx, false);
             } else {
@@ -109,7 +118,9 @@ public abstract class ProductImageWorker {
                     return;
                 }
             }
-            productImageEnsureCache.put(productContentTypeId, Boolean.TRUE);
+            if (useUtilCache) {
+                productImageEnsureCache.put(cacheKey, Boolean.TRUE);
+            }
         } catch(Exception e) {
             Debug.logError("Could not trigger image variant resizing for product [" + product.get("productId") + "] productContentTypeId ["
                     + productContentTypeId + "] imageLink [" + imageUrl + "]: " + e.toString(), module);
@@ -382,7 +393,7 @@ public abstract class ProductImageWorker {
                 "hasTable", "N", "description", description, "parentTypeId", parentTypeId).create();
     }
 
-    public static String getDataResourceImageUrl(GenericValue dataResource, boolean useCache) throws GenericEntityException { // SCIPIO
+    public static String getDataResourceImageUrl(GenericValue dataResource, boolean useEntityCache) throws GenericEntityException { // SCIPIO
         if (dataResource == null) {
             return null;
         }
@@ -394,7 +405,7 @@ public abstract class ProductImageWorker {
         } else if ("ELECTRONIC_TEXT".equals(dataResourceTypeId)) {
             String dataResourceId = dataResource.hasModelField("drDataResourceId") ?
                     dataResource.getString("drDataResourceId") : dataResource.getString("dataResourceId");
-            GenericValue elecText = dataResource.getDelegator().findOne("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId), useCache);
+            GenericValue elecText = dataResource.getDelegator().findOne("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId), useEntityCache);
             if (elecText != null) {
                 return elecText.getString("textData");
             }
@@ -411,21 +422,61 @@ public abstract class ProductImageWorker {
         return null;
     }
 
-    // TODO: not used yet due to logging concerns
-    public static ImageProfile getImageProfileOrDefault(GenericValue product, String productContentTypeId, GenericValue content) {
-        String mediaProfileName;
-        if (content != null) {
-            mediaProfileName = content.getString("mediaProfile");
-            if (mediaProfileName == null) {
-                mediaProfileName = "IMAGE_PRODUCT-" + productContentTypeId;
-            }
-        } else {
-            mediaProfileName = product.getString("imageProfile");
-            if (mediaProfileName == null) {
-                mediaProfileName = "IMAGE_PRODUCT-ORIGINAL_IMAGE_URL";
-            }
-        }
-        return ImageProfile.getImageProfile(product.getDelegator(), mediaProfileName);
+    public static String getDefaultProductImageProfileName(Delegator delegator, String productContentTypeId) {
+        return "IMAGE_PRODUCT-" + productContentTypeId;
     }
 
+    public static ImageProfile getProductImageProfileOrDefault(Delegator delegator, String productContentTypeId, GenericValue product, GenericValue content, boolean useEntityCache, boolean useProfileCache) {
+        String profileName;
+        ImageProfile profile;
+        if (content != null) {
+            profileName = content.getString("mediaProfile");
+            if (profileName != null) {
+                profile = ImageProfile.getImageProfile(delegator, profileName, useProfileCache);
+                if (profile != null) {
+                    return profile;
+                } else {
+                    // Explicitly named missing profile is always an error
+                    Debug.logError("Could not find image profile [" + profileName + "] in mediaprofiles.properties from " +
+                            "Content.mediaProfile for content [" + content.get("contentId") + "] productContentTypeId [" + productContentTypeId +
+                            "] product [" + product.get("productId") + "]", module);
+                    return null;
+                }
+            }
+        } else if (product != null) {
+            profileName = product.getString("imageProfile");
+            if (profileName != null) {
+                profile = ImageProfile.getImageProfile(delegator, profileName, useProfileCache);
+                if (profile != null) {
+                    return profile;
+                } else {
+                    // Explicitly named missing profile is always an error
+                    Debug.logError("Could not find image profile [" + profileName + "] in mediaprofiles.properties from " +
+                            "Product.imageProfile for product [" + product.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
+                    return null;
+                }
+            }
+        }
+        profileName = getDefaultProductImageProfileName(delegator, productContentTypeId);
+        profile = ImageProfile.getImageProfile(delegator, profileName, useProfileCache);
+        if (profile != null) {
+            return profile;
+        } else {
+            // Clients may add extra productContentTypeId and they should add mediaprofiles.properties definitions
+            Debug.logWarning("Could not find default image profile [" + profileName + "] in mediaprofiles.properties from " +
+                    "productContentTypeId [" + productContentTypeId + "]; using IMAGE_PRODUCT", module);
+        }
+        profile = ImageProfile.getImageProfile(delegator, "IMAGE_PRODUCT", useProfileCache);
+        if (profile != null) {
+            return profile;
+        } else {
+            // Should not happen
+            Debug.logError("Could not find image profile IMAGE_PRODUCT in mediaprofiles.properties; fatal error", module);
+            return null;
+        }
+    }
+
+    public static ImageProfile getDefaultProductImageProfile(Delegator delegator, String productContentTypeId, boolean useEntityCache, boolean useProfileCache) {
+        return getProductImageProfileOrDefault(delegator, productContentTypeId, null, null, useEntityCache, useProfileCache);
+    }
 }

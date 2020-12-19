@@ -126,7 +126,7 @@ public abstract class ContentImageServices {
         if (imageProfileObj instanceof ImageProfile) {
             imageProfile = (ImageProfile) imageProfileObj;
         } else if (imageProfileObj instanceof String) {
-            imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj);
+            imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj, false);
             if (imageProfile == null) {
                 String errMsg = "Could not find mediaProfile [" + imageProfileObj + "]";
                 Debug.logError(logPrefix + errMsg, module);
@@ -154,7 +154,7 @@ public abstract class ContentImageServices {
                 if (imageProfileObj instanceof ImageProfile) {
                     imageProfile = (ImageProfile) imageProfileObj;
                 } else if (imageProfileObj instanceof String) {
-                    imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj);
+                    imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj, false);
                     if (imageProfile == null) {
                         String errMsg = "Could not find mediaProfile [" + imageProfileObj + "]";
                         Debug.logError(logPrefix + errMsg, module);
@@ -176,7 +176,7 @@ public abstract class ContentImageServices {
                         return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());
                     }
                 } else { // SCIPIO
-                    imgPropCfg = imageProfile.getVariantConfig();
+                    imgPropCfg = imageProfile.readVariantConfig(); // NOTE: reads non-cached version
                 }
             }
             if (sizeTypeList == null) {
@@ -660,7 +660,7 @@ public abstract class ContentImageServices {
         if (imageProfileObj instanceof ImageProfile) {
             imageProfile = (ImageProfile) imageProfileObj;
         } else if (imageProfileObj instanceof String) {
-            imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj);
+            imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj, false);
             if (imageProfile == null) {
                 String errMsg = "Could not find mediaProfile [" + imageProfileObj + "] for content image [" + imageOrigContentId + "]";
                 Debug.logError(logPrefix + errMsg, module);
@@ -686,7 +686,7 @@ public abstract class ContentImageServices {
             }
             String origMediaProfileName = origContent.getString("mediaProfile");
             if (imageProfile == null && origMediaProfileName != null) {
-                imageProfile = ImageProfile.getImageProfile(delegator, origMediaProfileName);
+                imageProfile = ImageProfile.getImageProfile(delegator, origMediaProfileName, false);
                 if (imageProfile == null) {
                     Debug.logError(logPrefix + "Could not find mediaProfile [" + origMediaProfileName + "] for content image [" + imageOrigContentId + "], using IMAGE_CONTENT default", module);
                 }
@@ -696,7 +696,7 @@ public abstract class ContentImageServices {
                 if (imageProfileObj instanceof ImageProfile) {
                     imageProfile = (ImageProfile) imageProfileObj;
                 } else if (imageProfileObj instanceof String) {
-                    imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj);
+                    imageProfile = ImageProfile.getImageProfile(delegator, (String) imageProfileObj, false);
                     if (imageProfile == null) {
                         String errMsg = "Could not find mediaProfile [" + imageProfileObj + "] for content image [" + imageOrigContentId + "]";
                         Debug.logError(logPrefix + errMsg, module);
@@ -728,7 +728,7 @@ public abstract class ContentImageServices {
                         return ServiceUtil.returnError(UtilProperties.getMessage(resourceProduct, "ScaleImage.unable_to_parse", locale) + " : " + imagePropXmlPath + " : " + e.getMessage());
                     }
                 } else { // SCIPIO
-                    imgPropCfg = imageProfile.getVariantConfig();
+                    imgPropCfg = imageProfile.readVariantConfig(); // NOTE: reads non-cached version
                 }
             }
             if (sizeTypeList == null) {
@@ -1257,7 +1257,6 @@ public abstract class ContentImageServices {
     public static Map<String, Object> contentImageAutoRescale(ServiceContext ctx) {
         String contentId = ctx.attr("contentId");
         GenericValue contentDataResource = ctx.attr("contentDataResource");
-        boolean requireProfile = ctx.attr("requireProfile", true);
         boolean createNew = ctx.attr("createNew", true);
         boolean deleteOld = ctx.attr("deleteOld", false);
         boolean recreateExisting = ctx.attr("recreateExisting", false);
@@ -1279,16 +1278,17 @@ public abstract class ContentImageServices {
             GenericValue content = contentDataResource.extractViewMember("Content");
             GenericValue dataResource = contentDataResource.extractViewMember("DataResource");
 
-            ImageVariantConfig imageVariantConfig = null;
-            String mediaProfile = content.getString("mediaProfile");
-            if (mediaProfile != null) {
-                imageVariantConfig = ImageVariantConfig.fromMediaProfile(ctx.delegator(), mediaProfile, false);
-                if (imageVariantConfig == null) {
-                    throw new GeneralException("Content [" + contentId + "] mediaProfile [" + mediaProfile + "] is undefined");
+            // Check explicit mediaProfile first
+            String imageProfileName = content.getString("mediaProfile");
+            ImageProfile imageProfile = null;
+            if (imageProfileName != null) {
+                imageProfile = ImageProfile.getImageProfile(ctx.delegator(), imageProfileName, false);
+                if (imageProfile == null) {
+                    throw new GeneralException("Content.mediaProfile [" + imageProfileName + "] for content [" + contentId + "] not found in mediaprofiles.properties");
                 }
             }
 
-            if (imageVariantConfig == null || !createNew) {
+            if (imageProfile == null || !createNew) {
                 // Get the first variant (for default fields)
                 EntityCondition cond = EntityCondition.makeCondition(
                         EntityCondition.makeCondition("contentIdStart", contentId),
@@ -1299,7 +1299,7 @@ public abstract class ContentImageServices {
                 //GenericValue variantContent = null;
                 GenericValue variantDataResource = null;
                 if (variantContentAssoc != null) {
-                    if (imageVariantConfig == null) {
+                    if (imageProfile == null) {
                         //variantContent = variantContentAssoc.extractViewMember("Content");
                         variantDataResource = ctx.delegator().from("DataResource").where("dataResourceId", variantContentAssoc.get("dataResourceId")).queryOne();
                         if (variantDataResource == null) {
@@ -1311,31 +1311,40 @@ public abstract class ContentImageServices {
                             "reason", "no-variants");
                 }
 
-                if (imageVariantConfig == null && variantContentAssoc != null) {
+                if (imageProfile == null && variantContentAssoc != null) {
                     String variantSizeId = variantDataResource.getString("sizeId");
                     if (variantSizeId != null) {
                         GenericValue variantImageSize = ctx.delegator().from("ImageSize").where("sizeId", variantSizeId).queryFirst();
                         if (variantImageSize == null) {
                             throw new GenericEntityException("Content [" + contentId + "] variant content [" + variantContentAssoc.get("contentId") + "] has invalid sizeId [" + variantSizeId + "]");
                         }
-                        imageVariantConfig = ImageVariantConfig.fromImageSizePreset(ctx.delegator(), variantImageSize.getString("presetId"), false);
-                        if (imageVariantConfig == null) {
-                            throw new GeneralException("Content [" + contentId + "] sizeId [" + variantSizeId + "] preset [" + variantImageSize.getString("presetId") + "] is undefined");
+                        imageProfile = ImageProfile.getImageProfile(ctx.delegator(), variantImageSize.getString("presetId"), false);
+                        if (imageProfile == null) {
+                            throw new GeneralException("Content [" + contentId + "] sizeId [" + variantSizeId + "] preset [" + variantImageSize.getString("presetId") + "] is not a valid media profile");
                         }
+
+                        // Auto-update records
+                        Debug.logWarning("contentImageAutoRescale: Content [" + contentId + "] has sizeId ImageSizePreset variants but no Content.mediaProfile, " +
+                                "auto-updating field with mediaProfile [" + imageProfile.getName() + "]", module);
+                        content = ctx.delegator().findOne("Content", UtilMisc.toMap("contentId", contentId), false);
+                        if (content == null) {
+                            throw new GeneralException("Content [" + contentId + "] not found after re-query");
+                        }
+                        content.set("mediaProfile", imageProfile.getName());
+                        content.store();
+
+                        // re-query
+                        contentDataResource = ctx.delegator().findOne("ContentDataResourceRequiredView", UtilMisc.toMap("contentId", contentId), false);
+                        if (contentDataResource == null) {
+                            throw new GeneralException("Content [" + contentId + "] not found after re-query");
+                        }
+                        content = contentDataResource.extractViewMember("Content");
                     }
                 }
             }
 
-            boolean implicitProfile = (imageVariantConfig == null);
-            if (implicitProfile) {
-                if (requireProfile) {
-                    return ServiceUtil.returnFailure("No explicit image media profile for content [" + contentId + "], not regenerating image size variants");
-                }
-                mediaProfile = ContentImageWorker.getContentImageMediaProfileOrDefault(content, true);
-                imageVariantConfig = ImageProfile.getVariantConfig(ImageProfile.getImageProfileOrDefault(ctx.delegator(), mediaProfile));
-                if (imageVariantConfig == null) {
-                    throw new GeneralException("Unable to determine image profile variant config for content [" + contentId + "]; is mediaprofiles.properties configured?");
-                }
+            if (imageProfile == null) {
+                imageProfile = ContentImageWorker.getContentImageProfileOrDefault(ctx.delegator(), content, false, false);
             }
 
             Map<String, Object> contentFields = new HashMap<>();
@@ -1359,8 +1368,7 @@ public abstract class ContentImageServices {
 
             Map<String, Object> resizeCtx = ctx.makeValidInContext("contentImageDbScaleInAllSizeCore", ctx);
             resizeCtx.put("imageOrigContentId", contentId);
-            resizeCtx.put("imageProfile", mediaProfile);
-            resizeCtx.put("imageVariantConfig", imageVariantConfig);
+            resizeCtx.put("imageProfile", imageProfile);
             resizeCtx.put("fileSizeDataResAttrName", FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME);
             resizeCtx.put("deleteOld", deleteOld); // NOTE: NOT RECOMMENDED anymore
             resizeCtx.put("recreateExisting", recreateExisting);
@@ -1372,7 +1380,6 @@ public abstract class ContentImageServices {
                 Debug.logInfo("contentImageAutoRescale: Rebuilding variants for image content [" + contentId + "]"
                         + (progressInfo != null ? " (" + progressInfo + ")" : ""), module);
             }
-
             Map<String, Object> resizeResult = ctx.dispatcher().runSync("contentImageDbScaleInAllSizeCore", resizeCtx, nonFatal);
             if (resizeResult.get("successCount") != null) {
                 variantSuccessCount += (Integer) resizeResult.get("successCount");

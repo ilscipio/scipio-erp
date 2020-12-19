@@ -103,7 +103,7 @@ public abstract class ImageVariants implements Serializable {
     public ImageProfile getProfile() {
         ImageProfile profile = this.profile;
         if (profile == null) {
-            profile = ImageProfile.getImageProfile(getDelegator(), getProfileName());
+            profile = ImageProfile.getImageProfile(getDelegator(), getProfileName(), false);
             this.profile = profile;
         }
         return profile;
@@ -113,7 +113,7 @@ public abstract class ImageVariants implements Serializable {
     public ImageProfile getExplicitProfile() {
         ImageProfile explicitProfile = this.explicitProfile;
         if (explicitProfile == null) {
-            explicitProfile = ImageProfile.getImageProfile(getDelegator(), getExplicitProfileName());
+            explicitProfile = ImageProfile.getImageProfile(getDelegator(), getExplicitProfileName(), false);
             this.explicitProfile = explicitProfile;
         }
         return explicitProfile;

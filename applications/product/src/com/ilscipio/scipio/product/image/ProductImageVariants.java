@@ -2,7 +2,6 @@ package com.ilscipio.scipio.product.image;
 
 import com.ilscipio.scipio.content.image.ImageVariants;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -15,8 +14,11 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
+import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceContext;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.ftl.ContentUrlDirective;
 
 import java.util.ArrayList;
@@ -165,8 +167,7 @@ public class ProductImageVariants extends ImageVariants {
         if (profileName != null) {
             return profileName;
         }
-        // FIXME: hardcoded default, should be based on productContentTypeId, see ContentImageWorker.getContentImageMediaProfileOrDefault
-        return "IMAGE_PRODUCT";
+        return ProductImageWorker.getDefaultProductImageProfileName(getDelegator(), getProductContentTypeId());
     }
 
     @Override
@@ -184,9 +185,10 @@ public class ProductImageVariants extends ImageVariants {
         return original;
     }
 
-    public GenericValue getRecord() {
-        return getOriginal().getRecord();
-    }
+    // confusing
+    //public GenericValue getRecord() {
+    //    return getOriginal().getRecord();
+    //}
 
     public GenericValue getProduct() {
         return product;
@@ -217,7 +219,7 @@ public class ProductImageVariants extends ImageVariants {
         ProductImageLocationInfo locationInfo = null;
         try {
             locationInfo = ProductImageLocationInfo.from(getDctx(), getProductId(),
-                    getProductContentTypeId(), getProfile(), getOriginal().getStaticImageUrl(), null);
+                    getProductContentTypeId(), getProfile(), getOriginal().getStaticImageUrl(), null, false, true);
         } catch (Exception e) {
             Debug.logError(e, "Error getting product image location info for product [" + getProductId()
                     + "] productContentTypeId [" + productContentTypeId + "]", module);
@@ -632,5 +634,23 @@ public class ProductImageVariants extends ImageVariants {
                                                        Map<String, Object> context, Map<String, Object> urlArgs) {
         // TODO
         return Collections.emptyMap();
+    }
+
+
+    public static void clearCaches(Delegator delegator) {
+        CACHE.clear();
+    }
+
+    public static Map<String, Object> clearCaches(ServiceContext ctx) {
+        clearCaches((Delegator) null);
+
+        if (Boolean.TRUE.equals(ctx.attr("distribute"))) {
+            DistributedCacheClear dcc = ctx.delegator().getDistributedCacheClear();
+            if (dcc != null) {
+                Map<String, Object> distCtx = UtilMisc.toMap("type", ctx.attr("type"));
+                dcc.runDistributedService("productImageVariantsDistributedClearCaches", distCtx);
+            }
+        }
+        return ServiceUtil.returnSuccess();
     }
 }

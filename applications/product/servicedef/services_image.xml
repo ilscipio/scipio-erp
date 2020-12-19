@@ -241,4 +241,15 @@
              location="com.ilscipio.scipio.product.image.ProductImageServices" invoke="abortProductImageAutoRescaleAll" use-transaction="false">
         <description>Aborts productImageAutoRescaleAll if possible</description>
     </service>
+
+    <service name="productImageVariantsDistributedClearCaches" engine="jms" location="serviceMessenger" invoke="productImageVariantsClearCaches"
+             auth="true" use-transaction="false" log-eca="quiet" log="quiet" hideResultInLog="true">
+        <description>Clear ProductImageVariants caches (SCIPIO)</description>
+    </service>
+    <service name="productImageVariantsClearCaches" engine="java" export="true"
+             location="com.ilscipio.scipio.product.image.ProductImageVariants" invoke="clearCaches" auth="true" use-transaction="false">
+        <description>Clear ProductImageVariants caches (SCIPIO)</description>
+        <!--<permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>-->
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
+    </service>
 </services>

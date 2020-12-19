@@ -53,6 +53,8 @@ public class ProductImageLocationInfo implements Serializable {
     protected final ImageVariantConfig variantConfig;
     protected final String imageFilename;
     protected final Collection<String> sizeTypeList;
+    protected final boolean useEntityCache;
+    protected final boolean useProfileCache;
 
     protected ProductImageWorker.ImageViewType imageViewType;
     protected String imageExtension;
@@ -70,10 +72,13 @@ public class ProductImageLocationInfo implements Serializable {
         this.variantConfig = null;
         this.imageFilename = null;
         this.sizeTypeList = null;
+        this.useEntityCache = false;
+        this.useProfileCache = false;
     }
 
     protected ProductImageLocationInfo(DispatchContext dctx, String productId, String productContentTypeId,
-                                       ImageVariantConfig variantConfig, String imageFilename, Collection<String> sizeTypeList) throws IllegalArgumentException {
+                                       ImageVariantConfig variantConfig, String imageFilename, Collection<String> sizeTypeList,
+                                       boolean useEntityCache, boolean useProfileCache) throws IllegalArgumentException {
         this.delegator = dctx.getDelegator();
         this.delegatorName = this.delegator.getDelegatorName();
         this.dispatcher = dctx.getDispatcher();
@@ -92,18 +97,22 @@ public class ProductImageLocationInfo implements Serializable {
             sizeTypeList = variantConfig.getVariantNames();
         }
         this.sizeTypeList = sizeTypeList;
+        this.useEntityCache = useEntityCache;
+        this.useProfileCache = useProfileCache;
     }
 
     public static ProductImageLocationInfo from(DispatchContext dctx, String productId, String productContentTypeId,
                                                 ImageVariantConfig variantConfig, String imageFilename,
-                                                Collection<String> sizeTypeList) throws IllegalArgumentException, GeneralException {
-        return new ProductImageLocationInfo(dctx, productId, productContentTypeId, variantConfig, imageFilename, sizeTypeList);
+                                                Collection<String> sizeTypeList, boolean useEntityCache, boolean useProfileCache) throws IllegalArgumentException, GeneralException {
+        return new ProductImageLocationInfo(dctx, productId, productContentTypeId, variantConfig, imageFilename, sizeTypeList, useEntityCache, useProfileCache);
     }
 
     public static ProductImageLocationInfo from(DispatchContext dctx, String productId, String productContentTypeId,
                                                 ImageProfile imageProfile, String imageFilename,
-                                                Collection<String> sizeTypeList) throws IllegalArgumentException, GeneralException {
-        return from(dctx, productId, productContentTypeId, imageProfile.getVariantConfig(), imageFilename, sizeTypeList);
+                                                Collection<String> sizeTypeList, boolean useEntityCache, boolean useProfileCache) throws IllegalArgumentException, GeneralException {
+        // NOTE: this currently calls the non-cached readVariantConfig, because this is intended for backend
+        return from(dctx, productId, productContentTypeId, useProfileCache ? imageProfile.getVariantConfig() : imageProfile.readVariantConfig(),
+                imageFilename, sizeTypeList, useEntityCache, useProfileCache);
     }
 
     /**
@@ -113,7 +122,7 @@ public class ProductImageLocationInfo implements Serializable {
      */
     public static ProductImageLocationInfo from(DispatchContext dctx, Locale locale, GenericValue product, String productContentTypeId,
                                                 String imageUrl, Collection<String> sizeTypeList,
-                                                Boolean useParentImageUrl, boolean useCache) throws IllegalArgumentException, GeneralException {
+                                                Boolean useParentImageUrl, boolean useEntityCache, boolean useProfileCache) throws IllegalArgumentException, GeneralException {
         Delegator delegator = dctx.getDelegator();
         if (locale == null) {
             locale = Locale.getDefault();
@@ -121,10 +130,10 @@ public class ProductImageLocationInfo implements Serializable {
         String productId = product.getString("productId");
         GenericValue content = null;
         GenericValue productContent = dctx.getDelegator().from("ProductContent").where("productId", productId,
-                    "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().cache(useCache).queryFirst();
+                    "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().cache(useEntityCache).queryFirst();
         String inlineImageUrl = null;
         if (productContent != null) {
-            content = productContent.getRelatedOne("Content", useCache);
+            content = productContent.getRelatedOne("Content", useEntityCache);
         } else {
             String productFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
             ModelEntity productModel = dctx.getDelegator().getModelEntity("Product");
@@ -141,11 +150,11 @@ public class ProductImageLocationInfo implements Serializable {
             if (Boolean.TRUE.equals(useParentImageUrl)) {
                 // NOTE: this consults the parent product which we don't want, but in known cases should return right value
                 imageUrl = ProductContentWrapper.getProductContentAsText(product, productContentTypeId,
-                        locale, dctx.getDispatcher(), useCache, "raw");
+                        locale, dctx.getDispatcher(), useEntityCache, "raw");
             } else {
                 if (content != null) {
                     imageUrl = ProductImageWorker.getDataResourceImageUrl(
-                            delegator.from("DataResource").where("dataResourceId", content.get("dataResourceId")).queryOne(), false);
+                            delegator.from("DataResource").where("dataResourceId", content.get("dataResourceId")).queryOne(), useEntityCache);
                 } else if (inlineImageUrl != null) {
                     imageUrl = inlineImageUrl;
                 }
@@ -155,25 +164,12 @@ public class ProductImageLocationInfo implements Serializable {
             }
         }
 
-        String mediaProfileName;
-        if (content != null) {
-            mediaProfileName = content.getString("mediaProfile");
-            if (mediaProfileName == null) {
-                mediaProfileName = "IMAGE_PRODUCT-" + productContentTypeId;
-            }
-        } else {
-            mediaProfileName = product.getString("imageProfile");
-            if (mediaProfileName == null) {
-                mediaProfileName = "IMAGE_PRODUCT-ORIGINAL_IMAGE_URL";
-            }
-        }
-
-        ImageProfile imageProfile = ImageProfile.getImageProfile(dctx.getDelegator(), mediaProfileName);
+        ImageProfile imageProfile = ProductImageWorker.getProductImageProfileOrDefault(delegator, productContentTypeId, product, content, useEntityCache, useProfileCache);
         if (imageProfile == null) {
-            Debug.logError("Could not find media profile [" + imageProfile + "]", module);
+            Debug.logError("Could not find media profile for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]", module);
             return null;
         }
-        return ProductImageLocationInfo.from(dctx, productId, productContentTypeId, imageProfile, imageUrl, sizeTypeList);
+        return ProductImageLocationInfo.from(dctx, productId, productContentTypeId, imageProfile, imageUrl, sizeTypeList, useEntityCache, useProfileCache);
     }
 
     public boolean isNull() {
@@ -220,6 +216,14 @@ public class ProductImageLocationInfo implements Serializable {
 
     public Collection<String> getSizeTypeList() {
         return sizeTypeList;
+    }
+
+    protected boolean isUseEntityCache() {
+        return useEntityCache;
+    }
+
+    protected boolean isUseProfileCache() {
+        return useProfileCache;
     }
 
     public ProductImageWorker.ImageViewType getImageViewType() throws IllegalArgumentException, GeneralException {

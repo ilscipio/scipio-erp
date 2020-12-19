@@ -7,12 +7,16 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceContext;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.FullWebappInfo;
 import org.ofbiz.webapp.ftl.WebappUrlDirective;
 
@@ -36,6 +40,7 @@ public class ContentImageVariants extends ImageVariants {
     protected final GenericValue contentView;
     protected String mediaProfileName;
     protected ContentVariant original;
+    protected String originalContentId;
     protected Map<String, ContentVariant> variantMap;
     protected List<ContentVariant> variantList;
     protected List<GenericValue> variantRecords;
@@ -44,6 +49,7 @@ public class ContentImageVariants extends ImageVariants {
                                    boolean useEntityCache, Map<String, Object> options) {
         super(delegator, dispatcher, locale, useEntityCache, options);
         this.contentView = contentView;
+        this.originalContentId = contentView.getString("contentId");
     }
 
     protected ContentImageVariants() {
@@ -106,10 +112,9 @@ public class ContentImageVariants extends ImageVariants {
     public String getProfileName() {
         String mediaProfileName = this.mediaProfileName;
         if (mediaProfileName == null) {
-            try {
-                mediaProfileName = ContentImageWorker.getContentImageMediaProfileOrDefault(getRecord(), isUseEntityCache());
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+            ImageProfile imageProfile = ContentImageWorker.getContentImageProfileOrDefault(getDelegator(), getContentView(), isUseEntityCache(), false);
+            if (imageProfile != null) {
+                mediaProfileName = imageProfile.getName();
             }
             if (mediaProfileName == null) {
                 mediaProfileName = "";
@@ -121,12 +126,13 @@ public class ContentImageVariants extends ImageVariants {
 
     @Override
     public String getExplicitProfileName() {
-        return getRecord().getString("mediaProfile");
+        return getContentView().getString("mediaProfile");
     }
 
-    public GenericValue getRecord() {
-        return getContentView();
-    }
+    // confusing
+    //public GenericValue getRecord() {
+    //    return getContentView();
+    //}
 
     public GenericValue getContentView() {
         return contentView;
@@ -136,14 +142,18 @@ public class ContentImageVariants extends ImageVariants {
     public ContentVariant getOriginal() {
         ContentVariant original = this.original;
         if (original == null) {
-            Long imageWidth = getRecord().getLong("drScpWidth");
-            Long imageHeight = getRecord().getLong("drScpHeight");
+            Long imageWidth = getContentView().getLong("drScpWidth");
+            Long imageHeight = getContentView().getLong("drScpHeight");
             ImageVariantConfig.VariantInfo variantInfo = new ImageVariantConfig.VariantInfo("original",
                     (imageWidth != null) ? imageWidth : -1, (imageHeight != null) ? imageHeight : -1, null, null);
-            original = makeOriginalVariant(variantInfo, getRecord());
+            original = makeOriginalVariant(variantInfo, getContentView());
             this.original = original;
         }
         return original;
+    }
+
+    public String getOriginalContentId() {
+        return originalContentId;
     }
 
     @Override
@@ -293,7 +303,7 @@ public class ContentImageVariants extends ImageVariants {
                 // don't add variant
                 return paramStr;
             }
-            paramStr += "&variant=" + UtilCodec.getUrlEncoder().encode(getName());
+            paramStr += (paramStr.contains("?") ? "&" : "?") + "variant=" + UtilCodec.getUrlEncoder().encode(getName());
             return paramStr;
         }
 
@@ -304,7 +314,11 @@ public class ContentImageVariants extends ImageVariants {
 
         @Override
         public String getStaticImageUrl() {
-            return "?contentId=" + UtilCodec.getUrlEncoder().encode(getContentId());
+            String contentPath = getContentView().getString("contentPath");
+            if (contentPath != null) {
+                return "/" + contentPath;
+            }
+            return "?contentId=" + UtilCodec.getUrlEncoder().encode(getOriginalContentId());
         }
 
         @Override
@@ -415,5 +429,22 @@ public class ContentImageVariants extends ImageVariants {
 
         return UtilMisc.toMap("srcset", srcset, "srcsetTarget", srcsetTarget,
                 "srcsetSize", srcsetSize, "srcsetSizeTarget", srcsetSizeTarget);
+    }
+
+    public static void clearCaches(Delegator delegator) {
+        CACHE.clear();
+    }
+
+    public static Map<String, Object> clearCaches(ServiceContext ctx) {
+        clearCaches((Delegator) null);
+
+        if (Boolean.TRUE.equals(ctx.attr("distribute"))) {
+            DistributedCacheClear dcc = ctx.delegator().getDistributedCacheClear();
+            if (dcc != null) {
+                Map<String, Object> distCtx = UtilMisc.toMap("type", ctx.attr("type"));
+                dcc.runDistributedService("contentImageVariantsDistributedClearCaches", distCtx);
+            }
+        }
+        return ServiceUtil.returnSuccess();
     }
 }

@@ -222,14 +222,9 @@
         <attribute name="sizeTypeList" mode="IN" type="Collection" optional="true">
             <description>Optional list of size dimension names to restrict resizing to (e.g.: 320x240, small); unlisted are left unchanged</description>
         </attribute>
-        <attribute name="requireProfile" mode="IN" type="Boolean" optional="true" default-value="false">
-            <description>If true, Content.mediaProfile or DataResource.sizeId (old) must be set;
-                if false, attempts to infer a profile from mediaprofiles.properties, either IMAGE_PRODUCT-ORIGINAL_IMAGE_URL, IMAGE_CONTENT or IMAGE_DEFAULT</description>
-        </attribute>
         <attribute name="createNew" mode="IN" type="Boolean" optional="true" default-value="true">
             <description>If true, even if the image currently has no variants, attempts to generate new variants;
-                if false, only regenerates if variants already created;
-                WARN: If true, not currently guaranteed to reproduce original Content and DataResource fields</description>
+                if false, only regenerates if variants already created</description>
         </attribute>
         <attribute name="recreateExisting" mode="IN" type="Boolean" optional="true" default-value="false">
             <description>If false (default), existing files for the size types are ignored and not regenerated; if true, all or give size types are always regenerated (slow)</description>
@@ -252,4 +247,14 @@
         <attribute name="variantSkipCount" mode="OUT" type="Integer" optional="true"/>
     </service>
 
+    <service name="contentImageVariantsDistributedClearCaches" engine="jms" location="serviceMessenger" invoke="contentImageVariantsClearCaches"
+             auth="true" use-transaction="false" log-eca="quiet" log="quiet" hideResultInLog="true">
+        <description>Clear ContentImageVariants caches (SCIPIO)</description>
+    </service>
+    <service name="contentImageVariantsClearCaches" engine="java" export="true"
+             location="com.ilscipio.scipio.content.image.ContentImageVariants" invoke="clearCaches" auth="true" use-transaction="false">
+        <description>Clear ContentImageVariants caches (SCIPIO)</description>
+        <!--<permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>-->
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
+    </service>
 </services>

@@ -94,27 +94,43 @@ public abstract class ContentImageWorker {
     protected ContentImageWorker() {
     }
 
-    /**
-     * Gets Content.mediaProfile or an inferred default for the detected content type, as defined in mediaprofiles.properties.
-     * <p>Stock defaults: product-default, cms-default, default.</p>
-     * <p>NOTE: common-default also exists but is not returned by this method because it's the fallback default.</p>
-     */
-    public static String getContentImageMediaProfileOrDefault(GenericValue content, boolean useCache) throws GenericEntityException {
-        String mediaProfile = content.getString("mediaProfile");
-        if (mediaProfile != null) {
-            return mediaProfile;
+    /** NOTE: Currently does not recognize product images anymore (they can't be mixed in current code), see ProductImageWorker.getProductImageProfileOrDefault */
+    public static ImageProfile getContentImageProfileOrDefault(Delegator delegator, GenericValue content, boolean useEntityCache, boolean useUtilCache) {
+        String profileName;
+        ImageProfile profile;
+        if (content != null) {
+            profileName = content.getString("mediaProfile");
+            if (profileName != null) {
+                profile = ImageProfile.getImageProfile(delegator, profileName, useUtilCache);
+                if (profile != null) {
+                    return profile;
+                } else {
+                    // Explicitly named missing profile is always an error
+                    Debug.logError("Could not find image profile [" + profileName + "] in mediaprofiles.properties from " +
+                            "Content.mediaProfile for content [" + content.get("contentId") + "]", module);
+                    return null;
+                }
+            }
+            String contentTypeId = content.getString("contentTypeId");
+            if ("SCP_MEDIA".equals(contentTypeId) || "SCP_MEDIA_VARIANT".equals(contentTypeId)) { // NOTE: variant should usually not be passed here!
+                profile = ImageProfile.getImageProfile(delegator, "IMAGE_MEDIA", useUtilCache);
+                if (profile != null) {
+                    return profile;
+                } else {
+                    // Should not happen
+                    Debug.logError("Could not find image profile IMAGE_MEDIA in mediaprofiles.properties; fatal error", module);
+                    return null;
+                }
+            }
         }
-        // Infer default
-        GenericValue productContent = content.getDelegator().from("ProductContent")
-                .where("contentId", content.get("contentId")).cache(useCache).queryFirst();
-        if (productContent != null) {
-            return "IMAGE_PRODUCT-" + productContent.get("productContentTypeId");
+        profile = ImageProfile.getImageProfile(delegator, "IMAGE_CONTENT", useUtilCache);
+        if (profile != null) {
+            return profile;
+        } else {
+            // Should not happen
+            Debug.logError("Could not find image profile IMAGE_CONTENT in mediaprofiles.properties; fatal error", module);
+            return null;
         }
-        String contentTypeId = content.getString("contentTypeId");
-        if ("SCP_MEDIA".equals(contentTypeId) || "SCP_MEDIA_VARIANT".equals(contentTypeId)) {
-            return "IMAGE_CONTENT";
-        }
-        return "IMAGE_DEFAULT";
     }
 
     /**
@@ -210,115 +226,5 @@ public abstract class ContentImageWorker {
             }
         }
         return map;
-    }
-
-    @Deprecated
-    public static Map<String, Object> getImageContentVariantDetails(GenericValue content, boolean useCache) throws GenericEntityException {
-        if (content == null) {
-            return null;
-        }
-        Delegator delegator = content.getDelegator();
-        String contentId = content.getString("contentId");
-        Map<String, Object> icvd = new LinkedHashMap<>();
-        String mediaProfileName = getContentImageMediaProfileOrDefault(content, useCache);
-        String contentMediaProfileName = content.getString("mediaProfile");
-        icvd.put("mediaProfileName", mediaProfileName);
-        icvd.put("contentMediaProfileName", contentMediaProfileName);
-        ImageProfile mediaProfile = ImageProfile.getImageProfile(delegator, mediaProfileName);
-        if (mediaProfile == null) {
-            Debug.logWarning("getImageContentVariantDetails: Could not find mediaProfile [" + mediaProfileName + "]; configuration changed?", module);
-        } else {
-            icvd.put("mediaProfile", mediaProfile);
-        }
-        if (contentMediaProfileName != null) {
-            ImageProfile contentMediaProfile = ImageProfile.getImageProfile(delegator, contentMediaProfileName);
-            if (mediaProfile == null) {
-                Debug.logWarning("getImageContentVariantDetails: Could not find mediaProfile [" + mediaProfileName + "]; configuration changed?", module);
-            } else {
-                icvd.put("contentMediaProfile", contentMediaProfile);
-            }
-        }
-
-        List<GenericValue> variantRecordList = getResizedImageContentAssocDataResourceRecords(delegator, contentId, useCache);
-        if (UtilValidate.isNotEmpty(variantRecordList)) {
-            icvd.put("variantRecordList", variantRecordList);
-        }
-
-        Map<String, Map<String, Object>> variants = new LinkedHashMap<>();
-        if (UtilValidate.isNotEmpty(variantRecordList)) {
-            for(GenericValue variantRecord : variantRecordList) {
-                String sizeType = variantRecord.getString("caMapKey");
-                Map<String, Object> variantMap = new LinkedHashMap<>();
-                variantMap.put("sizeType", sizeType);
-                variantMap.put("contentAssocTypeId", variantRecord.get("caContentAssocTypeId"));
-                variantMap.put("variantRecord", variantRecord);
-                Long imageWidth = variantRecord.getLong("drScpWidth");
-                if (imageWidth != null) {
-                    variantMap.put("imageWidth", imageWidth.intValue());
-                }
-                Long imageHeight = variantRecord.getLong("drScpHeight");
-                if (imageHeight != null) {
-                    variantMap.put("imageHeight", imageHeight.intValue());
-                }
-                ImageVariantConfig.VariantInfo variantConfig = null;
-                String sizeId = variantRecord.getString("drSizeId");
-                if (sizeId != null) {
-                    GenericValue imageSizeDimension = delegator.findOne("ImageSizeDimension", UtilMisc.toMap("sizeId", sizeId), true);
-                    if (imageSizeDimension != null) {
-                        variantConfig = ImageVariantConfig.VariantInfo.fromImageSizeDimension(imageSizeDimension);
-                    }
-                }
-                if (variantConfig == null && mediaProfile != null) {
-                    variantConfig = mediaProfile.getVariantConfig().getVariant(sizeType);
-                    if (variantConfig == null) {
-                        Debug.logWarning("getImageContentVariantDetails: Could not find sizeType [" + sizeType
-                                + "] in media profile [" + mediaProfile.getName() + "] for variant content [" + variantRecord.get("contentId") + "]; configuration changed?", module);
-                    }
-                }
-                if (variantConfig != null) {
-                    variantMap.put("variantConfig", variantConfig);
-                    variantMap.put("presetWidth", variantConfig.getWidth());
-                    variantMap.put("presetHeight", variantConfig.getHeight());
-                } else {
-                    Debug.logWarning("getImageContentVariantDetails: No variant config found for variant content [" + variantRecord.get("contentId") + "]", module);
-                }
-                // Get the effective preset data used to generate the media, IF available (not always)
-                Map<String, Object> srcPreset = variantRecord.getJsonAsMap("drSrcPresetJson");
-                if (srcPreset != null) {
-                    ImageVariantConfig.VariantInfo srcVariantConfig = ImageVariantConfig.VariantInfo.fromMap(sizeType, srcPreset);
-                    variantMap.put("srcVariantConfig", srcVariantConfig);
-                    variantMap.put("srcPresetWidth", srcVariantConfig.getWidth());
-                    variantMap.put("srcPresetHeight", srcVariantConfig.getHeight());
-                }
-                variants.put(sizeType, variantMap);
-            }
-            icvd.put("variants", variants);
-        }
-        return icvd;
-    }
-
-    @Deprecated
-    public static Map<String, Object> getImageContentVariantDetails(Delegator delegator, String contentId, boolean useCache) throws GenericEntityException {
-        return getImageContentVariantDetails(delegator.findOne("Content", UtilMisc.toMap("contentId", contentId), useCache), useCache);
-    }
-
-    @Deprecated
-    public static Map<String, Object> getImageContentVariantDetailsSafe(GenericValue content, boolean useCache) {
-        try {
-            return getImageContentVariantDetails(content, useCache);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-            return null;
-        }
-    }
-
-    @Deprecated
-    public static Map<String, Object> getImageContentVariantDetailsSafe(Delegator delegator, String contentId, boolean useCache) {
-        try {
-            return getImageContentVariantDetails(delegator, contentId, useCache);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-            return null;
-        }
     }
 }

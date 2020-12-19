@@ -24,7 +24,6 @@ import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceValidationException;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -113,15 +112,7 @@ public abstract class ProductImageServices {
             imagePathArgs.putAll(imagePathArgsRcvd); // explicit args crush ours
         }
         contentCtx.put("imagePathArgs", imagePathArgs);
-
-        String imageProfileName = "IMAGE_PRODUCT-" + productContentTypeId;
-        ImageProfile imageProfile = ImageProfile.getImageProfile(delegator, imageProfileName);
-        if (imageProfile != null) {
-            contentCtx.put("defaultImageProfile", imageProfile);
-        } else {
-            Debug.logWarning("productImageFileScaleInAllSize: Could not find image profile [" + imageProfileName + "], defaulting to IMAGE_PRODUCT", module);
-            contentCtx.put("defaultImageProfile", "IMAGE_PRODUCT");
-        }
+        contentCtx.put("defaultImageProfile", ProductImageWorker.getDefaultProductImageProfile(delegator, productContentTypeId, false, false));
 
         // TODO/FIXME: currently provides no deletion of the old images...
 
@@ -363,22 +354,12 @@ public abstract class ProductImageServices {
         boolean createInitial = Boolean.TRUE.equals(ctx.getAttr("createInitial"));
          */
 
-        String mediaProfileName;
-        if (content != null) {
-            mediaProfileName = content.getString("mediaProfile");
-            if (mediaProfileName == null) {
-                mediaProfileName = "IMAGE_PRODUCT-" + productContentTypeId;
-            }
-        } else {
-            mediaProfileName = product.getString("imageProfile");
-            if (mediaProfileName == null) {
-                mediaProfileName = "IMAGE_PRODUCT-ORIGINAL_IMAGE_URL";
-            }
-        }
-        ImageProfile imageProfile = ImageProfile.getImageProfile(ctx.delegator(), mediaProfileName);
+        ImageProfile imageProfile = ProductImageWorker.getProductImageProfileOrDefault(ctx.delegator(),
+                "DETAIL_IMAGE_URL".equals(productContentTypeId) ? "ORIGINAL_IMAGE_URL" : productContentTypeId,
+                product, content, false, false);
         if (imageProfile == null) {
-            Debug.logError("productImageRescaleImage: Could not find media profile [" + imageProfile + "] for product [" + productId + "]", module);
-            return ServiceUtil.returnError("Could not find media profile [" + imageProfile + "] for product [" + productId + "]");
+            Debug.logError("productImageRescaleImage: Could not find media profile for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]", module);
+            return ServiceUtil.returnError("Could not find media profile for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]");
         }
 
         ProductImageWorker.ImageViewType imageViewType;
@@ -396,7 +377,7 @@ public abstract class ProductImageServices {
         if (!recreateExisting) {
             try {
                 ProductImageLocationInfo pili = ProductImageLocationInfo.from(ctx.dctx(), ctx.locale(),
-                        product, productContentTypeId, origImageUrl, sizeTypeList, false, false);
+                        product, productContentTypeId, origImageUrl, sizeTypeList, false, false, false);
                 sizeTypeList = (pili != null) ? pili.getMissingVariantNames() : null;
                 if (UtilValidate.isEmpty(sizeTypeList)) {
                     String msg = "No missing sizeTypes for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]" + (sizeTypeList != null ? " sizeTypeList [" + sizeTypeList + "]" : "") + "; not resizing";

@@ -625,12 +625,15 @@ public class ExtWebappInfo implements Serializable {
         if (webXml != null) {
             Map<String, String> servletMappings = webXml.getServletMappings();
             if (servletMappings != null) {
-                String servletPath = servletMappings.get(servletMapping);
-                if (UtilValidate.isNotEmpty(servletPath)) {
-                    if (servletPath.endsWith("/*")) {
-                        return servletPath.substring(0, servletPath.length() - "/*".length());
-                    } else {
-                        return servletPath;
+                // TODO: optimize (api is reversed)
+                for(Map.Entry<String, String> mapping : servletMappings.entrySet()) {
+                    if (servletMapping.equals(mapping.getValue())) {
+                        String servletPath = mapping.getKey();
+                        if (servletPath.endsWith("/*")) {
+                            return servletPath.substring(0, servletPath.length() - "/*".length());
+                        } else {
+                            return servletPath;
+                        }
                     }
                 }
             }

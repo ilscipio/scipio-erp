@@ -2,13 +2,7 @@ package com.ilscipio.scipio.ce.webapp.ftl.template;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,6 +19,8 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
@@ -692,12 +688,46 @@ public abstract class TemplateFtlUtil {
      * */
     public static String generateDefaultKey(HttpServletRequest request, String hashableString){
         StringBuffer url = request.getRequestURL();
-        if (request.getQueryString() != null) url.append("?").append(request.getQueryString());
-        if(UtilValidate.isNotEmpty(hashableString)){
-            return SeoStringUtil.getHash(url.toString()+UtilCache.SEPARATOR+hashableString, StandardCharsets.ISO_8859_1);
-        }else{
-            return SeoStringUtil.getHash(url.toString(), StandardCharsets.ISO_8859_1);
+        StringBuffer unhashedKey = url;
+
+        Delegator delegator = (Delegator)request.getAttribute("delegator");
+
+        if(UtilValidate.isNotEmpty(delegator)){
+            unhashedKey.append(UtilCache.SEPARATOR+delegator.getDelegatorName());
         }
+
+        if(UtilValidate.isNotEmpty(request.getAttribute("webSiteId"))){
+            unhashedKey.append(UtilCache.SEPARATOR+request.getAttribute("webSiteId"));
+        }
+
+        if(UtilValidate.isNotEmpty(request.getAttribute("productStoreId"))){
+            unhashedKey.append(UtilCache.SEPARATOR+request.getAttribute("productStoreId"));
+        }
+
+        if(UtilValidate.isNotEmpty(request.getAttribute("locale"))){
+            Locale locale = (Locale) request.getAttribute("locale");
+            unhashedKey.append(UtilCache.SEPARATOR+locale.toString());
+        }
+
+        if(UtilValidate.isNotEmpty(request.getAttribute("_CURRENT_VIEW_"))){
+            unhashedKey.append(UtilCache.SEPARATOR+request.getAttribute("_CURRENT_VIEW_"));
+        }
+
+        if(UtilValidate.isNotEmpty(request.getAttribute("_ERROR_MESSAGE_"))){
+            unhashedKey.append(UtilCache.SEPARATOR+request.getAttribute("_ERROR_MESSAGE_"));
+        }
+
+        /*
+        CmsControlState cmsInfo = CmsControlState.fromRequestIfExists(request);
+        if(UtilValidate.isNotEmpty(cmsInfo)){
+            unhashedKey.append(UtilCache.SEPARATOR+cmsInfo.getOrigRequestSourcePath());
+        }*/
+
+        String userLoginSet = UtilValidate.isNotEmpty(request.getAttribute("userLogin")) ? "Y" : "N";
+        unhashedKey.append(UtilCache.SEPARATOR+userLoginSet);
+
+        return SeoStringUtil.getHash(unhashedKey.toString(), StandardCharsets.ISO_8859_1);
+
     }
 
     public static String generateDefaultKey(String hashableString) throws TemplateModelException {

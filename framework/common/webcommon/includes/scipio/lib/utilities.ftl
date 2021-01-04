@@ -5509,19 +5509,27 @@ Generates a unique element cache key from request object and additional paramete
 
   * Parameters *
     prependString          = ((string)) A parameter string, added before the request url (unhashed)
-    hashableString         = ((string)) A parameter string, added after the request url (hashed)
+    hashableString         = ((string)) A parameter string, added after the request url (hashed if hashing enabled)
 
   * History *
     Added for 2.1.0.
 
 -->
-<#function getCacheKey prependString hashableString>
+<#function getCacheKey prependString="" hashableString="">
   <#if request?has_content>
     <#local reqUrl = Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].generateDefaultKey(prependString,hashableString)>
     <#if reqUrl?has_content>
       <#return raw(reqUrl)>
     </#if>
   <#else>
-    <#return raw(prependString+"::"+hashableString)>
+    <#if prependString?has_content>
+      <#if hashableString?has_content>
+        <#return raw(prependString)+"::"+raw(hashableString)>
+      <#else>
+        <#return raw(prependString)>
+      </#if>
+    <#else>
+      <#return raw(hashableString)>
+    </#if>
   </#if>
 </#function>

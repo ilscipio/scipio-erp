@@ -726,8 +726,16 @@ public abstract class TemplateFtlUtil {
         String userLoginSet = UtilValidate.isNotEmpty(request.getAttribute("userLogin")) ? "Y" : "N";
         unhashedKey.append(UtilCache.SEPARATOR+userLoginSet);
 
-        return SeoStringUtil.getHash(unhashedKey.toString(), StandardCharsets.ISO_8859_1);
+        if (UtilValidate.isNotEmpty(hashableString)) { // TODO: REVIEW: added recently
+            unhashedKey.append(UtilCache.SEPARATOR);
+            unhashedKey.append(hashableString);
+        }
 
+        // TODO: REVIEW: getHash uses md5 which is too slow - acceptable if this were stored in session, but then
+        //  it needs to be cleared reliably i.e. when userLogin changes... including _CURRENT_VIEW_ and _ERROR_MESSAGE_
+        //  also makes this impossible for now
+        //return SeoStringUtil.getHash(unhashedKey.toString(), StandardCharsets.ISO_8859_1);
+        return unhashedKey.toString();
     }
 
     public static String generateDefaultKey(String hashableString) throws TemplateModelException {
@@ -742,7 +750,11 @@ public abstract class TemplateFtlUtil {
      * Uses ISO_8859_1 undeneath, as request urls use a
      * */
     public static String generateDefaultKey(HttpServletRequest request, String prependStr, String hashableString){
-        return prependStr+UtilCache.SEPARATOR+generateDefaultKey(request,hashableString);
+        if (UtilValidate.isNotEmpty(prependStr)) {
+            return prependStr + UtilCache.SEPARATOR + generateDefaultKey(request, hashableString);
+        } else {
+            return generateDefaultKey(request, hashableString);
+        }
     }
 
     public static String generateDefaultKey(String prependStr, String hashableString) throws TemplateModelException {

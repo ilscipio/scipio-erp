@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.ce.webapp.ftl.template;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ilscipio.scipio.ce.util.SeoStringUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -680,5 +682,41 @@ public abstract class TemplateFtlUtil {
         } else {
             return LangFtlUtil.unwrapAlways(model);
         }
+    }
+
+    /**
+     * SCIPIO: Generate a cache-key from request object and an optional hashable string
+     * Added 2020-04-01
+     *
+     * Uses ISO_8859_1 undeneath, as request urls use a
+     * */
+    public static String generateDefaultKey(HttpServletRequest request, String hashableString){
+        StringBuffer url = request.getRequestURL();
+        if (request.getQueryString() != null) url.append("?").append(request.getQueryString());
+        if(UtilValidate.isNotEmpty(hashableString)){
+            return SeoStringUtil.getHash(url.toString()+UtilCache.SEPARATOR+hashableString, StandardCharsets.ISO_8859_1);
+        }else{
+            return SeoStringUtil.getHash(url.toString(), StandardCharsets.ISO_8859_1);
+        }
+    }
+
+    public static String generateDefaultKey(String hashableString) throws TemplateModelException {
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
+        return generateDefaultKey(ContextFtlUtil.getRequest(env), hashableString);
+    }
+
+    /**
+     * SCIPIO: Generate cache key from request; prepend additional string
+     * Added 2020-04-01
+     *
+     * Uses ISO_8859_1 undeneath, as request urls use a
+     * */
+    public static String generateDefaultKey(HttpServletRequest request, String prependStr, String hashableString){
+        return prependStr+UtilCache.SEPARATOR+generateDefaultKey(request,hashableString);
+    }
+
+    public static String generateDefaultKey(String prependStr, String hashableString) throws TemplateModelException {
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
+        return generateDefaultKey(ContextFtlUtil.getRequest(env), prependStr, hashableString);
     }
 }

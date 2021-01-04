@@ -5500,3 +5500,28 @@ TODO: Implement as transform
     <#t><#nested><#t>
   </#if>
 </#macro>
+
+<#--
+*************
+* getCacheKey
+************
+Generates a unique element cache key from request object and additional parameters
+
+  * Parameters *
+    prependString          = ((string)) A parameter string, added before the request url (unhashed)
+    hashableString         = ((string)) A parameter string, added after the request url (hashed)
+
+  * History *
+    Added for 2.1.0.
+
+-->
+<#function getCacheKey prependString hashableString>
+  <#if request?has_content>
+    <#local reqUrl = Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].generateDefaultKey(prependString,hashableString)>
+    <#if reqUrl?has_content>
+      <#return raw(reqUrl)>
+    </#if>
+  <#else>
+    <#return raw(prependString+"::"+hashableString)>
+  </#if>
+</#function>

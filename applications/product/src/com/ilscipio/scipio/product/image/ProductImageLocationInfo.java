@@ -12,6 +12,7 @@ import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
@@ -51,6 +52,7 @@ public class ProductImageLocationInfo implements Serializable {
     protected final String productId;
     protected final String productContentTypeId;
     protected final ImageVariantConfig variantConfig;
+    protected final String imagePath; // may be path or URL
     protected final String imageFilename;
     protected final Collection<String> sizeTypeList;
     protected final boolean useEntityCache;
@@ -64,12 +66,15 @@ public class ProductImageLocationInfo implements Serializable {
     protected Map<String, Object> imagePathArgs;
     protected Map<String, VariantLocation> sizeTypeInfoMap;
 
+    protected GenericValue product;
+
     protected ProductImageLocationInfo() {
         this.delegatorName = null;
         this.dispatcherName = null;
         this.productId = null;
         this.productContentTypeId = null;
         this.variantConfig = null;
+        this.imagePath = null;
         this.imageFilename = null;
         this.sizeTypeList = null;
         this.useEntityCache = false;
@@ -77,7 +82,7 @@ public class ProductImageLocationInfo implements Serializable {
     }
 
     protected ProductImageLocationInfo(DispatchContext dctx, String productId, String productContentTypeId,
-                                       ImageVariantConfig variantConfig, String imageFilename, Collection<String> sizeTypeList,
+                                       ImageVariantConfig variantConfig, String imagePath, Collection<String> sizeTypeList,
                                        boolean useEntityCache, boolean useProfileCache) throws IllegalArgumentException {
         this.delegator = dctx.getDelegator();
         this.delegatorName = this.delegator.getDelegatorName();
@@ -86,11 +91,13 @@ public class ProductImageLocationInfo implements Serializable {
         this.productId = productId;
         this.productContentTypeId = productContentTypeId;
         this.variantConfig = variantConfig;
+        this.imagePath = imagePath;
+        String imageFilename = imagePath;
         if (imageFilename.lastIndexOf("/") != -1) {
             imageFilename = imageFilename.substring(imageFilename.lastIndexOf("/") + 1);
         }
         if (imageFilename.lastIndexOf(".") <= 0 || imageFilename.lastIndexOf(".") >= (imageFilename.length() - 1)) { // SCIPIO: added this to prevent more serious problems
-            throw new IllegalArgumentException("Original image filename [" + imageFilename + "] has missing or improper file extension (image type)");
+            throw new IllegalArgumentException("Original image filename [" + imagePath + "] has missing or improper file extension (image type)");
         }
         this.imageFilename = imageFilename;
         if (sizeTypeList == null) {
@@ -210,6 +217,11 @@ public class ProductImageLocationInfo implements Serializable {
         return variantConfig;
     }
 
+    /** Returns either a URL or a file path (used to extract {@link #getImageFilename()}, unreliable. */
+    public String getImagePath() {
+        return imagePath;
+    }
+
     public String getImageFilename() {
         return imageFilename;
     }
@@ -281,50 +293,71 @@ public class ProductImageLocationInfo implements Serializable {
     }
 
     protected void initPathProperties() throws IllegalArgumentException, GeneralException {
+        String imageServerPathExpr = EntityUtilProperties.getPropertyValue("catalog", "image.server.path", getDelegator());
+        try {
+            imageServerPathExpr = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageServerPathExpr, imageServerPathExpr);
+        } catch (MalformedURLException e) {
+            throw new GeneralException(e);
+        }
+        String imageUrlPrefixExpr = EntityUtilProperties.getPropertyValue("catalog", "image.url.prefix", getDelegator());
+        Map<String, Object> imagePathArgs = makeImagePathArg(new HashMap<>());
+        String imageServerPath = makeImageServerPath(imageServerPathExpr, imagePathArgs);
+        String imageUrlPrefix = makeImageUrlPrefix(imageUrlPrefixExpr, imagePathArgs);
+
+        this.imageServerPath = imageServerPath;
+        this.imageUrlPrefix = imageUrlPrefix;
+        //this.imageFnFmt = FlexibleStringExpander.getInstance(imageFnFmt); // done by makeImagePathArg
+    }
+
+    protected Map<String, Object> makeImagePathArg(Map<String, Object> imagePathArgs) throws GeneralException {
         ProductImageWorker.ImageViewType imageViewType = getImageViewType();
         String viewType = imageViewType.getViewType();
         String viewNumber = imageViewType.getViewNumber();
-
-        String imageServerPath = EntityUtilProperties.getPropertyValue("catalog", "image.server.path", getDelegator());
-        String imageUrlPrefix = EntityUtilProperties.getPropertyValue("catalog", "image.url.prefix", getDelegator());
-        Map<String, Object> imagePathArgs = new HashMap<>();
 
         String imageFnFmt;
         String id = getProductId();
         if (viewType.toLowerCase().contains("main")) {
             imageFnFmt = EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", getDelegator());
-            imagePathArgs.putAll(UtilMisc.toMap("location", "products", "id", id, "type", "original"));
+            UtilMisc.put(imagePathArgs,"location", "products", "id", id, "type", "original");
         } else if (viewType.toLowerCase().contains("additional") && viewNumber != null && !"0".equals(viewNumber)) {
             imageFnFmt = EntityUtilProperties.getPropertyValue("catalog", "image.filename.additionalviewsize.format", getDelegator());
-            if (imageFnFmt.endsWith("${id}")) { // TODO: REVIEW: I don't get this
+            if (imageFnFmt.endsWith("${id}")) {
                 id = id + "_View_" + viewNumber;
             } else {
                 viewType = "additional" + viewNumber;
             }
-            imagePathArgs.putAll(UtilMisc.toMap("location", "products", "id", id, "viewtype", viewType, "sizetype", "original"));
+            UtilMisc.put(imagePathArgs, "location", "products", "id", id, "viewtype", viewType, "sizetype", "original");
         } else {
             throw new IllegalArgumentException("Unrecognized viewType [" + viewType + "] or viewNumber [" + viewNumber
                     + "] for productContentTypeId [" + getProductContentTypeId() + "] for product [" + id + "]");
         }
+        imagePathArgs.put("tenantId", getDelegator().getDelegatorTenantId());
 
-        try {
-            imageServerPath = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageServerPath, imageServerPath);
-        } catch (MalformedURLException e) {
-            throw new GeneralException(e);
-        }
-
-        Map<String, Object> imageContext = new HashMap<>(); // new HashMap<>(context);
-        imageContext.put("tenantId", getDelegator().getDelegatorTenantId());
-        imageContext.putAll(imagePathArgs);
-        imageServerPath = FlexibleStringExpander.expandString(imageServerPath, imageContext);
-        imageUrlPrefix = FlexibleStringExpander.expandString(imageUrlPrefix, imageContext);
-        imageServerPath = imageServerPath.endsWith("/") ? imageServerPath.substring(0, imageServerPath.length() - 1) : imageServerPath;
-        imageUrlPrefix = imageUrlPrefix.endsWith("/") ? imageUrlPrefix.substring(0, imageUrlPrefix.length() - 1) : imageUrlPrefix;
-
-        this.imageServerPath = imageServerPath;
-        this.imageUrlPrefix = imageUrlPrefix;
-        this.imageFnFmt = FlexibleStringExpander.getInstance(imageFnFmt);
         this.imagePathArgs = imagePathArgs;
+        this.imageFnFmt = FlexibleStringExpander.getInstance(imageFnFmt);
+        return imagePathArgs;
+    }
+
+    protected String makeImageServerPath(String imageServerPathExpr, Map<String, Object> imageContext) {
+        return PathUtil.removeTrailDelim(FlexibleStringExpander.expandString(imageServerPathExpr, imageContext));
+    }
+
+    protected String makeImageUrlPrefix(String imageUrlPrefixExpr, Map<String, Object> imageContext) {
+        return PathUtil.removeTrailDelim(FlexibleStringExpander.expandString(imageUrlPrefixExpr, imageContext));
+    }
+
+    public GenericValue getProduct() {
+        GenericValue product = this.product;
+        if (product == null) {
+            try {
+                product = getDelegator().findOne("Product", UtilMisc.toMap("productId", getProductId()), false);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                product = GenericValue.NULL_VALUE;
+            }
+            this.product = product;
+        }
+        return (GenericValue.NULL_VALUE != product) ? product : null;
     }
 
     public Map<String, VariantLocation> getVariantLocations() throws IllegalArgumentException, GeneralException {

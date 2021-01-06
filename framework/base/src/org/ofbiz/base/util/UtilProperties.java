@@ -2404,14 +2404,15 @@ public final class UtilProperties implements Serializable {
          */
         public static ResourceBundle getBundle(String resource, Locale locale, ClassLoader loader, boolean optional) throws MissingResourceException {
             String resourceName = createResourceName(resource, locale, true);
+            String origResourceName = null;
             UtilResourceBundle bundle = bundleCache.get(resourceName);
             if (bundle == null) {
                 // SCIPIO: 2018-10-02: Handle alias case
-                // TODO: Optimize: Alias cases require two cache lookups here, but it's better than nothing.
-                String realResourceName = ResourceNameAliases.getSubstituteResourceNameAliasOrNull(resource);
-                if (realResourceName != null) {
-                    resource = realResourceName;
-                    createResourceName(resource, locale, true);
+                String realResource = ResourceNameAliases.getSubstituteResourceNameAliasOrNull(resource);
+                if (realResource != null) {
+                    origResourceName = resourceName;
+                    resource = realResource;
+                    resourceName = createResourceName(resource, locale, true);
                     bundle = bundleCache.get(resourceName);
                     if (bundle != null) {
                         return bundle;
@@ -2457,7 +2458,12 @@ public final class UtilProperties implements Serializable {
                     Debug.logInfo("ResourceBundle " + resource + " (" + locale + ") created in " + totalTime / 1000.0 + "s with "
                             + numProperties + " properties", module);
                 }
-                bundleCache.putIfAbsent(resourceName, bundle);
+                // SCIPIO: don't putIfAbsent because need both names to point to same bundle, not a serious issue anyway
+                //bundleCache.putIfAbsent(resourceName, bundle);
+                bundleCache.put(resourceName, bundle);
+                if (origResourceName != null) { // SCIPIO: also put the bundle under the alias (faster lookup) - TODO: REVIEW: always safe? looks like it
+                    bundleCache.put(origResourceName, bundle);
+                }
             }
             return bundle;
         }

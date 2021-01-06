@@ -35,5 +35,5 @@ jQuery(document).ready(function() {
         jQuery('#${escapeVal(focusFieldName, 'js')}').focus();
       </#if>
     }
-})
+});
 </@script>

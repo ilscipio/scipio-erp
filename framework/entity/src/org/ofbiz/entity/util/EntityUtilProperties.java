@@ -40,6 +40,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
@@ -47,6 +48,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.w3c.dom.Element;
 
 @SuppressWarnings("serial")
 public final class EntityUtilProperties implements Serializable {
@@ -477,6 +479,41 @@ public final class EntityUtilProperties implements Serializable {
 
     public static Properties xmlToProperties(InputStream in, Locale locale, Properties properties) throws IOException, InvalidPropertiesFormatException {
         return UtilProperties.xmlToProperties(in, locale, properties);
+    }
+
+    /** Reads properties from ResourceProperty entity (SCIPIO). */
+    public static Properties entityResourceToProperties(String resourceName, Locale locale, Properties properties, Delegator delegator, Boolean useCache) throws IOException, InvalidPropertiesFormatException {
+        if (delegator == null) { // FIXME: default delegator fallback
+            delegator = DelegatorFactory.getDefaultDelegator();
+        }
+        if (resourceName.endsWith(".xml")) {
+            resourceName = resourceName.substring(0, resourceName.length() - ".xml".length());
+        }
+        if (locale == null) {
+            throw new IllegalArgumentException("locale cannot be null");
+        }
+        String localeString = locale.toString();
+        String correctedLocaleString = localeString.replace('_','-');
+
+        List<GenericValue> propertyList = delegator.from("ResourceProperty").where(
+                EntityCondition.makeCondition("resourceId", resourceName),
+                EntityCondition.makeCondition(EntityCondition.makeCondition("lang", localeString), EntityOperator.OR,
+                        EntityCondition.makeCondition("lang", correctedLocaleString))).orderBy("propertyId").cache(useCache).queryListSafe();
+        if (UtilValidate.isNotEmpty(propertyList)) {
+            for (GenericValue property : propertyList) {
+                Object value = property.get("value");
+                boolean useEmpty = property.getBoolean("useEmpty", false);
+                if (useEmpty || (value instanceof String && !((String) value).isEmpty())) {
+                    properties.put(property.get("propertyId"), property.get("value"));
+                }
+            }
+        }
+        return properties;
+    }
+
+    /** Reads properties from ResourceProperty entity (SCIPIO). */
+    public static Properties entityResourceToProperties(String resourceName, Locale locale, Properties properties, Object delegator, Boolean useCache) throws IOException, InvalidPropertiesFormatException {
+        return entityResourceToProperties(resourceName, locale, properties, (Delegator) delegator, useCache);
     }
 
     /**

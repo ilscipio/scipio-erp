@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
@@ -50,6 +51,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.ilscipio.scipio.ce.util.PathUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -2507,24 +2509,57 @@ public final class UtilProperties implements Serializable {
 
     }
 
+    // SCIPIO
+    private static Method entityResourceToPropertiesMethod = null;
+
+    private static void entityResourceToProperties(String resourceName, Locale locale, Properties properties, Object delegator, boolean useCache) {
+        // SCIPIO: Attempt to integrate ResourceProperty entries
+        if (entityResourceToPropertiesMethod == null) {
+            try {
+                entityResourceToPropertiesMethod = Class.forName("org.ofbiz.entity.util.EntityUtilProperties")
+                        .getMethod("entityResourceToProperties", String.class, Locale.class, Properties.class, Object.class, Boolean.class);
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+        }
+        if (entityResourceToPropertiesMethod != null) {
+            try {
+                entityResourceToPropertiesMethod.invoke(null, resourceName, locale, properties, null, useCache);
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+        }
+    }
+
     /** Custom Properties class. Extended from Properties to add support
      * for the OFBiz custom XML file format.
      */
     public static class ExtendedProperties extends Properties {
         protected static final Map<String, Map<String, String>> COMMAND_LINE_PROPERTIES = Collections.unmodifiableMap(getCommandLinePropertyOverrides(true));
 
+        private final URL url; // SCIPIO
+        private final Locale locale; // SCIPIO
+
         public ExtendedProperties() {
             super();
+            url = null;
+            locale = null;
         }
+
         public ExtendedProperties(Properties defaults) {
             super(defaults);
+            url = null;
+            locale = null;
         }
+
         public ExtendedProperties(URL url, Locale locale) throws IOException, InvalidPropertiesFormatException {
             InputStream in = null;
             try {
                 in = new BufferedInputStream(url.openStream());
                 if (url.getFile().endsWith(".xml")) {
                     xmlToProperties(in, locale, this);
+                    // SCIPIO: read from ResourceProperty
+                    entityResourceToProperties(PathUtil.getFileNameFromPath(url.getFile()), locale, this, null, false);
                 } else {
                     load(in);
                     loadCommandLineProperties(url); // SCIPIO
@@ -2534,11 +2569,19 @@ public final class UtilProperties implements Serializable {
                     in.close();
                 }
             }
+            // SCIPIO
+            this.url = url;
+            this.locale = locale;
         }
+
         @Override
         public void loadFromXML(InputStream in) throws IOException, InvalidPropertiesFormatException {
             try {
                 xmlToProperties(in, null, this);
+                if (url != null && locale != null) {
+                    // SCIPIO: read from ResourceProperty
+                    entityResourceToProperties(PathUtil.getFileNameFromPath(url.getFile()), locale, this, null, false);
+                }
             } finally {
                 in.close();
             }

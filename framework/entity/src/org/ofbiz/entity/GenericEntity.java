@@ -807,6 +807,11 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         }
     }
 
+    public Boolean getBoolean(String name, Boolean defaultValue) { // SCIPIO
+        Boolean value = getBoolean(name);
+        return (value != null) ? value : defaultValue;
+    }
+
     /** Returns the specified field as a <code>TimeDuration</code> instance.
      * The field's Java data type can be either <code>String</code> or
      * <code>Number</code>. Invalid Java data types will throw

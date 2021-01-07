@@ -228,4 +228,16 @@ public class PathUtil {
         }
         return false;
     }
+
+    public static String getFileNameFromPath(String path) {
+        if (path == null) {
+            return null;
+        }
+        String name = path;
+        int lastSlash = path.lastIndexOf('/');
+        if (lastSlash >= 0) {
+            name = path.substring(lastSlash + 1);
+        }
+        return name.isEmpty() ? null : name;
+    }
 }

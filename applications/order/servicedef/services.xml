@@ -342,7 +342,7 @@ code package.
         <attribute name="changeMap" type="Map" mode="IN" optional="false"/>
     </service>
     <service name="appendOrderItem" engine="java" auth="true"
-            location="org.ofbiz.order.order.OrderServices" invoke="addItemToApprovedOrder">
+            location="org.ofbiz.order.order.OrderServices" invoke="addItemToApprovedOrder" transaction-timeout="7200">
         <description>Append an item to an existing order</description>
         <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
         <attribute name="shipGroupSeqId" type="String" mode="IN" optional="false"/>

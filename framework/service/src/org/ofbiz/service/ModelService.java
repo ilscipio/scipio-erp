@@ -302,6 +302,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     Long priority;
 
+    /**
+     * SCIPIO: Default job pool when service invoked as persistent job, when not overridden by caller.
+     */
+    String jobPoolPersist;
+
     public ModelService() {}
 
     public ModelService(ModelService model) {
@@ -349,6 +354,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         this.ecaLogLevel = model.ecaLogLevel;
         this.typeConvertParamList = model.typeConvertParamList;
         this.priority = model.priority;
+        this.jobPoolPersist = model.jobPoolPersist;
     }
 
     @Override
@@ -2415,6 +2421,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public Long getPriority() {
         return priority;
+    }
+
+    /**
+     * SCIPIO: Returns the default job pool when service invoked as persistent job, when not overridden by caller.
+     */
+    public String getJobPoolPersist() {
+        return jobPoolPersist;
     }
 
     /**

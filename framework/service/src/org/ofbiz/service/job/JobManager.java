@@ -690,6 +690,9 @@ public final class JobManager {
             throw new JobManagerException(e);
         }
         String poolName = serviceOptions.jobPool();
+        if (poolName == null) {
+            poolName = modelService.getJobPoolPersist(); // SCIPIO
+        }
         // SCIPIO: NOTE: we leave priority null unless explicit so it picks up default from ModelService/JobPriority
         Long priority = (serviceOptions.priority() != null) ? serviceOptions.priority() : null;
         long startTime = (serviceOptions.startTime() != null) ? serviceOptions.startTime() : System.currentTimeMillis(); // SCIPIO: new: if missing, assume now (simplifies API)

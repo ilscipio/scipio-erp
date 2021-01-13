@@ -325,6 +325,8 @@ public class ModelServiceReader implements Serializable {
         }
         service.priority = priority;
 
+        service.jobPoolPersist = UtilValidate.nullIfEmpty(serviceElement.getAttribute("job-pool-persist"));
+
         return service;
     }
 

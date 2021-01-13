@@ -177,6 +177,14 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="job-pool-persist">
+            <xs:annotation>
+                <xs:documentation>
+                    SCIPIO: Default job pool when service scheduled as persistent job, when not overridden by caller.
+                    NOTE: This occurs during job scheduling; changing this has no effect for a JobSandbox record already scheduled.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="notification">
         <xs:complexType>

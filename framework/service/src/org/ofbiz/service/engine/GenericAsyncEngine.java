@@ -126,7 +126,14 @@ public abstract class GenericAsyncEngine extends AbstractEngine {
                 }
 
                 Map<String, Object> jFields = UtilMisc.toMap("jobId", jobId, "jobName", jobName, "runTime", UtilDateTime.nowTimestamp());
-                jFields.put("poolId", (pao.jobPool() != null) ? pao.jobPool() : ServiceConfigUtil.getServiceEngine().getThreadPool().getSendToPool()); // SCIPIO: added jobPool
+                String poolId = pao.jobPool();
+                if (poolId == null) {
+                    poolId = modelService.getJobPoolPersist();
+                    if (poolId == null) {
+                        poolId = ServiceConfigUtil.getServiceEngine().getThreadPool().getSendToPool();
+                    }
+                }
+                jFields.put("poolId", poolId); // SCIPIO: added jobPool
                 jFields.put("statusId", "SERVICE_PENDING");
                 jFields.put("serviceName", modelService.name);
                 jFields.put("loaderName", localName);

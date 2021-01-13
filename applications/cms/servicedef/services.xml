@@ -826,12 +826,10 @@
         <attribute mode="OUT" name="dataResourceId" type="String" optional="true"/>
         <attribute mode="OUT" name="dataResourceTypeId" type="String" optional="true"/>
     </service>
-    <!-- TODO: cmsRebuildMediaVariants will probably be replaced by more generic content version -->
-    <service name="cmsRebuildMediaVariants" engine="java"
-        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="rebuildMediaVariants" auth="true" transaction-timeout="144000" semaphore="fail">
-        <description>Recreates (deletes + creates) auto-resized images for specified or all images</description>
+    <service name="cmsRebuildMediaVariantList" engine="java"
+             location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="rebuildMediaVariantList" auth="true" transaction-timeout="144000">
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute mode="IN" name="contentIdList" type="List" optional="true">
+        <attribute mode="IN" name="contentIdList" type="List" optional="false">
             <description>contentId of images for which to recreate their variants; if omitted, applies to all images (slow)</description>
         </attribute>
         <attribute mode="IN" name="forceCreate" type="Boolean" optional="true" default-value="false">
@@ -850,7 +848,7 @@
         <attribute name="createdDate" mode="IN" type="Timestamp" optional="true">
             <description>Optional createdDate for Content and DataResource</description>
         </attribute>
-        <attribute name="doLog" mode="IN" type="Boolean" optional="true"/>
+        <attribute name="doLog" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <!-- SCIPIO (12/17/2018): Allowing custom image variant sizes config -->
         <attribute mode="IN" name="imageVariantConfig" type="org.ofbiz.common.image.ImageVariantConfig" optional="true"/>
         <!-- SCIPIO (01/19/2019): Passing custom image sizes for responsive images -->
@@ -863,6 +861,15 @@
         <attribute name="variantSuccessCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="variantFailCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="variantSkipCount" mode="OUT" type="Integer" optional="true"/>
+    </service>
+    <!-- TODO: cmsRebuildMediaVariants will probably be replaced by more generic content version -->
+    <service name="cmsRebuildMediaVariants" engine="java"
+        location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="rebuildMediaVariants" auth="true" transaction-timeout="144000" semaphore="fail">
+        <description>Recreates (deletes + creates) auto-resized images for specified or all images</description>
+        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
+        <implements service="cmsRebuildMediaVariantList"/>
+        <override name="contentIdList" optional="true"/>
+        <override name="doLog" default-value="true"/>
     </service>
     <service name="cmsAbortRebuildMediaVariants" engine="java"
              location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="abortRebuildMediaVariants" auth="true">

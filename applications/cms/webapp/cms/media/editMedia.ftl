@@ -266,7 +266,7 @@
                         </#if>
                     </form>
                     <#if ((media.dataResourceTypeId)!) == "IMAGE_OBJECT">
-                        <form method="post" action="<@pageUrl>rebuildMediaVariants?contentId=${media.contentId}</@pageUrl>" id="mediaresizeform">
+                        <form method="post" action="<@pageUrl>rebuildMediaVariantList?contentId=${media.contentId}</@pageUrl>" id="mediaresizeform">
                             <input type="hidden" name="contentIdList" value="[${media.contentId}]"/>
                             <input type="hidden" name="forceCreate" value="true"/>
                             <input type="hidden" name="createNew" value="true"/>

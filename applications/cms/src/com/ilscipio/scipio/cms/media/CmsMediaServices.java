@@ -756,7 +756,11 @@ public abstract class CmsMediaServices {
         }
     }
 
-    public static Map<String, Object> rebuildMediaVariants(ServiceContext ctx, ProcessSignals processSignals) {
+    public static Map<String, Object> rebuildMediaVariantList(ServiceContext ctx) {
+        return rebuildMediaVariants(ctx, null);
+    }
+
+    protected static Map<String, Object> rebuildMediaVariants(ServiceContext ctx, ProcessSignals processSignals) {
         // TODO: delegate to ContentImageServices
         Collection<String> contentIdList = ctx.attr("contentIdList");
         boolean forceCreate = ctx.attr("forceCreate", false);
@@ -768,12 +772,11 @@ public abstract class CmsMediaServices {
         boolean sepTrans = ctx.attr("sepTrans", (contentIdList == null));
 
         Set<String> remainingContentIds = new HashSet<>();
-        Boolean doLog = ctx.attr("doLog");
+        Boolean doLog = ctx.attr("doLog", false);
         EntityListIterator contentDataResourceList = null;
         try {
             if (contentIdList == null) {
                 contentDataResourceList = CmsMediaWorker.getAllMediaContentDataResourceRequired(ctx.delegator(), "IMAGE_OBJECT", null);
-                doLog = true;
             } else {
                 contentIdList = new LinkedHashSet<>(contentIdList); // remove dups
                 remainingContentIds = new HashSet<>(contentIdList);
@@ -781,9 +784,6 @@ public abstract class CmsMediaServices {
             }
             if (contentDataResourceList == null) {
                 return ServiceUtil.returnSuccess();
-            }
-            if (doLog == null) {
-                doLog = false;
             }
             if (doLog) {
                 Debug.logInfo(logPrefix+"Beginning rebuildMediaVariants for images " + (contentIdList != null ? contentIdList : "[all]")

@@ -502,9 +502,9 @@
         <response name="error" type="view" value="media"/>
     </request-map>
     
-    <request-map uri="rebuildMediaVariants">
+    <request-map uri="rebuildMediaVariantList">
         <security https="true" auth="true"/>
-        <event type="service" invoke="cmsRebuildMediaVariants"/>
+        <event type="service" invoke="cmsRebuildMediaVariantList"/>
         <response name="success" type="request-redirect" value="editMedia" save-request="messages">
             <redirect-parameter name="contentId"/>
         </response>

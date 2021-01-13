@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,8 +36,10 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -481,8 +484,8 @@ public final class EntityUtilProperties implements Serializable {
         return UtilProperties.xmlToProperties(in, locale, properties);
     }
 
-    /** Reads properties from ResourceProperty entity (SCIPIO). */
-    public static Properties entityResourceToProperties(String resourceName, Locale locale, Properties properties, Delegator delegator, Boolean useCache) throws IOException, InvalidPropertiesFormatException {
+    /** Reads properties from LocalizedProperty entity (SCIPIO). */
+    public static Properties entityResourceToProperties(String resourceName, Locale locale, Properties properties, Delegator delegator, boolean useCache) {
         if (delegator == null) { // FIXME: default delegator fallback
             delegator = DelegatorFactory.getDefaultDelegator();
         }
@@ -495,7 +498,7 @@ public final class EntityUtilProperties implements Serializable {
         String localeString = locale.toString();
         String correctedLocaleString = localeString.replace('_','-');
 
-        List<GenericValue> propertyList = delegator.from("ResourceProperty").where(
+        List<GenericValue> propertyList = delegator.from("LocalizedProperty").where(
                 EntityCondition.makeCondition("resourceId", resourceName),
                 EntityCondition.makeCondition(EntityCondition.makeCondition("lang", localeString), EntityOperator.OR,
                         EntityCondition.makeCondition("lang", correctedLocaleString))).orderBy("propertyId").cache(useCache).queryListSafe();
@@ -511,9 +514,46 @@ public final class EntityUtilProperties implements Serializable {
         return properties;
     }
 
-    /** Reads properties from ResourceProperty entity (SCIPIO). */
-    public static Properties entityResourceToProperties(String resourceName, Locale locale, Properties properties, Object delegator, Boolean useCache) throws IOException, InvalidPropertiesFormatException {
+    /** Reads properties from LocalizedProperty entity (SCIPIO). */
+    public static Properties entityResourceToProperties(String resourceName, Locale locale, Properties properties, Object delegator, boolean useCache) {
         return entityResourceToProperties(resourceName, locale, properties, (Delegator) delegator, useCache);
+    }
+
+    /** Reads properties from LocalizedProperty entity (SCIPIO). */
+    public static Map<String, Map<String, String>> entityResourceToLocalePropertyMap(String resourceName, boolean sort, Delegator delegator, boolean useCache, Map<String, Map<String, String>> out) {
+        if (delegator == null) { // FIXME: default delegator fallback
+            delegator = DelegatorFactory.getDefaultDelegator();
+        }
+        if (resourceName.endsWith(".xml")) {
+            resourceName = resourceName.substring(0, resourceName.length() - ".xml".length());
+        }
+        List<GenericValue> propertyList = delegator.from("LocalizedProperty").where("resourceId", resourceName).orderBy("propertyId").cache(useCache).queryListSafe();
+        if (UtilValidate.isNotEmpty(propertyList)) {
+            for (GenericValue property : propertyList) {
+                String value = property.getString("value");
+                boolean useEmpty = property.getBoolean("useEmpty", false);
+                if (useEmpty || UtilValidate.isNotEmpty(value)) {
+                    String propertyId = property.getString("propertyId");
+                    String lang = property.getString("lang");
+                    Map<String, String> propMap = UtilGenerics.cast(out.get(propertyId));
+                    boolean newMap = false;
+                    if (propMap == null) {
+                        propMap = sort ? new TreeMap<>() : new LinkedHashMap<>();
+                        newMap = true;
+                    }
+                    propMap.put(lang, value);
+                    if (newMap) {
+                        out.put(propertyId, propMap);
+                    }
+                }
+            }
+        }
+        return out;
+    }
+
+    /** Reads properties from LocalizedProperty entity (SCIPIO). */
+    public static Map<String, Map<String, String>> entityResourceToLocalePropertyMap(String resourceName, boolean sort, Object delegator, boolean useCache, Map<String, Map<String, String>> out) throws IOException, InvalidPropertiesFormatException {
+        return entityResourceToLocalePropertyMap(resourceName, sort, (Delegator) delegator, useCache, out);
     }
 
     /**

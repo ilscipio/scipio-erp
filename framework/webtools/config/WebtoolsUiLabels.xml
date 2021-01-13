@@ -1867,6 +1867,10 @@
         <value xml:lang="zh">实体</value>
         <value xml:lang="zh-TW">資料實體</value>
     </property>
+    <property key="WebtoolsEntityLabels">
+        <value xml:lang="de">Entitätsetiketten</value>
+        <value xml:lang="en">Entity Labels</value>
+    </property>
     <property key="WebtoolsEntityCreatePermissionError">
         <value xml:lang="de">Sie haben keine Berechtigung, eine Entität zu erstellen</value>
         <value xml:lang="en">You do not have permission to create a entity</value>
@@ -3352,7 +3356,7 @@
         <value xml:lang="zh">过滤标签信息</value>
         <value xml:lang="zh-TW">過濾標簽資訊</value>
     </property>
-    <property key="WebtoolsLabelManagerSecuryError">
+    <property key="WebtoolsLabelManagerSecurityError">
         <value xml:lang="de">Sie haben keine Berechtigung für den Label Manager (Sie benötigen LABEL_MANAGER_VIEW)</value>
         <value xml:lang="en">Cannot view Labels Info pages without LABEL_MANAGER_VIEW permission.</value>
         <value xml:lang="fr">Impossible d'accèder à la page de gestion des traductions sans l'autorisation LABEL_MANAGER_VIEW.</value>
@@ -5735,6 +5739,14 @@
         <value xml:lang="vi">Thực hiện Đồng bộ ngoại tuyến</value>
         <value xml:lang="zh">运行离线同步</value>
         <value xml:lang="zh-TW">執行離線同步</value>
+    </property>
+    <property key="WebtoolsSystemProperties">
+        <value xml:lang="de">Systemeigenschaften</value>
+        <value xml:lang="en">System Properties</value>
+    </property>
+    <property key="WebtoolsSystemPropertiesNotice">
+        <value xml:lang="de">HINWEIS: Mit dieser Funktion kann nur eine Teilmenge der Systemeigenschaften gespeichert werden. Einige Eigenschaften unterstützen nur Eigenschaftendateien (config/*. Properties).</value>
+        <value xml:lang="en">NOTE: Only a subset of system properties can be stored using this function. Some properties only support property files (config/*.properties).</value>
     </property>
     <property key="WebtoolsTTL">
         <value xml:lang="de">TTL</value>

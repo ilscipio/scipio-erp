@@ -1063,4 +1063,27 @@ public class StringUtil {
         }
         return out;
     }
+
+    public static String removeSuffix(String str, String suffix) { // SCIPIO
+        if (UtilValidate.isEmpty(str) || UtilValidate.isEmpty(suffix)) {
+            return str;
+        }
+        if (str.endsWith(suffix)) {
+            return str.substring(0, str.length() - suffix.length());
+        } else {
+            return str;
+        }
+    }
+
+    public static String removeSuffix(String str, String... suffixes) { // SCIPIO
+        if (UtilValidate.isEmpty(str)) {
+            return str;
+        }
+        for(String suffix : suffixes) {
+            if (UtilValidate.isNotEmpty(suffix) && str.endsWith(suffix)) {
+                return str.substring(0, str.length() - suffix.length());
+            }
+        }
+        return str;
+    }
 }

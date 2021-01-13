@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -1711,6 +1712,106 @@ public final class UtilProperties implements Serializable {
         return properties;
     }
 
+    /** Returns map of resource names to maps of locales to text values, all locales (SCIPIO). */
+    public static Map<String, Map<String, String>> xmlToLocalePropertyMap(InputStream in, boolean sort, Map<String, Map<String, String>> out) throws IOException, InvalidPropertiesFormatException {
+        if (in == null) {
+            throw new IllegalArgumentException("InputStream cannot be null");
+        }
+        Document doc;
+        try {
+            doc = UtilXml.readXmlDocument(in, true, "XML Properties file");
+        } catch (Exception e) {
+            Debug.logWarning(e, "XML file could not be loaded.", module);
+            return null;
+        } finally {
+            in.close();
+        }
+        Element resourceElement = doc.getDocumentElement();
+        List<? extends Element> propertyList = UtilXml.childElementList(resourceElement, "property");
+        if (UtilValidate.isNotEmpty(propertyList)) {
+            for (Element property : propertyList) {
+                String propName = property.getAttribute("key");
+                if (propName.isEmpty()) {
+                    continue;
+                }
+                Map<String, String> propMap = UtilGenerics.cast(out.get(propName));
+                boolean newMap = false;
+                if (propMap == null) {
+                    propMap = sort ? new TreeMap<>() : new LinkedHashMap<>();
+                    newMap = true;
+                }
+                List<? extends Element> values = UtilXml.childElementList(property, "value"); // "xml:lang"
+                for(Element value : values) {
+                    String localeString = value.getAttribute("xml:lang");
+                    String valueString = UtilXml.elementValue(value);
+                    if (valueString != null && UtilValidate.isNotEmpty(localeString)) {
+                        propMap.put(localeString, valueString);
+                    }
+                }
+                if (newMap && !propMap.isEmpty()) {
+                    out.put(propName, propMap);
+                }
+            }
+        }
+        return out;
+    }
+
+    public static Map<String, Map<String, String>> xmlToLocalePropertyMap(URL url, boolean sort, Map<String, Map<String, String>> out) throws IOException, InvalidPropertiesFormatException {
+        InputStream in = null;
+        try {
+            in = new BufferedInputStream(url.openStream());
+            return xmlToLocalePropertyMap(in, sort, out);
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+        }
+    }
+
+    // SCIPIO
+    private static Method entityResourceToPropertiesMethod = null;
+
+    private static Properties entityResourceToProperties(String resourceName, Locale locale, Properties properties, Object delegator, boolean useCache) {
+        // SCIPIO: Attempt to integrate LocalizedProperty entries
+        if (entityResourceToPropertiesMethod == null) {
+            try {
+                entityResourceToPropertiesMethod = Class.forName("org.ofbiz.entity.util.EntityUtilProperties")
+                        .getMethod("entityResourceToProperties", String.class, Locale.class, Properties.class, Object.class, boolean.class);
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+        }
+        if (entityResourceToPropertiesMethod != null) {
+            try {
+                return (Properties) entityResourceToPropertiesMethod.invoke(null, resourceName, locale, properties, null, useCache);
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+        }
+        return properties;
+    }
+
+    private static Method entityResourceToLocalePropertyMapMethod = null;
+
+    public static Map<String, Map<String, String>> entityResourceToLocalePropertyMap(String resourceName, boolean sort, Object delegator, boolean useCache, Map<String, Map<String, String>> out) throws IOException, InvalidPropertiesFormatException {
+        if (entityResourceToLocalePropertyMapMethod == null) {
+            try {
+                entityResourceToLocalePropertyMapMethod = Class.forName("org.ofbiz.entity.util.EntityUtilProperties")
+                        .getMethod("entityResourceToLocalePropertyMap", String.class, boolean.class, Object.class, boolean.class, Map.class);
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+        }
+        if (entityResourceToLocalePropertyMapMethod != null) {
+            try {
+                return UtilGenerics.cast(entityResourceToLocalePropertyMapMethod.invoke(null, resourceName, sort, delegator, useCache, out));
+            } catch (Exception e) {
+                Debug.logError(e, module);
+            }
+        }
+        return out;
+    }
+
     /**
      * SCIPIO: Returns all property names in the given Properties that start with given prefix
      * and end with given suffix, with option to forbid dots in between.
@@ -2474,6 +2575,30 @@ public final class UtilProperties implements Serializable {
             return getBundle(resource, locale, loader, false);
         }
 
+        /**
+         * Tries to clear all the caches related to the resource name/id (SCIPIO).
+         * FIXME: Occasionally might clear unrelated caches due to approximate naming.
+         * Also this does not properly support
+         */
+        public static void clearCachesForResourceBundle(String resource) {
+            if (UtilValidate.isEmpty(resource)) {
+                return;
+            }
+            resource = StringUtil.removeSuffix(resource, ".properties", ".xml");
+            Set<String> resources = new HashSet<>();
+            resources.add(resource);
+            List<String> aliases = getResourceNameAliasMap().get(resource);
+            if (aliases != null) {
+                resources.addAll(aliases);
+            }
+            aliases = getResourceNameAliasAndReverseAliasMap().get(resource);
+            if (aliases != null) {
+                resources.addAll(aliases);
+            }
+            Pattern urlCacheKeyPat = Pattern.compile("^(" + String.join("|", resources) + ")(_[a-zA-Z0-9_-]+)?$");
+            UtilResourceBundle.bundleCache.removeByFilter((key, value) -> urlCacheKeyPat.matcher(key).matches());
+        }
+
         @Override
         public int hashCode() {
             return this.hashCode;
@@ -2509,28 +2634,6 @@ public final class UtilProperties implements Serializable {
 
     }
 
-    // SCIPIO
-    private static Method entityResourceToPropertiesMethod = null;
-
-    private static void entityResourceToProperties(String resourceName, Locale locale, Properties properties, Object delegator, boolean useCache) {
-        // SCIPIO: Attempt to integrate ResourceProperty entries
-        if (entityResourceToPropertiesMethod == null) {
-            try {
-                entityResourceToPropertiesMethod = Class.forName("org.ofbiz.entity.util.EntityUtilProperties")
-                        .getMethod("entityResourceToProperties", String.class, Locale.class, Properties.class, Object.class, Boolean.class);
-            } catch (Exception e) {
-                Debug.logError(e, module);
-            }
-        }
-        if (entityResourceToPropertiesMethod != null) {
-            try {
-                entityResourceToPropertiesMethod.invoke(null, resourceName, locale, properties, null, useCache);
-            } catch (Exception e) {
-                Debug.logError(e, module);
-            }
-        }
-    }
-
     /** Custom Properties class. Extended from Properties to add support
      * for the OFBiz custom XML file format.
      */
@@ -2558,7 +2661,7 @@ public final class UtilProperties implements Serializable {
                 in = new BufferedInputStream(url.openStream());
                 if (url.getFile().endsWith(".xml")) {
                     xmlToProperties(in, locale, this);
-                    // SCIPIO: read from ResourceProperty
+                    // SCIPIO: read from LocalizedProperty
                     entityResourceToProperties(PathUtil.getFileNameFromPath(url.getFile()), locale, this, null, false);
                 } else {
                     load(in);
@@ -2579,7 +2682,7 @@ public final class UtilProperties implements Serializable {
             try {
                 xmlToProperties(in, null, this);
                 if (url != null && locale != null) {
-                    // SCIPIO: read from ResourceProperty
+                    // SCIPIO: read from LocalizedProperty
                     entityResourceToProperties(PathUtil.getFileNameFromPath(url.getFile()), locale, this, null, false);
                 }
             } finally {
@@ -2773,7 +2876,7 @@ public final class UtilProperties implements Serializable {
             for(Map.Entry<String, List<String>> entry : aliasMap.entrySet()) {
                 String resource = entry.getKey();
                 List<String> aliases = entry.getValue();
-                for(int i=0; i < aliases.size(); i++) {
+                for(int i = 0; i < aliases.size(); i++) {
                     String alias = aliases.get(i);
                     List<String> reverseAliases = new ArrayList<>(aliases.size());
                     reverseAliases.add(resource);
@@ -2837,4 +2940,14 @@ public final class UtilProperties implements Serializable {
             return resource;
         }
     }
+
+    /**
+     * Tries to clear all the caches related to the resource name/id (SCIPIO).
+     * FIXME: Occasionally might clear unrelated caches due to approximate naming.
+     * Also this does not properly support
+     */
+    public static void clearCachesForResourceBundle(String resource) {
+        UtilResourceBundle.clearCachesForResourceBundle(resource);
+    }
+
 }

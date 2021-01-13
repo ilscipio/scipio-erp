@@ -890,7 +890,7 @@ code package.
         <prim-key field="systemPropertyId"/>
     </entity>
 
-    <entity entity-name="ResourceProperty" package-name="org.ofbiz.common.property" title="Configurable Resource Property"><!-- SCIPIO: 2018-08-30: fixed title -->
+    <entity entity-name="LocalizedProperty" package-name="org.ofbiz.common.property" title="Configurable Label Property"><!-- SCIPIO: 2018-08-30: fixed title -->
         <description>Defines and overrides localized resource and label properties as otherwise found in *UiLabels.xml files in the filesystem (SCIPIO)</description>
         <!-- SCIPIO: NOTE: This is not related to Java system properties; it is better to refer to these as "Entity Properties" in code, as suggested in name by EntityUtilProperties.java -->
         <field name="resourceId" type="id-long-ne"></field>

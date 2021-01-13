@@ -63,6 +63,7 @@ code package.
     <service-resource type="model" loader="main" location="servicedef/services_method.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_geo.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_qrcode.xml"/>
+    <service-resource type="model" loader="main" location="servicedef/services_property.xml"/><!-- SCIPIO -->
     <service-resource type="model" loader="main" location="servicedef/services_security.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_test.xml"/>
     <service-resource type="group" loader="main" location="servicedef/groups_test.xml"/>

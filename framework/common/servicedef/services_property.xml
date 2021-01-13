@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/services.xsd">
+    <description>Property Services</description>
+    <vendor>Ilscipio GmbH</vendor>
+
+    <service name="updateLocalizedProperty" engine="java" location="com.ilscipio.scipio.common.label.PropertyServices" invoke="updateLocalizedProperty">
+        <description>Get label name-value map from a property resource bundle for given locale</description>
+        <attribute name="preventEmpty" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="resourceId" type="String" mode="IN" optional="false"/>
+        <attribute name="propertyId" type="String" mode="IN" optional="false"/>
+        <attribute name="lang" type="String" mode="IN" optional="false"/>
+        <attribute name="value" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="useEmpty" type="String" mode="IN" optional="true"/>
+    </service>
+
+    <service name="distributedClearLocalizedPropertyCaches" engine="jms" location="serviceMessenger" invoke="clearLocalizedPropertyCaches"
+             auth="true" use-transaction="false" log-eca="quiet" log="quiet" hideResultInLog="true">
+        <description>clearLocalizedPropertyCache for all Servers listening to the topic (SCIPIO)</description>
+        <attribute name="resourceId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="clearLocalizedPropertyCaches" engine="java" location="com.ilscipio.scipio.common.label.PropertyServices" invoke="clearLocalizedPropertyCaches">
+        <description>Clear UtilCaches and LocalizedProperty caches for the given resource (SCIPIO)</description>
+        <attribute name="type" type="String" mode="IN" optional="true">
+            <description>TODO: currently ignored, but callers should still specify</description>
+        </attribute>
+        <attribute name="resourceId" type="String" mode="IN" optional="false"/>
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
+    </service>
+
+    <!-- FIXME: dependency issues
+    <service name="getLocalizedPropertyValues" engine="java" location="com.ilscipio.scipio.common.label.PropertyServices" invoke="getLocalizedPropertyValues">-->
+    <service name="getLocalizedPropertyValues" engine="java" location="org.ofbiz.webtools.labelmanager.LabelServices" invoke="getLocalizedPropertyValues">
+        <description>Get label name-value map from a property resource bundle for given locale</description>
+        <attribute name="resourceId" type="String" mode="IN" optional="false"/>
+        <attribute name="propertyId" type="String" mode="IN" optional="false"/>
+        <attribute name="langValueMap" type="Map" mode="IN" optional="true"><description>Lang-value map from combined maps (staticLangValueMap + entityLangValueMap)</description></attribute>
+        <attribute name="staticLangValueMap" type="Map" mode="IN" optional="true"><description>Lang-value map from static file</description></attribute>
+        <attribute name="entityLangValueMap" type="Map" mode="IN" optional="true"><description>Lang-value map from LocalizedProperty entity</description></attribute>
+    </service>
+</services>

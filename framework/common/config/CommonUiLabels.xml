@@ -9893,6 +9893,14 @@
         <value xml:lang="zh-CN">设定</value>
         <value xml:lang="zh-TW">剖面</value>
     </property>
+    <property key="CommonProperties">
+        <value xml:lang="de">Properties</value>
+        <value xml:lang="en">Properties</value>
+    </property>
+    <property key="CommonProperty">
+        <value xml:lang="de">Property</value>
+        <value xml:lang="en">Property</value>
+    </property>
     <property key="CommonProsPrep">
         <value xml:lang="ar">في ظرف الإعداد</value>
         <value xml:lang="cs">Probíhá výběr</value>

@@ -20,8 +20,10 @@ package org.ofbiz.webtools.labelmanager;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -37,50 +39,106 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.service.ServiceContext;
+import org.ofbiz.service.ServiceUtil;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+/**
+ * LabelManagerFactory.
+ * SCIPIO: Refactored for threading and various issues, see also LabelFile.
+ */
 public class LabelManagerFactory {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final String resource = "WebtoolsUiLabels";
     public static final String keySeparator = "#";
 
-    protected static Set<String> componentNamesFound = null;
-    protected static Map<String, LabelFile> filesFound = null;
+    // SCIPIO: these are throw into a single-key cache so it can respond to cache clearing and fix synch
+    private static class Static implements Serializable {
+        private static final UtilCache<String, Static> STATICS = UtilCache.createUtilCache("label.manager.factory");
+        protected final Set<String> componentNamesFound;
+        protected final Map<String, LabelFile> filesFound;
+        protected final Map<String, LabelFile> filesFoundNoExt;
+
+        private Static(Set<String> componentNamesFound, Map<String, LabelFile> filesFound, Map<String, LabelFile> filesFoundNoExt) {
+            this.componentNamesFound = componentNamesFound;
+            this.filesFound = filesFound;
+            this.filesFoundNoExt = filesFoundNoExt;
+        }
+
+        private static Static makeInstance() {
+            Set<String> componentNamesFound = new TreeSet<>();
+            Collection<ComponentConfig> componentConfigs = ComponentConfig.getAllComponents();
+            for (ComponentConfig componentConfig : componentConfigs) {
+                componentNamesFound.add(componentConfig.getComponentName());
+            }
+
+            Map<String, LabelFile> filesFound;
+            try {
+                filesFound = findLabelFiles(true);
+            } catch (IOException e) {
+                Debug.logError(e, module);
+                filesFound = Collections.emptyMap();
+            }
+
+            Map<String, LabelFile> filesFoundNoExt = new TreeMap<>();
+            for(Map.Entry<String, LabelFile> entry : filesFoundNoExt.entrySet()) {
+                String name = entry.getKey();
+                if (name.lastIndexOf('.') > 0) { // SCIPIO
+                    name = name.substring(0, name.lastIndexOf('.'));
+                }
+                filesFoundNoExt.put(name, entry.getValue());
+            }
+
+            return new Static(Collections.unmodifiableSet(componentNamesFound),
+                    Collections.unmodifiableMap(filesFound),
+                    Collections.unmodifiableMap(filesFoundNoExt));
+        }
+
+        public static Static getInstance() {
+            Static entry = STATICS.get("default");
+            if (entry == null) {
+                entry = makeInstance();
+                STATICS.putIfAbsent("default", entry);
+            }
+            return entry;
+        }
+
+        public Set<String> getComponentNamesFound() {
+            return componentNamesFound;
+        }
+
+        public Map<String, LabelFile> getFilesFound() {
+            return filesFound;
+        }
+
+        public Map<String, LabelFile> getFilesFoundNoExt() {
+            return filesFoundNoExt;
+        }
+    }
 
     protected Map<String, LabelInfo> labels = new TreeMap<String, LabelInfo>();
     protected Set<String> localesFound = new TreeSet<String>();
     protected List<LabelInfo> duplicatedLocalesLabelsList = new LinkedList<LabelInfo>();
 
-    public static synchronized LabelManagerFactory getInstance() throws IOException {
-        if (componentNamesFound == null) {
-            loadComponentNames();
-        }
-        if (filesFound == null) {
-            loadLabelFiles();
-        }
+    public static synchronized LabelManagerFactory getInstance() {
+        Static.getInstance();
         return new LabelManagerFactory();
     }
 
     protected LabelManagerFactory() {
     }
 
-    protected static void loadComponentNames() {
-        componentNamesFound = new TreeSet<String>();
-        Collection<ComponentConfig> componentConfigs = ComponentConfig.getAllComponents();
-        for (ComponentConfig componentConfig : componentConfigs) {
-            componentNamesFound.add(componentConfig.getComponentName());
-        }
-    }
-
-    protected static void loadLabelFiles() throws IOException {
-        filesFound = new TreeMap<String, LabelFile>();
+    public static Map<String, LabelFile> findLabelFiles(boolean includeExtension) throws IOException { // SCIPIO
+        Map<String, LabelFile> filesFound = new TreeMap<String, LabelFile>();
         List<ClasspathInfo> cpInfos = ComponentConfig.getAllClasspathInfos();
         for (ClasspathInfo cpi : cpInfos) {
             if ("dir".equals(cpi.type)) {
@@ -95,10 +153,15 @@ public class LabelManagerFactory {
                 }
                 List<File> resourceFiles = FileUtil.findXmlFiles(configRoot + location, null, "resource", null);
                 for (File resourceFile : resourceFiles) {
-                    filesFound.put(resourceFile.getName(), new LabelFile(resourceFile, cpi.componentConfig.getComponentName()));
+                    String fileName = resourceFile.getName();
+                    if (!includeExtension && fileName.lastIndexOf('.') > 0) { // SCIPIO
+                        fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+                    }
+                    filesFound.put(fileName, new LabelFile(resourceFile, cpi.componentConfig.getComponentName()));
                 }
             }
         }
+        return filesFound;
     }
 
     public void findMatchingLabels(String component, String fileName, String key, String locale)
@@ -107,7 +170,7 @@ public class LabelManagerFactory {
             // Important! Don't allow unparameterized queries - doing so will result in loading the entire project into memory
             return;
         }
-        for (LabelFile fileInfo : filesFound.values()) {
+        for (LabelFile fileInfo : Static.getInstance().getFilesFound().values()) {
             if (UtilValidate.isNotEmpty(component) && !component.equals(fileInfo.componentName)) {
                 continue;
             }
@@ -160,7 +223,7 @@ public class LabelManagerFactory {
     }
 
     public LabelFile getLabelFile(String fileName) {
-        return filesFound.get(fileName);
+        return Static.getInstance().getFilesFound().get(fileName);
     }
 
     public Map<String, LabelInfo> getLabels() {
@@ -172,11 +235,11 @@ public class LabelManagerFactory {
     }
 
     public static Collection<LabelFile> getFilesFound() {
-        return filesFound.values();
+        return Static.getInstance().getFilesFound().values();
     }
 
     public static Set<String> getComponentNamesFound() {
-        return componentNamesFound;
+        return Static.getInstance().getComponentNamesFound();
     }
 
     public Set<String> getLabelsList() {
@@ -216,5 +279,21 @@ public class LabelManagerFactory {
             }
         }
         return notEmptyLabels;
+    }
+
+    public static Map<String, LabelFile> getLabelFileMapStatic() { // SCIPIO
+        return Static.getInstance().getFilesFound();
+    }
+
+    public static LabelFile getLabelFileStatic(String resource) { // SCIPIO
+        return getLabelFileMapStatic().get(resource);
+    }
+
+    public static Map<String, LabelFile> getLabelFileNoExtMapStatic() { // SCIPIO
+        return Static.getInstance().getFilesFoundNoExt();
+    }
+
+    public static LabelFile getLabelFileNoExtStatic(String resource) { // SCIPIO
+        return getLabelFileNoExtMapStatic().get(resource);
     }
 }

@@ -647,7 +647,7 @@ public class ProductImageVariants extends ImageVariants {
         if (Boolean.TRUE.equals(ctx.attr("distribute"))) {
             DistributedCacheClear dcc = ctx.delegator().getDistributedCacheClear();
             if (dcc != null) {
-                Map<String, Object> distCtx = UtilMisc.toMap("type", ctx.attr("type"));
+                Map<String, Object> distCtx = UtilMisc.newMap(); // UtilMisc.toMap("type", ctx.attr("type"));
                 dcc.runDistributedService("productImageVariantsDistributedClearCaches", distCtx);
             }
         }

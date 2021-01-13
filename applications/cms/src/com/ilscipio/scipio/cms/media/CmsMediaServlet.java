@@ -296,6 +296,12 @@ public class CmsMediaServlet extends HttpServlet {
 
             // not public check security
             if (!"Y".equalsIgnoreCase(isPublic)) {
+                // 2021-01-13: if no userlogin, automatically deny otherwise below fails
+                if (userLogin == null) {
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal error"); // WARN: DO NOT send details, for security reasons
+                    return;
+                }
+
                 // do security check
                 Map<String, ? extends Object> permSvcCtx = UtilMisc.toMap("userLogin", userLogin, "locale", locale, "mainAction", "VIEW", "contentId", contentId);
                 Map<String, Object> permSvcResp;

@@ -4976,6 +4976,12 @@
         <value xml:lang="en">Doc. Type template</value>
         <value xml:lang="fr">Modèle de type de doc.</value>
     </property>
+    <property key="AccountingDownloadInvoices">
+        <value xml:lang="de">Massen-Download-Rechnungen</value>
+        <value xml:lang="en">Mass download invoices</value>
+        <value xml:lang="fr">Téléchargement de factures en masse</value>
+        <value xml:lang="es">Descarga masiva de facturas</value>
+    </property>
     <property key="AccountingDueDate">
         <value xml:lang="ar">تعديل الدفعة</value>
         <value xml:lang="cs">Datum splatnosti</value>
@@ -22515,6 +22521,12 @@
         <value xml:lang="vi">Trừ tiền và tạo Lô thanh toán</value>
         <value xml:lang="zh">存款支付并创建批量处理</value>
         <value xml:lang="zh-TW">存款支付並新建批量處理</value>
+    </property>
+    <property key="PageTitleDownloadInvoices">
+        <value xml:lang="de">Rechnungen herunterladen</value>
+        <value xml:lang="en">Download invoices</value>
+        <value xml:lang="fr">Télécharger les factures</value>
+        <value xml:lang="es">Decargar facturas</value>
     </property>
     <property key="PageTitleFixedAssetDepreciationHistory">
         <value xml:lang="ar">سوابق الإستلاك</value>

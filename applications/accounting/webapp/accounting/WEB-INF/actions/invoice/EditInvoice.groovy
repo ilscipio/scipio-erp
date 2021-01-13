@@ -25,6 +25,10 @@ import org.ofbiz.base.util.collections.*
 import org.ofbiz.entity.*
 
 invoiceId = parameters.get("invoiceId");
+// SCIPIO: 2020-01-12: getting invoiceId from context as a fallback. This allows to use this script not only when invoked directly from a request-map
+if (!invoiceId) {
+    invoiceId = context.invoiceId;
+}
 
 invoice = from('Invoice').where('invoiceId', invoiceId).queryOne();
 context.invoice = invoice;

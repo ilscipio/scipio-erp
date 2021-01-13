@@ -528,6 +528,31 @@ code package.
             </widgets>
         </section>
     </screen>
+
+    <screen name="DownloadInvoices">
+        <section>
+            <actions>
+                <script location="component://party/webapp/partymgr/WEB-INF/actions/party/GetMyCompany.groovy"/>
+                <entity-condition entity-name="StatusItem" list="invoiceStatuses">
+                    <condition-expr field-name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
+                </entity-condition>
+                <entity-condition entity-name="InvoiceType" list="invoiceTypes">
+                    <condition-expr field-name="parentTypeId" operator="equals" value="INVOICE"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonInvoicesDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <screenlet title="${uiLabelMap.PageTitleDownloadInvoices}" navigation-form-name="DownloadInvoices">
+                            <platform-specific>
+                                <html><html-template location="component://accounting/webapp/accounting/invoice/ScipioDownloadInvoices.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <!-- 
     ********************

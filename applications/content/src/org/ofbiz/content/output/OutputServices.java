@@ -206,6 +206,8 @@ public class OutputServices {
     }
 
     public static Map<String, Object> createFileFromScreen(DispatchContext dctx, Map<String, ? extends Object> serviceContext) {
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
         Locale locale = (Locale) serviceContext.get("locale");
         Delegator delegator = dctx.getDelegator();
         String screenLocation = (String) serviceContext.remove("screenLocation");
@@ -272,12 +274,13 @@ public class OutputServices {
             fos.write(baos.toByteArray());
             fos.close();
 
+            result.put("fileOutput", file);
         } catch (Exception e) { // SCIPIO: 2018-10-09: Kept Exception for now
             Debug.logError(e, "Error rendering [" + contentType + "]: " + e.toString(), module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ContentRenderingError", UtilMisc.toMap("contentType", contentType, "errorString", e.toString()), locale));
         }
 
-        return ServiceUtil.returnSuccess();
+        return result;
     }
 
 }

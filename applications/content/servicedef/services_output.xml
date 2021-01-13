@@ -42,6 +42,8 @@ code package.
                 <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingFileName"/>
             </type-validate>
         </attribute>
+        <!-- SCIPIO: 2020-01-13: adding the produced File into the output -->
+        <attribute name="fileOutput" type="java.io.File" mode="OUT" optional="true"/>
     </service>
 
 </services>

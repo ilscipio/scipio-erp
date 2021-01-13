@@ -2814,6 +2814,17 @@ code package.
         <response name="success" type="view" value="InvoicePDF"/>
     </request-map>
 
+    <request-map uri="downloadInvoices">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="DownloadInvoices"></response>
+    </request-map>
+    <request-map uri="massDownloadInvoices.pdf">
+        <security https="true" auth="true"/>
+        <event type="java" path="com.ilscipio.scipio.accounting.invoice.InvoiceEvents" invoke="massDownloadInvoices"/>
+        <response name="error" type="view" value="DownloadInvoices"></response>
+        <response name="success" type="none"></response>
+    </request-map>
+
     <request-map uri="printCheck.pdf">
         <!-- security https="true" auth="true"/ -->
         <response name="success" type="view" value="PrintCheckPDF"/>
@@ -3117,6 +3128,10 @@ code package.
     <view-map name="invoiceRoles" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceRoles"/>
 
     <view-map name="invoiceTerms" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#InvoiceTerms"/>
+
+    <!-- SCIPIO: 21-01-12: new view-map for mass downloading invoices -->
+    <view-map name="DownloadInvoices" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#DownloadInvoices"/>
+
 
     <view-map name="sendPerEmail" type="screen" page="component://accounting/widget/invoice/InvoiceScreens.xml#SendPerEmail"/>
     <view-map name="EditInvoiceItemType" type="screen" page="component://accounting/widget/settings/InvoiceItemTypeScreens.xml#EditInvoiceItemType"/>

@@ -1071,7 +1071,10 @@
         <menu-item name="commissionReport" title="${uiLabelMap.AccountingCommissionReport}">
             <link target="FindCommissions"/>
         </menu-item>
-
+        <!-- SCIPIO: 21-01-12: new menu entry for mass downloading invoices -->
+        <menu-item name="massDownloadInvoices" title="${uiLabelMap.AccountingDownloadInvoices}">
+            <link target="downloadInvoices"/>
+        </menu-item>
 
     </menu>
 

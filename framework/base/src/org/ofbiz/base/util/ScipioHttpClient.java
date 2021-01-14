@@ -1,5 +1,7 @@
 package org.ofbiz.base.util;
 
+
+
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
@@ -9,6 +11,13 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
+import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
+import org.apache.http.nio.conn.NHttpClientConnectionManager;
+import org.apache.http.nio.reactor.ConnectingIOReactor;
+import org.apache.http.nio.reactor.IOReactorException;
 import org.apache.http.ssl.SSLContexts;
 
 import java.io.Closeable;
@@ -27,14 +36,19 @@ public class ScipioHttpClient implements Closeable {
 
     protected final Config config;
     protected final boolean autoClose;
+
     protected volatile HttpClientConnectionManager connectionManager;
+    protected volatile NHttpClientConnectionManager asyncConnectionManager;
     protected volatile CloseableHttpClient httpClient;
+    protected volatile CloseableHttpAsyncClient asyncHttpClient;
 
     protected ScipioHttpClient(Config config, boolean autoClose) {
         this.config = config;
         this.autoClose = autoClose;
         this.connectionManager = null;
+        this.asyncConnectionManager = null;
         this.httpClient = null;
+        this.asyncHttpClient = null;
     }
 
     public static ScipioHttpClient fromConfig(Config config, boolean autoClose) {
@@ -65,6 +79,16 @@ public class ScipioHttpClient implements Closeable {
         return config.createConnectionManager();
     }
 
+    /** Build method for HttpClient, always creates. */
+    public CloseableHttpClient createHttpClient(HttpClientConnectionManager connectionManager) {
+        return config.createHttpClient(connectionManager);
+    }
+
+    /** Build method for HttpClient: always creates HttpClient but reusing the current connection manager initializing as needed. */
+    public CloseableHttpClient createHttpClient() {
+        return config.createHttpClient(getConnectionManager());
+    }
+
     public CloseableHttpClient getHttpClient() {
         CloseableHttpClient httpClient = this.httpClient;
         if (httpClient == null) {
@@ -79,14 +103,49 @@ public class ScipioHttpClient implements Closeable {
         return httpClient;
     }
 
-    /** Build method for HttpClient, always creates. */
-    public CloseableHttpClient createHttpClient(HttpClientConnectionManager connectionManager) {
-        return config.createHttpClient(connectionManager);
+    /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Gets connection manager (normally PoolingNHttpClientConnectionManager), creates if needed. */
+    public NHttpClientConnectionManager getAsyncConnectionManager() {
+        NHttpClientConnectionManager connectionManager = this.asyncConnectionManager;
+        if (connectionManager == null) {
+            synchronized(this) {
+                connectionManager = this.asyncConnectionManager;
+                if (connectionManager == null) {
+                    connectionManager = createAsyncConnectionManager();
+                    this.asyncConnectionManager = connectionManager;
+                }
+            }
+        }
+        return connectionManager;
     }
 
-    /** Build method for HttpClient: always creates HttpClient but reusing the current connection manager initializing as needed. */
-    public CloseableHttpClient createHttpClient() {
-        return config.createHttpClient(getConnectionManager());
+    /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for NPoolingHttpClientConnectionManager mainly, always creates. */
+    public NHttpClientConnectionManager createAsyncConnectionManager() {
+        return config.createAsyncConnectionManager();
+    }
+
+    /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for async HttpClient, always creates. */
+    public CloseableHttpAsyncClient createAsyncHttpClient(NHttpClientConnectionManager connectionManager) {
+        return config.createAsyncHttpClient(connectionManager);
+    }
+
+    /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for async HttpClient: always creates HttpClient but reusing the current connection manager initializing as needed. */
+    public CloseableHttpAsyncClient createAsyncHttpClient() {
+        return config.createAsyncHttpClient(getAsyncConnectionManager());
+    }
+
+    /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT **/
+    public CloseableHttpAsyncClient getAsyncHttpClient() {
+        CloseableHttpAsyncClient asyncHttpClient = this.asyncHttpClient;
+        if (asyncHttpClient == null) {
+            synchronized(this) {
+                asyncHttpClient = this.asyncHttpClient;
+                if (asyncHttpClient == null) {
+                    asyncHttpClient = createAsyncHttpClient(getAsyncConnectionManager());
+                    this.asyncHttpClient = asyncHttpClient;
+                }
+            }
+        }
+        return asyncHttpClient;
     }
 
     /** If true, {@link #close()} is called in {@link #finalize()}. WARN: May not be sufficient for safe close. */
@@ -103,12 +162,14 @@ public class ScipioHttpClient implements Closeable {
                 Debug.logWarning("Could not close HttpClient: " + e.toString(), module);
             }
         }
-        if (connectionManager instanceof PoolingHttpClientConnectionManager) {
-            try {
+        try {
+            if (connectionManager instanceof PoolingHttpClientConnectionManager) {
                 ((PoolingHttpClientConnectionManager) connectionManager).close();
-            } catch(Exception e) {
-                Debug.logWarning(e, "Could not close HttpClient connection manager: " + e.toString(), module);
+            } else if (connectionManager instanceof PoolingNHttpClientConnectionManager) {
+                ((PoolingNHttpClientConnectionManager) connectionManager).closeExpiredConnections();
             }
+        } catch(Exception e) {
+            Debug.logWarning(e, "Could not close HttpClient connection manager: " + e.toString(), module);
         }
     }
 
@@ -165,6 +226,24 @@ public class ScipioHttpClient implements Closeable {
             return fromContext(UtilProperties.getPropertiesWithPrefix(UtilProperties.getProperties(resource), prefix));
         }
 
+        /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Extracted from createHttpClient for reuse **/
+        protected RequestConfig buildRequestConfig() {
+            RequestConfig.Builder config = RequestConfig.custom();
+            if (getConnectionRequestTimeout() != null) {
+                config.setConnectionRequestTimeout(getConnectionRequestTimeout());
+            }
+            if (getConnectTimeout() != null) {
+                config.setConnectTimeout(getConnectTimeout());
+            }
+            if (getSocketTimeout() != null) {
+                config.setSocketTimeout(getSocketTimeout());
+            }
+            if (getExpectContinueEnabled() != null) {
+                config.setExpectContinueEnabled(true);
+            }
+            return config.build();
+        }
+
         /** Build method for PoolingHttpClientConnectionManager mainly. */
         public HttpClientConnectionManager createConnectionManager() {
             if (!Boolean.TRUE.equals(getPooling())) {
@@ -185,25 +264,46 @@ public class ScipioHttpClient implements Closeable {
 
         /** Build method for HttpClient. */
         public CloseableHttpClient createHttpClient(HttpClientConnectionManager connectionManager) {
-            RequestConfig.Builder config = RequestConfig.custom();
-            if (getConnectionRequestTimeout() != null) {
-                config.setConnectionRequestTimeout(getConnectionRequestTimeout());
-            }
-            if (getConnectTimeout() != null) {
-                config.setConnectTimeout(getConnectTimeout());
-            }
-            if (getSocketTimeout() != null) {
-                config.setSocketTimeout(getSocketTimeout());
-            }
-            if (getExpectContinueEnabled() != null) {
-                config.setExpectContinueEnabled(true);
-            }
-            RequestConfig requestConfig = config.build();
             return HttpClients.custom()
-                    .setDefaultRequestConfig(requestConfig)
+                .setDefaultRequestConfig(buildRequestConfig())
+                .setConnectionManager(connectionManager)
+                .build();
+        }
+
+        /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for PoolingNHttpClientConnectionManager mainly. */
+        public NHttpClientConnectionManager createAsyncConnectionManager() {
+            if (!Boolean.TRUE.equals(getPooling())) {
+                return null;
+            }
+            PoolingNHttpClientConnectionManager cm = null;
+            try {
+                ConnectingIOReactor ioReactor = new DefaultConnectingIOReactor();
+                cm = new PoolingNHttpClientConnectionManager(ioReactor);
+                if (getMaxConnections() != null) {
+                    cm.setMaxTotal(getMaxConnections());
+                }
+                if (getMaxConnectionsPerHost() != null) {
+                    cm.setDefaultMaxPerRoute(getMaxConnectionsPerHost());
+                }
+            } catch (IOReactorException e) {
+                Debug.logError(e, module);
+            }
+
+            return cm;
+        }
+
+        /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for HttpAsyncClient. */
+        public CloseableHttpAsyncClient createAsyncHttpClient(NHttpClientConnectionManager connectionManager) {
+            CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClients.custom()
+                    .setDefaultRequestConfig(buildRequestConfig())
                     .setConnectionManager(connectionManager)
                     .build();
+            if (!httpAsyncClient.isRunning()) {
+                httpAsyncClient.start();
+            }
+            return httpAsyncClient;
         }
+
 
         public Factory getFactory() {
             return factory;

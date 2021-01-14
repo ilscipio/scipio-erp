@@ -114,6 +114,8 @@
         <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.13" conf="base,sources"/>
         <dependency org="org.apache.httpcomponents" name="httpcore-nio" rev="4.4.13" conf="base,sources"/>
         <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.5.12" conf="base,sources"/>
+        <!-- SCIPIO: 2020-01-14: Added Apache HTTP Client async -->
+        <dependency org="org.apache.httpcomponents" name="httpasyncclient" rev="4.1.4" conf="base,sources" />
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.22" conf="base,sources"/>
         <dependency org="com.ibm.icu" name="icu4j" rev="63.1" conf="base,sources"/>
         <dependency org="javolution" name="javolution" rev="5.5.1" conf="base,sources"/><!-- TODO: increase: blocked by EntitySaxReader -->

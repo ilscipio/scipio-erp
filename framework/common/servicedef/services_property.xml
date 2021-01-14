@@ -21,6 +21,12 @@ code package.
         <attribute name="useEmpty" type="String" mode="IN" optional="true"/>
     </service>
 
+    <service name="updateLocalizedPropertyOptional" engine="java" location="com.ilscipio.scipio.common.label.PropertyServices" invoke="updateLocalizedPropertyOptional">
+        <description>Get label name-value map from a property resource bundle for given locale</description>
+        <implements service="updateLocalizedProperty"/>
+        <override name="lang" optional="true"/>
+    </service>
+
     <service name="distributedClearLocalizedPropertyCaches" engine="jms" location="serviceMessenger" invoke="clearLocalizedPropertyCaches"
              auth="true" use-transaction="false" log-eca="quiet" log="quiet" hideResultInLog="true">
         <description>clearLocalizedPropertyCache for all Servers listening to the topic (SCIPIO)</description>
@@ -28,9 +34,6 @@ code package.
     </service>
     <service name="clearLocalizedPropertyCaches" engine="java" location="com.ilscipio.scipio.common.label.PropertyServices" invoke="clearLocalizedPropertyCaches">
         <description>Clear UtilCaches and LocalizedProperty caches for the given resource (SCIPIO)</description>
-        <attribute name="type" type="String" mode="IN" optional="true">
-            <description>TODO: currently ignored, but callers should still specify</description>
-        </attribute>
         <attribute name="resourceId" type="String" mode="IN" optional="false"/>
         <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
     </service>
@@ -41,8 +44,14 @@ code package.
         <description>Get label name-value map from a property resource bundle for given locale</description>
         <attribute name="resourceId" type="String" mode="IN" optional="false"/>
         <attribute name="propertyId" type="String" mode="IN" optional="false"/>
-        <attribute name="langValueMap" type="Map" mode="IN" optional="true"><description>Lang-value map from combined maps (staticLangValueMap + entityLangValueMap)</description></attribute>
-        <attribute name="staticLangValueMap" type="Map" mode="IN" optional="true"><description>Lang-value map from static file</description></attribute>
-        <attribute name="entityLangValueMap" type="Map" mode="IN" optional="true"><description>Lang-value map from LocalizedProperty entity</description></attribute>
+        <attribute name="langValueMap" type="Map" mode="OUT" optional="true">
+            <description>Lang-value map from combined maps (staticLangValueMap + entityLangValueMap)</description>
+        </attribute>
+        <attribute name="staticLangValueMap" type="Map" mode="OUT" optional="true">
+            <description>Lang-value map from static file</description>
+        </attribute>
+        <attribute name="entityLangValueMap" type="Map" mode="OUT" optional="true">
+            <description>Lang-value map from LocalizedProperty entity</description>
+        </attribute>
     </service>
 </services>

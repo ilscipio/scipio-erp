@@ -38,7 +38,7 @@ code package.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsLabelManagerSecurityError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -60,7 +60,7 @@ code package.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsLabelManagerSecurityError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -82,7 +82,7 @@ code package.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsLabelManagerSecurityError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -106,8 +106,70 @@ code package.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsLabelManagerSecuryError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsLabelManagerSecurityError}</label>
             </fail-widgets>
         </section>
     </screen>
+
+    <!-- SCIPIO -->
+    <screen name="EntityLabels">
+        <section>
+            <actions>
+                <set field="titleProperty" value="WebtoolsEntityLabels"/>
+                <set field="activeSubMenuItem" value="EntityLabels"/>
+                <script location="component://webtools/webapp/webtools/WEB-INF/actions/labelmanager/EntityLabels.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="LABEL_MANAGER_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific><html><html-template location="component://webtools/webapp/webtools/labelmanager/EntityLabels.ftl"/></html></platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsLabelManagerSecurityError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <!-- FIXME
+    <screen name="SystemProperties">
+        <section>
+            <condition>
+                <if-has-permission permission="LABEL_MANAGER_VIEW"/>
+            </condition>
+            <actions>
+                <set field="titleProperty" value="WebtoolsEntityLabels"/>
+                <set field="activeSubMenuItem" value="SystemProperties"/>
+                <script lang="groovy"><![CDATA[
+
+                ]]></script>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonLabelDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <decorator-section name="search-options">
+                                <platform-specific><html><html-template location="component://webtools/webapp/webtools/labelmanager/SearchLabels.ftl"/></html></platform-specific>
+                            </decorator-section>
+                            <decorator-section name="search-results">
+                                <platform-specific><html><html-template location="component://webtools/webapp/webtools/labelmanager/ViewLabels.ftl"/></html></platform-specific>
+                            </decorator-section>
+                        </decorator-screen>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+            <fail-widgets>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsLabelManagerSecurityError}</label>
+            </fail-widgets>
+        </section>
+    </screen>
+    -->
 </screens>

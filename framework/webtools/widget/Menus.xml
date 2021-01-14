@@ -39,8 +39,10 @@ code package.
         <menu-item name="service" title="${uiLabelMap.WebtoolsServiceEngineTools}">
             <link target="ServiceList"/>
         </menu-item>
-        <menu-item name="labels" title="${uiLabelMap.WebtoolsLabelManager}">
-            <link target="SearchLabels"/>
+        <menu-item name="properties" title="${uiLabelMap.CommonProperties}">
+            <link target="EntityLabels">
+                <parameter param-name="resourceId"/>
+            </link>
         </menu-item>
         <menu-item name="importExport" title="${uiLabelMap.WebtoolsImportExport}">
             <link target="xmldsdump"/>
@@ -92,11 +94,9 @@ code package.
         <menu-item name="service">
             <sub-menu name="service" include="serviceSideBar"/>
         </menu-item>
-        <!-- SCIPIO: this sub-menu had only one entry, so omit. if adding more, uncomment this
-            and the set field in CommonLabelDecorator.
-        <menu-item name="labels">
-            <sub-menu name="label" include="labelSideBar"/>
-        </menu-item> -->
+        <menu-item name="properties">
+            <sub-menu name="Property" include="PropertySideBar"/>
+        </menu-item>
         <menu-item name="importExport">
             <sub-menu name="importExport" include="importExportSideBar"/>
         </menu-item>
@@ -259,16 +259,6 @@ code package.
 
     <menu name="artifactSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="artifactTabBar" recursive="includes-only" />
-    </menu>
-    
-    <menu name="labelTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="labels" title="${uiLabelMap.WebtoolsLabelManager}">
-            <link target="SearchLabels"/>
-        </menu-item>
-    </menu>
-    
-    <menu name="labelSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="labelTabBar" recursive="includes-only" />
     </menu>
     
     <!-- SCIPIO: TODO?: child sidebar instead, maybe... and/or parent could link to edit instead of find when temporalExpression not empty... -->
@@ -696,4 +686,21 @@ code package.
         </menu-item>
     </menu>
 
+    <!-- SCIPIO -->
+    <menu name="PropertyTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!--<menu-item name="SystemProperties" title="${uiLabelMap.WebtoolsSystemProperties}">
+            <link target="SystemProperties"/>
+        </menu-item>-->
+        <menu-item name="EntityLabels" title="${uiLabelMap.WebtoolsEntityLabels}">
+            <link target="EntityLabels">
+                <parameter param-name="resourceId"/>
+            </link>
+        </menu-item>
+        <menu-item name="FileLabels" title="${uiLabelMap.WebtoolsLabelManagerFindLabels}">
+            <link target="FileLabels"/>
+        </menu-item>
+    </menu>
+    <menu name="PropertySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="PropertyTabBar" recursive="includes-only" />
+    </menu>
 </menus>

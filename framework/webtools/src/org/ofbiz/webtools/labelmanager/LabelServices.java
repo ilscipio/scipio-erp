@@ -23,7 +23,8 @@ public abstract class LabelServices {
         if (staticLangValueMap == null) {
             return ServiceUtil.returnFailure("Property [" + propertyId + "] not found in resource [" + resourceId + "]");
         }
-        Map<String, String> entityLangValueMap = labelFile.getStaticPropertyValues(propertyId);
+        // NOTE: Currently no tenant delegator support
+        Map<String, String> entityLangValueMap = labelFile.getEntityPropertyValues(propertyId);
         Map<String, String> langValueMap = new TreeMap<>(staticLangValueMap);
         if (entityLangValueMap != null) {
             langValueMap.putAll(entityLangValueMap);

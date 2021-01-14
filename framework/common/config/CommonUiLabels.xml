@@ -3950,7 +3950,11 @@
         <value xml:lang="de">Entitätsfeld</value>
         <value xml:lang="en">Entity Field</value>
         <value xml:lang="fr">Champ d'entité</value>
-    </property>  
+    </property>
+    <property key="CommonEntityProperties">
+        <value xml:lang="de">Entity Properties</value>
+        <value xml:lang="en">Entity Properties</value>
+    </property>
     <property key="CommonEntityTestFailure">
         <value xml:lang="ar">غير قادر على إنشاء كيان اختبار</value>
         <value xml:lang="cs">Nepodařilo se vytvořit testovací entitu</value>

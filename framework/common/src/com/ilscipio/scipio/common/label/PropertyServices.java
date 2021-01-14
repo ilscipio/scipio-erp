@@ -19,18 +19,21 @@
 package com.ilscipio.scipio.common.label;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
 
 import java.util.Map;
 
 /**
- * Label services (SCIPIO).
+ * Property and label services (SCIPIO).
+ * NOTE: Does not support tenant delegator.
  */
 public class PropertyServices {
 
@@ -64,7 +67,23 @@ public class PropertyServices {
         }
     }
 
-    public static void clearLocalizedPropertyCaches(ServiceContext ctx) {
-        UtilProperties.clearCachesForResourceBundle(ctx.attr("resourceId"));
+    public static Map<String, Object> updateLocalizedPropertyOptional(ServiceContext ctx) {
+        if (UtilValidate.isEmpty((String) ctx.get("lang"))) {
+            return ServiceUtil.returnSuccessReadOnly();
+        }
+        return updateLocalizedProperty(ctx);
+    }
+
+    public static Map<String, Object> clearLocalizedPropertyCaches(ServiceContext ctx) {
+        String resourceId = ctx.attr("resourceId");
+        UtilProperties.clearCachesForResourceBundle(resourceId);
+        if (Boolean.TRUE.equals(ctx.attr("distribute"))) {
+            DistributedCacheClear dcc = ctx.delegator().getDistributedCacheClear();
+            if (dcc != null) {
+                Map<String, Object> distCtx = UtilMisc.toMap("resourceId", resourceId);
+                dcc.runDistributedService("distributedClearLocalizedPropertyCaches", distCtx);
+            }
+        }
+        return ServiceUtil.returnSuccessReadOnly();
     }
 }

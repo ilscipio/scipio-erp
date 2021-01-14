@@ -490,10 +490,7 @@ code package.
     <screen name="CommonLabelDecorator">
         <section>
             <actions>
-                <!-- SCIPIO: this sub-menu had only one entry, so omit. if adding more, uncomment this
-                    and the submenu include in WebtoolsAppSideBar.
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="label" />-->
-                <set field="activeSubMenu" from-field="activeSubMenu" default-value="TOP" />
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Property" />
                 <!-- SCIPIO: force this item -->
                 <set field="activeSubMenuItem" from-field="activeSubMenuItem" default-value="labels"/>
                 <condition-to-field field="commonSideBarMenu.condList[]" type="Boolean">

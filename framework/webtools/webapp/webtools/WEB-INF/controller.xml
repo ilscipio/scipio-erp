@@ -508,7 +508,11 @@ code package.
     </request-map>
 
     <!-- Label Manager Requests -->
-    <request-map uri="SearchLabels">
+    <request-map uri="FileLabels">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SearchLabels"/>
+    </request-map>
+    <request-map uri="SearchLabels"><!-- SCIPIO: backward-compat -->
         <security https="true" auth="true"/>
         <response name="success" type="view" value="SearchLabels"/>
     </request-map>
@@ -522,6 +526,41 @@ code package.
     <request-map uri="UpdateLabel">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="UpdateLabel"/>
+    </request-map>
+
+    <!-- SCIPIO: new label and property requests -->
+    <request-map uri="EntityLabels">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EntityLabels"/>
+    </request-map>
+    <request-map uri="SystemProperties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SystemProperties"/>
+    </request-map>
+    <request-map uri="updateLocalizedPropertyMulti">
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="updateLocalizedPropertyOptional"/>
+        <response name="success" type="request" value="clearLocalizedPropertyCaches"/>
+        <response name="error" type="view" value="EntityLabels"/>
+    </request-map>
+    <request-map uri="clearLocalizedPropertyCaches">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="clearLocalizedPropertyCaches"/>
+        <response name="success" type="request-redirect" value="EntityLabels">
+            <redirect-parameter name="resourceId"/>
+        </response>
+        <response name="error" type="view" value="EntityLabels"/>
+    </request-map>
+    <request-map uri="getLocalizedPropertyValues">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="getLocalizedPropertyValues"/>
+        <response name="success" type="request" value="json"/>
+        <response name="error" type="request" value="json"/>
+    </request-map>
+
+    <request-map uri="SystemProperties">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="SystemProperties"/>
     </request-map>
 
     <request-map uri="ViewReferences">
@@ -867,6 +906,9 @@ code package.
     <view-map name="UpdateLabel" type="screen" page="component://webtools/widget/LabelManagerScreens.xml#UpdateLabel"/>
     <view-map name="ViewReferences" type="screen" page="component://webtools/widget/LabelManagerScreens.xml#ViewReferences"/>
     <view-map name="ViewFile" type="screen" page="component://webtools/widget/LabelManagerScreens.xml#ViewFile"/>
+    <view-map name="EntityLabels" type="screen" page="component://webtools/widget/LabelManagerScreens.xml#EntityLabels"/>
+    <view-map name="SystemProperties" type="screen" page="component://webtools/widget/LabelManagerScreens.xml#SystemProperties"/>
+    <view-map name="LookupLabelNames" type="screen" page="component://webtools/widget/LabelManagerScreens.xml#LookupLabelNames"/>
 
     <!-- Temporal expression views -->
     <view-map name="editTemporalExpression" type="screen" page="component://webtools/widget/TempExprScreens.xml#EditTemporalExpression"/>

@@ -90,7 +90,7 @@ public class LabelManagerFactory {
             }
 
             Map<String, LabelFile> filesFoundNoExt = new TreeMap<>();
-            for(Map.Entry<String, LabelFile> entry : filesFoundNoExt.entrySet()) {
+            for(Map.Entry<String, LabelFile> entry : filesFound.entrySet()) {
                 String name = entry.getKey();
                 if (name.lastIndexOf('.') > 0) { // SCIPIO
                     name = name.substring(0, name.lastIndexOf('.'));

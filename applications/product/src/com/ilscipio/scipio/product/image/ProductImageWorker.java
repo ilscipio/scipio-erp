@@ -19,7 +19,6 @@
 package com.ilscipio.scipio.product.image;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -98,7 +97,7 @@ public abstract class ProductImageWorker {
         try {
             // TODO: optimize the duplicate lookups (cached anyway)
             ProductImageLocationInfo pili = ProductImageLocationInfo.from(dctx, locale,
-                    product, productContentTypeId, imageUrl, null, true, false, useUtilCache);
+                    product, ProductImageViewType.from(productContentTypeId), imageUrl, null, true, false, useUtilCache, null);
             List<String> sizeTypeList = (pili != null) ? pili.getMissingVariantNames() : null;
             if (UtilValidate.isEmpty(sizeTypeList)) {
                 if (useUtilCache) {
@@ -124,61 +123,6 @@ public abstract class ProductImageWorker {
         } catch(Exception e) {
             Debug.logError("Could not trigger image variant resizing for product [" + product.get("productId") + "] productContentTypeId ["
                     + productContentTypeId + "] imageLink [" + imageUrl + "]: " + e.toString(), module);
-        }
-    }
-
-    public static class ImageViewType implements Serializable {
-        protected final String viewType;
-        protected final String viewNumber;
-
-        protected ImageViewType(String viewType, String viewNumber) {
-            this.viewType = viewType;
-            this.viewNumber = viewNumber;
-        }
-
-        public static ImageViewType from(String viewType, String viewNumber) {
-            return new ImageViewType(viewType, viewNumber);
-        }
-
-        public static ImageViewType from(String productContentTypeId) {
-            String viewType;
-            String viewNumber;
-            if ("ORIGINAL_IMAGE_URL".equals(productContentTypeId) || "LARGE_IMAGE_URL".equals(productContentTypeId)
-                    || "MEDIUM_IMAGE_URL".equals(productContentTypeId) || "SMALL_IMAGE_URL".equals(productContentTypeId) || "DETAIL_IMAGE_URL".equals(productContentTypeId)) {
-                viewType = "main";
-                viewNumber = null;
-            } else if ("LARGE_IMAGE_ALT".equals(productContentTypeId) || "MEDIUM_IMAGE_ALT".equals(productContentTypeId) || "SMALL_IMAGE_ALT".equals(productContentTypeId) || "DETAIL_IMAGE_ALT".equals(productContentTypeId)) {
-                viewType = "alt"; // TODO: REVIEW: where is this one used?
-                viewNumber = null;
-            } else if (productContentTypeId.startsWith("ADDITIONAL_IMAGE_")) {
-                viewType = "additional";
-                viewNumber = productContentTypeId.substring("ADDITIONAL_IMAGE_".length());
-                if (viewNumber.isEmpty()) {
-                    throw new IllegalArgumentException("Unsupported productContentTypeId [" + productContentTypeId
-                            + "]: invalid productContentTypeId name format (ADDITIONAL_IMAGE_n)");
-                }
-            } else if (productContentTypeId.startsWith("XTRA_IMG_")) { // do the corresponding ADDITIONAL_IMAGE
-                viewType = "additional";
-                String viewInfo = productContentTypeId.substring("XTRA_IMG_".length());
-                String[] parts = viewInfo.split("_", 2);
-                if (parts.length != 2 || parts[0].isEmpty() || parts[1].isEmpty()) {
-                    throw new IllegalArgumentException("Unsupported productContentTypeId [" + productContentTypeId
-                            + "]: invalid productContentTypeId name format (XTRA_IMG_n_abc)");
-                }
-                viewNumber = parts[0];
-            } else {
-                throw new IllegalArgumentException("Unsupported productContentTypeId [" + productContentTypeId
-                        + "]: invalid productContentTypeId name format (XTRA_IMG_n_abc)");
-            }
-            return from(viewType, viewNumber);
-        }
-
-        public String getViewType() {
-            return viewType;
-        }
-
-        public String getViewNumber() {
-            return viewNumber;
         }
     }
 

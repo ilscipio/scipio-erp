@@ -6,13 +6,13 @@ import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
@@ -44,25 +44,27 @@ public class ProductImageLocationInfo implements Serializable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final ProductImageLocationInfo NULL = new ProductImageLocationInfo();
+    private static final Factory FACTORY = readFactory();
 
     private transient Delegator delegator;
     private final String delegatorName;
     private transient LocalDispatcher dispatcher;
     private final String dispatcherName;
     protected final String productId;
-    protected final String productContentTypeId;
+    protected final ProductImageViewType imageViewType;
     protected final ImageVariantConfig variantConfig;
     protected final String imagePath; // may be path or URL
     protected final String imageFilename;
-    protected final Collection<String> sizeTypeList;
+    protected Collection<String> sizeTypeList;
     protected final boolean useEntityCache;
     protected final boolean useProfileCache;
 
-    protected ProductImageWorker.ImageViewType imageViewType;
     protected String imageExtension;
+    protected String imageServerPathExpr;
     protected String imageServerPath;
+    protected String imageUrlPrefixExpr;
     protected String imageUrlPrefix;
-    protected FlexibleStringExpander imageFnFmt;
+    protected String imageFnFmtExpr;
     protected Map<String, Object> imagePathArgs;
     protected Map<String, VariantLocation> sizeTypeInfoMap;
 
@@ -72,7 +74,7 @@ public class ProductImageLocationInfo implements Serializable {
         this.delegatorName = null;
         this.dispatcherName = null;
         this.productId = null;
-        this.productContentTypeId = null;
+        this.imageViewType = null;
         this.variantConfig = null;
         this.imagePath = null;
         this.imageFilename = null;
@@ -81,15 +83,15 @@ public class ProductImageLocationInfo implements Serializable {
         this.useProfileCache = false;
     }
 
-    protected ProductImageLocationInfo(DispatchContext dctx, String productId, String productContentTypeId,
+    protected ProductImageLocationInfo(DispatchContext dctx, String productId, ProductImageViewType imageViewType,
                                        ImageVariantConfig variantConfig, String imagePath, Collection<String> sizeTypeList,
-                                       boolean useEntityCache, boolean useProfileCache) throws IllegalArgumentException {
+                                       boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws IllegalArgumentException {
         this.delegator = dctx.getDelegator();
         this.delegatorName = this.delegator.getDelegatorName();
         this.dispatcher = dctx.getDispatcher();
         this.dispatcherName = this.dispatcher.getName();
         this.productId = productId;
-        this.productContentTypeId = productContentTypeId;
+        this.imageViewType = imageViewType;
         this.variantConfig = variantConfig;
         this.imagePath = imagePath;
         String imageFilename = imagePath;
@@ -100,26 +102,92 @@ public class ProductImageLocationInfo implements Serializable {
             throw new IllegalArgumentException("Original image filename [" + imagePath + "] has missing or improper file extension (image type)");
         }
         this.imageFilename = imageFilename;
-        if (sizeTypeList == null) {
-            sizeTypeList = variantConfig.getVariantNames();
-        }
         this.sizeTypeList = sizeTypeList;
         this.useEntityCache = useEntityCache;
         this.useProfileCache = useProfileCache;
     }
 
-    public static ProductImageLocationInfo from(DispatchContext dctx, String productId, String productContentTypeId,
-                                                ImageVariantConfig variantConfig, String imageFilename,
-                                                Collection<String> sizeTypeList, boolean useEntityCache, boolean useProfileCache) throws IllegalArgumentException, GeneralException {
-        return new ProductImageLocationInfo(dctx, productId, productContentTypeId, variantConfig, imageFilename, sizeTypeList, useEntityCache, useProfileCache);
+    public static Factory getFactory(DispatchContext dctx) {
+        return FACTORY;
     }
 
-    public static ProductImageLocationInfo from(DispatchContext dctx, String productId, String productContentTypeId,
-                                                ImageProfile imageProfile, String imageFilename,
-                                                Collection<String> sizeTypeList, boolean useEntityCache, boolean useProfileCache) throws IllegalArgumentException, GeneralException {
-        // NOTE: this currently calls the non-cached readVariantConfig, because this is intended for backend
-        return from(dctx, productId, productContentTypeId, useProfileCache ? imageProfile.getVariantConfig() : imageProfile.readVariantConfig(),
-                imageFilename, sizeTypeList, useEntityCache, useProfileCache);
+    private static Factory readFactory() {
+        String clsName = UtilProperties.getPropertyValue("catalog", "product.image.location.info.factory");
+        if (UtilValidate.isEmpty(clsName)) {
+            return new Factory();
+        }
+        try {
+            Class<?> cls = Class.forName(clsName);
+            return (Factory) cls.newInstance();
+        } catch (Exception e) {
+            Debug.logError(e, "Invalid catalog#product.image.location.info.factory", module);
+            return new Factory();
+        }
+    }
+
+    public static class Factory {
+        public ProductImageLocationInfo make(DispatchContext dctx, String productId, ProductImageViewType imageViewType,
+                                              ImageVariantConfig variantConfig, String imagePath, Collection<String> sizeTypeList,
+                                              boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws IllegalArgumentException {
+            return new ProductImageLocationInfo(dctx, productId, imageViewType, variantConfig, imagePath, sizeTypeList, useEntityCache, useProfileCache, extraParams);
+        }
+
+        public ProductImageLocationInfo from(DispatchContext dctx, String productId, ProductImageViewType imageViewType,
+                                              ImageVariantConfig variantConfig, String imageFilename,
+                                              Collection<String> sizeTypeList, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
+            return make(dctx, productId, imageViewType, variantConfig, imageFilename, sizeTypeList, useEntityCache, useProfileCache, extraParams);
+        }
+
+        public ProductImageLocationInfo from(DispatchContext dctx, String productId, ProductImageViewType imageViewType,
+                                             ImageProfile imageProfile, String imageFilename,
+                                             Collection<String> sizeTypeList, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
+            // NOTE: this currently calls the non-cached readVariantConfig, because this is intended for backend
+            return from(dctx, productId, imageViewType, (imageProfile != null) ?
+                            (useProfileCache ? imageProfile.getVariantConfig() : imageProfile.readVariantConfig()) : null,
+                    imageFilename, sizeTypeList, useEntityCache, useProfileCache, extraParams);
+        }
+
+        /**
+         * Returns ProductImageLocationInfo or null if no image URL/location/variants applicable for the given product/productContentTypeId.
+         * If passed productContent or imageUrl null attempts to determine from data.
+         * Based on productImageAutoRescale (TODO?: deduplicate).
+         */
+        public ProductImageLocationInfo from(DispatchContext dctx, Locale locale, GenericValue product, ProductImageViewType imageViewType,
+                                                    String imageUrl, Collection<String> sizeTypeList,
+                                                    Boolean useParentImageUrl, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
+            Delegator delegator = dctx.getDelegator();
+            String productContentTypeId = imageViewType.getProductContentTypeId();
+            if (locale == null) {
+                locale = Locale.getDefault();
+            }
+            String productId = product.getString("productId");
+
+            ImageContentInfo imageUrlInfo = ImageContentInfo.from(dctx, locale, product, productContentTypeId, imageUrl, useParentImageUrl, useEntityCache);
+            if (imageUrlInfo.getImageUrl() == null) {
+                Debug.logError("Could not determine image path or URL for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]", module);
+                return null;
+            }
+            imageUrl = imageUrlInfo.getImageUrl();
+
+            ImageProfile imageProfile = ProductImageWorker.getProductImageProfileOrDefault(delegator, productContentTypeId, product, imageUrlInfo.getContent(), useEntityCache, useProfileCache);
+            if (imageProfile == null) {
+                Debug.logError("Could not find media profile for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]", module);
+                return null;
+            }
+            return from(dctx, productId, imageViewType, imageProfile, imageUrl, sizeTypeList, useEntityCache, useProfileCache, extraParams);
+        }
+    }
+
+    public static ProductImageLocationInfo from(DispatchContext dctx, String productId, ProductImageViewType imageViewType,
+                                         ImageVariantConfig variantConfig, String imageFilename,
+                                         Collection<String> sizeTypeList, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
+        return getFactory(dctx).from(dctx, productId, imageViewType, variantConfig, imageFilename, sizeTypeList, useEntityCache, useProfileCache, extraParams);
+    }
+
+    public static ProductImageLocationInfo from(DispatchContext dctx, String productId, ProductImageViewType imageViewType,
+                                         ImageProfile imageProfile, String imageFilename,
+                                         Collection<String> sizeTypeList, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
+        return getFactory(dctx).from(dctx, productId, imageViewType, imageProfile, imageFilename, sizeTypeList, useEntityCache, useProfileCache, extraParams);
     }
 
     /**
@@ -127,154 +195,172 @@ public class ProductImageLocationInfo implements Serializable {
      * If passed productContent or imageUrl null attempts to determine from data.
      * Based on productImageAutoRescale (TODO?: deduplicate).
      */
-    public static ProductImageLocationInfo from(DispatchContext dctx, Locale locale, GenericValue product, String productContentTypeId,
-                                                String imageUrl, Collection<String> sizeTypeList,
-                                                Boolean useParentImageUrl, boolean useEntityCache, boolean useProfileCache) throws IllegalArgumentException, GeneralException {
-        Delegator delegator = dctx.getDelegator();
-        if (locale == null) {
-            locale = Locale.getDefault();
-        }
-        String productId = product.getString("productId");
-        GenericValue content = null;
-        GenericValue productContent = dctx.getDelegator().from("ProductContent").where("productId", productId,
-                    "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().cache(useEntityCache).queryFirst();
-        String inlineImageUrl = null;
-        if (productContent != null) {
-            content = productContent.getRelatedOne("Content", useEntityCache);
-        } else {
-            String productFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
-            ModelEntity productModel = dctx.getDelegator().getModelEntity("Product");
-            if (!productModel.isField(productFieldName)) {
-                // May happen normally due to ADDITIONAL_IMAGE_x
-                //Debug.logError(logPrefix+"Invalid productContentTypeId [" + productContentTypeId
-                //        + "] for product [" + productId + "] for resize operation (parent products not consulted)", module);
-                return null;
-            }
-            inlineImageUrl = product.getString(productFieldName);
-        }
-
-        if (imageUrl == null) {
-            if (Boolean.TRUE.equals(useParentImageUrl)) {
-                // NOTE: this consults the parent product which we don't want, but in known cases should return right value
-                imageUrl = ProductContentWrapper.getProductContentAsText(product, productContentTypeId,
-                        locale, dctx.getDispatcher(), useEntityCache, "raw");
-            } else {
-                if (content != null) {
-                    imageUrl = ProductImageWorker.getDataResourceImageUrl(
-                            delegator.from("DataResource").where("dataResourceId", content.get("dataResourceId")).queryOne(), useEntityCache);
-                } else if (inlineImageUrl != null) {
-                    imageUrl = inlineImageUrl;
-                }
-            }
-            if (UtilValidate.isEmpty(imageUrl)) {
-                return null;
-            }
-        }
-
-        ImageProfile imageProfile = ProductImageWorker.getProductImageProfileOrDefault(delegator, productContentTypeId, product, content, useEntityCache, useProfileCache);
-        if (imageProfile == null) {
-            Debug.logError("Could not find media profile for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]", module);
-            return null;
-        }
-        return ProductImageLocationInfo.from(dctx, productId, productContentTypeId, imageProfile, imageUrl, sizeTypeList, useEntityCache, useProfileCache);
+    public static ProductImageLocationInfo from(DispatchContext dctx, Locale locale, GenericValue product, ProductImageViewType imageViewType,
+                                         String imageUrl, Collection<String> sizeTypeList,
+                                         Boolean useParentImageUrl, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
+        return getFactory(dctx).from(dctx, locale, product, imageViewType, imageUrl, sizeTypeList, useParentImageUrl, useEntityCache, useProfileCache, extraParams);
     }
 
-    public boolean isNull() {
+    public boolean isNull() throws GeneralException {
         return productId == null;
     }
 
-    public Delegator getDelegator() {
+    public Delegator getDelegator() throws GeneralException {
         Delegator delegator = this.delegator;
         if (delegator == null) {
-            delegator = DelegatorFactory.getDelegator(delegatorName);
+            delegator = DelegatorFactory.getDelegator(getDelegatorName());
             this.delegator = delegator;
         }
         return delegator;
     }
 
-    public LocalDispatcher getDispatcher() {
+    public String getDelegatorName() throws GeneralException {
+        return delegatorName;
+    }
+
+    public LocalDispatcher getDispatcher() throws GeneralException {
         LocalDispatcher dispatcher = this.dispatcher;
         if (dispatcher == null) {
-            dispatcher = ServiceContainer.getLocalDispatcher(dispatcherName, this.getDelegator());
+            dispatcher = ServiceContainer.getLocalDispatcher(getDispatcherName(), this.getDelegator());
             this.dispatcher = dispatcher;
         }
         return dispatcher;
     }
 
-    public DispatchContext getDctx() {
+    public String getDispatcherName() throws GeneralException {
+        return dispatcherName;
+    }
+
+    public DispatchContext getDctx() throws GeneralException {
         return getDispatcher().getDispatchContext();
     }
 
-    public String getProductId() {
+    public String getProductId() throws GeneralException {
         return productId;
     }
 
-    public String getProductContentTypeId() {
-        return productContentTypeId;
+    public String getProductContentTypeId() throws GeneralException {
+        return getImageViewType().getProductContentTypeId();
     }
 
-    public ImageVariantConfig getVariantConfig() {
+    public ImageVariantConfig getVariantConfig() throws GeneralException {
         return variantConfig;
     }
 
     /** Returns either a URL or a file path (used to extract {@link #getImageFilename()}, unreliable. */
-    public String getImagePath() {
+    public String getImagePath() throws GeneralException {
         return imagePath;
     }
 
-    public String getImageFilename() {
+    public String getImageFilename() throws GeneralException {
         return imageFilename;
     }
 
-    public Collection<String> getSizeTypeList() {
+    public Collection<String> getSizeTypeList() throws GeneralException {
+        Collection<String> sizeTypeList = this.sizeTypeList;
+        if (sizeTypeList == null) {
+            if (getVariantConfig() != null) {
+                sizeTypeList = getVariantConfig().getVariantNames();
+            } else {
+                throw new IllegalArgumentException("Could not determine a sizeTypeList (none passed or missing profile/variant config)");
+            }
+            this.sizeTypeList = sizeTypeList;
+        }
         return sizeTypeList;
     }
 
-    protected boolean isUseEntityCache() {
+    protected boolean isUseEntityCache() throws GeneralException {
         return useEntityCache;
     }
 
-    protected boolean isUseProfileCache() {
+    protected boolean isUseProfileCache() throws GeneralException {
         return useProfileCache;
     }
 
-    public ProductImageWorker.ImageViewType getImageViewType() throws IllegalArgumentException, GeneralException {
-        ProductImageWorker.ImageViewType imageViewType = this.imageViewType;
-        if (imageViewType == null) {
-            imageViewType = ProductImageWorker.ImageViewType.from(productContentTypeId);
-            this.imageViewType = imageViewType;
-        }
+    public ProductImageViewType getImageViewType() throws GeneralException {
         return imageViewType;
     }
 
-    public String getImageServerPath() throws IllegalArgumentException, GeneralException {
+    public String getImageServerPathExpr() throws GeneralException {
+        String imageServerPathExpr = this.imageServerPathExpr;
+        if (imageServerPathExpr == null) {
+            imageServerPathExpr = readImageServerPathExpr();
+            this.imageServerPathExpr = imageServerPathExpr;
+        }
+        return imageServerPathExpr;
+    }
+
+    protected String readImageServerPathExpr() throws GeneralException {
+        String imageServerPathExpr = EntityUtilProperties.getPropertyValue("catalog", "image.server.path", getDelegator());
+        try {
+            imageServerPathExpr = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageServerPathExpr, imageServerPathExpr);
+        } catch (MalformedURLException e) {
+            throw new GeneralException(e);
+        }
+        return imageServerPathExpr;
+    }
+
+    public String getImageServerPath() throws GeneralException {
         String imageServerPath = this.imageServerPath;
         if (imageServerPath == null) {
-            initPathProperties();
-            imageServerPath = this.imageServerPath;
+            imageServerPath = makeImageServerPath(getImageServerPathExpr(), getImagePathArgs());
+            this.imageServerPath = imageServerPath;
         }
         return imageServerPath;
     }
 
-    public String getImageUrlPrefix() throws IllegalArgumentException, GeneralException {
+    protected String makeImageServerPath(String imageServerPathExpr, Map<String, Object> imageContext) throws GeneralException {
+        return PathUtil.removeTrailDelim(FlexibleStringExpander.expandString(imageServerPathExpr, imageContext));
+    }
+
+    public String getImageUrlPrefixExpr() throws GeneralException {
+        String imageUrlPrefixExpr = this.imageUrlPrefixExpr;
+        if (imageUrlPrefixExpr == null) {
+            imageUrlPrefixExpr = readImageUrlPrefixExpr();
+            this.imageUrlPrefixExpr = imageUrlPrefixExpr;
+        }
+        return imageUrlPrefixExpr;
+    }
+
+    protected String readImageUrlPrefixExpr() throws GeneralException {
+        return EntityUtilProperties.getPropertyValue("catalog", "image.url.prefix", getDelegator());
+    }
+
+    public String getImageUrlPrefix() throws GeneralException {
         String imageUrlPrefix = this.imageUrlPrefix;
         if (imageUrlPrefix == null) {
-            initPathProperties();
-            imageUrlPrefix = this.imageUrlPrefix;
+            imageUrlPrefix = makeImageUrlPrefix(getImageUrlPrefixExpr(), getImagePathArgs());
+            this.imageUrlPrefix = imageUrlPrefix;
         }
         return imageUrlPrefix;
     }
 
-    public FlexibleStringExpander getImageFnFmt() throws IllegalArgumentException, GeneralException {
-        FlexibleStringExpander imageFnFmt = this.imageFnFmt;
+    protected String makeImageUrlPrefix(String imageUrlPrefixExpr, Map<String, Object> imageContext) throws GeneralException {
+        return PathUtil.removeTrailDelim(FlexibleStringExpander.expandString(imageUrlPrefixExpr, imageContext));
+    }
+
+    public void setImageFnFmtExpr(String imageFnFmtExpr) throws GeneralException {
+        this.imageFnFmtExpr = UtilValidate.isNotEmpty(imageFnFmtExpr) ? imageFnFmtExpr : null;
+    }
+
+    public String getImageFnFmtExpr() throws GeneralException {
+        String imageFnFmt = this.imageFnFmtExpr;
         if (imageFnFmt == null) {
-            initPathProperties();
-            imageFnFmt = this.imageFnFmt;
+            imageFnFmt = readImageFnFmtExpr();
+            this.imageFnFmtExpr = imageFnFmt;
         }
         return imageFnFmt;
     }
 
-    public String getImageExtension() throws IllegalArgumentException, GeneralException {
+    protected String readImageFnFmtExpr() throws GeneralException {
+        if (getImageViewType().isMain()) {
+            return EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", getDelegator());
+        } else {
+            return EntityUtilProperties.getPropertyValue("catalog", "image.filename.additionalviewsize.format", getDelegator());
+        }
+    }
+
+    public String getImageExtension() throws GeneralException {
         String imageExtension = this.imageExtension;
         if (imageExtension == null) {
             imageExtension = imageFilename.substring(imageFilename.lastIndexOf(".") + 1);
@@ -283,84 +369,48 @@ public class ProductImageLocationInfo implements Serializable {
         return imageExtension;
     }
 
-    public Map<String, Object> getImagePathArgs() throws IllegalArgumentException, GeneralException {
+    public Map<String, Object> getImagePathArgs() throws GeneralException {
         Map<String, Object> imagePathArgs = this.imagePathArgs;
         if (imagePathArgs == null) {
-            initPathProperties();
-            imagePathArgs = this.imagePathArgs;
+            imagePathArgs = makeImagePathArg(new HashMap<>());
+            this.imagePathArgs = imagePathArgs;
         }
         return imagePathArgs;
     }
 
-    protected void initPathProperties() throws IllegalArgumentException, GeneralException {
-        String imageServerPathExpr = EntityUtilProperties.getPropertyValue("catalog", "image.server.path", getDelegator());
-        try {
-            imageServerPathExpr = FlexibleLocation.resolveFileUrlAsPathIfUrl(imageServerPathExpr, imageServerPathExpr);
-        } catch (MalformedURLException e) {
-            throw new GeneralException(e);
-        }
-        String imageUrlPrefixExpr = EntityUtilProperties.getPropertyValue("catalog", "image.url.prefix", getDelegator());
-        Map<String, Object> imagePathArgs = makeImagePathArg(new HashMap<>());
-        String imageServerPath = makeImageServerPath(imageServerPathExpr, imagePathArgs);
-        String imageUrlPrefix = makeImageUrlPrefix(imageUrlPrefixExpr, imagePathArgs);
-
-        this.imageServerPath = imageServerPath;
-        this.imageUrlPrefix = imageUrlPrefix;
-        //this.imageFnFmt = FlexibleStringExpander.getInstance(imageFnFmt); // done by makeImagePathArg
-    }
-
     protected Map<String, Object> makeImagePathArg(Map<String, Object> imagePathArgs) throws GeneralException {
-        ProductImageWorker.ImageViewType imageViewType = getImageViewType();
+        ProductImageViewType imageViewType = getImageViewType();
+        String imageFnFmt = getImageFnFmtExpr();
+
         String viewType = imageViewType.getViewType();
         String viewNumber = imageViewType.getViewNumber();
-
-        String imageFnFmt;
         String id = getProductId();
-        if (viewType.toLowerCase().contains("main")) {
-            imageFnFmt = EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", getDelegator());
+
+        if (getImageViewType().isMain()) {
             UtilMisc.put(imagePathArgs,"location", "products", "id", id, "type", "original");
-        } else if (viewType.toLowerCase().contains("additional") && viewNumber != null && !"0".equals(viewNumber)) {
-            imageFnFmt = EntityUtilProperties.getPropertyValue("catalog", "image.filename.additionalviewsize.format", getDelegator());
+        } else {
             if (imageFnFmt.endsWith("${id}")) {
                 id = id + "_View_" + viewNumber;
             } else {
                 viewType = "additional" + viewNumber;
             }
             UtilMisc.put(imagePathArgs, "location", "products", "id", id, "viewtype", viewType, "sizetype", "original");
-        } else {
-            throw new IllegalArgumentException("Unrecognized viewType [" + viewType + "] or viewNumber [" + viewNumber
-                    + "] for productContentTypeId [" + getProductContentTypeId() + "] for product [" + id + "]");
         }
-        imagePathArgs.put("tenantId", getDelegator().getDelegatorTenantId());
 
-        this.imagePathArgs = imagePathArgs;
-        this.imageFnFmt = FlexibleStringExpander.getInstance(imageFnFmt);
+        imagePathArgs.put("tenantId", getDelegator().getDelegatorTenantId());
         return imagePathArgs;
     }
 
-    protected String makeImageServerPath(String imageServerPathExpr, Map<String, Object> imageContext) {
-        return PathUtil.removeTrailDelim(FlexibleStringExpander.expandString(imageServerPathExpr, imageContext));
-    }
-
-    protected String makeImageUrlPrefix(String imageUrlPrefixExpr, Map<String, Object> imageContext) {
-        return PathUtil.removeTrailDelim(FlexibleStringExpander.expandString(imageUrlPrefixExpr, imageContext));
-    }
-
-    public GenericValue getProduct() {
+    public GenericValue getProduct() throws GeneralException {
         GenericValue product = this.product;
         if (product == null) {
-            try {
-                product = getDelegator().findOne("Product", UtilMisc.toMap("productId", getProductId()), false);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-                product = GenericValue.NULL_VALUE;
-            }
+            product = getDelegator().findOne("Product", UtilMisc.toMap("productId", getProductId()), false);
             this.product = product;
         }
         return (GenericValue.NULL_VALUE != product) ? product : null;
     }
 
-    public Map<String, VariantLocation> getVariantLocations() throws IllegalArgumentException, GeneralException {
+    public Map<String, VariantLocation> getVariantLocations() throws GeneralException {
         Map<String, VariantLocation> sizeTypeInfoMap = this.sizeTypeInfoMap;
         if (sizeTypeInfoMap == null) {
             sizeTypeInfoMap = readVariantLocations();
@@ -369,14 +419,17 @@ public class ProductImageLocationInfo implements Serializable {
         return sizeTypeInfoMap;
     }
 
-    protected Map<String, VariantLocation> readVariantLocations() throws IllegalArgumentException, GeneralException {
+    protected Map<String, VariantLocation> readVariantLocations() throws GeneralException {
+        if (getVariantConfig() == null) {
+            throw new IllegalArgumentException("No variant config available for product image");
+        }
         Map<String, VariantLocation> sizeTypeInfoMap = new LinkedHashMap<>();
         for (String sizeType : getSizeTypeList()) {
             ImageVariantConfig.VariantInfo variantInfo = getVariantConfig().getVariant(sizeType);
             if (variantInfo == null) {
                 throw new IllegalArgumentException("sizeType [" + sizeType + "] not found in image variant config [" + getVariantConfig().getName() + "]");
             }
-            String newFileLocation = ContentImageServices.expandImageFnFmt(getImageFnFmt(), sizeType, getImagePathArgs());
+            String newFileLocation = ContentImageServices.expandImageFnFmt(FlexibleStringExpander.getInstance(getImageFnFmtExpr()), sizeType, getImagePathArgs());
             String targetFileType = (variantInfo.getFormat() != null) ? variantInfo.resolveFormatExt(getDelegator()) : getImageExtension();
             String relativeLocation = newFileLocation + "." + targetFileType;
             sizeTypeInfoMap.put(sizeType, new VariantLocation(variantInfo, relativeLocation,
@@ -386,7 +439,7 @@ public class ProductImageLocationInfo implements Serializable {
         return sizeTypeInfoMap;
     }
 
-    public Map<String, VariantLocation> getMissingVariants() throws IllegalArgumentException, GeneralException {
+    public Map<String, VariantLocation> getMissingVariants() throws GeneralException {
         Map<String, VariantLocation> missingVariants = null;
         for(Map.Entry<String, VariantLocation> entry : getVariantLocations().entrySet()) {
             if (!entry.getValue().hasSource()) {
@@ -399,7 +452,7 @@ public class ProductImageLocationInfo implements Serializable {
         return (missingVariants != null) ? missingVariants : Collections.emptyMap();
     }
 
-    public List<String> getMissingVariantNames() throws IllegalArgumentException, GeneralException {
+    public List<String> getMissingVariantNames() throws GeneralException {
         List<String> missingVariantNames = new ArrayList<>();
         for(Map.Entry<String, VariantLocation> entry : getVariantLocations().entrySet()) {
             if (!entry.getValue().hasSource()) {
@@ -473,6 +526,71 @@ public class ProductImageLocationInfo implements Serializable {
 
         public boolean checkSourceFile() {
             return new File(getFileLocation()).exists();
+        }
+    }
+
+    public static class ImageContentInfo {
+        protected String imageUrl;
+        protected GenericValue productContent;
+        protected GenericValue content;
+
+        protected ImageContentInfo(String imageUrl, GenericValue productContent, GenericValue content) {
+            this.imageUrl = imageUrl;
+            this.productContent = productContent;
+            this.content = content;
+        }
+
+        public static ImageContentInfo from(DispatchContext dctx, Locale locale, GenericValue product, String productContentTypeId, String imageUrl, Boolean useParentImageUrl, boolean useEntityCache) throws GeneralException {
+            String productId = product.getString("productId");
+            GenericValue content = null;
+            GenericValue productContent = dctx.getDelegator().from("ProductContent").where("productId", productId,
+                    "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().cache(useEntityCache).queryFirst();
+            String inlineImageUrl = null;
+            if (productContent != null) {
+                content = productContent.getRelatedOne("Content", useEntityCache);
+            } else {
+                String productFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
+                ModelEntity productModel = dctx.getDelegator().getModelEntity("Product");
+                if (productModel.isField(productFieldName)) {
+                    inlineImageUrl = product.getString(productFieldName);
+                } else {
+                    // May happen normally due to ADDITIONAL_IMAGE_x
+                    //Debug.logError(logPrefix+"Invalid productContentTypeId [" + productContentTypeId
+                    //        + "] for product [" + productId + "] for resize operation (parent products not consulted)", module);
+                    //return null;
+                }
+            }
+
+            if (imageUrl == null) {
+                if (Boolean.TRUE.equals(useParentImageUrl)) {
+                    // NOTE: this consults the parent product which we don't want, but in known cases should return right value
+                    imageUrl = ProductContentWrapper.getProductContentAsText(product, productContentTypeId,
+                            locale, dctx.getDispatcher(), useEntityCache, "raw");
+                } else {
+                    if (content != null) {
+                        imageUrl = ProductImageWorker.getDataResourceImageUrl(
+                                dctx.getDelegator().from("DataResource").where("dataResourceId", content.get("dataResourceId")).queryOne(), useEntityCache);
+                    } else if (inlineImageUrl != null) {
+                        imageUrl = inlineImageUrl;
+                    }
+                }
+            }
+            if (UtilValidate.isEmpty(imageUrl)) {
+                imageUrl = null;
+            }
+            return new ImageContentInfo(imageUrl, productContent, content);
+        }
+
+        public String getImageUrl() {
+            return imageUrl;
+        }
+
+        public GenericValue getProductContent() {
+            return productContent;
+        }
+
+        public GenericValue getContent() {
+            return content;
         }
     }
 }

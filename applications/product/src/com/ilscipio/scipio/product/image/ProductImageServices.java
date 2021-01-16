@@ -72,49 +72,49 @@ public abstract class ProductImageServices {
             return ServiceUtil.returnError(e.getMessage());
         }
 
-        if (isStrArgEmpty(contentCtx, "imageServerPath")) {
-            String imageServerPath = EntityUtilProperties.getPropertyValue("catalog", "image.server.path", delegator);
-            contentCtx.put("imageServerPath", imageServerPath);
-        }
-        if (isStrArgEmpty(contentCtx, "imageUrlPrefix")) {
-            String imageUrlPrefix = EntityUtilProperties.getPropertyValue("catalog", "image.url.prefix", delegator);
-            contentCtx.put("imageUrlPrefix", imageUrlPrefix);
-        }
-
-        Map<String, Object> imagePathArgs = new HashMap<>();
-
         String productId = (String) ctx.get("productId");
-        String productContentTypeId;
-        if (viewType.toLowerCase().contains("main")) {
-            if (isStrArgEmpty(contentCtx, "imageFnFmt")) {
-                contentCtx.put("imageFnFmt", EntityUtilProperties.getPropertyValue("catalog", "image.filename.format", delegator));
-            }
-            imagePathArgs.putAll(UtilMisc.toMap("location", "products", "id", productId, "type", "original"));
-            productContentTypeId = "ORIGINAL_IMAGE_URL";
-        } else if (viewType.toLowerCase().contains("additional") && viewNumber != null && !"0".equals(viewNumber)) {
-            if (isStrArgEmpty(contentCtx, "imageFnFmt")) {
-                contentCtx.put("imageFnFmt", EntityUtilProperties.getPropertyValue("catalog", "image.filename.additionalviewsize.format", delegator));
-            }
-            String filenameFormat = (String) contentCtx.get("imageFnFmt");
-            if (filenameFormat.endsWith("${id}")) { // TODO: REVIEW: I don't get this
-                productId = productId + "_View_" + viewNumber;
-            } else {
-                viewType = "additional" + viewNumber;
-            }
-            imagePathArgs.putAll(UtilMisc.toMap("location", "products", "id", productId, "viewtype", viewType, "sizetype", "original"));
-            productContentTypeId = "ADDITIONAL_IMAGE_" + viewNumber;
-        } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage("ProductErrorUiLabels", "ProductImageViewType", UtilMisc.toMap("viewType", viewType), locale));
-        }
 
-        Map<String, ?> imagePathArgsRcvd = UtilGenerics.checkMap(contentCtx.get("imagePathArgs"));
-        if (imagePathArgsRcvd != null) {
-            imagePathArgs.putAll(imagePathArgsRcvd); // explicit args crush ours
-        }
-        contentCtx.put("imagePathArgs", imagePathArgs);
-        contentCtx.put("defaultImageProfile", ProductImageWorker.getDefaultProductImageProfile(delegator, productContentTypeId, false, false));
+        ProductImageLocationInfo locInfo;
+        try {
+            String imagePath = ctx.attr("imageOrigFn");
+            if (UtilValidate.isEmpty(imagePath)) {
+                imagePath = ctx.attr("imageOrigPath");
+                if (UtilValidate.isEmpty(imagePath)) {
+                    imagePath = ctx.attr("imageOrigUrl");
+                    if (UtilValidate.isEmpty(imagePath)) {
+                        throw new IllegalArgumentException("Required parameter missing: imageOrigFn/imageOrigPath/imageOrigUrl");
+                    }
+                }
+            }
+            locInfo = ProductImageLocationInfo.from(ctx.dctx(), productId,
+                    ProductImageViewType.from(viewType, viewNumber), (ImageProfile) null, imagePath, null,
+                    false, false, null);
 
-        // TODO/FIXME: currently provides no deletion of the old images...
+            if (isStrArgEmpty(contentCtx, "imageServerPath")) {
+                contentCtx.put("imageServerPath", locInfo.getImageServerPathExpr());
+            }
+            if (isStrArgEmpty(contentCtx, "imageUrlPrefix")) {
+                contentCtx.put("imageUrlPrefix", locInfo.getImageUrlPrefixExpr());
+            }
+            if (isStrArgEmpty(contentCtx, "imageFnFmt")) {
+                contentCtx.put("imageFnFmt", locInfo.getImageFnFmtExpr());
+            }
+
+            Map<String, Object> imagePathArgs = locInfo.getImagePathArgs();
+            Map<String, ?> imagePathArgsRcvd = UtilGenerics.checkMap(contentCtx.get("imagePathArgs"));
+            if (imagePathArgsRcvd != null) {
+                imagePathArgs = new HashMap<>(imagePathArgs);
+                imagePathArgs.putAll(imagePathArgsRcvd); // explicit args crush ours
+            }
+            contentCtx.put("imagePathArgs", imagePathArgs);
+            contentCtx.put("defaultImageProfile", ProductImageWorker.getDefaultProductImageProfile(delegator, locInfo.getProductContentTypeId(), false, false));
+
+            // TODO/FIXME: currently provides no deletion of the old images...
+
+        } catch(Exception e) {
+            Debug.logError(e, "productImageFileScaleInAllSize: Error preparing context for product [" + productId + "]: " + e.toString(), module);
+            return ServiceUtil.returnError(e.toString());
+        }
 
         Map<String, Object> result = ContentImageServices.contentImageFileScaleInAllSizeCore(ctx.from(contentCtx));
         result.put("productSizeTypeList", ScaleImage.sizeTypeList);
@@ -362,9 +362,9 @@ public abstract class ProductImageServices {
             return ServiceUtil.returnError("Could not find media profile for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]");
         }
 
-        ProductImageWorker.ImageViewType imageViewType;
+        ProductImageViewType imageViewType;
         try {
-            imageViewType = ProductImageWorker.ImageViewType.from(productContentTypeId);
+            imageViewType = ProductImageViewType.from(productContentTypeId);
         } catch(Exception e) {
             Debug.logError(e,"productImageRescaleImage: Could not determine image view type from product [" + productId + "]: " + e.toString(), module);
             return ServiceUtil.returnError("Could not determine image view type from product [" + productId + "]: " + e.toString());
@@ -377,7 +377,7 @@ public abstract class ProductImageServices {
         if (!recreateExisting) {
             try {
                 ProductImageLocationInfo pili = ProductImageLocationInfo.from(ctx.dctx(), ctx.locale(),
-                        product, productContentTypeId, origImageUrl, sizeTypeList, false, false, false);
+                        product, ProductImageViewType.from(productContentTypeId), origImageUrl, sizeTypeList, false, false, false, null);
                 sizeTypeList = (pili != null) ? pili.getMissingVariantNames() : null;
                 if (UtilValidate.isEmpty(sizeTypeList)) {
                     String msg = "No missing sizeTypes for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]" + (sizeTypeList != null ? " sizeTypeList [" + sizeTypeList + "]" : "") + "; not resizing";

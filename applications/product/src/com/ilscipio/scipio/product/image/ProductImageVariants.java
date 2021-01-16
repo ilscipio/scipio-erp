@@ -219,7 +219,7 @@ public class ProductImageVariants extends ImageVariants {
         ProductImageLocationInfo locationInfo = null;
         try {
             locationInfo = ProductImageLocationInfo.from(getDctx(), getProductId(),
-                    getProductContentTypeId(), getProfile(), getOriginal().getStaticImageUrl(), null, false, true);
+                    ProductImageViewType.from(getProductContentTypeId()), getProfile(), getOriginal().getStaticImageUrl(), null, false, true, null);
         } catch (Exception e) {
             Debug.logError(e, "Error getting product image location info for product [" + getProductId()
                     + "] productContentTypeId [" + productContentTypeId + "]", module);

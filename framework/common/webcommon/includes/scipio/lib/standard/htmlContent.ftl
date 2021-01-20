@@ -1708,6 +1708,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
     type                    = (none|fill|cover|contain|scale-down|bg-cover, default: cover) 
                               * {{{fill|cover|contain|scale-down}}}: css3 object-fit
                               * {{{bgcover}}}: css background cover
+    style                   = (string) Style attribute, added to img element
     link                    = Link URL around nested content
                               WARN: 2016-10-10: '''Do not pass''' any unsafe input in this link at this time!
                                   Escaping protection is only partial (html but not css).
@@ -1721,7 +1722,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
     height                  = (string) container height e.g. "12px" - acts as a max-height  
 -->
 <#assign img_defaultArgs = {
-  "src":"", "responsiveMap" : {}, "id":"","type":"cover", "class":"", "width":"", "height":"","link":"", "linkTarget":false, "passArgs":{}, "attribs":{}
+  "src":"", "responsiveMap" : {}, "id":"","type":"cover", "style":"","class":"", "width":"", "height":"","link":"", "linkTarget":false, "passArgs":{}, "attribs":{}
 }>
 <#macro img args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.img_defaultArgs)>
@@ -1734,13 +1735,119 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
   <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
     <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
   </#if>
-  <@img_markup class=class id=id src=src responsiveMap=responsiveMap type=type width=width height=height link=link linkTarget=linkTarget attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
+  <@img_markup class=class id=id src=src responsiveMap=responsiveMap type=type style=style width=width height=height link=link linkTarget=linkTarget attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
 </#macro>
 
 <#-- @img main markup - theme override -->
-<#macro img_markup class="" id="" src="" responsiveMap={} type="" width="" height="" link=link linkTarget=linkTarget attribs={} origArgs={} passArgs={} catchArgs...>
+<#assign scpDefaultImgSrcSizesByColumns = {
+"1" : {
+"(max-width:576px)":8,
+"(max-width:766px)":24,
+"(min-width:766px)":60,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":16,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":48,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":120
+},
+"2" : {
+"(max-width:576px)":56,
+"(max-width:766px)":88,
+"(min-width:766px)":160,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":112,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":176,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":320
+},
+"3" : {
+"(max-width:576px)":104,
+"(max-width:766px)":152,
+"(min-width:766px)":260,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":208,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":304,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":520
+},
+"4" : {
+"(max-width:576px)":152,
+"(max-width:766px)":215,
+"(min-width:766px)":360,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":304,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":430,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":720
+},
+"5" : {
+"(max-width:576px)":200,
+"(max-width:766px)":280,
+"(min-width:766px)":460,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":400,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":560,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":920
+},
+"6" : {
+"(max-width:576px)":248,
+"(max-width:766px)":343,
+"(min-width:766px)":560,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":496,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":686,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1120
+},
+"7" : {
+"(max-width:576px)":296,
+"(max-width:766px)":407,
+"(min-width:766px)":660,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":592,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":814,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1320
+},
+"8" : {
+"(max-width:576px)":344,
+"(max-width:766px)":471,
+"(min-width:766px)":760,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":688,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":942,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1520
+},
+"9" : {
+"(max-width:576px)":392,
+"(max-width:766px)":535,
+"(min-width:766px)":860,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":784,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":1070,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1720
+},
+"10" : {
+"(max-width:576px)":440,
+"(max-width:766px)":600,
+"(min-width:766px)":960,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":880,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":1200,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1920
+},
+"11" : {
+"(max-width:576px)":488,
+"(max-width:766px)":662,
+"(min-width:766px)":1060,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":976,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":1324,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":2120
+},
+"12" : {
+"(max-width:576px)":536,
+"(max-width:766px)":726,
+"(min-width:766px)":1160,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":1072,
+"(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":1452,
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":2320
+}
+} />
+<#macro img_markup class="" id="" src="" responsiveMap={} type="" style="" width="" height="" link=link linkTarget=linkTarget attribs={} origArgs={} passArgs={} catchArgs...>
     <#local imgContainer><#if width?has_content>width: ${escapeVal(width, 'css-html')};</#if><#if height?has_content> height: ${escapeVal(height, 'css-html')};</#if></#local>
     <#local imgClass = "scipio-image">
+    <#local src=raw(src)/>
+    <#local currImgNum = getRequestVar("scipioCurrentImgNum")!"">
+    <#if currImgNum?has_content>
+      <#local currImgNum = currImgNum+1>
+    <#else>
+      <#local currImgNum = 1>
+    </#if>
+    <#local dummy = setRequestVar("scipioCurrentImgNum", currImgNum)>
     <#if responsiveMap?has_content><#local imgClass = addClassArg(imgClass, styles.image_responsive!"img-fluid")></#if>
     <#local nested><#nested></#local>
     <#switch type>
@@ -1765,34 +1872,106 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
             </div>
           <#break>
         <#default>
-            <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapeVal(type, 'css-html')};</#local>
-            <#local class = addClassArg(class, "scipio-image-container")>
-            <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if> style="${imgContainer}" scipioFit="${escapeVal(type, 'html')}">
-                 <#local srcset = "">
-                 <#local sizes = "">
-                 <#if responsiveMap?has_content>
-                    <#local responsiveKeys = mapKeys(responsiveMap)>
-                    <#if responsiveKeys?contains('srcset')>
-                        <#local srcsetMap=toSimpleMap(responsiveMap)['srcset']>
-                        <#list srcsetMap?keys as srcsetEntry>
-                            <#local srcset=srcset +' '+escapeFullUrl(srcsetMap[srcsetEntry], 'html')+raw(' ' + srcsetEntry + 'w')>
-                            <#if !srcsetEntry?is_last><#local srcset=srcset + ", "></#if>
-                        </#list>
+            <@utilCache cacheName="htmlContent.ftl" key="${src!}::${id!}::${link!}::${currImgNum!1}" expireTime=60000>
+                <#local sizes=""/>
+                <#local contentId=src?keep_after("contentId=")/>
+                <#local productId=src?keep_after("productId=")/>
+                <#local imgSize=src?keep_after("imgSize=")/>
+                <#if contentId?contains("&")>
+                    <#local contentId=contentId?keep_before("&")/>
+                </#if>
+
+                <#if !responsiveMap?has_content>
+                    <#-- dyanmically calculate sizes -->
+                    <#local cellStackValues = readRequestStack("scipioContainerSizesStack")!{}>
+                    <#local sizeDef ={}/>
+                    <#local availableSize = 0/>
+                    <#if readRequestStack("scipioPresetImgSizeStack")?has_content>
+                        <#local sizeDef = readRequestStack("scipioPresetImgSizeStack")!{}/>
+                    <#else>
+                        <#if cellStackValues["large"]?has_content>
+                            <#local availableSize = cellStackValues["large"]!/>
+                            <#if defaultImgSrcSizesByColumns?has_content>
+                                <#local sizeDef = defaultImgSrcSizesByColumns[availableSize?c]/>
+                            <#else>
+                                <#local sizeDef = scpDefaultImgSrcSizesByColumns[availableSize?c]/>
+                            </#if>
+                        </#if>
                     </#if>
-                    <#if responsiveKeys?contains('sizes')>
-                        <#local sizesMap=toSimpleMap(responsiveMap)['sizes']>
-                        <#list sizesMap?keys as sizesEntry>
-                            <#local sizes=sizes + ("(" + sizesEntry + ") " + sizesMap[sizesEntry])>
-                            <#if !sizesEntry?is_last><#local sizes=sizes + ", "></#if>
-                        </#list>
-                        
+                    <#if !responsiveMap?has_content && (contentId?has_content || productId?has_content)>
+                        <#local sizeMap = false/>
+                        <#if contentId?has_content>
+                            <#local imageVariants = getImageVariants({"contentId":contentId, "useCache":true})!false>
+                        </#if>
+                        <#if productId?has_content>
+                            <#local imageVariants = getImageVariants({"productId":productId, "useCache":true})!false>
+                        </#if>
+                        <#if imageVariants?has_content>
+                            <#local responsiveMap = imageVariants.getResponsiveVariantMap("image/webp", sizeDef, context, {})!{}>
+                        </#if>
                     </#if>
-                 </#if>
-                <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
-                    <img src="${escapeFullUrl(src, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>sizes="${sizes}"</#if></#if><@compiledClassAttribStr class=imgClass /> style="${imgStyle}" <#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>/>
-                <#if link?has_content></a></#if>
-                <#if nested?has_content><#nested></#if>
-            </div>
+                </#if>
+                <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapeVal(type, 'css-html')};</#local>
+                <#local class = addClassArg(class, "scipio-image-container")>
+                <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if> style="${imgContainer}" scipioFit="${escapeVal(type, 'html')}">
+                     <#local srcset = "">
+                     <#local sizes = "">
+                     <#if responsiveMap?has_content>
+                        <#local responsiveKeys = mapKeys(responsiveMap)>
+                         <#local srcset = ""/>
+                         <#local srcsetWebp = ""/>
+                         <#local responsiveKeys = mapKeys(responsiveMap)>
+                         <#if responsiveKeys?contains('srcsetWebp')>
+                             <#local srcsetMap=responsiveMap['srcsetWebp']>
+                             <#list toSimpleMap(responsiveMap)?keys as srcsetEntry>
+                                 <#local srcsetWebp=srcsetWebp +srcsetEntry+raw(' ' + srcsetMap[srcsetEntry] + 'w')>
+                                 <#if !srcsetEntry?is_last><#local srcsetWebp=raw(srcsetWebp) + ", "></#if>
+                             </#list>
+                        </#if>
+                        <#if responsiveKeys?contains('sizes')>
+                            <#local sizesMap=toSimpleMap(responsiveMap)['sizes']>
+                            <#list sizesMap?keys as sizesEntry>
+                                <#local sizes=sizes + ("(" + sizesEntry + ") " + sizesMap[sizesEntry])>
+                                <#if !sizesEntry?is_last><#local sizes=sizes + ", "></#if>
+                            </#list>
+
+                        </#if>
+                     </#if>
+                     <#local maxCurrImg = 3/>
+                     <#if "category"==parameters._CURRENT_VIEW_! || request.requestURL?contains("/category/")>
+                         <#local maxCurrImg = 8/>
+                     </#if>
+                    <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
+                         <#if responsiveMap?has_content>
+                             <picture>
+                             <#if (responsiveMap.srcsetSizeTarget)?has_content>
+                                 <#local srcsetSize = responsiveMap['srcsetSizeTarget']>
+                                 <#list toSimpleMap(srcsetSize) as k,v>
+                                     <source type="image/webp" <#if v?has_content>media="${v}"</#if>  srcset="${k}" />
+                                 </#list>
+                             </#if>
+                             <#if (responsiveMap.srcset)?has_content>
+                                 <#local srcsetSize = responsiveMap['srcsetSize']>
+                                 <#local srcsetMap = responsiveMap['srcset']>
+
+                                 <#list toSimpleMap(srcsetSize) as k,v>
+                                     <#if srcsetMap[raw(k)]?has_content >
+                                         <#local srcset=srcset +k+' ' + srcsetMap[raw(k)] + 'w'>
+                                         <#if !k?is_last>
+                                             <#local srcset=raw(srcset) + ", ">
+                                         </#if>
+                                     </#if>
+                                     <#--<source <#if srcsetSize?has_content>media="${srcsetSize[srcsetEntry]}"</#if>  data-srcset="${srcsetEntry}" />-->
+                                 </#list>
+                             </#if>
+                         </#if>
+                         <img src="${escapeFullUrl(src, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>data-sizes="${sizes}"</#if></#if><#if style?has_content>style="${style}"</#if> <@compiledClassAttribStr class=imgClass />
+                         <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>/>
+                         <#if responsiveMap?has_content></picture></#if>
+                    <#if link?has_content></a></#if>
+                    <#if nested?has_content><#nested></#if>
+                </div>
+            </@utilCache>
     </#switch>
 </#macro>
 

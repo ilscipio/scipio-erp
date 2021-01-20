@@ -770,6 +770,12 @@
         <value xml:lang="zh">密码必须至少有${minPasswordLength} 个字符。</value>
         <value xml:lang="zh-TW">密碼至少要有 ${minPasswordLength} 個字元.</value>
     </property>
+    <property key="loginservices.password_must_be_most_characters_long">
+        <value xml:lang="de">Das Passwort darf höchstens ${maxPasswordLength} Zeichen enthalten.</value>
+        <value xml:lang="en">Password must be at most ${maxPasswordLength} characters long.</value>
+        <value xml:lang="es">La clave debe tener como máximo ${maxPasswordLength} caracteres.</value>
+        <value xml:lang="fr">Le mot de passe doit être au plus ${maxPasswordLength} caractères.</value>
+    </property>
     <property key="loginservices.password_or_verify_missing">
         <value xml:lang="de">Das Passwort oder zweite Eingabe des Passwortes fehlt.</value>
         <value xml:lang="en">Password or verify password missing.</value>

@@ -961,11 +961,18 @@ public class LoginServices {
         }
 
         int minPasswordLength = 0;
+        int maxPasswordLength = 0; // SCIPIO
 
         try {
             minPasswordLength = EntityUtilProperties.getPropertyAsInteger("security", "password.length.min", 0);
         } catch (NumberFormatException nfe) {
             minPasswordLength = 0;
+        }
+
+        try {
+            maxPasswordLength = EntityUtilProperties.getPropertyAsInteger("security", "password.length.max", 0);
+        } catch (NumberFormatException nfe) {
+            maxPasswordLength = 0;
         }
 
         if (newPassword != null) {
@@ -984,11 +991,23 @@ public class LoginServices {
                     errMsg = UtilProperties.getMessage(resource, passwordPatternMessage, messageMap, locale);
                     messageMap = UtilMisc.toMap("passwordPatternMessage", errMsg);
                     errorMessageList.add(errMsg);
+                } else if (!(newPassword.length() >= minPasswordLength)) { // SCIPIO: check EVEN IF using regex pattern
+                    Map<String, String> messageMap = UtilMisc.toMap("minPasswordLength", Integer.toString(minPasswordLength));
+                    errMsg = UtilProperties.getMessage(resource,"loginservices.password_must_be_least_characters_long", messageMap, locale);
+                    errorMessageList.add(errMsg);
+                } else if (maxPasswordLength > 0 && !(newPassword.length() <= maxPasswordLength)) { // SCIPIO
+                    Map<String, String> messageMap = UtilMisc.toMap("maxPasswordLength", Integer.toString(maxPasswordLength));
+                    errMsg = UtilProperties.getMessage(resource,"loginservices.password_must_be_most_characters_long", messageMap, locale);
+                    errorMessageList.add(errMsg);
                 }
             } else {
                 if (!(newPassword.length() >= minPasswordLength)) {
                     Map<String, String> messageMap = UtilMisc.toMap("minPasswordLength", Integer.toString(minPasswordLength));
                     errMsg = UtilProperties.getMessage(resource,"loginservices.password_must_be_least_characters_long", messageMap, locale);
+                    errorMessageList.add(errMsg);
+                } else if (maxPasswordLength > 0 && !(newPassword.length() <= maxPasswordLength)) { // SCIPIO
+                    Map<String, String> messageMap = UtilMisc.toMap("maxPasswordLength", Integer.toString(maxPasswordLength));
+                    errMsg = UtilProperties.getMessage(resource,"loginservices.password_must_be_most_characters_long", messageMap, locale);
                     errorMessageList.add(errMsg);
                 }
             }

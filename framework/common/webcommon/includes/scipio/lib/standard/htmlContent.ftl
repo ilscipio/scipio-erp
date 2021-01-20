@@ -1911,7 +1911,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                         </#if>
                     </#if>
                 </#if>
-                <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapeVal(type, 'css-html')};</#local>
+                <#local imgStyle><#if imgContainer?has_content>${imgContainer}</#if>object-fit: ${escapeVal(type, 'css-html')};${style}</#local>
                 <#local class = addClassArg(class, "scipio-image-container")>
                 <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if> style="${imgContainer}" scipioFit="${escapeVal(type, 'html')}">
                      <#local srcset = "">
@@ -1965,7 +1965,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                                  </#list>
                              </#if>
                          </#if>
-                         <img src="${escapeFullUrl(src, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>data-sizes="${sizes}"</#if></#if><#if style?has_content>style="${style}"</#if> <@compiledClassAttribStr class=imgClass />
+                         <img src="${escapeFullUrl(src, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>data-sizes="${sizes}"</#if></#if><#if imgStyle?has_content>style="${imgStyle}"</#if> <@compiledClassAttribStr class=imgClass />
                          <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>/>
                          <#if responsiveMap?has_content></picture></#if>
                     <#if link?has_content></a></#if>

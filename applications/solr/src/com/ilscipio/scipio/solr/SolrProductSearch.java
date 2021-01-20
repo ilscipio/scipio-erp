@@ -29,6 +29,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Collation;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
+import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.common.params.CommonParams;
 import org.ofbiz.base.util.ContinueException;
@@ -49,6 +50,7 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.solr.util.DirectJsonRequest;
@@ -735,6 +737,88 @@ public abstract class SolrProductSearch {
         return result;
     }
 
+    public static Map<String, Object> solrGetDoc(ServiceContext ctx) {
+        try {
+            Map<String, Object> dispatchMap = ctx.makeValidContext("runSolrQuery", ModelService.IN_PARAM, ctx.context());
+
+            dispatchMap.putIfAbsent("facet", false);
+            dispatchMap.putIfAbsent("spellcheck", false);
+            dispatchMap.putIfAbsent("highlight", false);
+
+            String id = ctx.attr("id");
+            dispatchMap.put("query", "id:" + SolrExprUtil.escapeTermFull(id));
+
+            List<String> queryFilters = getEnsureQueryFiltersModifiable(dispatchMap);
+            SolrQueryUtil.addDefaultQueryFilters(queryFilters, ctx.context());
+            dispatchMap.put("queryFilters", queryFilters);
+
+            Map<String, Object> searchResult = ctx.dispatcher().runSync("runSolrQuery", dispatchMap);
+            if (!ServiceUtil.isSuccess(searchResult)) {
+                return copySolrQueryExtraOutParams(searchResult, ServiceUtil.returnResultSysFields(searchResult));
+            }
+            QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
+
+            Map<String, Object> result;
+            if (queryResult.getResults().size() > 0) {
+                result = ServiceUtil.returnSuccess();
+                result.put("doc", queryResult.getResults().get(0));
+            } else {
+                result = ServiceUtil.returnFailure("Could not find doc id [" + id + "]");
+            }
+            return result;
+        } catch (Exception e) {
+            Debug.logError(e, "Solr: solrGetDoc: " + e.getMessage(), module);
+            return ServiceUtil.returnError(e.toString());
+        }
+    }
+
+    public static Map<String, Object> solrGetDocs(ServiceContext ctx) {
+        try {
+            Map<String, Object> dispatchMap = ctx.makeValidContext("runSolrQuery", ModelService.IN_PARAM, ctx.context());
+            Collection<String> idList = ctx.attr("idList");
+            if (UtilValidate.isEmpty(idList)) {
+                return ServiceUtil.returnError("Missing solr document id or idList");
+            }
+
+            dispatchMap.putIfAbsent("facet", false);
+            dispatchMap.putIfAbsent("spellcheck", false);
+            dispatchMap.putIfAbsent("highlight", false);
+
+            StringBuilder sb = new StringBuilder();
+            for(String listId : idList) {
+                sb.append(' ');
+                sb.append(SolrExprUtil.escapeTermFull(listId));
+            }
+            dispatchMap.put("query", "id:(" + sb.substring(1) + ")");
+
+            List<String> queryFilters = getEnsureQueryFiltersModifiable(dispatchMap);
+            SolrQueryUtil.addDefaultQueryFilters(queryFilters, ctx.context());
+            dispatchMap.put("queryFilters", queryFilters);
+
+            Map<String, Object> searchResult = ctx.dispatcher().runSync("runSolrQuery", dispatchMap);
+            if (!ServiceUtil.isSuccess(searchResult)) {
+                return copySolrQueryExtraOutParams(searchResult, ServiceUtil.returnResultSysFields(searchResult));
+            }
+            QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
+            Map<String, Object> result = (idList.size() == queryResult.getResults().getNumFound()) ?
+                    ServiceUtil.returnSuccess() :
+                    ServiceUtil.returnFailure("Could not find documents; queried: " + idList.size() + ", found: " + queryResult.getResults().getNumFound());
+            if ("map".equals(ctx.attr("resultType"))) {
+                Map<String, Map<String, Object>> docMap = new LinkedHashMap<>();
+                for (SolrDocument solrDoc : queryResult.getResults()) {
+                    docMap.put((String) solrDoc.get("id"), solrDoc);
+                }
+                result.put("docMap", docMap);
+            } else {
+                result.put("docList", queryResult.getResults());
+            }
+            return result;
+        } catch (Exception e) {
+            Debug.logError(e, "Solr: solrGetDocs: " + e.getMessage(), module);
+            return ServiceUtil.returnError(e.toString());
+        }
+    }
+
     private static Map<String, Object> copySolrQueryExtraOutParams(Map<String, Object> src, Map<String, Object> dest) {
         if (src.containsKey("errorType")) dest.put("errorType", src.get("errorType"));
         if (src.containsKey("nestedErrorMessage")) dest.put("nestedErrorMessage", src.get("nestedErrorMessage"));
@@ -948,7 +1032,7 @@ public abstract class SolrProductSearch {
             for (String catKey : allCategoriesMap.keySet()) {
 //                Debug.log("building extended top category: " + catKey);                
                 Map<String, List<Map<String, Object>>> categoryMap = UtilMisc.newInsertOrderMap();
-                categoryMap.put("menu-0", prepareAndRunSorlCategoryQuery(dctx, context, catalogId, "0/" + catKey, "1/" + catKey + "/", 0));
+                categoryMap.put("menu-0", prepareAndRunSolrCategoryQuery(dctx, context, catalogId, "0/" + catKey, "1/" + catKey + "/", 0));
                 catLevel.add(buildCategoriesExtendedFromMap(categoryMap, (Map<String, Object>) allCategoriesMap.get(catKey), "/" + catKey,
                         dctx, context, catalogId));
             }
@@ -987,7 +1071,7 @@ public abstract class SolrProductSearch {
                 Debug.logInfo("Solr: getSideDeepCategories: level: " + level + " iterating element: " + catKey + "   categoryPath: " + categoryPath
                         + " facetPrefix: " + facetPrefix, module);
             }
-            List<Map<String, Object>> tempList = prepareAndRunSorlCategoryQuery(dctx, context, catalogId, categoryPath, facetPrefix, level);
+            List<Map<String, Object>> tempList = prepareAndRunSolrCategoryQuery(dctx, context, catalogId, categoryPath, facetPrefix, level);
             if (categoriesExtended.containsKey("menu-" + level)) {
                 categoriesExtended.get("menu-" + level).addAll(tempList);
             } else {
@@ -997,8 +1081,8 @@ public abstract class SolrProductSearch {
         return categoriesExtended;
     }
 
-    private static List<Map<String, Object>> prepareAndRunSorlCategoryQuery(DispatchContext dctx, Map<String, Object> context, String catalogId,
-            String categoryPath, String facetPrefix, int level) throws Exception {
+    private static List<Map<String, Object>> prepareAndRunSolrCategoryQuery(DispatchContext dctx, Map<String, Object> context, String catalogId,
+                                                                            String categoryPath, String facetPrefix, int level) throws Exception {
         // TODO: Use this method in sideDeepCategories
         Map<String, Object> query = getAvailableCategories(dctx, context, catalogId, categoryPath, null, facetPrefix, false, 0, 0);
         if (ServiceUtil.isError(query)) {

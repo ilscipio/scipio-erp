@@ -578,4 +578,33 @@ code package.
         <attribute name="categories" type="java.util.Map" mode="OUT" optional="true"/>
     </service>
 
+    <service name="solrGetDoc" engine="java"
+             transaction-timeout="72000"
+             location="com.ilscipio.scipio.solr.SolrProductSearch"
+             invoke="solrGetDoc">
+        <description>Get document by ID</description>
+        <implements service="solrSearchCommon"/>
+        <attribute name="id" type="String" mode="IN" optional="false"/>
+        <attribute name="doc" type="Map" mode="OUT" optional="true">
+            <description>The first result</description>
+        </attribute>
+    </service>
+
+    <service name="solrGetDocs" engine="java"
+             transaction-timeout="72000"
+             location="com.ilscipio.scipio.solr.SolrProductSearch"
+             invoke="solrGetDocs">
+        <description>Get documents by ID</description>
+        <implements service="solrSearchCommon"/>
+        <attribute name="idList" type="List" mode="IN" optional="true"/>
+        <attribute name="resultType" type="String" mode="IN" optional="true" default-value="list">
+            <description>Values: list, map</description>
+        </attribute>
+        <attribute name="docList" type="List" mode="OUT" optional="true">
+            <description>Document list, if resultType list</description>
+        </attribute>
+        <attribute name="docMap" type="Map" mode="OUT" optional="true">
+            <description>Maps id to document, if resultType map</description>
+        </attribute>
+    </service>
 </services>

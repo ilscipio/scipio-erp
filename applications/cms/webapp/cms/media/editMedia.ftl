@@ -299,7 +299,7 @@
                             </#if>
                             <#assign imageFile = delegator.findOne("ImageDataResource", false, {"dataResourceId" : media.dataResourceId})!>
                             <#if imageFile?has_content>
-                                <@img src=dataFile responsiveMap=responsiveMap!/>
+                                <@img src=dataFile responsiveMap=responsiveMap! style="width:100%;" type=""/>
                             </#if>
                         <#elseif media.dataResourceTypeId == "VIDEO_OBJECT">
                             <#assign videoFile = delegator.findOne("VideoDataResource", false, {"dataResourceId" : media.dataResourceId})!>                    

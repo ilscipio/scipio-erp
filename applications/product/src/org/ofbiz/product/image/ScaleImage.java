@@ -67,7 +67,8 @@ public class ScaleImage {
     }
 
     /**
-     * scaleImageInAllSize
+     * scaleImageInAllSize.
+     * @deprecated 2021-01: Use service productImageFileScaleInAllSize instead (SCIPIO).
      * <p>
      * Scale the original image into all different size Types (small, medium, large, detail)
      * <p>
@@ -83,6 +84,7 @@ public class ScaleImage {
      * @throws  ImagingOpException          The transform is non-invertible
      * @throws  IOException                 Error prevents the document from being fully parsed
      */
+    @Deprecated
     public static Map<String, Object> scaleImageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType, String viewNumber,
             String imageProfile, Map<String, Object> imageWriteOptions) throws IllegalArgumentException, ImagingOpException, IOException {
 
@@ -267,12 +269,14 @@ public class ScaleImage {
 
     /**
      * scaleImageManageInAllSize.
+     * @deprecated 2021-01: Use service productImageFileScaleInAllSize instead (SCIPIO).
      * <p>
      * SCIPIO: 2017-07-04: This now looks for ImageProperties.xml under the product component; if not found,
      * falls back on the one in content component.
      * <p>
      * SCIPIO: NOTE: No code in ofbiz appears to be using this method. It is yet unknown why it is here.
      */
+    @Deprecated
     public static Map<String, Object> scaleImageManageInAllSize(Map<String, ? extends Object> context, String filenameToUse, String viewType,
                                                                 String viewNumber , String imageType, String imageProfile, Map<String, Object> imageWriteOptions) throws IllegalArgumentException, ImagingOpException, IOException {
 

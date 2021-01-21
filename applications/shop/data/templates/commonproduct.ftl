@@ -154,8 +154,6 @@ NOTE: This template does not support globals as-is (#global)
 
     <#-- Update Product -->
     <#if (imageNr <= 0)>
-        <#--
-        <#assign scaledImage = Static["org.ofbiz.product.image.ScaleImage"].scaleImageInAllSize(paramMap, filenameToUse, "main", imageNr?string)!>-->
         <#assign scaledImage = dispatcher.runSync("productImageFileScaleInAllSize", paramMap + {"viewType":"main"})!>
         <#local originalImageUrl = (scaledImage.imageUrlMap.original)!imageUrl>
         <#-- Original Image -->
@@ -167,8 +165,6 @@ NOTE: This template does not support globals as-is (#global)
         </#if><#t/>
         /><#lt/>
     <#else>
-        <#--
-        <#assign scaledImage = Static["org.ofbiz.product.image.ScaleImage"].scaleImageInAllSize(paramMap, filenameToUse, "additional", imageNr?string)! -->
         <#assign scaledImage = dispatcher.runSync("productImageFileScaleInAllSize", paramMap + {"viewType":"additional", "viewNumber":imageNr})!>
         <#local originalImageUrl = (scaledImage.imageUrlMap.original)!imageUrl>
         <#-- Original Image -->

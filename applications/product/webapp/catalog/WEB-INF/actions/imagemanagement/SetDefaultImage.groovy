@@ -176,6 +176,7 @@ if (fileType) {
             // call scaleImageInAllSize
             if (fileType.equals("original")) {
                 context.delegator = delegator;
+                // SCIPIO: TODO: If used again (this file currently unused), replace with service productImageFileScaleInAllSize
                 result = ScaleImage.scaleImageInAllSize(context, filenameToUse, "main", "0", "IMAGE_PRODUCT-ORIGINAL_IMAGE_URL", null);
 
                 if (result.containsKey("responseMessage") && result.get("responseMessage").equals("success")) {

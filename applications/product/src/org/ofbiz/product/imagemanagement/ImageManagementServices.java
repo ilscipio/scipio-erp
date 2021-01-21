@@ -306,6 +306,7 @@ public class ImageManagementServices {
 
     /**
      * Scaling method.
+     * @deprecated 2021-01: Use service productImageFileScaleInAllSize instead (SCIPIO).
      * <p>
      * SCIPIO: 2017-07-04: This now looks for ImageProperties.xml under the product component; if not found,
      * falls back on the one in content component.
@@ -313,6 +314,7 @@ public class ImageManagementServices {
      * SCIPIO: NOTE: 2017-07-04: This appears to have been a modified copy-paste of the methods in
      * {@link org.ofbiz.product.image.ScaleImage#scaleImageManageInAllSize}.
      */
+    @Deprecated
     public static Map<String, Object> scaleImageMangementInAllSize(Map<String, ? extends Object> context, String filenameToUse, String resizeType, String productId,
                                                                    String imageProfile, Map<String, Object> imageWriteOptions) throws IllegalArgumentException, ImagingOpException, IOException {
 

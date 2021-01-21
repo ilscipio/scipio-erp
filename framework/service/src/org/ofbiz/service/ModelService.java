@@ -616,17 +616,18 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @param context the context
      * @param mode Test either mode IN or mode OUT
      * @param locale the actual locale to use
+     * @param log Allow logging (SCIPIO)
      */
-    public void validate(Map<String, Object> context, String mode, Locale locale) throws ServiceValidationException {
+    public void validate(Map<String, Object> context, String mode, Locale locale, boolean log) throws ServiceValidationException {
         Map<String, String> requiredInfo = new HashMap<>();
         Map<String, String> optionalInfo = new HashMap<>();
 
-        if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : Validating context - " + context, module);
+        if (log && Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : Validating context - " + context, module);
 
         // do not validate results with errors
         if (mode.equals(OUT_PARAM) && context != null && context.containsKey(RESPONSE_MESSAGE)) {
             if (RESPOND_ERROR.equals(context.get(RESPONSE_MESSAGE)) || RESPOND_FAIL.equals(context.get(RESPONSE_MESSAGE))) {
-                if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : response was an error, not validating.", module);
+                if (log && Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : {" + this.name + "} : response was an error, not validating.", module);
                 return;
             }
         }
@@ -700,7 +701,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             validate(requiredInfo, requiredTest, true, this, mode, locale);
             validate(optionalInfo, optionalTest, false, this, mode, locale);
         } catch (ServiceValidationException e) {
-            Debug.logError("[ModelService.validate] : {" + name + "} : (" + mode + ") Required test error: " + e.toString(), module);
+            if (log) {
+                Debug.logError("[ModelService.validate] : {" + name + "} : (" + mode + ") Required test error: " + e.toString(), module);
+            }
             throw e;
         }
 
@@ -719,6 +722,16 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 throw new ServiceValidationException(errorMessageList, this, mode);
             }
         }
+    }
+
+    /**
+     * Validates a Map against the IN or OUT parameter information
+     * @param context the context
+     * @param mode Test either mode IN or mode OUT
+     * @param locale the actual locale to use
+     */
+    public void validate(Map<String, Object> context, String mode, Locale locale) throws ServiceValidationException {
+        validate(context, mode, locale, true);
     }
 
     /**

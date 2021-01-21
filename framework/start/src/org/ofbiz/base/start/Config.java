@@ -428,4 +428,62 @@ public class Config {
         //return null;
         return file;
     }
+
+    // SCIPIO: Added getters
+
+    public InetAddress getAdminAddress() {
+        return adminAddress;
+    }
+
+    public String getAdminKey() {
+        return adminKey;
+    }
+
+    public int getAdminPort() {
+        return adminPort;
+    }
+
+    public String getAwtHeadless() {
+        return awtHeadless;
+    }
+
+    public String getContainerConfig() {
+        return containerConfig;
+    }
+
+    public String getInstrumenterClassName() {
+        return instrumenterClassName;
+    }
+
+    public String getInstrumenterFile() {
+        return instrumenterFile;
+    }
+
+    public List<Map<String, String>> getLoaders() {
+        return loaders;
+    }
+
+    public String getLogDir() {
+        return logDir;
+    }
+
+    public String getOfbizHome() {
+        return ofbizHome;
+    }
+
+    public boolean isShutdownAfterLoad() {
+        return shutdownAfterLoad;
+    }
+
+    public String getSplashLogo() {
+        return splashLogo;
+    }
+
+    public boolean isUseShutdownHook() {
+        return useShutdownHook;
+    }
+
+    public Integer getPortOffset() {
+        return portOffset;
+    }
 }

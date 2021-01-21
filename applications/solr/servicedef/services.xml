@@ -201,7 +201,7 @@ code package.
     </service>
 
     <!-- NOTE: ProductIndexingNow an alias for scheduleProductIndexing, also triggers non-solr product updates, left for compatibility, will not be removed -->
-    <service name="registerUpdateToSolr" engine="java" location="com.ilscipio.scipio.solr.EntityIndexer" invoke="scheduleProductIndexing"
+    <service name="registerUpdateToSolr" engine="java" location="com.ilscipio.scipio.solr.EntityIndexer" invoke="scheduleEntityIndexing"
         use-transaction="false" log="quiet" log-eca="quiet"><!-- must not force transaction; special behavior -->
         <description>Registers (queues) a product add or removal to/from solr index by product instance or by productId - intended for use with ECAs/SECAs
             - delays the solr index update (updateToSolr) to the current transaction's global-commit</description>

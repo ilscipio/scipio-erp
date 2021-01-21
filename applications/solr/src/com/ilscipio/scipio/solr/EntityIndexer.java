@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.solr;
 
+import org.ofbiz.base.SystemState;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
@@ -992,6 +993,13 @@ public class EntityIndexer implements Runnable {
      * for the EntityIndexer.
      */
     public static Map<String, Object> scheduleEntityIndexing(DispatchContext dctx, Map<String, Object> context) {
+        if (!SystemState.getInstance().isServerExecution()) {
+            if (Debug.verboseOn()) {
+                Debug.logInfo("Not scheduling entity indexing; not a regular server execution", module);
+            }
+            return ServiceUtil.returnSuccess("Not scheduling entity indexing; not a regular server execution");
+        }
+
         if ("trans-commit".equals(context.get("event")) && TransactionUtil.isTransactionInPlaceSafe()) {
             if (TransactionUtil.getStatusSafe() == TransactionUtil.STATUS_MARKED_ROLLBACK) {
                 return ServiceUtil.returnFailure("Current transaction is marked for rollback; aborting scheduleEntityIndexing");

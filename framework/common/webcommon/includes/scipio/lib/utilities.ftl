@@ -2941,7 +2941,8 @@ TODO: doesn't handle dates (ambiguous?)
   <#if escape>
     <#switch lang>
       <#case "json">
-        <#return val?json_string>
+        <#-- NOTE: 2021-01: JSON only allows literal \n -->
+        <#return val?json_string?replace("\r\n", "\\n")?replace("\n", "\\n")>
         <#break>
       <#case "js">
         <#-- NOTE: We un-escape the single quotes because we know our containing quotes are double-quotes.

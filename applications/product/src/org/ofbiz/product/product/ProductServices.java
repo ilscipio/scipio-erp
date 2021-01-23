@@ -1174,7 +1174,7 @@ public class ProductServices {
             try {
                 Map<String, Object> rescaleResult = dispatcher.runSync("productImageAutoRescale", UtilMisc.toMap(
                         "userLogin", context.get("userLogin"), "locale", context.get("locale"), "timeZone", context.get("timeZone"),
-                        "productId", productId, "productContentTypeId", productContentTypeId, "createSizeTypeContent", true
+                        "productId", productId, "productContentTypeId", productContentTypeId, "createSizeTypeContent", true, "recreateExisting", true
                 ));
                 if (ServiceUtil.isError(rescaleResult)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(rescaleResult));

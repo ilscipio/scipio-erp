@@ -1,9 +1,6 @@
 package com.ilscipio.scipio.order.web;
 
 import com.ilscipio.scipio.web.SocketSessionManager;
-import de.bripkens.gravatar.DefaultImage;
-import de.bripkens.gravatar.Gravatar;
-import de.bripkens.gravatar.Rating;
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
@@ -14,13 +11,10 @@ import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-import org.springframework.core.annotation.OrderUtils;
-import sun.net.www.content.text.Generic;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 

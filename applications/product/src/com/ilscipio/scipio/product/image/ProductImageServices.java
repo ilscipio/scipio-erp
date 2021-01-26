@@ -193,6 +193,21 @@ public abstract class ProductImageServices {
                 return result;
             }
         }
+
+        if (Boolean.TRUE.equals(ctx.attr("clearCaches"))) {
+            try {
+                Map<String, Object> clearCachesCtx = ctx.makeValidInContext("productImageVariantsClearCaches", ctx.context());
+                clearCachesCtx.put("productId", productId);
+                clearCachesCtx.put("distribute", true);
+                Map<String, Object> clearCachesResult = ctx.dispatcher().runSync("productImageVariantsClearCaches", clearCachesCtx);
+                if (!ServiceUtil.isSuccess(clearCachesResult)) {
+                    Debug.logWarning("productImageRescaleImage: product [" + productId + "]: error clearing caches: " + ServiceUtil.getErrorMessage(clearCachesResult), module);
+                }
+            } catch (GenericServiceException e) {
+                Debug.logWarning(e, "productImageRescaleImage: product [" + productId + "]: error clearing caches: " + e.toString(), module);
+            }
+        }
+
         Map<String, Object> result;
         int successCount = ((int) stats.get("successCount"));
         int errorCount = ((int) stats.get("errorCount"));

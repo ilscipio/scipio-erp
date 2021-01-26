@@ -28,6 +28,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ilscipio.scipio.product.image.ProductImageVariants;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -278,11 +279,29 @@ public class ProductContentWrapper extends CommonContentWrapper {
         return imageUrl;
     }
 
+    /**
+     * Returns {@link ProductImageVariants} (SCIPIO).
+     * NOTE: In newer code this is preferable to {@link #getImageUrl(String)} and uses its own dedicated cache
+     * (<code>product.image.variants</code>) separate from the ProductContentWrapper cache.
+     * @param productContentTypeId The original image content type ID (not variants), usually one of: ORIGINAL_IMAGE_URL, ADDITIONAL_IMAGE_x
+     */
+    public ProductImageVariants getImageVariants(String productContentTypeId) {
+        return ProductImageVariants.from(getProductId(), productContentTypeId, true, getDelegator(), getDispatcher(), getLocale(), true, null);
+    }
+
     public GenericValue getProduct() { // SCIPIO
         return getEntityValue();
     }
 
     public String getProductId() { // SCIPIO
         return getShortPk();
+    }
+
+    public static void clearCachesByPrefix(Delegator delegator, String prefix) { // SCIPIO
+        productContentCache.removeByFilter((k, v) -> k.startsWith(prefix));
+    }
+
+    public static void clearCaches(Delegator delegator) { // SCIPIO
+        productContentCache.clear();
     }
 }

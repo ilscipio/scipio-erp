@@ -163,6 +163,7 @@
                 if false, runs in current transaction and returns error on on image resize fail</description>
         </attribute>
         <attribute name="logDetail" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="clearCaches" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <!-- per-image counts -->
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
@@ -245,11 +246,15 @@
     <service name="productImageVariantsDistributedClearCaches" engine="jms" location="serviceMessenger" invoke="productImageVariantsClearCaches"
              auth="true" use-transaction="false" log-eca="quiet" log="quiet" hideResultInLog="true">
         <description>Clear ProductImageVariants caches (SCIPIO)</description>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="productContentTypeId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="productImageVariantsClearCaches" engine="java" export="true"
              location="com.ilscipio.scipio.product.image.ProductImageVariants" invoke="clearCaches" auth="true" use-transaction="false">
         <description>Clear ProductImageVariants caches (SCIPIO)</description>
         <!--<permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>-->
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="productContentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
     </service>
 </services>

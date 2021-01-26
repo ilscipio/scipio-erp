@@ -187,7 +187,8 @@ if (fileType) {
                         product.store();
                         try {
                             def servCtx = dispatcher.runSync("productImageAutoRescale", [userLogin:context.userLogin,
-                                locale:context.locale, product:product, productContentTypeId:"ORIGINAL_IMAGE_URL", createSizeTypeContent:true, recreateExisting:true]);
+                                locale:context.locale, product:product, productContentTypeId:"ORIGINAL_IMAGE_URL", createSizeTypeContent:true,
+                                recreateExisting:true, clearCaches:true]);
                             if (!ServiceUtil.isSuccess(servCtx)) {
                                 def errorMessageList = context.errorMessageList ?: [];
                                 errorMessageList.addAll("productImageAutoRescale: " + ServiceUtil.getErrorMessage(servCtx));

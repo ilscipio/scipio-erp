@@ -106,7 +106,7 @@ public abstract class ProductImageWorker {
                 return;
             }
             Map<String, Object> ctx = UtilMisc.toMap("productId", product.get("productId"), "productContentTypeId", productContentTypeId,
-                    "sizeTypeList", sizeTypeList, "recreateExisting", true); // NOTE: the getMissingVariantNames check above (for performance) already implements the recreateExisting logic
+                    "sizeTypeList", sizeTypeList, "recreateExisting", true, "clearCaches", true); // NOTE: the getMissingVariantNames check above (for performance) already implements the recreateExisting logic
             if (async) {
                 dctx.getDispatcher().runAsync("productImageAutoRescale", ctx, false);
             } else {

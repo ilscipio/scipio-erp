@@ -63,8 +63,7 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
                 String mode = LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) modeModel));
                 if ("u".equals(mode)) {
                     unwrap = Boolean.TRUE;
-                }
-                else if ("w".equals(mode)) {
+                } else if ("w".equals(mode)) {
                     unwrap = Boolean.FALSE;
                 }
             }
@@ -72,7 +71,7 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         Object value = valueModel;
-        if (unwrap == Boolean.TRUE) {
+        if (Boolean.TRUE.equals(unwrap)) {
             value = LangFtlUtil.unwrapPermissive(valueModel);
         }
         ContextFtlUtil.setRequestVar(LangFtlUtil.getAsStringNonEscaping(((TemplateScalarModel) nameModel)), value, env);

@@ -5180,31 +5180,20 @@ size factors.
 *************
 * getRenderContextType
 ************
-Tries to figure out if this is web render, email, or other general.
+Returns the render context type: web, email, general; based on ScreenRenderer.
 -->
 <#function getRenderContextType>
-  <#-- FIXME?: this detection is primitive... not sure covers all possible cases... -->
-  <#local res = "general">
-  <#if request??>
-    <#local res = "web">
-  <#else>
-    <#if baseUrl??>
-      <#local res = "email">
-    </#if>
-  </#if>
-  <#return res>
+  <#return raw(Static["org.ofbiz.widget.renderer.RenderContextWorker"].getRenderContextType(context))>
 </#function>
 
 <#-- 
 *************
 * getRenderPlatformType
 ************
-html, xml, etc.; best-effort.
+Returns the render platform (output language) type: html, xml, etc.; best-effort detection.
 -->
 <#function getRenderPlatformType>
-  <#if screens??>
-    <#return raw(screens.getScreenStringRenderer().getRendererName()!"")>
-  </#if>
+  <#return raw(Static["org.ofbiz.widget.renderer.RenderContextWorker"].getRenderPlatformType(context))>
 </#function>
 
 <#-- 
@@ -5225,24 +5214,7 @@ Returns void if nothing.
                               Caller should use #getRenderContextType().
 -->
 <#function getDefaultScipioLibLocation libName renderPlatformType="default" renderContextType="general">
-  <#local res = getPropertyValue("scipioWebapp", "scipio.templating.lib." + renderContextType + "." + renderPlatformType + "."  + libName  + ".location")!"">
-  <#if res?has_content>
-    <#return res>
-  </#if>
-  <#-- DEV NOTE: the conditions below almost look wrong, but they are actually correct and are here to prevent useless double-lookups already covered by the first check above -->
-  <#if renderContextType != "general">
-    <#local res = getPropertyValue("scipioWebapp", "scipio.templating.lib.general." + renderPlatformType  + "." + libName + ".location")!"">
-    <#if res?has_content>
-      <#return res>
-    </#if>
-  </#if>
-  <#if renderPlatformType != "default">
-    <#local res = getPropertyValue("scipioWebapp", "scipio.templating.lib." + renderContextType + ".default." + libName + ".location")!"">
-    <#if res?has_content>
-      <#return res>
-    </#if>
-  </#if>
-  <#local res = getPropertyValue("scipioWebapp", "scipio.templating.lib.general.default." + libName + ".location")!"">
+  <#local res = raw(Static["org.ofbiz.widget.renderer.VisualThemeWorker"].getDefaultScipioLibLocation(libName, renderPlatformType, renderContextType)!)>
   <#if res?has_content>
     <#return res>
   </#if>
@@ -5266,7 +5238,7 @@ Checks the resourceNames in the given order.
 NOTE: "default" is a special map key; should be avoided.
 -->
 <#function getMacroLibraryLocationStaticFromResources renderPlatformType resources resourceNames...>
-  <#local res = Static["org.ofbiz.widget.renderer.VisualThemeWorker"].getMacroLibraryLocationStaticFromResources(renderPlatformType, rendererVisualThemeResources!, resourceNames)!"">
+  <#local res = Static["org.ofbiz.widget.renderer.VisualThemeWorker"].getMacroLibraryLocationStaticFromResources(renderPlatformType, resources, resourceNames)!"">
   <#if res?has_content>
     <#return raw(res)>
   </#if>

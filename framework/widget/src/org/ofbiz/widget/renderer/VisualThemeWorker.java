@@ -1,5 +1,7 @@
 package org.ofbiz.widget.renderer;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -7,11 +9,16 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
+import freemarker.template.TemplateModelException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.GroovyUtil;
 import org.ofbiz.base.util.ScriptUtil;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -32,6 +39,18 @@ public class VisualThemeWorker {
 
     private static final UtilCache<String, String> libLocationExprCache = UtilCache.createUtilCache("renderer.visualtheme.resources.liblocation");
     private static final Map<String, Object> emptyContext = Collections.unmodifiableMap(new HashMap<String, Object>());
+
+    // SCIPIO
+    private static final Map<String, List<String>> FTL_LIB_VAR_RESOURCE_NAMES = Collections.unmodifiableMap(UtilMisc.toMap(
+            "web", UtilMisc.unmodifiableArrayList("VT_STL_VAR_WEB", "VT_STL_VAR_LOC"),
+            "email", UtilMisc.unmodifiableArrayList("VT_STL_VAR_MAIL", "VT_STL_VAR_LOC"),
+            "default", UtilMisc.unmodifiableArrayList("VT_STL_VAR_LOC")
+    ));
+    private static final Map<String, List<String>> FTL_LIB_TMPL_RESOURCE_NAMES = Collections.unmodifiableMap(UtilMisc.toMap(
+            "web", UtilMisc.unmodifiableArrayList("VT_STL_TMPLT_WEB", "VT_STL_TMPLT_LOC"),
+            "email", UtilMisc.unmodifiableArrayList("VT_STL_TMPLT_MAIL", "VT_STL_TMPLT_LOC"),
+            "default", UtilMisc.unmodifiableArrayList("VT_STL_TMPLT_LOC")
+    ));
 
     /**
      * SCIPIO: Gets visual theme resources from context or if missing, calculates appropriate
@@ -211,7 +230,7 @@ public class VisualThemeWorker {
     }
 
     public static String getMacroLibraryLocationStaticFromResources(String platform, Map<String, List<String>> themeResources,
-            String... resourceNames) {
+                                                                    Collection<String> resourceNames) {
         if (themeResources == null) {
             return null;
         }
@@ -225,6 +244,11 @@ public class VisualThemeWorker {
             }
         }
         return null;
+    }
+
+    public static String getMacroLibraryLocationStaticFromResources(String platform, Map<String, List<String>> themeResources,
+                                                                    String... resourceNames) {
+        return getMacroLibraryLocationStaticFromResources(platform, themeResources, Arrays.asList(resourceNames));
     }
 
     /**
@@ -294,6 +318,131 @@ public class VisualThemeWorker {
                 return null;
             }
         }
+    }
+
+    public static String getDefaultScipioLibLocation(String libName, String renderPlatformType, String renderContextType) {
+        if (renderPlatformType == null) {
+            renderPlatformType = "default";
+        }
+        if (renderContextType == null) {
+            renderContextType = "general";
+        }
+        String loc = UtilProperties.getPropertyValue("scipioWebapp", "scipio.templating.lib." + renderContextType + "." + renderPlatformType + "."  + libName  + ".location");
+        if (UtilValidate.isNotEmpty(loc)) {
+            return loc;
+        }
+        if (!"general".equals(renderContextType)) {
+            loc = UtilProperties.getPropertyValue("scipioWebapp", "scipio.templating.lib.general." + renderPlatformType  + "." + libName + ".location");
+            if (UtilValidate.isNotEmpty(loc)) {
+                return loc;
+            }
+        }
+        if (!"default".equals(renderPlatformType)) {
+            loc = UtilProperties.getPropertyValue("scipioWebapp", "scipio.templating.lib." + renderContextType + ".default." + libName + ".location");
+            if (UtilValidate.isNotEmpty(loc)) {
+                return loc;
+            }
+        }
+        loc = UtilProperties.getPropertyValue("scipioWebapp", "scipio.templating.lib.general.default." + libName + ".location");
+        if (UtilValidate.isNotEmpty(loc)) {
+            return loc;
+        }
+        return null;
+    }
+
+    public static List<String> getFtlLibVariableResourceNames(String renderContextType) {
+        List<String> resourceNames = FTL_LIB_VAR_RESOURCE_NAMES.get(renderContextType);
+        return (resourceNames != null) ? resourceNames : FTL_LIB_VAR_RESOURCE_NAMES.get("default");
+    }
+
+    public static List<String> getFtlLibTemplateResourceNames(String renderContextType) {
+        List<String> resourceNames = FTL_LIB_TMPL_RESOURCE_NAMES.get(renderContextType);
+        return (resourceNames != null) ? resourceNames : FTL_LIB_TMPL_RESOURCE_NAMES.get("default");
+    }
+
+    public static Map<String, Object> getFtlLibVariables(Map<String, Object> context) {
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+
+        Map<String, Object> scpTmplGlobalVars = null;
+        try {
+            scpTmplGlobalVars = UtilGenerics.cast(ContextFtlUtil.getRequestVar("scpLibVarsRaw", request, context));
+            if (scpTmplGlobalVars != null) {
+                return scpTmplGlobalVars;
+            }
+        } catch (ClassCastException | TemplateModelException e) {
+            Debug.logError("Could not read scpLibVarsRaw from context: " + e.toString(), module);
+        }
+
+        String renderPlatformType = RenderContextWorker.getRenderPlatformType(context);
+        String renderContextType = RenderContextWorker.getRenderContextType(context);
+        Map<String, List<String>> themeResources = UtilGenerics.cast(context.get("rendererVisualThemeResources"));
+
+        String scpVarLibPath = null;
+        if (themeResources != null) {
+            scpVarLibPath = getMacroLibraryLocationStaticFromResources(renderPlatformType, themeResources,
+                    getFtlLibVariableResourceNames(renderContextType));
+            if (UtilValidate.isEmpty(scpVarLibPath)) {
+                scpVarLibPath = getDefaultScipioLibLocation("variables", renderPlatformType, renderContextType);
+            }
+        }
+        if (UtilValidate.isEmpty(scpVarLibPath)) {
+            Debug.logWarning("No library variables location defined in system or visual theme, cannot fetch Scipio " +
+                    "variables for renderPlatformType [" + renderPlatformType + "] renderContextType [" + renderContextType + "]", module);
+            return null;
+        }
+
+        try {
+            scpTmplGlobalVars = GroovyUtil.runScriptAtLocationNewEmptyContext(scpVarLibPath, "");
+        } catch (GeneralException e) {
+            Debug.logError("Could not run library variables template [" + scpVarLibPath + "] for renderPlatformType [" + renderPlatformType +
+                "] renderContextType [" + renderContextType + "]: " + e.toString(), module);
+            return null;
+        }
+
+        try {
+            ContextFtlUtil.setRequestVar("scpLibVarsRaw", scpTmplGlobalVars, request, context);
+        } catch (TemplateModelException e) {
+            Debug.logError("Could not set request var scpLibVarsRaw: " + e.toString(), module);
+        }
+        return scpTmplGlobalVars;
+    }
+
+    public static String getFtlLibTemplatePath(Map<String, Object> context) {
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+
+        String scpLibTmplPath = null;
+        try {
+            scpLibTmplPath = UtilGenerics.cast(ContextFtlUtil.getRequestVar("scpLibTmplPath", request, context));
+            if (scpLibTmplPath != null) {
+                return scpLibTmplPath;
+            }
+        } catch (ClassCastException | TemplateModelException e) {
+            Debug.logError("Could not read scpLibTmplPath from context: " + e.toString(), module);
+        }
+
+        String renderPlatformType = RenderContextWorker.getRenderPlatformType(context);
+        String renderContextType = RenderContextWorker.getRenderContextType(context);
+        Map<String, List<String>> themeResources = UtilGenerics.cast(context.get("rendererVisualThemeResources"));
+
+        if (themeResources != null) {
+            scpLibTmplPath = getMacroLibraryLocationStaticFromResources(renderPlatformType, themeResources,
+                    getFtlLibTemplateResourceNames(renderContextType));
+            if (UtilValidate.isEmpty(scpLibTmplPath)) {
+                scpLibTmplPath = getDefaultScipioLibLocation("template", renderPlatformType, renderContextType);
+            }
+        }
+        if (UtilValidate.isEmpty(scpLibTmplPath)) {
+            Debug.logWarning("No library template location defined in system or visual theme, cannot fetch Scipio" +
+                    " variables template for renderPlatformType [" + renderPlatformType + "] renderContextType [" + renderContextType + "]", module);
+            return null;
+        }
+
+        try {
+            ContextFtlUtil.setRequestVar("scpLibTmplPath", scpLibTmplPath, request, context);
+        } catch (TemplateModelException e) {
+            Debug.logError("Could not set request var scpLibTmplPath: " + e.toString(), module);
+        }
+        return scpLibTmplPath;
     }
 
 }

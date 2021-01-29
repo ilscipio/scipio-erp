@@ -1900,13 +1900,13 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                     </#if>
                     <#if !responsiveMap?has_content && (contentId?has_content || productId?has_content)>
                         <#local sizeMap = false/>
+                        <#local imageVariants = false/>
                         <#if contentId?has_content>
                             <#local imageVariants = getImageVariants({"contentId":contentId, "useCache":true})!false>
-                        </#if>
-                        <#if productId?has_content>
+                        <#elseif productId?has_content>
                             <#local imageVariants = getImageVariants({"productId":productId, "useCache":true})!false>
                         </#if>
-                        <#if imageVariants?has_content>
+                        <#if !imageVariants?is_boolean>
                             <#local responsiveMap = imageVariants.getResponsiveVariantMap("image/webp", sizeDef, context, {})!{}>
                         </#if>
                     </#if>

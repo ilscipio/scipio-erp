@@ -27,6 +27,7 @@ import org.ofbiz.webapp.ftl.ContentUrlDirective;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -745,8 +746,74 @@ public class ProductImageVariants extends ImageVariants {
     @Override
     public Map<String, Object> getResponsiveVariantMap(String targetMimeTypeId, Map<String, ? extends Number> sizeDefs,
                                                        Map<String, Object> context, Map<String, Object> urlArgs) {
-        // TODO
-        return Collections.emptyMap();
+        // TODO: REVIEW: from ContentImageVariants#getResponsiveVariantMap
+        /* Example:
+        <#local sizeMap = getImageVariants("product", productId)!false/><#-- now accepts empty contentId, will return null/false -->
+        <#if !sizeMap?is_boolean>
+          <#local responsiveMap = sizeMap.getResponsiveVariantMap("image/webp", sizeDefs, context, {})/>
+        </#if>
+         */
+        List<? extends Variant> variantList = getVariantList();
+        if (UtilValidate.isEmpty(variantList) || UtilValidate.isEmpty(sizeDefs)) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, Object> srcset = new LinkedHashMap<>();
+        Map<String, Object> srcsetTarget = new LinkedHashMap<>();
+        Map<String, Object> srcsetSize = new LinkedHashMap<>();
+        Map<String, Object> srcsetSizeTarget = new LinkedHashMap<>();
+
+        variantList = new ArrayList<>(variantList);
+        variantList.sort(new Comparator<Variant>() {
+            @Override
+            public int compare(Variant o1, Variant o2) {
+                // NOTE: imageWidth is physical width, it *could* be missing for old data (and non-updated product images),
+                // so may want configWidth instead...
+                Integer width1 = o1.getImageWidth();
+                Integer width2 = o2.getImageWidth();
+                if (width1 == null || width2 == null) {
+                    return 0;
+                }
+                return Integer.compare(width2, width1); // reversed
+            }
+        });
+
+        for(Map.Entry<String, ? extends Number> sizeDefEntry : sizeDefs.entrySet()) {
+            Variant bestSize = null;
+            Variant bestSizeTarget = null;
+
+            String sizeDefKey = sizeDefEntry.getKey();
+            Number sizeDefNum = sizeDefEntry.getValue();
+            if (UtilValidate.isNotEmpty(sizeDefKey) && sizeDefNum != null) {
+                for (Variant variant : variantList) {
+                    if (variant.getImageWidth() != null && variant.getImageWidth() >= sizeDefNum.intValue()) {
+                        if (targetMimeTypeId.equals(variant.getMimeTypeId())) {
+                            bestSizeTarget = variant;
+                        } else {
+                            bestSize = variant;
+                        }
+                    }
+                }
+            }
+
+            if (bestSize != null) {
+                String url = bestSize.getImageUrl(context, urlArgs);
+                if (UtilValidate.isNotEmpty(url)) {
+                    srcset.put(url, bestSize.getImageWidth());
+                    srcsetSize.put(url, sizeDefKey);
+                }
+            }
+            if (bestSizeTarget != null) {
+                String url = bestSizeTarget.getImageUrl(context, urlArgs);
+                if (UtilValidate.isNotEmpty(url)) {
+                    srcsetTarget.put(url, bestSizeTarget.getImageWidth());
+                    srcsetSizeTarget.put(url, sizeDefKey);
+                }
+            }
+        }
+
+        return UtilMisc.toMap("srcset", srcset, "srcsetTarget", srcsetTarget,
+                "srcsetSize", srcsetSize, "srcsetSizeTarget", srcsetSizeTarget);
     }
 
     public static Map<String, Object> clearCaches(ServiceContext ctx) {

@@ -14,8 +14,9 @@
 * MAIN STYLES *
 *************************************
 * Scipio automatically recognizes the "styles" hash variable and makes it available.
+* NOTE: 2021-02: These styles are now cached globally - not per-request - by default when
+* cache.properties#render.api.lib.variables.static.enabled=true, meaning no request variables are available here.
 */
-
 
 context.styles = [
     

@@ -5183,7 +5183,7 @@ size factors.
 Returns the render context type: web, email, general; based on ScreenRenderer.
 -->
 <#function getRenderContextType>
-  <#return raw(Static["org.ofbiz.widget.renderer.RenderContextWorker"].getRenderContextType(context))>
+  <#return raw(Static["org.ofbiz.widget.renderer.RenderEnvWorker"].getRenderContextType(context))>
 </#function>
 
 <#-- 
@@ -5193,7 +5193,7 @@ Returns the render context type: web, email, general; based on ScreenRenderer.
 Returns the render platform (output language) type: html, xml, etc.; best-effort detection.
 -->
 <#function getRenderPlatformType>
-  <#return raw(Static["org.ofbiz.widget.renderer.RenderContextWorker"].getRenderPlatformType(context))>
+  <#return raw(Static["org.ofbiz.widget.renderer.RenderEnvWorker"].getRenderPlatformType(context))>
 </#function>
 
 <#-- 

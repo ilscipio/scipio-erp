@@ -8,9 +8,10 @@ import com.ilscipio.scipio.ce.webapp.ftl.context.ContextFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
+import org.ofbiz.base.util.UtilGenerics;
 
 /**
- * SCIPIO
+ * RenderEnvType, also known as renderContextType (SCIPIO).
  */
 public enum RenderEnvType {
 
@@ -20,7 +21,7 @@ public enum RenderEnvType {
      * Currently (2018-08) equivalent to presence of HttpServletRequest
      * (but this could change in future).
      */
-    WEBAPP(false),
+    WEBAPP(false, "web"),
 
     /**
      * Email render context.
@@ -28,7 +29,7 @@ public enum RenderEnvType {
      * Currently (2018-08) this counts toward {@link #isStatic()},
      * but this could change in future.
      */
-    EMAIL(true),
+    EMAIL(true, "email"),
 
     /**
      * General static render context.
@@ -37,12 +38,14 @@ public enum RenderEnvType {
      * <p>
      * Currently (2018-08) this means any non-EMAIL static context.
      */
-    STATIC(true);
+    STATIC(true, "general");
 
     private final boolean staticEnv;
+    private final String apiName;
 
-    private RenderEnvType(boolean staticEnv) {
+    private RenderEnvType(boolean staticEnv, String apiName) {
         this.staticEnv = staticEnv;
+        this.apiName = apiName;
     }
 
     public boolean isWebapp() {
@@ -51,6 +54,10 @@ public enum RenderEnvType {
 
     public boolean isStatic() {
         return staticEnv;
+    }
+
+    public String getApiName() {
+        return apiName;
     }
 
     /**

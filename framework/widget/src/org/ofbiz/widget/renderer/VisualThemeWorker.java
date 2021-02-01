@@ -28,6 +28,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.FullWebappInfo;
+import org.ofbiz.webapp.renderer.RenderEnvType;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
@@ -44,13 +46,13 @@ public class VisualThemeWorker {
     private static final Map<String, List<String>> FTL_LIB_VAR_RESOURCE_NAMES = Collections.unmodifiableMap(UtilMisc.toMap(
             "web", UtilMisc.unmodifiableArrayList("VT_STL_VAR_WEB", "VT_STL_VAR_LOC"),
             "email", UtilMisc.unmodifiableArrayList("VT_STL_VAR_MAIL", "VT_STL_VAR_LOC"),
-            "default", UtilMisc.unmodifiableArrayList("VT_STL_VAR_LOC")
-    ));
+            "default", UtilMisc.unmodifiableArrayList("VT_STL_VAR_LOC")));
     private static final Map<String, List<String>> FTL_LIB_TMPL_RESOURCE_NAMES = Collections.unmodifiableMap(UtilMisc.toMap(
             "web", UtilMisc.unmodifiableArrayList("VT_STL_TMPLT_WEB", "VT_STL_TMPLT_LOC"),
             "email", UtilMisc.unmodifiableArrayList("VT_STL_TMPLT_MAIL", "VT_STL_TMPLT_LOC"),
-            "default", UtilMisc.unmodifiableArrayList("VT_STL_TMPLT_LOC")
-    ));
+            "default", UtilMisc.unmodifiableArrayList("VT_STL_TMPLT_LOC")));
+    private static final UtilCache<String, Map<String, Object>> FTL_LIB_VAR_STATIC_CACHE = UtilCache.createUtilCache("render.api.lib.variables.static");
+
 
     /**
      * SCIPIO: Gets visual theme resources from context or if missing, calculates appropriate
@@ -63,8 +65,7 @@ public class VisualThemeWorker {
 
         if (Boolean.TRUE.equals((Boolean) context.get("rendererVisualThemeResourcesChecked"))) {
             themeResources = UtilGenerics.cast(context.get("rendererVisualThemeResources"));
-        }
-        else {
+        } else {
             try {
                 themeResources = VisualThemeWorker.loadVisualThemeResources(context);
             } catch (GenericServiceException e) {
@@ -80,7 +81,7 @@ public class VisualThemeWorker {
     /**
      * SCIPIO: Loads visual theme resources from context, best-effort, using as generalized logic as possible.
      * <p>
-     * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers}.
+     * Code migrated from <code>org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers}</code>.
      * Original code only checked for preference of userPreferences.
      */
     public static Map<String, List<String>> loadVisualThemeResources(Map<String, Object> context) throws GenericServiceException {
@@ -95,8 +96,7 @@ public class VisualThemeWorker {
 
             if (UtilValidate.isNotEmpty(script)) {
                 themeResources = VisualThemeWorker.loadVisualThemeResourcesFromScript(context, script, webSite);
-            }
-            else {
+            } else {
                 // original stock behavior
                 themeResources = VisualThemeWorker.getVisualThemeResourcesFromUserPrefs(context);
             }
@@ -119,8 +119,7 @@ public class VisualThemeWorker {
 
             if (UtilValidate.isNotEmpty(script)) {
                 themeResources = VisualThemeWorker.loadVisualThemeResourcesFromScript(context, script, webSite);
-            }
-            else {
+            } else {
                 // FIXME? not sure original stock behavior makes sense here because userLoginId ambiguous - may not be end user
                 //themeResources = getVisualThemeResourcesFromUserPrefs(context);
                 themeResources = VisualThemeWorker.getDefaultVisualThemeResources(context);
@@ -132,7 +131,7 @@ public class VisualThemeWorker {
     /**
      * SCIPIO: Gets resources from user preferences already in context.
      * <p>
-     * Code migrated from {@link org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers}.
+     * Code migrated from <code>org.ofbiz.widget.renderer.macro.MacroScreenViewHandler#loadRenderers</code>.
      * @throws GenericServiceException
      */
     public static Map<String, List<String>> getVisualThemeResourcesFromUserPrefs(Map<String, Object> context) throws GenericServiceException {
@@ -275,11 +274,9 @@ public class VisualThemeWorker {
             if (expanded == null) {
                 return null;
             }
-        }
-        else if (locationExpr.startsWith("{")) {
+        } else if (locationExpr.startsWith("{")) {
             expanded = StringUtil.toMap(locationExpr.replaceAll("\\s+", ""));
-        }
-        else {
+        } else {
             expanded = locationExpr;
         }
 
@@ -292,11 +289,9 @@ public class VisualThemeWorker {
             else {
                 return null;
             }
-        }
-        else if (expanded instanceof Map) {
+        } else if (expanded instanceof Map) {
             return getMacroLibraryLocation(UtilGenerics.<Map<String, String>>cast(expanded), platform);
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -308,13 +303,11 @@ public class VisualThemeWorker {
         String res = platformLocationMap.get(platform);
         if (res != null && !res.isEmpty()) {
             return res;
-        }
-        else {
+        } else {
             res = platformLocationMap.get("default");
             if (res != null && !res.isEmpty()) {
                 return res;
-            }
-            else {
+            } else {
                 return null;
             }
         }
@@ -360,22 +353,41 @@ public class VisualThemeWorker {
         return (resourceNames != null) ? resourceNames : FTL_LIB_TMPL_RESOURCE_NAMES.get("default");
     }
 
-    public static Map<String, Object> getFtlLibVariables(Map<String, Object> context) {
+    public static Map<String, Object> getFtlLibVariables(Map<String, Object> context, Map<String, Object> args) {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
+        boolean useCache = !Boolean.FALSE.equals(args.get("useCache"));
+
+        String renderPlatformType = RenderEnvWorker.getRenderPlatformType(context);
+        String renderContextType = RenderEnvWorker.getRenderContextType(context);
+        Map<String, List<String>> themeResources = UtilGenerics.cast(context.get("rendererVisualThemeResources"));
 
         Map<String, Object> scpTmplGlobalVars = null;
-        try {
-            scpTmplGlobalVars = UtilGenerics.cast(ContextFtlUtil.getRequestVar("scpLibVarsRaw", request, context));
-            if (scpTmplGlobalVars != null) {
-                return scpTmplGlobalVars;
+        String staticCacheKey = null;
+        if (useCache) {
+            try {
+                scpTmplGlobalVars = UtilGenerics.cast(ContextFtlUtil.getRequestVar("scpLibVarsRaw", request, context));
+                if (scpTmplGlobalVars != null) {
+                    return scpTmplGlobalVars;
+                }
+            } catch (ClassCastException | TemplateModelException e) {
+                Debug.logError("Could not read scpLibVarsRaw from context: " + e.toString(), module);
             }
-        } catch (ClassCastException | TemplateModelException e) {
-            Debug.logError("Could not read scpLibVarsRaw from context: " + e.toString(), module);
+            if (FTL_LIB_VAR_STATIC_CACHE.isEnabled()) {
+                Delegator delegator = (Delegator) context.get("delegator");
+                RenderEnvType renderEnvType = RenderEnvType.fromContext(context);
+                FullWebappInfo webappInfo = FullWebappInfo.fromContext(context, renderEnvType);
+                // Cache is static and non-weak so key can only includes webapp-level
+                staticCacheKey = (themeResources != null ? UtilMisc.firstSafe(themeResources.get("VT_ID")) : null) + "::" +
+                        (webappInfo != null ? webappInfo.getWebSiteId() : null) + "::" +
+                        (webappInfo != null ? webappInfo.getServerId() : null) + "::" +
+                        (webappInfo != null ? webappInfo.getContextPath() : null) + "::" +
+                        delegator.getDelegatorName();
+                scpTmplGlobalVars = FTL_LIB_VAR_STATIC_CACHE.get(staticCacheKey);
+                if (scpTmplGlobalVars != null) {
+                    return scpTmplGlobalVars;
+                }
+            }
         }
-
-        String renderPlatformType = RenderContextWorker.getRenderPlatformType(context);
-        String renderContextType = RenderContextWorker.getRenderContextType(context);
-        Map<String, List<String>> themeResources = UtilGenerics.cast(context.get("rendererVisualThemeResources"));
 
         String scpVarLibPath = null;
         if (themeResources != null) {
@@ -398,30 +410,43 @@ public class VisualThemeWorker {
                 "] renderContextType [" + renderContextType + "]: " + e.toString(), module);
             return null;
         }
+        scpTmplGlobalVars = Collections.unmodifiableMap(scpTmplGlobalVars);
 
-        try {
-            ContextFtlUtil.setRequestVar("scpLibVarsRaw", scpTmplGlobalVars, request, context);
-        } catch (TemplateModelException e) {
-            Debug.logError("Could not set request var scpLibVarsRaw: " + e.toString(), module);
+        if (useCache) {
+            try {
+                ContextFtlUtil.setRequestVar("scpLibVarsRaw", scpTmplGlobalVars, request, context);
+            } catch (TemplateModelException e) {
+                Debug.logError("Could not set request var scpLibVarsRaw: " + e.toString(), module);
+            }
+            if (FTL_LIB_VAR_STATIC_CACHE.isEnabled()) {
+                FTL_LIB_VAR_STATIC_CACHE.put(staticCacheKey, scpTmplGlobalVars);
+            }
         }
         return scpTmplGlobalVars;
     }
 
-    public static String getFtlLibTemplatePath(Map<String, Object> context) {
+    public static Map<String, Object> getFtlLibVariables(Map<String, Object> context) {
+        return getFtlLibVariables(context, Collections.emptyMap());
+    }
+
+    public static String getFtlLibTemplatePath(Map<String, Object> context, Map<String, Object> args) {
         HttpServletRequest request = (HttpServletRequest) context.get("request");
+        boolean useCache = !Boolean.FALSE.equals(args.get("useCache"));
 
         String scpLibTmplPath = null;
-        try {
-            scpLibTmplPath = UtilGenerics.cast(ContextFtlUtil.getRequestVar("scpLibTmplPath", request, context));
-            if (scpLibTmplPath != null) {
-                return scpLibTmplPath;
+        if (useCache) {
+            try {
+                scpLibTmplPath = UtilGenerics.cast(ContextFtlUtil.getRequestVar("scpLibTmplPath", request, context));
+                if (scpLibTmplPath != null) {
+                    return scpLibTmplPath;
+                }
+            } catch (ClassCastException | TemplateModelException e) {
+                Debug.logError("Could not read scpLibTmplPath from context: " + e.toString(), module);
             }
-        } catch (ClassCastException | TemplateModelException e) {
-            Debug.logError("Could not read scpLibTmplPath from context: " + e.toString(), module);
         }
 
-        String renderPlatformType = RenderContextWorker.getRenderPlatformType(context);
-        String renderContextType = RenderContextWorker.getRenderContextType(context);
+        String renderPlatformType = RenderEnvWorker.getRenderPlatformType(context);
+        String renderContextType = RenderEnvWorker.getRenderContextType(context);
         Map<String, List<String>> themeResources = UtilGenerics.cast(context.get("rendererVisualThemeResources"));
 
         if (themeResources != null) {
@@ -445,4 +470,7 @@ public class VisualThemeWorker {
         return scpLibTmplPath;
     }
 
+    public static String getFtlLibTemplatePath(Map<String, Object> context) {
+        return getFtlLibTemplatePath(context, Collections.emptyMap());
+    }
 }

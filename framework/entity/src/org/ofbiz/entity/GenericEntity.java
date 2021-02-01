@@ -1421,6 +1421,19 @@ public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>,
         }
     }
 
+    /** Sets the named fields to the passed values, even if the value is null (SCIPIO)
+     * @param keyValuePairs Name/value pairs of values to set
+     */
+    public void setFields(Object... keyValuePairs) {
+        // ArrayOutOfBounds is clear enough
+        //if (keyValuePairs.length % 2 == 1) {
+        //    throw new IllegalArgumentException("You must pass an even sized array to the setPairs method (size = " + keyValuePairs.length + ")");
+        //}
+        for (int i = 0; i < keyValuePairs.length;) {
+            set((String) keyValuePairs[i++], keyValuePairs[i++]);
+        }
+    }
+
     public boolean matchesFields(Map<String, ? extends Object> keyValuePairs) {
         if (fields == null) {
             return true;

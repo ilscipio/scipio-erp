@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
@@ -66,9 +64,10 @@ public abstract class ContextFtlUtil {
      * @see #pushRequestStack
      * @see #getRequestVar
      */
-    public static final String REQUEST_VAR_MAP_NAME_REQATTRIBS = "scipioTmplReqVarsAttr";
-    public static final String REQUEST_VAR_MAP_NAME_GLOBALCONTEXT = "scipioTmplReqVarsCtx";
-    public static final String REQUEST_VAR_MAP_NAME_FTLGLOBALS = "scipioTmplReqVarsFtl";
+    public static final String REQUEST_VAR_MAP_NAME_REQATTRIBS = "scpLibReqVarsAttr";
+    public static final String REQUEST_VAR_MAP_NAME_GLOBALCONTEXT = "scpLibReqVarsCtx";
+    public static final String REQUEST_VAR_MAP_NAME_PLAINCONTEXT = "scpLibReqVarsCtx";
+    public static final String REQUEST_VAR_MAP_NAME_FTLGLOBALS = "scpLibReqVarsFtl";
 
     public static final int REQUEST_STACK_INITIAL_CAPACITY = 10;
 
@@ -224,6 +223,16 @@ public abstract class ContextFtlUtil {
         return mapWrapper.getRawMap();
     }
 
+    private static Map<String, Object> getRequestVarMapFromPlainContext(Map<String, Object> context) {
+        RequestVarMapWrapper mapWrapper = (RequestVarMapWrapper) context.get(ContextFtlUtil.REQUEST_VAR_MAP_NAME_PLAINCONTEXT);
+        if (mapWrapper == null) {
+            // FIXME: should try to get underlying map from request or FTL globals
+            mapWrapper = new RequestVarMapWrapper();
+            context.put(ContextFtlUtil.REQUEST_VAR_MAP_NAME_PLAINCONTEXT, mapWrapper);
+        }
+        return mapWrapper.getRawMap();
+    }
+
     private static Map<String, Object> getRequestVarMapFromFtlGlobals(Environment env) {
         RequestVarMapWrapperModel mapWrapper = null;
         try {
@@ -330,20 +339,19 @@ public abstract class ContextFtlUtil {
         if (request != null) {
             getRequestVarMapFromReqAttribs(request).put(name, value);
             //Debug.logInfo("setRequestVar: request attrib (name: " + name + ")", module);
-        }
-        else {
+        } else {
             Map<String, Object> globalContext = getGlobalContext(context, env);
             if (globalContext != null) {
                 getRequestVarMapFromGlobalContext(globalContext).put(name, value);
                 //globalContext.put(name, value);
                 //Debug.logInfo("setRequestVar: globalContext var (name: " + name + ")", module);
-            }
-            else if (env != null) {
+            } else if (env != null) {
                 getRequestVarMapFromFtlGlobals(env).put(name, value);
                 //Debug.logInfo("setRequestVar: ftl global var (name: " + name + ")", module);
-            }
-            else {
-                throw new IllegalArgumentException("No request, context or ftl environment to set request scope var (name: " + name + ")");
+            } else {
+                // For cases with non-standard or plain context
+                //throw new IllegalArgumentException("No request, context or ftl environment to set request scope var (name: " + name + ")");
+                getRequestVarMapFromPlainContext(context).put(name, value);
             }
         }
     }
@@ -380,19 +388,18 @@ public abstract class ContextFtlUtil {
         if (request != null) {
             res = getRequestVarMapFromReqAttribs(request).get(name);
             //Debug.logInfo("getRequestVar: request attrib (name: " + name + ")", module);
-        }
-        else {
+        } else {
             Map<String, Object> globalContext = getGlobalContext(context, env);
             if (globalContext != null) {
                 res = getRequestVarMapFromGlobalContext(globalContext).get(name);
                 //Debug.logInfo("getRequestVar: globalContext var (name: " + name + ")", module);
-            }
-            else if (env != null) {
+            } else if (env != null) {
                 res = getRequestVarMapFromFtlGlobals(env).get(name);
                 //Debug.logInfo("getRequestVar: ftl global var (name: " + name + ")", module);
-            }
-            else {
-                throw new IllegalArgumentException("No request, context or ftl environment to get request scope var (name: " + name + ")");
+            } else {
+                // For cases with non-standard or plain context
+                //throw new IllegalArgumentException("No request, context or ftl environment to set request scope var (name: " + name + ")");
+                res = getRequestVarMapFromPlainContext(context).get(name);
             }
         }
 

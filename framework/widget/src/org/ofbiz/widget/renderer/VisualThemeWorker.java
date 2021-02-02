@@ -313,7 +313,8 @@ public class VisualThemeWorker {
         }
     }
 
-    public static String getDefaultScipioLibLocation(String libName, String renderPlatformType, String renderContextType) {
+    public static String getDefaultScipioLibLocation(String libName, String renderPlatformType, String renderContextType, Delegator delegator) {
+        // NOTE: delegator could be null
         if (renderPlatformType == null) {
             renderPlatformType = "default";
         }
@@ -354,6 +355,12 @@ public class VisualThemeWorker {
     }
 
     public static Map<String, Object> getFtlLibVariables(Map<String, Object> context, Map<String, Object> args) {
+        if (context == null) {
+            context = new HashMap<>(); // May be written to
+        }
+        if (args == null) {
+            args = Collections.emptyMap();
+        }
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         boolean useCache = !Boolean.FALSE.equals(args.get("useCache"));
 
@@ -376,15 +383,17 @@ public class VisualThemeWorker {
                 Delegator delegator = (Delegator) context.get("delegator");
                 RenderEnvType renderEnvType = RenderEnvType.fromContext(context);
                 FullWebappInfo webappInfo = FullWebappInfo.fromContext(context, renderEnvType);
-                // Cache is static and non-weak so key can only includes webapp-level
-                staticCacheKey = (themeResources != null ? UtilMisc.firstSafe(themeResources.get("VT_ID")) : null) + "::" +
-                        (webappInfo != null ? webappInfo.getWebSiteId() : null) + "::" +
-                        (webappInfo != null ? webappInfo.getServerId() : null) + "::" +
-                        (webappInfo != null ? webappInfo.getContextPath() : null) + "::" +
-                        delegator.getDelegatorName();
-                scpTmplGlobalVars = FTL_LIB_VAR_STATIC_CACHE.get(staticCacheKey);
-                if (scpTmplGlobalVars != null) {
-                    return scpTmplGlobalVars;
+                if (themeResources != null || webappInfo != null) {
+                    // Cache is static and non-weak so key can only includes webapp-level
+                    staticCacheKey = (themeResources != null ? UtilMisc.firstSafe(themeResources.get("VT_ID")) : null) + "::" +
+                            (webappInfo != null ? webappInfo.getWebSiteId() : null) + "::" +
+                            (webappInfo != null ? webappInfo.getServerId() : null) + "::" +
+                            (webappInfo != null ? webappInfo.getContextPath() : null) + "::" +
+                            delegator.getDelegatorName();
+                    scpTmplGlobalVars = FTL_LIB_VAR_STATIC_CACHE.get(staticCacheKey);
+                    if (scpTmplGlobalVars != null) {
+                        return scpTmplGlobalVars;
+                    }
                 }
             }
         }
@@ -393,14 +402,14 @@ public class VisualThemeWorker {
         if (themeResources != null) {
             scpVarLibPath = getMacroLibraryLocationStaticFromResources(renderPlatformType, themeResources,
                     getFtlLibVariableResourceNames(renderContextType));
-            if (UtilValidate.isEmpty(scpVarLibPath)) {
-                scpVarLibPath = getDefaultScipioLibLocation("variables", renderPlatformType, renderContextType);
-            }
         }
         if (UtilValidate.isEmpty(scpVarLibPath)) {
-            Debug.logWarning("No library variables location defined in system or visual theme, cannot fetch Scipio " +
-                    "variables for renderPlatformType [" + renderPlatformType + "] renderContextType [" + renderContextType + "]", module);
-            return null;
+            scpVarLibPath = getDefaultScipioLibLocation("variables", renderPlatformType, renderContextType, (Delegator) context.get("delegator"));
+            if (UtilValidate.isEmpty(scpVarLibPath)) {
+                Debug.logWarning("No library variables location defined in system or visual theme, cannot fetch Scipio " +
+                        "variables for renderPlatformType [" + renderPlatformType + "] renderContextType [" + renderContextType + "]", module);
+                return null;
+            }
         }
 
         try {
@@ -418,7 +427,7 @@ public class VisualThemeWorker {
             } catch (TemplateModelException e) {
                 Debug.logError("Could not set request var scpLibVarsRaw: " + e.toString(), module);
             }
-            if (FTL_LIB_VAR_STATIC_CACHE.isEnabled()) {
+            if (staticCacheKey != null) {
                 FTL_LIB_VAR_STATIC_CACHE.put(staticCacheKey, scpTmplGlobalVars);
             }
         }
@@ -430,6 +439,12 @@ public class VisualThemeWorker {
     }
 
     public static String getFtlLibTemplatePath(Map<String, Object> context, Map<String, Object> args) {
+        if (context == null) {
+            context = new HashMap<>(); // May be written to
+        }
+        if (args == null) {
+            args = Collections.emptyMap();
+        }
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         boolean useCache = !Boolean.FALSE.equals(args.get("useCache"));
 
@@ -452,14 +467,14 @@ public class VisualThemeWorker {
         if (themeResources != null) {
             scpLibTmplPath = getMacroLibraryLocationStaticFromResources(renderPlatformType, themeResources,
                     getFtlLibTemplateResourceNames(renderContextType));
-            if (UtilValidate.isEmpty(scpLibTmplPath)) {
-                scpLibTmplPath = getDefaultScipioLibLocation("template", renderPlatformType, renderContextType);
-            }
         }
         if (UtilValidate.isEmpty(scpLibTmplPath)) {
-            Debug.logWarning("No library template location defined in system or visual theme, cannot fetch Scipio" +
-                    " variables template for renderPlatformType [" + renderPlatformType + "] renderContextType [" + renderContextType + "]", module);
-            return null;
+            scpLibTmplPath = getDefaultScipioLibLocation("template", renderPlatformType, renderContextType, (Delegator) context.get("delegator"));
+            if (UtilValidate.isEmpty(scpLibTmplPath)) {
+                Debug.logWarning("No library template location defined in system or visual theme, cannot fetch Scipio" +
+                        " variables template for renderPlatformType [" + renderPlatformType + "] renderContextType [" + renderContextType + "]", module);
+                return null;
+            }
         }
 
         try {

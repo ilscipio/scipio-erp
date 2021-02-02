@@ -5214,7 +5214,7 @@ Returns void if nothing.
                               Caller should use #getRenderContextType().
 -->
 <#function getDefaultScipioLibLocation libName renderPlatformType="default" renderContextType="general">
-  <#local res = raw(Static["org.ofbiz.widget.renderer.VisualThemeWorker"].getDefaultScipioLibLocation(libName, renderPlatformType, renderContextType)!)>
+  <#local res = raw(Static["org.ofbiz.widget.renderer.VisualThemeWorker"].getDefaultScipioLibLocation(libName, renderPlatformType, renderContextType, delegator)!)>
   <#if res?has_content>
     <#return res>
   </#if>

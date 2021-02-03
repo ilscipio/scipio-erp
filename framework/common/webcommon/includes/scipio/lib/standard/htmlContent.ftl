@@ -1938,21 +1938,21 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                         </#if>
                      </#if>
                      <#local maxCurrImg = 3/>
-                     <#if "category"==parameters._CURRENT_VIEW_! || request.requestURL?contains("/category/")>
+                     <#if "category"==parameters._CURRENT_VIEW_! || (request?has_content && request.requestURL?contains("/category/"))>
                          <#local maxCurrImg = 8/>
                      </#if>
                     <#if link?has_content><a href="${escapeFullUrl(link, 'html')}"<#if linkTarget?has_content> target="${escapeVal(linkTarget, 'html')}"</#if>></#if>
                          <#if responsiveMap?has_content>
                              <picture>
                              <#if (responsiveMap.srcsetSizeTarget)?has_content>
-                                 <#local srcsetSize = responsiveMap['srcsetSizeTarget']>
+                                 <#local srcsetSize = responsiveMap['srcsetSizeTarget']!{}>
                                  <#list toSimpleMap(srcsetSize) as k,v>
                                      <source type="image/webp" <#if v?has_content>media="${v}"</#if>  srcset="${k}" />
                                  </#list>
                              </#if>
                              <#if (responsiveMap.srcset)?has_content>
-                                 <#local srcsetSize = responsiveMap['srcsetSize']>
-                                 <#local srcsetMap = responsiveMap['srcset']>
+                                 <#local srcsetSize = responsiveMap['srcsetSize']!{}>
+                                 <#local srcsetMap = responsiveMap['srcset']!{}>
 
                                  <#list toSimpleMap(srcsetSize) as k,v>
                                      <#if srcsetMap[raw(k)]?has_content >

@@ -67,6 +67,7 @@ SCIPIO_ADDON_MAP[shopde]="shopde addons/shopde ee shopde /"
 SCIPIO_ADDON_MAP[vue-theme]="vue-theme themes/vue ee vue-theme /"
 SCIPIO_ADDON_MAP[stripe]="stripe addons/stripe ee stripe /"
 SCIPIO_ADDON_MAP[mailchimp]="mailchimp addons/mailchimp ee mailchimp /"
+SCIPIO_ADDON_MAP[matomo]="matomo addons/matomo ee matomo /"
 
 # OVERRIDES
 # If you need to override any of the above definitions (for whatever reason, normally not),

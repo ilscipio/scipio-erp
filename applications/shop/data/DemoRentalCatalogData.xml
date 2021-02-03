@@ -73,7 +73,7 @@ code package.
         smallImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/small.jpg" mediumImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/medium.jpg" largeImageUrl="/images/products/shop/gallery/02/travel/ship-1083684/large.jpg"/>
 
     <Product productId="TrvlJacket" productTypeId="FINISHED_GOOD" productName="Travel Jacket" internalName="Travel Jacket" description="A travel jacket" longDescription="An excellent weatherproof travel jacket."  taxable="Y" chargeShipping="Y" autoCreateKeywords="Y" isVirtual="N" isVariant="N" createdDate="2004-03-04 18:48:34.612" createdByUserLogin="admin" lastModifiedDate="2004-03-04 18:48:34.612" lastModifiedByUserLogin="admin"
-        smallImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-03/small.jpg" mediumImageUrl="images/products/shop/gallery/01/clothing/men-jacket-03/medium.jpg" largeImageUrl="images/products/shop/gallery/01/clothing/men-jacket-03/large.jpg"/>
+        smallImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-03/small.jpg" mediumImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-03/medium.jpg" largeImageUrl="/images/products/shop/gallery/01/clothing/men-jacket-03/large.jpg"/>
     
     <!-- product prices -->
     <ProductPrice productId="RoomStd" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="EUR" productStoreGroupId="_NA_" fromDate="2003-03-04 18:49:03.163" price="15.99" createdDate="2001-05-13 12:00:00.0" createdByUserLogin="admin" lastModifiedDate="2001-05-13 12:00:00.0" lastModifiedByUserLogin="admin"/>

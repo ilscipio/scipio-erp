@@ -179,6 +179,12 @@ if (useCache) {
         context.productImageList = cachedValue.productImageList;
         context.startDate = cachedValue.startDate;
         context.productTags = cachedValue.productTags;
+        context.alsoBoughtProducts = cachedValue.alsoBoughtProducts;
+        context.obsoleteProducts = cachedValue.obsoleteProducts;
+        context.crossSellProducts = cachedValue.crossSellProducts;
+        context.upSellProducts = cachedValue.upSellProducts;
+        context.obsolenscenseProducts = cachedValue.obsolenscenseProducts;
+        context.accessoryProducts = cachedValue.accessoryProducts;
     }
 }
 
@@ -394,6 +400,25 @@ if(!cachedValue){
         }
     }
 
+    // get product associations
+    alsoBoughtProducts = runService('getAssociatedProducts', [productId : productId, type : "ALSO_BOUGHT", checkViewAllow : true, prodCatalogId : currentCatalogId, bidirectional : false, sortDescending : true]);
+    context.alsoBoughtProducts = alsoBoughtProducts.assocProducts;
+
+    obsoleteProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_OBSOLESCENCE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
+    context.obsoleteProducts = obsoleteProducts.assocProducts;
+
+    crossSellProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_COMPLEMENT", checkViewAllow : true, prodCatalogId : currentCatalogId]);
+    context.crossSellProducts = crossSellProducts.assocProducts;
+
+    upSellProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_UPGRADE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
+    context.upSellProducts = upSellProducts.assocProducts;
+
+    obsolenscenseProducts = runService('getAssociatedProducts', [productIdTo : productId, type : "PRODUCT_OBSOLESCENCE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
+    context.obsolenscenseProducts = obsolenscenseProducts.assocProducts;
+
+    accessoryProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_ACCESSORY", checkViewAllow : true, prodCatalogId : currentCatalogId]);
+    context.accessoryProducts = accessoryProducts.assocProducts;
+
     // cache
     prodMap = [:];
     prodMap.product_id = context.product_id;
@@ -419,30 +444,17 @@ if(!cachedValue){
     prodMap.productImageList = context.productImageList;
     prodMap.startDate = context.startDate;
     prodMap.productTags = context.productTags;
+    prodMap.alsoBoughtProducts = context.alsoBoughtProducts;
+    prodMap.obsoleteProducts = context.obsoleteProducts;
+    prodMap.crossSellProducts = context.crossSellProducts;
+    prodMap.upSellProducts = context.upSellProducts;
+    prodMap.obsolenscenseProducts = context.obsolenscenseProducts;
+    prodMap.accessoryProducts = context.accessoryProducts;
     productCache.put(cacheKey,prodMap);
 }
 
 // non-cacheable code
 if(product){
-    // get product associations
-    alsoBoughtProducts = runService('getAssociatedProducts', [productId : productId, type : "ALSO_BOUGHT", checkViewAllow : true, prodCatalogId : currentCatalogId, bidirectional : false, sortDescending : true]);
-    context.alsoBoughtProducts = alsoBoughtProducts.assocProducts;
-
-    obsoleteProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_OBSOLESCENCE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
-    context.obsoleteProducts = obsoleteProducts.assocProducts;
-
-    crossSellProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_COMPLEMENT", checkViewAllow : true, prodCatalogId : currentCatalogId]);
-    context.crossSellProducts = crossSellProducts.assocProducts;
-
-    upSellProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_UPGRADE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
-    context.upSellProducts = upSellProducts.assocProducts;
-
-    obsolenscenseProducts = runService('getAssociatedProducts', [productIdTo : productId, type : "PRODUCT_OBSOLESCENCE", checkViewAllow : true, prodCatalogId : currentCatalogId]);
-    context.obsolenscenseProducts = obsolenscenseProducts.assocProducts;
-
-    accessoryProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_ACCESSORY", checkViewAllow : true, prodCatalogId : currentCatalogId]);
-    context.accessoryProducts = accessoryProducts.assocProducts;
-
     if (cart.isSalesOrder()) {
         // sales order: run the "calculateProductPrice" service
         priceContext = [product : product, prodCatalogId : catalogId,

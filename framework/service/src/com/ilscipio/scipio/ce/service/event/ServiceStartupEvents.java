@@ -4,8 +4,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 import org.ofbiz.base.config.GenericConfigException;
@@ -13,6 +16,7 @@ import org.ofbiz.base.start.Config;
 import org.ofbiz.base.start.ExtendedStartupLoader;
 import org.ofbiz.base.start.StartupException;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.DelegatorFactory;
@@ -121,17 +125,41 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
     }
 
     protected boolean execStartupServiceAsync() throws StartupException {
-        // single service invocation
-        String startupService = System.getProperty("scipio.startup.service");
-        if (UtilValidate.isNotEmpty(startupService) || UtilValidate.isNotEmpty(System.getProperty("scipio.startup.service.1"))) {
-            LocalDispatcher dispatcher = getDispatcher();
-            if (dispatcher == null) {
-                Debug.logError("Scipio: Cannot exec startup service; could not get dispatcher", module);
-                return false;
+        LocalDispatcher dispatcher = getDispatcher();
+        String serviceName;
+        if (dispatcher == null) {
+            Debug.logError("Scipio: Cannot exec startup service; could not get dispatcher", module);
+            return false;
+        }
+
+        // properties-based invocation
+        Map<String, Map<String, Object>> startupProps = UtilProperties.extractPropertiesWithPrefixAndId(new LinkedHashMap<>(),
+                UtilProperties.getMergedPropertiesFromAllComponents("scipio-events"), "scipio.startup.service.");
+        if (UtilValidate.isNotEmpty(startupProps)) {
+            List<Map<String, Object>> serviceEntryList = new ArrayList<>(startupProps.values());
+            serviceEntryList.sort(Comparator.comparingInt(o -> UtilMisc.toInteger(o.get("prio"), 9999999)));
+            for(Map<String, Object> serviceEntry : serviceEntryList) {
+                serviceName = (String) serviceEntry.get("name");
+                String mode = getServiceMode(serviceName, serviceEntry.get("mode"));
+                Map<String, String> servParams = UtilProperties.getPropertiesWithPrefix(serviceEntry, "params.");
+                if (Debug.infoOn()) {
+                    Debug.logInfo("Running startup service [" + serviceName + "] prio [" +
+                            serviceEntry.get("prio") + "] mode [" + mode + "] params " + servParams, module);
+                }
+                execStartupService(dispatcher, serviceName, servParams, mode);
             }
+        }
+
+        // command line invocation
+        serviceName = System.getProperty("scipio.startup.service");
+        if (UtilValidate.isNotEmpty(serviceName) || UtilValidate.isNotEmpty(System.getProperty("scipio.startup.service.1"))) {
+            // single service invocation
             Map<String, String> servParams = UtilProperties.getPropertiesWithPrefix(System.getProperties(), "scipio.startup.service.params.");
-            String mode = System.getProperty("scipio.startup.service.mode");
-            execStartupService(dispatcher, startupService, servParams, mode, null);
+            String mode = getServiceMode(serviceName, System.getProperty("scipio.startup.service.mode"));
+            if (Debug.infoOn()) {
+                Debug.logInfo("Running startup service [" + serviceName + "] mode [" + mode + "] params " + servParams, module);
+            }
+            execStartupService(dispatcher, serviceName, servParams, mode);
 
             // multiple service invocation
             if (UtilValidate.isNotEmpty(System.getProperty("scipio.startup.service.1"))) {
@@ -141,13 +169,17 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
                 for(String key : startupServices.keySet()) serviceKeys.add(Integer.parseInt(key));
                 Collections.sort(serviceKeys);
                 for(Integer key : serviceKeys) {
-                    startupService = startupServices.get(key.toString());
+                    serviceName = startupServices.get(key.toString());
                     servParams = UtilProperties.getPropertiesWithPrefix(System.getProperties(), "scipio.startup.service." + key + ".params.");
-                    mode = System.getProperty("scipio.startup.service." + key + ".mode");
-                    execStartupService(dispatcher, startupService, servParams, mode, key);
+                    mode = getServiceMode(serviceName, System.getProperty("scipio.startup.service." + key + ".mode"));
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("Running startup service [" + serviceName + "] index [" + key + "] mode [" + mode + "] params " + servParams, module);
+                    }
+                    execStartupService(dispatcher, serviceName, servParams, mode);
                 }
             }
         }
+
         return false;
     }
 
@@ -156,13 +188,19 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
                 DelegatorFactory.getDelegator("default"));
     }
 
-    protected Map<String, Object> execStartupService(LocalDispatcher dispatcher, String serviceName, Map<String, ?> context, String mode, Integer serviceIndex) {
+    protected String getServiceMode(String serviceName, Object mode) {
+        if ("sync".equals(mode) || "async".equals(mode)) {
+            return (String) mode;
+        }
+        if (UtilValidate.isNotEmpty((String) mode)) {
+            Debug.logError("Invalid service mode for startup service [" + serviceName + "], using async: " + mode, module);
+        }
+        return "async";
+    }
+
+    protected Map<String, Object> execStartupService(LocalDispatcher dispatcher, String serviceName, Map<String, ?> context, String mode) {
         try {
             if (!"sync".equals(mode) && !"async".equals(mode)) mode = "async";
-            if (Debug.infoOn()) {
-                final String indexMsg = (serviceIndex != null) ? " [" + serviceIndex + "]" : "";
-                Debug.logInfo("Scipio: Running startup service '" + serviceName + "'" + indexMsg + " (" + mode + "), params: " + context, module);
-            }
             String userLoginAuthId = null;
             if (context.get("userLogin") instanceof String) {
                 userLoginAuthId = (String) context.get("userLogin");
@@ -173,7 +211,7 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
                 GenericValue userLogin = EntityQuery.use(dispatcher.getDelegator()).from("UserLogin")
                         .where("userLoginId", userLoginAuthId).queryOne();
                 if (userLogin == null) {
-                    Debug.logWarning("Scipio: Could not find UserLogin '" + userLoginAuthId + "' to run startup service '" + serviceName + "'", module);
+                    Debug.logWarning("Could not find UserLogin [" + userLoginAuthId + "] to run startup service [" + serviceName + "]", module);
                 } else {
                     ctx.put("userLogin", userLogin);
                 }
@@ -182,40 +220,40 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
                 dispatcher.runAsync(serviceName, ctx, false);
                 return null;
             } else {
-                Map<String, Object> result = dispatcher.runSync(serviceName, ctx);
+                Map<String, Object> result = dispatcher.runSyncNewTrans(serviceName, ctx);
                 if (ServiceUtil.isError(result)) {
                     String msg = ServiceUtil.getErrorMessage(result);
                     if (msg != null && !msg.isEmpty()) {
-                        Debug.logError("Scipio: Ran startup service '" + serviceName +
-                                "', status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
+                        Debug.logError("Ran startup service [" + serviceName +
+                                "], status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
                     } else {
-                        Debug.logError("Scipio: Ran startup service '" + serviceName +
-                            "', status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
+                        Debug.logError("Ran startup service [" + serviceName +
+                            "], status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
                     }
                 } else if (ServiceUtil.isFailure(result)) {
                     String msg = ServiceUtil.getErrorMessage(result);
                     if (msg != null && !msg.isEmpty()) {
-                        Debug.logWarning("Scipio: Ran startup service '" + serviceName +
-                                "', status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
+                        Debug.logWarning("Ran startup service [" + serviceName +
+                                "], status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
                     } else {
-                        Debug.logWarning("Scipio: Ran startup service '" + serviceName +
-                            "', status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
+                        Debug.logWarning("Ran startup service [" + serviceName +
+                            "], status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
                     }
                 } else {
                     String msg = ServiceUtil.getSuccessMessage(result);
                     if (msg != null && !msg.isEmpty()) {
-                        Debug.logInfo("Scipio: Ran startup service '" + serviceName +
-                                "', status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
+                        Debug.logInfo("Ran startup service [" + serviceName +
+                                "], status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
                     } else {
-                        Debug.logInfo("Scipio: Ran startup service '" + serviceName +
-                            "', status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
+                        Debug.logInfo("Ran startup service [" + serviceName +
+                            "], status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
                     }
                 }
                 return result;
             }
         } catch (GenericServiceException | GenericEntityException e) {
-            Debug.logError("Scipio: Error running startup service '" + serviceName + "': " + e.getMessage(), module);
-            return ServiceUtil.returnError(e.getMessage());
+            Debug.logError("Error running startup service [" + serviceName + "]: " + e.toString(), module);
+            return ServiceUtil.returnError(e.toString());
         }
     }
 }

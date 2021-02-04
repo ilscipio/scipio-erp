@@ -303,6 +303,8 @@
         <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.3" conf="base,j2eespecs,sources"/>
         <dependency org="javax.el" name="javax.el-api" rev="3.0.1-b06" conf="base,j2eespecs,sources"/>
         <dependency org="javax.annotation" name="javax.annotation-api" rev="1.3.2" conf="base,j2eespecs,sources"/>
+        <!-- SCIPIO: 21-02-04: Added javax.json-api as two addons (matomo and lightning) are currently using it -->
+        <dependency org="javax.json" name="javax.json-api" rev="1.1.4" conf="base,j2eespecs,sources"/>
 
         <!-- entity component (framework/entity/ivy.xml) -->
         <dependency org="org.apache.commons" name="commons-dbcp2" rev="2.5.0" conf="base,sources"/>

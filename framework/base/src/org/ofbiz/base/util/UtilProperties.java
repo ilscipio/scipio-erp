@@ -1891,9 +1891,61 @@ public final class UtilProperties implements Serializable {
     }
 
     /**
+     * Puts all property name/value pairs in the given Properties that start with given prefix
+     * and end with given suffix, with option to forbid dots in between, to the given out map.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static <M extends Map<String, ?>> M putPropertiesWithPrefixSuffix(M out, Map<String, ?> properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        if (properties == null) {
+            return out;
+        }
+        int prefixLength = (prefix == null) ? 0 : prefix.length();
+        int suffixLength = (suffix == null) ? 0 : suffix.length();
+        for(Map.Entry<String, ?> entry : properties.entrySet()) {
+            String name = entry.getKey();
+            if ((prefix == null || name.startsWith(prefix)) && (suffix == null || name.endsWith(suffix))) {
+                String middle = name.substring(prefixLength, name.length() - suffixLength);
+                if (allowDots || !middle.contains(".")) {
+                    Object value = entry.getValue();
+                    if (entry.getValue() instanceof String) {
+                        value = ((String) entry.getValue()).trim();
+                    }
+                    out.put((returnPrefix ? prefix : "") + middle + (returnSuffix ? suffix : ""), UtilGenerics.cast(value));
+                }
+            }
+        }
+        return out;
+    }
+
+    /**
+     * Puts all property name/value pairs in the given Properties that start with given prefix
+     * with option to forbid dots in names, to the given out map.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static <M extends Map<String, ? super String>> M putPropertiesWithPrefix(M out, Map<String, ?> properties, String prefix, boolean allowDots, boolean returnPrefix) {
+        if (properties == null) {
+            return out;
+        }
+        int prefixLength = (prefix == null) ? 0 : prefix.length();
+        for(Map.Entry<String, ?> entry : properties.entrySet()) {
+            String name = entry.getKey();
+            if ((prefix == null || name.startsWith(prefix))) {
+                String middle = name.substring(prefixLength, name.length());
+                if (allowDots || !middle.contains(".")) {
+                    Object value = entry.getValue();
+                    if (entry.getValue() instanceof String) {
+                        value = ((String) entry.getValue()).trim();
+                    }
+                    out.put((returnPrefix ? prefix : "") + middle, UtilGenerics.cast(value));
+                }
+            }
+        }
+        return out;
+    }
+
+    /**
      * SCIPIO: Puts all property name/value pairs in the given Properties that start with given prefix,
      * stripping the prefix and allowing dots in names, to the given out map.
-     * Added 2017-07-10.
      */
     public static <M extends Map<String, ? super String>> M putPropertiesWithPrefix(M out, Properties properties, String prefix) {
         return putPropertiesWithPrefix(out, properties, prefix, true, false);
@@ -1902,7 +1954,6 @@ public final class UtilProperties implements Serializable {
     /**
      * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix
      * and end with given suffix, with option to forbid dots in between, in an unordered map.
-     * Added 2018-04-27.
      */
     public static Map<String, String> getPropertiesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
         return putPropertiesWithPrefixSuffix(new HashMap<>(), properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
@@ -1911,7 +1962,6 @@ public final class UtilProperties implements Serializable {
     /**
      * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix
      * with option to forbid dots in name, in an unordered map.
-     * Added 2018-04-27.
      */
     public static Map<String, String> getPropertiesWithPrefix(Properties properties, String prefix, boolean allowDots, boolean returnPrefix) {
         return putPropertiesWithPrefix(new HashMap<>(), properties, prefix, allowDots, returnPrefix);
@@ -1920,9 +1970,44 @@ public final class UtilProperties implements Serializable {
     /**
      * SCIPIO: Gets all property name/value pairs in the given Properties that start with given prefix,
      * stripping the prefix and allowing dots in names, in an unordered map.
-     * Added 2018-04-27.
      */
     public static Map<String, String> getPropertiesWithPrefix(Properties properties, String prefix) {
+        return putPropertiesWithPrefix(new HashMap<>(), properties, prefix, true, false);
+    }
+
+    /**
+     * Puts all property name/value pairs in the given Properties that start with given prefix,
+     * stripping the prefix and allowing dots in names, to the given out map.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static <M extends Map<String, ? super String>> M putPropertiesWithPrefix(M out, Map<String, ?> properties, String prefix) {
+        return putPropertiesWithPrefix(out, properties, prefix, true, false);
+    }
+
+    /**
+     * Gets all property name/value pairs in the given Properties that start with given prefix
+     * and end with given suffix, with option to forbid dots in between, in an unordered map.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static Map<String, String> getPropertiesWithPrefixSuffix(Map<String, ?> properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
+        return putPropertiesWithPrefixSuffix(new HashMap<>(), properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
+    }
+
+    /**
+     * Gets all property name/value pairs in the given Properties that start with given prefix
+     * with option to forbid dots in name, in an unordered map.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static Map<String, String> getPropertiesWithPrefix(Map<String, ?> properties, String prefix, boolean allowDots, boolean returnPrefix) {
+        return putPropertiesWithPrefix(new HashMap<>(), properties, prefix, allowDots, returnPrefix);
+    }
+
+    /**
+     * Gets all property name/value pairs in the given Properties that start with given prefix,
+     * stripping the prefix and allowing dots in names, in an unordered map.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static Map<String, String> getPropertiesWithPrefix(Map<String, ?> properties, String prefix) {
         return putPropertiesWithPrefix(new HashMap<>(), properties, prefix, true, false);
     }
 

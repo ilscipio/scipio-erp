@@ -183,7 +183,7 @@ if (passedEntityNames) {
     // Scipio: Ofbiz had a toBrowser option here, which is now replaced for by a default function that will create the backup and store in db  
     if (isNormalBackup) {
         List<String> entityList = new ArrayList<String>(passedEntityNames);
-        exportFil = dispatcher.runSync("getEntityExport", ["request":request, "response":response,
+        exportFil = dispatcher.runSync("getEntityExport", [ //"request":request, "response":response,
             "userLogin":context.userLogin, "entityList":entityList, "fromDate":entityFrom, "thruDate":entityThru,"description":description]);
         
     } else {

@@ -1,6 +1,7 @@
 package com.ilscipio.scipio.content.image;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
@@ -16,7 +17,9 @@ import org.ofbiz.webapp.ftl.WebappUrlDirective;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -141,6 +144,27 @@ public abstract class ImageVariants implements Serializable {
 
     /** Returns list of image variants, excluding "original" ({@link #getOriginal()}. */
     public abstract List<? extends Variant> getVariantList();
+
+    /**
+     * Returns map of image variants by sizeType ("small", "800x600", ...), including "original" ({@link #getOriginal()}.
+     * NOTE: If cache.properties#product.image.variants.sourceCheck=true (product images only), this returns empty if no physically defined
+     * variants are detected.
+     */
+    public Map<String, ? extends Variant> getOriginalAndVariantMap() {
+        Map<String, ? extends Variant> originalAndVariantMap = new LinkedHashMap<>();
+        originalAndVariantMap.put("original", UtilGenerics.cast(getOriginal()));
+        originalAndVariantMap.putAll(UtilGenerics.cast(getVariantMap()));
+        return Collections.unmodifiableMap(originalAndVariantMap);
+    }
+
+    /** Returns list of image variants, including "original" ({@link #getOriginal()}. */
+    public List<? extends Variant> getOriginalAndVariantList() {
+        List<? extends Variant> variantList = getVariantList();
+        List<? extends Variant> originalAndVariantList = new ArrayList<>(1 + variantList.size());
+        originalAndVariantList.add(UtilGenerics.cast(getOriginal()));
+        originalAndVariantList.addAll(UtilGenerics.cast(variantList));
+        return Collections.unmodifiableList(originalAndVariantList);
+    }
 
     /**
      * Returns the source check setting, which controls whether Variant instances with or without checking for source

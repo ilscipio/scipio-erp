@@ -238,7 +238,7 @@ public abstract class ContentImageServices {
                 } else {
                     int i = imageOrigUrl.lastIndexOf(imageUrlPrefix + "/");
                     if (i < 0) {
-                        throw new IllegalArgumentException("imageOrigUrl [" + imageOrigUrl + "] does not contain expected imageUrlPrefix [']" + imageUrlPrefix + "]");
+                        throw new IllegalArgumentException("imageOrigUrl [" + imageOrigUrl + "] does not contain expected imageUrlPrefix [" + imageUrlPrefix + "]");
                     }
                     imageUrlPrefixPrefix = imageOrigUrl.substring(0, i);
                     bufImgPath = imageServerPath + imageOrigUrl.substring(i + imageUrlPrefix.length());

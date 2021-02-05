@@ -83,7 +83,10 @@
         <attribute name="productId" mode="IN" type="String" optional="false">
             <description>productId</description>
         </attribute>
-        <attribute name="viewType" mode="IN" type="String" optional="false">
+        <attribute name="imageViewType" mode="IN" type="com.ilscipio.scipio.product.image.ProductImageViewType" optional="true">
+            <description>Full instance alternative to viewType/viewNumber parameters (NOTE: imageViewType should be "original" viewSize only)</description>
+        </attribute>
+        <attribute name="viewType" mode="IN" type="String" optional="true">
             <description>main|additional</description>
         </attribute>
         <attribute name="viewNumber" mode="IN" type="Object" optional="true">
@@ -256,5 +259,19 @@
         <attribute name="productId" type="String" mode="IN" optional="true"/>
         <attribute name="productContentTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
+    </service>
+
+    <service name="productImageMigrateImageUrlProductContentTypeData" engine="java"
+             location="com.ilscipio.scipio.product.image.ProductImageServices" invoke="productImageMigrateImageUrlProductContentTypeData" auth="true">
+        <description>Migrates IMAGE_URL ProductContentType data for 2021-02 enhancements (SCIPIO)</description>
+        <required-permissions join-type="OR">
+            <check-permission permission="CATALOG_ADMIN"/>
+        </required-permissions>
+        <attribute name="force" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If false, only runs if the ORIGINAL_IMAGE_URL record looks incomplete</description>
+        </attribute>
+        <attribute name="preview" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>If true, aborts transaction at end</description>
+        </attribute>
     </service>
 </services>

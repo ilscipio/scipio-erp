@@ -179,6 +179,16 @@ public class ContentImageVariants extends ImageVariants {
         return variantList;
     }
 
+    @Override
+    public Map<String, ContentVariant> getOriginalAndVariantMap() {
+        return UtilGenerics.cast(super.getOriginalAndVariantMap());
+    }
+
+    @Override
+    public List<ContentVariant> getOriginalAndVariantList() {
+        return UtilGenerics.cast(super.getOriginalAndVariantList());
+    }
+
     protected Map<String, ContentVariant> makeVariants(Map<String, ContentVariant> variants, List<GenericValue> variantRecords) {
         Map<String, ContentVariant> recordVariants = new LinkedHashMap<>();
         for (GenericValue variantRecord : variantRecords) {

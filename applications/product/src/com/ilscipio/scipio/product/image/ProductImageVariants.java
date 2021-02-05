@@ -2,6 +2,7 @@ package com.ilscipio.scipio.product.image;
 
 import com.ilscipio.scipio.content.image.ImageVariants;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -14,7 +15,6 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.product.product.ProductContentWrapper;
@@ -46,7 +46,7 @@ public class ProductImageVariants extends ImageVariants {
 
     protected final GenericValue product;
     protected final GenericValue productMediaDetails;
-    protected final String productContentTypeId;
+    protected final ProductImageViewType origImageViewType;
     protected final GenericValue productContentView;
     protected final ProductVariant original;
     protected final boolean variantSourceCheck;
@@ -60,13 +60,13 @@ public class ProductImageVariants extends ImageVariants {
     protected Timestamp queryMoment;
 
     protected ProductImageVariants(GenericValue product, String productContentTypeId, GenericValue productContentView, GenericValue productMediaDetails, boolean useParents,
-                                   Delegator delegator, LocalDispatcher dispatcher, Locale locale, boolean useEntityCache, Map<String, Object> options) {
+                                   Delegator delegator, LocalDispatcher dispatcher, Locale locale, boolean useEntityCache, Map<String, Object> options) throws GeneralException {
         super(delegator, dispatcher, locale, useEntityCache, options);
         if (options == null) {
             options = Collections.emptyMap();
         }
         this.product = product;
-        this.productContentTypeId = productContentTypeId;
+        this.origImageViewType = ProductImageViewType.from(delegator, productContentTypeId, false, true);
         this.productContentView = productContentView;
         this.productMediaDetails = productMediaDetails;
         if (productContentView != null) {
@@ -74,12 +74,13 @@ public class ProductImageVariants extends ImageVariants {
             Long imageHeight = productContentView.getLong("drScpHeight");
             ImageVariantConfig.VariantInfo variantInfo = new ImageVariantConfig.VariantInfo("original",
                     (imageWidth != null) ? imageWidth : -1, (imageHeight != null) ? imageHeight : -1, null, null);
-            this.original = makeContentVariant(variantInfo, productContentView);
+            this.original = makeContentVariant(variantInfo, this.origImageViewType, productContentView);
         } else {
-            // FIXME: CANNOT GET ORIGINAL IMAGE DIMENSIONS YET
+            Long imageWidth = (productMediaDetails != null) ? productMediaDetails.getLong("originalImageWidth") : null;
+            Long imageHeight = (productMediaDetails != null) ? productMediaDetails.getLong("originalImageHeight") : null;
             ImageVariantConfig.VariantInfo variantInfo = new ImageVariantConfig.VariantInfo("original",
-                    -1, -1, null, null);
-            this.original = makeInlineVariant(variantInfo, productContentTypeId, getProductCandidateFieldName(productContentTypeId));
+                    (imageWidth != null) ? imageWidth : -1, (imageHeight != null) ? imageHeight : -1, null, null);
+            this.original = makeInlineVariant(variantInfo, this.origImageViewType, getProductCandidateFieldName(productContentTypeId));
         }
         this.useParents = useParents;
         Boolean variantSourceCheck = (Boolean) options.get("variantSourceCheck");
@@ -88,7 +89,7 @@ public class ProductImageVariants extends ImageVariants {
 
     protected ProductImageVariants() {
         this.product = null;
-        this.productContentTypeId = null;
+        this.origImageViewType = null;
         this.productContentView = null;
         this.original = null;
         this.variantSourceCheck = VARIANT_SOURCE_CHECK;
@@ -143,21 +144,25 @@ public class ProductImageVariants extends ImageVariants {
                 }
             }
             productMediaDetails = delegator.findOne("ProductMediaDetails", UtilMisc.toMap("productId", productId), false);
+
+            if (productContentView == null && !"ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
+                return null;
+            }
+
+            ProductImageVariants imageVariants = new ProductImageVariants(product, productContentTypeId, productContentView, productMediaDetails, useParents,
+                    delegator, dispatcher, locale, false, options);
+
+            String originalImageUrl = imageVariants.getOriginal().getStaticImageUrl();
+            if (UtilValidate.isNotEmpty(originalImageUrl)) {
+                // See also ProductContentWrapper.getImageUrl
+                ProductImageWorker.ensureProductImage(dispatcher.getDispatchContext(), locale, product, productContentTypeId, originalImageUrl, true, true);
+            }
+
+            return imageVariants;
         } catch (Exception e) {
             Debug.logError(e, module);
             return null;
         }
-        if (productContentView == null && !"ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
-            return null;
-        }
-        ProductImageVariants imageVariants = new ProductImageVariants(product, productContentTypeId, productContentView, productMediaDetails, useParents,
-                delegator, dispatcher, locale, false, options);
-        String originalImageUrl = imageVariants.getOriginal().getStaticImageUrl();
-        if (UtilValidate.isNotEmpty(originalImageUrl)) {
-            // See also ProductContentWrapper.getImageUrl
-            ProductImageWorker.ensureProductImage(dispatcher.getDispatchContext(), locale, product, productContentTypeId, originalImageUrl, true, true);
-        }
-        return imageVariants;
     }
 
     @Override
@@ -216,7 +221,11 @@ public class ProductImageVariants extends ImageVariants {
     }
 
     public String getProductContentTypeId() {
-        return productContentTypeId;
+        return getOrigImageViewType().getProductContentTypeId();
+    }
+
+    public ProductImageViewType getOrigImageViewType() {
+        return origImageViewType;
     }
 
     public boolean isUseParents() {
@@ -285,11 +294,11 @@ public class ProductImageVariants extends ImageVariants {
             if (imageUrl == null) {
                 throw new IllegalStateException("No stored default image URL found for product/productContentTypeId");
             }
-            locationInfo = ProductImageLocationInfo.from(getDctx(), getProductId(),
-                    ProductImageViewType.from(getProductContentTypeId()), getProfile(), imageUrl, null, false, true, null);
+            locationInfo = ProductImageLocationInfo.from(getDctx(), getProductId(), getOrigImageViewType(), getProfile(),
+                    imageUrl, null, false, true, null);
         } catch (Exception e) {
             Debug.logError(e, "Error getting product image location info for product [" + getProductId()
-                    + "] productContentTypeId [" + productContentTypeId + "]", module);
+                    + "] productContentTypeId [" + getProductContentTypeId() + "]", module);
         }
         return locationInfo;
     }
@@ -301,7 +310,7 @@ public class ProductImageVariants extends ImageVariants {
                 defaultVariantLocations = getDefaultLocationInfo().getVariantLocations();
             } catch (Exception e) {
                 Debug.logError(e, "Error getting product image location info for product [" + getProductId()
-                        + "] productContentTypeId [" + productContentTypeId + "]", module);
+                        + "] productContentTypeId [" + getProductContentTypeId() + "]", module);
             }
             if (defaultVariantLocations == null) {
                 defaultVariantLocations = Collections.emptyMap();
@@ -347,32 +356,52 @@ public class ProductImageVariants extends ImageVariants {
         return variantList;
     }
 
+    @Override
+    public Map<String, ProductVariant> getOriginalAndVariantMap() {
+        return UtilGenerics.cast(super.getOriginalAndVariantMap());
+    }
+
+    @Override
+    public List<ProductVariant> getOriginalAndVariantList() {
+        return UtilGenerics.cast(super.getOriginalAndVariantList());
+    }
+
     protected Map<String, ProductVariant> makeVariants(Map<String, ProductVariant> variants) {
         Map<String, GenericValue> sizeTypeRecordMap;
         try {
-            sizeTypeRecordMap = ProductImageWorker.getVariantProductContentDataResourceRecordsBySizeType(getDelegator(),
-                    getProductId(), getProductContentTypeId(), getQueryMoment(), false, isUseEntityCache());
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
+            sizeTypeRecordMap = ProductImageWorker.getVariantProductContentDataResourceRecordsByViewSize(getDelegator(),
+                    getProductId(), getOrigImageViewType(), getQueryMoment(), false, isUseEntityCache());
+        } catch (GeneralException e) {
+            Debug.logError(e, "makeVariants: " + e.toString(), module);
             sizeTypeRecordMap = Collections.emptyMap(); // this can sometimes proceed, sometimes not
         }
+
         for(ImageVariantConfig.VariantInfo config : getVariantConfig().getVariantList()) {
             String sizeType = config.getName();
             ProductVariant variant;
             GenericValue variantRecord = sizeTypeRecordMap.get(sizeType);
+
+            ProductImageViewType variantImageViewType;
+            try {
+                variantImageViewType = ProductImageViewType.from(getDelegator(),
+                        getOrigImageViewType().getViewType(), getOrigImageViewType().getViewNumber(), sizeType, false, true);
+            } catch (Exception e) {
+                Debug.logError("Unable to derive variantImageViewType for sizeType [" + sizeType +
+                        "] for productId [" + getProductId() + "] imageViewType " + getOrigImageViewType(), module);
+                continue;
+            }
+
             if (variantRecord != null) {
-                variant = makeContentVariant(config, variantRecord);
+                variant = makeContentVariant(config, variantImageViewType, variantRecord);
             } else {
-                // TODO: REVIEW: NOT ALL SIZE TYPES POSSESS ProductContent records, and may not be on Product either,
-                //  so we have to infer from Product fields and then filenames...
-                String pctId = ProductImageWorker.getImageSizeTypeProductContentTypeId(getProductContentTypeId(), sizeType);
-                String fieldName = getProductCandidateFieldName(pctId);
+                String fieldName = getProductCandidateFieldName(variantImageViewType.getProductContentTypeId());
                 if (isProductField(fieldName)) {
-                    variant = makeInlineVariant(config, pctId, fieldName);
+                    variant = makeInlineVariant(config, variantImageViewType, fieldName);
                 } else {
-                    variant = makeDefaultVariant(config, pctId);
+                    variant = makeDefaultVariant(config, variantImageViewType);
                 }
             }
+
             if (!isVariantSourceCheck() || variant.hasSource()) {
                 variants.put(config.getName(), variant);
             }
@@ -381,28 +410,22 @@ public class ProductImageVariants extends ImageVariants {
     }
 
     public abstract class ProductVariant extends Variant {
-        protected final GenericValue record; // TODO: move into ContentProductVariant
+        protected final ProductImageViewType variantImageViewType;
         protected String staticImageUrl;
         protected String mimeTypeId;
 
-        protected ProductVariant(ImageVariantConfig.VariantInfo config, GenericValue record) {
+        protected ProductVariant(ImageVariantConfig.VariantInfo config, ProductImageViewType variantImageViewType) {
             super(config);
-            this.record = record;
+            this.variantImageViewType = variantImageViewType;
         }
 
-        @Override
-        public String getContentId() {
-            return getRecord().getString("contentId");
+        public ProductImageViewType getVariantImageViewType() {
+            return variantImageViewType;
         }
 
         @Override
         public String getAssocId() {
-            return getRecord().getString("productContentTypeId");
-        }
-
-        @Override
-        public GenericValue getRecord() {
-            return record;
+            return getVariantImageViewType().getProductContentTypeId();
         }
 
         @Override
@@ -604,18 +627,31 @@ public class ProductImageVariants extends ImageVariants {
         }
     }
 
-    protected ContentProductVariant makeContentVariant(ImageVariantConfig.VariantInfo config, GenericValue record) {
-        return new ContentProductVariant(config, record);
+    protected ContentProductVariant makeContentVariant(ImageVariantConfig.VariantInfo config, ProductImageViewType variantImageViewType, GenericValue record) {
+        return new ContentProductVariant(config, variantImageViewType, record);
     }
 
     public class ContentProductVariant extends ProductVariant {
-        protected ContentProductVariant(ImageVariantConfig.VariantInfo config, GenericValue record) {
-            super(config, record);
+        protected final GenericValue record;
+
+        protected ContentProductVariant(ImageVariantConfig.VariantInfo config, ProductImageViewType variantImageViewType, GenericValue record) {
+            super(config, variantImageViewType);
+            this.record = record;
+        }
+
+        @Override
+        public String getContentId() {
+            return getRecord().getString("contentId");
+        }
+
+        @Override
+        public GenericValue getRecord() {
+            return record;
         }
     }
 
-    protected InlineProductVariant makeInlineVariant(ImageVariantConfig.VariantInfo config, String productContentTypeId, String fieldName) {
-        return new InlineProductVariant(config, productContentTypeId, fieldName);
+    protected InlineProductVariant makeInlineVariant(ImageVariantConfig.VariantInfo config, ProductImageViewType variantImageViewType, String fieldName) {
+        return new InlineProductVariant(config, variantImageViewType, fieldName);
     }
 
     /**
@@ -623,23 +659,16 @@ public class ProductImageVariants extends ImageVariants {
      * TODO: REVIEW: Currently this is also created for variants missing records and not having any inline fields.
      */
     public class InlineProductVariant extends ProductVariant {
-        protected final String productContentTypeId;
         protected final String fieldName;
 
-        protected InlineProductVariant(ImageVariantConfig.VariantInfo config, String productContentTypeId, String fieldName) {
-            super(config, null);
-            this.productContentTypeId = productContentTypeId;
+        protected InlineProductVariant(ImageVariantConfig.VariantInfo config, ProductImageViewType variantImageViewType, String fieldName) {
+            super(config, variantImageViewType);
             this.fieldName = fieldName;
         }
 
         @Override
         public String getContentId() {
             return null;
-        }
-
-        @Override
-        public String getAssocId() {
-            return productContentTypeId;
         }
 
         @Override
@@ -679,16 +708,14 @@ public class ProductImageVariants extends ImageVariants {
         }
     }
 
-    protected DefaultProductVariant makeDefaultVariant(ImageVariantConfig.VariantInfo config, String productContentTypeId) {
-        return new DefaultProductVariant(config, productContentTypeId);
+    protected DefaultProductVariant makeDefaultVariant(ImageVariantConfig.VariantInfo config, ProductImageViewType variantImageViewType) {
+        return new DefaultProductVariant(config, variantImageViewType);
     }
 
     public class DefaultProductVariant extends ProductVariant {
-        protected final String productContentTypeId;
 
-        protected DefaultProductVariant(ImageVariantConfig.VariantInfo config, String productContentTypeId) {
-            super(config, null);
-            this.productContentTypeId = productContentTypeId;
+        protected DefaultProductVariant(ImageVariantConfig.VariantInfo config, ProductImageViewType variantImageViewType) {
+            super(config, variantImageViewType);
         }
 
         @Override
@@ -698,7 +725,7 @@ public class ProductImageVariants extends ImageVariants {
 
         @Override
         public String getAssocId() {
-            return productContentTypeId;
+            return getVariantImageViewType().getProductContentTypeId();
         }
 
         @Override
@@ -739,7 +766,7 @@ public class ProductImageVariants extends ImageVariants {
         @Override
         public boolean hasSource() {
             ProductImageLocationInfo.VariantLocation loc = getDefaultVariantLocations().get(getName());
-            return (loc != null) ? loc.hasSourceFile() : false;
+            return loc != null && loc.hasSourceFile();
         }
     }
 

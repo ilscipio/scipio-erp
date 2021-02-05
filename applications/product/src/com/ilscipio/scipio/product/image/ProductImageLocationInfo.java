@@ -153,10 +153,11 @@ public class ProductImageLocationInfo implements Serializable {
          * Based on productImageAutoRescale (TODO?: deduplicate).
          */
         public ProductImageLocationInfo from(DispatchContext dctx, Locale locale, GenericValue product, ProductImageViewType imageViewType,
-                                                    String imageUrl, Collection<String> sizeTypeList,
-                                                    Boolean useParentImageUrl, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
+                                             String imageUrl, Collection<String> sizeTypeList,
+                                             Boolean useParentImageUrl, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
             Delegator delegator = dctx.getDelegator();
             String productContentTypeId = imageViewType.getProductContentTypeId();
+            String origProductContentTypeId = imageViewType.getOriginal(true).getProductContentTypeId();
             if (locale == null) {
                 locale = Locale.getDefault();
             }
@@ -169,7 +170,7 @@ public class ProductImageLocationInfo implements Serializable {
             }
             imageUrl = imageUrlInfo.getImageUrl();
 
-            ImageProfile imageProfile = ProductImageWorker.getProductImageProfileOrDefault(delegator, productContentTypeId, product, imageUrlInfo.getContent(), useEntityCache, useProfileCache);
+            ImageProfile imageProfile = ProductImageWorker.getProductImageProfileOrDefault(delegator, origProductContentTypeId, product, imageUrlInfo.getContent(), useEntityCache, useProfileCache);
             if (imageProfile == null) {
                 Debug.logError("Could not find media profile for product [" + productId + "] productContentTypeId [" + productContentTypeId + "]", module);
                 return null;
@@ -185,8 +186,8 @@ public class ProductImageLocationInfo implements Serializable {
     }
 
     public static ProductImageLocationInfo from(DispatchContext dctx, String productId, ProductImageViewType imageViewType,
-                                         ImageProfile imageProfile, String imageFilename,
-                                         Collection<String> sizeTypeList, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
+                                                ImageProfile imageProfile, String imageFilename,
+                                                Collection<String> sizeTypeList, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
         return getFactory(dctx).from(dctx, productId, imageViewType, imageProfile, imageFilename, sizeTypeList, useEntityCache, useProfileCache, extraParams);
     }
 
@@ -196,8 +197,8 @@ public class ProductImageLocationInfo implements Serializable {
      * Based on productImageAutoRescale (TODO?: deduplicate).
      */
     public static ProductImageLocationInfo from(DispatchContext dctx, Locale locale, GenericValue product, ProductImageViewType imageViewType,
-                                         String imageUrl, Collection<String> sizeTypeList,
-                                         Boolean useParentImageUrl, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
+                                                String imageUrl, Collection<String> sizeTypeList,
+                                                Boolean useParentImageUrl, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException {
         return getFactory(dctx).from(dctx, locale, product, imageViewType, imageUrl, sizeTypeList, useParentImageUrl, useEntityCache, useProfileCache, extraParams);
     }
 

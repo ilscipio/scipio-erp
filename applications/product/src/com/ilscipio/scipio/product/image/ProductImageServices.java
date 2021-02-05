@@ -6,7 +6,6 @@ import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
@@ -15,9 +14,9 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
-import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.image.ScaleImage;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceContext;
@@ -33,7 +32,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
@@ -61,9 +59,26 @@ public abstract class ProductImageServices {
      */
     public static Map<String, Object> productImageFileScaleInAllSize(ServiceContext ctx) throws ServiceValidationException {
         Delegator delegator = ctx.delegator();
-        String viewType = ctx.attr("viewType");
-        String viewNumber = ctx.getString("viewNumber");
-        Locale locale = ctx.locale();
+        String productId = (String) ctx.get("productId");
+
+        ProductImageViewType imageViewType = ctx.attr("imageViewType");
+        if (imageViewType != null) {
+            if (!imageViewType.isOriginal()) {
+                String errorMsg = "productImageFileScaleInAllSize: product [" + productId + "]: imageViewType is not 'original' viewSize";
+                Debug.logError("productImageFileScaleInAllSize: " + errorMsg, module);
+                return ServiceUtil.returnError(errorMsg);
+            }
+        } else {
+            try {
+                imageViewType = ProductImageViewType.from(delegator, ctx.getString("viewType"), ctx.getString("viewNumber"),
+                        "original", true, true);
+            } catch (Exception e) {
+                Debug.logError(e, "productImageFileScaleInAllSize: product [" + productId + "]: error determining imageViewType for viewType [" +
+                        ctx.getString("viewType") + "] viewNumber [" + ctx.getString("viewNumber") + "]: " + e.toString(), module);
+                return ServiceUtil.returnError(e.toString());
+            }
+        }
+        String productContentTypeId = imageViewType.getProductContentTypeId();
 
         Map<String, Object> contentCtx;
         try {
@@ -71,8 +86,6 @@ public abstract class ProductImageServices {
         } catch (GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
-
-        String productId = (String) ctx.get("productId");
 
         ProductImageLocationInfo locInfo;
         try {
@@ -86,8 +99,7 @@ public abstract class ProductImageServices {
                     }
                 }
             }
-            locInfo = ProductImageLocationInfo.from(ctx.dctx(), productId,
-                    ProductImageViewType.from(viewType, viewNumber), (ImageProfile) null, imagePath, null,
+            locInfo = ProductImageLocationInfo.from(ctx.dctx(), productId, imageViewType, (ImageProfile) null, imagePath, null,
                     false, false, null);
 
             if (isStrArgEmpty(contentCtx, "imageServerPath")) {
@@ -107,7 +119,7 @@ public abstract class ProductImageServices {
                 imagePathArgs.putAll(imagePathArgsRcvd); // explicit args crush ours
             }
             contentCtx.put("imagePathArgs", imagePathArgs);
-            contentCtx.put("defaultImageProfile", ProductImageWorker.getDefaultProductImageProfile(delegator, locInfo.getProductContentTypeId(), false, false));
+            contentCtx.put("defaultImageProfile", ProductImageWorker.getDefaultProductImageProfile(delegator, productContentTypeId, false, false));
 
             // TODO/FIXME: currently provides no deletion of the old images...
 
@@ -154,7 +166,7 @@ public abstract class ProductImageServices {
 
         if (allImages) {
             try {
-                productContentTypeIdList = new ArrayList<>(ProductImageWorker.getOriginalImageProductContentTypes(ctx.delegator()).keySet());
+                productContentTypeIdList = new ArrayList<>(ProductImageViewType.getOriginalViewSizeProductContentTypes(ctx.delegator(), true).keySet());
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
                 return ServiceUtil.returnError(e.toString());
@@ -177,6 +189,11 @@ public abstract class ProductImageServices {
                 Map<String, Object> res2 = productImageRescaleImage(ctx, product, "DETAIL_IMAGE_URL", null, nonFatal);
                 if (!"no-image-url".equals(res2.get("reason"))) {
                     res = res2;
+                } else {
+                    Map<String, Object> res3 = productImageRescaleImage(ctx, product, "LARGE_IMAGE_URL", null, nonFatal);
+                    if (!"no-image-url".equals(res3.get("reason"))) {
+                        res = res3;
+                    }
                 }
             }
             if (!productImageAutoRescaleRegisterResult(ctx, product, res, stats, nonFatal)) {
@@ -265,6 +282,20 @@ public abstract class ProductImageServices {
         int variantFailCount = 0;
         boolean logDetail = ctx.attr("logDetail", false);
         String productId = product.getString("productId");
+
+        ProductImageViewType imageViewType;
+        ProductImageViewType origImageViewType;
+        try {
+            imageViewType = ProductImageViewType.from(ctx.delegator(), productContentTypeId, true, true);
+            // NOTE: because productContentTypeId may be special exception values DETAIL_IMAGE_URL/LARGE_IMAGE_URL (instead of ORIGINAL_IMAGE_URL),
+            // some code needs the following instead
+            origImageViewType = imageViewType.getOriginal(true);
+        } catch(Exception e) {
+            String errorMsg = "product [" + productId + "] productContentTypeId [" + productContentTypeId + "]: could not determine image view type: " + e.toString();
+            Debug.logError(e,"productImageRescaleImage: " + errorMsg, module);
+            return ServiceUtil.returnError(errorMsg);
+        }
+
         GenericValue content = null;
         if (UtilValidate.isNotEmpty(contentId)) {
             try {
@@ -373,8 +404,7 @@ public abstract class ProductImageServices {
          */
 
         ImageProfile imageProfile = ProductImageWorker.getProductImageProfileOrDefault(ctx.delegator(),
-                "DETAIL_IMAGE_URL".equals(productContentTypeId) ? "ORIGINAL_IMAGE_URL" : productContentTypeId,
-                product, content, false, false);
+                origImageViewType.getProductContentTypeId(), product, content, false, false);
         if (imageProfile == null) {
             String errorMsg = "product [" + productId + "] productContentTypeId [" + productContentTypeId +
                     "] origImageUrl [" + origImageUrl + "]: could not find media profile";
@@ -382,23 +412,12 @@ public abstract class ProductImageServices {
             return ServiceUtil.returnError(errorMsg);
         }
 
-        ProductImageViewType imageViewType;
-        try {
-            imageViewType = ProductImageViewType.from(productContentTypeId);
-        } catch(Exception e) {
-            String errorMsg = "product [" + productId + "] productContentTypeId [" + productContentTypeId + "] origImageUrl [" + origImageUrl + "]: could not determine image view type: " + e.toString();
-            Debug.logError(e,"productImageRescaleImage: " + errorMsg, module);
-            return ServiceUtil.returnError(errorMsg);
-        }
-        String viewType = imageViewType.getViewType();
-        String viewNumber = imageViewType.getViewNumber();
-
         Collection<String> sizeTypeList = ctx.attr("sizeTypeList");
         boolean recreateExisting = ctx.attr("recreateExisting", false);
         if (!recreateExisting) {
             try {
                 ProductImageLocationInfo pili = ProductImageLocationInfo.from(ctx.dctx(), ctx.locale(),
-                        product, ProductImageViewType.from(productContentTypeId), origImageUrl, sizeTypeList, false, false, false, null);
+                        product, imageViewType, origImageUrl, sizeTypeList, false, false, false, null);
                 sizeTypeList = (pili != null) ? pili.getMissingVariantNames() : null;
                 if (UtilValidate.isEmpty(sizeTypeList)) {
                     String msg = "product [" + productId + "] productContentTypeId [" + productContentTypeId + "] origImageUrl [" + origImageUrl +
@@ -419,7 +438,7 @@ public abstract class ProductImageServices {
         Debug.logInfo("productImageRescaleImage: product [" + productId + "] productContentTypeId [" + productContentTypeId
             + "] origImageUrl [" + origImageUrl + "]: begin scaling image variants", module);
 
-        Map<String, Object> resizeCtx = UtilMisc.toMap("productId", productId, "imageOrigUrl", origImageUrl, "viewType", viewType, "viewNumber", viewNumber,
+        Map<String, Object> resizeCtx = UtilMisc.toMap("productId", productId, "imageOrigUrl", origImageUrl, "imageViewType", origImageViewType,
                 "locale", ctx.get("locale"), "userLogin", ctx.get("userLogin"), "timeZone", ctx.get("timeZone"), "imageProfile", imageProfile,
                 "sizeTypeList", sizeTypeList);
         try {
@@ -454,31 +473,18 @@ public abstract class ProductImageServices {
 
             Map<String, Map<String, Object>> imageInfoMap = UtilGenerics.cast(resizeResult.get("imageInfoMap"));
             if (UtilValidate.isNotEmpty(imageInfoMap)) {
-                int imageNum = ProductImageWorker.getImageProductContentTypeNum(productContentTypeId);
                 Timestamp fromDate = UtilDateTime.nowTimestamp();
                 for(Map.Entry<String, Map<String, Object>> entry : imageInfoMap.entrySet()) {
                     String sizeType = entry.getKey();
                     Map<String, Object> sizeTypeInfo = entry.getValue();
                     String imageUrl = (String) sizeTypeInfo.get("url");
-                    String pctId = ProductImageWorker.getImageSizeTypeProductContentTypeId(imageNum, sizeType);
-                    GenericValue pct = ctx.delegator().from("ProductContentType").where("productContentTypeId", pctId).cache().queryOne();
-                    if (pct == null) {
-                        pct = ctx.delegator().from("ProductContentType").where("productContentTypeId", pctId).queryOne();
-                        if (pct == null) {
-                            if (Boolean.TRUE.equals(ctx.attr("createSizeTypeContent"))) {
-                                Debug.logWarning("productImageRescaleImage: product [" + productId + "] productContentTypeId [" + pctId +
-                                                "] origImageUrl [" + origImageUrl + "] imageUrl [" + imageUrl + "]: ProductContentType not found for image sizeType [" + sizeType + "]; creating", module);
-                                pct = ProductImageWorker.createProductContentTypeImageUrlRecord(ctx.delegator(), pctId, "IMAGE_URL_VARIANT", sizeType);
-                            } else {
-                                continue;
-                            }
-                        }
-                    }
+                    ProductImageViewType scaledImageViewType = ProductImageViewType.from(ctx.delegator(),
+                            imageViewType.getViewType(), imageViewType.getViewNumber(), sizeType, true, true); //ctx.attr("createSizeTypeContent")
                     if (imageUrl != null && (imageUrl.startsWith(".") || imageUrl.contains("/."))) { // SPECIAL: detect bug (missing filename)
                         throw new IllegalStateException("internal or data error: invalid url [" + imageUrl + "] for sizeType [" + sizeType + "], not updating");
                     }
-                    Map<String, Object> res = updateProductContentImageUrl(ctx, product, pct.getString("productContentTypeId"), imageUrl, origImageUrl, productContentTypeId, fromDate,
-                            ctx.attr("createSizeTypeContent"), sizeTypeInfo);
+                    Map<String, Object> res = updateProductContentImageUrl(ctx, product, scaledImageViewType.getProductContentTypeId(), imageUrl,
+                            origImageUrl, productContentTypeId, fromDate, ctx.attr("createSizeTypeContent"), sizeTypeInfo);
                     if (ServiceUtil.isError(res)) {
                         return UtilMisc.put(new HashMap<>(res), "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount);
                     }
@@ -915,5 +921,100 @@ public abstract class ProductImageServices {
     public static Map<String, Object> abortProductImageAutoRescaleAll(ServiceContext ctx) {
         productImageAutoRescaleAllSignals.put("stop");
         return ServiceUtil.returnSuccess();
+    }
+
+    public static Map<String, Object> productImageMigrateImageUrlProductContentTypeData(ServiceContext ctx) throws ServiceValidationException {
+        try {
+            boolean force = Boolean.TRUE.equals(ctx.attr("force"));
+            boolean preview = Boolean.TRUE.equals(ctx.attr("preview"));
+            if (!force) {
+                GenericValue origPct = ctx.delegator().from("ProductContentType").where("productContentTypeId", "ORIGINAL_IMAGE_URL").queryOne();
+                if (origPct == null) {
+                    Debug.logError("productImageMigrateImageUrlProductContentTypeData: Missing ORIGINAL_IMAGE_URL", module);
+                    return ServiceUtil.returnError("Missing ORIGINAL_IMAGE_URL");
+                }
+                if (isProductContentTypeImageUrlRecordComplete(origPct)) {
+                    Debug.logInfo("productImageMigrateImageUrlProductContentTypeData: ORIGINAL_IMAGE_URL populated, not running", module);
+                    return ServiceUtil.returnSuccess("ORIGINAL_IMAGE_URL populated, not running");
+                }
+            }
+
+            int updated = 0;
+
+            GenericValue baseImagePct = ctx.delegator().findOne("ProductContentType", UtilMisc.toMap("productContentTypeId", "IMAGE_URL_BASE"), false);
+            if (baseImagePct == null) {
+                baseImagePct = ctx.delegator().makeValue("ProductContentType", "productContentTypeId", "IMAGE_URL_BASE",
+                        "hasTable", "N", "description", "Image - Base").create();
+                updated++;
+                Debug.logInfo("productImageMigrateImageUrlProductContentTypeData: created: " + baseImagePct, module);
+            }
+            GenericValue fullImagePct = ctx.delegator().findOne("ProductContentType", UtilMisc.toMap("productContentTypeId", "IMAGE_URL_FULL"), false);
+            if (fullImagePct == null) {
+                fullImagePct = ctx.delegator().makeValue("ProductContentType", "productContentTypeId", "IMAGE_URL_FULL",
+                        "hasTable", "N", "description", "Image - Full", "parentTypeId", "IMAGE_URL_BASE").create();
+                updated++;
+                Debug.logInfo("productImageMigrateImageUrlProductContentTypeData: created: " + fullImagePct, module);
+            }
+
+            List<EntityCondition> orCondList = new ArrayList<>();
+            orCondList.add(EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "%_IMAGE_URL"));
+            orCondList.add(EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "ADDITIONAL_IMAGE_%"));
+            orCondList.add(EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "XTRA_IMG_%"));
+
+            List<GenericValue> pcts = ctx.delegator().from("ProductContentType")
+                    .where(EntityCondition.makeCondition(orCondList, EntityOperator.OR)).queryList();
+            for(GenericValue pct : pcts) {
+                if (!isProductContentTypeImageUrlRecordComplete(pct)) {
+                    String pctId = pct.getString("productContentTypeId");
+                    String viewType = ProductImageViewType.extractProductContentTypeIdViewType(ctx.delegator(), pctId);
+                    String viewNumber = ProductImageViewType.extractProductContentTypeIdViewNumber(ctx.delegator(), pctId);
+                    String viewSize = ProductImageViewType.extractProductContentTypeIdViewSize(ctx.delegator(), pctId);
+                    if ("L".equals(viewNumber)) {
+                        continue;
+                    }
+
+                    String parentTypeId;
+                    if ("original".equals(viewSize)) {
+                        parentTypeId = "IMAGE_URL_FULL";
+                    } else {
+                        if ("main".equals(viewType)) {
+                            parentTypeId = "ORIGINAL_IMAGE_URL";
+                        } else {
+                            parentTypeId = "ADDITIONAL_IMAGE_" + viewNumber;
+                        }
+                    }
+
+                    pct.set("parentTypeId", parentTypeId);
+                    pct.set("viewType", viewType);
+                    pct.set("viewNumber", viewNumber);
+                    pct.set("viewSize", viewSize);
+                    if ("ORIGINAL_IMAGE_URL".equals(pctId)) {
+                        pct.set("viewVariantId", "${VIEWSIZE}_IMAGE_URL");
+                        pct.set("viewVariantDesc", "Image - ${viewSize}");
+                    } else if (pctId.startsWith("ADDITIONAL_IMAGE_")) {
+                        pct.set("viewVariantId", "XTRA_IMG_${VIEWNUMBER}_${VIEWSIZE}");
+                        pct.set("viewVariantDesc", "Image - Additional View ${viewNumber} ${viewSize}");
+                    }
+
+                    pct.store();
+                    updated++;
+                    Debug.logInfo("productImageMigrateImageUrlProductContentTypeData: updated: " + pct, module);
+                } else if (preview) {
+                    Debug.logInfo("productImageMigrateImageUrlProductContentTypeData: skipped: " + pct, module);
+                }
+            }
+
+            if (preview) {
+                return ServiceUtil.returnError("preview - aborted with error - updated: " + updated);
+            }
+            return ServiceUtil.returnSuccess("updated: " + updated);
+        } catch(Exception e) {
+            Debug.logError(e, "productImageMigrateImageUrlProductContentTypeData: " + e.toString(), module);
+            return ServiceUtil.returnError(e.toString());
+        }
+    }
+
+    private static boolean isProductContentTypeImageUrlRecordComplete(GenericValue pct) {
+        return pct.get("parentTypeId") != null && pct.get("viewType") != null && pct.get("viewNumber") != null && pct.get("viewSize") != null;
     }
 }

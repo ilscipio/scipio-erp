@@ -21,12 +21,14 @@ package com.ilscipio.scipio.product.image;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -95,9 +97,10 @@ public abstract class ProductImageWorker {
             }
         }
         try {
-            // TODO: optimize the duplicate lookups (cached anyway)
+            ProductImageViewType imageViewType = ProductImageViewType.from(dctx.getDelegator(), productContentTypeId, true, true)
+                    .getOriginal(true);
             ProductImageLocationInfo pili = ProductImageLocationInfo.from(dctx, locale,
-                    product, ProductImageViewType.from(productContentTypeId), imageUrl, null, true, false, useUtilCache, null);
+                    product, imageViewType, imageUrl, null, true, false, useUtilCache, null);
             List<String> sizeTypeList = (pili != null) ? pili.getMissingVariantNames() : null;
             if (UtilValidate.isEmpty(sizeTypeList)) {
                 if (useUtilCache) {
@@ -126,215 +129,71 @@ public abstract class ProductImageWorker {
         }
     }
 
-    public static Map<String, GenericValue> getOriginalImageProductContentTypes(Delegator delegator) throws GenericEntityException, IllegalArgumentException {
-        Map<String, GenericValue> pctMap = new LinkedHashMap<>();
-        String origPctId = "ORIGINAL_IMAGE_URL";
-        GenericValue origPct = delegator.from("ProductContentType").where("productContentTypeId", origPctId).cache().queryOne();
-        if (origPct == null) {
-            throw new IllegalArgumentException("Could not find ProductContentType [" + origPctId + "]");
+    public static List<GenericValue> getVariantProductContentDataResourceRecords(Delegator delegator, String productId,
+                                                                                 ProductImageViewType originalImageViewType, Timestamp moment,
+                                                                                 boolean includeOriginal, boolean useCache) throws GeneralException, IllegalArgumentException {
+        if (!originalImageViewType.isOriginal()) {
+            throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        pctMap.put(origPctId, origPct);
-        List<GenericValue> pctList = delegator.from("ProductContentType")
-                .where(EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "ADDITIONAL_IMAGE_%")).cache().queryList();
-        if (pctList != null) {
-            for(GenericValue pct : pctList) {
-                pctMap.put(pct.getString("productContentTypeId"), pct);
-            }
+        List<String> pctIdList = originalImageViewType.getProductContentTypeIds(includeOriginal, useCache);
+        if (pctIdList.isEmpty()) {
+            return Collections.emptyList();
         }
-        return pctMap;
+        return delegator.from("ProductContentAndDataResource")
+                .where(EntityCondition.makeCondition("productId", productId),
+                        EntityCondition.makeCondition("productContentTypeId", EntityOperator.IN, pctIdList))
+                .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
     }
 
-    public static Map<String, GenericValue> getImageProductContentTypes(Delegator delegator, String productContentTypeId)
-            throws GenericEntityException, IllegalArgumentException {
-        Map<String, GenericValue> pctMap = new LinkedHashMap<>();
-        int imageNum = getImageProductContentTypeNum(productContentTypeId);
-        if (imageNum == 0) {
-            String origPctId = "ORIGINAL_IMAGE_URL";
-            GenericValue origPct = delegator.from("ProductContentType").where("productContentTypeId", origPctId).cache().queryOne();
-            if (origPct == null) {
-                throw new IllegalArgumentException("Could not find ProductContentType [" + origPctId + "]");
-            }
-            pctMap.put(origPctId, origPct);
-            List<GenericValue> pctList = delegator.from("ProductContentType")
-                    .where(EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "%_IMAGE_URL")).cache().queryList();
-            if (pctList != null) {
-                for(GenericValue pct : pctList) {
-                    if (!origPctId.equals(pct.getString("productContentTypeId"))) {
-                        pctMap.put(pct.getString("productContentTypeId"), pct);
-                    }
-                }
-            }
-        } else {
-            String origPctId = "ADDITIONAL_IMAGE_" + imageNum;
-            GenericValue origPct = delegator.from("ProductContentType").where("productContentTypeId", origPctId).cache().queryOne();
-            if (origPct == null) {
-                throw new IllegalArgumentException("Could not find ProductContentType [" + origPctId + "]");
-            }
-            pctMap.put(origPctId, origPct);
-            List<GenericValue> pctList = delegator.from("ProductContentType")
-                    .where(EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "XTRA_IMG_" + imageNum + "_%")).cache().queryList();
-            if (pctList != null) {
-                for(GenericValue pct : pctList) {
-                    if (!origPctId.equals(pct.getString("productContentTypeId"))) {
-                        pctMap.put(pct.getString("productContentTypeId"), pct);
-                    }
-                }
-            }
+    public static Map<ProductImageViewType, GenericValue> getVariantProductContentDataResourceRecordsByViewType(Delegator delegator, String productId,
+                                                                                                                ProductImageViewType originalImageViewType, Timestamp moment,
+                                                                                                                boolean includeOriginal, boolean useCache) throws GeneralException, IllegalArgumentException {
+        if (!originalImageViewType.isOriginal()) {
+            throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        return pctMap;
-    }
-
-    public static Collection<String> getImageProductContentTypeIds(Delegator delegator, String productContentTypeId) throws GenericEntityException {
-        return getImageProductContentTypes(delegator, productContentTypeId).keySet();
-    }
-
-    public static Map<String, GenericValue> getVariantProductContentDataResourceRecordsBySizeType(Delegator delegator, String productId,
-                                                                                        String productContentTypeId, Timestamp moment,
-                                                                                        boolean includeOriginal, boolean useCache) throws GenericEntityException, IllegalArgumentException {
-        // TODO: REVIEW: this uses a heuristic to infer the sizeType, but this should be codified somewhere
-        Map<String, GenericValue> sizeTypeMap = new LinkedHashMap<>();
-        int imageNum = getImageProductContentTypeNum(productContentTypeId);
-        if (imageNum == 0) {
-            List<GenericValue> pcdrList = delegator.from("ProductContentAndDataResource")
-                    .where(EntityCondition.makeCondition("productId", productId),
-                            EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "%_IMAGE_URL"))
-                    .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
-            if (pcdrList != null) {
-                if (includeOriginal) {
-                    for (GenericValue pcdr : pcdrList) { // original first
-                        String pctId = pcdr.getString("productContentTypeId");
-                        if ("ORIGINAL_IMAGE_URL".equals(pctId)) {
-                            sizeTypeMap.put("original", pcdr);
-                        }
-                    }
-                }
-                for(GenericValue pcdr : pcdrList) {
-                    String pctId = pcdr.getString("productContentTypeId");
-                    if (!"ORIGINAL_IMAGE_URL".equals(pctId)) {
-                        sizeTypeMap.put(getProductContentTypeImageSizeType(pctId), pcdr);
-                    }
-                }
-            }
-        } else {
-            String origPctId = "ADDITIONAL_IMAGE_" + imageNum;
-            if (includeOriginal) {
-                GenericValue origPcdr = delegator.from("ProductContentAndDataResource")
-                        .where(EntityCondition.makeCondition("productId", productId),
-                                EntityCondition.makeCondition("productContentTypeId", origPctId))
-                        .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryFirst();
-                if (origPcdr != null) {
-                    sizeTypeMap.put("original", origPcdr);
-                }
-            }
-            List<GenericValue> pctList = delegator.from("ProductContentAndDataResource")
-                    .where(EntityCondition.makeCondition("productId", productId),
-                            EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "XTRA_IMG_" + imageNum + "_%"))
-                    .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
-            if (pctList != null) {
-                for(GenericValue pcdr : pctList) {
-                    String pctId = pcdr.getString("productContentTypeId");
-                    sizeTypeMap.put(getProductContentTypeImageSizeType(pctId), pcdr);
-                }
-            }
+        Map<String, GenericValue> pctIdMap = originalImageViewType.getProductContentTypesById(includeOriginal, useCache);
+        if (pctIdMap.isEmpty()) {
+            return Collections.emptyMap();
         }
-        return sizeTypeMap;
-    }
-
-    public static Map<String, GenericValue> getImageSizeProductContentTypes(Delegator delegator, String productContentTypeId) throws GenericEntityException, IllegalArgumentException {
-        Map<String, GenericValue> sizePctMap = new LinkedHashMap<>();
-        for(Map.Entry<String, GenericValue> entry : getImageSizeProductContentTypes(delegator, productContentTypeId).entrySet()) {
-            sizePctMap.put(getProductContentTypeImageSizeType(entry.getValue()), entry.getValue());
+        List<GenericValue> pcdrList = delegator.from("ProductContentAndDataResource")
+                .where(EntityCondition.makeCondition("productId", productId),
+                        EntityCondition.makeCondition("productContentTypeId", EntityOperator.IN, pctIdMap.keySet()))
+                .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
+        if (pcdrList.isEmpty()) {
+            return Collections.emptyMap();
         }
-        return sizePctMap;
-    }
-
-    /**
-     * Gets a sizeType for an image size variant ProductContentType.
-     * TODO: ProductContentType should support this directly on the entity.
-     */
-    public static String getProductContentTypeImageSizeType(GenericValue pct) throws IllegalArgumentException {
-        return getProductContentTypeImageSizeType(pct.getString("productContentTypeId"));
-    }
-
-    // TODO: REMOVE: this is a hack for now, see above
-    protected static String getProductContentTypeImageSizeType(String productContentTypeId) throws IllegalArgumentException {
-        if (productContentTypeId.equals("ORIGINAL_IMAGE_URL") || productContentTypeId.startsWith("ADDITIONAL_IMAGE_")) {
-            return "original";
-        } else if (productContentTypeId.endsWith("_IMAGE_URL")) {
-            return productContentTypeId.substring(0, productContentTypeId.length() - "_IMAGE_URL".length()).toLowerCase();
-        } else if (productContentTypeId.startsWith("XTRA_IMG_")) {
-            return productContentTypeId.substring(productContentTypeId.lastIndexOf('_')).toLowerCase();
-        } else {
-            throw new IllegalArgumentException("Unrecognized image productContentTypeId: " + productContentTypeId);
+        Map<ProductImageViewType, GenericValue> viewTypeMap = new LinkedHashMap<>();
+        for(GenericValue pcdr : pcdrList) {
+            String productContentTypeId = pcdr.getString("productContentTypeId");
+            viewTypeMap.put(ProductImageViewType.from(pctIdMap.get(productContentTypeId), false, useCache), pcdr);
         }
+        return viewTypeMap;
     }
 
-    public static GenericValue getImageSizeTypeProductContentType(Delegator delegator, int imageNum, String sizeType) throws GenericEntityException, IllegalArgumentException {
-        return delegator.from("ProductContentType").where("productContentTypeId", getImageSizeTypeProductContentTypeId(imageNum, sizeType))
-                .cache().queryOne();
-    }
-
-    public static GenericValue getImageSizeTypeProductContentType(Delegator delegator, String productContentTypeId, String sizeType) throws GenericEntityException, IllegalArgumentException {
-        return getImageSizeTypeProductContentType(delegator, getImageProductContentTypeNum(productContentTypeId), sizeType);
-    }
-
-    protected static String getImageSizeTypeProductContentTypeId(int imageNum, String sizeType) throws IllegalArgumentException {
-        if (imageNum == 0) {
-            return sizeType.toUpperCase() + "_IMAGE_URL";
-        } else if (imageNum > 0) {
-            return "original".equalsIgnoreCase(sizeType) ? "ADDITIONAL_IMAGE_" + imageNum : "XTRA_IMG_" + imageNum + "_" + sizeType.toUpperCase();
-        } else {
-            throw new IllegalArgumentException("Invalid image number: " + imageNum);
+    public static Map<String, GenericValue> getVariantProductContentDataResourceRecordsByViewSize(Delegator delegator, String productId,
+                                                                                                  ProductImageViewType originalImageViewType, Timestamp moment,
+                                                                                                  boolean includeOriginal, boolean useCache) throws GeneralException, IllegalArgumentException {
+        if (!originalImageViewType.isOriginal()) {
+            throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-    }
-
-    protected static String getImageSizeTypeProductContentTypeId(String productContentTypeId, String sizeType) throws IllegalArgumentException {
-        return getImageSizeTypeProductContentTypeId(getImageProductContentTypeNum(productContentTypeId), sizeType);
-    }
-
-    public static int getImageProductContentTypeNum(String productContentTypeId) throws IllegalArgumentException {
-        if (productContentTypeId.endsWith("_IMAGE_URL")) {
-            return 0;
-        } else if (productContentTypeId.startsWith("ADDITIONAL_IMAGE_")) {
-            return Integer.parseInt(productContentTypeId.substring("ADDITIONAL_IMAGE_".length()));
-        } else if (productContentTypeId.startsWith("XTRA_IMG_")) {
-            int sepIndex = productContentTypeId.indexOf('_', "XTRA_IMG_".length());
-            if (sepIndex <= 0) {
-                throw new IllegalArgumentException("Unrecognized image productContentTypeId (expected format: XTRA_IMG_%_%): " + productContentTypeId);
-            }
-            return Integer.parseInt(productContentTypeId.substring("XTRA_IMG_".length(), sepIndex));
-        } else {
-            throw new IllegalArgumentException("Unrecognized image productContentTypeId (expected %_IMAGE_URL, ADDITIONAL_IMAGE_%, XTRA_IMG_%_%): " + productContentTypeId);
+        Map<String, GenericValue> pctIdMap = originalImageViewType.getProductContentTypesById(includeOriginal, useCache);
+        if (pctIdMap.isEmpty()) {
+            return Collections.emptyMap();
         }
-    }
-
-    /** Migration and backward-compatibility, see ProductTypeData.xml */
-    public static void ensureParentProductContentTypeImageUrlRecords(Delegator delegator) throws GenericEntityException {
-        GenericValue imageUrl = delegator.findOne("ProductContentType", UtilMisc.toMap("productContentTypeId", "IMAGE_URL_BASE"), false);
-        if (imageUrl == null) {
-            delegator.makeValue("ProductContentType", "productContentTypeId", "IMAGE_URL_BASE",
-                    "hasTable", "N", "description", "Image - Base").create();
+        List<GenericValue> pcdrList = delegator.from("ProductContentAndDataResource")
+                .where(EntityCondition.makeCondition("productId", productId),
+                        EntityCondition.makeCondition("productContentTypeId", EntityOperator.IN, pctIdMap.keySet()))
+                .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
+        if (pcdrList.isEmpty()) {
+            return Collections.emptyMap();
         }
-        GenericValue fullImageUrl = delegator.findOne("ProductContentType", UtilMisc.toMap("productContentTypeId", "IMAGE_URL_FULL"), false);
-        if (fullImageUrl == null) {
-            delegator.makeValue("ProductContentType", "productContentTypeId", "IMAGE_URL_FULL",
-                    "hasTable", "N", "description", "Image - Full", "parentTypeId", "IMAGE_URL_BASE").create();
+        Map<String, GenericValue> viewTypeMap = new LinkedHashMap<>();
+        for(GenericValue pcdr : pcdrList) {
+            String productContentTypeId = pcdr.getString("productContentTypeId");
+            ProductImageViewType imageViewType = ProductImageViewType.from(pctIdMap.get(productContentTypeId), false, useCache);
+            viewTypeMap.put(imageViewType.getViewSize(), pcdr);
         }
-        GenericValue variantImageUrl = delegator.findOne("ProductContentType", UtilMisc.toMap("productContentTypeId", "IMAGE_URL_VARIANT"), false);
-        if (variantImageUrl == null) {
-            delegator.makeValue("ProductContentType", "productContentTypeId", "IMAGE_URL_VARIANT",
-                    "hasTable", "N", "description", "Image - Variant", "parentTypeId", "IMAGE_URL_BASE").create();
-        }
-    }
-
-    /** Migration and backward-compatibility, see ProductTypeData.xml */
-    public static GenericValue createProductContentTypeImageUrlRecord(Delegator delegator, String productContentTypeId, String parentTypeId, String sizeType) throws GenericEntityException {
-        ensureParentProductContentTypeImageUrlRecords(delegator);
-        int imageNum = getImageProductContentTypeNum(productContentTypeId);
-        String sizeTypeName = sizeType.substring(0, 1).toUpperCase() + sizeType.substring(1);
-        String description = (imageNum >= 1) ? "Image - Additional View " + imageNum + " " + sizeTypeName : "Image - " + sizeTypeName;
-        return delegator.makeValue("ProductContentType", "productContentTypeId", productContentTypeId,
-                "hasTable", "N", "description", description, "parentTypeId", parentTypeId).create();
+        return viewTypeMap;
     }
 
     public static String getDataResourceImageUrl(GenericValue dataResource, boolean useEntityCache) throws GenericEntityException { // SCIPIO
@@ -370,6 +229,10 @@ public abstract class ProductImageWorker {
         return "IMAGE_PRODUCT-" + productContentTypeId;
     }
 
+    /**
+     * Gets image profile from mediaprofiles.properties.
+     * NOTE: productContentTypeId should be ORIGINAL_IMAGE_URL or ADDITIONAL_IMAGE_x, not the size variants' IDs (LARGE_IMAGE_URL, ...)
+     */
     public static ImageProfile getProductImageProfileOrDefault(Delegator delegator, String productContentTypeId, GenericValue product, GenericValue content, boolean useEntityCache, boolean useProfileCache) {
         String profileName;
         ImageProfile profile;

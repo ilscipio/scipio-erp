@@ -358,7 +358,7 @@ public class ProductImageViewType implements Serializable {
         } else if (productContentTypeId.endsWith("_IMAGE_URL")) {
             return productContentTypeId.substring(0, productContentTypeId.length() - "_IMAGE_URL".length()).toLowerCase();
         } else if (productContentTypeId.startsWith("XTRA_IMG_")) {
-            return productContentTypeId.substring(productContentTypeId.lastIndexOf('_') + 1).toLowerCase();
+            return productContentTypeId.substring(productContentTypeId.indexOf('_', "XTRA_IMG_".length()) + 1).toLowerCase();
         } else {
             throw new IllegalArgumentException("Unrecognized image productContentTypeId for compatibility mode auto-determination: " + productContentTypeId);
         }

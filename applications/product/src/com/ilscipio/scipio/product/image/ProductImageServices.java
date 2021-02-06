@@ -925,7 +925,8 @@ public abstract class ProductImageServices {
 
     public static Map<String, Object> productImageMigrateImageUrlProductContentTypeData(ServiceContext ctx) throws ServiceValidationException {
         try {
-            boolean force = Boolean.TRUE.equals(ctx.attr("force"));
+            boolean forceAll = Boolean.TRUE.equals(ctx.attr("forceAll"));
+            boolean force = Boolean.TRUE.equals(ctx.attr("force")) || forceAll;
             boolean preview = Boolean.TRUE.equals(ctx.attr("preview"));
             if (!force) {
                 GenericValue origPct = ctx.delegator().from("ProductContentType").where("productContentTypeId", "ORIGINAL_IMAGE_URL").queryOne();
@@ -964,7 +965,7 @@ public abstract class ProductImageServices {
             List<GenericValue> pcts = ctx.delegator().from("ProductContentType")
                     .where(EntityCondition.makeCondition(orCondList, EntityOperator.OR)).queryList();
             for(GenericValue pct : pcts) {
-                if (!isProductContentTypeImageUrlRecordComplete(pct)) {
+                if (forceAll || !isProductContentTypeImageUrlRecordComplete(pct)) {
                     String pctId = pct.getString("productContentTypeId");
                     String viewType = ProductImageViewType.extractProductContentTypeIdViewType(ctx.delegator(), pctId);
                     String viewNumber = ProductImageViewType.extractProductContentTypeIdViewNumber(ctx.delegator(), pctId);

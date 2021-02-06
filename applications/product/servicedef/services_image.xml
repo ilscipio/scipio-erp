@@ -270,6 +270,9 @@
         <attribute name="force" type="Boolean" mode="IN" optional="true" default-value="false">
             <description>If false, only runs if the ORIGINAL_IMAGE_URL record looks incomplete</description>
         </attribute>
+        <attribute name="forceAll" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, recreates all - implies force</description>
+        </attribute>
         <attribute name="preview" type="Boolean" mode="IN" optional="true" default-value="true">
             <description>If true, aborts transaction at end</description>
         </attribute>

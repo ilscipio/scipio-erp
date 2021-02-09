@@ -5,21 +5,35 @@
 
 <#-- TODO: params instead of context vars -->
 <#macro productDetailImages>
-    <#-- FIXME: these ?trim should be removed and handled elsewhere or differently because
-        they cause coercion to string -->
     <#--
     <#assign productAdditionalSmallImage1 = productContentWrapper.getImageUrl("XTRA_IMG_1_SMALL")! />
     <#assign productAdditionalSmallImage2 = productContentWrapper.getImageUrl("XTRA_IMG_2_SMALL")! />
     <#assign productAdditionalSmallImage3 = productContentWrapper.getImageUrl("XTRA_IMG_3_SMALL")! />
-    <#assign productAdditionalSmallImage4 = productContentWrapper.getImageUrl("XTRA_IMG_4_SMALL")! />-->
+    <#assign productAdditionalSmallImage4 = productContentWrapper.getImageUrl("XTRA_IMG_4_SMALL")! />
+    -->
 
+    <#-- Use improved ProductImageVariants with dedicated cache and integrated URL building
+    <#assign productOriginalImage = productContentWrapper.getImageUrl("ORIGINAL_IMAGE_URL")! />
     <#assign productAdditionalImage1 = productContentWrapper.getImageUrl("ADDITIONAL_IMAGE_1")! />
     <#assign productAdditionalImage2 = productContentWrapper.getImageUrl("ADDITIONAL_IMAGE_2")! />
     <#assign productAdditionalImage3 = productContentWrapper.getImageUrl("ADDITIONAL_IMAGE_3")! />
     <#assign productAdditionalImage4 = productContentWrapper.getImageUrl("ADDITIONAL_IMAGE_4")! />
+
     <#assign productLargeImageUrl = productContentWrapper.getImageUrl("LARGE_IMAGE_URL")! />
-    <#assign productOriginalImage = productContentWrapper.getImageUrl("ORIGINAL_IMAGE_URL")! />
-    
+    -->
+    <#local origImgVrts = productContentWrapper.getImageVariants("ORIGINAL_IMAGE_URL")!/>
+    <#local adnImg1Vrts = productContentWrapper.getImageVariants("ADDITIONAL_IMAGE_1")!/>
+    <#local adnImg2Vrts = productContentWrapper.getImageVariants("ADDITIONAL_IMAGE_2")!/>
+    <#local adnImg3Vrts = productContentWrapper.getImageVariants("ADDITIONAL_IMAGE_3")!/>
+    <#local adnImg4Vrts = productContentWrapper.getImageVariants("ADDITIONAL_IMAGE_4")!/>
+
+    <#assign productOriginalImage = (origImgVrts.original.getImageUrl(context))!/>
+    <#assign productAdditionalImage1 = (adnImg1Vrts.original.getImageUrl(context))!/>
+    <#assign productAdditionalImage2 = (adnImg2Vrts.original.getImageUrl(context))!/>
+    <#assign productAdditionalImage3 = (adnImg3Vrts.original.getImageUrl(context))!/>
+    <#assign productAdditionalImage4 = (adnImg4Vrts.original.getImageUrl(context))!/>
+    <#assign productLargeImageUrl = (origImgVrts.getVariant("large").getImageUrl(context))!/>
+
     <#if firstLargeImage?has_content>
         <#assign productLargeImageUrl = firstLargeImage />
     </#if>

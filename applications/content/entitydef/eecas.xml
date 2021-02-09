@@ -15,33 +15,43 @@ code package.
 
     <!-- Content Keyword Indexing ECAs -->
     <eca entity="Content" operation="create" event="return">
+        <condition-property resource="content" property-name="indexContentKeywords.eca" operator="equals" type="Boolean" value="true" scope="init"/>
         <action service="indexContentKeywords" mode="sync" value-attr="contentInstance"/>
     </eca>
     <eca entity="Content" operation="store" event="return">
+        <condition-property resource="content" property-name="indexContentKeywords.eca" operator="equals" type="Boolean" value="true" scope="init"/>
         <action service="indexContentKeywords" mode="sync"/>
     </eca>
     <eca entity="ContentAttribute" operation="create-store" event="return">
+        <condition-property resource="content" property-name="indexContentKeywords.eca" operator="equals" type="Boolean" value="true" scope="init"/>
         <action service="indexContentKeywords" mode="sync"/>
     </eca>
     <eca entity="ContentMetaData" operation="create-store" event="return">
+        <condition-property resource="content" property-name="indexContentKeywords.eca" operator="equals" type="Boolean" value="true" scope="init"/>
         <action service="indexContentKeywords" mode="sync"/>
     </eca>
     <eca entity="ContentRole" operation="create-store" event="return">
+        <condition-property resource="content" property-name="indexContentKeywords.eca" operator="equals" type="Boolean" value="true" scope="init"/>
         <action service="indexContentKeywords" mode="sync"/>
     </eca>
     <eca entity="ProductContent" operation="create-store" event="return">
+        <condition-property resource="content" property-name="indexContentKeywords.eca" operator="equals" type="Boolean" value="true" scope="init"/>
         <action service="indexContentKeywords" mode="sync"/>
     </eca>
     <eca entity="ProductCategoryContent" operation="create-store" event="return">
+        <condition-property resource="content" property-name="indexContentKeywords.eca" operator="equals" type="Boolean" value="true" scope="init"/>
         <action service="indexContentKeywords" mode="sync"/>
     </eca>
     <eca entity="PartyContent" operation="create-store" event="return">
+        <condition-property resource="content" property-name="indexContentKeywords.eca" operator="equals" type="Boolean" value="true" scope="init"/>
         <action service="indexContentKeywords" mode="sync"/>
     </eca>
     <eca entity="WebSiteContent" operation="create-store" event="return">
+        <condition-property resource="content" property-name="indexContentKeywords.eca" operator="equals" type="Boolean" value="true" scope="init"/>
         <action service="indexContentKeywords" mode="sync"/>
     </eca>
     <eca entity="WorkEffortContent" operation="create-store" event="return">
+        <condition-property resource="content" property-name="indexContentKeywords.eca" operator="equals" type="Boolean" value="true" scope="init"/>
         <action service="indexContentKeywords" mode="sync"/>
     </eca>
 

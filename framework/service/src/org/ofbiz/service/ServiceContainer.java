@@ -95,6 +95,10 @@ public class ServiceContainer implements Container {
         return dispatcher;
     }
 
+    public static LocalDispatcher createLocalDispatcher(String dispatcherName, Delegator delegator) {
+        return dispatcherFactory.createLocalDispatcher(dispatcherName, delegator);
+    }
+
     public static void deregister(String dispatcherName) {
         LocalDispatcher dispatcher = dispatcherCache.get(dispatcherName);
         if (dispatcher != null) {

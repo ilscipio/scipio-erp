@@ -247,6 +247,21 @@ under the License.
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute type="xs:string" name="format"/>
+        <xs:attribute name="scope"><!-- default="run" -->
+            <xs:annotation>
+                <xs:documentation>
+                    The time at which the condition is evaluated (SCIPIO).
+                    If set to "init" and the condition evaluates to false, this ECA will not be registered
+                    in the system and will not run at runtime.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="run"/>
+                    <xs:enumeration value="init"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="condition-property" substitutionGroup="AllConditionals">
         <xs:complexType>

@@ -141,6 +141,7 @@ public final class EntityEcaUtil {
             return rules;
         }
         for (Element e: UtilXml.childElementList(rootElement, "eca")) {
+            //if (rule.checkInitConditions()) {
             rules.add(new EntityEcaRule(e));
         }
         try {

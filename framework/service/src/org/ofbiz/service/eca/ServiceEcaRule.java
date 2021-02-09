@@ -19,6 +19,7 @@
 package org.ofbiz.service.eca;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,10 +44,11 @@ public final class ServiceEcaRule implements java.io.Serializable {
     public final String eventName;
     public final boolean runOnFailure;
     public final boolean runOnError;
-    public final List<ServiceEcaCondition> conditions = new ArrayList<ServiceEcaCondition>();
-    public final List<Object> actionsAndSets = new ArrayList<Object>();
+    public final List<ServiceEcaCondition> conditions;
+    public final List<Object> actionsAndSets;
     public final boolean enabled; // SCIPIO: 2018-09-06: made final for thread-safety
     public final String definitionLocation;
+    protected transient Boolean initEnabled = null;
 
     public ServiceEcaRule(Element eca, String definitionLocation) {
         this.definitionLocation = definitionLocation;
@@ -77,29 +79,30 @@ public final class ServiceEcaRule implements java.io.Serializable {
             conditions.add(new ServiceEcaCondition(element, false, false, true));
         }
          */
+        ArrayList<ServiceEcaCondition> conditions = new ArrayList<ServiceEcaCondition>(); // SCIPIO: fixed final synch issue
         for (Element element: UtilXml.childElementList(eca)) {
             ServiceEcaCondition condition = ServiceEcaCondition.getCondition(element);
             if (condition != null) {
                 conditions.add(condition);
             }
         }
-
         if (Debug.verboseOn()) {
             Debug.logVerbose("Conditions: " + conditions, module);
         }
+        conditions.trimToSize();
+        this.conditions = Collections.unmodifiableList(conditions);
 
         Set<String> nameSet = UtilMisc.toSet("set", "action");
+        ArrayList<Object> actionsAndSets = new ArrayList<Object>(); // SCIPIO: fixed final synch issue
         for (Element actionOrSetElement: UtilXml.childElementList(eca, nameSet)) {
             if ("action".equals(actionOrSetElement.getNodeName())) {
-                this.actionsAndSets.add(new ServiceEcaAction(actionOrSetElement, this.eventName));
+                actionsAndSets.add(new ServiceEcaAction(actionOrSetElement, this.eventName));
             } else {
-                this.actionsAndSets.add(new ServiceEcaSetField(actionOrSetElement));
+                actionsAndSets.add(new ServiceEcaSetField(actionOrSetElement));
             }
         }
-
-        // SCIPIO
-        ((ArrayList<ServiceEcaCondition>) conditions).trimToSize();
-        ((ArrayList<Object>) actionsAndSets).trimToSize();
+        actionsAndSets.trimToSize();
+        this.actionsAndSets = Collections.unmodifiableList(actionsAndSets);
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("actions and sets (intermixed): " + actionsAndSets, module);
@@ -139,8 +142,14 @@ public final class ServiceEcaRule implements java.io.Serializable {
     }
 
     public void eval(String serviceName, DispatchContext dctx, Map<String, Object> context, Map<String, Object> result, boolean isError, boolean isFailure, Set<String> actionsRun) throws GenericServiceException {
-        if (!enabled) {
-            Debug.logInfo("Service ECA [" + this.serviceName + "] on [" + this.eventName + "] is disabled; not running.", module);
+        // SCIPIO: Now incorporated into initEnabled for speed
+        //if (!enabled) {
+        //    if (Debug.verboseOn()) {
+        //        Debug.logVerbose("Service ECA [" + this.serviceName + "] on [" + this.eventName + "] is disabled; not running.", module);
+        //    }
+        //    return;
+        //}
+        if (!isEnabled(dctx, context)) { // SCIPIO
             return;
         }
         if (isFailure && !this.runOnFailure) {
@@ -152,15 +161,18 @@ public final class ServiceEcaRule implements java.io.Serializable {
 
         boolean allCondTrue = true;
         for (ServiceEcaCondition ec: conditions) {
-            if (!ec.eval(serviceName, dctx, context)) {
-                if (Debug.infoOn()) {
-                    Debug.logInfo("For Service ECA [" + this.serviceName + "] on [" + this.eventName + "] got false for condition: " + ec, module);
-                }
-                allCondTrue = false;
-                break;
-            } else {
-                if (Debug.verboseOn()) {
-                    Debug.logVerbose("For Service ECA [" + this.serviceName + "] on [" + this.eventName + "] got true for condition: " + ec, module);
+            Boolean subResult = ec.eval(serviceName, dctx, context, null); // SCIPIO: null
+            if (subResult != null) {
+                if (!subResult) {
+                    if (Debug.infoOn()) {
+                        Debug.logInfo("For Service ECA [" + this.serviceName + "] on [" + this.eventName + "] got false for condition: " + ec, module);
+                    }
+                    allCondTrue = false;
+                    break;
+                } else {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("For Service ECA [" + this.serviceName + "] on [" + this.eventName + "] got true for condition: " + ec, module);
+                    }
                 }
             }
         }
@@ -248,5 +260,43 @@ public final class ServiceEcaRule implements java.io.Serializable {
     @Override
     public String toString() {
         return "ServiceEcaRule:" + this.serviceName + ":" + this.eventName + ":runOnError=" + this.runOnError + ":runOnFailure=" + this.runOnFailure + ":enabled=" + this.enabled + ":conditions=" + this.conditions + ":actionsAndSets=" + this.actionsAndSets;
+    }
+
+    protected final boolean isEnabled(DispatchContext dctx, Map<String, Object> context) { // SCIPIO
+        Boolean initEnabled = this.initEnabled;
+        if (initEnabled == null) {
+            synchronized (this) {
+                initEnabled = this.initEnabled;
+                if (initEnabled == null) {
+                    if (!enabled) {
+                        initEnabled = false;
+                        if (Debug.infoOn()) {
+                            Debug.logInfo("Service ECA [" + this.serviceName + "] on [" + this.eventName + "] is disabled globally.", module);
+                        }
+                    } else {
+                        initEnabled = checkInitConditions(dctx, context, true);
+                    }
+                    this.initEnabled = initEnabled;
+                }
+            }
+        }
+        return initEnabled;
+    }
+
+    protected boolean checkInitConditions(DispatchContext dctx, Map<String, Object> context, boolean log) { // SCIPIO
+        for(ServiceEcaCondition cond : conditions) {
+            try {
+                Boolean subResult = cond.eval(serviceName, dctx, context, "init");
+                if (Boolean.FALSE.equals(subResult)) {
+                    if (log && Debug.infoOn()) {
+                        Debug.logInfo("Service ECA [" + this.serviceName + "] on [" + this.eventName + "] is disabled by init condition: " + cond, module);
+                    }
+                    return false;
+                }
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Could not check seca condition for service [" + serviceName + "] at init scope: " + cond, module);
+            }
+        }
+        return true;
     }
 }

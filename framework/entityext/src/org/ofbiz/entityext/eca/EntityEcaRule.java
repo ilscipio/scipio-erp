@@ -19,6 +19,7 @@
 package org.ofbiz.entityext.eca;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -26,14 +27,20 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entityext.EntityServiceFactory;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.LocalDispatcherFactory;
+import org.ofbiz.service.ServiceContainer;
+import org.ofbiz.service.ServiceDispatcher;
 import org.w3c.dom.Element;
 
 /**
@@ -52,6 +59,7 @@ public final class EntityEcaRule implements java.io.Serializable {
     private final List<Object> actionsAndSets;
     private boolean enabled = true;
     private final List<String> conditionFieldNames  = new ArrayList<String>();
+    protected transient Boolean initEnabled = null;
 
     public EntityEcaRule(Element eca) {
         this.entityName = eca.getAttribute("entity");
@@ -110,11 +118,16 @@ public final class EntityEcaRule implements java.io.Serializable {
     }
 
     public void eval(String currentOperation, DispatchContext dctx, GenericEntity value, boolean isError, Set<String> actionsRun) throws GenericEntityException {
-        if (!enabled) {
-            Debug.logInfo("Entity ECA [" + this.entityName + "] on [" + this.eventName + "] is disabled; not running.", module);
+        // SCIPIO: Now incorporated into initEnabled for speed
+        //if (!enabled) {
+        //    if (Debug.verboseOn()) {
+        //        Debug.logVerbose("Entity ECA [" + this.entityName + "] on [" + this.eventName + "] is disabled; not running.", module);
+        //    }
+        //    return;
+        //}
+        if (!isEnabled(dctx, Collections.emptyMap())) { // SCIPIO
             return;
         }
-
         //Debug.logInfo("eval eeca rule: operation=" + currentOperation + ", in event=" + this.eventName + ", on entity=" + this.entityName + ", for value=" + value, module);
         if (isError && !this.runOnError) {
             return;
@@ -146,9 +159,12 @@ public final class EntityEcaRule implements java.io.Serializable {
 
         boolean allCondTrue = true;
         for (EntityEcaCondition ec: conditions) {
-            if (!ec.eval(dctx, value, context)) {
-                allCondTrue = false;
-                break;
+            Boolean subResult = ec.eval(dctx, value, context, null); // SCIPIO: null
+            if (subResult != null) {
+                if (!subResult) {
+                    allCondTrue = false;
+                    break;
+                }
             }
         }
 
@@ -236,5 +252,43 @@ public final class EntityEcaRule implements java.io.Serializable {
     @Override
     public String toString() {
         return "EntityEcaRule:" + this.entityName + ":" + this.operationName + ":" + this.eventName +  ":runOnError=" + this.runOnError + ":enabled=" + this.enabled + ":conditions=" + this.conditions + ":actionsAndSets=" + this.actionsAndSets + ":conditionFieldNames" + this.conditionFieldNames;
+    }
+
+    protected final boolean isEnabled(DispatchContext dctx, Map<String, Object> context) { // SCIPIO
+        Boolean initEnabled = this.initEnabled;
+        if (initEnabled == null) {
+            synchronized (this) {
+                initEnabled = this.initEnabled;
+                if (initEnabled == null) {
+                    if (!enabled) {
+                        initEnabled = false;
+                        if (Debug.infoOn()) {
+                            Debug.logInfo("Entity ECA [" + this.entityName + "] on [" + this.eventName + "] is disabled globally.", module);
+                        }
+                    } else {
+                        initEnabled = checkInitConditions(dctx, context, true);
+                    }
+                    this.initEnabled = initEnabled;
+                }
+            }
+        }
+        return initEnabled;
+    }
+
+    protected boolean checkInitConditions(DispatchContext dctx, Map<String, Object> context, boolean log) { // SCIPIO
+        for(EntityEcaCondition cond : conditions) {
+            try {
+                Boolean subResult = cond.eval(dctx, dctx.getDelegator().makeValue(entityName), context, "init");
+                if (Boolean.FALSE.equals(subResult)) {
+                    if (log && Debug.infoOn()) {
+                        Debug.logInfo("Entity ECA [" + this.entityName + "] on [" + this.eventName + "] is disabled by init condition: " + cond, module);
+                    }
+                    return false;
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Could not check eca condition for entity [" + entityName + "] at init scope: " + cond, module);
+            }
+        }
+        return true;
     }
 }

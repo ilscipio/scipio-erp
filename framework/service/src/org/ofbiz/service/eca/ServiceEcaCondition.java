@@ -19,13 +19,17 @@
 package org.ofbiz.service.eca;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.ofbiz.base.GeneralConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -71,7 +75,11 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
 
     public abstract String getShortDisplayDescription(boolean moreDetail);
 
-    public abstract boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context) throws GenericServiceException;
+    public abstract Boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context, String scope) throws GenericServiceException; // SCIPIO: scope
+
+    public Boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context) throws GenericServiceException { // SCIPIO: scope
+        return eval(serviceName, dctx, context, null);
+    }
 
     public static abstract class GroupServiceEcaCondition extends ServiceEcaCondition {
         protected final List<ServiceEcaCondition> conditions;
@@ -128,13 +136,19 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
         }
 
         @Override
-        public boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context) throws GenericServiceException {
+        public Boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context, String scope) throws GenericServiceException {
+            Boolean result = null; // SCIPIO: if all null, returns null; otherwise AND non-nulls
             for (ServiceEcaCondition ec: conditions) {
-                if (!ec.eval(serviceName, dctx, context)) {
-                    return false;
+                Boolean subResult = ec.eval(serviceName, dctx, context, scope);
+                if (subResult != null) {
+                    if (!subResult) {
+                        return false;
+                    } else {
+                        result = true;
+                    }
                 }
             }
-            return true;
+            return result;
         }
     }
 
@@ -149,15 +163,20 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
         }
 
         @Override
-        public boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context) throws GenericServiceException {
-            boolean foundOneTrue = false;
+        public Boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context, String scope) throws GenericServiceException {
+            Boolean foundOneTrue = null; // SCIPIO: if all null, returns null; otherwise XOR non-nulls
             for (ServiceEcaCondition ec : conditions) {
-                if (ec.eval(serviceName, dctx, context)) {
-                    if (foundOneTrue) {
-                        // now found two true, so return false
-                        return false;
+                Boolean subResult = ec.eval(serviceName, dctx, context, scope);
+                if (subResult != null) {
+                    if (subResult) {
+                        if (foundOneTrue != null && foundOneTrue) {
+                            // now found two true, so return false
+                            return false;
+                        }
+                        foundOneTrue = true;
+                    } else if (foundOneTrue == null) {
+                        foundOneTrue = false;
                     }
-                    foundOneTrue = true;
                 }
             }
             return foundOneTrue;
@@ -175,13 +194,19 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
         }
 
         @Override
-        public boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context) throws GenericServiceException {
+        public Boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context, String scope) throws GenericServiceException {
+            Boolean result = null; // SCIPIO: if all null, returns null; otherwise OR non-nulls
             for (ServiceEcaCondition ec: conditions) {
-                if (ec.eval(serviceName, dctx, context)) {
-                    return true;
+                Boolean subResult = ec.eval(serviceName, dctx, context, scope);
+                if (subResult != null) {
+                    if (subResult) {
+                        return true;
+                    } else {
+                        result = false;
+                    }
                 }
             }
-            return false;
+            return result;
         }
     }
 
@@ -198,8 +223,9 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
         }
 
         @Override
-        public boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context) throws GenericServiceException {
-            return !condition.eval(serviceName, dctx, context);
+        public Boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context, String scope) throws GenericServiceException {
+            Boolean subResult = condition.eval(serviceName, dctx, context, scope); // SCIPIO: null
+            return (subResult != null) ? !subResult : null;
         }
     }
     
@@ -216,6 +242,8 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
         protected boolean isService = false;
         protected boolean property = false; // SCIPIO
         protected String propertyResource = null;
+        protected Set<String> scopes = null; // SCIPIO
+        protected String scopeString = null; // SCIPIO
 
         public SingleServiceEcaCondition(Element condition, boolean isConstant, boolean isService, boolean property) { // SCIPIO: added property
             if (isService) {
@@ -250,6 +278,10 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
                         this.propertyResource = null;
                     }
                 }
+            }
+            this.scopeString = UtilValidate.nullIfEmpty(condition.getAttribute("scope"));
+            if (this.scopeString != null) {
+                scopes = Collections.unmodifiableSet(StringUtil.splitNames(new HashSet<>(), this.scopeString));
             }
         }
 
@@ -287,7 +319,17 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
         }
 
         @Override
-        public boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context) throws GenericServiceException {
+        public Boolean eval(String serviceName, DispatchContext dctx, Map<String, Object> context, String scope) throws GenericServiceException {
+            if (scope == null || "run".equals(scope)) { // SCIPIO
+                if (scopes != null && !scopes.contains("run")) {
+                    return null; // null means not applicable - skip this condition
+                }
+            } else {
+                if (scopes == null || !scopes.contains(scope)) {
+                    return null;
+                }
+            }
+
             if (serviceName == null || dctx == null || context == null || dctx.getClassLoader() == null) {
                 throw new GenericServiceException("Cannot have null Service, Context or DispatchContext!");
             }
@@ -393,6 +435,7 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
             StringBuilder buf = new StringBuilder();
 
             if (UtilValidate.isNotEmpty(conditionService)) buf.append("[").append(conditionService).append("]");
+            if (UtilValidate.isNotEmpty(propertyResource)) buf.append("[").append(propertyResource).append("]");
             if (UtilValidate.isNotEmpty(lhsMapName)) buf.append("[").append(lhsMapName).append("]");
             if (UtilValidate.isNotEmpty(lhsValueName)) buf.append("[").append(lhsValueName).append("]");
             if (UtilValidate.isNotEmpty(operator)) buf.append("[").append(operator).append("]");
@@ -401,6 +444,8 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
             if (UtilValidate.isNotEmpty(isConstant)) buf.append("[").append(isConstant).append("]");
             if (UtilValidate.isNotEmpty(compareType)) buf.append("[").append(compareType).append("]");
             if (UtilValidate.isNotEmpty(format)) buf.append("[").append(format).append("]");
+            if (UtilValidate.isNotEmpty(scopeString)) buf.append("[").append(scopeString).append("]");
+
             return buf.toString();
         }
 
@@ -418,6 +463,7 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
             result = prime * result + ((operator == null) ? 0 : operator.hashCode());
             result = prime * result + ((rhsMapName == null) ? 0 : rhsMapName.hashCode());
             result = prime * result + ((rhsValueName == null) ? 0 : rhsValueName.hashCode());
+            result = prime * result + ((scopeString == null) ? 0 : scopeString.hashCode());
             return result;
         }
 
@@ -437,6 +483,8 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
 
                 if (this.isConstant != other.isConstant) return false;
                 if (this.isService != other.isService) return false;
+
+                if (!UtilValidate.areEqual(this.scopeString, other.scopeString)) return false; // SCIPIO: FIXME: inaccurate
 
                 return true;
             } else {

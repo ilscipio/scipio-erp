@@ -19,14 +19,17 @@
 package org.ofbiz.entityext.eca;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.ofbiz.base.GeneralConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -71,7 +74,11 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
         return null;
     }
 
-    public abstract boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context) throws GenericEntityException;
+    public abstract Boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context, String scope) throws GenericEntityException; // SCIPIO: scope
+
+    public Boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context) throws GenericEntityException { // SCIPIO: scope
+        return eval(dctx, value, context, null);
+    }
 
     protected abstract List<String> getFieldNames();
 
@@ -131,13 +138,19 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
         }
 
         @Override
-        public boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context) throws GenericEntityException {
+        public Boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context, String scope) throws GenericEntityException {
+            Boolean result = null; // SCIPIO: if all null, returns null; otherwise AND non-nulls
             for (EntityEcaCondition ec: conditions) {
-                if (!ec.eval(dctx, value, context)) {
-                    return false;
+                Boolean subResult = ec.eval(dctx, value, context, scope);
+                if (subResult != null) {
+                    if (!subResult) {
+                        return false;
+                    } else {
+                        result = true;
+                    }
                 }
             }
-            return true;
+            return result;
         }
     }
 
@@ -152,15 +165,20 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
         }
 
         @Override
-        public boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context) throws GenericEntityException {
-            boolean foundOneTrue = false;
+        public Boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context, String scope) throws GenericEntityException {
+            Boolean foundOneTrue = null; // SCIPIO: if all null, returns null; otherwise XOR non-nulls
             for (EntityEcaCondition ec : conditions) {
-                if (ec.eval(dctx, value, context)) {
-                    if (foundOneTrue) {
-                        // now found two true, so return false
-                        return false;
+                Boolean subResult = ec.eval(dctx, value, context, scope);
+                if (subResult != null) {
+                    if (subResult) {
+                        if (foundOneTrue != null && foundOneTrue) {
+                            // now found two true, so return false
+                            return false;
+                        }
+                        foundOneTrue = true;
+                    } else if (foundOneTrue == null) {
+                        foundOneTrue = false;
                     }
-                    foundOneTrue = true;
                 }
             }
             return foundOneTrue;
@@ -178,13 +196,19 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
         }
 
         @Override
-        public boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context) throws GenericEntityException {
+        public Boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context, String scope) throws GenericEntityException {
+            Boolean result = null; // SCIPIO: if all null, returns null; otherwise OR non-nulls
             for (EntityEcaCondition ec: conditions) {
-                if (ec.eval(dctx, value, context)) {
-                    return true;
+                Boolean subResult = ec.eval(dctx, value, context, scope);
+                if (subResult != null) {
+                    if (subResult) {
+                        return true;
+                    } else {
+                        result = false;
+                    }
                 }
             }
-            return false;
+            return result;
         }
     }
 
@@ -201,8 +225,9 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
         }
 
         @Override
-        public boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context) throws GenericEntityException {
-            return !condition.eval(dctx, value, context);
+        public Boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context, String scope) throws GenericEntityException {
+            Boolean subResult = condition.eval(dctx, value, context, scope); // SCIPIO: null
+            return (subResult != null) ? !subResult : null;
         }
     }
 
@@ -217,6 +242,8 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
         protected String conditionService = null;
         protected boolean property = false; // SCIPIO
         protected String propertyResource = null;
+        protected Set<String> scopes = null; // SCIPIO
+        protected String scopeString = null; // SCIPIO
 
         public SingleEntityEcaCondition(Element condition, boolean constant, boolean isService, boolean property) { // SCIPIO: added property
             if (isService) {
@@ -247,6 +274,10 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
                     }
                 }
             }
+            this.scopeString = UtilValidate.nullIfEmpty(condition.getAttribute("scope"));
+            if (this.scopeString != null) {
+                scopes = Collections.unmodifiableSet(StringUtil.splitNames(new HashSet<>(), this.scopeString));
+            }
         }
 
         public SingleEntityEcaCondition(Element condition, boolean constant, boolean isService) {
@@ -254,7 +285,17 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
         }
 
         @Override
-        public boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context) throws GenericEntityException {
+        public Boolean eval(DispatchContext dctx, GenericEntity value, Map<String, Object> context, String scope) throws GenericEntityException {
+            if (scope == null || "run".equals(scope)) { // SCIPIO
+                if (scopes != null && !scopes.contains("run")) {
+                    return null; // null means not applicable - skip this condition
+                }
+            } else {
+                if (scopes == null || !scopes.contains(scope)) {
+                    return null;
+                }
+            }
+
             if (dctx == null || value == null || dctx.getClassLoader() == null) {
                 throw new GenericEntityException("Cannot have null Value or DispatchContext!");
             }
@@ -310,7 +351,7 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
                 Debug.logVerbose("Comparing : " + lhsValue + " " + operator + " " + rhsValue, module);
 
             // evaluate the condition & invoke the action(s)
-            List<Object> messages = new LinkedList<Object>();
+            List<Object> messages = new ArrayList<Object>(); // SCIPIO: ArrayList
             Boolean cond = ObjectType.doRealCompare(lhsValue, rhsValue, operator, compareType, format, messages, null, dctx.getClassLoader(), constant);
 
             // if any messages were returned send them out
@@ -345,13 +386,14 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
         public String toString() {
             StringBuilder buf = new StringBuilder();
             if (UtilValidate.isNotEmpty(conditionService)) buf.append("[").append(conditionService).append("]");
+            if (UtilValidate.isNotEmpty(propertyResource)) buf.append("[").append(propertyResource).append("]");
             if (UtilValidate.isNotEmpty(lhsValueName)) buf.append("[").append(lhsValueName).append("]");
             if (UtilValidate.isNotEmpty(operator)) buf.append("[").append(operator).append("]");
             if (UtilValidate.isNotEmpty(rhsValueName)) buf.append("[").append(rhsValueName).append("]");
             if (UtilValidate.isNotEmpty(constant)) buf.append("[").append(constant).append("]");
             if (UtilValidate.isNotEmpty(compareType)) buf.append("[").append(compareType).append("]");
             if (UtilValidate.isNotEmpty(format)) buf.append("[").append(format).append("]");
-            if (UtilValidate.isNotEmpty(format)) buf.append("[").append(format).append("]"); // SCIPIO
+            if (UtilValidate.isNotEmpty(scopeString)) buf.append("[").append(scopeString).append("]"); // SCIPIO
             return buf.toString();
         }
 
@@ -365,6 +407,7 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
             result = prime * result + (constant ? 1231 : 1237);
             result = prime * result + ((compareType == null) ? 0 : compareType.hashCode());
             result = prime * result + ((format == null) ? 0 : format.hashCode());
+            result = prime * result + ((scopeString == null) ? 0 : scopeString.hashCode());
             // SCIPIO: FIXME: should more fields be here, or is this hashcode intended to differ from equals?? (unusual)
             return result;
         }
@@ -384,6 +427,7 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
                 if (this.isService != other.isService) return false;
                 if (this.property != other.property) return false; // SCIPIO
                 if (!UtilValidate.areEqual(this.propertyResource, other.propertyResource)) return false; // SCIPIO
+                if (!UtilValidate.areEqual(this.scopeString, other.scopeString)) return false; // SCIPIO: FIXME: inaccurate
 
                 return true;
             } else {

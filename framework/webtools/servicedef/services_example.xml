@@ -22,4 +22,18 @@ code package.
         <attribute name="message" mode="IN" type="String" optional="true"></attribute>
         <attribute name="successMessage" mode="IN" type="String" optional="true"></attribute>
     </service>
+
+    <service name="testAdminService" engine="java" location="org.ofbiz.example.ExampleServices" invoke="testAdminService" auth="true">
+        <required-permissions join-type="AND">
+            <check-permission permission="OFBTOOLS" action="_VIEW"/>
+        </required-permissions>
+        <attribute name="inParam1" mode="IN" type="String" optional="true"/>
+        <attribute name="inParam2" mode="IN" type="String" optional="true"/>
+        <attribute name="inParam3" mode="IN" type="String" optional="true"/>
+        <attribute name="inParam4Internal" mode="IN" type="String" optional="true" access="internal"/>
+        <attribute name="inListParam3" mode="IN" type="List" optional="true" string-list-suffix="_inListParam3"/>
+        <attribute name="inMapParam4" mode="IN" type="Map" optional="true" string-map-prefix="inMapParam4_"/>
+        <attribute name="outResult1" mode="OUT" type="String" optional="true"/>
+        <attribute name="outResult2" mode="OUT" type="String" optional="true"/>
+    </service>
 </services>

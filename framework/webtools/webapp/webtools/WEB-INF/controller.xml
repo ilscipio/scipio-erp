@@ -741,7 +741,12 @@ code package.
         <response name="success" type="request" value="WebtoolsLayoutDemo"/>
         <response name="error" type="request" value="WebtoolsLayoutDemo"/>
     </request-map>
-    
+    <request-map uri="testAdminService"><!-- SCIPIO: cleaner URL -->
+        <security https="true" auth="true"/>
+        <event type="service-multi" invoke="testAdminService"/>
+        <response name="success" type="view" value="WebtoolsLayoutDemo"/>
+    </request-map>
+
     <!-- SCIPIO: EntityUtilityServices -->
     <request-map uri="EntityUtilityServices">
         <security https="true" auth="true"/>

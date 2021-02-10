@@ -1291,6 +1291,19 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 </@section>
 
 <#if debugMode>
+    <a name="TestAdminService"></a>
+    <@section title="testAdminService: debug controller events">
+        <form name="testAdminService1" method="post" action="<@pageUrl uri='testAdminService?debugMode=true'/>">
+            <@field type="input" name="inParam1_o_1" label="inParam1"/>
+            <@field type="input" name="inParam2_o_1" label="inParam2"/>
+            <@field type="input" name="inParam3_o_1" label="inParam3"/>
+            <@field type="input" name="inParam4Internal_o_1" label="inParam4Internal" placeholder="(this value will be ignored)"/>
+            <@field type="submit" />
+        </form>
+    </@section>
+</#if>
+
+<#if debugMode>
 <a name="AutoValueFormFields"></a>
 <@section title="Auto-Value Form Fields">
   <#assign autoformAction><@pageUrl>LayoutDemo<#if debugMode>?debugMode=true</#if></@pageUrl></#assign>

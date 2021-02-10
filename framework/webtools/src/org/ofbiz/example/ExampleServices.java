@@ -25,7 +25,11 @@ import java.util.Set;
 import javax.websocket.Session;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilRandom;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ModelParam;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
 
 /** ExampleServices. NOTE: 2020-03: This example is now obsolete. See GenericWebSocket and SocketSessionManager instead. */
@@ -50,5 +54,20 @@ public class ExampleServices {
             Debug.logError(e.getMessage(), module);
         }
         return ServiceUtil.returnSuccess();
+    }
+
+    public static Map<String, Object> testAdminService(ServiceContext ctx) {
+        for(String attrName : ctx.getModelService().getInParamNames()) {
+            if (ctx.containsKey(attrName)) {
+                Debug.logInfo("testAdminService: " + attrName + "=" + ctx.attr(attrName), module);
+            }
+        }
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        for(ModelParam param : ctx.getModelService().getOutModelParamList()) {
+            if ("String".equals(param.getType()) && !param.isInternal()) {
+                result.put(param.getName(), UtilRandom.generateAlphaNumericString(20));
+            }
+        }
+        return result;
     }
 }

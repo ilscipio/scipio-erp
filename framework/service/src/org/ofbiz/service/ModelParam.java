@@ -94,7 +94,10 @@ public class ModelParam implements Serializable {
 
     // SCIPIO
     boolean typeConvert = false;
-    
+
+    ModelService.Access access;
+    ModelService.Access eventAccess;
+
     public ModelParam() {}
 
     public ModelParam(ModelParam param) {
@@ -121,6 +124,8 @@ public class ModelParam implements Serializable {
         this.internal = param.internal;
         // SCIPIO
         this.typeConvert = param.typeConvert;
+        this.access = param.access;
+        this.eventAccess = param.eventAccess;
     }
 
     public void addValidator(String className, String methodName, String failMessage) {
@@ -170,6 +175,11 @@ public class ModelParam implements Serializable {
         return this.internal;
     }
 
+    // SCIPIO
+    public boolean isInternal() {
+        return internal;
+    }
+
     public boolean isIn() {
         return ModelService.IN_PARAM.equals(this.mode) || ModelService.IN_OUT_PARAM.equals(this.mode);
     }
@@ -212,6 +222,23 @@ public class ModelParam implements Serializable {
 
     public boolean isTypeConvert() { // SCIPIO
         return typeConvert;
+    }
+
+    public ModelService.Access getAccess() {
+        return access;
+    }
+
+    public ModelService.Access getEventAccess() {
+        return eventAccess;
+    }
+
+    public ModelService.Access getEffectiveEventAccess() {
+        ModelService.Access access = getEventAccess();
+        if (access != null) {
+            return access;
+        }
+        access = getAccess();
+        return (access != null) ? access : ModelService.Access.PUBLIC;
     }
 
     public boolean equals(ModelParam model) {

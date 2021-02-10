@@ -77,7 +77,6 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.service.group.GroupModel;
 import org.ofbiz.service.group.GroupServiceModel;
 import org.ofbiz.service.group.ServiceGroupReader;
-import org.ofbiz.service.job.JobPriority;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -306,6 +305,40 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * SCIPIO: Default job pool when service invoked as persistent job, when not overridden by caller.
      */
     String jobPoolPersist;
+
+    public static class Access implements Serializable { // SCIPIO
+        public static final Access PUBLIC = new Access("public");
+        public static final Access INTERNAL = new Access("internal");
+
+        private final String name;
+
+        protected Access(String name) {
+            this.name = name;
+        }
+
+        public static Access fromName(String name, Access defaultValue) throws IllegalArgumentException {
+            if (UtilValidate.isEmpty(name)) {
+                return defaultValue;
+            } else if (PUBLIC.getName().equals(name)) {
+                return PUBLIC;
+            } else if (INTERNAL.getName().equals(name)) {
+                return INTERNAL;
+            } else {
+                throw new IllegalArgumentException("Invalid service attribute access level name: " + name);
+            }
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public boolean isPublic() {
+            return this == PUBLIC;
+        }
+        public boolean isInternal() {
+            return this == INTERNAL;
+        }
+    }
 
     public ModelService() {}
 
@@ -1314,10 +1347,25 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
             if (OUT_PARAM.equals(modelParam.mode)) {
                 continue;
             }
-
             inList.add(modelParam);
         }
         return inList;
+    }
+
+    /**
+     * Returns a list of ModelParam objects in the order they were defined when
+     * the service was created (SCIPIO).
+     */
+    public List<ModelParam> getOutModelParamList() {
+        List<ModelParam> outList = new ArrayList<>(this.contextParamList.size());
+        for (ModelParam modelParam: this.contextParamList) {
+            // don't include IN parameters in this list, only OUT and INOUT
+            if (IN_PARAM.equals(modelParam.mode)) {
+                continue;
+            }
+            outList.add(modelParam);
+        }
+        return outList;
     }
 
     /**

@@ -224,22 +224,25 @@ public class ServiceMultiEventHandler implements EventHandler {
                     if ("timeZone".equals(paramName)) continue;
 
                     Object value = null;
+                    boolean publicParam = modelParam.getEffectiveEventAccess().isPublic(); // SCIPIO: exclude parameters when public
                     if (UtilValidate.isNotEmpty(modelParam.stringMapPrefix)) {
-                        Map<String, Object> paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, curSuffix);
+                        Map<String, Object> paramMap = publicParam ? UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, curSuffix) :
+                                UtilHttp.makeParamMapWithPrefix(UtilHttp.getAllAttributeMap(request), modelParam.stringMapPrefix, curSuffix);
                         value = paramMap;
                     } else if (UtilValidate.isNotEmpty(modelParam.stringListSuffix)) {
-                        List<Object> paramList = UtilHttp.makeParamListWithSuffix(request, modelParam.stringListSuffix, null);
+                        List<Object> paramList = publicParam ? UtilHttp.makeParamListWithSuffix(request, modelParam.stringListSuffix, null) :
+                                UtilHttp.makeParamListWithSuffix(UtilHttp.getAllAttributeMap(request), modelParam.stringListSuffix, null);
                         value = paramList;
                     } else {
                         // check attributes; do this before parameters so that attribute which can be changed by code can override parameters which can't
                         value = request.getAttribute(paramName + curSuffix);
 
-                        if (value == null) {
+                        if (value == null && publicParam) {
                             value = requestBodyMap.get(paramName + curSuffix); // SCIPIO: application/json request body parameters
                         }
 
                         // first check for request parameters
-                        if (value == null) {
+                        if (value == null && publicParam) {
                             String name = paramName + curSuffix;
 
                             ServiceEventHandler.checkSecureParameter(requestMap, urlOnlyParameterNames, name, session, serviceName, dctx.getDelegator());
@@ -262,12 +265,14 @@ public class ServiceMultiEventHandler implements EventHandler {
                         // now check global scope
                         if (value == null) {
                             if (checkGlobalScope) {
-                                String[] gParamArr = request.getParameterValues(paramName);
-                                if (gParamArr != null) {
-                                    if (gParamArr.length > 1) {
-                                        value = Arrays.asList(gParamArr);
-                                    } else {
-                                        value = gParamArr[0];
+                                if (publicParam) {
+                                    String[] gParamArr = request.getParameterValues(paramName);
+                                    if (gParamArr != null) {
+                                        if (gParamArr.length > 1) {
+                                            value = Arrays.asList(gParamArr);
+                                        } else {
+                                            value = gParamArr[0];
+                                        }
                                     }
                                 }
                                 if (value == null) {
@@ -280,7 +285,7 @@ public class ServiceMultiEventHandler implements EventHandler {
                         }
 
                         // make any composite parameter data (e.g., from a set of parameters {name_c_date, name_c_hour, name_c_minutes})
-                        if (value == null) {
+                        if (value == null && publicParam) {
                             value = UtilHttp.makeParamValueFromComposite(request, paramName + curSuffix, locale);
                         }
 

@@ -163,12 +163,15 @@ public class ServiceEventHandler implements EventHandler {
             if ("timeZone".equals(name)) continue;
 
             Object value = null;
+            boolean publicParam = modelParam.getEffectiveEventAccess().isPublic(); // SCIPIO: exclude parameters when public
             if (UtilValidate.isNotEmpty(modelParam.stringMapPrefix)) {
-                Map<String, Object> paramMap = UtilHttp.makeParamMapWithPrefix(request, multiPartMap, modelParam.stringMapPrefix, null);
+                Map<String, Object> paramMap = publicParam ? UtilHttp.makeParamMapWithPrefix(request, multiPartMap, modelParam.stringMapPrefix, null)
+                        : UtilHttp.makeParamMapWithPrefix(UtilHttp.getAllAttributeMap(request), multiPartMap, modelParam.stringMapPrefix, null);
                 value = paramMap;
                 if (Debug.verboseOn()) Debug.logVerbose("Set [" + modelParam.name + "]: " + paramMap, module);
             } else if (UtilValidate.isNotEmpty(modelParam.stringListSuffix)) {
-                List<Object> paramList = UtilHttp.makeParamListWithSuffix(request, multiPartMap, modelParam.stringListSuffix, null);
+                List<Object> paramList = publicParam ? UtilHttp.makeParamListWithSuffix(request, multiPartMap, modelParam.stringListSuffix, null) :
+                        UtilHttp.makeParamListWithSuffix(UtilHttp.getAllAttributeMap(request), multiPartMap, modelParam.stringListSuffix, null);
                 value = paramList;
             } else {
                 // SCIPIO: NO: Always check parameters after attributes, otherwise other event can't override
@@ -186,17 +189,17 @@ public class ServiceEventHandler implements EventHandler {
 
                 // SCIPIO: NOTE: These have been changed to null checks due to inconsistency with ServiceMultiEventHandler and logic
                 //if (UtilValidate.isEmpty(value)) {
-                if (value == null) {
+                if (value == null && publicParam) {
                     value = multiPartMap.get(name); // SCIPIO: only get this after attributes
                 }
 
-                if (value == null) {
+                if (value == null && publicParam) {
                     value = requestBodyMap.get(name); // SCIPIO: application/json request body parameters
                 }
 
                 // check the request parameters
                 //if (UtilValidate.isEmpty(value)) {
-                if (value == null) {
+                if (value == null && publicParam) {
                     ServiceEventHandler.checkSecureParameter(requestMap, urlOnlyParameterNames, name, session, serviceName, dctx.getDelegator());
 
                     // if the service modelParam has allow-html="any" then get this direct from the request instead of in the parameters Map so there will be no canonicalization possibly messing things up

@@ -512,7 +512,16 @@ public class ModelServiceReader implements Serializable {
                         param.optional = "true".equalsIgnoreCase(autoElement.getAttribute("optional")); // default to true
                         param.formDisplay = !"false".equalsIgnoreCase(autoElement.getAttribute("form-display")); // default to false
                         param.allowHtml = UtilXml.checkEmpty(autoElement.getAttribute("allow-html"), "none").intern(); // default to none
+                        // SCIPIO
                         param.typeConvert = "true".equalsIgnoreCase(autoElement.getAttribute("type-convert")); // SCIPIO: auto type convert flag: default to false
+                        String accessStr = autoElement.getAttribute("access");
+                        if (!accessStr.isEmpty()) {
+                            param.access = ModelService.Access.fromName(accessStr, null);
+                        }
+                        String eventAccessStr = autoElement.getAttribute("event-access");
+                        if (!eventAccessStr.isEmpty()) {
+                            param.eventAccess = ModelService.Access.fromName(eventAccessStr, null);
+                        }
                         modelParamMap.put(field.getName(), param);
                     }
                 }
@@ -578,6 +587,15 @@ public class ModelServiceReader implements Serializable {
 
             // SCIPIO: auto type convert flag
             param.typeConvert = "true".equalsIgnoreCase(attribute.getAttribute("type-convert")); // default to false
+
+            String accessStr = attribute.getAttribute("access");
+            if (!accessStr.isEmpty()) {
+                param.access = ModelService.Access.fromName(accessStr, null);
+            }
+            String eventAccessStr = attribute.getAttribute("event-access");
+            if (!eventAccessStr.isEmpty()) {
+                param.eventAccess = ModelService.Access.fromName(eventAccessStr, null);
+            }
 
             // set the validators
             this.addValidators(attribute, param);
@@ -725,6 +743,15 @@ public class ModelServiceReader implements Serializable {
                 // SCIPIO: auto type convert flag
                 if (UtilValidate.isNotEmpty(overrideElement.getAttribute("type-convert"))) {
                     param.typeConvert = "true".equalsIgnoreCase(overrideElement.getAttribute("type-convert")); // default to true
+                }
+
+                String accessStr = overrideElement.getAttribute("access");
+                if (!accessStr.isEmpty()) {
+                    param.access = ModelService.Access.fromName(accessStr, null);
+                }
+                String eventAccessStr = overrideElement.getAttribute("event-access");
+                if (!eventAccessStr.isEmpty()) {
+                    param.eventAccess = ModelService.Access.fromName(eventAccessStr, null);
                 }
 
                 // override validators

@@ -455,6 +455,30 @@ under the License.
                 Added 2019-01-04.
             </xs:documentation></xs:annotation>
         </xs:attribute>
+        <xs:attribute name="access"><!-- default="public" -->
+            <xs:annotation>
+                <xs:documentation>Visibility of the attribute toward public-facing services (SCIPIO).
+                    Default: "public". When set to "internal", the attribute cannot be assigned from request parameters from direct controller event calls.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="public"/>
+                    <xs:enumeration value="internal"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="event-access"><!-- default="public" -->
+            <xs:annotation>
+                <xs:documentation>Visibility of the attribute toward public-facing services specifically from controller events (SCIPIO).
+                    Default: "public". When set to "internal", the attribute cannot be assigned from request parameters from direct controller event calls.</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="public"/>
+                    <xs:enumeration value="internal"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="deprecated">
         <xs:complexType mixed="true">

@@ -1838,7 +1838,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
 }
 } />
 <#macro img_markup class="" id="" src="" responsiveMap={} type="" style="" width="" height="" link=link linkTarget=linkTarget attribs={} origArgs={} passArgs={} catchArgs...>
-    <#local imgContainer><#if width?has_content>width: ${escapeVal(width, 'css-html')};</#if><#if height?has_content> height: ${escapeVal(height, 'css-html')};</#if></#local>
+    <#local imgContainer><#if width?has_content>width: ${escapeVal(width, 'css-html')?replace("px","")}px;</#if><#if height?has_content> height: ${escapeVal(height, 'css-html')?replace("px","")}px;</#if></#local>
     <#local imgClass = "scipio-image">
     <#local src=raw(src)/>
     <#local currImgNum = getRequestVar("scipioCurrentImgNum")!"">

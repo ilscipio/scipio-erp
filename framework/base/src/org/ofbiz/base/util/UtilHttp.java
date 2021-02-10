@@ -787,6 +787,10 @@ public final class UtilHttp {
         return makeParamMapWithPrefix(getCombinedMap(request), additionalFields, prefix, suffix);
     }
 
+    public static Map<String, Object> makeParamMapWithPrefix(Map<String, ? extends Object> context, String prefix, String suffix) {
+        return makeParamMapWithPrefix(context, null, prefix, suffix);
+    }
+
     public static Map<String, Object> makeParamMapWithPrefix(Map<String, ? extends Object> context, Map<String, ? extends Object> additionalFields, String prefix, String suffix) {
         Map<String, Object> paramMap = new HashMap<>();
         for (Map.Entry<String, ? extends Object> entry: context.entrySet()) {
@@ -884,6 +888,7 @@ public final class UtilHttp {
 
     // SCIPIO: TODO: this should use getCombinedMap as above by default and corresponding overload
     public static List<Object> makeParamListWithSuffix(HttpServletRequest request, Map<String, ? extends Object> additionalFields, String suffix, String prefix) {
+        /* SCIPIO: use combined map for consistency with makeParamMapWithPrefix
         List<Object> paramList = new ArrayList<>();
         Enumeration<String> parameterNames = UtilGenerics.cast(request.getParameterNames());
         while (parameterNames.hasMoreElements()) {
@@ -897,6 +902,44 @@ public final class UtilHttp {
                 } else {
                     String value = request.getParameter(parameterName);
                     paramList.add(value);
+                }
+            }
+        }
+        if (additionalFields != null) {
+            for (Map.Entry<String, ? extends Object> entry: additionalFields.entrySet()) {
+                String fieldName = entry.getKey();
+                if (fieldName.endsWith(suffix)) {
+                    if (UtilValidate.isNotEmpty(prefix)) {
+                        if (fieldName.startsWith(prefix)) {
+                            paramList.add(entry.getValue());
+                        }
+                    } else {
+                        paramList.add(entry.getValue());
+                    }
+                }
+            }
+        }
+        return paramList;
+        */
+        return makeParamListWithSuffix(getCombinedMap(request), additionalFields, suffix, prefix);
+    }
+
+    public static List<Object> makeParamListWithSuffix(Map<String, ? extends Object> context, String suffix, String prefix) {
+        return makeParamListWithSuffix(context, null, suffix, prefix);
+    }
+
+    // SCIPIO: version that accepts context map instead of HttpServletRequest
+    public static List<Object> makeParamListWithSuffix(Map<String, ? extends Object> context, Map<String, ? extends Object> additionalFields, String suffix, String prefix) {
+        List<Object> paramList = new ArrayList<>();
+        for (Map.Entry<String, ? extends Object> entry: context.entrySet()) {
+            String parameterName = entry.getKey();
+            if (parameterName.endsWith(suffix)) {
+                if (UtilValidate.isNotEmpty(prefix)) {
+                    if (parameterName.startsWith(prefix)) {
+                        paramList.add(entry.getValue());
+                    }
+                } else {
+                    paramList.add(entry.getValue());
                 }
             }
         }

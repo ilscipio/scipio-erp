@@ -51,6 +51,22 @@ code package.
         <attribute mode="IN" name="entityNames" type="Collection" optional="true"/>
     </service>
 
+    <service name="scheduleAllEntityIndexing" engine="java" location="com.ilscipio.scipio.solr.EntityIndexer" invoke="scheduleAllEntityIndexing"
+             use-transaction="true"><!-- sync service -->
+        <description>Registers all found entities for indexing queueing in global queue immediately.</description>
+        <attribute mode="IN" name="entityName" type="String" optional="true"/><!-- NOTE: Technically usually required -->
+        <attribute mode="IN" name="topics" type="Collection" optional="true">
+            <description>Names of subscriber topics to limit which subscribers are triggered</description>
+        </attribute>
+        <attribute mode="IN" name="action" type="String" optional="true"><!-- default-value="auto" -->
+            <description>Supported values: add (same as addToSolr), remove (same as removeFromSolr),
+                auto (default - this either adds or removes based on whether or not the productId still exists in the database)</description>
+        </attribute>
+        <attribute mode="IN" name="flush" type="String" optional="true">
+            <description>Whether to force-flush any of the queued entities. Values: auto (default), all (flush all products in global queue a.s.a.p. including these)</description><!-- TODO: more modes possible later -->
+        </attribute>
+    </service>
+
     <service name="scheduleProductIndexing" engine="java" location="com.ilscipio.scipio.solr.EntityIndexer" invoke="scheduleEntityIndexing"
              use-transaction="false" log="quiet" log-eca="quiet"><!-- async service -->
         <description>Registers product ID or values for indexing queueing at the end of the transaction or in global queue
@@ -75,6 +91,13 @@ code package.
         </attribute>
         <override name="entityName" optional="true" default-value="Product"/>
         <override name="idField" type="String" optional="true" default-value="productId"/>
+    </service>
+
+    <service name="scheduleAllProductIndexing" engine="java" location="com.ilscipio.scipio.solr.EntityIndexer" invoke="scheduleAllEntityIndexing"
+             use-transaction="true">
+        <description>Registers all found products for indexing queueing in global queue immediately.</description>
+        <implements service="scheduleAllEntityIndexing"/>
+        <override name="entityName" optional="true" default-value="Product"/>
     </service>
 
     <!-- ========================================================= -->

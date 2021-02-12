@@ -3,6 +3,7 @@ package com.ilscipio.scipio.solr;
 import org.ofbiz.base.SystemState;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -14,9 +15,12 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.EntityFindOptions;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
+import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceOptions;
 import org.ofbiz.service.ServiceSyncRegistrations;
 import org.ofbiz.service.ServiceUtil;
@@ -27,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -1051,7 +1056,7 @@ public class EntityIndexer implements Runnable {
                 // register the service
                 Map<String, Object> servCtx = UtilMisc.toMap("locale", context.get("locale"), "userLogin", context.get("userLogin"),
                         "timeZone", context.get("timeZone"), "event", "global-queue");
-                Map<String, Map<GenericPK, Entry>> entitiesToIndex = new HashMap<>();
+                Map<String, Map<GenericPK, Entry>> entitiesToIndex = new LinkedHashMap<>();
                 // IMPORTANT: LinkedHashMap keeps order of changes across transaction
                 Map<GenericPK, Entry> entryMap = new LinkedHashMap<>();
                 for(Entry entry : entries) {
@@ -1102,7 +1107,7 @@ public class EntityIndexer implements Runnable {
                 Collection<Entry> entries = indexer.extractEntries(dctx.getDelegator(), context, System.currentTimeMillis(), null);
                 if (UtilValidate.isNotEmpty(entries)) {
                     if (entitiesToIndex == null) {
-                        entitiesToIndex = new HashMap<>();
+                        entitiesToIndex = new LinkedHashMap<>();
                     }
                     Map<GenericPK, Entry> entryMap = entitiesToIndex.get(indexer.getName());
                     if (entryMap == null) {
@@ -1115,32 +1120,94 @@ public class EntityIndexer implements Runnable {
                     }
                 }
             }
+            Map<String, Object> newEntitiesToIndex = UtilGenerics.cast(context.get("newEntitiesToIndex"));
+            Set<String> entityNames = UtilMisc.keySet(entitiesToIndex, newEntitiesToIndex);
+
             int scheduled = 0;
             StringBuilder pkList = new StringBuilder();
             int pkCount = 0;
-            for(Map.Entry<String, Map<GenericPK, Entry>> indexerEntry : entitiesToIndex.entrySet()) {
-                EntityIndexer targetIndexer = getIndexer(indexerEntry.getKey());
+            for(String targetEntityName : entityNames) {
+                EntityIndexer targetIndexer = getIndexer(targetEntityName);
                 if (pkList.length() > 0) {
                     pkList.append("; ");
                 }
                 pkList.append(targetIndexer.getEntityName());
                 pkList.append(": ");
                 boolean firstPk = true;
-                for(Entry entry : indexerEntry.getValue().values()) {
-                    targetIndexer.add(entry);
-                    if (pkCount < SolrProductSearch.getMaxLogIds()) {
-                        if (!firstPk) {
-                            pkList.append(", ");
+
+                Map<GenericPK, Entry> targetEntry = (entitiesToIndex != null) ? entitiesToIndex.get(targetEntityName) : null;
+                if (targetEntry != null) {
+                    for (Entry entry : targetEntry.values()) {
+                        targetIndexer.add(entry);
+                        if (pkCount < SolrProductSearch.getMaxLogIds()) {
+                            if (!firstPk) {
+                                pkList.append(", ");
+                            }
+                            pkList.append(entry.getShortPk());
+                            pkCount++;
+                        } else if (pkCount == SolrProductSearch.getMaxLogIds()) {
+                            pkList.append("...");
+                            pkCount++;
                         }
-                        pkList.append(entry.getShortPk());
-                        pkCount++;
-                    } else if (pkCount == SolrProductSearch.getMaxLogIds()) {
-                        pkList.append("...");
-                        pkCount++;
+                        scheduled++;
+                        firstPk = false;
                     }
-                    scheduled++;
-                    firstPk = false;
                 }
+
+                Object rawEntities = newEntitiesToIndex.get(targetEntityName);
+                if (rawEntities != null) {
+                    Map<String, Object> extractCtx = new HashMap<>(context);
+                    extractCtx.remove("entityName");
+                    extractCtx.remove("idField");
+                    Iterator<?> it;
+                    if (rawEntities instanceof Iterable || rawEntities instanceof Iterator) {
+                        it = UtilMisc.asIterator(rawEntities);
+                    } else {
+                        it = UtilMisc.toList(rawEntities).iterator();
+                    }
+
+                    if (rawEntities instanceof EntityListIterator) {
+                        // in this case trigger running early due to high number
+                        if (!targetIndexer.isRunning()) {
+                            // Start the async service to create a new thread and prioritize in system at same time
+                            dctx.getDispatcher().runAsync("runEntityIndexing",
+                                    UtilMisc.toMap("userLogin", context.get("userLogin"), "entityName", targetIndexer.getName()),
+                                    ServiceOptions.asyncMemory().priority(targetIndexer.getRunServicePriority()));
+                        }
+                    }
+
+                    Object value;
+                    while((value = UtilMisc.next(it)) != null) {
+                        if (value instanceof GenericEntity) {
+                            extractCtx.put("instance", value);
+                            extractCtx.remove("id");
+                        } else if (value instanceof String) {
+                            extractCtx.remove("instance");
+                            extractCtx.put("id", value);
+                        } else {
+                            throw new IllegalArgumentException("invalid entityInstances for entity [" + targetEntityName + "]: " + value.getClass().getName());
+                        }
+                        Collection<Entry> entries = targetIndexer.extractEntries(dctx.getDelegator(), extractCtx, System.currentTimeMillis(), null);
+                        if (UtilValidate.isNotEmpty(entries)) {
+                            for(Entry entry : entries) {
+                                targetIndexer.add(entry);
+                                if (pkCount < SolrProductSearch.getMaxLogIds()) {
+                                    if (!firstPk) {
+                                        pkList.append(", ");
+                                    }
+                                    pkList.append(entry.getShortPk());
+                                    pkCount++;
+                                } else if (pkCount == SolrProductSearch.getMaxLogIds()) {
+                                    pkList.append("...");
+                                    pkCount++;
+                                }
+                                scheduled++;
+                                firstPk = false;
+                            }
+                        }
+                    }
+                }
+
                 if (!targetIndexer.isRunning()) {
                     // Start the async service to create a new thread and prioritize in system at same time
                     dctx.getDispatcher().runAsync("runEntityIndexing",
@@ -1155,6 +1222,53 @@ public class EntityIndexer implements Runnable {
             final String errMsg = "Could not queue entity indexing";
             Debug.logError(e, "scheduleEntityIndexing: " + errMsg, module);
             return ServiceUtil.returnError(errMsg + ": " + e.toString());
+        }
+    }
+
+    public static Map<String, Object> scheduleAllEntityIndexing(ServiceContext ctx) {
+        Delegator delegator = ctx.delegator();
+        ProcessSignals processSignals = null;
+
+        String entityName = ctx.attr("entityName");
+        EntityListIterator prodIt = null;
+        try {
+            if (processSignals != null && processSignals.isSet("stop")) {
+                return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted");
+            }
+
+            EntityFindOptions findOptions = new EntityFindOptions();
+            prodIt = delegator.find(entityName, null, null, null, null, findOptions);
+            if (processSignals != null && processSignals.isSet("stop")) {
+                return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted");
+            }
+
+            /* TODO: filters
+            Collection<String> includeMainStoreIds = UtilMisc.nullIfEmpty(ctx.<Collection<String>>attr("includeMainStoreIds"));
+            Collection<String> includeAnyStoreIds = UtilMisc.nullIfEmpty(ctx.<Collection<String>>attr("includeAnyStoreIds"));
+            List<SolrDocBuilder.ProductFilter> productFilters = null;
+            SolrDocBuilder.ProductFilter storeProductFilter = docBuilder.makeStoreProductFilter(includeMainStoreIds, includeAnyStoreIds);
+            if (storeProductFilter != null) {
+                productFilters = (productFilters != null) ? new ArrayList<>(productFilters) : new ArrayList<>();
+                productFilters.add(storeProductFilter);
+            }
+            */
+
+            Map<String, Object> queueCtx = new HashMap<>(ctx.context());
+            queueCtx.put("newEntitiesToIndex", UtilMisc.toMap(entityName, prodIt));
+            Map<String, Object> queueResult = queueEntityIndexing(ctx.dctx(), queueCtx);
+            if (ServiceUtil.isError(queueResult)) {
+                return ServiceUtil.returnResultSysFields(queueResult);
+            }
+            return ServiceUtil.returnResultSysFields(queueResult);
+        } catch (Exception e) {
+            return ServiceUtil.returnError(e.toString());
+        } finally {
+            if (prodIt != null) {
+                try {
+                    prodIt.close();
+                } catch(Exception e) {
+                }
+            }
         }
     }
 

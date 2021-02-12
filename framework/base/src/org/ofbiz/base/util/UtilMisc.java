@@ -2315,4 +2315,25 @@ public final class UtilMisc {
             return unmodifiableAdapted(optimized(map));
         }
     }
+
+    /**
+     * SCIPIO: Returns a best-possible optimized views of the combined keys of both maps, unless one is not set.
+     */
+    public static <K> Set<K> keySet(Map<K, ?> firstMap, Map<K, ?> secondMap) { // SCIPIO
+        if (UtilValidate.isNotEmpty(firstMap)) {
+            if (UtilValidate.isNotEmpty(secondMap)) {
+                Set<K> keys = new LinkedHashSet<>(firstMap.keySet());
+                keys.addAll(secondMap.keySet());
+                return keys;
+            } else {
+                return firstMap.keySet();
+            }
+        } else {
+            if (UtilValidate.isNotEmpty(secondMap)) {
+                return secondMap.keySet();
+            } else {
+                return Collections.emptySet();
+            }
+        }
+    }
 }

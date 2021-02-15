@@ -1,14 +1,22 @@
 package com.ilscipio.scipio.party;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
@@ -191,5 +199,57 @@ public class PartyServices {
         result.put("facilityPurposeCount", facilityPurposeCount);
         result.put("totalPurposeCount", partyPurposeCount+facilityPurposeCount);
         return result;
+    }
+
+    /**
+     * Finds abandoned carts by users
+     * @param ctx The DispatchContext that this service is operating in.
+     * @param context Map containing the input parameters.
+     * @return Map with the result of the service, the output parameters.
+     */
+    public static Map<String, Object> findAbandonedCartsByUser(DispatchContext ctx, Map<String, ? extends Object> context) {
+        Map<String, Object> result = new HashMap<>();
+        Delegator delegator = ctx.getDelegator();
+        Timestamp now = UtilDateTime.nowTimestamp();
+        List<GenericValue> toBeStored = new LinkedList<>();
+        Locale locale = (Locale) context.get("locale");
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        String productStoreId = (String) context.get("productStoreId");
+
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Integer daysOffset = (Integer) context.get("daysOffset");
+
+        DynamicViewEntity dve = new DynamicViewEntity();
+        dve.addMemberEntity("CAL", "CartAbandonedLine");
+        dve.addMemberEntity("V", "Visit");
+        dve.addMemberEntity("P", "Party");
+        dve.addMemberEntity("UL", "UserLogin");
+
+        dve.addAliasAll("CAL", null, null);
+        dve.addAlias("V", "partyId", null, null, null, null, null);
+        dve.addAlias("V", "userLoginId", null, null, null, null, null);
+
+        dve.addViewLink("CAL", "V", false, UtilMisc.toList(ModelKeyMap.makeKeyMapList("visitId")));
+        dve.addViewLink("V", "P", true, UtilMisc.toList(ModelKeyMap.makeKeyMapList("partyId")));
+        dve.addViewLink("V", "UL", true, UtilMisc.toList(ModelKeyMap.makeKeyMapList("userLoginId")));
+
+        EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(
+                EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, null),
+                EntityCondition.makeCondition("userLoginId", EntityOperator.NOT_EQUAL, null)
+        ), EntityOperator.OR);
+//        condition = EntityCondition.makeCondition(condition, EntityOperator.AND,
+//            EntityCondition.makeCondition("productStoreId", productStoreId));
+        try {
+            List<GenericValue> abandonedCarts = EntityQuery.use(delegator).from(dve).where(condition).queryList();
+            for (GenericValue abandonedCart : abandonedCarts) {
+                Debug.log("abandonedCart ===> " + abandonedCart);
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+        }
+
+        return ServiceUtil.returnSuccess();
     }
 }

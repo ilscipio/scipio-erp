@@ -1755,4 +1755,15 @@ code package.
         <attribute mode="IN" name="size" type="Integer" optional="true" default-value="50"/>
         <attribute mode="OUT" name="gravatarImageUrl" type="String" optional="false" />
     </service>
+
+    <!-- SCIPIO: Added 2.0.0: Finds abandoned carts in order to send reminder emails or other uses -->
+    <service name="findAbandonedCartsByUser" engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="findAbandonedCartsByUser" auth="true">
+        <description>
+            Finds abandoned carts by user
+        </description>
+        <attribute name="fromDate" mode="IN" type="java.sql.Timestamp" optional="true" />
+        <attribute name="daysOffset" mode="IN" type="Integer" optional="true" />
+        <attribute name="productStoreId" mode="IN" type="String" optional="true" />
+    </service>
+
 </services>

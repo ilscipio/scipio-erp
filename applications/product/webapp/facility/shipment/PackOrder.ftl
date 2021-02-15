@@ -144,6 +144,7 @@ code package.
             </#if>
     
             <#-- manual per item form -->
+            <#assign itemInfos = packingSession.getItemInfos()!>
             <#if showInput != "N" && itemInfos?has_content>
                 <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPack')}"/>
                 <@section title=sectionTitle>
@@ -165,7 +166,6 @@ code package.
                 </@section>       
     
                 <#-- auto grid form -->
-                <#assign itemInfos = packingSession.getItemInfos()!>
                 <#assign sectionTitle="${rawLabel('ProductProducts')} ${rawLabel('ProductToPack')}"/>
                 <@section title=sectionTitle>
                     <form name="multiPackForm" method="post" action="<@pageUrl>ProcessBulkPackOrder</@pageUrl>">
@@ -270,7 +270,9 @@ code package.
     
             <#-- complete form -->
             <#assign packageSeqIds = packingSession.getPackageSeqIds()/>
+
             <#if showInput != "N" && packageSeqIds?has_content>
+                ${Debug.log("packageSeqIds ===> " + packageSeqIds)}
                 <@section>
                     <form name="completePackForm" method="post" action="<@pageUrl>CompletePack</@pageUrl>">
                         <@fields type="default-manual">

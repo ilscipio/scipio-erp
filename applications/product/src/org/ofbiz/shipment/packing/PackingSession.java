@@ -1029,7 +1029,7 @@ public class PackingSession implements java.io.Serializable {
         return shipmentBoxType;
     }
 
-    class ItemDisplay extends AbstractMap<Object, Object> {
+    class ItemDisplay extends HashMap<Object, Object> {
 
         public GenericValue orderItem;
         public BigDecimal quantity;
@@ -1051,6 +1051,7 @@ public class PackingSession implements java.io.Serializable {
                 quantity = v.getBigDecimal("totQuantityReserved").setScale(2, RoundingMode.HALF_UP);
             }
             Debug.logInfo("created item display object quantity: " + quantity + " (" + productId + ")", module);
+            put(productId, this);
         }
 
         public GenericValue getOrderItem() {
@@ -1061,10 +1062,10 @@ public class PackingSession implements java.io.Serializable {
             return quantity;
         }
 
-        @Override
-        public Set<Entry<Object, Object>> entrySet() {
-            return null;
-        }
+//        @Override
+//        public Set<Entry<Object, Object>> entrySet() {
+//            return ;
+//        }
 
         @Override
         public Object get(Object name) {

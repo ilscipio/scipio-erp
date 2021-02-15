@@ -30,9 +30,17 @@ code package.
         <action service="setInvoicesToReadyFromShipment" mode="sync" run-as-user="system"/>
     </eca>
 
+    <!-- SCIPIO: updated 2.0.0: Original seca for statusId=SHIPMENT_SHIPPED accepts now statusId=SHIPMENT_DELIVERED within the condition.
+        The service will differentiate shipment sent and shipment delivered status thus the right email notification will be sent.
+        Besides the notification email for SHIPMENT_DELIVERED is now optional and controlled by ProductStore settings, falling back to shop properties if null.
+        Basically This is because an order complete email notification is already sent, so shipment delivered notification may be quite redundant in most cases.
+    -->
     <eca service="updateShipment" event="commit">
         <condition-field field-name="statusId" operator="not-equals" to-field-name="oldStatusId"/>
-        <condition field-name="statusId" operator="equals" value="SHIPMENT_SHIPPED"/>
+        <or>
+            <condition field-name="statusId" operator="equals" value="SHIPMENT_SHIPPED"/>
+            <condition field-name="statusId" operator="equals" value="SHIPMENT_DELIVERED"/>
+        </or>
         <condition field-name="shipmentTypeId" operator="equals" value="SALES_SHIPMENT"/>
         <action service="sendShipmentCompleteNotification" mode="async" persist="true"/>
     </eca>

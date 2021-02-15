@@ -1096,23 +1096,43 @@ public class ShipmentServices {
         Map<String, Object> sendMap = new HashMap<String, Object>();
         GenericValue shipment = null ;
         GenericValue orderHeader = null;
+        String productStoreId = orderHeader.getString("productStoreId");
+        GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
         try {
             shipment = EntityQuery.use(delegator).from("Shipment").where("shipmentId", shipmentId).queryOne();
             orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", shipment.getString("primaryOrderId")).queryOne();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problem getting info from database", module);
         }
+
+        // SCIPIO: added 2.0.0: Notification email is now determined by shipment
+        String emailType = null;
+        if (shipment.getString("statusId").equals("SHIPMENT_SHIPPED")) {
+            emailType = "PRDS_ODR_SHIP_SENT";
+        } else if (shipment.getString("statusId").equals("SHIPMENT_DELIVERED")) {
+            Boolean sendShipmentDeliveredNotificationEmail = productStore.getBoolean("notificationEmailShipmentDelivered");
+            if (UtilValidate.isEmpty(sendShipmentDeliveredNotificationEmail)) {
+                sendShipmentDeliveredNotificationEmail = UtilProperties.getPropertyAsBoolean("shipment", "shipment.email.notification.delivered", false);
+            }
+            if (UtilValidate.isEmpty(sendShipmentDeliveredNotificationEmail) || sendShipmentDeliveredNotificationEmail.equals(Boolean.FALSE)) {
+                return ServiceUtil.returnSuccess("Notification email for delivered shipments disabled");
+            }
+            emailType = "PRDS_ODR_SHIP_COMPLT";
+        } else {
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmailInvalidShipmentStatus", localePar));
+        }
+
         GenericValue productStoreEmail = null;
         try {
-            productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", orderHeader.get("productStoreId"), "emailType", "PRDS_ODR_SHIP_COMPLT").queryOne();
+            productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType).queryOne();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem getting the ProductStoreEmailSetting for productStoreId =" + orderHeader.get("productStoreId") + " and emailType = PRDS_ODR_SHIP_COMPLT", module);
+            Debug.logError(e, "Problem getting the ProductStoreEmailSetting for productStoreId =" + orderHeader.get("productStoreId") + " and emailType = " + emailType, module);
         }
         if (productStoreEmail == null) {
             return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
                     "ProductProductStoreEmailSettingsNotValid",
                     UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"),
-                            "emailType", "PRDS_ODR_SHIP_COMPLT"), localePar));
+                            "emailType", emailType), localePar));
         }
         // the override screenUri
         if (UtilValidate.isEmpty(screenUri)) {
@@ -1157,7 +1177,6 @@ public class ShipmentServices {
         }
 
         // SCIPIO: Determine webSiteId for store email
-        String productStoreId = orderHeader.getString("productStoreId");
         String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
                 (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
         if (webSiteId != null) {
@@ -1182,7 +1201,7 @@ public class ShipmentServices {
         }
         // check for errors
         if (sendResp != null && ServiceUtil.isError(sendResp)) {
-            sendResp.put("emailType", "PRDS_ODR_SHIP_COMPLT");
+            sendResp.put("emailType", emailType);
             return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmail", localePar), null, null, sendResp);
         }
         return sendResp;

@@ -80,6 +80,8 @@ code package.
     <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_ODR_PAY_CHANGE" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentChangeNotice" subject="SCIPIO ERP - Order Payment Notification #${orderId}" fromAddress="test@scipioerp.com"/>
     <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_ODR_PAY_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#PaymentCompletedNotice" subject="SCIPIO ERP - Order Payment Notification #${orderId}" fromAddress="test@scipioerp.com"/>
 
+    <!-- SCIPIO: added 2.0.0: New product store email setting for shipment sent -->
+    <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_ODR_SHIP_SENT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#ShipmentSentNotice" subject="SCIPIO ERP - Shipment Sent Notification #${orderId}" fromAddress="test@scipioerp.com"/>
     <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_ODR_SHIP_COMPLT" bodyScreenLocation="component://shop/widget/EmailOrderScreens.xml#ShipmentCompleteNotice" subject="SCIPIO ERP - Shipment Complete Notification #${orderId}" fromAddress="test@scipioerp.com"/>
 
     <ProductStoreEmailSetting productStoreId="ScipioShop" emailType="PRDS_RTN_ACCEPT" bodyScreenLocation="component://shop/widget/EmailReturnScreens.xml#ReturnAccept" subject="SCIPIO ERP - Return Accepted #${returnHeader.returnId}" xslfoAttachScreenLocation="component://order/widget/ordermgr/OrderPrintScreens.xml#ReturnPDF" fromAddress="test@scipioerp.com"/>

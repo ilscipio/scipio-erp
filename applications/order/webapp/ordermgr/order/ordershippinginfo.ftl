@@ -5,7 +5,8 @@ code package.
 -->
 
 <#if shipGroups?has_content && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
-  <#if parameters.view?has_content && parameters.view == "OISGA">
+    ${Debug.log("parameters.view ====> " + parameters.view!)}
+
   <#-- New in Ofbiz 14.12 -->
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
@@ -13,6 +14,7 @@ code package.
     </@menu>
   </#macro>
   <@section title=uiLabelMap.OrderShipmentInformation menuContent=menuContent>
+    <#if parameters.view?has_content && parameters.view == "OISGA">
     <@fields type="default-manual">
       <@table type="data-complex" role="grid">
         <@thead>
@@ -36,133 +38,130 @@ code package.
               <#assign rowCount = 0>
 
               <#if index != 0>
-          <@tr type="util"><@td colspan="4"><hr/></@td></@tr>
+                <@tr type="util"><@td colspan="4"><hr/></@td></@tr>
               </#if>
               <#if (quantityOrdered > 0) >
-          <@tr>
-              <@td><a name="orderItem${index}">${orderItem.orderItemSeqId}</a></@td>
-              <@td><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderItem.productId!}</@serverUrl>" class="link">${orderItem.productId!}</a>]</@td>
-              <@td>${quantityOrdered}</@td>
-              <@td>${quantityNotAvailable}</@td>
-              <@td colspan="2">
-                  <#if !orderItem.statusId?exists || orderItem.statusId == "ITEM_CREATED" || orderItem.statusId == "ITEM_APPROVED">
-                  <div id="display${index}">
-                      <a name="display${index}" href="javascript:showEdit('edit', '${index}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
-                  </div>
-                  <div id="edit${index}" style="display: none">
-                      <a href="javascript:document.UpdateOrderItemShipGroupAssoc${index}.submit()" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.CommonValidate}</a>
-                      <a href="javascript:showEdit('display', '${index}'); restoreEditField('${index}');" class="${styles.link_run_local_cancel!}">${uiLabelMap.CommonCancel}</a>
-                  </div>
-                  </#if>
-              </@td>
-          </@tr>
-          <@tr>
-            <@td colspan="5">
-              <form method="post" action="<@pageUrl>UpdateOrderItemShipGroupAssoc?view=OISGA</@pageUrl>" name="UpdateOrderItemShipGroupAssoc${index}"/>
-                <input type="hidden" name="orderId" value="${orderId}"/>
-                <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
-                
-                <@table type="data-complex">
-                
-              <#list OISGAssContents as OISGAssContent>
-                <#assign OISG = OISGAssContent.getRelatedOne("OrderItemShipGroup", false)>
-                <#assign orderShipments = OISGAssContent.getRelated("OrderShipment", null, null, false)>
-                      
-                <@tr>
-                  <@td width="40%">&nbsp;</@td>
-                  <@td width="40%">
-                    <input name="_rowSubmit_o_${rowCount}" value="Y" type="hidden"/>
-                    <input type="hidden" name="orderId_o_${rowCount}" value="${orderId}"/>
-                    <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
-                    <input type="hidden" name="shipGroupSeqId_o_${rowCount}" value="${OISG.shipGroupSeqId}"/>
-                    <input type="hidden" name="rowCount_o_${rowCount}" value="${rowCount}"/>
-                      <div> [${OISG.shipGroupSeqId}] <#if OISG.shipByDate?has_content>, ${uiLabelMap.OrderShipBeforeDate} : ${OISG.shipByDate?date}</#if></div>
-                          <#if orderType == "SALES_ORDER">
-                              <#list orderShipments as orderShipment>
-                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId!}<#if externalLoginKey?has_content>&amp;externalLoginKey=${externalLoginKey}</#if></@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
-                              </#list>
-                          <#elseif orderType == "PURCHASE_ORDER">
-                              <#list orderShipments as orderShipment>
-                                  <#if orderShipment.quantity?has_content & orderShipment.quantity != 0.0>
-                      <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="<@serverUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}<#if externalLoginKey?has_content>&amp;externalLoginKey=${externalLoginKey}</#if></@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                  <@tr>
+                      <@td><a name="orderItem${index}">${orderItem.orderItemSeqId}</a></@td>
+                      <@td><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderItem.productId!}</@serverUrl>" class="link">${orderItem.productId!}</a>]</@td>
+                      <@td>${quantityOrdered}</@td>
+                      <@td>${quantityNotAvailable}</@td>
+                      <@td colspan="2">
+        <#--                  <#if !orderItem.statusId?exists || orderItem.statusId == "ITEM_CREATED" || orderItem.statusId == "ITEM_APPROVED">-->
+                          <div id="display${index}">
+                              <a name="display${index}" href="javascript:showEdit('edit', '${index}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
+                          </div>
+                          <div id="edit${index}" style="display: none">
+                              <a href="javascript:document.UpdateOrderItemShipGroupAssoc${index}.submit()" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.CommonValidate}</a>
+                              <a href="javascript:showEdit('display', '${index}'); restoreEditField('${index}');" class="${styles.link_run_local_cancel!}">${uiLabelMap.CommonCancel}</a>
+                          </div>
+        <#--                  </#if>-->
+                      </@td>
+                  </@tr>
+                  <@tr>
+                    <@td colspan="5">
+                      <form method="post" action="<@pageUrl>UpdateOrderItemShipGroupAssoc?view=OISGA</@pageUrl>" name="UpdateOrderItemShipGroupAssoc${index}"/>
+                        <input type="hidden" name="orderId" value="${orderId}"/>
+                        <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
+
+                        <@table type="data-complex">
+                          <#list OISGAssContents as OISGAssContent>
+                            <#assign OISG = OISGAssContent.getRelatedOne("OrderItemShipGroup", false)>
+                            <#assign orderShipments = OISGAssContent.getRelated("OrderShipment", null, null, false)>
+
+                            <@tr>
+                              <@td width="40%">&nbsp;</@td>
+                              <@td width="40%">
+                                <input name="_rowSubmit_o_${rowCount}" value="Y" type="hidden"/>
+                                <input type="hidden" name="orderId_o_${rowCount}" value="${orderId}"/>
+                                <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
+                                <input type="hidden" name="shipGroupSeqId_o_${rowCount}" value="${OISG.shipGroupSeqId}"/>
+                                <input type="hidden" name="rowCount_o_${rowCount}" value="${rowCount}"/>
+                                  <div> [${OISG.shipGroupSeqId}] <#if OISG.shipByDate?has_content>, ${uiLabelMap.OrderShipBeforeDate} : ${OISG.shipByDate?date}</#if></div>
+                                      <#if orderType == "SALES_ORDER">
+                                          <#list orderShipments as orderShipment>
+                                            <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="<@serverUrl>/facility/control/EditShipment?shipmentId=${orderShipment.shipmentId!}<#if externalLoginKey?has_content>&amp;externalLoginKey=${externalLoginKey}</#if></@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                                          </#list>
+                                      <#elseif orderType == "PURCHASE_ORDER">
+                                          <#list orderShipments as orderShipment>
+                                              <#if orderShipment.quantity?has_content & orderShipment.quantity != 0.0>
+                                                <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="<@serverUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}<#if externalLoginKey?has_content>&amp;externalLoginKey=${externalLoginKey}</#if></@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                                              <#else>
+                                                <#assign shipmentItem = orderShipment.getShipmentItem()>
+                                                <div>${uiLabelMap.OrderPlannedRejected} : </b><a target="facility" href="<@serverUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}<#if externalLoginKey?has_content>&amp;externalLoginKey=${externalLoginKey}</#if></@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${shipmentItem.quantity!}</div>
+                                              </#if>
+                                          </#list>
+                                      </#if>
+                              </@td>
+                              <@td width="20%" class="${styles.text_right!}">
+                                  <div id="displayQuantity${index}${rowCount}">${OISGAssContent.quantity!}</div>
+                                  <#if (orderShipments.size()?default(0)) == 0>
+                                    <div id="editQuantity${index}${rowCount}" style="display: none;"><input id="edit${index}_o_${rowCount}" name="quantity_o_${rowCount}" size="5" value="${OISGAssContent.quantity!}" title="${OISGAssContent.quantity!}" /></div>
                                   <#else>
-                                      <#assign shipmentItem = orderShipment.getShipmentItem()>
-                      <div>${uiLabelMap.OrderPlannedRejected} : </b><a target="facility" href="<@serverUrl>/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}<#if externalLoginKey?has_content>&amp;externalLoginKey=${externalLoginKey}</#if></@serverUrl>" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${shipmentItem.quantity!}</div>
+                                    <div id="editQuantity${index}${rowCount}" style="display: none;">${OISGAssContent.quantity!}</div>
+                                    <input type="hidden" name="quantity_o_${rowCount}" value="${OISGAssContent.quantity!}"/>
                                   </#if>
-                              </#list>
-                          </#if>
-                  </@td>
-                  <@td width="20%" class="${styles.text_right!}">
-                      <div id="displayQuantity${index}${rowCount}">${OISGAssContent.quantity!}</div>
-                          <#if (orderShipments.size()?default(0)) == 0>
-                      <div id="editQuantity${index}${rowCount}" style="display: none;"><input id="edit${index}_o_${rowCount}" name="quantity_o_${rowCount}" size="5" value="${OISGAssContent.quantity!}" title="${OISGAssContent.quantity!}" /></div>
-                          <#else>
-                      <div id="editQuantity${index}${rowCount}" style="display: none;">${OISGAssContent.quantity!}</div>
-                      <input type="hidden" name="quantity_o_${rowCount}" value="${OISGAssContent.quantity!}"/>
-                          </#if>
-                  </@td>
+                              </@td>
+                            </@tr>
+                            <#assign rowCount = rowCount + 1>
+                          </#list>
+                        </@table>
+                        <input type="hidden" name="_rowCount" value="${rowCount}"/>
+                      </form>
+                    </@td>
                 </@tr>
-                <#assign rowCount = rowCount + 1> 
-              </#list>
-                </@table> 
-                
-                <input type="hidden" name="_rowCount" value="${rowCount}"/>
-              </form>
-            
-            </@td>
-          </@tr>  
-                  <#if !orderItem.statusId?exists || orderItem.statusId == "ITEM_CREATED" || orderItem.statusId == "ITEM_APPROVED" && (orderHeader.statusId != "ORDER_SENT" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED" && orderHeader.statusId != "ORDER_CANCELLED")>
-          <@tr>
-              
-              <@td colspan="3">&nbsp;</@td>
-              <@td colspan="2">
-                <form method="post" action="<@pageUrl>AddOrderItemShipGroupAssoc?view=OISGA</@pageUrl>" name="addOISGForm${index}"/>
-                <input type="hidden" name="editQuantity" value="edit"/>
-                <input type="hidden" name="editQuantityIndex" value="${index}"/>
-                <input type="hidden" name="orderId" value="${orderId}"/>
-                <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
-                <input type="hidden" name="quantity" value="0"/>
-                  <@table type="fields">
-                      <@tr>
-                          <@td>
-                             <div class="label">${uiLabelMap.OrderAddToshipGroup} : </div>
-                             <div>
-                                 <@field type="select" name="shipGroupSeqId" onChange="showShipByDate(this, 'shipByDate${index}')">
-                                    <#list shipGroups as shipGroup>
-                                     <option value="${shipGroup.shipGroupSeqId}">[${shipGroup.shipGroupSeqId}]<#if shipGroup.shipByDate?has_content>, ${shipGroup.shipByDate?date}</#if></option>
-                                    </#list>
-                                     <option value="new">${uiLabelMap.CommonNew}</option>
-                                 </@field>
-                             </div>
-                         </@td>
-                     </@tr>
-                     <@tr>
-                         <@td>
-                             <div style="display:none" id="shipByDate${index}">
-                                 <div class="label">${uiLabelMap.OrderShipBeforeDate} : </div>
-                                 <div><@field type="datetime" name="shipByDate" value=(requestParameters.maxDate!) size="25" maxlength="30" id="shipByDate_${index}" /></div>
-                             </div>
-                         </@td>
-                     </@tr>
-                     <@tr>
-                         <@td>
-                             <@field type="submit" submitType="link" href="javascript:document.addOISGForm${index}.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonAdd/>
-                         </@td>
-                     </@tr>
-                 </@table>
-               </form>
-             </@td>
-             
-         </@tr>
-                  </#if>
+
+                <#if !orderItem.statusId?exists || orderItem.statusId == "ITEM_CREATED" || orderItem.statusId == "ITEM_APPROVED" && (orderHeader.statusId != "ORDER_SENT" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED" && orderHeader.statusId != "ORDER_CANCELLED")>
+                  <@tr>
+                      <@td colspan="3">&nbsp;</@td>
+                      <@td colspan="2">
+                        <form method="post" action="<@pageUrl>AddOrderItemShipGroupAssoc?view=OISGA</@pageUrl>" name="addOISGForm${index}"/>
+                        <input type="hidden" name="editQuantity" value="edit"/>
+                        <input type="hidden" name="editQuantityIndex" value="${index}"/>
+                        <input type="hidden" name="orderId" value="${orderId}"/>
+                        <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
+                        <input type="hidden" name="quantity" value="0"/>
+                          <@table type="fields">
+                              <@tr>
+                                  <@td>
+                                     <div class="label">${uiLabelMap.OrderAddToshipGroup} : </div>
+                                     <div>
+                                         <@field type="select" name="shipGroupSeqId" onChange="showShipByDate(this, 'shipByDate${index}')">
+                                            <#list shipGroups as shipGroup>
+                                             <option value="${shipGroup.shipGroupSeqId}">[${shipGroup.shipGroupSeqId}]<#if shipGroup.shipByDate?has_content>, ${shipGroup.shipByDate?date}</#if></option>
+                                            </#list>
+                                             <option value="new">${uiLabelMap.CommonNew}</option>
+                                         </@field>
+                                     </div>
+                                 </@td>
+                             </@tr>
+                             <@tr>
+                                 <@td>
+                                     <div style="display:none" id="shipByDate${index}">
+                                         <div class="label">${uiLabelMap.OrderShipBeforeDate} : </div>
+                                         <div><@field type="datetime" name="shipByDate" value=(requestParameters.maxDate!) size="25" maxlength="30" id="shipByDate_${index}" /></div>
+                                     </div>
+                                 </@td>
+                             </@tr>
+                             <@tr>
+                                 <@td>
+                                     <@field type="submit" submitType="link" href="javascript:document.addOISGForm${index}.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text=uiLabelMap.CommonAdd/>
+                                 </@td>
+                             </@tr>
+                         </@table>
+                       </form>
+                     </@td>
+                  </@tr>
+                </#if>
               </#if>
               <#assign index = index + 1>
           </#list>
         </@tbody>
       </@table>
     </@fields>
+    </#if>
   </@section>
-<#else>
+<#--<#else>-->
 <#list shipGroups as shipGroup>
   <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
@@ -177,7 +176,8 @@ code package.
          </#if>
        </@menu>
     </#macro>
-    <@section title="${rawLabel('OrderShipmentInformation')} - ${raw(shipGroup.shipGroupSeqId)}" menuContent=menuContent>
+    ${Debug.log("shipGroup ===> " + shipGroup)}
+    <@section title="${rawLabel('OrderShipGroup')} - ${raw(shipGroup.shipGroupSeqId)}" menuContent=menuContent>
         <@fields type="default-manual">
             <@table type="fields">
                     <form name="updateOrderItemShipGroup" method="post" action="<@pageUrl>updateShipGroupShipInfo</@pageUrl>">
@@ -187,12 +187,22 @@ code package.
                         <input type="hidden" name="oldContactMechId" value="${shipGroup.contactMechId!}"/>            
                         
                         <#if orderHeader.orderTypeId == "SALES_ORDER">
+                          ${Debug.log("orderItem ===> " + orderItem)}
+                          <@tr>
+                            <@td scope="row" class="${styles.grid_large!}3">
+                                ${uiLabelMap.CommonStatus}
+                            </@td>
+                            <@td scope="row" class="${styles.grid_large!}3">
+                                ${orderItem.statusId}
+                            </@td>
+                          </@tr>
                           <@tr>
                             <@td scope="row" class="${styles.grid_large!}3">
                                 ${uiLabelMap.CommonMethod}
                             </@td>
                             <@td valign="top" colspan="3">
-                                <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
+                                <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED"
+                                    && orderHeader.statusId != "ORDER_SENT">
                                         <#-- passing the shipmentMethod value as the combination of three fields value
                                         i.e shipmentMethodTypeId & carrierPartyId & roleTypeId. Values are separated by
                                         "@" symbol.
@@ -234,7 +244,8 @@ code package.
                                 ${uiLabelMap.OrderAddress}
                             </@td>
                             <@td valign="top" colspan="3">
-                                <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
+                                <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED"
+                                    && orderHeader.statusId != "ORDER_SENT">
                                     <@row>
                                         <@cell columns=6>
                                             
@@ -467,7 +478,8 @@ code package.
             ${uiLabelMap.OrderInstructions}
           </@td>
           <@td align="left" valign="top" width="80%">
-            <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
+            <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))
+                && orderHeader.statusId != "ORDER_SENT">
               <form id="updateShippingInstructionsForm_${shipGroup.shipGroupSeqId}" name="updateShippingInstructionsForm" method="post" action="<@pageUrl>setShippingInstructions</@pageUrl>">
                 <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
@@ -623,4 +635,4 @@ code package.
     </@section>
 </#list>
 </#if>
-</#if>
+<#--</#if>-->

@@ -109,6 +109,8 @@ code package.
     <StatusItem description="Created" sequenceId="01" statusCode="CREATED" statusId="ITEM_CREATED" statusTypeId="ORDER_ITEM_STATUS"/>
     <StatusItem description="Approved" sequenceId="05" statusCode="APPROVED" statusId="ITEM_APPROVED" statusTypeId="ORDER_ITEM_STATUS"/>
     <StatusItem description="Completed" sequenceId="10" statusCode="COMPLETED" statusId="ITEM_COMPLETED" statusTypeId="ORDER_ITEM_STATUS"/>
+    <!-- SCIPIO: added 2.0.0: ITEM_SENT Order Item status -->
+    <StatusItem description="Sent" sequenceId="97" statusCode="SENT" statusId="ITEM_SENT" statusTypeId="ORDER_ITEM_STATUS"/>
     <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ITEM_REJECTED" statusTypeId="ORDER_ITEM_STATUS"/>
     <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ITEM_CANCELLED" statusTypeId="ORDER_ITEM_STATUS"/>
 
@@ -138,6 +140,10 @@ code package.
     <StatusValidChange statusId="ITEM_APPROVED" statusIdTo="ITEM_COMPLETED" transitionName="Complete Item"/>
     <StatusValidChange statusId="ITEM_APPROVED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
     <StatusValidChange statusId="ITEM_COMPLETED" statusIdTo="ITEM_APPROVED" transitionName="Approve Item"/>
+    <!-- SCIPIO: 27-01-2021: Added new ITEM_SENT Order Item status valid changes -->
+    <StatusValidChange statusId="ITEM_APPROVED" statusIdTo="ITEM_SENT" transitionName="Sent Item"/>
+    <StatusValidChange statusId="ITEM_SENT" statusIdTo="ITEM_COMPLETED" transitionName="Complete Item"/>
+
 
     <!-- order payment pref status -->
     <StatusType description="Payment Preference" hasTable="N" parentTypeId="" statusTypeId="PAYMENT_PREF_STATUS"/>

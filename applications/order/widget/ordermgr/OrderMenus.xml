@@ -290,7 +290,7 @@ code package.
                     <if-compare field="orderHeader.orderTypeId" operator="equals" value="SALES_ORDER"/>
                     <or>
                         <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_APPROVED"/>
-                        <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_SENT"/>
+<!--                        <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_SENT"/>-->
                     </or>
                 </and>
             </condition>
@@ -303,10 +303,18 @@ code package.
                 <and>
                     <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_COMPLETED"/>
                     <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
+                    <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_SENT"/>
                 </and>
             </condition>
             <link target="createOrderItemShipGroup">
                 <parameter param-name="orderId"/>
+            </link>
+        </menu-item>
+        <!-- SCIPIO: added 2.0.0: added new menu entry for completing order -->
+        <menu-item name="CompleteShipGroup" title="${uiLabelMap.OrderComplete}" widget-style="+${styles.action_run_sys} ${styles.action_add}">
+            <link target="OrderCompleteOrder">
+                <parameter param-name="orderId"/>
+                <parameter param-name="statusId" value="ORDER_COMPLETED"/>
             </link>
         </menu-item>
     </menu>

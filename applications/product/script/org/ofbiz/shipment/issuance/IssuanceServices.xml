@@ -165,7 +165,16 @@ code package.
         <check-errors/>
 
         <!-- get orderItem -->
+        <log level="always" message="orderId: ${parameters.orderId}" />
+        <entity-one entity-name="OrderHeader" value-field="orderHeader"/>
         <entity-one entity-name="OrderItem" value-field="orderItem"/>
+        <entity-one entity-name="Product" value-field="product">
+            <field-map field-name="productId" from-field="orderItem.productId" />
+        </entity-one>
+        <log level="always" message="orderHeader: ${orderHeader}" />
+        <log level="always" message="orderItem: ${orderItem}" />
+        <log level="always" message="product: ${product}" />
+
         <!-- get inventoryItem -->
         <entity-one entity-name="InventoryItem" value-field="inventoryItem"/>
         <!-- get shipment -->
@@ -180,6 +189,7 @@ code package.
         <call-simple-method method-name="calcQtyForShipmentItemInline"/>
 
         <log level="info" message="qtyForShipmentItem: ${qtyForShipmentItem}"/>
+        <log level="always" message="shipment: ${shipment}"/>
 
         <if-compare value="0" operator="greater-equals" field="qtyForShipmentItem" type="BigDecimal">
             <if-not-empty field="orderShipment">
@@ -231,7 +241,22 @@ code package.
                 <!-- if there are no more OIIRs for the orderItem, set the orderItem.statusId to ITEM_COMPLETED -->
                 <get-related value-field="orderItem" relation-name="OrderItemShipGrpInvRes" list="otherOiirs"/>
                 <if-empty field="otherOiirs">
-                    <set value="ITEM_COMPLETED" field="changeOrderItemStatusMap.statusId"/>
+                    <if>
+                        <condition>
+                            <and>
+                                <if-compare field="orderHeader.salesChannelEnumId" value="POS_SALES_CHANNEL" operator="equals"/>
+                                <if-compare field="product.productTypeId" value="DIGITAL_GOOD" operator="equals"/>
+                            </and>
+                        </condition>
+                        <then>
+                            <set value="ITEM_COMPLETED" field="changeOrderItemStatusMap.statusId"/>
+                            <log message="OrderItem [${orderItem.productId}] ITEM_COMPLETED" level="always" />
+                        </then>
+                        <else>
+                            <set value="ITEM_SENT" field="changeOrderItemStatusMap.statusId"/>
+                            <log message="OrderItem [${orderItem.productId}] ITEM_SENT" level="always" />
+                        </else>
+                    </if>
                     <set from-field="orderItem.orderId" field="changeOrderItemStatusMap.orderId"/>
                     <set from-field="orderItem.orderItemSeqId" field="changeOrderItemStatusMap.orderItemSeqId"/>
                     <call-service service-name="changeOrderItemStatus" in-map-name="changeOrderItemStatusMap"/>

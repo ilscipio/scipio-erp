@@ -116,7 +116,8 @@
             <input type="hidden" name="fromDate" value="${fromDate!}"/>
           </form></@menuitem>
         </#if>
-        <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
+        <#-- SCIPIO: 21-01-29: Added ORDER_SENT in the condition so orders can't be cancelled if already sent -->
+        <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT">
           <@menuitem type="link" href="javascript:document.OrderCancel.submit()" text=uiLabelMap.OrderCancelOrder class="+${styles.action_run_sys!} ${styles.action_terminate!}"><form name="OrderCancel" method="post" action="<@pageUrl>changeOrderStatus/orderview</@pageUrl>">
             <input type="hidden" name="statusId" value="ORDER_CANCELLED"/>
             <input type="hidden" name="setItemStatus" value="Y"/>
@@ -149,17 +150,19 @@
         <#if currentStatus.statusId != "ORDER_CANCELLED">
           <@menuitem type="link" href=makePageUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text=uiLabelMap.OrderCreateAsNewOrder class="+${styles.action_run_session!} ${styles.action_add!}"/>
         </#if>
-        --> 
+        -->
         <#if currentStatus.statusId == "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
           <@menuitem type="link" href=makePageUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text=uiLabelMap.OrderCreateReplacementOrder class="+${styles.action_run_sys!} ${styles.action_add!}"/>
         </#if>
-        <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
+          <#-- SCIPIO: 21-01-29: Added ORDER_SENT in the condition so order items can't be edited if already sent -->
+        <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT">
           <@menuitem type="link" href=makePageUrl("editOrderItems?orderId=${orderId}") text=uiLabelMap.OrderEditItems class="+${styles.action_nav!}"/>
         </#if>
 
         <#-- Shipping -->
         <#-- Migreated to Shipment Information-->
-            <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
+            <#-- SCIPIO: 21-01-29: Added ORDER_SENT in the condition so order items can't be edited if already sent -->
+            <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT">
               <@menuitem type="generic">
                  <form action="<@pageUrl>createOrderItemShipGroup</@pageUrl>" method="post">
                     <input type="hidden" name="orderId" value="${orderId}"/>
@@ -169,13 +172,20 @@
             </#if>
             <#if security.hasEntityPermission("FACILITY","_CREATE", request)>
                 <#if orderHeader.orderTypeId == "SALES_ORDER">
-                    <#if orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_SENT">
-                         <@menuitem type="generic">
-                             <form action="<@pageUrl>quickShipOrder</@pageUrl>" method="post">
-                               <input type="hidden" name="orderId" value="${orderId}"/>
-                              <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderQuickShipEntireOrder}"/>
-                             </form>
-                          </@menuitem>
+                    <#if orderHeader.statusId == "ORDER_APPROVED">
+                        <@menuitem type="generic">
+                            <form action="<@pageUrl>quickShipOrder</@pageUrl>" method="post">
+                                <input type="hidden" name="orderId" value="${orderId}"/>
+                                <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderQuickShipEntireOrder}"/>
+                            </form>
+                        </@menuitem>
+<#--                    <#elseif orderHeader.statusId == "ORDER_SENT">-->
+<#--                        <@menuitem type="generic">-->
+<#--                            <form action="<@pageUrl>completeSalesOrder</@pageUrl>" method="post">-->
+<#--                                <input type="hidden" name="orderId" value="${orderId}"/>-->
+<#--                                <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderComplete}"/>-->
+<#--                            </form>-->
+<#--                        </@menuitem>-->
                     </#if>
                 </#if>
             </#if>
@@ -197,14 +207,14 @@
             </#if>-->
             <#if currentStatus.statusId == "ORDER_COMPLETED">
               <@menuitem type="generic">
-                        <form action="<@pageUrl>quickreturn</@pageUrl>" method="post">
-                            <input type="hidden" name="orderId" value="${orderId!}"/>
-                            <input type="hidden" name="partyId" value="${partyId!}"/>
-                            <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId!}"/>
-                            <input type="hidden" name="needsInventoryReceive" value="${needsInventoryReceive!}"/>
-                            <input type="submit" class="${styles.action_nav!} ${styles.action_terminate!}" value="${uiLabelMap.OrderCreateReturn}"/>
-                        </form>
-                    </@menuitem>
+                <form action="<@pageUrl>quickreturn</@pageUrl>" method="post">
+                    <input type="hidden" name="orderId" value="${orderId!}"/>
+                    <input type="hidden" name="partyId" value="${partyId!}"/>
+                    <input type="hidden" name="returnHeaderTypeId" value="${returnHeaderTypeId!}"/>
+                    <input type="hidden" name="needsInventoryReceive" value="${needsInventoryReceive!}"/>
+                    <input type="submit" class="${styles.action_nav!} ${styles.action_terminate!}" value="${uiLabelMap.OrderCreateReturn}"/>
+                </form>
+              </@menuitem>
             </#if>
         </#if>
         <#-- Export -->

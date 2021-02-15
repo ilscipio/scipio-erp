@@ -1937,16 +1937,20 @@ public class OrderServices {
         boolean allCanceled = true;
         boolean allComplete = true;
         boolean allApproved = true;
+        boolean allSent = true;
         if (orderItems != null) {
             for (GenericValue item : orderItems) {
                 String statusId = item.getString("statusId");
                 if (!"ITEM_CANCELLED".equals(statusId)) {
                     allCanceled = false;
-                    if (!"ITEM_COMPLETED".equals(statusId)) {
-                        allComplete = false;
-                        if (!"ITEM_APPROVED".equals(statusId)) {
-                            allApproved = false;
-                            break;
+                    if (!"ITEM_SENT".equals(statusId)) {
+                        allSent = false;
+                        if (!"ITEM_COMPLETED".equals(statusId)) {
+                            allComplete = false;
+                            if (!"ITEM_APPROVED".equals(statusId)) {
+                                allApproved = false;
+                                break;
+                            }
                         }
                     }
                 }
@@ -1958,6 +1962,8 @@ public class OrderServices {
                 if (!"PURCHASE_ORDER".equals(orderTypeId)) {
                     newStatus = "ORDER_CANCELLED";
                 }
+            } else if (allSent) {
+                newStatus = "ORDER_SENT";
             } else if (allComplete) {
                 newStatus = "ORDER_COMPLETED";
             } else if (allApproved) {

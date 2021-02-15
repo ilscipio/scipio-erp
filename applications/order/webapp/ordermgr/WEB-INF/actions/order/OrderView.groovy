@@ -320,10 +320,11 @@ if (orderHeader) {
 
     // see if an approved order with all items completed exists
     context.setOrderCompleteOption = false;
-    if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
-        expr = EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "ITEM_COMPLETED");
-        notCreatedItems = orderReadHelper.getOrderItemsByCondition(expr);
-        if (!notCreatedItems) {
+    if ("ORDER_APPROVED".equals(orderHeader.statusId)
+        || "ORDER_SENT".equals(orderHeader.statusId)) {
+        expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_COMPLETED");
+        completedItems = orderReadHelper.getOrderItemsByCondition(expr);
+        if (!completedItems) {
             context.setOrderCompleteOption = true;
         }
     }

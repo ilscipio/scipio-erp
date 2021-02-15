@@ -112,6 +112,8 @@ code package.
     <Enumeration description="Quote Created" enumCode="QUO_CREATED" enumId="PRDS_QUO_CREATED" enumTypeId="PRDS_EMAIL" sequenceId="16"/>
     <Enumeration description="Quote Confirmation" enumCode="QUO_CONFIRM" enumId="PRDS_QUO_CONFIRM" enumTypeId="PRDS_EMAIL" sequenceId="17"/>
     <Enumeration description="Shipment Complete" enumCode="SHP_COMPLETE" enumId="PRDS_ODR_SHIP_COMPLT" enumTypeId="PRDS_EMAIL" sequenceId="18"/>
+    <!-- SCIPIO: added 2.0.0: new email notification type for shipment sent -->
+    <Enumeration description="Shipment Sent" enumCode="SHP_SENT" enumId="PRDS_ODR_SHIP_SENT" enumTypeId="PRDS_EMAIL" sequenceId="19"/>
 
     <!-- SCIPIO: added 2.1.0: new email notification type for recovening abandoned carts -->
     <Enumeration description="Recover Abandoned Cart" enumCode="RCVR_ABNDND_CRT" enumId="PRDS_RCVR_ABNDND_CRT" enumTypeId="PRDS_EMAIL" sequenceId="20"/>

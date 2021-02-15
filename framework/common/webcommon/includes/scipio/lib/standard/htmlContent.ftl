@@ -1872,7 +1872,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
             </div>
           <#break>
         <#default>
-            <@utilCache cacheName="htmlContent.ftl" key="${src!}::${id!}::${link!}::${currImgNum!1}" expireTime=60000>
+            <@utilCache cacheName="htmlContent.ftl" key="${src!}::${id!}::${link!}::${currImgNum!1}::${type!}" expireTime=60000>
                 <#local sizes=""/>
                 <#local contentId=src?keep_after("contentId=")/>
                 <#local productId=src?keep_after("productId=")/>

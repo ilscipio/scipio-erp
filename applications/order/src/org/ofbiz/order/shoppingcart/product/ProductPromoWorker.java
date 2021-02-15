@@ -1429,6 +1429,7 @@ public final class ProductPromoWorker {
         return actionResultInfo;
     }
 
+    // SCIPIO: updated 2.0.0: added new PROMO_GFT_WR_PERCENT promo type
     public static void performAction(ActionResultInfo actionResultInfo, GenericValue productPromoAction, ShoppingCart cart, Delegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp) throws GenericEntityException, CartItemModifyException {
         String productPromoActionEnumId = productPromoAction.getString("productPromoActionEnumId");
 
@@ -1834,6 +1835,63 @@ public final class ProductPromoWorker {
                 doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
                 actionResultInfo.ranAction = true;
                 actionResultInfo.totalDiscountAmount = amount;
+            }
+        } else if ("PROMO_GFT_WR_PERCENT".equals(productPromoActionEnumId)) {
+            // if there are productIds associated with the action then restrict to those productIds, otherwise apply for all products
+            Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
+
+            // go through the cart items and for each product that has a specialPromoPrice use that price
+            for (ShoppingCartItem cartItem : cart.items()) {
+                String itemProductId = cartItem.getProductId();
+                if (UtilValidate.isEmpty(itemProductId)) {
+                    continue;
+                }
+
+                if (productIds.size() > 0 && !productIds.contains(itemProductId)) {
+                    continue;
+                }
+
+                Integer existingPromoAdjustments = findAdjustment(productPromoAction, cartItem.getAdjustments());
+                if (UtilValidate.isEmpty(existingPromoAdjustments) || existingPromoAdjustments.intValue() == 0) {
+                    Map<String, List<GenericValue>> optionalProductFeatures = cartItem.getOptionalProductFeatures();
+                    if (UtilValidate.isNotEmpty(optionalProductFeatures) && optionalProductFeatures.containsKey("GIFT_WRAP")) {
+                        List<GenericValue> giftWrapFeatures = optionalProductFeatures.get("GIFT_WRAP");
+                        for (GenericValue giftWrapFeature : giftWrapFeatures) {
+                            BigDecimal defaultAmount= giftWrapFeature.getBigDecimal("defaultAmount");
+
+                            Map<String, String> fields = UtilMisc.<String, String>toMap("productId", itemProductId, "productFeatureId", giftWrapFeature.get("productFeatureId"));
+                            GenericValue productFeatureAppl = null;
+                            List<GenericValue> features = null;
+                            try {
+                                features = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where(fields).orderBy("-fromDate").filterByDate().queryList();
+                            } catch (GenericEntityException e) {
+                                Debug.logError(e, module);
+                            }
+                            BigDecimal amount = BigDecimal.ZERO;
+                            for (GenericValue feature : features) {
+                                GenericValue featureAppl = cartItem.getAdditionalProductFeatureAndAppl(feature.getString("productFeatureTypeId"));
+                                if (UtilValidate.isNotEmpty(featureAppl)) {
+                                    amount = amount.add(feature.getBigDecimal("amount"));
+                                    if (amount.compareTo(BigDecimal.ZERO) <= 0 && defaultAmount.compareTo(BigDecimal.ZERO) > 0) {
+                                        amount = defaultAmount;
+                                    }
+                                }
+                            }
+
+                            BigDecimal percentage = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : (productPromoAction.getBigDecimal("amount").movePointLeft(2))).negate();
+                            BigDecimal finalAmount = amount.multiply(percentage);
+                            if (finalAmount.compareTo(BigDecimal.ZERO) != 0) {
+                                doOrderItemPromoAction(productPromoAction, cartItem, finalAmount, "amount", delegator);
+                                actionResultInfo.ranAction = true;
+                                actionResultInfo.totalDiscountAmount = finalAmount;
+                            } else {
+                                actionResultInfo.ranAction = false;
+                            }
+                        }
+                    }
+                } else {
+                    actionResultInfo.ranAction = false;
+                }
             }
         } else {
             Debug.logError("An un-supported productPromoActionType was used: " + productPromoActionEnumId + ", not performing any action", module);

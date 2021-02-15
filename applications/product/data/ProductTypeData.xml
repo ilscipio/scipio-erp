@@ -443,6 +443,8 @@ code package.
     <Enumeration description="Shipping X% discount" enumCode="SHIP_CHARGE" enumId="PROMO_SHIP_CHARGE" sequenceId="09" enumTypeId="PROD_PROMO_ACTION"/>
     <Enumeration description="Call Service" enumCode="SERVICE" enumId="PROMO_SERVICE" sequenceId="10" enumTypeId="PROD_PROMO_ACTION"/>
     <Enumeration description="Tax % Discount" enumCode="TAX_PERCENT" enumId="PROMO_TAX_PERCENT" sequenceId="11" enumTypeId="PROD_PROMO_ACTION"/>
+    <!-- SCIPIO: 2.0.0: New gift wrap percent discount -->
+    <Enumeration description="Gift Wrap % discount" enumCode="GIFT_WRAP_PERCENT" enumId="PROMO_GFT_WR_PERCENT" sequenceId="12" enumTypeId="PROD_PROMO_ACTION"/>
 
     <EnumerationType description="Product Rating Field Type" enumTypeId="PROD_RATING_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Min Rating" enumCode="MIN" enumId="PRDR_MIN" sequenceId="01" enumTypeId="PROD_RATING_TYPE"/>

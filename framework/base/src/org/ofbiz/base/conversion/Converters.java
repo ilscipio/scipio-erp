@@ -19,10 +19,9 @@
 package org.ofbiz.base.conversion;
 
 import java.lang.reflect.Modifier;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.ofbiz.base.lang.SourceMonitored;
@@ -35,9 +34,12 @@ import org.ofbiz.base.util.UtilGenerics;
 public class Converters {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     protected static final String DELIMITER = "->";
-    protected static final ConcurrentHashMap<String, Converter<?, ?>> converterMap = new ConcurrentHashMap<>();
-    private static final Set<ConverterCreator> creators = new HashSet<>();
-    private static final Set<String> noConversions = new HashSet<>();
+    protected static final Map<String, Converter<?, ?>> converterMap = new ConcurrentHashMap<>();
+    // SCIPIO: These are UNSAFE, so instead we'll use ConcurrentHashMap
+    //private static final Set<ConverterCreator> creators = new HashSet<>();
+    //private static final Set<String> noConversions = new HashSet<>();
+    private static final Map<ConverterCreator, Object> creators = new ConcurrentHashMap<>();
+    private static final Map<String, Object> noConversions = new ConcurrentHashMap<>();
 
     static {
         registerCreator(new PassThruConverterCreator());
@@ -81,7 +83,8 @@ OUTER:
             if (result != null) {
                 return UtilGenerics.cast(result);
             }
-            if (noConversions.contains(key)) {
+            if (noConversions.containsKey(key)) { // SCIPIO
+            //if (noConversions.contains(key)) {
                 throw new ClassNotFoundException("No converter found for " + key);
             }
             Class<?> foundSourceClass = null;
@@ -102,7 +105,7 @@ OUTER:
                 converterMap.putIfAbsent(key, foundConverter);
                 continue OUTER;
             }
-            for (ConverterCreator value : creators) {
+            for (ConverterCreator value : creators.keySet()) { // SCIPIO: keySet
                 result = createConverter(value, sourceClass, targetClass);
                 if (result != null) {
                     converterMap.putIfAbsent(key, result);
@@ -110,9 +113,11 @@ OUTER:
                 }
             }
             boolean addedToSet = false;
-            synchronized (noConversions) {
-                addedToSet = noConversions.add(key);
-            }
+            // SCIPIO
+            //synchronized (noConversions) {
+            //    addedToSet = noConversions.add(key);
+            //}
+            addedToSet = (noConversions.put(key, Boolean.TRUE) == null);
             if (addedToSet) {
                 Debug.logWarning("*** No converter found, converting from " +
                         sourceClass.getName() + " to " + targetClass.getName() +
@@ -166,9 +171,11 @@ OUTER:
      * @param creator The <code>ConverterCreater</code> instance to register
      */
     public static <S, T> void registerCreator(ConverterCreator creator) {
-        synchronized (creators) {
-            creators.add(creator);
-        }
+        // SCIPIO
+        //synchronized (creators) {
+        //    creators.add(creator);
+        //}
+        creators.put(creator, Boolean.TRUE);
     }
 
     /** Registers a <code>Converter</code> instance to be used by the

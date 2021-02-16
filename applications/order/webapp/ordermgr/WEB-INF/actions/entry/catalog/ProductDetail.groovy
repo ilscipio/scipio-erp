@@ -656,6 +656,7 @@ if(product){
                                         variantProductInfo.price = variantPriceMap.basePrice;
                                         variantProductInfo.priceFormatted = UtilFormatOut.formatCurrency(variantPriceMap.basePrice, variantPriceMap.currencyUsed, UtilHttp.getLocale(request));
                                         variantProductInfoMap[virtual.productId] = variantProductInfo;
+                                        Debug.log("[" + virtual.productId + "]: " + variantProductInfo);
                                     } else {
                                         virtualPriceMap = runService('calculatePurchasePrice', priceContext);
                                         // SCIPIO: Save product info for virtual

@@ -116,7 +116,7 @@
             <input type="hidden" name="fromDate" value="${fromDate!}"/>
           </form></@menuitem>
         </#if>
-        <#-- SCIPIO: 21-01-29: Added ORDER_SENT in the condition so orders can't be cancelled if already sent -->
+        <#-- SCIPIO: 2.0.0: Added ORDER_SENT in the condition so orders can't be cancelled if already sent -->
         <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT">
           <@menuitem type="link" href="javascript:document.OrderCancel.submit()" text=uiLabelMap.OrderCancelOrder class="+${styles.action_run_sys!} ${styles.action_terminate!}"><form name="OrderCancel" method="post" action="<@pageUrl>changeOrderStatus/orderview</@pageUrl>">
             <input type="hidden" name="statusId" value="ORDER_CANCELLED"/>

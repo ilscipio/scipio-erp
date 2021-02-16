@@ -1092,12 +1092,13 @@ public class ShipmentServices {
         String screenUri = (String) context.get("screenUri");
         Locale localePar = (Locale) context.get("locale");
 
+        // send the notification
+        Map<String, Object> sendResp = ServiceUtil.returnSuccess();
+
         // prepare the shipment information
         Map<String, Object> sendMap = new HashMap<String, Object>();
         GenericValue shipment = null ;
         GenericValue orderHeader = null;
-        String productStoreId = orderHeader.getString("productStoreId");
-        GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
         try {
             shipment = EntityQuery.use(delegator).from("Shipment").where("shipmentId", shipmentId).queryOne();
             orderHeader = EntityQuery.use(delegator).from("OrderHeader").where("orderId", shipment.getString("primaryOrderId")).queryOne();
@@ -1106,103 +1107,106 @@ public class ShipmentServices {
         }
 
         // SCIPIO: added 2.0.0: Notification email is now determined by shipment
-        String emailType = null;
-        if (shipment.getString("statusId").equals("SHIPMENT_SHIPPED")) {
-            emailType = "PRDS_ODR_SHIP_SENT";
-        } else if (shipment.getString("statusId").equals("SHIPMENT_DELIVERED")) {
-            Boolean sendShipmentDeliveredNotificationEmail = productStore.getBoolean("notificationEmailShipmentDelivered");
-            if (UtilValidate.isEmpty(sendShipmentDeliveredNotificationEmail)) {
-                sendShipmentDeliveredNotificationEmail = UtilProperties.getPropertyAsBoolean("shipment", "shipment.email.notification.delivered", false);
+        if (UtilValidate.isNotEmpty(orderHeader)) {
+            String productStoreId = orderHeader.getString("productStoreId");
+            GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+            String emailType = null;
+            if (shipment.getString("statusId").equals("SHIPMENT_SHIPPED")) {
+                emailType = "PRDS_ODR_SHIP_SENT";
+            } else if (shipment.getString("statusId").equals("SHIPMENT_DELIVERED")) {
+                Boolean sendShipmentDeliveredNotificationEmail = productStore.getBoolean("notificationEmailShipmentDelivered");
+                if (UtilValidate.isEmpty(sendShipmentDeliveredNotificationEmail)) {
+                    sendShipmentDeliveredNotificationEmail = UtilProperties.getPropertyAsBoolean("shipment", "shipment.email.notification.delivered", false);
+                }
+                if (UtilValidate.isEmpty(sendShipmentDeliveredNotificationEmail) || sendShipmentDeliveredNotificationEmail.equals(Boolean.FALSE)) {
+                    return ServiceUtil.returnSuccess("Notification email for delivered shipments disabled");
+                }
+                emailType = "PRDS_ODR_SHIP_COMPLT";
+            } else {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmailInvalidShipmentStatus", localePar));
             }
-            if (UtilValidate.isEmpty(sendShipmentDeliveredNotificationEmail) || sendShipmentDeliveredNotificationEmail.equals(Boolean.FALSE)) {
-                return ServiceUtil.returnSuccess("Notification email for delivered shipments disabled");
+
+            GenericValue productStoreEmail = null;
+            try {
+                productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType).queryOne();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem getting the ProductStoreEmailSetting for productStoreId =" + orderHeader.get("productStoreId") + " and emailType = " + emailType, module);
             }
-            emailType = "PRDS_ODR_SHIP_COMPLT";
-        } else {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmailInvalidShipmentStatus", localePar));
-        }
+            if (productStoreEmail == null) {
+                return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
+                        "ProductProductStoreEmailSettingsNotValid",
+                        UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"),
+                                "emailType", emailType), localePar));
+            }
 
-        GenericValue productStoreEmail = null;
-        try {
-            productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType).queryOne();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem getting the ProductStoreEmailSetting for productStoreId =" + orderHeader.get("productStoreId") + " and emailType = " + emailType, module);
-        }
-        if (productStoreEmail == null) {
-            return ServiceUtil.returnFailure(UtilProperties.getMessage(resource,
-                    "ProductProductStoreEmailSettingsNotValid",
-                    UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"),
-                            "emailType", emailType), localePar));
-        }
-        // the override screenUri
-        if (UtilValidate.isEmpty(screenUri)) {
-            String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
-            sendMap.put("bodyScreenUri", bodyScreenLocation);
-        } else {
-            sendMap.put("bodyScreenUri", screenUri);
-        }
+            // the override screenUri
+            if (UtilValidate.isEmpty(screenUri)) {
+                String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
+                sendMap.put("bodyScreenUri", bodyScreenLocation);
+            } else {
+                sendMap.put("bodyScreenUri", screenUri);
+            }
 
-        String partyId = shipment.getString("partyIdTo");
+            String partyId = shipment.getString("partyIdTo");
 
-        // get the email address
-        String emailString = null;
-        GenericValue email = PartyWorker.findPartyLatestContactMech(partyId, "EMAIL_ADDRESS", delegator);
-        if (UtilValidate.isNotEmpty(email)) {
-            emailString = email.getString("infoString");
-        }
-        if (UtilValidate.isEmpty(emailString)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                    "ProductProductStoreEmailSettingsNoSendToFound", localePar));
-        }
+            // get the email address
+            String emailString = null;
+            GenericValue email = PartyWorker.findPartyLatestContactMech(partyId, "EMAIL_ADDRESS", delegator);
+            if (UtilValidate.isNotEmpty(email)) {
+                emailString = email.getString("infoString");
+            }
+            if (UtilValidate.isEmpty(emailString)) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "ProductProductStoreEmailSettingsNoSendToFound", localePar));
+            }
 
-        Locale locale = PartyWorker.findPartyLastLocale(partyId, delegator);
-        if (locale == null) {
-            locale = Locale.getDefault();
-        }
+            Locale locale = PartyWorker.findPartyLastLocale(partyId, delegator);
+            if (locale == null) {
+                locale = Locale.getDefault();
+            }
 
-        Map<String, Object> bodyParameters = UtilMisc.<String, Object>toMap("partyId", partyId, "shipmentId", shipmentId, "orderId", shipment.getString("primaryOrderId"), "userLogin", userLogin, "locale", locale);
-        sendMap.put("bodyParameters", bodyParameters);
-        sendMap.put("userLogin",userLogin);
+            Map<String, Object> bodyParameters = UtilMisc.<String, Object>toMap("partyId", partyId, "shipmentId", shipmentId, "orderId", shipment.getString("primaryOrderId"), "userLogin", userLogin, "locale", locale);
+            sendMap.put("bodyParameters", bodyParameters);
+            sendMap.put("userLogin", userLogin);
 
-        sendMap.put("subject", productStoreEmail.getString("subject"));
-        sendMap.put("contentType", productStoreEmail.get("contentType"));
-        sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
-        sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
-        sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
+            sendMap.put("subject", productStoreEmail.getString("subject"));
+            sendMap.put("contentType", productStoreEmail.get("contentType"));
+            sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
+            sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
+            sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
 
-        if ((sendTo != null) && UtilValidate.isEmail(sendTo)) {
-            sendMap.put("sendTo", sendTo);
-        } else {
-            sendMap.put("sendTo", emailString);
-        }
+            if ((sendTo != null) && UtilValidate.isEmail(sendTo)) {
+                sendMap.put("sendTo", sendTo);
+            } else {
+                sendMap.put("sendTo", emailString);
+            }
 
-        // SCIPIO: Determine webSiteId for store email
-        String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
-                (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
-        if (webSiteId != null) {
-            sendMap.put("webSiteId", webSiteId);
-        } else {
-            // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
-            // This is only technically an error if the email contains links back to a website.
-            Debug.logWarning("sendShipmentCompleteNotification: No webSiteId determined for store '" + productStoreId + "' email", module);
-        }
-        bodyParameters.put("productStoreId", productStoreId); // SCIPIO
+            // SCIPIO: Determine webSiteId for store email
+            String webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, productStoreId,
+                    (orderHeader != null) ? orderHeader.getString("webSiteId") : null, true);
+            if (webSiteId != null) {
+                sendMap.put("webSiteId", webSiteId);
+            } else {
+                // TODO: REVIEW: Historically, this type of email did not require a webSiteId, so for now, keep going...
+                // This is only technically an error if the email contains links back to a website.
+                Debug.logWarning("sendShipmentCompleteNotification: No webSiteId determined for store '" + productStoreId + "' email", module);
+            }
+            bodyParameters.put("productStoreId", productStoreId); // SCIPIO
 
-        // send the notification
-        Map<String, Object> sendResp = null;
-        try {
-            sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
-        } catch (GenericServiceException gse) {
-            Debug.logError(gse, "Problem sending mail", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmail", localePar));
-        } catch (Exception e) {
-            Debug.logError(e, "Problem sending mail", module);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmail", localePar));
-        }
-        // check for errors
-        if (sendResp != null && ServiceUtil.isError(sendResp)) {
-            sendResp.put("emailType", emailType);
-            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmail", localePar), null, null, sendResp);
+            try {
+                sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
+            } catch (GenericServiceException gse) {
+                Debug.logError(gse, "Problem sending mail", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmail", localePar));
+            } catch (Exception e) {
+                Debug.logError(e, "Problem sending mail", module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmail", localePar));
+            }
+            // check for errors
+            if (sendResp != null && ServiceUtil.isError(sendResp)) {
+                sendResp.put("emailType", emailType);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error, "OrderProblemSendingEmail", localePar), null, null, sendResp);
+            }
         }
         return sendResp;
     }

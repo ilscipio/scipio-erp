@@ -249,10 +249,11 @@ ToDo: Update menu with Authorize and Capture transaction actions
                     <@row>
                         <@cell columns=6>
                             <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE" && paymentMethodType.paymentMethodTypeId != "EXT_PAYPAL" && paymentMethodType.paymentMethodTypeId != "EXT_LIGHTNING" && paymentMethodType.paymentMethodTypeId != "EXT_COD">
-                              <#if orderPaymentPreference.maxAmount?has_content>
-                                 ${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
-                              </#if>
-                              <br />&nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
+<#--                              <#if orderPaymentPreference.maxAmount?has_content>-->
+<#--                                 ${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>-->
+<#--                              </#if>-->
+<#--                              <br />&nbsp;-->
+                            [<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                             <#--
                             <div><@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())!}</div>
                             <div>&nbsp;<#if orderPaymentPreference.authRefNum??>(${uiLabelMap.OrderReference}: ${orderPaymentPreference.authRefNum})</#if></div>
@@ -281,7 +282,7 @@ ToDo: Update menu with Authorize and Capture transaction actions
                         </@cell>
                         <@cell columns=6>
                             <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
-                                <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED">                                
+                                <#if orderPaymentPreference.statusId != "PAYMENT_RECEIVED" && orderPaymentPreference.statusId != "PAYMENT_SETTLED">
                                     <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                                     <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@pageUrl>updateOrderPaymentPreference</@pageUrl>">
                                       <input type="hidden" name="orderId" value="${orderId}" />
@@ -289,6 +290,14 @@ ToDo: Update menu with Authorize and Capture transaction actions
                                       <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
                                       <input type="hidden" name="checkOutPaymentId" value="${paymentMethodType.paymentMethodTypeId!paymentMethod.paymentMethodTypeId!}" />
                                     </form>
+                                    <#if paymentMethodType.paymentMethodTypeId == "EXT_STRIPE">
+                                        <a href="javascript:document.RetryOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.FormFieldTitle_checkAction}</a>
+                                        <form name="RetryOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@pageUrl>retryStripeOrderPaymentPreference</@pageUrl>">
+                                            <input type="hidden" name="orderId" value="${orderId}" />
+                                            <input type="hidden" name="orderPaymentPreferenceId" value="${orderPaymentPreference.orderPaymentPreferenceId}" />
+                                            <input type="hidden" name="checkOutPaymentId" value="${paymentMethodType.paymentMethodTypeId!paymentMethod.paymentMethodTypeId!}" />
+                                        </form>
+                                    </#if>
                                 </#if>
                            </#if>
                         </@cell>

@@ -17,6 +17,9 @@
  * under the License.
  */
 
+
+import org.ofbiz.product.product.ProductWorker
+
 import java.math.BigDecimal;
 import java.util.*;
 import java.sql.Timestamp;
@@ -191,7 +194,7 @@ if (orderHeader) {
     shipGroups = from("OrderItemShipGroup").where("orderId", orderId).orderBy("shipGroupSeqId").queryList();
     context.shipGroups = shipGroups;
 
-
+    orderContainsDigitalProducts = false;
     orderItemDatas = [];
     orderItemList.each { orderItem ->
         BigDecimal cancelQuantity = orderItem.get("cancelQuantity");
@@ -226,15 +229,22 @@ if (orderHeader) {
                 quantityNotAvailable = quantityNotAvailable.add(oisgir.getBigDecimal("quantityNotAvailable"));
             }
         }
+
+        product = orderItem.getRelatedOne("Product", false)
         orderItemData = [:];
         orderItemData.put("orderItem", orderItem);
         orderItemData.put("OISGAssContents", OISGAssContents);
-        orderItemData.put("product", orderItem.getRelatedOne("Product", false));
+        orderItemData.put("product", product);
         orderItemData.put("quantityOrdered", quantityOrdered);
         orderItemData.put("totalQuantityPlanned", totalQuantityPlanned);
         orderItemData.put("totalQuantityToPlan", totalQuantityToPlan);
         orderItemData.put("quantityNotAvailable", quantityNotAvailable);
         orderItemDatas.add(orderItemData);
+
+        // SCIPIO: 2.0.0: check if an item is digital so we enable the complete order button
+        if (!orderContainsDigitalProducts && ProductWorker.isDigital(product)) {
+            orderContainsDigitalProducts  = true;
+        }
     }
     context.put("orderItemDatas", orderItemDatas);
     
@@ -318,9 +328,9 @@ if (orderHeader) {
         context.purchaseOrderItemTypeList = purchaseOrderItemTypeList;
     }
 
-    // see if an approved order with all items completed exists
+    // SCIPIO: 2.0.0: check if an approved order with all items completed exist
     context.setOrderCompleteOption = false;
-    if ("ORDER_APPROVED".equals(orderHeader.statusId)
+    if ((orderContainsDigitalProducts && "ORDER_APPROVED".equals(orderHeader.statusId))
         || "ORDER_SENT".equals(orderHeader.statusId)) {
         expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_COMPLETED");
         completedItems = orderReadHelper.getOrderItemsByCondition(expr);

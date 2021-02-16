@@ -20,6 +20,7 @@ package org.ofbiz.base.conversion;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -174,6 +175,20 @@ public class CollectionConverters implements ConverterLoader {
         public Set<String> convert(String obj) throws ConversionException {
             if (obj.startsWith("[") && obj.endsWith("]")) {
                 return StringUtil.toSet(obj);
+            }
+            return super.convert(obj);
+        }
+    }
+
+    public static class StringToCollection extends GenericSingletonToCollection<String> { // SCIPIO
+        public StringToCollection() {
+            super(String.class);
+        }
+
+        @Override
+        public Collection<String> convert(String obj) throws ConversionException {
+            if (obj.startsWith("[") && obj.endsWith("]")) {
+                return StringUtil.toList(obj);
             }
             return super.convert(obj);
         }

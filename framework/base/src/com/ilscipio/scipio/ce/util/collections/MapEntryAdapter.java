@@ -58,28 +58,23 @@ public interface MapEntryAdapter<K, V> extends Map.Entry<K, V> {
     }
 
     /**
+     * Calls entry's {@link #setValueOnly} method IF it is an instance of MapEntryAdapter.
+     */
+    public static <K, V> void setValueOnly(Map.Entry<K, V> entry, V value) {
+        if (entry instanceof MapEntryAdapter) {
+            ((MapEntryAdapter<K, V>) entry).setValueOnly(value);
+        } else if (entry != null) {
+            entry.setValue(value);
+        }
+    }
+
+    /**
      * Calls entry's {@link #setValueOnly} method.
      */
     public static <K, V> void setValueOnly(MapEntryAdapter<K, V> entry, V value) {
         if (entry != null) {
             entry.setValueOnly(value);
         }
-    }
-
-    /**
-     * Calls entry's {@link #setValueOnly} method IF it is an instance of MapEntryAdapter.
-     */
-    public static <K, V> void setValueOnly(Map.Entry<K, V> entry, V value) {
-        if (entry instanceof MapEntryAdapter) {
-            ((MapEntryAdapter<K, V>) entry).setValueOnly(value);
-        }
-    }
-
-    /**
-     * Calls entry's {@link #removeValue()} method.
-     */
-    public static <K, V> V removeValue(MapEntryAdapter<K, V> entry) {
-        return (entry != null) ? entry.removeValue() : null;
     }
 
     /**
@@ -96,12 +91,10 @@ public interface MapEntryAdapter<K, V> extends Map.Entry<K, V> {
     }
 
     /**
-     * Calls entry's {@link #removeValueOnly()} method.
+     * Calls entry's {@link #removeValue()} method.
      */
-    public static <K, V> void removeValueOnly(MapEntryAdapter<K, V> entry) {
-        if (entry != null) {
-            entry.removeValueOnly();
-        }
+    public static <K, V> V removeValue(MapEntryAdapter<K, V> entry) {
+        return (entry != null) ? entry.removeValue() : null;
     }
 
     /**

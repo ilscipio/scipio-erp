@@ -773,8 +773,6 @@ public final class RequestAttrPolicy {
      * Policy INVOKER
      * ******************************************************************************
      * These can be run using the supplied INVOKER variables in interfaces above.
-     *
-     * DEV NOTE: Originally SaveRestorePolicyInvoker
      */
 
     /**
@@ -877,7 +875,7 @@ public final class RequestAttrPolicy {
          * NOTE: The name check here is suboptimal, but probably won't matter.
          */
         public boolean filterSaveAttrToMap(Map<String, Object> saveAttrMap, Map.Entry<String, Object> attrEntry) {
-            return filterSaveAttrToMap( saveAttrMap, MapEntryAdapter.getKey(attrEntry), MapEntryAdapter.getValue(attrEntry));
+            return filterSaveAttrToMap(saveAttrMap, MapEntryAdapter.getKey(attrEntry), MapEntryAdapter.getValue(attrEntry));
         }
 
         /**

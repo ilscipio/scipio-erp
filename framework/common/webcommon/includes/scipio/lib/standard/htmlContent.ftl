@@ -1722,7 +1722,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
     height                  = (string) container height e.g. "12px" - acts as a max-height  
 -->
 <#assign img_defaultArgs = {
-  "src":"", "responsiveMap" : {}, "id":"","type":"cover", "style":"","class":"", "width":"", "height":"","link":"", "linkTarget":false, "passArgs":{}, "attribs":{}
+  "src":"", "responsiveMap" : {}, "id":"","type":"cover", "style":"","class":"", "width":"", "height":"","link":"", "linkTarget":false, "lazy" : true, "passArgs":{}, "attribs":{}
 }>
 <#macro img args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.img_defaultArgs)>
@@ -1735,7 +1735,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
   <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
     <#local linkTarget = styles[stylePrefix + "_linktarget"]!"">
   </#if>
-  <@img_markup class=class id=id src=src responsiveMap=responsiveMap type=type style=style width=width height=height link=link linkTarget=linkTarget attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
+  <@img_markup class=class id=id src=src responsiveMap=responsiveMap type=type style=style width=width height=height link=link lazy=lazy linkTarget=linkTarget attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@img_markup>
 </#macro>
 
 <#-- @img main markup - theme override -->
@@ -1837,7 +1837,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
 "(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":2320
 }
 } />
-<#macro img_markup class="" id="" src="" responsiveMap={} type="" style="" width="" height="" link=link linkTarget=linkTarget attribs={} origArgs={} passArgs={} catchArgs...>
+<#macro img_markup class="" id="" src="" responsiveMap={} type="" style="" width="" height="" lazy=true link=link linkTarget=linkTarget attribs={} origArgs={} passArgs={} catchArgs...>
     <#local imgContainer><#if width?has_content>width: ${escapeVal(width, 'css-html')?replace("px","")}px;</#if><#if height?has_content> height: ${escapeVal(height, 'css-html')?replace("px","")}px;</#if></#local>
     <#local imgClass = "scipio-image">
     <#local src=raw(src)/>
@@ -1966,7 +1966,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                              </#if>
                          </#if>
                          <img src="${escapeFullUrl(src, 'html')}" <#if srcset?has_content>srcset="${srcset}" <#if sizes?has_content>data-sizes="${sizes}"</#if></#if><#if imgStyle?has_content>style="${imgStyle}"</#if> <@compiledClassAttribStr class=imgClass />
-                         <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>/>
+                         <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if lazy> loading="lazy"</#if>/>
                          <#if responsiveMap?has_content></picture></#if>
                     <#if link?has_content></a></#if>
                     <#if nested?has_content><#nested></#if>

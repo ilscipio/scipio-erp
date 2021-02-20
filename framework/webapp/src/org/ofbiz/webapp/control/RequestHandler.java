@@ -1101,7 +1101,7 @@ public class RequestHandler {
      * Returns empty string instead of null if missing, for compatibility with existing Ofbiz code.
      */
     String parseResponseValue(HttpServletRequest request, HttpServletResponse response, ConfigXMLReader.RequestResponse responseDef, ConfigXMLReader.RequestMap requestMap) {
-        Object attrValue = responseDef.getValueExpr().getValue(request, response);
+        Object attrValue = (responseDef.getValueExpr() != null) ? responseDef.getValueExpr().getValue(request, response) : null;
         if (attrValue != null) {
             if (attrValue instanceof String) {
                 String attrStr = (String) attrValue;

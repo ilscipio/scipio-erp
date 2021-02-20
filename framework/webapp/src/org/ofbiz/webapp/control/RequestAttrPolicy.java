@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -20,6 +21,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 
 import com.ilscipio.scipio.ce.util.collections.MapEntryAdapter;
@@ -33,6 +35,7 @@ import com.ilscipio.scipio.ce.util.servlet.ServletAttrContainer;
  * Added 2019-01-22.
  */
 public final class RequestAttrPolicy {
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private RequestAttrPolicy() {}
 
@@ -127,8 +130,8 @@ public final class RequestAttrPolicy {
      * child classes corresponding to the callbacks(s) to which you want to subscribe.
      * For advanced usage, you can override the callback for any plugin callback:
      * <pre><code>
-     * class MyClass implements {@link RequestSavingAttrPolicy.NotSaveable} { // prevent any saving into session attributes
-     * class MyClass implements {@link RequestSavingAttrPolicy.Never} { // prevent any saving to OR restoring from session attributes
+     * class MyClass implements RequestSavingAttrPolicy.NotSaveable { // prevent any saving into session attributes
+     * class MyClass implements RequestSavingAttrPolicy.Never { // prevent any saving to OR restoring from session attributes
      * </code></pre>
      */
     public interface RequestSavingAttrPolicy extends AttrPolicy {
@@ -225,6 +228,25 @@ public final class RequestAttrPolicy {
         }
 
         private final Map<Class<? extends AttrPolicy>, Set<String>> attrNameExclMap = new HashMap<>(); // This was previously _SCP_NOSAVEREQATTR_ request attribute (HashSet)
+        private Map<Class<? extends AttrPolicy>, Map<Class<?>, AttrTypeEntry>> attrTypeFilterMap = Collections.emptyMap();
+
+        protected static class AttrTypeEntry implements Serializable {
+            private final Object result;
+            private final Integer logLevel;
+
+            public AttrTypeEntry(Object result, Integer logLevel) {
+                this.result = result;
+                this.logLevel = logLevel;
+            }
+
+            public Object getResult() {
+                return result;
+            }
+
+            public Integer getLogLevel() {
+                return logLevel;
+            }
+        }
 
         protected RequestAttrNamePolicy(Set<String> attrNameExcl) {
             if (attrNameExcl != null) {
@@ -275,7 +297,21 @@ public final class RequestAttrPolicy {
         }
 
         public static RequestAttrNamePolicy create() {
-            return new RequestAttrNamePolicy();
+            RequestAttrNamePolicy ranp = new RequestAttrNamePolicy();
+
+            // TODO: cleanup these, it should be possible but deserialization crash poses issues
+            ranp.addAttrTypeFilter(RedirectAttrPolicy.SavePolicy.class, Throwable.class, AttrPolicy.VALUE_UNSET, Debug.INFO);
+            ranp.addAttrTypeFilter(ViewLastAttrPolicy.SavePolicy.class, Throwable.class, AttrPolicy.VALUE_UNSET, Debug.INFO);
+
+            try {
+                Class<?> fecls = Class.forName("com.ilscipio.scipio.cms.ServiceErrorFormatter$FormattedError");
+                ranp.addAttrTypeFilter(RedirectAttrPolicy.SavePolicy.class, fecls, AttrPolicy.VALUE_UNSET, Debug.INFO);
+                ranp.addAttrTypeFilter(ViewLastAttrPolicy.SavePolicy.class, fecls, AttrPolicy.VALUE_UNSET, Debug.INFO);
+            } catch (ClassNotFoundException e) {
+                Debug.logError(e, module);
+            }
+
+            return ranp;
         }
 
         private static RequestAttrNamePolicy createAndSet(HttpServletRequest request, Collection<String> noSaveAttrSet) {
@@ -300,8 +336,9 @@ public final class RequestAttrPolicy {
          * NOTE: In order to simply prevent attributes from being <em>saved</em> into all session maps,
          * simply pass <code>{@link RequestSavingAttrPolicy.NotSaveable}.class</code> as <code>targetEvent</code>.
          */
-        public void addExclude(Class<? extends AttrPolicy> targetEvent, String attrName) {
+        public RequestAttrNamePolicy addExclude(Class<? extends AttrPolicy> targetEvent, String attrName) {
             add(attrName);
+            return this;
         }
 
         /**
@@ -312,8 +349,9 @@ public final class RequestAttrPolicy {
          * NOTE: In order to simply prevent attributes from being <em>saved</em> into all session maps,
          * simply pass <code>{@link RequestSavingAttrPolicy.NotSaveable}.class</code> as <code>targetEvent</code>.
          */
-        public void addExcludes(Class<? extends AttrPolicy> targetEvent, Collection<String> attrNames) {
+        public RequestAttrNamePolicy addExcludes(Class<? extends AttrPolicy> targetEvent, Collection<String> attrNames) {
             addAll(attrNames);
+            return this;
         }
 
         /**
@@ -324,8 +362,9 @@ public final class RequestAttrPolicy {
          * NOTE: In order to simply prevent attributes from being <em>saved</em> into all session maps,
          * simply pass <code>{@link RequestSavingAttrPolicy.NotSaveable}.class</code> as <code>targetEvent</code>.
          */
-        public void addExcludes(Class<? extends AttrPolicy> targetEvent, String... attrNames) {
+        public RequestAttrNamePolicy addExcludes(Class<? extends AttrPolicy> targetEvent, String... attrNames) {
             addAll(Arrays.asList(attrNames));
+            return this;
         }
 
         /**
@@ -361,6 +400,36 @@ public final class RequestAttrPolicy {
                     }
                 }
             }
+        }
+
+        public RequestAttrNamePolicy addAttrTypeFilter(Class<? extends AttrPolicy> policy, Class<?> objectType, Object action, Integer logLevel) {
+            Map<Class<?>, AttrTypeEntry> filterMap = getAttrTypeFilterMap().get(policy);
+            if (filterMap == null) {
+                filterMap = new HashMap<>();
+                if (getAttrTypeFilterMap().isEmpty()) {
+                    attrTypeFilterMap = new HashMap<>();
+                }
+                getAttrTypeFilterMap().put(policy, filterMap);
+            }
+            filterMap.put(objectType, new AttrTypeEntry(action, logLevel));
+            return this;
+        }
+
+        public Map<Class<? extends AttrPolicy>, Map<Class<?>, AttrTypeEntry>> getAttrTypeFilterMap() {
+            return attrTypeFilterMap;
+        }
+
+        public Map<Class<?>, AttrTypeEntry> getAttrTypeFilterMapForEvent(HttpServletRequest request, Class<? extends AttrPolicy> targetEvent) {
+            Map<Class<?>, AttrTypeEntry> attrTypeMap = getAttrTypeFilterMap().get(targetEvent);
+            if (attrTypeMap == null) {
+                attrTypeMap = new HashMap<>();
+                for(Map.Entry<Class<? extends AttrPolicy>, Map<Class<?>, AttrTypeEntry>> entry : getAttrTypeFilterMap().entrySet()) {
+                    if (targetEvent.isAssignableFrom(entry.getKey())) { // TODO?: optimize: isAssignableFrom could be pre-calculated?
+                        attrTypeMap.putAll(entry.getValue());
+                    }
+                }
+            }
+            return attrTypeMap;
         }
 
         private Set<String> getNoSaveExclSet() {
@@ -418,9 +487,13 @@ public final class RequestAttrPolicy {
                     return SavePolicy.class;
                 }
                 @Override
-                public Object doSaveAttr(SavePolicy policy, HttpServletRequest request, String attrName,
+                public Object doSaveAttr(Object value, HttpServletRequest request, String attrName,
                         Map<String, Object> saveAttrMap) {
-                    return policy.doViewLastAttrSave(request, attrName, saveAttrMap);
+                    if (value instanceof SavePolicy) {
+                        return ((SavePolicy) value).doViewLastAttrSave(request, attrName, saveAttrMap);
+                    } else {
+                        return doSaveAttrTypeFilter(value, request, attrName, saveAttrMap);
+                    }
                 }
                 public boolean isAttrNameExcluded(Map<String, Object> saveAttrMap, String attrName, Object value) {
                     // SCIPIO: 2020-01: Always exclude java servlet attributes, because transferring them across a redirect
@@ -478,7 +551,9 @@ public final class RequestAttrPolicy {
              */
             @Override
             default Object doViewLastAttrSave(HttpServletRequest request, String attrName, Map<String, Object> saveAttrMap) {
-                return AttrPolicy.VALUE_IGNORE;
+                // 2021-02: Do UNSET so it actively removes the entry for in-place modified maps
+                //return AttrPolicy.VALUE_IGNORE;
+                return AttrPolicy.VALUE_UNSET;
             }
         }
 
@@ -496,9 +571,13 @@ public final class RequestAttrPolicy {
                     return RestorePolicy.class;
                 }
                 @Override
-                public Object doRestoreAttr(RestorePolicy policy, HttpServletRequest request, String attrName,
+                public Object doRestoreAttr(Object value, HttpServletRequest request, String attrName,
                         Map<String, Object> saveAttrMap) {
-                    return policy.doViewLastRestoreAttr(request, attrName, saveAttrMap);
+                    if (value instanceof RestorePolicy) {
+                        return ((RestorePolicy) value).doViewLastRestoreAttr(request, attrName, saveAttrMap);
+                    } else {
+                        return null;
+                    }
                 }
             };
 
@@ -603,9 +682,13 @@ public final class RequestAttrPolicy {
                     return SavePolicy.class;
                 }
                 @Override
-                public Object doSaveAttr(SavePolicy policy, HttpServletRequest request, String attrName,
+                public Object doSaveAttr(Object value, HttpServletRequest request, String attrName,
                         Map<String, Object> saveAttrMap) {
-                    return policy.doRedirectSaveAttr(request, attrName, saveAttrMap);
+                    if (value instanceof SavePolicy) {
+                        return ((SavePolicy) value).doRedirectSaveAttr(request, attrName, saveAttrMap);
+                    } else {
+                        return doSaveAttrTypeFilter(value, request, attrName, saveAttrMap);
+                    }
                 }
                 @Override
                 public Set<String> getExtraAttrNameExcludes() {
@@ -687,9 +770,13 @@ public final class RequestAttrPolicy {
                     return RestorePolicy.class;
                 }
                 @Override
-                public Object doRestoreAttr(RestorePolicy policy, HttpServletRequest request, String attrName,
+                public Object doRestoreAttr(Object value, HttpServletRequest request, String attrName,
                         Map<String, Object> saveAttrMap) {
-                    return policy.doRedirectAttrRestore(request, attrName, saveAttrMap);
+                    if (value instanceof RestorePolicy) {
+                        return ((RestorePolicy) value).doRedirectAttrRestore(request, attrName, saveAttrMap);
+                    } else {
+                        return null;
+                    }
                 }
             };
 
@@ -786,6 +873,7 @@ public final class RequestAttrPolicy {
         private boolean filterAttrNames = true;
         //private RequestSavingAttrNamePolicy attrNamePolicy; // Optimization: not currently needed
         private Set<String> attrNameExcludes;
+        private Map<Class<?>, RequestAttrNamePolicy.AttrTypeEntry> attrTypeMap = null;
 
         protected SaveRestoreAttrPolicyInvoker(HttpServletRequest request) {
             this.request = request;
@@ -803,8 +891,9 @@ public final class RequestAttrPolicy {
          * Sets whether attribute names - and not only values/types - should get filtered
          * by the main method calls; can be disabled in some cases for faster code.
          */
-        public void setFilterAttrNames(boolean filterAttrNames) {
+        public SaveRestoreAttrPolicyInvoker<T> setFilterAttrNames(boolean filterAttrNames) {
             this.filterAttrNames = filterAttrNames;
+            return this;
         }
 
         protected RequestAttrNamePolicy getAttrNamePolicy() {
@@ -818,9 +907,11 @@ public final class RequestAttrPolicy {
         }
 
         protected Set<String> getAttrNameExcludes() {
+            Set<String> attrNameExcludes = this.attrNameExcludes;
             if (attrNameExcludes == null) {
                 attrNameExcludes = getAttrNamePolicy().getAllExcludes(getRequest(), getPolicyClass(),
                         getExtraAttrNameExcludes());
+                this.attrNameExcludes = attrNameExcludes;
             }
             return attrNameExcludes;
         }
@@ -829,10 +920,30 @@ public final class RequestAttrPolicy {
             return null;
         }
 
+        public Map<Class<?>, RequestAttrNamePolicy.AttrTypeEntry> getAttrTypeMap() {
+            Map<Class<?>, RequestAttrNamePolicy.AttrTypeEntry> attrTypeMap = this.attrTypeMap;
+            if (attrTypeMap == null) {
+                attrTypeMap = getAttrNamePolicy().getAttrTypeFilterMapForEvent(getRequest(), getPolicyClass());
+                this.attrTypeMap = attrTypeMap;
+            }
+            return attrTypeMap;
+        }
+
         public abstract Class<T> getPolicyClass();
 
         public boolean attrValueTypeApplies(String attrName, Object value, Map<String, Object> saveAttrMap) {
-            return (value != null) && getPolicyClass().isAssignableFrom(value.getClass()); // (value instanceof Xxx)
+            if (value == null) {
+                return false;
+            }
+            if (getPolicyClass().isAssignableFrom(value.getClass())) {
+                return true;
+            }
+            for(Class<?> cls : getAttrTypeMap().keySet()) {
+                if (cls.isAssignableFrom(value.getClass())) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public boolean isAttrNameExcluded(Map<String, Object> saveAttrMap, String attrName, Object value) {
@@ -848,8 +959,27 @@ public final class RequestAttrPolicy {
         /**
          * Main attribute value-/type-based filter - this invokes the main attribute callbacks on attribute value
          * objects that implement AttrPolicy subclasses.
+         * NOTE: may be overridden by subclasses if necessary.
          */
-        public abstract Object doSaveAttr(T poli, HttpServletRequest request, String attrName, Map<String, Object> saveAttrMap);
+        public abstract Object doSaveAttr(Object value, HttpServletRequest request, String attrName, Map<String, Object> saveAttrMap);
+
+        protected Object doSaveAttrTypeFilter(Object value, HttpServletRequest request, String attrName, Map<String, Object> saveAttrMap) {
+            if (value != null) {
+                for(Map.Entry<Class<?>, RequestAttrNamePolicy.AttrTypeEntry> entry : getAttrTypeMap().entrySet()) {
+                    if (entry.getKey().isAssignableFrom(value.getClass())) {
+                        RequestAttrNamePolicy.AttrTypeEntry typeEntry = entry.getValue();
+                        if (typeEntry.getLogLevel() != null) {
+                            if (typeEntry.getResult() == AttrPolicy.VALUE_UNSET) {
+                                Debug.log(typeEntry.getLogLevel(), "Filtered request attribute [" + attrName + "] type [" +
+                                        value.getClass().getName() + "] from session map", module);
+                            }
+                        }
+                        return typeEntry.getResult();
+                    }
+                }
+            }
+            return null;
+        }
 
         /**
          * Filters an individual attribute for value/type/name policy.
@@ -862,7 +992,7 @@ public final class RequestAttrPolicy {
             }
             if (attrValueTypeApplies(attrName, value, saveAttrMap)) {
                 @SuppressWarnings("unchecked")
-                Object filteredValue = doSaveAttr((T) value, getRequest(), attrName, saveAttrMap);
+                Object filteredValue = doSaveAttr(value, getRequest(), attrName, saveAttrMap);
                 return RequestAttrPolicy.putMapValue(saveAttrMap, attrName, filteredValue);
             }
             saveAttrMap.put(attrName, value);
@@ -904,7 +1034,7 @@ public final class RequestAttrPolicy {
             for(Map.Entry<String, Object> attrEntry : saveAttrMap.entrySet()) {
                 if (attrValueTypeApplies(attrEntry.getKey(), attrEntry.getValue(), saveAttrMap)) {
                     @SuppressWarnings("unchecked")
-                    Object filteredValue = doSaveAttr((T) attrEntry.getValue(), getRequest(), attrEntry.getKey(), saveAttrMap);
+                    Object filteredValue = doSaveAttr(attrEntry.getValue(), getRequest(), attrEntry.getKey(), saveAttrMap);
                     RequestAttrPolicy.setEntryValue(attrEntry, filteredValue);
                 }
             }
@@ -920,7 +1050,7 @@ public final class RequestAttrPolicy {
          * Main attribute value-/type-based filter - this invokes the main attribute callbacks on attribute value
          * objects that implement AttrPolicy subclasses.
          */
-        public abstract Object doRestoreAttr(T poli, HttpServletRequest request, String attrName, Map<String, Object> saveAttrMap);
+        public abstract Object doRestoreAttr(Object value, HttpServletRequest request, String attrName, Map<String, Object> saveAttrMap);
 
         /**
          * Filters an individual attribute for value/type/policy.
@@ -933,7 +1063,7 @@ public final class RequestAttrPolicy {
             }
             if (attrValueTypeApplies(attrName, value, saveAttrMap)) {
                 @SuppressWarnings("unchecked")
-                Object filteredValue = doRestoreAttr((T) value, getRequest(), attrName, saveAttrMap);
+                Object filteredValue = doRestoreAttr(value, getRequest(), attrName, saveAttrMap);
                 return RequestAttrPolicy.setServletAttribute(getRequest(), attrName, filteredValue);
             }
             setServletAttribute(getRequest(), attrName, value);

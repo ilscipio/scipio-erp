@@ -19,6 +19,7 @@
 
 
 import org.ofbiz.product.product.ProductWorker
+import org.ofbiz.shipment.packing.PackingSession
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -88,8 +89,8 @@ if (orderHeader) {
     context.orderTerms = orderTerms;
 
     // get sales reps
-    context.salesReps = orderHeader.getRelated("OrderRole", [orderId : orderHeader.orderId, roleTypeId : "SALES_REP"], null, false);
-    
+    context.salesReps = orderHeader.getRelated("OrderRole", [orderId: orderHeader.orderId, roleTypeId: "SALES_REP"], null, false);
+
     // get the order type
     orderType = orderHeader.orderTypeId;
     context.orderType = orderType;
@@ -105,7 +106,7 @@ if (orderHeader) {
         displayPartyId = orderReadHelper.getPlacingPartyId();
     }
     // SCIPIO: 2019-02-27: if null, fallback on the ID
-    
+
     if (displayPartyId) { // SCIPIO: if (displayParty) {
         partyId = displayPartyId; // SCIPIO: displayParty.partyId;
         context.displayParty = displayParty;
@@ -127,14 +128,14 @@ if (orderHeader) {
 
     orderVATTaxTotal = OrderReadHelper.getOrderVATTaxByTaxAuthGeoAndParty(orderAdjustments).taxGrandTotal;
     context.orderVATTaxTotal = orderVATTaxTotal;
-    
+
     grandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
     context.grandTotal = grandTotal;
 
     orderItemList = orderReadHelper.getOrderItems();
     // Retrieve all non-promo items that aren't cancelled
     context.orderItemList = orderReadHelper.getOrderItems().findAll { item ->
-        (item.isPromo == null || item.isPromo == 'N')  || !item.statusId.equals('ITEM_CANCELLED')
+        (item.isPromo == null || item.isPromo == 'N') || !item.statusId.equals('ITEM_CANCELLED')
     }
 
     shippingAddress = orderReadHelper.getShippingAddress();
@@ -184,9 +185,9 @@ if (orderHeader) {
     context.invoices = orderBilling*.invoiceId.unique();
 
     ecl = EntityCondition.makeCondition([
-                                    EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId),
-                                    EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED")],
-                                EntityOperator.AND);
+            EntityCondition.makeCondition("orderId", EntityOperator.EQUALS, orderId),
+            EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED")],
+            EntityOperator.AND);
     orderPaymentPreferences = from("OrderPaymentPreference").where(ecl).queryList();
     context.orderPaymentPreferences = orderPaymentPreferences;
 
@@ -194,12 +195,13 @@ if (orderHeader) {
     shipGroups = from("OrderItemShipGroup").where("orderId", orderId).orderBy("shipGroupSeqId").queryList();
     context.shipGroups = shipGroups;
 
+    ungroupedOrderItems = [];
     orderContainsDigitalProducts = false;
     orderItemDatas = [];
     orderItemList.each { orderItem ->
         BigDecimal cancelQuantity = orderItem.get("cancelQuantity");
         BigDecimal quantity = orderItem.get("quantity");
-        if ( cancelQuantity != null ) {
+        if (cancelQuantity != null) {
             quantityOrdered = quantity.subtract(cancelQuantity);
         } else {
             quantityOrdered = quantity;
@@ -210,16 +212,16 @@ if (orderHeader) {
         }
         BigDecimal totalQuantityPlanned = 0;
         OISGAssContents.each { OISGAssContent ->
-           BigDecimal cancelQty = OISGAssContent.get("cancelQuantity");
-           BigDecimal qty = OISGAssContent.get("quantity");
-           if (qty != null) {
-               totalQuantityPlanned = totalQuantityPlanned.add(qty);
-           }
-           if (cancelQty != null){
-               OISGAssContent.set("quantity", qty.subtract(cancelQty));
-           } else {
-               OISGAssContent.set("quantity", qty);
-           }
+            BigDecimal cancelQty = OISGAssContent.get("cancelQuantity");
+            BigDecimal qty = OISGAssContent.get("quantity");
+            if (qty != null) {
+                totalQuantityPlanned = totalQuantityPlanned.add(qty);
+            }
+            if (cancelQty != null) {
+                OISGAssContent.set("quantity", qty.subtract(cancelQty));
+            } else {
+                OISGAssContent.set("quantity", qty);
+            }
         }
         totalQuantityToPlan = totalQuantityPlanned - quantityOrdered;
         BigDecimal quantityNotAvailable = 0;
@@ -243,11 +245,18 @@ if (orderHeader) {
 
         // SCIPIO: 2.0.0: check if an item is digital so we enable the complete order button
         if (!orderContainsDigitalProducts && ProductWorker.isDigital(product)) {
-            orderContainsDigitalProducts  = true;
+            orderContainsDigitalProducts = true;
+        }
+
+        // SCIPIO: 2.0.0: new list that contains items that aren't in a shipGroup
+        if (UtilValidate.isEmpty(OISGAssContents)) {
+            ungroupedOrderItems.add(orderItem);
         }
     }
     context.put("orderItemDatas", orderItemDatas);
-    
+    context.put("ungroupedOrderItems", ungroupedOrderItems);
+    Debug.log("ungroupedOrderItems ===> " + ungroupedOrderItems);
+
     // create the actualDate for calendar
     actualDateCal = Calendar.getInstance();
     actualDateCal.setTime(new java.util.Date());
@@ -262,11 +271,11 @@ if (orderHeader) {
 
     // get Shipment tracking info
     orderShipmentInfoSummaryList = select("shipGroupSeqId", "shipmentId", "shipmentRouteSegmentId", "carrierPartyId", "shipmentMethodTypeId", "shipmentPackageSeqId", "trackingCode", "boxNumber")
-                                    .from("OrderShipmentInfoSummary")
-                                    .where("orderId", orderId)
-                                    .orderBy("shipmentId", "shipmentRouteSegmentId", "shipmentPackageSeqId")
-                                    .distinct()
-                                    .queryList();
+            .from("OrderShipmentInfoSummary")
+            .where("orderId", orderId)
+            .orderBy("shipmentId", "shipmentRouteSegmentId", "shipmentPackageSeqId")
+            .distinct()
+            .queryList();
     context.orderShipmentInfoSummaryList = orderShipmentInfoSummaryList;
 
     customerPoNumber = null;
@@ -331,7 +340,7 @@ if (orderHeader) {
     // SCIPIO: 2.0.0: check if an approved order with all items completed exist
     context.setOrderCompleteOption = false;
     if ((orderContainsDigitalProducts && "ORDER_APPROVED".equals(orderHeader.statusId))
-        || "ORDER_SENT".equals(orderHeader.statusId)) {
+            || "ORDER_SENT".equals(orderHeader.statusId)) {
         expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_COMPLETED");
         completedItems = orderReadHelper.getOrderItemsByCondition(expr);
         if (!completedItems) {
@@ -340,7 +349,7 @@ if (orderHeader) {
     }
 
     // get inventory summary for each shopping cart product item
-    inventorySummary = runService('getProductInventorySummaryForItems', [orderItems : orderItems])
+    inventorySummary = runService('getProductInventorySummaryForItems', [orderItems: orderItems])
     context.availableToPromiseMap = inventorySummary.availableToPromiseMap;
     context.quantityOnHandMap = inventorySummary.quantityOnHandMap;
     context.mktgPkgATPMap = inventorySummary.mktgPkgATPMap;
@@ -352,7 +361,7 @@ if (orderHeader) {
     if (productStore) {
         facility = productStore.getRelatedOne("Facility", false);
         if (facility) {
-            inventorySummaryByFacility = runService("getProductInventorySummaryForItems", [orderItems : orderItems, facilityId : facility.facilityId]);
+            inventorySummaryByFacility = runService("getProductInventorySummaryForItems", [orderItems: orderItems, facilityId: facility.facilityId]);
             context.availableToPromiseByFacilityMap = inventorySummaryByFacility.availableToPromiseMap;
             context.quantityOnHandByFacilityMap = inventorySummaryByFacility.quantityOnHandMap;
             context.facility = facility;
@@ -369,7 +378,7 @@ if (orderHeader) {
             ownerPartyId = orderReadHelper.getBillToParty().partyId;
             Map ownedFacilities = [:];
             shipGroups.each { shipGroup ->
-                lookupMap = [ownerPartyId : ownerPartyId];
+                lookupMap = [ownerPartyId: ownerPartyId];
                 if (shipGroup.contactMechId) {
                     lookupMap.contactMechId = shipGroup.contactMechId;
                 }
@@ -411,7 +420,7 @@ if (orderHeader) {
     productionMap = [:];
     productIds.each { productId ->
         if (productId) {  // avoid order items without productIds, such as bulk order items
-            resultOutput = runService("getProductManufacturingSummaryByFacility", [productId : productId]);
+            resultOutput = runService("getProductManufacturingSummaryByFacility", [productId: productId]);
             manufacturingInQuantitySummaryByFacility = resultOutput.summaryInByFacility;
             Double productionQuantity = 0;
             manufacturingInQuantitySummaryByFacility.values().each { manQuantity ->
@@ -426,7 +435,7 @@ if (orderHeader) {
         // INVENTORY: find the number of products in outstanding sales orders for the same product store    
         requiredMap = InventoryWorker.getOutstandingProductQuantitiesForSalesOrders(productIds, delegator);
         context.requiredProductQuantityMap = requiredMap;
-    
+
         // INVENTORY: find the quantity of each product in outstanding purchase orders
         onOrderMap = InventoryWorker.getOutstandingProductQuantitiesForPurchaseOrders(productIds, delegator);
         context.onOrderProductQuantityMap = onOrderMap;
@@ -435,7 +444,7 @@ if (orderHeader) {
         context.onOrderProductQuantityMap = [:];
     }
 
-        // list to find all the POSTAL_ADDRESS for the shipment party.
+    // list to find all the POSTAL_ADDRESS for the shipment party.
     orderParty = from("Party").where("partyId", partyId).queryOne();
     shippingContactMechList = ContactHelper.getContactMech(orderParty, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false);
     context.shippingContactMechList = shippingContactMechList;
@@ -458,7 +467,7 @@ if (orderHeader) {
 
     // Get a map of returnable items
     returnableItems = [:];
-    returnableItemServiceMap = run service: 'getReturnableItems', with: [orderId : orderId]
+    returnableItemServiceMap = run service: 'getReturnableItems', with: [orderId: orderId]
     if (returnableItemServiceMap.returnableItems) {
         returnableItems = returnableItemServiceMap.returnableItems;
     }
@@ -480,18 +489,31 @@ if (orderHeader) {
         }
     }
 
-   // list to find all the POSTAL_ADDRESS for the party.
-   orderParty = from("Party").where("partyId", partyId).queryOne();
-   postalContactMechList = ContactHelper.getContactMechByType(orderParty,"POSTAL_ADDRESS", false);
-   context.postalContactMechList = postalContactMechList;
+    // list to find all the POSTAL_ADDRESS for the party.
+    orderParty = from("Party").where("partyId", partyId).queryOne();
+    postalContactMechList = ContactHelper.getContactMechByType(orderParty, "POSTAL_ADDRESS", false);
+    context.postalContactMechList = postalContactMechList;
 
-   // list to find all the TELECOM_NUMBER for the party.
-   telecomContactMechList = ContactHelper.getContactMechByType(orderParty,"TELECOM_NUMBER", false);
-   context.telecomContactMechList = telecomContactMechList;
+    // list to find all the TELECOM_NUMBER for the party.
+    telecomContactMechList = ContactHelper.getContactMechByType(orderParty, "TELECOM_NUMBER", false);
+    context.telecomContactMechList = telecomContactMechList;
 
-   // list to find all the EMAIL_ADDRESS for the party.
-   emailContactMechList = ContactHelper.getContactMechByType(orderParty,"EMAIL_ADDRESS", false);
-   context.emailContactMechList = emailContactMechList;
+    // list to find all the EMAIL_ADDRESS for the party.
+    emailContactMechList = ContactHelper.getContactMechByType(orderParty, "EMAIL_ADDRESS", false);
+    context.emailContactMechList = emailContactMechList;
+
+    if (!context.request != null) {
+       packSession = request.getSession().getAttribute("packingSession");
+       if (!packSession) {
+           if (facility) {
+               packSession = new PackingSession(dispatcher, userLogin, facility.facilityId, null, orderId, null);
+           } else {
+               packSession = new PackingSession(dispatcher, userLogin);
+           }
+       }
+       context.packSession = packSession;
+       Debug.log("packSession: " + packSession);
+    }
 }
 
 paramString = "";
@@ -534,8 +556,17 @@ if (orderItems) {
 
 // getting online ship estimates corresponding to this Order from UPS when "Hold" button will be clicked, when user packs from weight package screen.
 // This case comes when order's shipping amount is  more then or less than default percentage (defined in shipment.properties) of online UPS shipping amount.
-
-shipments = from("Shipment").where("primaryOrderId", orderId, "statusId", "SHIPMENT_PICKED").queryList();
+shipmentCond =  EntityCondition.makeCondition(
+    UtilMisc.toList(EntityCondition.makeCondition("primaryOrderId", EntityJoinOperator.EQUALS, orderId),
+    EntityCondition.makeCondition(UtilMisc.toList(
+        EntityCondition.makeCondition("statusId", "SHIPMENT_INPUT"),
+        EntityCondition.makeCondition("statusId", "SHIPMENT_PICKED"),
+        EntityCondition.makeCondition("statusId", "SHIPMENT_PACKED"),
+        EntityCondition.makeCondition("statusId", "SHIPMENT_SHIPPED")
+    ), EntityJoinOperator.OR)),
+    EntityJoinOperator.AND
+);
+shipments = from("Shipment").where(shipmentCond).queryList();
 if (shipments) {
     pickedShipmentId = EntityUtil.getFirst(shipments).shipmentId;
     shipmentRouteSegment = from("ShipmentRouteSegment").where("shipmentId", pickedShipmentId).queryFirst();
@@ -567,6 +598,7 @@ if (shipments) {
         }
     }
 }
+context.shipments = shipments;
 
 // get orderAdjustmentId for SHIPPING_CHARGES
 orderAdjustmentId = null;

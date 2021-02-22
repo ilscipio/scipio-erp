@@ -43,7 +43,7 @@
         </@field>
         <#-- SCIPIO: TODO: REVIEW: I'm not sure we should allow to change the orderId while editing... -->
         <#if shipment?has_content>
-            <@field type="display" name="primaryOrderId" label=uiLabelMap.ProductPrimaryOrderId value=(shipment.primaryOrderId!)>
+            <@field type="generic" name="primaryOrderId" label=uiLabelMap.ProductPrimaryOrderId>
               <#if shipment.primaryOrderId?has_content><#-- SCIPIO: 2018-06-08: don't crash if not set -->
                 <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${shipment.primaryOrderId}</@serverUrl>">${shipment.primaryOrderId}</a>
               </#if>

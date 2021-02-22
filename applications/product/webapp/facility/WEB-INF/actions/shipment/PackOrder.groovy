@@ -71,6 +71,11 @@ if (orderId && !shipGroupSeqId && orderId.indexOf("/") > -1) {
 
 // setup the packing session
 packSession = session.getAttribute("packingSession");
+Debug.log("orderId       : " + packSession.getPrimaryOrderId());
+Debug.log("primaryOrderId: " + orderId);
+if (packSession && orderId && (!packSession.getPrimaryOrderId().equals(orderId))) {
+    packSession = null;
+}
 clear = parameters.clear;
 if (!packSession) {
     packSession = new org.ofbiz.shipment.packing.PackingSession(dispatcher, userLogin);

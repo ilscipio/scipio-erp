@@ -425,6 +425,8 @@ code package.
                 <set field="emailParams.sendBcc" from-field="storeEmail.bccAddress"/>
                 <set field="emailParams.contentType" from-field="storeEmail.contentType"/>
                 <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
+                <!-- SCIPIO: 2.0.0: Passing sendAs (from alias) product store email setting -->
+                <set field="emailParams.sendAs" from-field="storeEmail.sendAs"/>
                 <set field="emailParams.emailType" from-field="storeEmailLookup.emailType"/>
                 <!-- SCIPIO: Determine webSiteId for store email -->
                 <set field="emailParams.webSiteId" value="${groovy:org.ofbiz.webapp.website.WebSiteWorker.getWebSiteId(request)}"/>

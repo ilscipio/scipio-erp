@@ -2826,6 +2826,8 @@ public class OrderServices {
         sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
         sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
         sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
+        // SCIPIO: 2.0.0: Passing sendAs (from alias) product store email setting
+        sendMap.put("sendAs", productStoreEmail.get("sendAs"));
         if ((sendTo != null) && UtilValidate.isEmail(sendTo)) {
             sendMap.put("sendTo", sendTo);
         } else {

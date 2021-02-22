@@ -286,6 +286,8 @@ public class OrderReturnServices {
                 sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
                 sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
                 sendMap.put("sendTo", emailAddress);
+                // SCIPIO: 2.0.0: Passing sendAs (from alias) product store email setting
+                sendMap.put("sendAs", productStoreEmail.get("sendAs"));
                 sendMap.put("partyId", returnHeader.getString("fromPartyId"));
 
                 sendMap.put("userLogin", userLogin);

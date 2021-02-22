@@ -1228,6 +1228,8 @@ public class ValueLinkServices {
                 emailCtx.put("sendCc", productStoreEmail.get("ccAddress"));
                 emailCtx.put("sendBcc", bcc);
                 emailCtx.put("subject", productStoreEmail.getString("subject"));
+                // SCIPIO: 2.0.0: Passing sendAs (from alias) product store email setting
+                emailCtx.put("sendAs", productStoreEmail.getString("sendAs"));
                 emailCtx.put("userLogin", userLogin);
 
                 // SCIPIO: Determine webSiteId for store email
@@ -1481,6 +1483,8 @@ public class ValueLinkServices {
             emailCtx.put("sendCc", productStoreEmail.get("ccAddress"));
             emailCtx.put("sendBcc", productStoreEmail.get("bccAddress"));
             emailCtx.put("subject", productStoreEmail.getString("subject"));
+            // SCIPIO: 2.0.0: Passing sendAs (from alias) product store email setting
+            emailCtx.put("sendAs", productStoreEmail.getString("sendAs"));
             emailCtx.put("userLogin", userLogin);
 
             // SCIPIO: Determine webSiteId for store email

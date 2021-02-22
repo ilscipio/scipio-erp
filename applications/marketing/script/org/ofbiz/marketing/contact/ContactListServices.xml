@@ -524,6 +524,8 @@ code package.
             <set field="emailParams.sendFrom" from-field="storeEmail.fromAddress"/>
             <set field="emailParams.subject" value="${storeEmail.subject} ${contactList.contactListName}"/>
             <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
+            <!-- SCIPIO: 2.0.0: Passing sendAs (from alias) product store email setting -->
+            <set field="emailParams.sendAs" from-field="storeEmail.sendAs"/>
             <set field="emailParams.contentType" value="text/html"/>
             <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>
         </if-not-empty>
@@ -601,6 +603,8 @@ code package.
             <set field="emailParams.sendFrom" from-field="storeEmail.fromAddress"/>
             <set field="emailParams.subject" value="${storeEmail.subject} ${contactList.contactListName}"/>
             <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
+            <!-- SCIPIO: 2.0.0: Passing sendAs (from alias) product store email setting -->
+            <set field="emailParams.sendAs" from-field="storeEmail.sendAs"/>
             <set field="emailParams.contentType" value="text/html"/>
             <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>
         </if-not-empty>
@@ -631,6 +635,8 @@ code package.
             <set field="emailParams.sendFrom" from-field="storeEmail.fromAddress"/>
             <set field="emailParams.subject" value="${storeEmail.subject} ${contactList.contactListName}"/>
             <set field="emailParams.bodyScreenUri" from-field="storeEmail.bodyScreenLocation"/>
+            <!-- SCIPIO: 2.0.0: Passing sendAs (from alias) product store email setting -->
+            <set field="emailParams.sendAs" from-field="storeEmail.sendAs"/>
             <set field="emailParams.contentType" value="text/html"/>
             <call-service service-name="sendMailFromScreen" in-map-name="emailParams"/>
         </if-not-empty>

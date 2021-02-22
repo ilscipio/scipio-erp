@@ -537,6 +537,8 @@ public class CommunicationEventServices {
                                     if (productStoreEmailSetting != null) {
                                         // send e-mail using screen template
                                         sendMailParams.put("bodyScreenUri", productStoreEmailSetting.getString("bodyScreenLocation"));
+                                        // SCIPIO: 2.0.0: Passing sendAs product store email setting
+                                        sendMailParams.put("sendAs", productStoreEmailSetting.getString("sendAs"));
                                         sendMailParams.put("bodyParameters", bodyParameters);
                                         sendMailParams.remove("body");
                                         sendMailParams.put("webSiteId", webSite.get("webSiteId")); // SCIPIO: Pass webSiteId to service itself (not just bodyParameters for the template); may be redundant here, but safer

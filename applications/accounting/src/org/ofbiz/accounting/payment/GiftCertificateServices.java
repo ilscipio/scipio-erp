@@ -960,6 +960,8 @@ public class GiftCertificateServices {
                 emailCtx.put("sendCc", productStoreEmail.get("ccAddress"));
                 emailCtx.put("sendBcc", bcc);
                 emailCtx.put("subject", productStoreEmail.getString("subject"));
+                // SCIPIO: 2.0.0: Passing sendAs (from alias) product store email setting
+                emailCtx.put("sendAs", productStoreEmail.getString("sendAs"));
                 emailCtx.put("userLogin", userLogin);
 
                 // SCIPIO: Determine webSiteId for store email
@@ -1218,6 +1220,8 @@ public class GiftCertificateServices {
             emailCtx.put("sendFrom", productStoreEmail.get("fromAddress"));
             emailCtx.put("sendCc", productStoreEmail.get("ccAddress"));
             emailCtx.put("sendBcc", productStoreEmail.get("bccAddress"));
+            // SCIPIO: 2.0.0: Passing sendAs (from alias) product store email setting
+            emailCtx.put("sendAs", productStoreEmail.getString("sendAs"));
             emailCtx.put("subject", productStoreEmail.getString("subject"));
             emailCtx.put("userLogin", userLogin);
 

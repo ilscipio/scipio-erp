@@ -18,6 +18,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.service.ServiceContext;
@@ -997,7 +998,7 @@ public class EntityIndexer implements Runnable {
      * queueEntityIndex, otherwise performs queueEntityIndex immediately. queueEntityIndex then appends to the queue
      * for the EntityIndexer.
      */
-    public static Map<String, Object> scheduleEntityIndexing(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> scheduleEntityIndexing(ServiceContext ctx) {
         if (!SystemState.getInstance().isServerExecution()) {
             if (Debug.verboseOn()) {
                 Debug.logInfo("Not scheduling entity indexing; not a regular server execution", module);
@@ -1005,30 +1006,30 @@ public class EntityIndexer implements Runnable {
             return ServiceUtil.returnSuccess("Not scheduling entity indexing; not a regular server execution");
         }
 
-        if ("trans-commit".equals(context.get("event")) && TransactionUtil.isTransactionInPlaceSafe()) {
+        if ("trans-commit".equals(ctx.attr("event")) && TransactionUtil.isTransactionInPlaceSafe()) {
             if (TransactionUtil.getStatusSafe() == TransactionUtil.STATUS_MARKED_ROLLBACK) {
                 return ServiceUtil.returnFailure("Current transaction is marked for rollback; aborting scheduleEntityIndexing");
             }
-            return scheduleTransCommitEntityIndexing(dctx, context);
+            return scheduleTransCommitEntityIndexing(ctx);
         } else {
-            return queueEntityIndexing(dctx, context);
+            return queueEntityIndexing(ctx);
         }
     }
 
     /**
      * Extracts an entity PK from context and adds it to entitiesToIndex map to the transaction commit registration service entry for scheduleEntityIndexing.
      */
-    public static Map<String, Object> scheduleTransCommitEntityIndexing(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> scheduleTransCommitEntityIndexing(ServiceContext ctx) {
         try {
-            LocalDispatcher dispatcher = dctx.getDispatcher();
+            LocalDispatcher dispatcher = ctx.dispatcher();
             ServiceSyncRegistrations regs = dispatcher.getServiceSyncRegistrations();
-            EntityIndexer indexer = EntityIndexer.getIndexer((String) context.get("entityName"));
+            EntityIndexer indexer = EntityIndexer.getIndexer(ctx.attr("entityName"));
             if (indexer == null) {
-                throw new IllegalArgumentException("Could not get indexer for entity [" + context.get("entityName") + "]");
+                throw new IllegalArgumentException("Could not get indexer for entity [" + ctx.attr("entityName") + "]");
             }
-            Collection<Entry> entries = indexer.extractEntries(dctx.getDelegator(), context, System.currentTimeMillis(), null);
+            Collection<Entry> entries = indexer.extractEntries(ctx.delegator(), ctx.context(), System.currentTimeMillis(), null);
             if (UtilValidate.isEmpty(entries)) {
-                Debug.logWarning("No entity values identified for scheduling for context: " + context, module);
+                Debug.logWarning("No entity values identified for scheduling for context: " + ctx.context(), module);
                 return ServiceUtil.returnFailure("No entity values identified for scheduling");
             }
             Collection<ServiceSyncRegistrations.ServiceSyncRegistration> commitRegs = regs.getCommitRegistrationsForService("scheduleEntityIndexing");
@@ -1054,8 +1055,8 @@ public class EntityIndexer implements Runnable {
                 return ServiceUtil.returnSuccess(msg);
             } else {
                 // register the service
-                Map<String, Object> servCtx = UtilMisc.toMap("locale", context.get("locale"), "userLogin", context.get("userLogin"),
-                        "timeZone", context.get("timeZone"), "event", "global-queue");
+                Map<String, Object> servCtx = UtilMisc.toMap("locale", ctx.locale(), "userLogin", ctx.userLogin(),
+                        "timeZone", ctx.timeZone(), "event", "global-queue");
                 Map<String, Map<GenericPK, Entry>> entitiesToIndex = new LinkedHashMap<>();
                 // IMPORTANT: LinkedHashMap keeps order of changes across transaction
                 Map<GenericPK, Entry> entryMap = new LinkedHashMap<>();
@@ -1064,7 +1065,7 @@ public class EntityIndexer implements Runnable {
                 }
                 entitiesToIndex.put(indexer.getName(), entryMap);
                 servCtx.put("entitiesToIndex", entitiesToIndex);
-                regs.addCommitService(dctx, "scheduleEntityIndexing", null, servCtx, false, false);
+                regs.addCommitService(ctx.dctx(), "scheduleEntityIndexing", null, servCtx, false, false);
             }
             //StringBuilder pkList = new StringBuilder();
             //int pkCount = 0;
@@ -1098,13 +1099,13 @@ public class EntityIndexer implements Runnable {
     /**
      * Queues the given entity PKs for indexing in the appropriate {@link EntityIndexer}.
      */
-    public static Map<String, Object> queueEntityIndexing(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> queueEntityIndexing(ServiceContext ctx) {
         try {
-            Map<String, Map<GenericPK, Entry>> entitiesToIndex = UtilGenerics.cast(context.get("entitiesToIndex"));
-            String entityName = (String) context.get("entityName");
+            Map<String, Map<GenericPK, Entry>> entitiesToIndex = ctx.attr("entitiesToIndex");
+            String entityName = ctx.attr("entityName");
             if (UtilValidate.isNotEmpty(entityName)) { // Only needed for "inline" queues (inline here is a convenience)
                 EntityIndexer indexer = EntityIndexer.getIndexer(entityName);
-                Collection<Entry> entries = indexer.extractEntries(dctx.getDelegator(), context, System.currentTimeMillis(), null);
+                Collection<Entry> entries = indexer.extractEntries(ctx.delegator(), ctx.context(), System.currentTimeMillis(), null);
                 if (UtilValidate.isNotEmpty(entries)) {
                     if (entitiesToIndex == null) {
                         entitiesToIndex = new LinkedHashMap<>();
@@ -1120,7 +1121,7 @@ public class EntityIndexer implements Runnable {
                     }
                 }
             }
-            Map<String, Object> newEntitiesToIndex = UtilGenerics.cast(context.get("newEntitiesToIndex"));
+            Map<String, Object> newEntitiesToIndex = ctx.attr("newEntitiesToIndex");
             Set<String> entityNames = UtilMisc.keySet(entitiesToIndex, newEntitiesToIndex);
 
             int scheduled = 0;
@@ -1154,9 +1155,9 @@ public class EntityIndexer implements Runnable {
                     }
                 }
 
-                Object rawEntities = newEntitiesToIndex.get(targetEntityName);
+                Object rawEntities = (newEntitiesToIndex != null) ? newEntitiesToIndex.get(targetEntityName) : null;
                 if (rawEntities != null) {
-                    Map<String, Object> extractCtx = new HashMap<>(context);
+                    Map<String, Object> extractCtx = new HashMap<>(ctx.context());
                     extractCtx.remove("entityName");
                     extractCtx.remove("idField");
                     Iterator<?> it;
@@ -1170,8 +1171,8 @@ public class EntityIndexer implements Runnable {
                         // in this case trigger running early due to high number
                         if (!targetIndexer.isRunning()) {
                             // Start the async service to create a new thread and prioritize in system at same time
-                            dctx.getDispatcher().runAsync("runEntityIndexing",
-                                    UtilMisc.toMap("userLogin", context.get("userLogin"), "entityName", targetIndexer.getName()),
+                            ctx.dispatcher().runAsync("runEntityIndexing",
+                                    UtilMisc.toMap("userLogin", ctx.attr("userLogin"), "entityName", targetIndexer.getName()),
                                     ServiceOptions.asyncMemory().priority(targetIndexer.getRunServicePriority()));
                         }
                     }
@@ -1187,7 +1188,7 @@ public class EntityIndexer implements Runnable {
                         } else {
                             throw new IllegalArgumentException("invalid entityInstances for entity [" + targetEntityName + "]: " + value.getClass().getName());
                         }
-                        Collection<Entry> entries = targetIndexer.extractEntries(dctx.getDelegator(), extractCtx, System.currentTimeMillis(), null);
+                        Collection<Entry> entries = targetIndexer.extractEntries(ctx.delegator(), extractCtx, System.currentTimeMillis(), null);
                         if (UtilValidate.isNotEmpty(entries)) {
                             for(Entry entry : entries) {
                                 targetIndexer.add(entry);
@@ -1210,8 +1211,8 @@ public class EntityIndexer implements Runnable {
 
                 if (!targetIndexer.isRunning()) {
                     // Start the async service to create a new thread and prioritize in system at same time
-                    dctx.getDispatcher().runAsync("runEntityIndexing",
-                        UtilMisc.toMap("userLogin", context.get("userLogin"), "entityName", targetIndexer.getName()),
+                    ctx.dispatcher().runAsync("runEntityIndexing",
+                        UtilMisc.toMap("userLogin", ctx.attr("userLogin"), "entityName", targetIndexer.getName()),
                             ServiceOptions.asyncMemory().priority(targetIndexer.getRunServicePriority()));
                 }
             }
@@ -1255,7 +1256,7 @@ public class EntityIndexer implements Runnable {
 
             Map<String, Object> queueCtx = new HashMap<>(ctx.context());
             queueCtx.put("newEntitiesToIndex", UtilMisc.toMap(entityName, prodIt));
-            Map<String, Object> queueResult = queueEntityIndexing(ctx.dctx(), queueCtx);
+            Map<String, Object> queueResult = queueEntityIndexing(ctx.from(queueCtx));
             if (ServiceUtil.isError(queueResult)) {
                 return ServiceUtil.returnResultSysFields(queueResult);
             }
@@ -1350,25 +1351,41 @@ public class EntityIndexer implements Runnable {
      * WARN: If multiple entityNames are passed they try-run sequentially - avoiding this for now, instead doing multiple
      * runAsync with single entityName.
      */
-    public static Map<String, Object> runEntityIndexing(DispatchContext dctx, Map<String, Object> context) {
-        Collection<String> entityNames = UtilGenerics.cast(context.get("entityNames"));
+    public static Map<String, Object> runEntityIndexing(ServiceContext ctx) {
+        Collection<String> entityNames = ctx.attr("entityNames");
         if (UtilValidate.isEmpty(entityNames)) {
-            String entityName = (String) context.get("entityName");
+            String entityName = ctx.attr("entityName");
             if (UtilValidate.isEmpty(entityName)) {
                 return ServiceUtil.returnError("No entity names (indexer names) specified");
             }
             entityNames = UtilMisc.toList(entityName);
         }
+
         for(String entityName : entityNames) {
             EntityIndexer targetIndexer = getIndexer(entityName);
             if (targetIndexer != null) {
                 try {
                     // Run with default dispatch context so everyone is equal
                     //targetIndexer.tryRun(dctx, context);
-                    targetIndexer.tryRun(targetIndexer.getDefaultDctx(), context);
+                    targetIndexer.tryRun(targetIndexer.getDefaultDctx(), ctx.context());
                 } catch(Exception e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError(e.toString());
+                }
+
+                // If there are elements in the queue, queue another invocation using a separate service call.
+                // NOTE: On a live system with a constant flux of ECAs this is not needed, but for development this can be needed.
+                if (!targetIndexer.isRunning() && targetIndexer.getQueue().size() > 0) {
+                    // Start the async service to create a new thread and prioritize in system at same time
+                    try {
+                        ctx.dispatcher().runAsync("runEntityIndexing",
+                                UtilMisc.toMap("userLogin", ctx.attr("userLogin"), "entityName", targetIndexer.getName()),
+                                ServiceOptions.asyncMemory().priority(targetIndexer.getRunServicePriority()));
+                    } catch (GenericServiceException e) {
+                        String msg = "Could not reschedule runEntityIndexing: " + e.toString();
+                        Debug.logError(e, "runEntityIndexing: " + msg, module);
+                        return ServiceUtil.returnFailure(msg);
+                    }
                 }
             }
         }

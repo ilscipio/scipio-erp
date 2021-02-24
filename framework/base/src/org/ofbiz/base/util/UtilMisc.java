@@ -1092,22 +1092,50 @@ public final class UtilMisc {
     /**
      * SCIPIO: Returns the first non-null value, or null.
      */
-    public static <T> T firstNonNull(Collection<T> values) {
+    public static <T> T firstNonNull(Collection<?> values) {
         return UtilObject.firstNonNull(values);
     }
 
     /**
      * SCIPIO: Returns the first element of collection or list using get() if possible.
      */
-    public static <T> T first(Collection<T> values) {
-        return (values instanceof List) ? UtilGenerics.<List<T>>cast(values).get(0) : values.iterator().next();
+    public static <T> T first(Collection<?> values) {
+        return (values instanceof List) ? UtilGenerics.<List<T>>cast(values).get(0) : UtilGenerics.cast(values.iterator().next());
     }
 
     /**
      * SCIPIO: Returns the first element of collection or list using get() if possible, or null if empty.
      */
-    public static <T> T firstSafe(Collection<T> values) {
+    public static <T> T firstSafe(Collection<?> values) {
         return UtilValidate.isNotEmpty(values) ? first(values) : null;
+    }
+
+    /**
+     * SCIPIO: Returns the first element of map.
+     * Map must not be empty.
+     */
+    public static <T> T first(Map<?, ?> values) {
+        return UtilGenerics.cast(values.entrySet().iterator().next().getValue());
+    }
+
+    /**
+     * SCIPIO: Returns the first element of map, with empty map check.
+     */
+    public static <T> T firstSafe(Map<?, ?> values) {
+        return UtilValidate.isNotEmpty(values) ? first(values) : null;
+    }
+
+    /**
+     * SCIPIO: Returns the first element of map or collection, or other the value itself.
+     */
+    public static <T> T firstOrSelfSafe(Object value) {
+        if (value instanceof Map) {
+            return UtilMisc.firstSafe(UtilGenerics.<Map<String, ?>>cast(value));
+        } else if (value instanceof Collection) {
+            return UtilMisc.firstSafe(UtilGenerics.<Collection<String>>cast(value));
+        } else {
+            return UtilGenerics.cast(value);
+        }
     }
 
     /**

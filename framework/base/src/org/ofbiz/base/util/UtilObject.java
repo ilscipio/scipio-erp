@@ -245,9 +245,11 @@ public final class UtilObject {
     /**
      * SCIPIO: Returns the first non-null value, or null.
      */
-    public static <T> T firstNonNull(Collection<T> values) {
-        for(T value : values) {
-            if (value != null) return value;
+    public static <T> T firstNonNull(Collection<?> values) {
+        for(Object value : values) {
+            if (value != null) {
+                return UtilGenerics.cast(value);
+            }
         }
         return null;
     }

@@ -555,9 +555,9 @@ public class EntityIndexer implements Runnable {
         if (entityRef != null) {
             return entityRef;
         }
-        String idField = (String) context.get("idField");
+        Object idField = context.get("idField");
         if (idField != null) {
-            entityRef = context.get(idField);
+            entityRef = extractFirstIdField(idField, context);
             if (entityRef != null) {
                 return entityRef;
             }
@@ -589,15 +589,15 @@ public class EntityIndexer implements Runnable {
         if (idRef == null) {
             if (entityRef instanceof Map) { // may also be GenericEntity (some entities may use idField when no relation defined)
                 Map<String, Object> mapEntityRef = UtilGenerics.cast(entityRef);
-                String idField = (String) context.get("idField"); // FIXME: support PKs greater than size 1 for idField
-                if (idField != null && getModelEntity().getPksSize() == 1) {
-                    idRef = mapEntityRef.get(idField);
+                Object idField = context.get("idField");
+                if (idField != null) {
+                    idRef = extractFirstIdField(idField, mapEntityRef); // FIXME: support PKs greater than size 1 for idField
                 }
             }
             if (idRef == null) {
-                String idField = (String) context.get("idField"); // FIXME: support PKs greater than size 1 for idField
-                if (idField != null && getModelEntity().getPksSize() == 1) {
-                    idRef = context.get(idField);
+                Object idField = context.get("idField");
+                if (idField != null) {
+                    idRef = extractFirstIdField(idField, context); // FIXME: support PKs greater than size 1 for idField
                 }
                 if (idRef == null) {
                     return null;
@@ -613,6 +613,26 @@ public class EntityIndexer implements Runnable {
             }
         }
         return null;
+    }
+
+    protected static Object extractIdField(Object idField, Map<String, ?> map) {
+        if (idField == null) {
+            return null;
+        } else if (idField instanceof String) {
+            return map.get(idField);
+        } else if (idField instanceof Collection) {
+            Map<String, Object> fields = new LinkedHashMap<>();
+            for(String id : UtilGenerics.<Collection<String>>cast(idField)) {
+                fields.put(id, map.get(id));
+            }
+            return fields;
+        } else {
+            throw new IllegalArgumentException("Invalid idField: " + idField);
+        }
+    }
+
+    protected static Object extractFirstIdField(Object idField, Map<String, ?> map) { // TODO: remove in future
+        return UtilMisc.firstOrSelfSafe(extractIdField(idField, map));
     }
 
     public Action extractEntryAction(Delegator delegator, Map<String, Object> context) {

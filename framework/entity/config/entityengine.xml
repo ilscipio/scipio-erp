@@ -7,6 +7,12 @@ code package.
 <!--
  - This file configures the Entity Engine JDBC (or other DataSource) and JTA
 access. For a detailed description see the core/docs/entityconfig.html file.
+
+SCIPIO: 2.1.0: Added system property override support:
+Simple data source attributes may be overridden in system properties using (after ant start target):
+    -Dscipio.entity.datasource.[name].[the-attr]=[value]
+e.g.:
+    -Dscipio.entity.datasource.localpostnew.check-indices-on-start=true
 -->
 <entity-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-config.xsd">

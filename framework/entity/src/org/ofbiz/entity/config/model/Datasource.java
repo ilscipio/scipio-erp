@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.ofbiz.base.lang.ThreadSafe;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericEntityConfException;
 import org.w3c.dom.Element;
@@ -30,10 +31,14 @@ import org.w3c.dom.Element;
 /**
  * An object that models the <code>&lt;datasource&gt;</code> element.
  *
+ * SCIPIO: 2.1.0: Added system property override support: <code>-Dscipio.entity.datasource.[name].[the-attr]=[value]</code>
+ *
  * @see <code>entity-config.xsd</code>
  */
 @ThreadSafe
 public final class Datasource {
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    protected static final String SYSPROP_NAME = "scipio.entity.datasource";
 
 /*
     public static final int TYPE_JNDI_JDBC = 1;
@@ -83,29 +88,30 @@ public final class Datasource {
     private final TyrexDataSource tyrexDataSource; // <tyrex-dataSource>
 
     Datasource(Element element) throws GenericEntityConfException {
+        // SCIPIO: Modified for command-line override support
         String lineNumberText = EntityConfig.createConfigFileLineNumberText(element);
         String name = element.getAttribute("name").intern();
         if (name.isEmpty()) {
             throw new GenericEntityConfException("<datasource> element name attribute is empty" + lineNumberText);
         }
         this.name = name;
-        String helperClass = element.getAttribute("helper-class").intern();
+        String helperClass = getAttr(name, element, "helper-class");
         if (helperClass.isEmpty()) {
             throw new GenericEntityConfException("<datasource> element helper-class attribute is empty" + lineNumberText);
         }
         this.helperClass = helperClass;
-        String fieldTypeName = element.getAttribute("field-type-name").intern();
+        String fieldTypeName = getAttr(name, element, "field-type-name");
         if (fieldTypeName.isEmpty()) {
             throw new GenericEntityConfException("<datasource> element field-type-name attribute is empty" + lineNumberText);
         }
         this.fieldTypeName = fieldTypeName;
-        this.useSchemas = !"false".equals(element.getAttribute("use-schemas"));
-        this.schemaName = element.getAttribute("schema-name").intern();
-        this.checkOnStart = !"false".equals(element.getAttribute("check-on-start"));
-        this.addMissingOnStart = "true".equals(element.getAttribute("add-missing-on-start"));
-        this.usePkConstraintNames = !"false".equals(element.getAttribute("use-pk-constraint-names"));
-        this.checkPksOnStart = !"false".equals(element.getAttribute("check-pks-on-start"));
-        String constraintNameClipLength = element.getAttribute("constraint-name-clip-length");
+        this.useSchemas = !"false".equals(getAttr(name, element, "use-schemas"));
+        this.schemaName = getAttr(name, element, "schema-name");
+        this.checkOnStart = !"false".equals(getAttr(name, element, "check-on-start"));
+        this.addMissingOnStart = "true".equals(getAttr(name, element, "add-missing-on-start"));
+        this.usePkConstraintNames = !"false".equals(getAttr(name, element, "use-pk-constraint-names"));
+        this.checkPksOnStart = !"false".equals(getAttr(name, element, "check-pks-on-start"));
+        String constraintNameClipLength = getAttr(name, element, "constraint-name-clip-length");
         if (constraintNameClipLength.isEmpty()) {
             this.constraintNameClipLength = 30;
         } else {
@@ -115,13 +121,13 @@ public final class Datasource {
                 throw new GenericEntityConfException("<datasource> element constraint-name-clip-length attribute is invalid" + lineNumberText);
             }
         }
-        this.useProxyCursor = "true".equalsIgnoreCase(element.getAttribute("use-proxy-cursor"));
-        String proxyCursorName = element.getAttribute("proxy-cursor-name").intern();
+        this.useProxyCursor = "true".equalsIgnoreCase(getAttr(name, element, "use-proxy-cursor"));
+        String proxyCursorName = getAttr(name, element, "proxy-cursor-name");
         if (proxyCursorName.isEmpty()) {
             proxyCursorName = "p_cursor";
         }
         this.proxyCursorName = proxyCursorName;
-        String resultFetchSize = element.getAttribute("result-fetch-size");
+        String resultFetchSize = getAttr(name, element, "result-fetch-size");
         if (resultFetchSize.isEmpty()) {
             this.resultFetchSize = -1;
         } else {
@@ -131,41 +137,44 @@ public final class Datasource {
                 throw new GenericEntityConfException("<datasource> element result-fetch-size attribute is invalid" + lineNumberText);
             }
         }
-        this.useForeignKeys = !"false".equals(element.getAttribute("use-foreign-keys"));
-        this.useForeignKeyIndices = !"false".equals(element.getAttribute("use-foreign-key-indices"));
-        this.checkFksOnStart = "true".equals(element.getAttribute("check-fks-on-start"));
-        this.checkFkIndicesOnStart = "true".equals(element.getAttribute("check-fk-indices-on-start"));
-        String fkStyle = element.getAttribute("fk-style").intern();
+        this.useForeignKeys = !"false".equals(getAttr(name, element, "use-foreign-keys"));
+        this.useForeignKeyIndices = !"false".equals(getAttr(name, element, "use-foreign-key-indices"));
+        this.checkFksOnStart = "true".equals(getAttr(name, element, "check-fks-on-start"));
+        this.checkFkIndicesOnStart = "true".equals(getAttr(name, element, "check-fk-indices-on-start"));
+        String fkStyle = getAttr(name, element, "fk-style");
         if (fkStyle.isEmpty()) {
             fkStyle = "name_constraint";
         }
         this.fkStyle = fkStyle;
-        this.useFkInitiallyDeferred = "true".equals(element.getAttribute("use-fk-initially-deferred"));
-        this.useIndices = !"false".equals(element.getAttribute("use-indices"));
-        this.useIndicesUnique = !"false".equals(element.getAttribute("use-indices-unique"));
-        this.checkIndicesOnStart = "true".equals(element.getAttribute("check-indices-on-start"));
-        String joinStyle = element.getAttribute("join-style").intern();
+        this.useFkInitiallyDeferred = "true".equals(getAttr(name, element, "use-fk-initially-deferred"));
+        this.useIndices = !"false".equals(getAttr(name, element, "use-indices"));
+        this.useIndicesUnique = !"false".equals(getAttr(name, element, "use-indices-unique"));
+        // SCIPIO: Override by startup flag
+
+
+        this.checkIndicesOnStart = "true".equals(getAttr(name, element, "check-indices-on-start"));
+        String joinStyle = getAttr(name, element, "join-style");
         if (joinStyle.isEmpty()) {
             joinStyle = "ansi";
         }
         this.joinStyle = joinStyle;
-        this.aliasViewColumns = "true".equals(element.getAttribute("alias-view-columns"));
-        this.alwaysUseConstraintKeyword = "true".equals(element.getAttribute("always-use-constraint-keyword"));
-        this.dropFkUseForeignKeyKeyword = "true".equals(element.getAttribute("drop-fk-use-foreign-key-keyword"));
-        this.useBinaryTypeForBlob = "true".equals(element.getAttribute("use-binary-type-for-blob"));
-        this.useOrderByNulls = "true".equals(element.getAttribute("use-order-by-nulls"));
-        String offsetStyle = element.getAttribute("offset-style").intern();
+        this.aliasViewColumns = "true".equals(getAttr(name, element, "alias-view-columns"));
+        this.alwaysUseConstraintKeyword = "true".equals(getAttr(name, element, "always-use-constraint-keyword"));
+        this.dropFkUseForeignKeyKeyword = "true".equals(getAttr(name, element, "drop-fk-use-foreign-key-keyword"));
+        this.useBinaryTypeForBlob = "true".equals(getAttr(name, element, "use-binary-type-for-blob"));
+        this.useOrderByNulls = "true".equals(getAttr(name, element, "use-order-by-nulls"));
+        String offsetStyle = getAttr(name, element, "offset-style");
         if (offsetStyle.isEmpty()) {
             offsetStyle = "none";
         }
         this.offsetStyle = offsetStyle;
-        this.tableType = element.getAttribute("table-type").intern();
-        this.characterSet = element.getAttribute("character-set").intern();
-        this.collate = element.getAttribute("collate").intern();
+        this.tableType = getAttr(name, element, "table-type");
+        this.characterSet = getAttr(name, element, "character-set");
+        this.collate = getAttr(name, element, "collate");
         
-        this.rowFormat = element.getAttribute("row-format");
+        this.rowFormat = getAttr(name, element, "row-format");
         
-        String maxWorkerPoolSize = element.getAttribute("max-worker-pool-size").intern();
+        String maxWorkerPoolSize = getAttr(name, element, "max-worker-pool-size");
         if (maxWorkerPoolSize.isEmpty()) {
             this.maxWorkerPoolSize = 1;
         } else {
@@ -421,5 +430,15 @@ public final class Datasource {
     /** Returns the <code>&lt;tyrex-dataSource&gt;</code> child element. */
     public TyrexDataSource getTyrexDataSource() {
         return this.tyrexDataSource;
+    }
+
+    protected static String getAttr(String dataSourceName, Element element, String attrName) { // SCIPIO
+        String propName = SYSPROP_NAME + "." + dataSourceName + "." + attrName;
+        String value = System.getProperty(propName);
+        if (value != null) {
+            Debug.logInfo("Applied attribute from system property: [" + propName + "=" + value + "]", module);
+            return value;
+        }
+        return element.getAttribute(attrName).intern();
     }
 }

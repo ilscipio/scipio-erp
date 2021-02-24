@@ -1251,6 +1251,8 @@ public class EntityIndexer implements Runnable {
         ProcessSignals processSignals = null;
 
         String entityName = ctx.attr("entityName");
+        Integer maxRows = ctx.attr("maxRows");
+
         EntityListIterator prodIt = null;
         try {
             if (processSignals != null && processSignals.isSet("stop")) {
@@ -1258,6 +1260,9 @@ public class EntityIndexer implements Runnable {
             }
 
             EntityFindOptions findOptions = new EntityFindOptions();
+            if (maxRows != null) {
+                findOptions.setMaxRows(maxRows);
+            }
             prodIt = delegator.find(entityName, null, null, null, null, findOptions);
             if (processSignals != null && processSignals.isSet("stop")) {
                 return ServiceUtil.returnFailure(processSignals.getProcess() + " aborted");

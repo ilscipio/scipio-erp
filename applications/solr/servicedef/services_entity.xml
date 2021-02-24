@@ -55,6 +55,7 @@ code package.
              use-transaction="true"><!-- sync service -->
         <description>Registers all found entities for indexing queueing in global queue immediately.</description>
         <attribute mode="IN" name="entityName" type="String" optional="true"/><!-- NOTE: Technically usually required -->
+        <attribute mode="IN" name="idField" type="Object" optional="true"/>
         <attribute mode="IN" name="topics" type="Collection" optional="true">
             <description>Names of subscriber topics to limit which subscribers are triggered</description>
         </attribute>
@@ -65,6 +66,7 @@ code package.
         <attribute mode="IN" name="flush" type="String" optional="true">
             <description>Whether to force-flush any of the queued entities. Values: auto (default), all (flush all products in global queue a.s.a.p. including these)</description><!-- TODO: more modes possible later -->
         </attribute>
+        <attribute mode="IN" name="maxRows" type="Integer" optional="true"/>
     </service>
 
     <service name="scheduleProductIndexing" engine="java" location="com.ilscipio.scipio.solr.EntityIndexer" invoke="scheduleEntityIndexing"
@@ -90,7 +92,7 @@ code package.
                 (NOTE: ignored if effective action is product removal)</description>
         </attribute>
         <override name="entityName" optional="true" default-value="Product"/>
-        <override name="idField" type="String" optional="true" default-value="productId"/>
+        <override name="idField" type="Object" optional="true" default-value="productId"/>
     </service>
 
     <service name="scheduleAllProductIndexing" engine="java" location="com.ilscipio.scipio.solr.EntityIndexer" invoke="scheduleAllEntityIndexing"
@@ -98,6 +100,7 @@ code package.
         <description>Registers all found products for indexing queueing in global queue immediately.</description>
         <implements service="scheduleAllEntityIndexing"/>
         <override name="entityName" optional="true" default-value="Product"/>
+        <override name="idField" type="Object" optional="true" default-value="productId"/>
     </service>
 
     <!-- ========================================================= -->

@@ -1345,4 +1345,11 @@
                     no text; otherwise it is essential even if empty because the alt texts are linked to it.</description>
         </attribute>
     </service>
+
+    <service name="prewarmContentCache" engine="java"
+             location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="prewarmContentCache" auth="true" transaction-timeout="600000" log="quiet">
+        <description>Prewarm the cache - run after restart and on a full cache clear. Fetches a range of urls. Useful to increase firstload performance</description>
+        <attribute name="urls" type="java.util.List" mode="IN"  optional="true"/>
+        <attribute name="url" type="String" mode="IN"  optional="true"/>
+    </service>
 </services>

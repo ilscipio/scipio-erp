@@ -13,10 +13,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
@@ -32,10 +31,12 @@ import com.ilscipio.scipio.cms.content.CmsPage.UserRole;
 import com.ilscipio.scipio.cms.template.CmsPageTemplate;
 import com.ilscipio.scipio.cms.template.RendererType;
 
+
 public abstract class CmsPageServices {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ServiceErrorFormatter errorFmt = CmsServiceUtil.getErrorFormatter();
+    private static final ScipioHttpClient SCIPIO_HTTP_CLIENT = ScipioHttpClient.fromConfig(ScipioHttpClient.Config.fromProperties("cms", "cache.prewarm.connect."));
 
     protected CmsPageServices() {
     }
@@ -506,6 +507,36 @@ public abstract class CmsPageServices {
             return err.returnFailure();
         }
         result.put("pages", pagesList);
+        return result;
+    }
+
+    /**
+     * Prewarms the cache of a static list of urls
+     */
+    public static Map<String, Object> prewarmContentCache(DispatchContext dctx, Map<String, ?> context) {
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        List<String> urls = (List<String>) context.get("urls");
+        String murl = (String) context.get("url");
+        if(UtilValidate.isNotEmpty(murl)){
+            urls = new ArrayList<>();
+            urls.add(murl);
+        }
+        StringBuffer str = new StringBuffer();
+        for (String url : urls){
+            try{
+                //CloseableHttpClient httpClient = SCIPIO_HTTP_CLIENT.getHttpClient();
+                CloseableHttpClient httpClient = UtilHttp.getAllowAllHttpClient();
+                HttpGet httpget = new HttpGet(url);
+                httpClient.execute(httpget);
+            }catch (Exception e){
+                str.append("Error reading: "+url+"\n");
+            }
+        }
+        if(str.length() > 0){
+            result = ServiceUtil.returnFailure("Ran prewarming with errors. \n"+str);
+        }
+
         return result;
     }
 }

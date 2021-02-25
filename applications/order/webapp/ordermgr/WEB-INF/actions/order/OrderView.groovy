@@ -195,8 +195,23 @@ if (orderHeader) {
     shipGroups = from("OrderItemShipGroup").where("orderId", orderId).orderBy("shipGroupSeqId").queryList();
     context.shipGroups = shipGroups;
 
-    ungroupedOrderItems = [];
-    orderContainsDigitalProducts = false;
+    // SCIPIO: 2.0.0: new list that contains items that are in a shipGroup already having a shipment or just a single order item not requiring multipe shipGroups
+    allOrderItemsShipped = [];
+    singleOrderItem = false;
+    if (orderItemList.size() > 1) {
+        shipGroups.each { shipGroup ->
+            shipment = from("Shipment").where("primaryOrderId", orderId, "primaryShipGroupSeqId", shipGroup.shipGroupSeqId).queryFirst();
+            if (shipment) {
+                allOrderItemsShipped.add(orderItem);
+            }
+        }
+    } else {
+        singleOrderItem = true;
+    }
+    context.put("allOrderItemsShipped", allOrderItemsShipped);
+    context.put("singleOrderItem", singleOrderItem);
+
+    orderContainsOnlyDigitalProducts = false;
     orderItemDatas = [];
     orderItemList.each { orderItem ->
         BigDecimal cancelQuantity = orderItem.get("cancelQuantity");
@@ -244,18 +259,12 @@ if (orderHeader) {
         orderItemDatas.add(orderItemData);
 
         // SCIPIO: 2.0.0: check if an item is digital so we enable the complete order button
-        if (!orderContainsDigitalProducts && ProductWorker.isDigital(product)) {
-            orderContainsDigitalProducts = true;
-        }
-
-        // SCIPIO: 2.0.0: new list that contains items that aren't in a shipGroup
-        if (UtilValidate.isEmpty(OISGAssContents)) {
-            ungroupedOrderItems.add(orderItem);
+        if (!orderContainsOnlyDigitalProducts && ProductWorker.isDigital(product)) {
+            orderContainsOnlyDigitalProducts = true;
         }
     }
     context.put("orderItemDatas", orderItemDatas);
-    context.put("ungroupedOrderItems", ungroupedOrderItems);
-    Debug.log("ungroupedOrderItems ===> " + ungroupedOrderItems);
+    context.put("orderContainsOnlyDigitalProducts", orderContainsOnlyDigitalProducts);
 
     // create the actualDate for calendar
     actualDateCal = Calendar.getInstance();
@@ -339,7 +348,7 @@ if (orderHeader) {
 
     // SCIPIO: 2.0.0: check if an approved order with all items completed exist
     context.setOrderCompleteOption = false;
-    if ((orderContainsDigitalProducts && "ORDER_APPROVED".equals(orderHeader.statusId))
+    if ((orderContainsOnlyDigitalProducts && "ORDER_APPROVED".equals(orderHeader.statusId))
             || "ORDER_SENT".equals(orderHeader.statusId)) {
         expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_COMPLETED");
         completedItems = orderReadHelper.getOrderItemsByCondition(expr);
@@ -512,7 +521,6 @@ if (orderHeader) {
            }
        }
        context.packSession = packSession;
-       Debug.log("packSession: " + packSession);
     }
 }
 

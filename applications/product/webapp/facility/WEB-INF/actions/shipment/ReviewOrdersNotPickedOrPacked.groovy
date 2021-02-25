@@ -17,25 +17,25 @@
  * under the License.
  */
 
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityUtil;
 
-import java.text.SimpleDateFormat;
+import org.ofbiz.base.util.Debug
+import org.ofbiz.entity.condition.EntityCondition
+import org.ofbiz.entity.condition.EntityOperator
 
+// SCIPIO: 2.0.0: didn't make sense to filter by pickSheetPrintedDate not null when we try to find orders not picked
 condList = [];
 condList.add(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ORDER_APPROVED"));
 condList.add(EntityCondition.makeCondition("orderTypeId", EntityOperator.EQUALS, "SALES_ORDER"));
-condList.add(EntityCondition.makeCondition("pickSheetPrintedDate", EntityOperator.NOT_EQUAL, null));
+condList.add(EntityCondition.makeCondition("pickSheetPrintedDate", EntityOperator.EQUALS, null));
 orderHeaders = from("OrderHeader").where(condList).queryList();
 orders = [];
-SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'/'K:mm a");
+//SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'/'K:mm a");
 orderHeaders.each { orderHeader ->
     itemIssuanceList = from("ItemIssuance").where("orderId", orderHeader.orderId).queryList();
     if (itemIssuanceList) {
-        orders.add([orderId : orderHeader.orderId, pickSheetPrintedDate : dateFormat.format(orderHeader.pickSheetPrintedDate), isVerified : "Y"]);
+        orders.add([orderId : orderHeader.orderId, isVerified : "Y"]); //pickSheetPrintedDate : dateFormat.format(orderHeader.pickSheetPrintedDate),
     } else {
-        orders.add([orderId : orderHeader.orderId, pickSheetPrintedDate : dateFormat.format(orderHeader.pickSheetPrintedDate), isVerified : "N"]);
+        orders.add([orderId : orderHeader.orderId, isVerified : "N"]); //pickSheetPrintedDate : dateFormat.format(orderHeader.pickSheetPrintedDate),
     }
 }
 context.orders = orders;

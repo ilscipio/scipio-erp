@@ -16,7 +16,6 @@ code package.
         document.clearPackLineForm.submit();
     }
 </@script>
-${Debug.log("shipment id ===> " + packingSession.getShipmentId()!)}
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", request)>
     <#assign showInput = requestParameters.showInput?default("Y")>    

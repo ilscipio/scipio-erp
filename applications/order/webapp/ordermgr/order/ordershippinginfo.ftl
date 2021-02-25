@@ -165,8 +165,6 @@ code package.
 
 <#assign allowedOrderStatus = (orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED"
                             && orderHeader.statusId != "ORDER_REJECTED" && orderHeader.statusId != "ORDER_SENT")!false>
-${Debug.log("order status id = " + orderHeader.statusId!)}
-${Debug.log("allowedOrderStatus = " + allowedOrderStatus?c)}
 <#list shipGroups as shipGroup>
   <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
@@ -179,9 +177,21 @@ ${Debug.log("allowedOrderStatus = " + allowedOrderStatus?c)}
          <#if !parameters.view?has_content>
            <@menuitem type="link" href=makePageUrl("orderShipping?orderId=${orderId}&view=OISGA") text=uiLabelMap.OrderShipmentInformationByOrderItem class="+${styles.action_run_sys!} ${styles.action_view!}" />
          </#if>
+         <#if !shipment?has_content && (orderHeader.statusId == "ORDER_APPROVED" || orderHeader.statusId == "ORDER_CREATED")>
+           <@menuitem type="link" href=makeServerUrl("/facility/control/VerifyPick?facilityId=" + (storeFacilityId!) + "&orderId=" + (orderId!) + "&shipGroupSeqId=" + (shipGroup.shipGroupSeqId!) + raw(externalKeyParam)) text=uiLabelMap.OrderPickShipmentForShipGroup class=("+" + (styles.action_run_sys!) + " " + (styles.action_find!)) />
+           <@menuitem type="link" href=makeServerUrl("/facility/control/PackOrder?facilityId=" + (storeFacilityId!) + "&orderId=" + (orderId!) + "&shipGroupSeqId=" + (shipGroup.shipGroupSeqId!) + raw(externalKeyParam)) text=uiLabelMap.OrderPackShipmentForShipGroup class=("+" + (styles.action_run_sys!) + " " + (styles.action_view!)) />
+           <a href="javascript:document.createShipment_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderNewShipmentForShipGroup}</a>
+           <form name="createShipment_${shipGroup.shipGroupSeqId}" method="post" action="<@serverUrl>/facility/control/createShipment</@serverUrl>">
+               <input type="hidden" name="primaryOrderId" value="${orderId}"/>
+               <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
+               <input type="hidden" name="statusId" value="SHIPMENT_INPUT" />
+               <input type="hidden" name="facilityId" value="${storeFacilityId!}" />
+               <input type="hidden" name="estimatedShipDate" value="${shipGroup.shipByDate!}"/>
+           </form>
+         </#if>
        </@menu>
     </#macro>
-    <@section title="${rawLabel('OrderShipGroup')} - ${raw(shipGroup.shipGroupSeqId)}" menuContent=menuContent>
+    <@section title="${uiLabelMap.OrderOrderId}: ${orderId!} - ${rawLabel('OrderShipGroup')}: ${raw(shipGroup.shipGroupSeqId)}" menuContent=menuContent>
         <@fields type="default-manual">
             <@table type="fields">
                 <form name="updateOrderItemShipGroup" method="post" action="<@pageUrl>updateShipGroupShipInfo</@pageUrl>">
@@ -467,28 +477,28 @@ ${Debug.log("allowedOrderStatus = " + allowedOrderStatus?c)}
             ${uiLabelMap.OrderInstructions}
           </@td>
           <@td align="left" valign="top" width="80%">
-            <@row>
-                <#if allowedOrderStatus>
-                  <form id="updateShippingInstructionsForm_${shipGroup.shipGroupSeqId}" name="updateShippingInstructionsForm" method="post" action="<@pageUrl>setShippingInstructions</@pageUrl>">
-                    <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
-                    <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
+            <#if allowedOrderStatus>
+              <form id="updateShippingInstructionsForm_${shipGroup.shipGroupSeqId}" name="updateShippingInstructionsForm" method="post" action="<@pageUrl>setShippingInstructions</@pageUrl>">
+                <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
+                <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
+                <@row>
                     <@cell columns=6>
-                        <@field type="textarea" name="shippingInstructions" id="shippingInstructions_${shipGroup.shipGroupSeqId}" rows=5 cols=10>${shipGroup.shippingInstructions!}</@field>
+                        <@field type="textarea" name="shippingInstructions" id="shippingInstructions_${shipGroup.shipGroupSeqId}" rows=5 inline=true>${shipGroup.shippingInstructions!}</@field>
                     </@cell>
                     <@cell columns=6>
-                        <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}"/>
+                        <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
                     </@cell>
-                  </form>
-                <#else>
-                  <@cell columns=6>
-                      <#if shipGroup.shippingInstructions?has_content>
-                        ${shipGroup.shippingInstructions}
-                      <#else>
-                        ${uiLabelMap.OrderThisOrderDoesNotHaveShippingInstructions}
-                      </#if>
-                  </@cell>
-                </#if>
-            </@row>
+                </@row>
+              </form>
+            <#else>
+              <@cell columns=6>
+                  <#if shipGroup.shippingInstructions?has_content>
+                    ${shipGroup.shippingInstructions}
+                  <#else>
+                    ${uiLabelMap.OrderThisOrderDoesNotHaveShippingInstructions}
+                  </#if>
+              </@cell>
+            </#if>
           </@td>
         </@tr>
 
@@ -498,28 +508,28 @@ ${Debug.log("allowedOrderStatus = " + allowedOrderStatus?c)}
                 ${uiLabelMap.OrderGiftMessage}
               </@td>
               <@td>
-                  <@row>
-                      <#if allowedOrderStatus>
-                        <form id="setGiftMessageForm_${shipGroup.shipGroupSeqId}" name="setGiftMessageForm" method="post" action="<@pageUrl>setGiftMessage</@pageUrl>">
-                          <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
-                          <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
-                            <@cell columns=6>
-                                <@field type="textarea" name="giftMessage" id="giftMessage_${shipGroup.shipGroupSeqId}" rows=5 cols=10>${shipGroup.giftMessage!}</@field>
-                            </@cell>
-                            <@cell columns=6>
-                                <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}"/>
-                            </@cell>
-                        </form>
-                      <#else>
+                  <#if allowedOrderStatus>
+                    <form id="setGiftMessageForm_${shipGroup.shipGroupSeqId}" name="setGiftMessageForm" method="post" action="<@pageUrl>setGiftMessage</@pageUrl>">
+                      <input type="hidden" name="orderId" value="${orderHeader.orderId}"/>
+                      <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
+                      <@row>
                           <@cell columns=6>
-                              <#if shipGroup.giftMessage?has_content>
-                                  ${shipGroup.giftMessage}
-                              <#else>
-                                  ${uiLabelMap.OrderThisOrderNotGift}
-                              </#if>
+                            <@field type="textarea" name="giftMessage" id="giftMessage_${shipGroup.shipGroupSeqId}" rows=5 inline=true>${shipGroup.giftMessage!}</@field>
                           </@cell>
-                      </#if>
-                  </@row>
+                          <@cell columns=6>
+                            <@field type="submit" text=uiLabelMap.CommonUpdate class="${styles.link_run_sys!} ${styles.action_update!}" />
+                          </@cell>
+                      </@row>
+                    </form>
+                  <#else>
+                      <@cell columns=6>
+                          <#if shipGroup.giftMessage?has_content>
+                              ${shipGroup.giftMessage}
+                          <#else>
+                              ${uiLabelMap.OrderThisOrderNotGift}
+                          </#if>
+                      </@cell>
+                  </#if>
               </@td>
             </@tr>
         </#if>
@@ -585,20 +595,7 @@ ${Debug.log("allowedOrderStatus = " + allowedOrderStatus?c)}
             <@td colspan="4" valign="top" align="center">
              <#if orderHeader.orderTypeId == "SALES_ORDER">
                <#if !shipGroup.supplierPartyId?has_content>
-                   <#if !shipments?has_content>
-                     <#if orderHeader.statusId == "ORDER_APPROVED">
-                        <a href="<@serverUrl>/facility/control/PackOrder?facilityId=${storeFacilityId!}&amp;orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderPackShipmentForShipGroup}</a>
-                        <br />
-                     </#if>
-                     <a href="javascript:document.createShipment_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderNewShipmentForShipGroup}</a>
-                     <form name="createShipment_${shipGroup.shipGroupSeqId}" method="post" action="<@serverUrl>/facility/control/createShipment</@serverUrl>">
-                       <input type="hidden" name="primaryOrderId" value="${orderId}"/>
-                       <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
-                       <input type="hidden" name="statusId" value="SHIPMENT_INPUT" />
-                       <input type="hidden" name="facilityId" value="${storeFacilityId!}" />
-                       <input type="hidden" name="estimatedShipDate" value="${shipGroup.shipByDate!}"/>
-                     </form>
-                   <#else>
+                   <#if shipments?has_content>
                        <@section title=uiLabelMap.FacilityShipments>
                            <#list shipments as shipment>
                                <@table type="fields">

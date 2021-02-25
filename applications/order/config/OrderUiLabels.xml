@@ -10102,6 +10102,13 @@
         <value xml:lang="zh">分拣订单</value>
         <value xml:lang="zh-TW">揀貨訂單</value>
     </property>
+    <property key="OrderPickShipmentForShipGroup">
+        <value xml:lang="de">Sendung für Schiffsgruppe auswählen</value>
+        <value xml:lang="en">Pick Shipment For Ship Group</value>
+        <value xml:lang="es">Recoger pedido para grupo de envío</value>
+        <value xml:lang="fr">Choisir l'expédition pour le groupe d'expédition</value>
+        <value xml:lang="it">Scegli spedizione per gruppo di navi</value>
+    </property>
     <property key="OrderPickedBy">
         <value xml:lang="ar">المستلم</value>
         <value xml:lang="de">Kommissioniert von</value>

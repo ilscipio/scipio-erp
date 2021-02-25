@@ -11,74 +11,99 @@ code package.
         <#assign showInput = "N">
     </#if>
 
-    <@section>
-        <form name="selectOrderForm" method="post" action="<@pageUrl>VerifyPick</@pageUrl>">
-            <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-            <@field type="generic" label=uiLabelMap.ProductOrderId>                    
-                <@field type="lookup" formName="selectOrderForm" name="orderId" id="orderId" size="20" maxlength="20" fieldFormName="LookupOrderHeader" value=(orderId!)/>                    
-                /
-                <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value=shipGroupSeqId!"00001"/>
-            </@field>
-            <@field type="generic" label=uiLabelMap.FormFieldTitle_picklistBinId>
-                <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value=(picklistBinId!)/>
-            </@field>
-            <@field type="submit" text="${rawLabel('ProductVerify')} ${rawLabel('OrderOrder')}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
-        </form>
-        <form name="clearPickForm" method="post" action="<@pageUrl>cancelAllRows</@pageUrl>">
-            <input type="hidden" name="orderId" value="${orderId!}"/>
-            <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-            <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-        </form>
-    </@section>
+    <#macro menuContent menuArgs={}>
+        <@menu args=menuArgs>
+            <#if picklistBinId?has_content || orderId?has_content>
+                <@menuitem type="link" href=makePageUrl("VerifyPick?facilityId=" + facility.facilityId + "resetSearch=true") text=uiLabelMap.ProductVerifyNewPick class="+${styles.action_nav!} ${styles.action_update!}"/>
+                <@menuitem type="generic">
+                    <@modal id="addProductToPick" label="Verify product" linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
+                        <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPick')}"/>
+                        <@section title=sectionTitle>
+                            <form name="singlePickForm" method="post" action="<@pageUrl>processVerifyPick</@pageUrl>">
+                                <input type="hidden" name="orderId" value="${orderId!}"/>
+                                <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
+                                <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
+                                <@field type="lookup" formName="singlePickForm" name="productId"id="productId" size="20" maxlength="20" fieldFormName="LookupProduct" label=uiLabelMap.ProductProductId/>
+                                <@field type="input"  name="quantity" size="6" maxlength="6" value="1" label=uiLabelMap.ProductQuantity/>
+                                <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
+                            </form>
+                        </@section>
+                    </@modal>
+                </@menuitem>
+                <@menuitem type="generic">
+                    <a href="javascript:document.multiPickForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductVerifyAllItems}</a>
+                </@menuitem>
+            <#else>
+            </#if>
+        </@menu>
+    </#macro>
+
+    <#-- SCIPIO: 2.0.0: Rendering lookup form when nothing is present -->
+    <#if !picklistBinId?has_content && !orderId?has_content>
+        <@section>
+            <form name="selectOrderForm" method="post" action="<@pageUrl>VerifyPick</@pageUrl>">
+                <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
+                <@field type="generic" label=uiLabelMap.ProductOrderId>
+                    <@field type="lookup" formName="selectOrderForm" name="orderId" id="orderId" size="20" maxlength="20" fieldFormName="LookupOrderHeader" value=(orderId!)/>
+                    /
+                    <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value=shipGroupSeqId!"00001"/>
+                </@field>
+                <@field type="generic" label=uiLabelMap.FormFieldTitle_picklistBinId>
+                    <@field type="input" label=uiLabelMap.FormFieldTitle_picklistBinId name="picklistBinId" size="29" maxlength="60" value=(picklistBinId!)/>
+                </@field>
+                <@field type="submit" text="${rawLabel('ProductVerify')} ${rawLabel('OrderOrder')}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
+            </form>
+        </@section>
+    </#if>
     
     <#if orderHeader?? && orderHeader?has_content && orderItemShipGroup?has_content>
-        <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderId}</@serverUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
-        <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
-            <#if (orderItemShipGroup.contactMechId)?has_content>
-                <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
-            </#if>
-            <#assign carrier = orderItemShipGroup.carrierPartyId!(uiLabelMap.CommonNA)>
-            <@row>
-                <@cell columns=4>
-                    <#if postalAddress?exists >
-                        <@heading><strong>${uiLabelMap.ProductShipToAddress}</strong></@heading>
-                        ${uiLabelMap.CommonTo}: ${postalAddress.toName!""}<br />
-                        <#if postalAddress.attnName?has_content>
-                            ${uiLabelMap.CommonAttn}: ${postalAddress.attnName}<br />
+            <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderId}</@serverUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
+            <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent!>
+                <#if (orderItemShipGroup.contactMechId)?has_content>
+                    <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
+                </#if>
+                <#assign carrier = orderItemShipGroup.carrierPartyId!(uiLabelMap.CommonNA)>
+                <@row>
+                    <@cell columns=4>
+                        <#if postalAddress?exists >
+                            <@heading><strong>${uiLabelMap.ProductShipToAddress}</strong></@heading>
+                            ${uiLabelMap.CommonTo}: ${postalAddress.toName!""}<br />
+                            <#if postalAddress.attnName?has_content>
+                                ${uiLabelMap.CommonAttn}: ${postalAddress.attnName}<br />
+                            </#if>
+                            ${postalAddress.address1}<br/>
+                            <#if postalAddress.address2?has_content>
+                                ${postalAddress.address2}<br/>
+                            </#if>
+                            ${postalAddress.city!}, ${postalAddress.stateProvinceGeoId!} ${postalAddress.postalCode!}<br />
+                            ${postalAddress.countryGeoId!}<br/>
                         </#if>
-                        ${postalAddress.address1}<br/>
-                        <#if postalAddress.address2?has_content>
-                            ${postalAddress.address2}<br/>
+                    </@cell>
+                    <@cell columns=4>
+                        <@heading><strong>${uiLabelMap.ProductCarrierShipmentMethod}</strong></@heading>
+                        <#if carrier == "USPS">
+                            <#assign color = "red">
+                        <#elseif carrier == "UPS">
+                            <#assign color = "green">
+                        <#else>
+                            <#assign color = "black">
                         </#if>
-                        ${postalAddress.city!}, ${postalAddress.stateProvinceGeoId!} ${postalAddress.postalCode!}<br />
-                        ${postalAddress.countryGeoId!}<br/>
-                    </#if>
-                </@cell>
-                <@cell columns=4>
-                    <@heading><strong>${uiLabelMap.ProductCarrierShipmentMethod}</strong></@heading>
-                    <#if carrier == "USPS">
-                        <#assign color = "red">
-                    <#elseif carrier == "UPS">
-                        <#assign color = "green">
-                    <#else>
-                        <#assign color = "black">
-                    </#if>
-                    <#if carrier != "_NA_">
-                        <font color="${color}">${carrier}</font>&nbsp;
-                    </#if>
-                    <#assign description = (delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":orderItemShipGroup.shipmentMethodTypeId}, false)).description>
-                    ${description!"??"}<br/>
-                    ${uiLabelMap.ProductEstimatedShipCostForShipGroup}<br />
-                    <#if shipmentCostEstimateForShipGroup?exists>
-                        <@ofbizCurrency amount=shipmentCostEstimateForShipGroup isoCode=(orderReadHelper.getCurrency()!)/><br />
-                    </#if>
-                </@cell>
-                <@cell columns=4>
-                    <@heading><strong>${uiLabelMap.OrderInstructions}</strong></@heading>
-                    ${orderItemShipGroup.shippingInstructions?default("(${uiLabelMap.CommonNone})")}
-                </@cell>
-            </@row>
-        </@section>
+                        <#if carrier != "_NA_">
+                            <font color="${color}">${carrier}</font>&nbsp;
+                        </#if>
+                        <#assign description = (delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":orderItemShipGroup.shipmentMethodTypeId}, false)).description>
+                        ${description!"??"}<br/>
+                        ${uiLabelMap.ProductEstimatedShipCostForShipGroup}<br />
+                        <#if shipmentCostEstimateForShipGroup?exists>
+                            <@ofbizCurrency amount=shipmentCostEstimateForShipGroup isoCode=(orderReadHelper.getCurrency()!)/><br />
+                        </#if>
+                    </@cell>
+                    <@cell columns=4>
+                        <@heading><strong>${uiLabelMap.OrderInstructions}</strong></@heading>
+                        ${orderItemShipGroup.shippingInstructions?default("(${uiLabelMap.CommonNone})")}
+                    </@cell>
+                </@row>
+            </@section>
     </#if>
     <#if shipments?has_content>
         <#assign sectionTitle>${rawLabel('ProductPicked')} ${rawLabel('FacilityShipments')}</#assign>
@@ -109,18 +134,6 @@ code package.
     </#if>
 
     <#if showInput != "N">
-        <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPick')}"/>
-        <@section title=sectionTitle>
-            <form name="singlePickForm" method="post" action="<@pageUrl>processVerifyPick</@pageUrl>">
-                <input type="hidden" name="orderId" value="${orderId!}"/>
-                <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-                <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
-                <@field type="lookup" formName="singlePickForm" name="productId"id="productId" size="20" maxlength="20" fieldFormName="LookupProduct" label=uiLabelMap.ProductProductId/>
-                <@field type="input"  name="quantity" size="6" maxlength="6" value="1" label=uiLabelMap.ProductQuantity/>
-                <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
-            </form>
-        </@section>
-
         <#if orderItems?has_content>
             <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPick')}"/>
             <@section title=sectionTitle>                
@@ -200,7 +213,10 @@ code package.
                                         </#if>
                                     </@td>
                                     <@td>
-                                        <a href="javascript:$('input[name=_rowSubmit_o_${orderItem_index}]').val('Y');document.multiPickForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}</a>
+                                        <#if (orderItemQuantity.compareTo(readyToVerify) > 0)>
+                                            <a href="javascript:$('input[name=productId]').val('${orderItem.productId}');$('input[name=quantity]').val($('input[name=qty_o_${orderItem_index}]').val());document.singlePickForm.submit();"
+                                                class="+${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}</a>
+                                        </#if>
                                     </@td>
                                     <input type="hidden" name="prd_o_${orderItem_index}" value="${(orderItem.productId)!}"/>
                                     <input type="hidden" name="ite_o_${orderItem_index}" value="${(orderItem.orderItemSeqId)!}"/>
@@ -239,19 +255,6 @@ code package.
                                 </#if>
                             </#list>
                         </@tbody>
-                        <@tfoot>
-                            <@tr>
-                                <@td colspan="7">
-                                    <#-- <#if isShowVerifyItemButton == "true">
-                                        <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItems}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
-                                    </#if>
-                                    &nbsp; -->
-                                    <#if rowKey != counter>
-                                        <input type="button" value="${uiLabelMap.CommonCancel}" onclick="javascript:document.clearPickForm.submit();"/>
-                                    </#if>
-                                </@td>
-                            </@tr>
-                        </@tfoot>
                     </@table>
                 </form>
             </@section>
@@ -276,24 +279,43 @@ code package.
                                 <@th>&nbsp;</@th>
                             </@tr>
                         </@thead>
-                        <#list pickRows as pickRow>
-                            <#if (pickRow.getOrderId()!).equals(orderId)>
-                                <@tr>
-                                    <@td>${pickRow.getOrderItemSeqId()!}</@td>
-                                    <@td>${pickRow.getProductId()!}</@td>
-                                    <@td>${pickRow.getInventoryItemId()!}</@td>
-                                    <@td>${pickRow.getReadyToVerifyQty()!}</@td>
-                                </@tr>
-                            </#if>
-                        </#list>
+                        <@tbody>
+                            <#list pickRows as pickRow>
+                                <#if (pickRow.getOrderId()!).equals(orderId)>
+                                    <@tr>
+                                        <@td>${pickRow.getOrderItemSeqId()!}</@td>
+                                        <@td>${pickRow.getProductId()!}</@td>
+                                        <@td>${pickRow.getInventoryItemId()!}</@td>
+                                        <@td>${pickRow.getReadyToVerifyQty()!}</@td>
+                                    </@tr>
+                                </#if>
+                            </#list>
+                        </@tbody>
+                        <@tfoot>
+                            <@tr>
+                                <@td colspan="7">
+                                    <#-- <#if isShowVerifyItemButton == "true">
+                                        <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItems}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
+                                    </#if>
+                                    &nbsp; -->
+                                    <#if rowKey != counter>
+                                        <input type="button" value="${uiLabelMap.CommonCancel}" onclick="javascript:document.clearPickForm.submit();"/>
+                                    </#if>
+                                    <a href="javascript:document.completePickForm.submit()" class="${styles.link_run_sys!} ${styles.action_complete!}">${uiLabelMap.ProductComplete}</a>
+                                </@td>
+                            </@tr>
+                        </@tfoot>
                     </@table>
-                    <div align="right">
-                         <a href="javascript:document.completePickForm.submit()" class="${styles.link_run_sys!} ${styles.action_complete!}">${uiLabelMap.ProductComplete}</a>
-                    </div>
                 </@section>
             </#if>
         </form>
+        <@form name="clearPickForm" method="post" action=makePageUrl("cancelAllRows")>
+            <input type="hidden" name="orderId" value="${orderId!}"/>
+            <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
+            <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
+        </@form>
     </#if>
+
 <#else>
   <@commonMsg type="error">${uiLabelMap.ProductFacilityViewPermissionError}</@commonMsg>
 </#if>

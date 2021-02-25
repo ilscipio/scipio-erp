@@ -1059,7 +1059,7 @@ code package.
                 <section>
                     <condition>
                         <not>
-                            <if-empty field="facility"/>
+                            <if-empty field="facilityId"/>
                         </not>
                     </condition>
                     <actions>

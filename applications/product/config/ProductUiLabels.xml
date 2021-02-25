@@ -32883,6 +32883,7 @@
         <value xml:lang="de">Verifiziert</value>
         <value xml:lang="en">Verified</value>
         <value xml:lang="it">Verificato</value>
+        <value xml:lang="es">Verificado</value>
         <value xml:lang="ja">確認済</value>
         <value xml:lang="vi">Đã xác minh</value>
         <value xml:lang="zh">已验证</value>
@@ -32892,20 +32893,36 @@
         <value xml:lang="de">Verifizieren</value>
         <value xml:lang="en">Verify</value>
         <value xml:lang="it">Verifica</value>
+        <value xml:lang="es">Verifica</value>
         <value xml:lang="ja">確認</value>
         <value xml:lang="vi">Xác minh</value>
         <value xml:lang="zh">验证</value>
         <value xml:lang="zh-TW">驗證</value>
+    </property>
+    <property key="ProductVerifyAllItems">
+        <value xml:lang="de">Überprüfen Sie alle</value>
+        <value xml:lang="en">Verify all</value>
+        <value xml:lang="it">Verifica tutto</value>
+        <value xml:lang="es">Verificar todo</value>
+        <value xml:lang="fr">Tout vérifier</value>
     </property>
     <property key="ProductVerifyPick">
         <value xml:lang="de">Verifiziere Auswahl</value>
         <value xml:lang="en">Verify Pick</value>
         <value xml:lang="fr">Vérifier le prélèvement</value>
         <value xml:lang="it">Verifica prelievo</value>
+        <value xml:lang="es">Verifica elección</value>
         <value xml:lang="ja">ピッキングを確認</value>
         <value xml:lang="vi">Xác minh Xử lý đặt hàng (Pick)</value>
         <value xml:lang="zh">验证分拣</value>
         <value xml:lang="zh-TW">驗證揀貨</value>
+    </property>
+    <property key="ProductVerifyNewPick">
+        <value xml:lang="de">Verifiziere neue Auswahl</value>
+        <value xml:lang="en">Verify New Pick</value>
+        <value xml:lang="fr">Vérifier le nouveau prélèvement</value>
+        <value xml:lang="it">Verifica nuovo prelievo</value>
+        <value xml:lang="es">Verifica nueva elección</value>
     </property>
     <property key="ProductViewEstimates">
         <value xml:lang="de">Versandkosten (Schätzungen)</value>

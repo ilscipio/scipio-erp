@@ -548,10 +548,12 @@ public abstract class CmsPageServices {
         StringBuffer str = new StringBuffer();
         for (String url : urls){
             try{
-                CloseableHttpClient httpClient = SCIPIO_HTTP_CLIENT.getHttpClient();
-                //CloseableHttpClient httpClient = UtilHttp.getAllowAllHttpClient();
-                HttpGet httpget = new HttpGet(url.trim());
-                httpClient.execute(httpget);
+                if(UtilValidate.isNotEmpty(url.trim())){
+                    CloseableHttpClient httpClient = SCIPIO_HTTP_CLIENT.getHttpClient();
+                    //CloseableHttpClient httpClient = UtilHttp.getAllowAllHttpClient();
+                    HttpGet httpget = new HttpGet(url.trim());
+                    httpClient.execute(httpget);
+                }
             }catch (Exception e){
                 str.append("Error reading: "+url+": "+e.toString()+"\n");
             }

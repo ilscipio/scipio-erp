@@ -4,5 +4,7 @@
     <!-- Run-at-startup auto warm caches -->
     <JobSandbox jobId="PREWARM_CACHE" jobName="Prewarm caches on startup" runTime="2000-01-01 00:00:00.000"
                 eventId="SCH_EVENT_STARTUP" serviceName="prewarmContentCacheFromDb" poolId="pool" runAsUser="system" tempExprId="SECOND_EVERY" maxRecurrenceCount="-1" maxRetry="-1"/>
-
+    <JobSandbox jobId="PREWARM_CACHE_NIGHTLY" jobName="Nightly job to prewarm caches"
+                runTime="2008-05-14 02:00:00.000" serviceName="prewarmContentCacheFromDb" tempExprId="HOUR_03" maxRecurrenceCount="-1"
+                poolId="pool" runAsUser="system" />
 </entity-engine-xml>

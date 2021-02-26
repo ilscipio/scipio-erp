@@ -198,6 +198,12 @@ code package.
         <response name="success" type="view" value="EditPrewarmCacheUrls"/>
         <response name="error" type="view" value="EditPrewarmCacheUrls"/>
     </request-map>
+    <request-map uri="PrewarmCache">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="prewarmContentCacheFromDb" />
+        <response name="success" type="view" value="EditPrewarmCacheUrls"/>
+        <response name="error" type="view" value="EditPrewarmCacheUrls"/>
+    </request-map>
     <request-map uri="EditUtilCacheClear">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.webtools.UtilCacheEvents" invoke="clearEvent"/>

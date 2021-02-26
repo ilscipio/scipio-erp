@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<service-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/service-eca.xsd">
+
+    <!-- Prewarm content caches when cache is cleared. Uses the /admin/control/EditPrewarmCacheUrls entries -->
+    <eca service="clearCacheFull" event="return">
+        <action service="prewarmContentCacheFromDb" mode="async" new-transaction="true" priority="10"/>
+    </eca>
+</service-eca>

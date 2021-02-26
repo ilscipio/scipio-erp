@@ -128,4 +128,91 @@ code package.
             </widgets>
         </section>
     </screen>
+
+    <screen name="EditPrewarmCacheUrls">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Server" />
+                <set field="activeSubMenuItem" value="prewarmcache"/>
+                <set field="titleProperty" value="WebtoolsPrewarmCacheUrls"/>
+                <script location="component://webtools/webapp/webtools/WEB-INF/actions/cache/EditPrewarmCacheUrls.groovy"/>
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.*;
+
+                    ctx = globalContext;
+
+                    // Script languages which can currently be executed from stored bodies
+                    // script names should be a subset of: CmsScriptTemplate.ScriptLang.getNames()
+                    // This is limited by the Ofbiz script utils/API, which mostly expect file locations rather than bodies.
+                    ctx.supportedScriptBodyLangs = ["groovy"];
+                    ctx.defaultScriptBodyLang = "groovy";
+
+                    // Script language names we currently accept for template locations
+                    // FIXME: for now, we always required "auto" - auto-determine language from location, to simplify our code;
+                    //     later we should allow override, because the auto-resolve algorithm is weak (see CmsScriptTemplate.ScriptExecutor)
+                    //     In theory we should allow: "groovy", "simple-method", "screen-actions", "auto"
+                    ctx.supportedScriptLocationLangs = ["auto"];
+                    ctx.defaultScriptLocationLang = "auto";
+
+                    // map of internal CMS script lang names to CodeMirror lang modes
+                    ctx.scriptLangEditorModeMap = [
+                        "groovy" : "groovy",
+                        "screen-actions" : "xml",
+                        "simple-method" : "xml",
+                        // FIXME: what is sane default/fallback/none mode? "clike"? I am putting "text" so that nothing highlights for these, but it's not a real mode name.
+                        "auto" : "text",
+                        "none" : "text",
+                        "default" : "text" // default is for anything that doesn't map into the above
+                    ];
+
+                    ctx.indentWithTabs = UtilProperties.getPropertyAsBoolean("cms", "cms.editor.indentWithTabs", false);
+                ]]></script>
+
+                <!-- CODEMIRROR and Codemirror freemarker extension -->
+                <set field="layoutSettings.VT_STYLESHEET[+0]" value="/base-theme/bower_components/codemirror/lib/codemirror.css" global="true"/>
+                <set field="layoutSettings.VT_STYLESHEET[+0]" value="/base-theme/bower_components/codemirror/addon/fold/foldgutter.css" global="true"/>
+                <set field="layoutSettings.VT_STYLESHEET[+0]" value="/base-theme/bower_components/codemirror/addon/hint/show-hint.css" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/lib/codemirror.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/display/placeholder.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/edit/matchbrackets.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/edit/matchtags.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/edit/closetag.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/fold/foldcode.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/fold/foldgutter.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/fold/brace-fold.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/fold/xml-fold.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/fold/comment-fold.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/hint/show-hint.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/hint/xml-hint.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/addon/hint/html-hint.js" global="true"/>
+
+                <!-- Languages - essential for CMS: Freemarker (render templates), Groovy & XML (script templates, edit & view). -->
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/mode/xml/xml.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/mode/htmlmixed/htmlmixed.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/mode/javascript/javascript.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/mode/vbscript/vbscript.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror/mode/groovy/groovy.js" global="true"/>
+                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror-mode-freemarker/freemarker/freemarker.js" global="true"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonWebtoolsAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <section>
+                            <condition>
+                                <if-has-permission permission="UTIL_CACHE" action="_EDIT"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://webtools/webapp/webtools/cache/prewarmCacheUrls.ftl"/></html>
+                                </platform-specific>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 </screens>

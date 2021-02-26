@@ -4500,6 +4500,13 @@
         <value xml:lang="zh">产品部分4</value>
         <value xml:lang="zh-TW">產品部分4</value>
     </property>
+    <property key="WebtoolsPrewarmCacheUrls">
+        <value xml:lang="de">Cache-Vorwärm-Urls</value>
+        <value xml:lang="en">Prewarm Cache Urls</value>
+    </property>
+    <property key="WebtoolsPrewarmCacheUrlDescription">
+        <value xml:lang="en">Prewarm the cache by reloading a list of urls everytime the full cache is cleared (server restart or full cache clear.). The Urls defined here, will be automatically fetched by the system. Requires a line separated list of entries.</value>
+    </property>
     <property key="WebtoolsPriority">
         <value xml:lang="de">Dringlichkeit</value>
         <value xml:lang="en">Priority</value>

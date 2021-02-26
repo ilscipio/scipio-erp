@@ -179,4 +179,13 @@ public abstract class CmsWebappUtil {
         return cmsWebSiteList;
     }
 
+    public static List<GenericValue> getWebSiteList(Delegator delegator) throws GenericEntityException {
+        List<GenericValue> cmsWebSiteList = new ArrayList<>();
+        final List<String> orderBy = Arrays.asList(new String[] {"siteName"});
+        for(GenericValue webSite : delegator.findByAnd("WebSite", null, orderBy, true)) {
+            cmsWebSiteList.add(webSite);
+        }
+        return cmsWebSiteList;
+    }
+
 }

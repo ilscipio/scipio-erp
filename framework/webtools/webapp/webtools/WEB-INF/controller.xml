@@ -188,11 +188,21 @@ code package.
         <response name="success" type="view" value="EditUtilCache"/>
         <response name="error" type="view" value="EditUtilCache"/>
     </request-map>
+    <request-map uri="EditPrewarmCacheUrls">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditPrewarmCacheUrls"/>
+    </request-map>
+    <request-map uri="UpdatePrewarmCacheUrls">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWebSite" />
+        <response name="success" type="view" value="EditPrewarmCacheUrls"/>
+        <response name="error" type="view" value="EditPrewarmCacheUrls"/>
+    </request-map>
     <request-map uri="EditUtilCacheClear">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.webtools.UtilCacheEvents" invoke="clearEvent"/>
-        <response name="success" type="view" value="EditUtilCache"/>
-        <response name="error" type="view" value="EditUtilCache"/>
+        <response name="success" type="request-redirect" value="EditUtilCache"/>
+        <response name="error" type="request-redirect" value="EditUtilCache"/>
     </request-map>
     <request-map uri="FindUtilCacheElements">
         <security https="true" auth="true"/>
@@ -858,6 +868,7 @@ code package.
     <view-map name="FindUtilCache" type="screen" page="component://webtools/widget/CacheScreens.xml#FindUtilCache"/>
     <view-map name="FindUtilCacheElements" type="screen" page="component://webtools/widget/CacheScreens.xml#FindUtilCacheElements"/>
     <view-map name="EditUtilCache" type="screen" page="component://webtools/widget/CacheScreens.xml#EditUtilCache"/>
+    <view-map name="EditPrewarmCacheUrls" type="screen" page="component://webtools/widget/CacheScreens.xml#EditPrewarmCacheUrls"/>
 
     <view-map name="viewdatafile" type="screen" page="component://webtools/widget/MiscScreens.xml#viewdatafile"/>
 

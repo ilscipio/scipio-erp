@@ -1,18 +1,13 @@
 package com.ilscipio.scipio.cms.content;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.ofbiz.base.util.*;
@@ -513,7 +508,35 @@ public abstract class CmsPageServices {
     /**
      * Prewarms the cache of a static list of urls
      */
-    public static Map<String, Object> prewarmContentCache(DispatchContext dctx, Map<String, ?> context) {
+    public static Map<String, Object> prewarmContentCacheFromDb(DispatchContext dctx, Map<String, ?> context) {
+        Delegator delegator = dctx.getDelegator();
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+
+        try{
+            List<GenericValue> websites = CmsWebappUtil.getWebSiteList(delegator);
+            for(GenericValue website : websites){
+                String prewarmCacheStr = website.getString("prewarmcache");
+                if(UtilValidate.isNotEmpty(prewarmCacheStr)){
+                    List<String> urls = Arrays.asList(prewarmCacheStr.split("\n"));
+                    result = dispatcher.runSync("prewarmContentCacheByUrl",UtilMisc.toMap(
+                            "urls",urls,
+                            "userLogin", userLogin));
+                }
+            }
+        }catch (Exception e){
+            Debug.logError("Error while prewarming contentCache",module);
+        }
+
+        return result;
+    }
+
+    /**
+     * Prewarms the cache of a static list of urls
+     */
+    public static Map<String, Object> prewarmContentCacheByUrl(DispatchContext dctx, Map<String, ?> context) {
         Delegator delegator = dctx.getDelegator();
         Map<String, Object> result = ServiceUtil.returnSuccess();
         List<String> urls = (List<String>) context.get("urls");

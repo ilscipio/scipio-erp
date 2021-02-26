@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    <!-- Run-at-startup auto warm caches -->
+    <JobSandbox jobId="PREWARM_CACHE" jobName="Prewarm caches on startup" runTime="2000-01-01 00:00:00.000"
+                eventId="SCH_EVENT_STARTUP" serviceName="prewarmContentCacheFromDb" poolId="pool" runAsUser="system" tempExprId="SECOND_EVERY" maxRecurrenceCount="-1" maxRetry="-1"/>
+
+</entity-engine-xml>

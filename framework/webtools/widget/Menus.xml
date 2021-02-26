@@ -202,6 +202,9 @@ code package.
         <menu-item name="cache" title="${uiLabelMap.WebtoolsCacheMaintenance}">
             <link target="FindUtilCache"/>
         </menu-item>
+        <menu-item name="prewarmcache" title="${uiLabelMap.WebtoolsPrewarmCacheUrls}">
+            <link target="EditPrewarmCacheUrls"/>
+        </menu-item>
         <menu-item name="artifact" title="${uiLabelMap.WebtoolsArtifactInfo}">
             <link target="ViewComponents"/>
             <sub-menu name="artifact" include="artifactSideBar"/>

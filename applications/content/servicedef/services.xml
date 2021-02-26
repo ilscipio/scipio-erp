@@ -1346,9 +1346,14 @@
         </attribute>
     </service>
 
-    <service name="prewarmContentCache" engine="java"
-             location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="prewarmContentCache" auth="true" transaction-timeout="600000" log="quiet">
-        <description>Prewarm the cache - run after restart and on a full cache clear. Fetches a range of urls. Useful to increase firstload performance</description>
+    <service name="prewarmContentCacheFromDb" engine="java"
+             location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="prewarmContentCacheFromDb" auth="true" transaction-timeout="600000" log="quiet">
+        <description>Prewarms the cache - runs after restart and on a full cache clear. Fetches Urls from Website entity. Useful to increase firstload performance</description>
+    </service>
+
+    <service name="prewarmContentCacheByUrl" engine="java"
+             location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="prewarmContentCacheByUrl" auth="true" transaction-timeout="600000" log="quiet">
+        <description>Prewarms the cache. Fetches a range of urls.</description>
         <attribute name="urls" type="java.util.List" mode="IN"  optional="true"/>
         <attribute name="url" type="String" mode="IN"  optional="true"/>
     </service>

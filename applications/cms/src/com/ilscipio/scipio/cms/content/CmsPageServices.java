@@ -550,7 +550,7 @@ public abstract class CmsPageServices {
             try{
                 CloseableHttpClient httpClient = SCIPIO_HTTP_CLIENT.getHttpClient();
                 //CloseableHttpClient httpClient = UtilHttp.getAllowAllHttpClient();
-                HttpGet httpget = new HttpGet(url);
+                HttpGet httpget = new HttpGet(url.trim());
                 httpClient.execute(httpget);
             }catch (Exception e){
                 str.append("Error reading: "+url+": "+e.toString()+"\n");

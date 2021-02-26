@@ -35,6 +35,15 @@
 <#if websites?has_content>
     <@section>
         <@row>
+            <@cell columns=2>
+                <@form action=makePageUrl("PrewarmCache")>
+                    <@field type="submit" text="Prewarm Cache" class="+${styles.link_run_sys!} ${styles.action_run!}"/>
+                </@form>
+            </@cell>
+        </@row>
+    </@section>
+    <@section>
+        <@row>
             <@cell columns=6>
                 <@form>
                     <@field type="select" label="WebSite" size="30" name="scriptWebsiteId" id="scriptWebsiteId" required=true events={"change":"openSection(this.value);"}>

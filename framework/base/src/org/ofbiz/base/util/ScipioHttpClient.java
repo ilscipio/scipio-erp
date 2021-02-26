@@ -7,7 +7,9 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
@@ -20,6 +22,7 @@ import org.apache.http.nio.reactor.ConnectingIOReactor;
 import org.apache.http.nio.reactor.IOReactorException;
 import org.apache.http.ssl.SSLContexts;
 
+import javax.net.ssl.SSLContext;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Serializable;
@@ -59,8 +62,15 @@ public class ScipioHttpClient implements Closeable {
         return fromConfig(config, true);
     }
 
+    public Config getConfig() {
+        return config;
+    }
+
     /** Gets connection manager (normally PoolingHttpClientConnectionManager), creates if needed. */
     public HttpClientConnectionManager getConnectionManager() {
+        if (!config.useConnectionManager()) {
+            return null;
+        }
         HttpClientConnectionManager connectionManager = this.connectionManager;
         if (connectionManager == null) {
             synchronized(this) {
@@ -105,6 +115,9 @@ public class ScipioHttpClient implements Closeable {
 
     /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Gets connection manager (normally PoolingNHttpClientConnectionManager), creates if needed. */
     public NHttpClientConnectionManager getAsyncConnectionManager() {
+        if (!config.useConnectionManager()) {
+            return null;
+        }
         NHttpClientConnectionManager connectionManager = this.asyncConnectionManager;
         if (connectionManager == null) {
             synchronized(this) {
@@ -184,6 +197,9 @@ public class ScipioHttpClient implements Closeable {
      * Generic HttpClient config/builder, can be used standalone without ScipioHttpClient instance.
      */
     public static class Config implements Serializable {
+        public static final String DEFAULT_JKS_STORE_FILENAME = "component://base/config/ofbizssl.jks";
+        public static final String DEFAULT_JKS_STORE_PASSWORD = "changeit";
+
         private final Factory factory;
         private final Boolean pooling;
         private final Integer maxConnections;
@@ -192,6 +208,10 @@ public class ScipioHttpClient implements Closeable {
         private final Integer socketTimeout;
         private final Integer connectionRequestTimeout;
         private final Boolean expectContinueEnabled;
+        private final Boolean trustSelfCert;
+        private final Boolean trustAnyHost;
+        private final String jksStoreFileName;
+        private final String jksStorePassword;
 
         protected Config(Map<String, ?> properties, Factory factory) {
             this.factory = factory;
@@ -202,6 +222,12 @@ public class ScipioHttpClient implements Closeable {
             this.socketTimeout = UtilProperties.asInteger(properties.get("socketTimeout"), null);
             this.connectionRequestTimeout = UtilProperties.asInteger(properties.get("connectionRequestTimeout"), null);
             this.expectContinueEnabled = UtilProperties.asBoolean(properties.get("expectContinueEnabled"), null);
+            this.trustSelfCert = UtilProperties.asBoolean(properties.get("trustSelfCert"), null);
+            this.trustAnyHost = UtilProperties.asBoolean(properties.get("trustAnyHost"), null);
+            String jksStoreFileName = (String) properties.get("jksStoreFileName");
+            this.jksStoreFileName = UtilValidate.isNotEmpty(jksStoreFileName) ? jksStoreFileName : DEFAULT_JKS_STORE_FILENAME;
+            String jksStorePassword = (String) properties.get("jksStorePassword");
+            this.jksStorePassword = UtilValidate.isNotEmpty(jksStorePassword) ? jksStorePassword : DEFAULT_JKS_STORE_PASSWORD;
         }
 
         public static Config fromContext(Map<String, ?> properties) {
@@ -246,12 +272,12 @@ public class ScipioHttpClient implements Closeable {
 
         /** Build method for PoolingHttpClientConnectionManager mainly. */
         public HttpClientConnectionManager createConnectionManager() {
-            if (!Boolean.TRUE.equals(getPooling())) {
+            if (!useConnectionManager()) {
                 return null;
             }
             PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(RegistryBuilder.<ConnectionSocketFactory>create()
-                    .register("http", PlainConnectionSocketFactory.getSocketFactory())
-                    .register("https", new SSLConnectionSocketFactory(SSLContexts.createDefault()))
+                    .register("http", getPlainConnectionSocketFactory())
+                    .register("https", getSSLConnectionSocketFactory())
                     .build());
             if (getMaxConnections() != null) {
                 cm.setMaxTotal(getMaxConnections());
@@ -262,17 +288,52 @@ public class ScipioHttpClient implements Closeable {
             return cm;
         }
 
+        protected PlainConnectionSocketFactory getPlainConnectionSocketFactory() {
+            return PlainConnectionSocketFactory.getSocketFactory();
+        }
+
+        protected SSLContext getSSLContext() {
+            if (Boolean.TRUE.equals(getTrustSelfCert())) {
+                try {
+                    return SSLContexts.custom().loadTrustMaterial(FileUtil.getFile(getJksStoreFileName()), getJksStorePassword().toCharArray(),
+                                    new TrustSelfSignedStrategy()).build();
+                } catch (Exception e) {
+                    Debug.logError(e, "Could not load self-cert trust SSLContext for HttpClient: " + e.toString(), module);
+                    //throw new RuntimeException(e); // TODO: REVIEW: will cause some classes to not load due to static instances
+                }
+            }
+            return SSLContexts.createDefault();
+        }
+
+        protected SSLConnectionSocketFactory getSSLConnectionSocketFactory(SSLContext sslContext) {
+            if (Boolean.TRUE.equals(getTrustAnyHost())) {
+                return new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
+            }
+            return new SSLConnectionSocketFactory(sslContext);
+        }
+
+        protected SSLConnectionSocketFactory getSSLConnectionSocketFactory() {
+            return getSSLConnectionSocketFactory(getSSLContext());
+        }
+
         /** Build method for HttpClient. */
         public CloseableHttpClient createHttpClient(HttpClientConnectionManager connectionManager) {
-            return HttpClients.custom()
-                .setDefaultRequestConfig(buildRequestConfig())
-                .setConnectionManager(connectionManager)
-                .build();
+            if (connectionManager != null) {
+                return HttpClients.custom()
+                        .setDefaultRequestConfig(buildRequestConfig())
+                        .setConnectionManager(connectionManager)
+                        .build();
+            } else {
+                return HttpClients.custom()
+                        .setDefaultRequestConfig(buildRequestConfig())
+                        .setSSLSocketFactory(getSSLConnectionSocketFactory())
+                        .build();
+            }
         }
 
         /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for PoolingNHttpClientConnectionManager mainly. */
         public NHttpClientConnectionManager createAsyncConnectionManager() {
-            if (!Boolean.TRUE.equals(getPooling())) {
+            if (!useConnectionManager()) {
                 return null;
             }
             PoolingNHttpClientConnectionManager cm = null;
@@ -288,7 +349,6 @@ public class ScipioHttpClient implements Closeable {
             } catch (IOReactorException e) {
                 Debug.logError(e, module);
             }
-
             return cm;
         }
 
@@ -304,13 +364,16 @@ public class ScipioHttpClient implements Closeable {
             return httpAsyncClient;
         }
 
-
         public Factory getFactory() {
             return factory;
         }
 
         public Boolean getPooling() {
             return pooling;
+        }
+
+        public boolean useConnectionManager() {
+            return Boolean.TRUE.equals(getPooling());
         }
 
         public Integer getMaxConnections() {
@@ -335,6 +398,28 @@ public class ScipioHttpClient implements Closeable {
 
         public Boolean getExpectContinueEnabled() {
             return expectContinueEnabled;
+        }
+
+        /**
+         * Returns true if should trust own certificate in jks keystore file, default false.
+         */
+        public Boolean getTrustSelfCert() {
+            return trustSelfCert;
+        }
+
+        /**
+         * Returns true if should validate any host, usually set in conjunction with trustSelfCert, default false.
+         */
+        public Boolean getTrustAnyHost() {
+            return trustAnyHost;
+        }
+
+        public String getJksStoreFileName() {
+            return jksStoreFileName;
+        }
+
+        public String getJksStorePassword() {
+            return jksStorePassword;
         }
     }
 

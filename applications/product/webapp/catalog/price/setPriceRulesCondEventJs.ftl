@@ -23,5 +23,5 @@ jQuery(document).ready( function() {
     });
     getDependentDropdownValues('getAssociatedPriceRulesConds', 'inputParamEnumId', 'AddProductPriceRulesCond_inputParamEnumId_o_0', 'AddProductPriceRulesCond_condValue_o_0', 'productPriceRulesCondValues', 'condValue_o_0', 'description', '', '', '', '', '', 'AddProductPriceRulesCond_condValueInput_o_0');
   }
-})
+});
 </@script>

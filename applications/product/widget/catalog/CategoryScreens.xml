@@ -565,9 +565,8 @@ code package.
             </widgets>
         </section>
     </screen> -->
-    
-    <!-- SCIPIO: To be removed -->
-    <!-- <screen name="EditCategoryAttributes">
+
+    <screen name="EditCategoryAttributes">
         <section>
             <actions>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
@@ -593,7 +592,7 @@ code package.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen> -->
+    </screen>
 
     <screen name="createProductInCategoryStart">
         <section>

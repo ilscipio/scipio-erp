@@ -244,6 +244,11 @@ code package.
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>
+        <menu-item name="EditCategoryAttributes" title="${uiLabelMap.ProductCategoryAttributes}">
+            <link target="EditCategoryAttributes">
+                <parameter param-name="productCategoryId"/>
+            </link>
+        </menu-item>
         <!-- SCIPIO - To be demoved -->
        <!--  <menu-item name="EditCategoryProdCatalogs" title="${uiLabelMap.ProductCatalogs}">
             <link target="EditCategoryProdCatalogs">
@@ -257,11 +262,6 @@ code package.
         </menu-item>
         <menu-item name="EditCategoryParties" title="${uiLabelMap.ProductCategoryParties}">
             <link target="EditCategoryParties">
-                <parameter param-name="productCategoryId"/>
-            </link>
-        </menu-item>
-        <menu-item name="EditCategoryAttributes" title="${uiLabelMap.ProductCategoryAttributes}">
-            <link target="EditCategoryAttributes">
                 <parameter param-name="productCategoryId"/>
             </link>
         </menu-item>

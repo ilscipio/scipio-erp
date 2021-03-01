@@ -32,6 +32,13 @@
         <value xml:lang="de">Seite</value>
         <value xml:lang="en">Page</value>
     </property>
+    <property key="CommonRobots">
+        <value xml:lang="en">Robots.txt</value>
+    </property>
+    <property key="CommonSetRobots">
+        <value xml:lang="de">Managen Sie ihre robots.txt dateien. Falls gesetzt, so wird der Inhalt automatisch unter der jeweiligen Zieldomain /robots.txt ausgespielt</value>
+        <value xml:lang="en">Manage your robots.txt files. If present, will automatically print content under targetdomain /robots.txt</value>
+    </property>
     <property key="CommonEditor">
         <value xml:lang="de">Editor</value>
         <value xml:lang="en">Editor</value>

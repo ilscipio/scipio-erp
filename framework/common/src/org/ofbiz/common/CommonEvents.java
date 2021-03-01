@@ -44,14 +44,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.lang.JSON;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilIO;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.common.image.storer.ImageStorers;
 import org.ofbiz.entity.Delegator;
@@ -62,6 +55,7 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.security.Security;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.event.JsonEventUtil;
+import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
  * Common Services
@@ -585,4 +579,30 @@ public class CommonEvents {
         return "success";
     }
 
+    public static String getRobots(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            String webSiteId = WebSiteWorker.getWebSiteId(request);
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), true);
+            if (webSite == null) throw new GeneralException("website not found: " + webSiteId);
+            String robots = webSite.getString("robots");
+
+            response.setContentType("text/plain");
+            response.setContentLength(robots.getBytes(UtilIO.getUtf8()).length); // SCIPIO: UtilIO.getUtf8()
+            response.setHeader("Cache-Control", "public,max-age=86400");
+
+            // return the content
+            Writer out;
+            try {
+                out = response.getWriter();
+                out.write(robots);
+                out.flush();
+            } catch (IOException e) {
+                Debug.logError(e, module);
+            }
+        } catch (Exception e) {
+            return "error";
+        }
+        return "success";
+    }
 }

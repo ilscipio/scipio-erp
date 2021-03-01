@@ -154,6 +154,17 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/> 
     </request-map>
+
+    <request-map uri="robots">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="robots"/>
+    </request-map>
+    <request-map uri="updateRobots">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWebSite" />
+        <response name="success" type="view" value="robots"/>
+        <response name="error" type="view" value="robots"/>
+    </request-map>
     
     <!-- Page Templates -->
     <request-map uri="templates">
@@ -610,6 +621,7 @@
     <view-map name="pages" type="screen" page="component://cms/widget/CMSScreens.xml#pages"/>
     <view-map name="editPage" type="screen" page="component://cms/widget/CMSScreens.xml#editPage"/>
     <view-map name="pageVersionList" type="screen" page="component://cms/widget/CMSScreens.xml#pageVersionList"/>
+    <view-map name="robots" type="screen" page="component://cms/widget/CMSScreens.xml#robots"/>
     <view-map name="templates" type="screen" page="component://cms/widget/CMSScreens.xml#templates"/>
     <view-map name="editTemplate" type="screen" page="component://cms/widget/CMSScreens.xml#editTemplate"/>
     <view-map name="assets" type="screen" page="component://cms/widget/CMSScreens.xml#assets"/>

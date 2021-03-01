@@ -211,6 +211,12 @@ NOTE: This should only contain framework-level definitions, and not business-rel
         <response name="success" type="view" value="main"/>
     </request-map>
 
+    <request-map uri="robots.txt">
+        <security https="true" auth="false"/><!-- SCIPIO: 2018-07-09: set https true -->
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="getRobots"/>
+        <response name="success" type="none"/>
+    </request-map>
+
     <!-- SCIPIO: Not for frontend stores for now
     <request-map uri="viewBlocked">
         <security https="true" auth="false"/><!- - SCIPIO: 2018-07-09: added security elem - ->

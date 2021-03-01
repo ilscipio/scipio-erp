@@ -521,18 +521,20 @@ public abstract class CmsPageServices {
                 String prewarmCacheStr = website.getString("prewarmcache");
                 if(UtilValidate.isNotEmpty(prewarmCacheStr)){
                     List<String> urls = Arrays.asList(prewarmCacheStr.split("\n"));
+                    for(String url : urls){
                     try{
-                        if(UtilValidate.isNotEmpty(url.trim())){
-                            CloseableHttpClient httpClient = SCIPIO_HTTP_CLIENT.getHttpClient();
-                            //CloseableHttpClient httpClient = UtilHttp.getAllowAllHttpClient();
-                            HttpGet httpget = new HttpGet(url.trim());
-                            httpClient.execute(httpget);
+                            if(UtilValidate.isNotEmpty(url.trim())){
+                                CloseableHttpClient httpClient = SCIPIO_HTTP_CLIENT.getHttpClient();
+                                //CloseableHttpClient httpClient = UtilHttp.getAllowAllHttpClient();
+                                HttpGet httpget = new HttpGet(url.trim());
+                                httpClient.execute(httpget);
+                            }
+                        }catch (Exception e){
+                            str.append("Error reading: "+url+": "+e.toString()+"\n");
                         }
-                    }catch (Exception e){
-                        str.append("Error reading: "+url+": "+e.toString()+"\n");
-                    }
-                    if(str.length() > 0){
-                        result = ServiceUtil.returnFailure("Ran prewarming with errors. \n"+str);
+                        if(str.length() > 0){
+                            result = ServiceUtil.returnFailure("Ran prewarming with errors. \n"+str);
+                        }
                     }
                 }
             }

@@ -162,7 +162,9 @@
         <#-- Shipping -->
         <#-- Migreated to Shipment Information-->
             <#-- SCIPIO: 21-01-29: Added ORDER_SENT in the condition so order items can't be edited if already sent -->
-            <#if (!singleOrderItem?has_content && !allOrderItemsShipped?has_content) && (currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT")>
+            <#if ((!singleOrderItem?has_content || (singleOrderItem?has_content && !singleOrderItem)) &&
+                (!allOrderItemsShipped?has_content) || (allOrderItemsShipped?has_content && !allOrderItemsShipped)) &&
+                (currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT")>
               <@menuitem type="generic">
                  <form action="<@pageUrl>createOrderItemShipGroup</@pageUrl>" method="post">
                     <input type="hidden" name="orderId" value="${orderId}"/>

@@ -195,20 +195,21 @@ if (orderHeader) {
     shipGroups = from("OrderItemShipGroup").where("orderId", orderId).orderBy("shipGroupSeqId").queryList();
     context.shipGroups = shipGroups;
 
-    // SCIPIO: 2.0.0: new list that contains items that are in a shipGroup already having a shipment or just a single order item not requiring multipe shipGroups
-    allOrderItemsShipped = [];
+    // SCIPIO: 2.0.0: new list that contains items that are in a shipGroup already having a shipment or just a single order item not requiring multiple shipGroups
+    orderItemsShipped = [];
     singleOrderItem = false;
     if (orderItemList.size() > 1) {
         shipGroups.each { shipGroup ->
             shipment = from("Shipment").where("primaryOrderId", orderId, "primaryShipGroupSeqId", shipGroup.shipGroupSeqId).queryFirst();
             if (shipment) {
-                allOrderItemsShipped.add(orderItem);
+                orderItemsShipped.addAll(shipment.getRelated("ShipmentItem"));
             }
         }
     } else {
         singleOrderItem = true;
     }
-    context.put("allOrderItemsShipped", allOrderItemsShipped);
+    Debug.log("allOrderItemsShipped size: " + orderItemsShipped.size() + " orderItemList size: " + orderItemList.size());
+    context.put("allOrderItemsShipped", (orderItemList.size() <= orderItemsShipped.size()));
     context.put("singleOrderItem", singleOrderItem);
 
     orderContainsOnlyDigitalProducts = false;

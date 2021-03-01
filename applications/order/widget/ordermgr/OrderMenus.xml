@@ -304,11 +304,12 @@ code package.
                     <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_COMPLETED"/>
                     <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
                     <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_SENT"/>
-                    <not><if-empty field="allOrderItemsShipped" /></not>
                     <and>
-                        <not>
-                            <if-empty field="singleOrderItem" />
-                        </not>
+                        <not><if-empty field="allOrderItemsShipped" /></not>
+                        <if-false field="allOrderItemsShipped" />
+                    </and>
+                    <and>
+                        <not><if-empty field="singleOrderItem" /></not>
                         <if-false field="singleOrderItem" />
                     </and>
                     <and>

@@ -1,4 +1,3 @@
-<@alert type="info">${getLabel("WebtoolsPrewarmCacheUrlDescription")}.</@alert>
 <#include "component://cms/webapp/cms/common/common.ftl">
 <@script>
     function openSection(v){
@@ -32,17 +31,13 @@
     });
 
 </@script>
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <@menuitem type="link" href=makePageUrl("PrewarmCache") class="+${styles.action_nav!} ${styles.action_run!}" text="Prewarm Cache"/>
+    </@menu>
+</#macro>
 <#if websites?has_content>
-    <@section>
-        <@row>
-            <@cell columns=2>
-                <@form action=makePageUrl("PrewarmCache")>
-                    <@field type="submit" text="Prewarm Cache" class="+${styles.link_run_sys!} ${styles.action_run!}"/>
-                </@form>
-            </@cell>
-        </@row>
-    </@section>
-    <@section>
+    <@section menuContent=menuContent>
         <@row>
             <@cell columns=6>
                 <@form>
@@ -52,6 +47,9 @@
                         </#list>
                     </@field>
                 </@form>
+            </@cell>
+            <@cell columns=6>
+                <@alert type="info">${getLabel("WebtoolsPrewarmCacheUrlDescription")}.</@alert>
             </@cell>
         </@row>
     </@section>

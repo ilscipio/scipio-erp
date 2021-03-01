@@ -513,7 +513,7 @@ public abstract class CmsPageServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-
+        StringBuffer str = new StringBuffer();
 
         try{
             List<GenericValue> websites = CmsWebappUtil.getWebSiteList(delegator);
@@ -521,9 +521,19 @@ public abstract class CmsPageServices {
                 String prewarmCacheStr = website.getString("prewarmcache");
                 if(UtilValidate.isNotEmpty(prewarmCacheStr)){
                     List<String> urls = Arrays.asList(prewarmCacheStr.split("\n"));
-                    result = dispatcher.runSync("prewarmContentCacheByUrl",UtilMisc.toMap(
-                            "urls",urls,
-                            "userLogin", userLogin));
+                    try{
+                        if(UtilValidate.isNotEmpty(url.trim())){
+                            CloseableHttpClient httpClient = SCIPIO_HTTP_CLIENT.getHttpClient();
+                            //CloseableHttpClient httpClient = UtilHttp.getAllowAllHttpClient();
+                            HttpGet httpget = new HttpGet(url.trim());
+                            httpClient.execute(httpget);
+                        }
+                    }catch (Exception e){
+                        str.append("Error reading: "+url+": "+e.toString()+"\n");
+                    }
+                    if(str.length() > 0){
+                        result = ServiceUtil.returnFailure("Ran prewarming with errors. \n"+str);
+                    }
                 }
             }
         }catch (Exception e){

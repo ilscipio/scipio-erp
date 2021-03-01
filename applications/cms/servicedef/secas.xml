@@ -9,7 +9,7 @@ code package.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/service-eca.xsd">
 
     <!-- Prewarm content caches when cache is cleared. Uses the /admin/control/EditPrewarmCacheUrls entries -->
-    <eca service="clearCacheFull" event="return">
+    <eca service="clearAllUtilCaches" event="return">
         <action service="prewarmContentCacheFromDb" mode="async" new-transaction="true" priority="10"/>
     </eca>
 </service-eca>

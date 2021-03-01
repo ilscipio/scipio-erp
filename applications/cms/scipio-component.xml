@@ -17,6 +17,7 @@
     <entity-resource type="data" reader-name="seed" loader="main" location="data/CmsSecurityPermissionSeedData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/CmsTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/CmsSeedData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/CmsScheduledServiceData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CmsSecurityGroupDemoData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CmsWebsiteDemoData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/CmsDemoData.xml"/>

@@ -83,10 +83,18 @@ if (category) {
     context.categoryTitle = categoryContentWrapper.get("CATEGORY_NAME");
     categoryDescription = categoryContentWrapper.get("DESCRIPTION");
     if (categoryDescription) {
-        context.metaDescription = categoryDescription;
         context.metaKeywords = categoryDescription + ", " + catalogName;
     } else {
         context.metaKeywords = catalogName;
+    }
+
+    // SCIPIO: 2.0.0: Fetching META_DESCRIPTION content first, if empty, then use DESCRIPTION
+    categoryMetaDescription = categoryContentWrapper.get("META_DESCRIPTION");
+    if (categoryMetaDescription) {
+        context.metaDescription = categoryMetaDescription;
+    }
+    if (!context.metaDescription && categoryDescription) {
+        context.metaDescription = categoryDescription;
     }
     context.productCategory = category;
 }

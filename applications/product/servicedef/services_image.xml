@@ -90,7 +90,7 @@
             <description>main|additional</description>
         </attribute>
         <attribute name="viewNumber" mode="IN" type="Object" optional="true">
-            <description>For additional (String or Integer)</description>
+            <description>For additional (String or Integer), a number between 1-4 for stock records; 0 for main viewType</description>
         </attribute>
         
         <!-- SCALING OPTIONS -->

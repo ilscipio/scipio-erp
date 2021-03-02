@@ -70,8 +70,9 @@ public abstract class ProductImageServices {
             }
         } else {
             try {
-                imageViewType = ProductImageViewType.from(delegator, ctx.getString("viewType"), ctx.getString("viewNumber"),
-                        "original", true, true);
+                String viewType = ctx.getString("viewType");
+                String viewNumber = ctx.getString("viewNumber", "main".equals(viewType) ? "0" : null);
+                imageViewType = ProductImageViewType.from(delegator, viewType, viewNumber, "original", true, true);
             } catch (Exception e) {
                 Debug.logError(e, "productImageFileScaleInAllSize: product [" + productId + "]: error determining imageViewType for viewType [" +
                         ctx.getString("viewType") + "] viewNumber [" + ctx.getString("viewNumber") + "]: " + e.toString(), module);

@@ -409,7 +409,7 @@ public class TemplateInvoker {
     public static <T extends TemplateModel> T wrap(TemplateInvoker invoker, WrapperModel targetModel, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (targetModel == null || targetModel == WrapperModel.HYBRID) {
             return (T) new HybridInvokerWrapper(invoker);
-        } else if (targetModel == null || targetModel == WrapperModel.SCALAR) {
+        } else if (targetModel == WrapperModel.SCALAR) {
             // 2017-03-31: just avoid the bean wrapper as much as possible, even though may not entirely be able to
 //            if (invoker instanceof StringTemplateInvoker && objectWrapper != null) {
 //                return (T) objectWrapper.wrap(invoker);

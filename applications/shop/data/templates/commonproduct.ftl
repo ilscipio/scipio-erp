@@ -178,7 +178,7 @@ NOTE: This template does not support globals as-is (#global)
         <#if scaledImage.imageUrlMap?has_content && scaledImage.productSizeTypeList?has_content>
             <#assign imageMap = scaledImage.imageUrlMap>
             <#list scaledImage.productSizeTypeList as sizeType>
-                <#assign imgDataResId>${productId}_ALT_${imageNr}_${sizeType?upper_case}</#assign><#-- WARN: > 20 chars -->
+                <#assign imgDataResId>${productId}_ALT_${imageNr}_${sizeType?upper_case}</#assign>
                 <#assign imgDataResDesc>${productId} Additional Image ${imageNr} ${sizeType}</#assign>
                 <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="${imgDataResId}" dataResourceName="${imgDataResDesc}" isPublic="Y"/>
                 <ElectronicText dataResourceId="${imgDataResId}" textData="${imageMap[sizeType]!}"/>

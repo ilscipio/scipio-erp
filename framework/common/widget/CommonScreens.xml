@@ -204,22 +204,42 @@ code package.
             <set field="origTitle" from-field="title" />
             <set field="origTitleProperty" from-field="titleProperty" />
 
-            <set field="finalTitle" value="${title}" default-value="${uiLabelMap[titleProperty]}"/>
-            <!-- 2016-10-26: support titleFormatString to simplify screens 
-                use backslash to delay the evaluation of expression to here -->
-            <set field="titleFormat" from-field="titleFormat" default-value="\${finalTitle}" />
+            <script lang="groovy"><![CDATA[
+                def title = context.title;
+                def titleProperty = context.titleProperty;
+                // Saved the orig "title" and "titleProperty" field JUST IN CASE something needs them; we may overwrite these
+                context.origTitle = origTitle;
+                context.origTitleProperty = titleProperty;
 
-            <set field="resolvedTitle" value="${groovy: org.ofbiz.base.util.string.FlexibleStringExpander.expandString(titleFormat, context)}" />
+                // Choose whether using title or titleProperty
+                def finalTitle = title;
+                if (!finalTitle) {
+                    def uiLabelMap = context.uiLabelMap;
+                    if (titleProperty && uiLabelMap != null) {
+                        finalTitle = uiLabelMap[titleProperty];
+                    }
+                }
+                context.finalTitle = finalTitle;
 
-            <!-- OVERWRITE the title field with resolved so automatically works with existing themes -->
-            <!-- NOTE: 2016-10-26: This now means that themes only need to check the "title" field; don't need to check titleProperty anymore (shouldn't be their job) -->
-            <set field="title" from-field="resolvedTitle"/>
+                // Apply special title format expression (FSE)
+                def titleFormat = context.titleFormat;
+                def resolvedTitle;
+                if (titleFormat && '${finalTitle}' != titleFormat) {
+                    resolvedTitle = org.ofbiz.base.util.string.FlexibleStringExpander.expandString(titleFormat, context).trim();
+                } else {
+                    resolvedTitle = finalTitle;
+                }
+                context.resolvedTitle = resolvedTitle;
 
-            <!-- GLOBAL version of the title so top-level templates can also access it
-                (NOTE: due to language issues, must be a different field name) -->
-            <set field="globalTitle" from-field="resolvedTitle" global="true"/>
+                // OVERWRITE the title field with resolved so automatically works with existing themes
+                // NOTE: 2016-10-26: This now means that themes only need to check the "title" field; don't need to check titleProperty anymore (shouldn't be their job)
+                context.title = resolvedTitle;
+                // GLOBAL version of the title so top-level templates can also access it
+                // (NOTE: due to language issues, must be a different field name)
+                globalContext.globalTitle = resolvedTitle;
+                context.headerTitle = resolvedTitle;
+            ]]></script>
 
-            <set field="headerTitle" from-field="resolvedTitle"/>
             <set field="layoutSettings.companyName" from-field="layoutSettings.companyName" default-value="SCIPIO" global="true"/>
 
             <set field="customSideBar" from-field="styles.customSideBar" default-value="false" global="true"/>

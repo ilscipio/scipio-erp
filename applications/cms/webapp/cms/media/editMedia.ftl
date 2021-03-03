@@ -12,25 +12,24 @@
     the @script must be placed INSIDE #createWrapper/#updateWrapper form reloaded 
     js inside them with ajax won't be able to access outside scripts (here) - e.g. delete button broken without this -->
 <#macro editMediaScripts>
-  <#if media?has_content>
     <#-- Javascript functions -->
-    <@script>    
+    <script>
         <@commonCmsScripts />
         
         <#-- To be loaded on pageload -->
-        $( document ).ready(function() {
+        $(document).ready(function() {
             setupCmsDeleteActionHooks();
-        }); 
-            
+        });
+
         function deleteMediaAsset() {
-            deleteCmsElement("<@pageUrl escapeAs='js'>deleteMedia</@pageUrl>", 
-                { contentId : "${escapeVal(media.contentId!, 'js')}" }, 
+            deleteCmsElement("<@pageUrl escapeAs='js'>deleteMedia</@pageUrl>",
+                { contentId : "${escapeVal(media.contentId!, 'js')}" },
                 function(eventMsgs) {
                     doCmsSuccessRedirect("<@pageUrl escapeAs='js'>media</@pageUrl>", eventMsgs);
                 }
             );
         }
-    </@script>
+    </script>
     
     <@modal id="delete-dialog">
         <@heading>${uiLabelMap.CommonWarning}</@heading>
@@ -39,7 +38,6 @@
            <a id="delete-button" class="${styles.button} btn-ok">${uiLabelMap.CommonContinue}</a>
         </div>
     </@modal>
-  </#if>
 </#macro>
 
 <#macro menuContent menuArgs={}>
@@ -57,13 +55,14 @@
 
 <@section id="mediaWrapper">
 
-    <@section id=formAction menuContent=menuContent>  
-     
-      <#-- SCRIPTS INSIDE FORM needed due to ajax -->
-      <@editMediaScripts/>
-      
+    <@section id=formAction menuContent=menuContent>
         <@row>
             <@cell id="mediaUpload" columns=5>
+                <#-- SCRIPTS INSIDE FORM needed due to ajax -->
+                <#-- SCIPIO: 2.0.0: media present check moved here, otherwise delete doesn't work (at least in Metro theme) -->
+                <#if media?has_content>
+                    <@editMediaScripts/>
+                </#if>
                 <@section title=sectionTitle>
                     <form method="post"<#if !media?has_content> enctype="multipart/form-data"</#if> action="<@pageUrl>${formAction}</@pageUrl>" name="mediaForm" id="mediaForm">                                                       
                         <#if parameters.contentName?has_content>
@@ -96,7 +95,8 @@
                             <@field type="display" label=uiLabelMap.CommonPath><a href="${escapeFullUrl(mediaUrl, 'html')}">${escapeFullUrl(mediaUrl, 'htmlmarkup')}</a></@field>
 
                             <#-- DEV NOTE: you must submit altValue otherwise the service didn't recognize properly -->
-                            <@field type="checkbox" name="isPublic" label=uiLabelMap.FormFieldTitle_isPublic value="true" altValue="false" checked=((media.isPublic!)=="Y") />
+                            <#-- SCIPIO: 2.0.0: added useHidden false because issues loading javascript after file upload -->
+                            <@field type="checkbox" name="isPublic" label=uiLabelMap.FormFieldTitle_isPublic value="true" useHidden=false checked=((media.isPublic!)=="Y") />
                             <@field type="display" label=uiLabelMap.CommonMediaType value=(dataResourceTypeIdVal!"") />
                             <@field type="display" label=uiLabelMap.CmsMediaOriginalName value=(media.objectInfo!"") />                            
 

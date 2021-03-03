@@ -77,6 +77,7 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
 import freemarker.template.utility.DeepUnwrap;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 
 /**
  * FreeMarkerWorker - Freemarker Template Engine Utilities.
@@ -192,6 +193,7 @@ public final class FreeMarkerWorker {
         newConfig.setSharedVariable("UtilHttp", new BeanModel(UtilHttp.getStaticInstance(), wrapper));
         newConfig.setSharedVariable("UtilMisc", new BeanModel(UtilMisc.getStaticInstance(), wrapper));
         newConfig.setSharedVariable("UtilNumber", new BeanModel(UtilNumber.getStaticInstance(), wrapper));
+        newConfig.setSharedVariable("FlexibleStringExpander", new BeanModel(FlexibleStringExpander.getStaticInstance(), wrapper));
 
         // SCIPIO: New standard TemplateLoader
         //newConfig.setTemplateLoader(new FlexibleTemplateLoader());

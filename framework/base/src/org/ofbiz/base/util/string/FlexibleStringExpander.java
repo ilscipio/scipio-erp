@@ -38,6 +38,7 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 
@@ -789,5 +790,14 @@ public abstract class FlexibleStringExpander implements Serializable, IsEmpty {
             }
             return obj;
         }
+    }
+
+    /**
+     * DO NOT USE: Returns a "dummy" static instance, for use by <code>FreeMarkerWorker</code>.
+     * Subject to change without notice.
+     * SCIPIO: 2.1.0: Added.
+     */
+    public static FlexibleStringExpander getStaticInstance() {
+        return nullExpr;
     }
 }

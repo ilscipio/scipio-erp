@@ -662,7 +662,7 @@ public class DatabaseUtil {
                     while (indexes.hasNext()) {
                         ModelIndex modelIndex = indexes.next();
 
-                        String relIndexName = makeIndexName(modelIndex, datasourceInfo.getConstraintNameClipLength());
+                        String relIndexName = makeIndexName(modelIndex); // SCIPIO: Removed: , datasourceInfo.getConstraintNameClipLength()
                         String checkIndexName = needsUpperCase[0] ? relIndexName.toUpperCase() : relIndexName;
                         if (tableIndexList.contains(checkIndexName)) {
                             tableIndexList.remove(checkIndexName);
@@ -1966,6 +1966,10 @@ public class DatabaseUtil {
         return indexName;
     }
 
+    public String makeIndexName(ModelIndex modelIndex) { // SCIPIO
+        return makeIndexName(modelIndex, datasourceInfo.getConstraintNameClipLength());
+    }
+
     /* ====================================================================== */
     public int createForeignKeys(ModelEntity entity, Map<String, ModelEntity> modelEntities, List<String> messages) {
         return this.createForeignKeys(entity, modelEntities, datasourceInfo.getConstraintNameClipLength(), datasourceInfo.getFkStyle(), datasourceInfo.getUseFkInitiallyDeferred(), messages);
@@ -2421,7 +2425,7 @@ public class DatabaseUtil {
             indexSqlBuf.append("UNIQUE ");
         }
         indexSqlBuf.append("INDEX ");
-        indexSqlBuf.append(makeIndexName(modelIndex, datasourceInfo.getConstraintNameClipLength()));
+        indexSqlBuf.append(makeIndexName(modelIndex)); // SCIPIO: Removed: , datasourceInfo.getConstraintNameClipLength()
         indexSqlBuf.append(" ON ");
         indexSqlBuf.append(entity.getTableName(datasourceInfo));
 
@@ -2481,7 +2485,10 @@ public class DatabaseUtil {
 
         indexSqlBuf.append(schemaName);
         indexSqlBuf.append(".");
-        indexSqlBuf.append(modelIndex.getName());
+        // SCIPIO: Index name missing clip
+        //indexSqlBuf.append(modelIndex.getName());
+        String indexName = makeIndexName(modelIndex);
+        indexSqlBuf.append(indexName);
 
         String deleteIndexSql = indexSqlBuf.toString();
         if (Debug.verboseOn()) Debug.logVerbose("[deleteDeclaredIndex] index sql=" + deleteIndexSql, module);

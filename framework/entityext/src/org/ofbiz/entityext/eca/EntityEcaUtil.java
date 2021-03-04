@@ -18,9 +18,9 @@
  *******************************************************************************/
 package org.ofbiz.entityext.eca;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -44,6 +44,7 @@ import org.w3c.dom.Element;
 
 /**
  * EntityEcaUtil
+ * <p>SCIPIO: 2.1.0: Minor fixes, switch to ArrayList.</p>
  */
 public final class EntityEcaUtil {
 
@@ -57,7 +58,7 @@ public final class EntityEcaUtil {
         Map<String, Map<String, List<EntityEcaRule>>> ecaCache = entityEcaReaders.get(entityEcaReaderName);
         if (ecaCache == null) {
             // FIXME: Collections are not thread safe
-            ecaCache = new HashMap<String, Map<String, List<EntityEcaRule>>>();
+            ecaCache = new HashMap<>();
             readConfig(entityEcaReaderName, ecaCache);
             ecaCache = entityEcaReaders.putIfAbsentAndGet(entityEcaReaderName, ecaCache);
         }
@@ -90,7 +91,7 @@ public final class EntityEcaUtil {
             return;
         }
 
-        List<Future<List<EntityEcaRule>>> futures = new LinkedList<Future<List<EntityEcaRule>>>();
+        List<Future<List<EntityEcaRule>>> futures = new ArrayList<Future<List<EntityEcaRule>>>();
         for (Resource eecaResourceElement : entityEcaReaderInfo.getResourceList()) {
             ResourceHandler handler = new MainResourceHandler(EntityConfig.ENTITY_ENGINE_XML_FILENAME, eecaResourceElement.getLoader(), eecaResourceElement.getLocation());
             futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createEcaLoaderCallable(handler)));
@@ -111,20 +112,20 @@ public final class EntityEcaUtil {
                 List<EntityEcaRule> rules = null;
                 if (eventMap == null) {
                     eventMap = new HashMap<String, List<EntityEcaRule>>();
-                    rules = new LinkedList<EntityEcaRule>();
+                    rules = new ArrayList<>(); // SCIPIO: ArrayList
                     ecaCache.put(entityName, eventMap);
                     eventMap.put(eventName, rules);
                 } else {
                     rules = eventMap.get(eventName);
                     if (rules == null) {
-                        rules = new LinkedList<EntityEcaRule>();
+                        rules = new ArrayList<>();
                         eventMap.put(eventName, rules);
                     }
                 }
                 //remove the old rule if found and keep the recent one
                 //This will prevent duplicate rule execution along with enabled/disabled eca workflow
                 if (rules.remove(rule)) {
-                    Debug.logWarning("Duplicate Entity ECA [" + entityName + "]" + "for operation [ "+ rule.getOperationName() + "] " + "on [" + eventName + "] ", module);
+                    Debug.logWarning("Duplicate Entity ECA [" + entityName + "] for operation [ " + rule.getOperationName() + "] on [" + eventName + "]", module);
                 }
                 rules.add(rule);
             }
@@ -132,7 +133,7 @@ public final class EntityEcaUtil {
     }
 
     private static List<EntityEcaRule> getEcaDefinitions(ResourceHandler handler) {
-        List<EntityEcaRule> rules = new LinkedList<EntityEcaRule>();
+        List<EntityEcaRule> rules = new ArrayList<EntityEcaRule>();
         Element rootElement = null;
         try {
             rootElement = handler.getDocument().getDocumentElement();

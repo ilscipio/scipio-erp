@@ -387,7 +387,7 @@ public class ProductImageVariants extends ImageVariants {
                         getOrigImageViewType().getViewType(), getOrigImageViewType().getViewNumber(), sizeType, false, true);
             } catch (Exception e) {
                 Debug.logError("Unable to derive variantImageViewType for sizeType [" + sizeType +
-                        "] for productId [" + getProductId() + "] imageViewType " + getOrigImageViewType(), module);
+                        "] for productId [" + getProductId() + "] imageViewType " + getOrigImageViewType() + ": " + e.toString(), module);
                 continue;
             }
 

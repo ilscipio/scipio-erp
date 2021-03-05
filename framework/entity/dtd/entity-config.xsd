@@ -244,8 +244,20 @@ under the License.
         <xs:attribute name="use-indices-unique" type="xs:boolean" default="true">
             <xs:annotation><xs:documentation>For manually declared indices (if used), use the unique constraint?</xs:documentation></xs:annotation>
         </xs:attribute>
-        <xs:attribute name="check-indices-on-start" type="xs:boolean"
-                      default="false"/>
+        <xs:attribute name="check-indices-on-start" type="xs:boolean" default="false"/>
+        <xs:attribute name="check-modified-indices-on-start" type="xs:boolean" default="true">
+            <xs:annotation>
+                <xs:documentation>
+                    When check-indices-on-start true, in addition to adding new indices, if supported by the database,
+                    field modifications on existing indices are detected and the indices are deleted and recreated.
+                    This is enabled by default only if check-indices-on-start is explicitly enabled as well, and
+                    can be disabled separately in case of problems.
+                    Currently supports databases:
+                    * Postgresql (postgres, postnew)
+                    SCIPIO: 2.1.0: Added.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="join-style" default="ansi">
             <xs:simpleType>
                 <xs:restriction base="xs:token">

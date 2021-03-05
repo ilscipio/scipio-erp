@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.UtilValidate;
@@ -169,7 +170,59 @@ public final class ModelIndex extends ModelChild {
                 return function.toString() + '(' + fieldName + ')';
             }
         }
+
+        /**
+         * Returns true if fields and definition are same as this.
+         * SCIPIO: 2.1.0: Added for index checking at startup.
+         */
+        public boolean equalsDef(Field other) {
+            return equals(other);
+        }
+
+        @Override
+        public boolean equals(Object o) { // SCIPIO
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Field field = (Field) o;
+            return getFieldName().equals(field.getFieldName()) &&
+                    getFunction() == field.getFunction();
+        }
+
+        @Override
+        public int hashCode() { // SCIPIO
+            return Objects.hash(getFieldName(), getFunction());
+        }
     }
 
     public enum Function { LOWER, UPPER }
+
+    /**
+     * Returns true if fields and definition are same as this (excluding name), including fields order.
+     * SCIPIO: 2.1.0: Added for index checking at startup.
+     */
+    public boolean equalsDef(ModelIndex other) {
+        if (other == null || this.getUnique() != other.getUnique() || this.getFields().size() != other.getFields().size()) {
+            return false;
+        }
+        for(int i = 0; i < this.getFields().size(); i++) {
+            if (!Objects.equals(this.getFields().get(i), other.getFields().get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() { // SCIPIO
+        return "{name='" + name + '\'' +
+                ", unique=" + unique +
+                ", fields=" + fields +
+                '}';
+    }
+
+    public boolean isAutoIndex() { // SCIPIO: TODO: REVIEW: completeness
+        return (getFields().size() == 1 &&
+                ModelEntity.STAMP_FIELD_LIST.contains(getFields().get(0).getFieldName()) &&
+                getFields().get(0).getFunction() == null);
+    }
 }

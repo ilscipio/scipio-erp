@@ -68,6 +68,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     public static final String STAMP_TX_FIELD = "lastUpdatedTxStamp";
     public static final String CREATE_STAMP_FIELD = "createdStamp";
     public static final String CREATE_STAMP_TX_FIELD = "createdTxStamp";
+    public static final List<String> STAMP_FIELD_LIST = UtilMisc.unmodifiableArrayList(STAMP_FIELD, STAMP_TX_FIELD, CREATE_STAMP_FIELD, CREATE_STAMP_TX_FIELD); // SCIPIO
 
     /** SCIPIO: Standard entity field for JSON data storage (2019: added for 2.1.0) */
     public static final String ENTITY_JSON_FIELD = "entityJson";
@@ -876,6 +877,16 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         //synchronized (fieldsLock) { // SCIPIO: 2018-09-29: Removed detrimental sync block for getters
         return fields.fieldsMap.get(fieldName); // SCIPIO: 2018-09-29: fields member
         //}
+    }
+
+    public ModelField getFieldByColName(String colName) { // SCIPIO
+        if (colName == null) return null;
+        for(ModelField field : fields.fieldsList) {
+            if (colName.equals(field.getColName())) {
+                return field;
+            }
+        }
+        return null;
     }
 
     /**

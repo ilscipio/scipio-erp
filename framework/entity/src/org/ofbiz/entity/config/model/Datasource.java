@@ -69,6 +69,7 @@ public final class Datasource {
     private final boolean useIndices;
     private final boolean useIndicesUnique;
     private final boolean checkIndicesOnStart;
+    private final boolean checkModifiedIndicesOnStart; // SCIPIO
     private final String joinStyle;
     private final boolean aliasViewColumns;
     private final boolean alwaysUseConstraintKeyword;
@@ -149,10 +150,8 @@ public final class Datasource {
         this.useFkInitiallyDeferred = "true".equals(getAttr(name, element, "use-fk-initially-deferred"));
         this.useIndices = !"false".equals(getAttr(name, element, "use-indices"));
         this.useIndicesUnique = !"false".equals(getAttr(name, element, "use-indices-unique"));
-        // SCIPIO: Override by startup flag
-
-
         this.checkIndicesOnStart = "true".equals(getAttr(name, element, "check-indices-on-start"));
+        this.checkModifiedIndicesOnStart = this.checkIndicesOnStart && !"false".equals(getAttr(name, element, "check-modified-indices-on-start"));
         String joinStyle = getAttr(name, element, "join-style");
         if (joinStyle.isEmpty()) {
             joinStyle = "ansi";
@@ -345,6 +344,14 @@ public final class Datasource {
     /** Returns the value of the <code>check-indices-on-start</code> attribute. */
     public boolean getCheckIndicesOnStart() {
         return this.checkIndicesOnStart;
+    }
+
+    /**
+     * Returns the value of the <code>check-modified-indices-on-start</code> attribute.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public boolean getCheckModifiedIndicesOnStart() {
+        return this.checkModifiedIndicesOnStart;
     }
 
     /** Returns the value of the <code>join-style</code> attribute. */

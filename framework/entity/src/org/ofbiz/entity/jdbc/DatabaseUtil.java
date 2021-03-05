@@ -42,9 +42,12 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntityConfException;
@@ -70,6 +73,9 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 public class DatabaseUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    // SCIPIO
+    private static final List<String> POSTGRES_FIELDTYPENAMES = UtilMisc.unmodifiableArrayList("postgres", "postnew");
+    private static final Pattern INDEX_FUNCTION_PAT = Pattern.compile("^(\\w+)\\((.+?)\\)$");
 
     // OFBiz Connections
     protected ModelFieldTypeReader modelFieldTypeReader = null;
@@ -666,6 +672,55 @@ public class DatabaseUtil {
                         String checkIndexName = needsUpperCase[0] ? relIndexName.toUpperCase() : relIndexName;
                         if (tableIndexList.contains(checkIndexName)) {
                             tableIndexList.remove(checkIndexName);
+
+                            // SCIPIO: 2.1.0: Check if any of the fields have changed; if so recreate index
+                            if (datasourceInfo.getCheckIndicesOnStart() && datasourceInfo.getCheckModifiedIndicesOnStart()) {
+                                // SPECIAL: skip the auto-generated TX field indexes because they should never change and create overhead
+                                if (!modelIndex.isAutoIndex()) {
+                                    ModelIndex dbIndex = readModelIndexFromDb(entity, modelIndex);
+                                    if (dbIndex == null) {
+                                        // Not be supported on all DBs
+                                        //Debug.logWarning("Could not read entity [" + entityName + "] index [" + modelIndex.getName() +
+                                        //        "] from db; cannot check for changes or recreate", module);
+                                    } else {
+                                        if (modelIndex.equalsDef(dbIndex)) {
+                                            if (Debug.verboseOn()) {
+                                                Debug.logVerbose("Index [" + dbIndex.getName() + "] for entity [" + entity.getEntityName() +
+                                                        "] unchanged in database; database index: " + dbIndex, module);
+                                            }
+                                        } else {
+                                            if (addMissing) {
+                                                Debug.logInfo("Index [" + dbIndex.getName() + "] for entity [" + entity.getEntityName() +
+                                                        "] changed in database; database index: " + dbIndex + "; new definition: " + modelIndex + "; deleting and recreating", module);
+                                                String deleteErrMsg = deleteDeclaredIndex(entity, modelIndex);
+                                                if (UtilValidate.isNotEmpty(deleteErrMsg)) {
+                                                    String message = "Could not delete index " + relIndexName + " for entity [" + entity.getEntityName() + "] for recreation: " + deleteErrMsg;
+                                                    Debug.logError(message, module);
+                                                    if (messages != null) messages.add(message);
+                                                } else {
+                                                    String errMsg = createDeclaredIndex(entity, modelIndex);
+                                                    if (UtilValidate.isNotEmpty(errMsg)) {
+                                                        String message = "Could not recreate index " + relIndexName + " for entity [" + entity.getEntityName() + "]: " + errMsg;
+                                                        Debug.logError(message, module);
+                                                        if (messages != null) messages.add(message);
+                                                    } else {
+                                                        String message = "Recreated index " + relIndexName + " for entity [" + entity.getEntityName() + "]";
+                                                        Debug.logVerbose(message, module);
+                                                        if (messages != null) messages.add(message);
+                                                        createdIndexes = true;
+                                                        numIndicesCreated++;
+                                                    }
+                                                }
+                                            } else {
+                                                if (Debug.verboseOn()) {
+                                                    Debug.logVerbose("Index [" + dbIndex.getName() + "] for entity [" + entity.getEntityName() +
+                                                            "] changed in database; database index: " + dbIndex + "; new definition: " + modelIndex + "; not updating", module);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         } else {
                             if (datasourceInfo.getCheckIndicesOnStart()) {
                                 // if not, create one
@@ -2507,6 +2562,115 @@ public class DatabaseUtil {
         return null;
     }
 
+    /**
+     * Attempts to build ModelIndex info from database definitions, currently only supports postgresql.
+     * SCIPIO: 2.1.0: Added for index checking at startup.
+     */
+    public ModelIndex readModelIndexFromDb(ModelEntity entity, ModelIndex modelIndex) {
+        if (getPostgresFieldTypeNames().contains(datasourceInfo.getFieldTypeName())) {
+            String tableName = entity.getPlainTableName(); //entity.getTableName(datasourceInfo);
+            String indexName = makeIndexName(modelIndex, datasourceInfo.getConstraintNameClipLength()); // FIXME
+            String readIndexSql = "SELECT indexdef FROM pg_indexes" +
+                    " WHERE LOWER(tablename) = '" + tableName.toLowerCase() + "' AND LOWER(indexname) = '" + indexName.toLowerCase() + "'";
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("[readModelIndexFromDb] index sql=" + readIndexSql, module);
+            }
+
+            boolean indexFound = false;
+            ModelIndex dbIndex = null;
+            String indexDef = null;
+            try (Connection connection = getConnection(); Statement stmt = connection.createStatement()) {
+                try(ResultSet resultSet = stmt.executeQuery(readIndexSql)) {
+                    if (resultSet.next()) {
+                        indexDef = resultSet.getString("indexdef");
+                        if (UtilValidate.isNotEmpty(indexDef)) {
+                            indexFound = true;
+                            String indexDefLower = indexDef.toLowerCase();
+                            boolean unique = indexDefLower.contains(" unique ");
+                            // FIXME: better parsing
+                            int fieldsStart = indexDef.indexOf('(');
+                            int fieldsEnd = indexDef.lastIndexOf(')');
+                            if (fieldsStart > 0 && fieldsEnd > 0 && fieldsStart < fieldsEnd) {
+                                String[] fieldDefs = indexDef.substring(fieldsStart + 1, fieldsEnd).split("\\s*,\\s*", fieldsStart);
+                                if (fieldDefs.length > 0) {
+                                    List<ModelIndex.Field> indexFields = new ArrayList<>();
+
+                                    for(String fieldDef : fieldDefs) {
+                                        String colName = fieldDef;
+                                        String functionName = null;
+                                        Matcher matcher = INDEX_FUNCTION_PAT.matcher(fieldDef);
+                                        if (matcher.matches()) {
+                                            functionName = matcher.group(1).toUpperCase();
+                                            colName = matcher.group(2);
+                                        }
+                                        colName = colName.toUpperCase();
+
+                                        ModelField modelField = entity.getFieldByColName(colName);
+                                        if (modelField == null) {
+                                            Debug.logError("Aborting entity [" + entity.getEntityName() + " index [" +
+                                                    indexName + "] change detection, may need manual deletion:" +
+                                                    " Index definition in db having column name [" + colName +
+                                                    "] cannot be mapped to entity field" +
+                                                    " for index definition:\n" + indexDef, module);
+                                            return null;
+                                        }
+
+                                        ModelIndex.Function function = null;
+                                        if (functionName != null) {
+                                            try {
+                                                function = ModelIndex.Function.valueOf(functionName);
+                                            } catch(IllegalArgumentException e) {
+                                                Debug.logError("Aborting entity [" + entity.getEntityName() + " index [" +
+                                                        indexName + "] change detection, may need manual deletion:" +
+                                                        " Index definition in db having column name [" + colName +
+                                                        "] with function [" + functionName + "] cannot be mapped to a recognized function" +
+                                                        " for index definition:\n" + indexDef, module);
+                                                return null;
+                                            }
+                                        }
+
+                                        indexFields.add(new ModelIndex.Field(modelField.getName(), function));
+                                    }
+
+                                    // SPECIAL: ensure there isn't more than one record, otherwise this is ambiguous
+                                    if (resultSet.next()) {
+                                        Debug.logError("Aborting entity [" + entity.getEntityName() + " index [" +
+                                                indexName + "] change detection, may need manual deletion:" +
+                                                " more than one index was returned for index definition:\n" + indexDef +
+                                                " using query:\n" + readIndexSql, module);
+                                        return null;
+                                    }
+                                    dbIndex = ModelIndex.create(entity, modelIndex.getDescription(), modelIndex.getName(), indexFields, unique);
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                String errMsg = "SQL Exception while executing the following:\n" + readIndexSql + "\nError was: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return null;
+            } catch (GenericEntityException e) {
+                String errMsg = "Unable to establish a connection with the database for helperName [" + this.helperInfo.getHelperFullName() + "]... Error was: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                return null;
+            }
+            if (!indexFound) {
+                Debug.logWarning("Missing index definition for entity [" + entity.getEntityName() + "] using query:\n" + readIndexSql, module);
+            } else if (dbIndex == null) {
+                Debug.logWarning("Unsupported index definition for entity [" + entity.getEntityName() + "] using query:\n" +
+                        readIndexSql + "\nRetrieved index definition:\n" + indexDef, module);
+            } else {
+                // Caller
+                //if (Debug.infoOn()) {
+                //    Debug.logInfo("Read ModelIndex for entity [" + entity.getEntityName() + "] from DB: [" + dbIndex + "] using query: " + readIndexSql, module);
+                //}
+            }
+            return dbIndex;
+        }
+        return null;
+    }
+
     /* ====================================================================== */
     /* ====================================================================== */
     public int createForeignKeyIndices(ModelEntity entity, List<String> messages) {
@@ -2695,6 +2859,10 @@ public class DatabaseUtil {
             }
         }
         return null;
+    }
+
+    public List<String> getPostgresFieldTypeNames() { // SCIPIO
+        return POSTGRES_FIELDTYPENAMES;
     }
 
     /* ====================================================================== */

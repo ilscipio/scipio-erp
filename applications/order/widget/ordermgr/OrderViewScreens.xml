@@ -539,7 +539,8 @@ code package.
                 <set field="title" value="${uiLabelMap.OrderShipmentInformation} ${orderId}"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderView.groovy"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/order/OrderViewWebSecure.groovy"/>
-                <set field="layoutSettings.javaScripts[]" value="/ordermgr-js/OrderShippingInfo.js" global="true"/>
+                <set field="layoutSettings.javaScriptsFooter[]" value="/ordermgr-js/OrderShippingInfo.js" global="true"/>
+                <set field="layoutSettings.javaScriptsFooter[]" value="/ordermgr-js/geoAutoCompleter.js" global="true"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderDecorator" location="${parameters.mainDecoratorLocation}">

@@ -3,7 +3,6 @@ This file is subject to the terms and conditions defined in the
 files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
-
 <#if shipGroups?has_content && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
   <#-- New in Ofbiz 14.12 -->
   <#if parameters.view?has_content && parameters.view == "OISGA">

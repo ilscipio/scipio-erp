@@ -435,7 +435,8 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         context.put("screens", screens);
 
         // make a reference for high level variables, a global context
-        context.put("globalContext", context.standAloneStack());
+        Map<String, Object> globalContext = context.standAloneStack();
+        context.put("globalContext", globalContext);
 
         // make sure the "nullField" object is in there for entity ops; note this is nullField and not null because as null causes problems in FreeMarker and such...
         context.put("nullField", GenericEntity.NULL_FIELD);
@@ -453,6 +454,8 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error while getting user preferences: ", module);
         }
+
+        globalContext.put("uiLabelMap", UtilProperties.getGlobalResourceBundleMap(locale, context)); // SCIPIO: 2.1.0: Now include global uiLabelMap as base
     }
 
     /**

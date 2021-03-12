@@ -667,6 +667,14 @@ public class MapContext<K, V> implements Map<K, V>, LocalizedMap<V> {
     }
 
     /**
+     * Returns the internal stack list, mainly for implementations.
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
+     */
+    public List<Map<K, V>> getStackList() {
+        return stackList;
+    }
+
+    /**
      * SCIPIO: Event handler for MapContext calls.
      * Added 2019-05-29.
      */

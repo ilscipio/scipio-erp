@@ -75,6 +75,7 @@ public class LabelFile {
     }
 
     public Map<String, Map<String, String>> getStaticPropertyMap() {
+        // FIXME: this should now use UtilProperties.ResourceBundleProperties.from()
         Map<String, Map<String, String>> staticPropertyMap = this.staticPropertyMap;
         if (staticPropertyMap == null) {
             try {

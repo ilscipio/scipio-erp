@@ -19,7 +19,7 @@
     under the License.
 -->
 
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" global="false">
     <property key="QRTypeNotSupported">
         <value xml:lang="de">Der QRCode-Typ {0} wird nicht unterstützt!</value>
         <value xml:lang="en">The QRCode type {0} is not supported!</value>

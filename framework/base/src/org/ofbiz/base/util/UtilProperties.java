@@ -19,6 +19,7 @@
 package org.ofbiz.base.util;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +41,6 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -54,6 +54,7 @@ import java.util.regex.Pattern;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
@@ -81,6 +82,12 @@ import org.w3c.dom.Element;
 public final class UtilProperties implements Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    /**
+     * Virtual name of global resource bundle/label property file.
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
+     */
+    public static final String GLOBAL_RESOURCE = "global";
 
     private UtilProperties() {}
 
@@ -1041,10 +1048,22 @@ public final class UtilProperties implements Serializable {
         return getMessage(resource, name, locale, false);
     }
 
+    /** Returns the value of the specified property name from the global
+     *  resource/properties file corresponding to the given locale.
+     *
+     * @param name The name of the property in the properties file
+     * @param locale The locale that the given resource will correspond to
+     * @return The value of the property in the properties file
+     */
+    public static String getMessage(String name, Locale locale) {
+        return getMessage(null, name, locale, false);
+    }
+
     /** Returns the value of the specified property name from the specified
      *  resource/properties file corresponding to the given locale.
-     * <p>
-     * SCIPIO: Version that guarantees there be no trim() operation.
+     *
+     * <p>SCIPIO: 1.x.x: Version that guarantees there be no trim() operation.</p>
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
      *
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
@@ -1053,55 +1072,43 @@ public final class UtilProperties implements Serializable {
      * @return The value of the property in the properties file
      */
     public static String getMessageNoTrim(String resource, String name, Locale locale, boolean optional) {
-        if (UtilValidate.isEmpty(resource)) {
-            return "";
-        }
+        // SCIPIO: Fall back to global map
+        //if (UtilValidate.isEmpty(resource)) {
+        //    return "";
+        //}
         if (UtilValidate.isEmpty(name)) {
             return "";
         }
-
         if (locale == null) {
             // SCIPIO: 2018-11-13: getResourceBundle throws exception if locale null.
             // Locale should always be specified so it is an error, but we can log instead of crashing.
             locale = Locale.getDefault();
-            Debug.logWarning("getMessage: locale (required) is null; using default (" + locale + "); label: " 
-                    + resource + "#" + name, module);
+            Debug.logWarning("getMessage: locale (required) is null; using default [" + locale + "] for label ["
+                    + (UtilValidate.isNotEmpty(resource) ? resource : GLOBAL_RESOURCE) + "#" + name + "]", module);
         }
 
+        // SCIPIO: NOTE: getResourceBundle automatically returns the global bundle for us here.
         ResourceBundle bundle = getResourceBundle(resource, locale);
-
         if (bundle == null) {
             return optional ? "" : name;
         }
-
-        /* SCIPIO: This is poor use of ResourceBundle interface - use the exceptions instead
-        String value = null;
-        if (bundle.containsKey(name)) {
-            value = bundle.getString(name);
-        } else {
-            if (optional) { // SCIPIO
-                return "";
-            }
-            Debug.logInfo(name + " misses in " + resource + " for locale " + locale, module);
-            return name;
-        }
-        return value == null ? name : value;
-        */
         try {
             return bundle.getString(name);
         } catch(MissingResourceException e) {
             if (optional) {
                 return "";
             }
-            Debug.logInfo(name + " misses in " + resource + " for locale " + locale, module);
+            Debug.logInfo("Property [" +  (UtilValidate.isNotEmpty(resource) ? resource : GLOBAL_RESOURCE) +
+                    "#" + name + "] for locale [" + locale + "]", module);
             return name;
         }
     }
 
     /** Returns the value of the specified property name from the specified
      *  resource/properties file corresponding to the given locale.
-     * <p>
-     * SCIPIO: Version that guarantees there be no trim() operation.
+     *
+     * <p>SCIPIO: 1.x.x: Version that guarantees there be no trim() operation.</p>
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
      *
      * @param resource The name of the resource - can be a file, class, or URL
      * @param name The name of the property in the properties file
@@ -1110,6 +1117,20 @@ public final class UtilProperties implements Serializable {
      */
     public static String getMessageNoTrim(String resource, String name, Locale locale) {
         return getMessageNoTrim(resource, name, locale, false); // SCIPIO: delegate
+    }
+
+    /** Returns the value of the specified property name from the global
+     *  resource/properties file corresponding to the given locale.
+     *
+     * <p>SCIPIO: 1.x.x: Version that guarantees there be no trim() operation.</p>
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
+     *
+     * @param name The name of the property in the properties file
+     * @param locale The locale that the given resource will correspond to
+     * @return The value of the property in the properties file
+     */
+    public static String getMessageNoTrim(String name, Locale locale) {
+        return getMessageNoTrim(null, name, locale, false);
     }
 
     /** Returns the value of the specified property name from the specified resource/properties file corresponding
@@ -1299,21 +1320,35 @@ public final class UtilProperties implements Serializable {
     }
 
     private static Set<String> resourceNotFoundMessagesShown = new HashSet<>();
+
     /** Returns the specified resource/properties file as a ResourceBundle
-     * SCIPIO: 2018-11-29: Added optional support.
+     * <p>SCIPIO: 2018-11-29: Added optional support.</p>
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
      * @param resource The name of the resource - can be a file, class, or URL
      * @param locale The locale that the given resource will correspond to
      * @param optional (SCIPIO) If true, no error if missing and generates empty instead (default is usually false)
      * @return The ResourceBundle
      */
     public static ResourceBundle getResourceBundle(String resource, Locale locale, boolean optional) {
-        if (UtilValidate.isEmpty(resource)) {
-            throw new IllegalArgumentException("resource cannot be null or empty");
-        }
+        // SCIPIO: May now be null for global
+        //if (UtilValidate.isEmpty(resource)) {
+        //    throw new IllegalArgumentException("resource cannot be null or empty");
+        //}
         if (locale == null) {
             throw new IllegalArgumentException("locale cannot be null");
         }
-        ResourceBundle bundle = null;
+
+        // SCIPIO: Check if the Global map suffices first - allows hot-deploy applications to override framework labels
+        GlobalResourceBundle globalBundle = (GlobalResourceBundle) getGlobalResourceBundle(locale);
+        if (UtilValidate.isEmpty(resource) || GLOBAL_RESOURCE.equals(resource)) {
+            return globalBundle;
+        }
+        resource = normResourceName(resource);
+        if (globalBundle.hasResource(resource)) {
+            return globalBundle;
+        }
+
+        ResourceBundle bundle;
         try {
             bundle = UtilResourceBundle.getBundle(resource, locale, (ClassLoader) null, optional); // SCIPIO: optional
         } catch (MissingResourceException e) {
@@ -1370,6 +1405,29 @@ public final class UtilProperties implements Serializable {
         return new ResourceBundleMapWrapper(getResourceBundle(resource, locale, optional), context);
     }
 
+    /** Returns the global resource/properties of all combined global="true" config/*Labels.xml files as a ResourceBundle.
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
+     * @param locale The locale that the given resource will correspond to
+     * @return The ResourceBundle
+     */
+    public static ResourceBundle getGlobalResourceBundle(Locale locale) {
+        if (locale == null) {
+            throw new IllegalArgumentException("locale cannot be null");
+        }
+        return GlobalResourceBundle.getGlobalBundle(locale, (ClassLoader) null, true);
+    }
+
+    /** Returns the global resource/properties file as a Map with the original
+     *  ResourceBundle in the Map under the key _RESOURCE_BUNDLE_
+     *  <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
+     * @param locale The locale that the given resource will correspond to
+     * @param context The screen rendering context
+     * @return Map containing all entries in The ResourceBundle
+     */
+    public static ResourceBundleMapWrapper getGlobalResourceBundleMap(Locale locale, Map<String, Object> context) {
+        return new ResourceBundleMapWrapper(getGlobalResourceBundle(locale), context);
+    }
+
     /** Returns the specified resource/properties file.<p>Note that this method
      * will return a Properties instance for the specified locale <em>only</em> -
      * if you need <a href="http://www.w3.org/International/">I18n</a> properties, then use
@@ -1403,7 +1461,7 @@ public final class UtilProperties implements Serializable {
         }
         if (UtilValidate.isNotEmpty(properties)) {
             if (Debug.verboseOn()) {
-                Debug.logVerbose("Loaded " + properties.size() + " properties for: " + resource + " (" + locale + ")", module);
+                Debug.logVerbose("getProperties: Loaded [" + properties.size() + "] properties for resource [" + resource + "] locale [" + locale + "]", module);
             }
         }
         return properties;
@@ -1445,7 +1503,7 @@ public final class UtilProperties implements Serializable {
      * @return A list of candidate locales.
      */
     public static List<Locale> localeToCandidateList(Locale locale) {
-        List<Locale> localeList = new LinkedList<>();
+        List<Locale> localeList = new ArrayList<>(); // SCIPIO: ArrayList
         localeList.add(locale);
         String localeString = locale.toString();
         int pos = localeString.lastIndexOf("_", localeString.length());
@@ -1524,6 +1582,22 @@ public final class UtilProperties implements Serializable {
             }
         }
         return resourceName;
+    }
+
+    public static String normResourceName(String resource) { // SCIPIO
+        if (resource == null) {
+            return null;
+        } else if (resource.endsWith(".xml")) {
+            return resource.substring(0, resource.length() - ".xml".length());
+        } else if (resource.endsWith(".properties")) {
+            return resource.substring(0, resource.length() - ".properties".length());
+        } else {
+            return resource;
+        }
+    }
+
+    public static String normResourceName(URL resourceURL) { // SCIPIO
+        return normResourceName(PathUtil.getFileNameFromPath(resourceURL.toString()));
     }
 
     public static boolean isPropertiesResourceNotFound(String resource, Locale locale, boolean removeExtension) {
@@ -1633,6 +1707,7 @@ public final class UtilProperties implements Serializable {
      * Convert XML property file to Properties instance. This method will convert
      * both the Java XML properties file format and the OFBiz custom XML
      * properties file format.
+     * @deprecated SCIPIO: 2.1.0: Use {@link ResourceBundleProperties#from(String, URL, InputStream)}
      *
      * <p>The format of the custom XML properties file is:</p>
      * <pre>
@@ -1652,64 +1727,190 @@ public final class UtilProperties implements Serializable {
      * @param in XML file InputStream
      * @param locale The desired locale
      * @param properties Optional Properties object to populate
-     * @return Properties instance or null if not found
+     * @return PropertyDefs instance or null if not found
      */
+    @Deprecated
     public static Properties xmlToProperties(InputStream in, Locale locale, Properties properties) throws IOException, InvalidPropertiesFormatException {
         if (in == null) {
             throw new IllegalArgumentException("InputStream cannot be null");
         }
-        Document doc = null;
-        try {
-            doc = UtilXml.readXmlDocument(in, true, "XML Properties file");
-            in.close();
-        } catch (Exception e) {
-            Debug.logWarning(e, "XML file for locale " + locale + " could not be loaded.", module);
-            in.close();
+        ResourceBundleProperties rbp = ResourceBundleProperties.from("unknown", null, in);
+        if (rbp == null) {
             return null;
         }
-        Element resourceElement = doc.getDocumentElement();
-        List<? extends Element> propertyList = UtilXml.childElementList(resourceElement, "property");
-        if (UtilValidate.isNotEmpty(propertyList)) {
-            // Custom XML properties file format
-            if (locale == null) {
-                throw new IllegalArgumentException("locale cannot be null");
-            }
-            String localeString = locale.toString();
-            String correctedLocaleString = localeString.replace('_','-');
-            for (Element property : propertyList) {
-                // Support old way of specifying xml:lang value.
-                // Old way: en_AU, new way: en-AU
-                Element value = UtilXml.firstChildElement(property, "value", "xml:lang", correctedLocaleString);
-                if( value == null ) {
-                    value = UtilXml.firstChildElement(property, "value", "xml:lang", localeString);
-                }
-                if (value != null) {
-                    if (properties == null) {
-                        properties = new Properties();
-                    }
-                    String valueString = UtilXml.elementValue(value);
-                    if (valueString != null) {
-                        properties.put(property.getAttribute("key"), valueString);
-                    }
-                }
-            }
-            return properties;
+        Properties props = rbp.getProperties(locale);
+        if (properties == null) {
+            // TODO: REVIEW: does this need a copy?
+            //return props;
+            properties = new Properties();
         }
-        propertyList = UtilXml.childElementList(resourceElement, "entry");
-        if (UtilValidate.isEmpty(propertyList)) {
-            throw new InvalidPropertiesFormatException("XML properties file invalid or empty");
-        }
-        // Java XML properties file format
-        for (Element property : propertyList) {
-            String value = UtilXml.elementValue(property);
-            if (value != null) {
-                if (properties == null) {
-                    properties = new Properties();
-                }
-                properties.put(property.getAttribute("key"), value);
-            }
-        }
+        properties.putAll(props);
         return properties;
+    }
+
+    /**
+     * Represents a full *Labels.xml with raw properties for all languages, with temporary cache to minimize file loads.
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
+     */
+    public static class ResourceBundleProperties implements Serializable {
+        /**
+         * ResourceBundleProperties cache.
+         * <p>NOTE: Recommended to set expireTime in cache.properties otherwise wastes memory if persisted.</p>
+         */
+        private static final UtilCache<String, ResourceBundleProperties> rbpCache = UtilCache.createUtilCache("properties.ResourceBundlePropertiesCache");
+
+        protected final String resource;
+        protected final URL resourceURL;
+        protected final Properties entryProperties;
+        protected final Map<String, Properties> localeProperties;
+        protected final Boolean globalLoad;
+
+        protected ResourceBundleProperties(String resource, URL resourceURL, Properties entryProperties, Map<String, Properties> localeProperties, Boolean globalLoad) {
+            this.resource = resource;
+            this.resourceURL = resourceURL;
+            this.entryProperties = entryProperties;
+            this.localeProperties = localeProperties;
+            this.globalLoad = globalLoad;
+        }
+
+        public static ResourceBundleProperties from(String resource, URL resourceURL, boolean useCache, boolean log) {
+            resource = normResourceName(resource);
+            ResourceBundleProperties rbp;
+            if (useCache) {
+                String cacheKey = resource;
+                rbp = rbpCache.get(cacheKey);
+                if (rbp == null) {
+                    rbp = from(resource, resourceURL, null, log);
+                    if (rbp != null) {
+                        rbp = rbpCache.putIfAbsentAndGet(cacheKey, rbp);
+                    }
+                }
+            } else {
+                rbp = from(resource, resourceURL, null, log);
+            }
+            return rbp;
+        }
+
+        public static ResourceBundleProperties from(String resource, URL resourceURL, boolean useCache) {
+            return from(resource, resourceURL, useCache, true);
+        }
+
+        public static ResourceBundleProperties from(String resource, URL resourceURL, InputStream in, boolean log) {
+            try {
+                resource = normResourceName(resource);
+                Properties entryProperties = new Properties();
+                int locPropCount = 0;
+                Map<String, Properties> localeProperties = new LinkedHashMap<>();
+                if (in == null) {
+                    try {
+                        in = new BufferedInputStream(resourceURL.openStream());
+                    } catch (IOException e) {
+                        Debug.logError("XML file for resource [" + resource + "] url [" +
+                                resourceURL + "] could not be loaded: " + e.toString(), module);
+                    }
+                }
+                Document doc;
+                try {
+                    doc = UtilXml.readXmlDocument(in, true, "XML Properties file");
+                } catch (Exception e) {
+                    Debug.logError("XML file for resource [" + resource + "] could not be loaded: " + e.toString(), module);
+                    return null;
+                }
+                Element resourceElement = doc.getDocumentElement();
+
+                // Custom XML properties file format
+                List<? extends Element> propertyElemList = UtilXml.childElementList(resourceElement, "property");
+                if (propertyElemList != null) {
+                    for (Element propertyElem : propertyElemList) {
+                        List<? extends Element> valueElemList = UtilXml.childElementList(propertyElem, "value");
+                        if (valueElemList != null) {
+                            for(Element valueElem : valueElemList) {
+                                String value = UtilXml.elementValue(valueElem);
+                                if (value != null) {
+                                    String name = propertyElem.getAttribute("key");
+                                    String localeString = valueElem.getAttribute("xml:lang");
+                                    if (localeString.isEmpty()) {
+                                        entryProperties.put(name, value);
+                                    } else {
+                                        localeString = localeString.replace('_','-');
+                                        Properties properties = localeProperties.get(localeString);
+                                        if (properties == null) {
+                                            properties = new Properties();
+                                            localeProperties.put(localeString, properties);
+                                        }
+                                        properties.put(name, value);
+                                        locPropCount++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Java XML properties file format
+                propertyElemList = UtilXml.childElementList(resourceElement, "entry");
+                if (propertyElemList != null) {
+                    for (Element propertyElem : propertyElemList) {
+                        String value = UtilXml.elementValue(propertyElem);
+                        if (value != null) {
+                            String name = propertyElem.getAttribute("key");
+                            entryProperties.put(name, value);
+                        }
+                    }
+                }
+                if (log && Debug.infoOn()) {
+                    int propCount = entryProperties.size() + locPropCount;
+                    Debug.logInfo("ResourceBundleProperties: Loaded resource [" + resource + "]" +
+                            ((Debug.verboseOn() && resourceURL != null) ? " url [" + resourceURL + "]" : "") + "; " +
+                            localeProperties.size() + " locales, " +
+                            propCount + " properties (" +
+                            entryProperties.size() + " regular, " +
+                            locPropCount + " localized)", module);
+                }
+                return new ResourceBundleProperties(resource, resourceURL, entryProperties, localeProperties,
+                        UtilMisc.booleanValue(resourceElement.getAttribute("global")));
+            } finally {
+                if (in != null) {
+                    try {
+                        in.close();
+                    } catch (IOException e) {
+                        Debug.logError(e.toString(), module);
+                    }
+                }
+            }
+        }
+
+        public static ResourceBundleProperties from(String resource, URL resourceURL, InputStream in) {
+            return from(resource, resourceURL, in, true);
+        }
+
+        public String getResource() {
+            return resource;
+        }
+
+        public URL getResourceURL() {
+            return resourceURL;
+        }
+
+        public Properties getEntryProperties() {
+            return entryProperties;
+        }
+
+        public Map<String, Properties> getLocaleProperties() {
+            return localeProperties;
+        }
+
+        public Properties getProperties(String locale) {
+            return getLocaleProperties().get(locale);
+        }
+
+        public Properties getProperties(Locale locale) {
+            return getProperties(locale.toString());
+        }
+
+        public Boolean getGlobalLoad() {
+            return globalLoad;
+        }
     }
 
     /** Returns map of resource names to maps of locales to text values, all locales (SCIPIO). */
@@ -2565,16 +2766,16 @@ public final class UtilProperties implements Serializable {
     /** Custom ResourceBundle class. This class extends ResourceBundle
      * to add custom bundle caching code and support for the OFBiz custom XML
      * properties file format.
+     * <p>SCIPIO: 2.1.0: Updated for global label namespace support.</p>
      */
     public static class UtilResourceBundle extends ResourceBundle {
         private static final UtilCache<String, UtilResourceBundle> bundleCache = UtilCache.createUtilCache("properties.UtilPropertiesBundleCache");
-        protected Properties properties = null;
-        protected Locale locale = null;
-        protected int hashCode = hashCode();
+        protected final Properties properties;
+        protected final Locale locale;
+        protected final int hashCode;
+        protected final Set<String> resources; // SCIPIO
 
-        protected UtilResourceBundle() {}
-
-        public UtilResourceBundle(Properties properties, Locale locale, UtilResourceBundle parent) {
+        public UtilResourceBundle(Properties properties, Locale locale, UtilResourceBundle parent, Set<String> resources) {
             this.properties = properties;
             this.locale = locale;
             setParent(parent);
@@ -2583,28 +2784,33 @@ public final class UtilProperties implements Serializable {
                 hashString += parent.properties;
             }
             this.hashCode = hashString.hashCode();
+            this.resources = (resources != null) ? resources : Collections.emptySet();
         }
 
         /**
          * Gets bundle.
-         * <p>
-         * SCIPIO: 2018-11-29: Added optional (usually default false).
+         * <p>SCIPIO: 2018-11-29: Added optional (usually default false).</p>
+         * <p>SCIPIO: 2.1.0: Added useCache (default true).</p>
          */
-        public static ResourceBundle getBundle(String resource, Locale locale, ClassLoader loader, boolean optional) throws MissingResourceException {
+        public static UtilResourceBundle getBundle(String resource, Locale locale, ClassLoader loader, boolean optional, boolean useCache, boolean log) throws MissingResourceException {
             String resourceName = createResourceName(resource, locale, true);
             String origResourceName = null;
-            UtilResourceBundle bundle = bundleCache.get(resourceName);
+            UtilResourceBundle bundle = useCache ? bundleCache.get(resourceName) : null;
             if (bundle == null) {
+                Set<String> resources = UtilMisc.toSet(normResourceName(resource)); // SCIPIO
                 // SCIPIO: 2018-10-02: Handle alias case
                 String realResource = ResourceNameAliases.getSubstituteResourceNameAliasOrNull(resource);
                 if (realResource != null) {
                     origResourceName = resourceName;
                     resource = realResource;
                     resourceName = createResourceName(resource, locale, true);
-                    bundle = bundleCache.get(resourceName);
-                    if (bundle != null) {
-                        return bundle;
+                    if (useCache) {
+                        bundle = bundleCache.get(resourceName);
+                        if (bundle != null) {
+                            return bundle;
+                        }
                     }
+                    resources.add(normResourceName(realResource));
                 }
                 double startTime = System.currentTimeMillis();
                 List<Locale> candidateLocales = getCandidateLocales(locale);
@@ -2614,14 +2820,18 @@ public final class UtilProperties implements Serializable {
                     Locale candidateLocale = candidateLocales.remove(candidateLocales.size() - 1);
                     // ResourceBundles are connected together as a singly-linked list
                     String lookupName = createResourceName(resource, candidateLocale, true);
-                    UtilResourceBundle lookupBundle = bundleCache.get(lookupName);
+                    UtilResourceBundle lookupBundle = useCache ? bundleCache.get(lookupName) : null;
                     if (lookupBundle == null) {
                         Properties newProps = getProperties(resource, candidateLocale);
-                        if (UtilValidate.isNotEmpty(newProps)) {
+                        // SCIPIO: Allow empty properties file, but not null, to prevent issues with temporarily commented out files
+                        //if (UtilValidate.isNotEmpty(newProps)) {
+                        if (newProps != null) {
                             // The last bundle we found becomes the parent of the new bundle
                             parentBundle = bundle;
-                            bundle = new UtilResourceBundle(newProps, candidateLocale, parentBundle);
-                            bundleCache.putIfAbsent(lookupName, bundle);
+                            bundle = new UtilResourceBundle(newProps, candidateLocale, parentBundle, resources);
+                            if (useCache) {
+                                bundleCache.putIfAbsent(lookupName, bundle);
+                            }
                             numProperties = newProps.size();
                         }
                     } else {
@@ -2632,32 +2842,40 @@ public final class UtilProperties implements Serializable {
                 if (bundle == null) {
                     if (optional) {
                         // SCIPIO: optional; create dummy bundle in cache to prevent further lookups
-                        Debug.logInfo("Optional resource " + resource + ", locale " + locale + " not found", module);
-                        bundle = new UtilResourceBundle(new ExtendedProperties(), locale, parentBundle);
+                        if (log && Debug.infoOn()) {
+                            Debug.logInfo("Optional resource [" + resource + "] locale [" + locale + "] not found", module);
+                        }
+                        bundle = new UtilResourceBundle(new ExtendedProperties(), locale, parentBundle, resources);
                     } else {
-                        throw new MissingResourceException("Resource " + resource + ", locale " + locale + " not found", null, null);
+                        throw new MissingResourceException("Resource [" + resource + "] locale [" + locale + "] not found", null, null);
                     }
                 } else if (!bundle.getLocale().equals(locale)) {
                     // Create a "dummy" bundle for the requested locale
-                    bundle = new UtilResourceBundle(bundle.properties, locale, parentBundle);
+                    bundle = new UtilResourceBundle(bundle.properties, locale, parentBundle, resources);
                 }
                 double totalTime = System.currentTimeMillis() - startTime;
-                if (Debug.infoOn()) {
+                if (log && Debug.infoOn()) {
                     Debug.logInfo("ResourceBundle " + resource + " (" + locale + ") created in " + totalTime / 1000.0 + "s with "
                             + numProperties + " properties", module);
                 }
-                // SCIPIO: don't putIfAbsent because need both names to point to same bundle, not a serious issue anyway
-                //bundleCache.putIfAbsent(resourceName, bundle);
-                bundleCache.put(resourceName, bundle);
-                if (origResourceName != null) { // SCIPIO: also put the bundle under the alias (faster lookup) - TODO: REVIEW: always safe? looks like it
-                    bundleCache.put(origResourceName, bundle);
+                if (useCache) {
+                    // SCIPIO: don't putIfAbsent because need both names to point to same bundle, not a serious issue anyway
+                    //bundleCache.putIfAbsent(resourceName, bundle);
+                    bundleCache.put(resourceName, bundle);
+                    if (origResourceName != null) { // SCIPIO: also put the bundle under the alias (faster lookup) - TODO: REVIEW: always safe? looks like it
+                        bundleCache.put(origResourceName, bundle);
+                    }
                 }
             }
             return bundle;
         }
 
-        public static ResourceBundle getBundle(String resource, Locale locale, ClassLoader loader) throws MissingResourceException {
-            return getBundle(resource, locale, loader, false);
+        public static UtilResourceBundle getBundle(String resource, Locale locale, ClassLoader loader, boolean optional) throws MissingResourceException {
+            return getBundle(resource, locale, loader, optional, true, true);
+        }
+
+        public static UtilResourceBundle getBundle(String resource, Locale locale, ClassLoader loader) throws MissingResourceException {
+            return getBundle(resource, locale, loader, false, true, true);
         }
 
         /**
@@ -2717,6 +2935,142 @@ public final class UtilProperties implements Serializable {
             };
         }
 
+        public Properties getPropertiesObj() { // SCIPIO
+            return properties;
+        }
+
+        public Set<String> getResources() { // SCIPIO
+            return resources;
+        }
+
+        public boolean hasResource(String resource) { // SCIPIO
+            return getResources().contains(resource);
+        }
+
+        public Boolean getGlobalLoad() { // SCIPIO
+            Properties properties = getPropertiesObj();
+            return (properties instanceof ExtendedProperties) ? ((ExtendedProperties) properties).getGlobalLoad() : null;
+        }
+    }
+
+    /**
+     * Global resource/properties of all combined global="true" config/*Labels.xml files as a ResourceBundle.
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
+     */
+    public static class GlobalResourceBundle extends UtilResourceBundle {
+        private static final UtilCache<String, GlobalResourceBundle> globalBundleCache = UtilCache.createUtilCache("properties.GlobalPropertiesBundleCache");
+
+        public GlobalResourceBundle(Properties properties, Locale locale, UtilResourceBundle parent, Set<String> resources) {
+            super(properties, locale, parent, resources);
+        }
+
+        public static ResourceBundle getGlobalBundle(Locale locale, ClassLoader loader, boolean useCache, boolean log) {
+            String cacheKey = useCache ? locale.toString() : null;
+            GlobalResourceBundle bundle = useCache ? globalBundleCache.get(cacheKey) : null;
+            if (bundle == null) {
+                double startTime = System.currentTimeMillis();
+                Properties properties = new ExtendedProperties(locale, null);
+
+                Map<String, URL> resources = new LinkedHashMap<>();
+                for(URL resourceURL : ComponentConfig.getAllComponentsRootResourceFileURLs((dir, name) -> name.endsWith("Labels.xml"))) {
+                    String resource = StringUtil.removeSuffix(new File(resourceURL.toString()).getName(), ".xml");
+                    resources.put(resource, resourceURL);
+                }
+
+                Map<String, URL> excludedResources = new LinkedHashMap<>();
+                Map<String, URL> invalidResources = new LinkedHashMap<>();
+                for(Map.Entry<String, URL> resourceEntry : resources.entrySet()) {
+                    String resource = resourceEntry.getKey();
+                    URL resourceURL = resourceEntry.getValue();
+                    UtilResourceBundle utilResourceBundle;
+                    try {
+                        utilResourceBundle = UtilResourceBundle.getBundle(resource, locale, loader, false, useCache, log && Debug.verboseOn());
+                    } catch(MissingResourceException e) {
+                        Debug.logError("GlobalResourceBundle (" + locale + "): Missing or invalid label resource [" + resource + "]: " + e.toString(), module);
+                        invalidResources.put(resource, resourceURL);
+                        continue;
+                    }
+                    if (Boolean.FALSE.equals(utilResourceBundle.getGlobalLoad())) {
+                        excludedResources.put(resource, resourceURL);
+                        continue;
+                    }
+
+                    for(String name : utilResourceBundle.keySet()) {
+                        Object value = utilResourceBundle.getObject(name);
+                        Object prevValue = properties.getProperty(name);
+                        if (log && prevValue != null) {
+                            if (!prevValue.equals(value)) {
+                                Debug.logWarning("GlobalResourceBundle (" + locale + "): Duplicate differing property [" + name + "] detected in resource [" +
+                                        resource + "] [" + resourceURL + "]", module);
+                            } else if (Debug.verboseOn()) {
+                                Debug.logWarning("GlobalResourceBundle (" + locale + "): Duplicate identical property [" + name + "] detected in resource [" +
+                                        resource + "] [" + resourceURL + "]", module);
+                            }
+                        }
+                        properties.put(name, value);
+                    }
+                }
+                for(String badResource : invalidResources.keySet()) {
+                    resources.remove(badResource);
+                }
+                for(String excludedResource : excludedResources.keySet()) {
+                    resources.remove(excludedResource);
+                }
+
+                bundle = new GlobalResourceBundle(properties, locale, null, new LinkedHashSet<>(resources.keySet()));
+                double totalTime = System.currentTimeMillis() - startTime;
+                if (log && Debug.infoOn()) {
+                    StringBuilder sb = new StringBuilder();
+                    if (Debug.verboseOn()) {
+                        for (Map.Entry<String, URL> resourceEntry : resources.entrySet()) {
+                            sb.append("\n");
+                            sb.append(resourceEntry.getKey());
+                            sb.append("=");
+                            sb.append(resourceEntry.getValue());
+                        }
+                        sb.append("\nexcluded resources: ");
+                        for (Map.Entry<String, URL> resourceEntry : excludedResources.entrySet()) {
+                            sb.append("\n");
+                            sb.append(resourceEntry.getKey());
+                            sb.append("=");
+                            sb.append(resourceEntry.getValue());
+                        }
+                        sb.append(")");
+                        sb.append("\ninvalid resources: ");
+                        for (Map.Entry<String, URL> resourceEntry : invalidResources.entrySet()) {
+                            sb.append("\n");
+                            sb.append(resourceEntry.getKey());
+                            sb.append("=");
+                            sb.append(resourceEntry.getValue());
+                        }
+                        sb.append(")");
+                    } else {
+                        sb.append(resources.keySet());
+                        sb.append(" (excluded: ");
+                        sb.append(excludedResources.keySet());
+                        sb.append(")");
+                        sb.append(" (invalid: ");
+                        sb.append(invalidResources.keySet());
+                        sb.append(")");
+                    }
+                    Debug.logInfo("GlobalResourceBundle (" + locale + ") created in " + totalTime / 1000.0 + "s with "
+                            + properties.size() + " properties; component resources: " + sb, module);
+                }
+                if (useCache) {
+                    globalBundleCache.put(cacheKey, bundle);
+                }
+            }
+            return bundle;
+        }
+
+        public static ResourceBundle getGlobalBundle(Locale locale, ClassLoader loader, boolean useCache) {
+            return getGlobalBundle(locale, loader, useCache, true);
+        }
+
+        @Override
+        public boolean hasResource(String resource) {
+            return GLOBAL_RESOURCE.equals(resource) || super.hasResource(resource);
+        }
     }
 
     /** Custom Properties class. Extended from Properties to add support
@@ -2727,28 +3081,47 @@ public final class UtilProperties implements Serializable {
 
         private final URL url; // SCIPIO
         private final Locale locale; // SCIPIO
+        private Boolean globalLoad; // SCIPIO: for use with global properties maps
 
         public ExtendedProperties() {
-            super();
             url = null;
             locale = null;
+            globalLoad = null;
+        }
+
+        public ExtendedProperties(Locale locale, Boolean globalLoad) { // SCIPIO
+            this.url = null;
+            this.locale = locale;
+            this.globalLoad = globalLoad;
         }
 
         public ExtendedProperties(Properties defaults) {
             super(defaults);
             url = null;
             locale = null;
+            globalLoad = null;
         }
 
         public ExtendedProperties(URL url, Locale locale) throws IOException, InvalidPropertiesFormatException {
             InputStream in = null;
+            Boolean globalLoad = null;
             try {
-                in = new BufferedInputStream(url.openStream());
-                if (url.getFile().endsWith(".xml")) {
-                    xmlToProperties(in, locale, this);
+                if (url.toString().endsWith(".xml")) {
+                    String resource = normResourceName(url);
+                    // SCIPIO: Improved, now uses extra caching layer
+                    //xmlToProperties(in, locale, this);
+                    ResourceBundleProperties rbp = ResourceBundleProperties.from(resource, url, true);
+                    if (rbp != null) {
+                        Properties props = rbp.getProperties(locale);
+                        if (props != null) {
+                            this.putAll(props);
+                        }
+                        globalLoad = rbp.getGlobalLoad();
+                    }
                     // SCIPIO: read from LocalizedProperty
-                    entityResourceToProperties(PathUtil.getFileNameFromPath(url.getFile()), locale, this, null, false);
+                    entityResourceToProperties(resource, locale, this, null, false);
                 } else {
+                    in = new BufferedInputStream(url.openStream());
                     load(in);
                     loadCommandLineProperties(url); // SCIPIO
                 }
@@ -2760,15 +3133,27 @@ public final class UtilProperties implements Serializable {
             // SCIPIO
             this.url = url;
             this.locale = locale;
+            this.globalLoad = globalLoad;
         }
 
         @Override
-        public void loadFromXML(InputStream in) throws IOException, InvalidPropertiesFormatException {
+        public synchronized void loadFromXML(InputStream in) throws IOException, InvalidPropertiesFormatException {
             try {
-                xmlToProperties(in, null, this);
+                // SCIPIO: Improved, now uses extra caching layer
+                //xmlToProperties(in, null, this);
+                URL url = getUrl();
+                String resource = normResourceName(url);
+                ResourceBundleProperties rbp = ResourceBundleProperties.from(normResourceName(url), url, true);
+                if (rbp != null) {
+                    Properties props = rbp.getEntryProperties();
+                    if (props != null) {
+                        this.putAll(props);
+                    }
+                    globalLoad = rbp.getGlobalLoad();
+                }
                 if (url != null && locale != null) {
                     // SCIPIO: read from LocalizedProperty
-                    entityResourceToProperties(PathUtil.getFileNameFromPath(url.getFile()), locale, this, null, false);
+                    entityResourceToProperties(resource, locale, this, null, false);
                 }
             } finally {
                 in.close();
@@ -2781,6 +3166,19 @@ public final class UtilProperties implements Serializable {
             if (cmdProps != null) {
                 this.putAll(cmdProps);
             }
+        }
+
+        // SCIPIO
+        public URL getUrl() {
+            return url;
+        }
+
+        public Locale getLocale() {
+            return locale;
+        }
+
+        public Boolean getGlobalLoad() {
+            return globalLoad;
         }
     }
 

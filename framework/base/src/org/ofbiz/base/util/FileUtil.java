@@ -55,6 +55,8 @@ import org.ofbiz.base.location.ComponentLocationResolver;
 public final class FileUtil {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    public static final FilenameFilter TRUE_FILENAME_FILTER = (dir, name) -> true; // SCIPIO
+    public static final FilenameFilter FALSE_FILENAME_FILTER = (dir, name) -> false; // SCIPIO
 
     private FileUtil () {}
 

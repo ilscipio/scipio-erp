@@ -20,9 +20,12 @@ package org.ofbiz.base.component;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -103,6 +106,37 @@ public final class ComponentConfig {
      */
     public static Collection<ComponentConfig> getAllComponents() {
         return componentConfigCache.values();
+    }
+
+    /**
+     * Get all components resources directly under "dir" folders, typically config/ and dtd/ (non-recursive).
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
+     */
+    public static List<URL> getAllComponentsRootResourceFileURLs(java.io.FilenameFilter fnFilter) {
+        if (fnFilter == null) {
+            fnFilter = FileUtil.TRUE_FILENAME_FILTER;
+        }
+        List<URL> resourceURLs = new ArrayList<>();
+        for(ComponentConfig cc : ComponentConfig.getAllComponents()) {
+            for (ComponentConfig.ClasspathInfo ci : cc.getClasspathInfos()) {
+                if ("dir".equals(ci.type)) {
+                    File configDir = new File(cc.getRootLocation(), ci.location);
+                    File[] files = configDir.listFiles(fnFilter);
+                    if (files != null && files.length > 0) {
+                        for(File file : files) {
+                            if (file.isFile()) {
+                                try {
+                                    resourceURLs.add(file.toURI().toURL());
+                                } catch (MalformedURLException e) {
+                                    Debug.logError(e, module);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return resourceURLs;
     }
 
     /**

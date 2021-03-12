@@ -91,6 +91,9 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
         if (this.initialResourceBundle == null) {
             throw new IllegalArgumentException("Cannot add bottom resource bundle, this wrapper was not properly initialized (there is no base/initial ResourceBundle).");
         }
+        if (hasResource(resource)) { // SCIPIO
+            return;
+        }
         this.addBottomResourceBundle(new InternalRbmWrapper(UtilProperties.getResourceBundle(resource, this.initialResourceBundle.getLocale())));
     }
 
@@ -99,10 +102,30 @@ public class ResourceBundleMapWrapper implements Map<String, Object>, Serializab
         if (this.initialResourceBundle == null) {
             throw new IllegalArgumentException("Cannot add bottom resource bundle, this wrapper was not properly initialized (there is no base/initial ResourceBundle).");
         }
+        if (hasResource(resource)) { // SCIPIO
+            return;
+        }
         this.addBottomResourceBundle(new InternalRbmWrapper(UtilProperties.getResourceBundle(resource, this.initialResourceBundle.getLocale(), optional)));
     }
-    
-    
+
+    /**
+     * Detects double-adding the same resource bundles.
+     * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
+     */
+    protected boolean hasResource(String resource) {
+        resource = UtilProperties.normResourceName(resource);
+        for(Map<String, Object> propertyMap : this.rbmwStack.getStackList()) {
+            UtilProperties.UtilResourceBundle rb = (UtilProperties.UtilResourceBundle) ((InternalRbmWrapper) propertyMap).getResourceBundle();
+            if (rb.hasResource(resource)) {
+                //if (Debug.infoOn()) {
+                //    Debug.logInfo("Property resource [" + resource + "] already contained in resource bundle [" + this + "]", module);
+                //}
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** In general we don't want to use this, better to start with the more specific ResourceBundle and add layers of common ones...
      * Puts ResourceBundle on the top of the stack (top meaning will override lower layers on the stack)
      */

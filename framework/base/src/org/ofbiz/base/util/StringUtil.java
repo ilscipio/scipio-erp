@@ -1065,14 +1065,7 @@ public class StringUtil {
     }
 
     public static String removeSuffix(String str, String suffix) { // SCIPIO
-        if (UtilValidate.isEmpty(str) || UtilValidate.isEmpty(suffix)) {
-            return str;
-        }
-        if (str.endsWith(suffix)) {
-            return str.substring(0, str.length() - suffix.length());
-        } else {
-            return str;
-        }
+        return (str != null && str.endsWith(suffix)) ? str.substring(0, str.length() - suffix.length()) : str;
     }
 
     public static String removeSuffix(String str, String... suffixes) { // SCIPIO

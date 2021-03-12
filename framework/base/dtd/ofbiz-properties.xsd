@@ -34,6 +34,23 @@ under the License.
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="property" />
             </xs:sequence>
+            <xs:attribute name="global">
+                <xs:annotation>
+                    <xs:documentation>
+                        If not specified, all label files named "*Labels.xml" are automatically included in global property-maps.
+                        If set to false, prevents inclusion.
+                        Labels from hot-deploy components automatically override those from framework and applications components
+                        when combined in the global property-maps.
+                        SCIPIO: 2.1.0: Added for global property-map support.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="true"/>
+                        <xs:enumeration value="false"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 

@@ -17766,11 +17766,13 @@
         <value xml:lang="ar">دليل تسلسل وحدة الإتفاقية</value>
         <value xml:lang="de">Vereinbarungsposition Seq ID</value>
         <value xml:lang="en">Agreement Item Seq ID</value>
+        <value xml:lang="es">Código de secuenca del ítem del acuerdo</value>
         <value xml:lang="fr">No séq. du point d'accord</value>
         <value xml:lang="hi-IN">अनुबंध मद अनुक्रम क्रमांक</value>
         <value xml:lang="it">Riga contratto</value>
         <value xml:lang="ja">契約アイテム連番ID</value>
         <value xml:lang="pt">ID de sequência do item do acordo</value>
+        <value xml:lang="th">รหัสรายการหัวข้อสัญญา</value>
         <value xml:lang="vi">Id Thứ tự hàng hóa</value>
         <value xml:lang="zh">合同条款序列号</value>
         <value xml:lang="zh-TW">合約條款序列號</value>
@@ -21022,21 +21024,19 @@
         <value xml:lang="zh-TW">生產能力</value>
     </property>
     <property key="FormFieldTitle_productId">
-        <value xml:lang="ar">دليل السلعة</value>
+        <value xml:lang="cs">ID produktu</value>
         <value xml:lang="de">Produkt ID</value>
         <value xml:lang="en">Product ID</value>
-        <value xml:lang="es">Id Producto</value>
+        <value xml:lang="es">Código de producto</value>
         <value xml:lang="fr">Réf. produit</value>
-        <value xml:lang="hi-IN">उत्पाद क्रमांक</value>
-        <value xml:lang="it">Codice Prodotto</value>
+        <value xml:lang="it">Codice prodotto</value>
         <value xml:lang="ja">製品ID</value>
-        <value xml:lang="nl">ID product</value>
-        <value xml:lang="pt">Id do produto</value>
+        <value xml:lang="nl">Product ID</value>
         <value xml:lang="ro">Cod Produs</value>
         <value xml:lang="ru">Код продукта</value>
         <value xml:lang="th">รหัสสินค้า</value>
-        <value xml:lang="vi">Id</value>
-        <value xml:lang="zh">产品编号</value>
+        <value xml:lang="vi">Mã sản phẩm</value>
+        <value xml:lang="zh">产品标识</value>
         <value xml:lang="zh-TW">產品識別</value>
     </property>
     <property key="FormFieldTitle_profitGlAccountId">

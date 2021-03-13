@@ -29,8 +29,24 @@
         <value xml:lang="en">Pages</value>
     </property>
     <property key="CommonPage">
+        <value xml:lang="ar">صفحة</value>
+        <value xml:lang="cs">Strana</value>
         <value xml:lang="de">Seite</value>
         <value xml:lang="en">Page</value>
+        <value xml:lang="es">Página</value>
+        <value xml:lang="fr">Page</value>
+        <value xml:lang="hi-IN">पृष्ठ</value>
+        <value xml:lang="it">Pagina</value>
+        <value xml:lang="ja">ページ</value>
+        <value xml:lang="nl">Pagina</value>
+        <value xml:lang="pt">Página</value>
+        <value xml:lang="ro">Pagina</value>
+        <value xml:lang="ru">Страница</value>
+        <value xml:lang="th">หน้า</value>
+        <value xml:lang="vi">Trang</value>
+        <value xml:lang="zh">页</value>
+        <value xml:lang="zh-CN">页</value>
+        <value xml:lang="zh-TW">共用網頁</value>
     </property>
     <property key="CommonRobots">
         <value xml:lang="en">Robots.txt</value>

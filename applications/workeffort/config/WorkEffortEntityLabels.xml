@@ -20,18 +20,15 @@
 -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="RateType.description.DISCOUNTED">
-        <value xml:lang="de">Vergünstigter Stundensatz</value>
-        <value xml:lang="en">Discounted Hourly Rate</value>
-        <value xml:lang="fr">Taux horaire escompté</value>
-        <value xml:lang="it">Percentuale oraria scontata</value>
-        <value xml:lang="ja">割引時間給</value>
-        <value xml:lang="nl">Uurtarief - korting</value>
-        <value xml:lang="ro">Procent Orar Redus</value>
-        <value xml:lang="ru">Сниженные почасовые ставки</value>
-        <value xml:lang="th">อัตราลดลงทุก ๆ ชั่วโมง</value>
-        <value xml:lang="vi">Tỷ lệ giảm giá theo giờ</value>
-        <value xml:lang="zh">小时价格折扣</value>
-        <value xml:lang="zh-TW">小時價格折扣</value>
+        <value xml:lang="ar">نسبة الخصم</value>
+        <value xml:lang="de">Ermäßigter Satz</value>
+        <value xml:lang="en">Discounted Rate</value>
+        <value xml:lang="fr">Réduit</value>
+        <value xml:lang="ja">割引レート</value>
+        <value xml:lang="nl">Tarief - met korting</value>
+        <value xml:lang="vi">Tỷ lệ giảm giá</value>
+        <value xml:lang="zh">贴现率</value>
+        <value xml:lang="zh-TW">貼現率</value>
     </property>
     <property key="RateType.description.FLC">
         <value xml:lang="de">Stundensatz - bei kompletten Preiskosten</value>
@@ -40,32 +37,25 @@
         <value xml:lang="zh">小时价格——全负荷成本价格</value>
     </property>
     <property key="RateType.description.OVERTIME">
-        <value xml:lang="de">Überstundensatz</value>
-        <value xml:lang="en">Overtime Hourly Rate</value>
-        <value xml:lang="fr">Taux horaire des heures supplémentaires</value>
-        <value xml:lang="it">Percentuale oraria straordinaria</value>
-        <value xml:lang="ja">残業時間給</value>
-        <value xml:lang="nl">Uurtarief - overtime</value>
-        <value xml:lang="ro">Procent Orar Straordinar</value>
-        <value xml:lang="ru">Почасовые ставки при переработке</value>
-        <value xml:lang="th">อัตราล่วงเวลาทุก ๆ ชั่วโมง</value>
-        <value xml:lang="vi">Tỷ lệ điều chỉnh làm ngoài giờ</value>
-        <value xml:lang="zh">加班小时价格</value>
-        <value xml:lang="zh-TW">加班小時價格</value>
+        <value xml:lang="de">Satz für Überstunden</value>
+        <value xml:lang="en">Overtime Rate</value>
+        <value xml:lang="fr">Majoré</value>
+        <value xml:lang="ja">残業レート</value>
+        <value xml:lang="nl">Tarief - Overtijd</value>
+        <value xml:lang="vi">Tỷ lệ làm ngoài giờ</value>
+        <value xml:lang="zh">加班费率</value>
+        <value xml:lang="zh-TW">加班費率</value>
     </property>
     <property key="RateType.description.STANDARD">
-        <value xml:lang="de">Standard Stundensatz</value>
-        <value xml:lang="en">Standard Hourly Rate</value>
-        <value xml:lang="fr">Taux horaire standard</value>
-        <value xml:lang="it">Percentuale oraria standard</value>
-        <value xml:lang="ja">標準時間給</value>
-        <value xml:lang="nl">Uurtarief - standaard</value>
-        <value xml:lang="ro">Procent Orar Standard</value>
-        <value xml:lang="ru">Стандартные почасовые ставки</value>
-        <value xml:lang="th">อัตรามาตรฐานทุก ๆ ชั่วโมง</value>
-        <value xml:lang="vi">Tỷ lệ trong giờ (hành chính)</value>
-        <value xml:lang="zh">标准小时价格</value>
-        <value xml:lang="zh-TW">標準小時價格</value>
+        <value xml:lang="ar">متوسط النسبة</value>
+        <value xml:lang="de">Standard-Satz</value>
+        <value xml:lang="en">Standard Rate</value>
+        <value xml:lang="fr">Standard</value>
+        <value xml:lang="nl">Tarief - Standaard</value>
+        <value xml:lang="ja">標準レート</value>
+        <value xml:lang="vi">Tỷ lệ chuẩn</value>
+        <value xml:lang="zh">标准费率</value>
+        <value xml:lang="zh-TW">標準費率</value>
     </property>
     <property key="WorkEffortAssocType.description.ROUTING_COMPONENT">
         <value xml:lang="de">Routing- und Routing-Aufgabenzuordnung</value>

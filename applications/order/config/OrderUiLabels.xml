@@ -1213,11 +1213,16 @@
         <value xml:lang="zh-TW">退貨標頭類型識別</value>
     </property>
     <property key="FormFieldTitle_returnItemSeqId">
-        <value xml:lang="de">Retourenposition Seq ID</value>
+        <value xml:lang="de">Retourenposition Seq. ID</value>
         <value xml:lang="en">Return Item Seq ID</value>
-        <value xml:lang="fr">Ref. ligne de retour</value>
-        <value xml:lang="nl">Retour Itemnr ID</value>
+        <value xml:lang="es">Nº sec. ítem de devolución</value>
+        <value xml:lang="fr">Réf. séq. de retour d'article</value>
+        <value xml:lang="it">Numero Riga Reso</value>
+        <value xml:lang="ja">返品アイテム連番ID</value>
+        <value xml:lang="th">รหัสรายการหัวข้อผลตอบแทน</value>
+        <value xml:lang="vi">Thứ tự hàng hóa hoàn trả</value>
         <value xml:lang="zh">退货明细序号</value>
+        <value xml:lang="zh-TW">退貨細項序號</value>
     </property>
     <property key="FormFieldTitle_salesChannelEnumId">
         <value xml:lang="ar">دليل تعداد قناة المبيعات</value>

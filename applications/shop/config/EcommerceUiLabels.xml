@@ -5155,19 +5155,20 @@
         <value xml:lang="zh-TW">購物車</value>
     </property>
     <property key="PageTitleSplitItemsForShipping">
+        <value xml:lang="ar">تقسيم البنود للشحن</value>
         <value xml:lang="da">Opdel varer til forsendelse</value>
-        <value xml:lang="de">Positionen aufteilen für Versand</value>
+        <value xml:lang="de">Positionen für den Versand aufteilen</value>
         <value xml:lang="en">Split Items For Shipping</value>
         <value xml:lang="es">Dividir Artículos para envío</value>
         <value xml:lang="fr">Dissocier les articles lors de l'expédition</value>
         <value xml:lang="it">Dividi gli articoli per spedizioni</value>
-        <value xml:lang="ja">発送時にアイテムを分割</value>
+        <value xml:lang="ja">発送のためアイテムを分割</value>
         <value xml:lang="nl">Splits items op voor verzending</value>
         <value xml:lang="pt-BR">Dividir itens em grupos para o envio</value>
         <value xml:lang="ro">Divide linii pe expedieri </value>
         <value xml:lang="ru">Разделить позиции для доставки</value>
         <value xml:lang="th">แยกสินค้าเพื่อการขนส่ง</value>
-        <value xml:lang="vi">Phân chia hàng hóa để vận chuyển</value>
+        <value xml:lang="vi">Phân chia danh mục sản phẩm để vận chuyển</value>
         <value xml:lang="zh">为送货分拆明细</value>
         <value xml:lang="zh-TW">為送貨分拆細項</value>
     </property>

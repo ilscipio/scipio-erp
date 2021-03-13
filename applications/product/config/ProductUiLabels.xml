@@ -3592,16 +3592,19 @@
         <value xml:lang="zh-TW">運輸附加費描述</value>
     </property>
     <property key="FormFieldTitle_agreementItemSeqId">
-        <value xml:lang="de">Vereinbarungsselement Seq. ID</value>
+        <value xml:lang="ar">دليل تسلسل وحدة الإتفاقية</value>
+        <value xml:lang="de">Vereinbarungsposition Seq ID</value>
         <value xml:lang="en">Agreement Item Seq ID</value>
         <value xml:lang="es">Código de secuenca del ítem del acuerdo</value>
-        <value xml:lang="fr">Réf. séq. d'un point d'accord commercial</value>
-        <value xml:lang="it">N.Seq. Riga Accordo</value>
+        <value xml:lang="fr">No séq. du point d'accord</value>
+        <value xml:lang="hi-IN">अनुबंध मद अनुक्रम क्रमांक</value>
+        <value xml:lang="it">Riga contratto</value>
         <value xml:lang="ja">契約アイテム連番ID</value>
+        <value xml:lang="pt">ID de sequência do item do acordo</value>
         <value xml:lang="th">รหัสรายการหัวข้อสัญญา</value>
-        <value xml:lang="vi">Id thứ tự hàng hóa</value>
-        <value xml:lang="zh">合同明细序号</value>
-        <value xml:lang="zh-TW">合約細項序列識別</value>
+        <value xml:lang="vi">Id Thứ tự hàng hóa</value>
+        <value xml:lang="zh">合同条款序列号</value>
+        <value xml:lang="zh-TW">合約條款序列號</value>
     </property>
     <property key="FormFieldTitle_aisleId">
         <value xml:lang="de">Gang ID</value>
@@ -4384,11 +4387,19 @@
         <value xml:lang="zh-TW">容器識別</value>
     </property>
     <property key="FormFieldTitle_contentType">
-        <value xml:lang="de">Inhalt Type</value>
+        <value xml:lang="ar">نوع المحتوى</value>
+        <value xml:lang="da">Indholdstype</value>
+        <value xml:lang="de">Inhaltstyp</value>
         <value xml:lang="en">Content Type</value>
+        <value xml:lang="es">Tipo de contenido</value>
         <value xml:lang="fr">Type de contenu</value>
         <value xml:lang="it">Tipo contenuto</value>
         <value xml:lang="ja">コンテンツタイプ</value>
+        <value xml:lang="nl">Soort content</value>
+        <value xml:lang="pt">Tipo de conteúdo</value>
+        <value xml:lang="ro">Tip Continut</value>
+        <value xml:lang="ru">Тип контента</value>
+        <value xml:lang="th">ประเภทหัวข้อ</value>
         <value xml:lang="vi">Loại nội dung</value>
         <value xml:lang="zh">内容类型</value>
         <value xml:lang="zh-TW">內容類型</value>

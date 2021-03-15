@@ -1346,7 +1346,7 @@
         </attribute>
     </service>
 
-    <service name="prewarmContentCacheFromDb" engine="java"
+    <service name="prewarmContentCacheFromDb" engine="java" max-retry="2" semaphore-sleep="10"
              location="com.ilscipio.scipio.cms.content.CmsPageServices" invoke="prewarmContentCacheFromDb" auth="true" transaction-timeout="600000" log="quiet">
         <description>Prewarms the cache - runs after restart and on a full cache clear. Fetches Urls from Website entity. Useful to increase firstload performance</description>
     </service>

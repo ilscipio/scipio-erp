@@ -285,6 +285,17 @@ public class ServiceDispatcher {
         boolean isError = false;
         boolean beganTrans = false;
         try {
+            if (!UtilMisc.nullOrZero(modelService.getStartDelay())) {
+                if (Debug.verboseOn() || ModelService.LogLevel.DEBUG.equals(modelService.getLogLevel())) {
+                    Debug.logInfo("[runSync] Delaying service [" + modelService.name + "] execution by " + modelService.getStartDelay() + "ms", module);
+                }
+                try {
+                    Thread.sleep(modelService.getStartDelay());
+                } catch (InterruptedException e) {
+                    throw new GenericServiceException(e);
+                }
+            }
+
             // check for semaphore and acquire a lock
             if ("wait".equals(modelService.semaphore) || "fail".equals(modelService.semaphore)) {
                 lock = new ServiceSemaphore(delegator, modelService);

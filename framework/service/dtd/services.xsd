@@ -137,10 +137,11 @@ under the License.
         <xs:attribute name="log"><!-- default="normal" -->
             <xs:annotation>
                 <xs:documentation>
-                    SCIPIO: If set to quiet, the service engine will avoid making info-/timing-level logs
+                    If set to quiet, the service engine will avoid making info-/timing-level logs
                     about this service; if set to debug, will provide extra info (same as debug=true attribute).
                     May be needed for small or low-level services that get called constantly and burden the log.
                     NOTE: If log is configured as verbose, "quiet" may not be respected.
+                    SCIPIO: 2.x.x: Added attribute.
                 </xs:documentation>
             </xs:annotation>
             <xs:simpleType>
@@ -154,11 +155,12 @@ under the License.
         <xs:attribute name="log-eca"><!-- default="normal" -->
             <xs:annotation>
                 <xs:documentation>
-                    SCIPIO: If set to quiet, the service engine will avoid making info-/timing-level logs
+                    If set to quiet, the service engine will avoid making info-/timing-level logs
                     about this service when called from ECAs, by default (may be overridden elsewhere);
                     if set to debug, will provide extra info (same as debug=true attribute).
                     May be needed for small or low-level services that get called constantly and burden the log.
                     NOTE: If log is configured as verbose, "quiet" may not be respected.
+                    SCIPIO: 2.x.x: Added attribute.
                 </xs:documentation>
             </xs:annotation>
             <xs:simpleType>
@@ -172,16 +174,27 @@ under the License.
         <xs:attribute name="priority"><!-- default="50" -->
             <xs:annotation>
                 <xs:documentation>
-                    SCIPIO: Default job priority when this service is run either async (ECA) or scheduled as a job. Default: 50 (normal)
+                    Default job priority when this service is run either async (ECA) or scheduled as a job. Default: 50 (normal)
                     NOTE: This currently has no effect on services invoked in "sync" mode.
+                    SCIPIO: 2.1.0: Added attribute.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
         <xs:attribute name="job-pool-persist">
             <xs:annotation>
                 <xs:documentation>
-                    SCIPIO: Default job pool when service scheduled as persistent job, when not overridden by caller.
+                    Default job pool when service scheduled as persistent job, when not overridden by caller.
                     NOTE: This occurs during job scheduling; changing this has no effect for a JobSandbox record already scheduled.
+                    SCIPIO: 2.1.0: Added attribute.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="start-delay"><!-- default="0" -->
+            <xs:annotation>
+                <xs:documentation>
+                    Fixed service start delay in milliseconds (ms). Default: 0 (none)
+                    NOTE: This currently has no effect on services invoked in "sync" mode.
+                    SCIPIO: 2.1.0: Added attribute.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>

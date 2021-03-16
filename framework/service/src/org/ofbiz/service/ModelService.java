@@ -306,6 +306,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     String jobPoolPersist;
 
+    /**
+     * Start delay, in milliseconds (thread sleep).
+     * <p>SCIPIO: 2.1.0: Added start-delay service attribute.</p>
+     */
+    Integer startDelay;
+
     public static class Access implements Serializable { // SCIPIO
         public static final Access PUBLIC = new Access("public");
         public static final Access INTERNAL = new Access("internal");
@@ -388,6 +394,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         this.typeConvertParamList = model.typeConvertParamList;
         this.priority = model.priority;
         this.jobPoolPersist = model.jobPoolPersist;
+        this.startDelay = model.startDelay;
     }
 
     @Override
@@ -2489,6 +2496,14 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public String getJobPoolPersist() {
         return jobPoolPersist;
+    }
+
+    /**
+     * Start delay, in milliseconds (thread sleep).
+     * <p>SCIPIO: 2.1.0: Added start-delay service attribute.</p>
+     */
+    public Integer getStartDelay() {
+        return startDelay;
     }
 
     /**

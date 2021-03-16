@@ -37,6 +37,7 @@ import org.ofbiz.base.metrics.MetricsFactory;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilURL;
@@ -326,6 +327,8 @@ public class ModelServiceReader implements Serializable {
         service.priority = priority;
 
         service.jobPoolPersist = UtilValidate.nullIfEmpty(serviceElement.getAttribute("job-pool-persist"));
+
+        service.startDelay = UtilMisc.toIntegerObject(UtilValidate.nullIfEmpty(serviceElement.getAttribute("start-delay")));
 
         return service;
     }

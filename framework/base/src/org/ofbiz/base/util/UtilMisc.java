@@ -621,6 +621,28 @@ public final class UtilMisc {
         return result == null ? defaultValue : result;
     }
 
+    /** Returns true if the number is null or zero.
+     * Not reliable for all floating-point values.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static boolean nullOrZero(Number number) { // SCIPIO
+        return (number == null || number.longValue() == 0L);
+    }
+
+    /** Returns true if the number is null or zero.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static boolean nullOrZero(Integer number) { // SCIPIO
+        return (number == null || number == 0);
+    }
+
+    /** Returns true if the number is null or zero.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static boolean nullOrZero(Long number) { // SCIPIO
+        return (number == null || number == 0);
+    }
+
     /** Converts an <code>Object</code> to a <code>Long</code>. Returns
      * <code>null</code> if conversion is not possible.
      * @param obj Object to convert

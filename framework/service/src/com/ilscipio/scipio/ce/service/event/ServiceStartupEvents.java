@@ -23,6 +23,8 @@ import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.service.AsyncOptions;
+import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
@@ -201,6 +203,7 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
     protected Map<String, Object> execStartupService(LocalDispatcher dispatcher, String serviceName, Map<String, ?> context, String mode) {
         try {
             if (!"sync".equals(mode) && !"async".equals(mode)) mode = "async";
+            String finalMode = mode;
             String userLoginAuthId = null;
             if (context.get("userLogin") instanceof String) {
                 userLoginAuthId = (String) context.get("userLogin");
@@ -217,43 +220,57 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
                 }
             }
             if ("async".equals(mode)) {
-                dispatcher.runAsync(serviceName, ctx, false);
+                dispatcher.runAsync(serviceName, ctx, new GenericRequester() {
+                    @Override
+                    public void receiveResult(Map<String, Object> result) {
+                        logServiceResult(dispatcher, serviceName, context, finalMode, result);
+                    }
+
+                    @Override
+                    public void receiveThrowable(Throwable t) {
+                        Debug.logError("Error running startup service [" + serviceName + "]: " + t.toString(), module);
+                    }
+                }, AsyncOptions.asyncMemoryDefault());
                 return null;
             } else {
                 Map<String, Object> result = dispatcher.runSyncNewTrans(serviceName, ctx);
-                if (ServiceUtil.isError(result)) {
-                    String msg = ServiceUtil.getErrorMessage(result);
-                    if (msg != null && !msg.isEmpty()) {
-                        Debug.logError("Ran startup service [" + serviceName +
-                                "], status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
-                    } else {
-                        Debug.logError("Ran startup service [" + serviceName +
-                            "], status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
-                    }
-                } else if (ServiceUtil.isFailure(result)) {
-                    String msg = ServiceUtil.getErrorMessage(result);
-                    if (msg != null && !msg.isEmpty()) {
-                        Debug.logWarning("Ran startup service [" + serviceName +
-                                "], status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
-                    } else {
-                        Debug.logWarning("Ran startup service [" + serviceName +
-                            "], status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
-                    }
-                } else {
-                    String msg = ServiceUtil.getSuccessMessage(result);
-                    if (msg != null && !msg.isEmpty()) {
-                        Debug.logInfo("Ran startup service [" + serviceName +
-                                "], status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
-                    } else {
-                        Debug.logInfo("Ran startup service [" + serviceName +
-                            "], status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
-                    }
-                }
+                logServiceResult(dispatcher, serviceName, context, mode, result);
                 return result;
             }
         } catch (GenericServiceException | GenericEntityException e) {
             Debug.logError("Error running startup service [" + serviceName + "]: " + e.toString(), module);
             return ServiceUtil.returnError(e.toString());
+        }
+    }
+
+    protected void logServiceResult(LocalDispatcher dispatcher, String serviceName, Map<String, ?> context, String mode, Map<String, Object> result) {
+        if (ServiceUtil.isError(result)) {
+            String msg = ServiceUtil.getErrorMessage(result);
+            if (msg != null && !msg.isEmpty()) {
+                Debug.logError("Finished startup service [" + serviceName +
+                        "], status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
+            } else {
+                Debug.logError("Finished startup service [" + serviceName +
+                        "], status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
+            }
+        } else if (ServiceUtil.isFailure(result)) {
+            String msg = ServiceUtil.getErrorMessage(result);
+            if (msg != null && !msg.isEmpty()) {
+                Debug.logWarning("Finished startup service [" + serviceName +
+                        "], status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
+            } else {
+                Debug.logWarning("Finished startup service [" + serviceName +
+                        "], status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
+            }
+        } else {
+            String msg = ServiceUtil.getSuccessMessage(result);
+            if (msg != null && !msg.isEmpty()) {
+                Debug.logInfo("Finished startup service [" + serviceName +
+                        "], status: " + result.get(ModelService.RESPONSE_MESSAGE) + ", message: " + msg, module);
+            } else {
+                Debug.logInfo("Finished startup service [" + serviceName +
+                        "], status: " + result.get(ModelService.RESPONSE_MESSAGE), module);
+            }
         }
     }
 }

@@ -1765,7 +1765,7 @@ public final class ProductPromoWorker {
             BigDecimal amount = cart.getSubTotalForPromotions().multiply(percentage);
 
             if (amount.compareTo(BigDecimal.ZERO) != 0) {
-                Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.FALSE : (productPromoAction.getBoolean("distributeAmount")));
+                Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
                     BigDecimal discountAmountTotal = BigDecimal.ZERO;
 
@@ -1816,7 +1816,7 @@ public final class ProductPromoWorker {
             }
 
             if (amount.compareTo(BigDecimal.ZERO) != 0) {
-                Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.FALSE : (productPromoAction.getBoolean("distributeAmount")));
+                Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
                     BigDecimal discountAmountTotal = BigDecimal.ZERO;
                     Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);

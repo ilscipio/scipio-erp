@@ -3806,6 +3806,7 @@ code package.
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
       </relation>
     </entity>
+    <!-- SCIPIO: 2.0.0: distributeAmount field added which forces discounted amounts to be distributed across items; only available for productPromoActionEnumId: PROMO_ORDER_PERCENT and PROMO_ORDER_AMOUNT -->
     <entity entity-name="ProductPromoAction"
             package-name="org.ofbiz.product.promo"
             title="Product Promotion Action">
@@ -3820,6 +3821,7 @@ code package.
       <field name="productId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="useCartQuantity" type="indicator"></field>
+      <field name="distributeAmount" type="indicator"></field>
       <prim-key field="productPromoId"/>
       <prim-key field="productPromoRuleId"/>
       <prim-key field="productPromoActionSeqId"/>

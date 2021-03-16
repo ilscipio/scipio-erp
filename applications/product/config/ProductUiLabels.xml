@@ -26858,6 +26858,13 @@
         <value xml:lang="zh">已输入的代码：</value>
         <value xml:lang="zh-TW">已輸入的代碼:</value>
     </property>
+    <property key="productPromoDistributeAmount">
+        <value xml:lang="de">Menge verteilen</value>
+        <value xml:lang="en">Distribute amount</value>
+        <value xml:lang="es">Distribuir montante</value>
+        <value xml:lang="fr">Distribuer le montant</value>
+        <value xml:lang="it">Distribuisci l'importo</value>
+    </property>
     <property key="ProductPromoNameId">
         <value xml:lang="de">Aktionsname [ID]</value>
         <value xml:lang="en">Promo Name [ID]</value>

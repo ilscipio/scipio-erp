@@ -444,6 +444,36 @@ code package.
                           <option value="N">${uiLabelMap.CommonN}</option>
                           <option value="Y">${uiLabelMap.CommonY}</option>
                         </@field>
+
+                        <#assign showDistributeAmount = "display:none;">
+                        <#if productPromoAction.productPromoActionEnumId?has_content
+                            && (productPromoAction.productPromoActionEnumId == "PROMO_ORDER_PERCENT"
+                            || productPromoAction.productPromoActionEnumId == "PROMO_ORDER_AMOUNT")>
+                            <#assign showDistributeAmount = "">
+                        </#if>
+                        <@script>
+                            $(document).ready(function() {
+                                $('select[name=productPromoActionEnumId]').change(function() {
+                                    if ($(this).val() == "PROMO_ORDER_PERCENT" || $(this).val() == "PROMO_ORDER_AMOUNT") {
+                                        $('#distributeAmount').fadeIn();
+                                    } else {
+                                        $('#distributeAmount').fadeOut();
+                                    }
+                                });
+                            });
+                        </@script>
+                        <@field type="select" labelColumns=4 name="distributeAmount" label=uiLabelMap.productPromoDistributeAmount containerStyle=showDistributeAmount containerId="distributeAmount">
+                            <#if (productPromoAction.distributeAmount)??>
+                                <#assign productPromoActionCurEnum = productPromoAction.getRelatedOne("ActionEnumeration", true)>
+                                <option value="${(productPromoAction.distributeAmount)!}"><#if (productPromoAction.distributeAmount.equals("Y"))>${uiLabelMap.CommonY}<#else>${uiLabelMap.CommonN}</#if></option>
+                                <option value="${(productPromoAction.distributeAmount)!}">&nbsp;</option>
+                            <#else>
+                                <option value="">&nbsp;</option>
+                            </#if>
+                            <option value="N">${uiLabelMap.CommonN}</option>
+                            <option value="Y">${uiLabelMap.CommonY}</option>
+                        </@field>
+
                         <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                         <a href="javascript:document.deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}.submit()" class="${styles.link_run_sys_long!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                       </form>

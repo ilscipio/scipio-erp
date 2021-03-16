@@ -1763,10 +1763,49 @@ public final class ProductPromoWorker {
         } else if ("PROMO_ORDER_PERCENT".equals(productPromoActionEnumId)) {
             BigDecimal percentage = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : (productPromoAction.getBigDecimal("amount").movePointLeft(2))).negate();
             BigDecimal amount = cart.getSubTotalForPromotions().multiply(percentage);
+
             if (amount.compareTo(BigDecimal.ZERO) != 0) {
-                doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
+                Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.FALSE : (productPromoAction.getBoolean("distributeAmount")));
+                if (distributeAmount) {
+                    BigDecimal discountAmountTotal = BigDecimal.ZERO;
+
+                    Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
+                    List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
+                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? new BigDecimal(lineOrderedByBasePriceList.size()) : productPromoAction.getBigDecimal("quantity");
+                    BigDecimal startingQuantity = quantityDesired;
+                    Iterator<ShoppingCartItem> lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
+                    while (lineOrderedByBasePriceIter.hasNext()) {
+                        ShoppingCartItem cartItem = lineOrderedByBasePriceIter.next();
+                        // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                        String parentProductId = cartItem.getParentProductId();
+                        GenericValue product = cartItem.getProduct();
+                        boolean passedItemConds = checkConditionsForItem(productPromoAction, cart, cartItem, delegator, dispatcher, nowTimestamp);
+                        if (passedItemConds && !cartItem.getIsPromo() &&
+                                (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
+                                (product == null || !"N".equals(product.getString("includeInPromotions")))) {
+                            // reduce quantity still needed to qualify for promo (quantityNeeded)
+                            BigDecimal quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
+                            if (quantityUsed.compareTo(BigDecimal.ZERO) > 0) {
+                                quantityDesired = quantityDesired.subtract(quantityUsed);
+
+                                // create an adjustment and add it to the cartItem that implements the promotion action
+                                BigDecimal percentModifier = productPromoAction.get("amount") == null ? BigDecimal.ZERO : productPromoAction.getBigDecimal("amount").movePointLeft(2);
+                                BigDecimal lineAmount = quantityUsed.multiply(cartItem.getBasePrice()).multiply(cartItem.getRentalAdjustment());
+                                BigDecimal discountAmount = lineAmount.multiply(percentModifier).negate();
+                                discountAmountTotal = discountAmountTotal.add(discountAmount);
+                            }
+                        }
+                    }
+
+                    distributeDiscountAmount(discountAmountTotal, cart.getGrandTotal(), getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
+                    actionResultInfo.totalDiscountAmount = discountAmountTotal;
+                    actionResultInfo.quantityLeftInAction = quantityDesired;
+                } else {
+                    doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
+                    actionResultInfo.totalDiscountAmount = amount;
+                }
                 actionResultInfo.ranAction = true;
-                actionResultInfo.totalDiscountAmount = amount;
+
             }
         } else if ("PROMO_ORDER_AMOUNT".equals(productPromoActionEnumId)) {
             BigDecimal amount = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : productPromoAction.getBigDecimal("amount")).negate();
@@ -1775,10 +1814,48 @@ public final class ProductPromoWorker {
             if (amount.negate().compareTo(subTotal) > 0) {
                 amount = subTotal.negate();
             }
+
             if (amount.compareTo(BigDecimal.ZERO) != 0) {
-                doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
+                Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.FALSE : (productPromoAction.getBoolean("distributeAmount")));
+                if (distributeAmount) {
+                    BigDecimal discountAmountTotal = BigDecimal.ZERO;
+                    Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
+
+                    List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
+                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? new BigDecimal(lineOrderedByBasePriceList.size()) : productPromoAction.getBigDecimal("quantity");
+                    Iterator<ShoppingCartItem> lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
+                    while (quantityDesired.compareTo(BigDecimal.ZERO) > 0 && lineOrderedByBasePriceIter.hasNext()) {
+                        ShoppingCartItem cartItem = lineOrderedByBasePriceIter.next();
+                        // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                        String parentProductId = cartItem.getParentProductId();
+                        GenericValue product = cartItem.getProduct();
+                        boolean passedItemConds = checkConditionsForItem(productPromoAction, cart, cartItem, delegator, dispatcher, nowTimestamp);
+                        if (passedItemConds && !cartItem.getIsPromo() &&
+                                (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
+                                (product == null || !"N".equals(product.getString("includeInPromotions")))) {
+                            // reduce quantity still needed to qualify for promo (quantityNeeded)
+                            BigDecimal quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
+                            quantityDesired = quantityDesired.subtract(quantityUsed);
+
+                            // create an adjustment and add it to the cartItem that implements the promotion action
+                            BigDecimal discount = amount.divide(new BigDecimal(lineOrderedByBasePriceList.size()));
+                            // don't allow the discount to be greater than the price
+                            if (discount.compareTo(cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment())) > 0) {
+                                discount = cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment());
+                            }
+                            BigDecimal discountAmount = quantityUsed.multiply(discount).negate();
+                            discountAmountTotal = discountAmountTotal.add(discountAmount);
+                        }
+                    }
+
+                    distributeDiscountAmount(discountAmountTotal, cart.getGrandTotal(), getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
+                    actionResultInfo.totalDiscountAmount = discountAmountTotal;
+                    actionResultInfo.quantityLeftInAction = quantityDesired;
+                } else {
+                    doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
+                    actionResultInfo.totalDiscountAmount = amount;
+                }
                 actionResultInfo.ranAction = true;
-                actionResultInfo.totalDiscountAmount = amount;
             }
         } else if ("PROMO_PROD_SPPRC".equals(productPromoActionEnumId)) {
             // if there are productIds associated with the action then restrict to those productIds, otherwise apply for all products

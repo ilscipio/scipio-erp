@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.lang.JSON;
@@ -586,7 +585,7 @@ public class CommonEvents {
             Delegator delegator = (Delegator) request.getAttribute("delegator");
             GenericValue webSite = delegator.findOne("WebSite", UtilMisc.toMap("webSiteId", webSiteId), true);
             if (webSite == null) throw new GeneralException("website not found: " + webSiteId);
-            String robots = StringEscapeUtils.unescapeHtml(webSite.getString("robots"));
+            String robots = webSite.getString("robots");
 
             response.setContentType("text/plain");
             response.setContentLength(robots.getBytes(UtilIO.getUtf8()).length); // SCIPIO: UtilIO.getUtf8()

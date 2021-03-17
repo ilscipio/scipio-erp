@@ -1771,10 +1771,13 @@ public final class ProductPromoWorker {
 
                     Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
                     List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
-                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? new BigDecimal(lineOrderedByBasePriceList.size()) : productPromoAction.getBigDecimal("quantity");
-                    BigDecimal startingQuantity = quantityDesired;
+                    BigDecimal totalQuantity = BigDecimal.ZERO;
+                    for (ShoppingCartItem item : lineOrderedByBasePriceList) {
+                        totalQuantity = totalQuantity.add(item.getQuantity());
+                    }
+                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? totalQuantity : productPromoAction.getBigDecimal("quantity");
                     Iterator<ShoppingCartItem> lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
-                    while (lineOrderedByBasePriceIter.hasNext()) {
+                    while (quantityDesired.compareTo(BigDecimal.ZERO) > 0 && lineOrderedByBasePriceIter.hasNext()) {
                         ShoppingCartItem cartItem = lineOrderedByBasePriceIter.next();
                         // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
                         String parentProductId = cartItem.getParentProductId();
@@ -1787,17 +1790,10 @@ public final class ProductPromoWorker {
                             BigDecimal quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
                             if (quantityUsed.compareTo(BigDecimal.ZERO) > 0) {
                                 quantityDesired = quantityDesired.subtract(quantityUsed);
-
-                                // create an adjustment and add it to the cartItem that implements the promotion action
-                                BigDecimal percentModifier = productPromoAction.get("amount") == null ? BigDecimal.ZERO : productPromoAction.getBigDecimal("amount").movePointLeft(2);
-                                BigDecimal lineAmount = quantityUsed.multiply(cartItem.getBasePrice()).multiply(cartItem.getRentalAdjustment());
-                                BigDecimal discountAmount = lineAmount.multiply(percentModifier).negate();
-                                discountAmountTotal = discountAmountTotal.add(discountAmount);
                             }
                         }
                     }
-
-                    distributeDiscountAmount(discountAmountTotal, cart.getGrandTotal(), getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
+                    distributeDiscountAmount(amount, cart.getGrandTotal(), getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
                     actionResultInfo.totalDiscountAmount = discountAmountTotal;
                     actionResultInfo.quantityLeftInAction = quantityDesired;
                 } else {
@@ -1822,8 +1818,13 @@ public final class ProductPromoWorker {
                     Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
 
                     List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
-                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? new BigDecimal(lineOrderedByBasePriceList.size()) : productPromoAction.getBigDecimal("quantity");
+                    BigDecimal totalQuantity = BigDecimal.ZERO;
+                    for (ShoppingCartItem item : lineOrderedByBasePriceList) {
+                        totalQuantity = totalQuantity.add(item.getQuantity());
+                    }
+                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? totalQuantity : productPromoAction.getBigDecimal("quantity");
                     Iterator<ShoppingCartItem> lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
+
                     while (quantityDesired.compareTo(BigDecimal.ZERO) > 0 && lineOrderedByBasePriceIter.hasNext()) {
                         ShoppingCartItem cartItem = lineOrderedByBasePriceIter.next();
                         // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
@@ -1837,8 +1838,7 @@ public final class ProductPromoWorker {
                             BigDecimal quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
                             quantityDesired = quantityDesired.subtract(quantityUsed);
 
-                            // create an adjustment and add it to the cartItem that implements the promotion action
-                            BigDecimal discount = amount.divide(new BigDecimal(lineOrderedByBasePriceList.size()));
+                            BigDecimal discount = amount.divide(totalQuantity, 2, BigDecimal.ROUND_HALF_UP);
                             // don't allow the discount to be greater than the price
                             if (discount.compareTo(cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment())) > 0) {
                                 discount = cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment());

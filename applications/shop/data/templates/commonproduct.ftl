@@ -136,57 +136,19 @@ NOTE: This template does not support globals as-is (#global)
     <#local imageServerPath = (.node.@imageServerPath[0]!)?string/>
     <#local imageNr = ((.node.@imageNr[0])!"0")?string?number?int/>
     <#local copyOrig = ((.node.@copyOrig[0])!"false")?string?boolean/><#-- TODO: REVIEW: not clear if want this true or false by default, lots of implications, could affect macro usage (if false) -->
-    <#-- not really needed
-    <#local fileType = imageUrl?keep_after_last(".")/>
-    <#local filenameToUse = "IMG_"+productId+"_"+imageNr+"."+fileType/> -->
-    <#local locale = Static["org.apache.commons.lang3.LocaleUtils"].toLocale("en_US")>
-    <#local localeStr = locale>
-    <#assign paramMap={
-    "locale" : locale,
-    "productId": productId,
-    "imageOrigUrl":imageUrl,
-    "imageServerPath":imageServerPath,
-    "copyOrig":copyOrig
-    }/>
-
-    <#-- printed by service
-    <#local dummy = Debug.logInfo("CUSTOM PRODUCT IMAGE: " + productId + " " + imageUrl + " [" + imageNr + "]", "deproduct.ftl")!>-->
-
-    <#-- Update Product -->
-    <#if (imageNr <= 0)>
-        <#assign scaledImage = dispatcher.runSync("productImageFileScaleInAllSize", paramMap + {"viewType":"main"})!>
-        <#local originalImageUrl = (scaledImage.imageUrlMap.original)!imageUrl>
-        <#-- Original Image -->
-        <Product productId="${productId}" originalImageUrl="${originalImageUrl}"<#rt/>
-        <#-- Additional Images -->
-        <#if scaledImage.imageUrlMap?has_content && scaledImage.productSizeTypeList?has_content><#t/>
-            <#assign imageMap = scaledImage.imageUrlMap><#t/>
-            <#list scaledImage.productSizeTypeList as sizeType><#if imageMap[sizeType]?has_content> ${sizeType}ImageUrl="${imageMap[sizeType]}"</#if></#list><#t/>
-        </#if><#t/>
-        /><#lt/>
+    <#if (imageNr > 0)>
+        <#local productContentTypeId = "ADDITIONAL_IMAGE_" + imageNr>
     <#else>
-        <#assign scaledImage = dispatcher.runSync("productImageFileScaleInAllSize", paramMap + {"viewType":"additional", "viewNumber":imageNr})!>
-        <#local originalImageUrl = (scaledImage.imageUrlMap.original)!imageUrl>
-        <#-- Original Image -->
-        <#assign imgDataResId>${productId}_ALT_${imageNr}</#assign>
-        <#assign imgDataResDesc>${productId} Additional Image ${imageNr}</#assign>
-        <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="${imgDataResId}" dataResourceName="${imgDataResDesc}" isPublic="Y"/>
-        <ElectronicText dataResourceId="${imgDataResId}" textData="${imageMap["detail"]!""}"/><#-- FIXME: this should be the original not detail -->
-        <Content contentId="${imgDataResId}" contentTypeId="DOCUMENT" dataResourceId="${imgDataResId}" contentName="${imgDataResDesc}"/>
-        <ProductContent productId="${productId}" contentId="${imgDataResId}" productContentTypeId="ADDITIONAL_IMAGE_${imageNr}" fromDate="2001-05-13 12:00:00.0"/>
-        <#-- Additional Images -->
-        <#if scaledImage.imageUrlMap?has_content && scaledImage.productSizeTypeList?has_content>
-            <#assign imageMap = scaledImage.imageUrlMap>
-            <#list scaledImage.productSizeTypeList as sizeType>
-                <#assign imgDataResId>${productId}_ALT_${imageNr}_${sizeType?upper_case}</#assign>
-                <#assign imgDataResDesc>${productId} Additional Image ${imageNr} ${sizeType}</#assign>
-                <DataResource dataResourceTypeId="ELECTRONIC_TEXT" dataResourceId="${imgDataResId}" dataResourceName="${imgDataResDesc}" isPublic="Y"/>
-                <ElectronicText dataResourceId="${imgDataResId}" textData="${imageMap[sizeType]!}"/>
-                <Content contentId="${imgDataResId}" contentTypeId="DOCUMENT" dataResourceId="${imgDataResId}" contentName="${imgDataResDesc}"/>
-                <ProductContent productId="${productId}" contentId="${imgDataResId}" productContentTypeId="XTRA_IMG_${imageNr}_${sizeType?upper_case}" fromDate="2001-05-13 12:00:00.0"/>
-            </#list>
-        </#if>
+        <#local productContentTypeId = "ORIGINAL_IMAGE_URL">
     </#if>
+    <#local dummy = Debug.logInfo("Queueing productImageAutoRescale for product [" + productId + "}", "commonproduct.ftl")!>
+    <#-- TODO: could try async-memory but it's currently unable to finish before end of data load and get canceled -->
+    <ProductImageOpRequest serviceId="productImageAutoRescale" mode="sync" productId="${productId}">
+        <serviceArgsJson><![CDATA[{
+            "productId":"${productId}", "recreateExisting":true, "productContentTypeId":"${productContentTypeId}",
+            "imageOrigUrl":"${imageUrl}", "copyOrig":${copyOrig?c}
+        }]]></serviceArgsJson>
+    </ProductImageOpRequest>
 </#macro>
 
 <#macro productFeatureAppl>

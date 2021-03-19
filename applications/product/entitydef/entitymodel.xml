@@ -3069,6 +3069,20 @@ code package.
             <key-map field-name="productId"/>
         </relation>
     </entity>
+    <!-- SCIPIO: Insert records into this to queue/trigger (depending on context) automatic productImageAutoRescale or other on ECA-->
+    <entity entity-name="ProductImageOpRequest"
+            package-name="org.ofbiz.product.product"
+            title="Inline Product Media Details">
+        <field name="piorId" type="id-ne"></field>
+        <field name="serviceId" type="id-ne"><description>Typically service name (e.g.: productImageAutoRescale)</description></field>
+        <field name="mode" type="id-ne"><description>Values: sync, async/async-memory, async-persist</description></field>
+        <field name="productId" type="id"></field>
+        <field name="serviceArgsJson" type="very-long"></field>
+        <prim-key field="piorId"/>
+        <relation type="one" fk-name="PRODIMOPREQ_PRODID" rel-entity-name="Product">
+            <key-map field-name="productId"/>
+        </relation>
+    </entity>
     <entity entity-name="ProductAssoc"
             package-name="org.ofbiz.product.product"
             title="Product Association">

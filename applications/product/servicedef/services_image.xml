@@ -167,6 +167,15 @@
         </attribute>
         <attribute name="logDetail" mode="IN" type="Boolean" optional="true" default-value="false"/>
         <attribute name="clearCaches" mode="IN" type="Boolean" optional="true" default-value="false"/>
+        <attribute name="imageOrigUrlMap" mode="IN" type="Map" optional="true">
+            <description>Maps productContentTypeId to original image URLs, intended for initial call; only needed if not already present on the product</description>
+        </attribute>
+        <attribute name="imageOrigUrl" mode="IN" type="String" optional="true">
+            <description>imageOrigUrl for single productContentTypeId, same as imageOrigUrlMap[productContentTypeId]</description>
+        </attribute>
+        <attribute name="copyOrig" mode="IN" type="Boolean" optional="true" default-value="false">
+            <description>Whether to make a copy of passed origImageUrl (if passed)</description>
+        </attribute>
         <!-- per-image counts -->
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
@@ -275,6 +284,17 @@
         </attribute>
         <attribute name="preview" type="Boolean" mode="IN" optional="true" default-value="true">
             <description>If true, aborts transaction at end</description>
+        </attribute>
+    </service>
+
+    <service name="productImageOpRequest" engine="java"
+             location="com.ilscipio.scipio.product.image.ProductImageServices" invoke="productImageOpRequest" auth="false" transaction-timeout="144000">
+        <description>Run a ProductImageOpRequest from ECA (SCIPIO)</description>
+        <attribute name="opReq" type="GenericValue" mode="IN" optional="false">
+            <description>ProductImageOpRequest instance</description>
+        </attribute>
+        <attribute name="deleteReq" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If false, only runs if the ORIGINAL_IMAGE_URL record looks incomplete</description>
         </attribute>
     </service>
 </services>

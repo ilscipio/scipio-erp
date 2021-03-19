@@ -181,17 +181,26 @@ public abstract class ProductImageServices {
                     + (UtilValidate.isNotEmpty(contentIdList) ? " contentIdList " + contentIdList : ""), module);
         }
 
+        Map<String, String> imageOrigUrlMap = ctx.attr("imageOrigUrlMap", Collections::emptyMap);
+        String imageOrigUrlParam = ctx.attr("imageOrigUrl");
+        if (UtilValidate.isNotEmpty(imageOrigUrlParam) && UtilValidate.isNotEmpty(productContentTypeIdParam)) {
+            imageOrigUrlMap = new HashMap<>(imageOrigUrlMap);
+            imageOrigUrlMap.put(productContentTypeIdParam, imageOrigUrlParam);
+        }
+        boolean copyOrig = ctx.attr("copyOrig");
+
         Map<String, Object> stats = UtilMisc.put(new LinkedHashMap<>(), "successCount", 0, "failCount", 0, "errorCount", 0, "skipCount", 0,
                 "variantSuccessCount", 0, "variantFailCount", 0);
         for(String productContentTypeId : productContentTypeIdList) {
-            Map<String, Object> res = productImageRescaleImage(ctx, product, productContentTypeId, null, nonFatal);
+            String origImageUrl = imageOrigUrlMap.get(productContentTypeId);
+            Map<String, Object> res = productImageRescaleImage(ctx, product, productContentTypeId, null, nonFatal, origImageUrl, copyOrig);
             if ("no-image-url".equals(res.get("reason")) && "ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
                 // SPECIAL: stock Scipio and other products don't always have ORIGINAL_IMAGE_URL but sometimes only DETAIL_IMAGE_URL
-                Map<String, Object> res2 = productImageRescaleImage(ctx, product, "DETAIL_IMAGE_URL", null, nonFatal);
+                Map<String, Object> res2 = productImageRescaleImage(ctx, product, "DETAIL_IMAGE_URL", null, nonFatal, origImageUrl, copyOrig);
                 if (!"no-image-url".equals(res2.get("reason"))) {
                     res = res2;
                 } else {
-                    Map<String, Object> res3 = productImageRescaleImage(ctx, product, "LARGE_IMAGE_URL", null, nonFatal);
+                    Map<String, Object> res3 = productImageRescaleImage(ctx, product, "LARGE_IMAGE_URL", null, nonFatal, origImageUrl, copyOrig);
                     if (!"no-image-url".equals(res3.get("reason"))) {
                         res = res3;
                     }
@@ -204,7 +213,7 @@ public abstract class ProductImageServices {
             }
         }
         for(String contentId : contentIdList) {
-            Map<String, Object> res = productImageRescaleImage(ctx, product, null, contentId, nonFatal);
+            Map<String, Object> res = productImageRescaleImage(ctx, product, null, contentId, nonFatal, null, copyOrig);
             if (!productImageAutoRescaleRegisterResult(ctx, product, res, stats, nonFatal)) {
                 Map<String, Object> result = ServiceUtil.returnError(((int) stats.get("errorCount")) + " errors auto-rescaling images for product [" + productId + "]" + " (stats: " + stats + ")");
                 result.putAll(stats);
@@ -278,7 +287,8 @@ public abstract class ProductImageServices {
         return true;
     }
 
-    private static Map<String, Object> productImageRescaleImage(ServiceContext ctx, GenericValue product, String productContentTypeId, String contentId, boolean nonFatal) throws ServiceValidationException {
+    private static Map<String, Object> productImageRescaleImage(ServiceContext ctx, GenericValue product, String productContentTypeId, String contentId, boolean nonFatal,
+                                                                String explOrigImageUrl, Boolean copyOrig) throws ServiceValidationException {
         int variantSuccessCount = 0;
         int variantFailCount = 0;
         boolean logDetail = ctx.attr("logDetail", false);
@@ -375,24 +385,26 @@ public abstract class ProductImageServices {
         //// NOTE: this consults the parent product which we don't want, but in known cases should return right value
         //String origImageUrl = ProductContentWrapper.getProductContentAsText(product, productContentTypeId,
         //        ctx.attr("locale"), ctx.dispatcher(), false, "raw");
-        String origImageUrl = null;
-        if (productContent != null) {
-            try {
-                GenericValue dataResource = (content != null) ? content.getRelatedOne("DataResource") : null;
-                origImageUrl = ProductImageWorker.getDataResourceImageUrl(dataResource, false);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, module);
-                return ServiceUtil.returnError(e.toString());
+        String origImageUrl = explOrigImageUrl;
+        if (origImageUrl == null) {
+            if (productContent != null) {
+                try {
+                    GenericValue dataResource = (content != null) ? content.getRelatedOne("DataResource") : null;
+                    origImageUrl = ProductImageWorker.getDataResourceImageUrl(dataResource, false);
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.toString());
+                }
+            } else if (productFieldName != null) {
+                origImageUrl = product.getString(productFieldName);
             }
-        } else if (productFieldName != null) {
-            origImageUrl = product.getString(productFieldName);
-        }
-        if (UtilValidate.isEmpty(origImageUrl)) {
-            String msg = "product [" + productId + "] productContentTypeId [" + productContentTypeId + "] origImageUrl [" + origImageUrl + "]: no image URL, not resizing";
-            if (logDetail || Debug.verboseOn()) {
-                Debug.logInfo("productImageRescaleImage: " + msg, module);
+            if (UtilValidate.isEmpty(origImageUrl)) {
+                String msg = "product [" + productId + "] productContentTypeId [" + productContentTypeId + "] origImageUrl [" + origImageUrl + "]: no image URL, not resizing";
+                if (logDetail || Debug.verboseOn()) {
+                    Debug.logInfo("productImageRescaleImage: " + msg, module);
+                }
+                return UtilMisc.put(ServiceUtil.returnSuccess(msg), "reason", "no-image-url");
             }
-            return UtilMisc.put(ServiceUtil.returnSuccess(msg), "reason", "no-image-url");
         }
 
         /*
@@ -441,7 +453,7 @@ public abstract class ProductImageServices {
 
         Map<String, Object> resizeCtx = UtilMisc.toMap("productId", productId, "imageOrigUrl", origImageUrl, "imageViewType", origImageViewType,
                 "locale", ctx.get("locale"), "userLogin", ctx.get("userLogin"), "timeZone", ctx.get("timeZone"), "imageProfile", imageProfile,
-                "sizeTypeList", sizeTypeList);
+                "sizeTypeList", sizeTypeList, "copyOrig", copyOrig);
         try {
             Map<String, Object> resizeResult;
             if (nonFatal) {
@@ -1018,5 +1030,40 @@ public abstract class ProductImageServices {
 
     private static boolean isProductContentTypeImageUrlRecordComplete(GenericValue pct) {
         return pct.get("parentTypeId") != null && pct.get("viewType") != null && pct.get("viewNumber") != null && pct.get("viewSize") != null;
+    }
+
+    public static Map<String, Object> productImageOpRequest(ServiceContext ctx) throws ServiceValidationException {
+        GenericValue opReq = ctx.attr("opReq");
+        String serviceId = opReq.getString("serviceId");
+        String mode = opReq.getString("mode");
+        Map<String, Object> serviceArgs = opReq.getJsonAsMapOrEmpty("serviceArgsJson");
+
+        Map<String, Object> servCtx = new HashMap<>(serviceArgs);
+        Map<String, Object> servResult = null;
+        try {
+            if ("async".equals(mode) || "async-memory".equals(mode)) {
+                ctx.dispatcher().runAsync(serviceId, servCtx, false);
+            } else if ("async-persist".equals(mode)) {
+                ctx.dispatcher().runAsync(serviceId, servCtx, true);
+            } else {
+                servResult = ctx.dispatcher().runSync(serviceId, servCtx);
+                if (ServiceUtil.isError(servResult)) {
+                    return ServiceUtil.returnResultSysFields(servResult);
+                }
+            }
+        } catch(GenericServiceException e) {
+            Debug.logError("productImageOpRequest: error running operation: " + e.toString(), module);
+            return ServiceUtil.returnError("error running operation: " + e.toString());
+        }
+
+        if (Boolean.TRUE.equals(ctx.attr("deleteReq"))) {
+            try {
+                opReq.remove();
+            } catch (GenericEntityException e) {
+                Debug.logError("productImageOpRequest: error deleting: " + e.toString(), module);
+                return ServiceUtil.returnFailure("error deleting: " + e.toString());
+            }
+        }
+        return (servResult != null) ? ServiceUtil.returnResultSysFields(servResult) : ServiceUtil.returnSuccess();
     }
 }

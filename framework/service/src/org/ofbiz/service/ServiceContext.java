@@ -7,6 +7,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -41,17 +42,25 @@ public class ServiceContext implements AttrMap<String, Object> {
         this.context = UtilGenerics.cast(context);
     }
 
+    /** Returns a new ServiceContext. */
     public static ServiceContext from(DispatchContext dctx, Map<String, ?> context) {
         // NOTE: ? should always be Object, this is for simplicity/compatibility, could be misused but never happens
         return new ServiceContext(dctx, context);
     }
 
+    /** Returns a new ServiceContext. */
     public static ServiceContext from(LocalDispatcher dispatcher, Map<String, ?> context) {
         return from(dispatcher.getDispatchContext(), context);
     }
 
+    /** Return this ServiceContext with a substitute context map, for delegation. */
     public ServiceContext from(Map<String, ?> newContext) {
         return new ServiceContext(this, newContext);
+    }
+
+    /** Returns a copy of this ServiceContext with a copy of its original context. */
+    public ServiceContext copy() {
+        return new ServiceContext(this, new HashMap<>(context()));
     }
 
     public DispatchContext dctx() {

@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -282,14 +283,10 @@ public final class Start {
                 try {
                     String loaderClassName = loaderMap.get("class");
                     Class<?> loaderClass = classloader.loadClass(loaderClassName);
-                    StartupLoader loader = (StartupLoader) loaderClass.newInstance();
+                    StartupLoader loader = (StartupLoader) loaderClass.getConstructor().newInstance();
                     loader.load(config, loaderArgs.toArray(new String[loaderArgs.size()]));
                     loaders.add(loader);
-                } catch (ClassNotFoundException e) {
-                    throw (StartupException) new StartupException(e.getMessage()).initCause(e);
-                } catch (InstantiationException e) {
-                    throw (StartupException) new StartupException(e.getMessage()).initCause(e);
-                } catch (IllegalAccessException e) {
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                     throw (StartupException) new StartupException(e.getMessage()).initCause(e);
                 }
             }

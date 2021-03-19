@@ -118,7 +118,7 @@ public class ProductImageLocationInfo implements Serializable {
         }
         try {
             Class<?> cls = Class.forName(clsName);
-            return (Factory) cls.newInstance();
+            return (Factory) cls.getConstructor().newInstance();
         } catch (Exception e) {
             Debug.logError(e, "Invalid catalog#product.image.location.info.factory", module);
             return new Factory();

@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ilscipio.scipio.ce.util.SeoStringUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilValidate;
@@ -573,8 +574,8 @@ public class SeoConfig {
                         Debug.logInfo("  url worker factory: " + factoryClsName, module);
                         try {
                             Class<? extends SeoCatalogUrlWorker.Factory<?>> urlWorkerFactoryCls =
-                                    (Class<? extends SeoCatalogUrlWorker.Factory<?>>) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName);
-                            urlWorkerFactory = urlWorkerFactoryCls.newInstance();
+                                    UtilGenerics.cast(Thread.currentThread().getContextClassLoader().loadClass(factoryClsName));
+                            urlWorkerFactory = urlWorkerFactoryCls.getConstructor().newInstance();
                         } catch (Exception e) {
                             Debug.logError(e, "Error loading url worker using factory: " + factoryClsName + ": " + e.getMessage(), module);
                         }

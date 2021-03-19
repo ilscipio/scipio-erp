@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -60,15 +61,9 @@ public final class InstrumenterWorker {
             }
             // SCIPIO: 2018-09-06: Added try-with-resources to ensure the URLClassLoader get closed
             try (URLClassLoader tmpLoader = new URLClassLoader(tmpUrls.toArray(new URL[tmpUrls.size()]), InstrumenterWorker.class.getClassLoader())) {
-                instrumenter = (Instrumenter) tmpLoader.loadClass(instrumenterClassName).newInstance();
+                instrumenter = (Instrumenter) tmpLoader.loadClass(instrumenterClassName).getConstructor().newInstance();
             }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return srcPaths;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-            return srcPaths;
-        } catch (IOException e) {
+        } catch (IllegalAccessException | InstantiationException | IOException | NoSuchMethodException | InvocationTargetException e) {
             e.printStackTrace();
             return srcPaths;
         } catch (ClassNotFoundException e) {

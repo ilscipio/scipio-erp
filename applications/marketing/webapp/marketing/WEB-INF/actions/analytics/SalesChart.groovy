@@ -13,7 +13,7 @@ import org.ofbiz.common.uom.SimpleUomRateConverter;
 // New util instance that sets variables in our binding
 asutil = GroovyUtil.getScriptFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy", binding);
 // also works here:
-//asutil = GroovyUtil.getScriptClassFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy").newInstance();
+//asutil = GroovyUtil.getScriptClassFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy").getConstructor().newInstance();
 //asutil.setBinding(binding);
 
 Map processResult() {

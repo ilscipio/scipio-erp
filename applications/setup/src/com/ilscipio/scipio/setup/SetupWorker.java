@@ -1095,7 +1095,7 @@ public abstract class SetupWorker implements Serializable {
                     staticWorker.stepStateMap.put(step, partialState);
                 }
 
-                ctor = cls.getDeclaredConstructor(RequestSetupWorker.class, StaticStepState.class);
+                ctor = cls.getConstructor(RequestSetupWorker.class, StaticStepState.class);
                 return (StepState) ctor.newInstance(this, partialState);
             } catch (Exception e) {
                 Debug.logError(e, module);

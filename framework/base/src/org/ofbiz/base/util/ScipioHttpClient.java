@@ -240,7 +240,7 @@ public class ScipioHttpClient implements Closeable {
             String factoryClsName = (String) properties.get("factoryClass");
             if (UtilValidate.isNotEmpty(factoryClsName)) {
                 try {
-                    factory = (Factory) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName).newInstance();
+                    factory = (Factory) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName).getConstructor().newInstance();
                 } catch (Exception e) {
                     Debug.logError(e, "Could not load factoryClass [" + factoryClsName + "] for ScipioHttpClient config", module);
                 }

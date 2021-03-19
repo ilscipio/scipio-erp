@@ -3,6 +3,7 @@ package com.ilscipio.scipio.solr;
 import org.ofbiz.base.util.ContinueException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 
 import java.io.IOException;
@@ -110,10 +111,8 @@ public interface IndexingHookHandler {
                 String factoryClassStr = props.get("factoryClass");
                 Factory factory;
                 try {
-                    @SuppressWarnings("unchecked")
-                    Class<? extends IndexingHookHandler.Factory> factoryCls =
-                            (Class<? extends IndexingHookHandler.Factory>) Thread.currentThread().getContextClassLoader().loadClass(factoryClassStr);
-                    factory = factoryCls.newInstance();
+                    Class<? extends IndexingHookHandler.Factory> factoryCls = UtilGenerics.cast(Thread.currentThread().getContextClassLoader().loadClass(factoryClassStr));
+                    factory = factoryCls.getConstructor().newInstance();
                 } catch(Exception e) {
                     Debug.logError("Could not load factory [" + factoryClassStr + "] from solrhooks.properties", module);
                     continue;

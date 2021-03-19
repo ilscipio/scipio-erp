@@ -246,9 +246,9 @@ public class ObjectType {
      * @throws IllegalAccessException
      */
     public static Object getInstance(String className) throws ClassNotFoundException,
-            InstantiationException, IllegalAccessException {
+            InstantiationException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         Class<?> c = loadClass(className);
-        Object o = c.newInstance();
+        Object o = c.getConstructor().newInstance();
 
         if (Debug.verboseOn()) {
             Debug.logVerbose("Instantiated object: " + o.toString(), module);

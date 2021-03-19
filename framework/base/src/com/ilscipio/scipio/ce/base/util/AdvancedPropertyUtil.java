@@ -251,7 +251,7 @@ public abstract class AdvancedPropertyUtil {
                 throw new IllegalArgumentException("class '" + className + "' does not implement '" + StartupLoader.class.getName() + "'");
             }
             try {
-                return (H) cls.newInstance();
+                return (H) cls.getConstructor().newInstance();
             } catch(Exception e) {
                 throw new IllegalArgumentException("error loading class '" + className + ": " + e.getMessage(), e);
             }

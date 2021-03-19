@@ -101,7 +101,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
                 if (Modifier.isStatic(m.getModifiers())) {
                     result = m.invoke(null, dctx, context);
                 } else {
-                    result = m.invoke(c.newInstance(), dctx, context);
+                    result = m.invoke(c.getConstructor().newInstance(), dctx, context);
                 }
             } catch(NoSuchMethodException e) {
                 // SCIPIO: Alternative form using ServiceContext (TODO?: cache method overload lookup?)
@@ -109,7 +109,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
                 if (Modifier.isStatic(m.getModifiers())) {
                     result = m.invoke(null, ServiceContext.from(dctx, context));
                 } else {
-                    result = m.invoke(c.newInstance(), ServiceContext.from(dctx, context));
+                    result = m.invoke(c.getConstructor().newInstance(), ServiceContext.from(dctx, context));
                 }
             }
         } catch (ClassNotFoundException cnfe) {

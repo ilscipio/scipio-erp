@@ -20,6 +20,8 @@ package org.ofbiz.widget.portal;
 
 import org.ofbiz.base.util.Debug;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * PortalPageWorker Class
  * <p>
@@ -36,12 +38,8 @@ public final class WidgetPortalPageWorker {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             // note: loadClass is necessary for these since this class doesn't know anything about them at compile time
-            portalPageWorker = (PortalPageWorkerInterface) loader.loadClass("org.ofbiz.widget.portal.PortalPageWorker").newInstance();
-        } catch (ClassNotFoundException e) {
-            Debug.logError(e, "Could not pre-initialize dynamically loaded class: ", module);
-        } catch (IllegalAccessException e) {
-            Debug.logError(e, "Could not pre-initialize dynamically loaded class: ", module);
-        } catch (InstantiationException e) {
+            portalPageWorker = (PortalPageWorkerInterface) loader.loadClass("org.ofbiz.widget.portal.PortalPageWorker").getConstructor().newInstance();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             Debug.logError(e, "Could not pre-initialize dynamically loaded class: ", module);
         }
     }

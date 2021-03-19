@@ -19,6 +19,7 @@
 package org.ofbiz.base.config;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import org.ofbiz.base.util.Debug;
@@ -151,13 +152,12 @@ public abstract class ResourceLoader {
         String className = loaderElement.getAttribute("class");
         ResourceLoader loader;
         try {
-            Class<?> lClass = null;
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            lClass = classLoader.loadClass(className);
-            loader = (ResourceLoader) lClass.newInstance();
+            Class<?> lClass = classLoader.loadClass(className);
+            loader = (ResourceLoader) lClass.getConstructor().newInstance();
             loader.init(loaderName, loaderElement.getAttribute("prefix"), loaderElement.getAttribute("prepend-env"));
             return loader;
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new GenericConfigException("Exception thrown while loading ResourceLoader class \"" + className
                     + "\" ", e);
         }

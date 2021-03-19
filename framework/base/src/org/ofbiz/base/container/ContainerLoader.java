@@ -20,6 +20,7 @@ package org.ofbiz.base.container;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -166,14 +167,10 @@ public class ContainerLoader implements StartupLoader {
         }
 
         // create a new instance of the container object
-        Container containerObj = null;
+        Container containerObj;
         try {
-            containerObj = (Container) containerClass.newInstance();
-        } catch (InstantiationException e) {
-            throw new StartupException("Cannot create " + containerCfg.name, e);
-        } catch (IllegalAccessException e) {
-            throw new StartupException("Cannot create " + containerCfg.name, e);
-        } catch (ClassCastException e) {
+            containerObj = (Container) containerClass.getConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | ClassCastException | NoSuchMethodException | InvocationTargetException e) {
             throw new StartupException("Cannot create " + containerCfg.name, e);
         }
 

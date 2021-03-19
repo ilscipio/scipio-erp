@@ -1,6 +1,7 @@
 package org.ofbiz.base.image;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -63,8 +64,8 @@ public interface ImageVariantSelector {
 
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-        public static Factory getFactoryFromSource(String factorySourceClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-            return ((FactorySource) Thread.currentThread().getContextClassLoader().loadClass(factorySourceClass).newInstance()).getFactory();
+        public static Factory getFactoryFromSource(String factorySourceClass) throws InstantiationException, IllegalAccessException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException {
+            return ((FactorySource) Thread.currentThread().getContextClassLoader().loadClass(factorySourceClass).getConstructor().newInstance()).getFactory();
         }
 
         public static Factory getFactoryFromPropertySafe(String resource, String name, String defaultVal) {

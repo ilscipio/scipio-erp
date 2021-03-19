@@ -3,6 +3,7 @@ package com.ilscipio.scipio.common.util;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -328,18 +329,15 @@ public abstract class TikaUtil {
             return null;
         BufferedInputStream bis = new BufferedInputStream(is);
         try {
-            EncodingDetector detector = encodingDetectorClass.newInstance();
+            EncodingDetector detector = encodingDetectorClass.getConstructor().newInstance();
             Metadata md = new Metadata();
             md.add(Metadata.RESOURCE_NAME_KEY, fileName);
             if (UtilValidate.isNotEmpty(mediaType)) {
                 md.add(Metadata.CONTENT_TYPE, mediaType.getType() + "/" + mediaType.getSubtype());
             }
             return detector.detect(is, md);
-        } catch (InstantiationException e) {
-            Debug.logError(e.getMessage(), module);
-            return null;
-        } catch (IllegalAccessException e) {
-            Debug.logError(e.getMessage(), module);
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            Debug.logError(e.toString(), module);
             return null;
         } finally {
             try {

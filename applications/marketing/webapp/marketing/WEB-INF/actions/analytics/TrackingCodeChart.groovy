@@ -16,7 +16,7 @@ import org.ofbiz.common.uom.SimpleUomRateConverter;
 // FIXME: revisit reuse pattern
 asutil = GroovyUtil.getScriptFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy", binding);
 // also works here:
-//asutil = GroovyUtil.getScriptClassFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy").newInstance();
+//asutil = GroovyUtil.getScriptClassFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy").getConstructor().newInstance();
 //asutil.setBinding(binding);
 
 //// use this helper to build a List of visits, orders, order totals, and conversion rates

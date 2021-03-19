@@ -1,6 +1,7 @@
 package org.ofbiz.product.config;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -67,8 +68,8 @@ public abstract class ProductConfigFactory {
             String factoryClsName = entry.getValue().get("productConfig.factoryClass");
             if (UtilValidate.isNotEmpty(factoryClsName)) {
                 try {
-                    Class<? extends Factory> factoryCls = (Class<? extends Factory>) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName);
-                    Factory factory = factoryCls.newInstance();
+                    Class<? extends Factory> factoryCls = UtilGenerics.cast(Thread.currentThread().getContextClassLoader().loadClass(factoryClsName));
+                    Factory factory = factoryCls.getConstructor().newInstance();
                     factoryMap.put(productStoreId, factory);
                 } catch(Exception e) {
                     Debug.logError("Could not load factory [" + factoryClsName + "] for store [" + productStoreId + "]", module);

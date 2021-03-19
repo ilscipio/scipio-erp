@@ -35,13 +35,13 @@ public class DatevHelper {
             Constructor<? extends AbstractDatevDataCategory> datevDataCategoryConstructor = dataCategoryClass.getConstructor(Delegator.class, DatevHelper.class);
             this.dataCategoryImpl = datevDataCategoryConstructor.newInstance(delegator, this);
             if (dataCategoryImpl.getOperationStatsClass() != null)
-                this.stats = dataCategoryImpl.getOperationStatsClass().newInstance();
+                this.stats = dataCategoryImpl.getOperationStatsClass().getConstructor().newInstance();
             else
-                this.stats = BaseOperationStats.class.newInstance();
+                this.stats = BaseOperationStats.class.getConstructor().newInstance();
             if (dataCategoryImpl.getOperationResultsClass() != null)
-                this.results = dataCategoryImpl.getOperationResultsClass().newInstance();
+                this.results = dataCategoryImpl.getOperationResultsClass().getConstructor().newInstance();
             else
-                this.results = BaseOperationResults.class.newInstance();
+                this.results = BaseOperationResults.class.getConstructor().newInstance();
             if (Debug.isOn(Debug.VERBOSE)) {
                 Debug.logInfo("Datev helper succesfully initialized.", module);
             }

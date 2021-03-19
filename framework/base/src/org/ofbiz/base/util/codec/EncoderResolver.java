@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.codec.EncoderFactory.EncoderSource;
@@ -44,10 +45,9 @@ public class EncoderResolver implements EncoderSource {
                 continue;
             }
             try {
-                @SuppressWarnings("unchecked")
-                Class<? extends EncoderFactory> factoryCls = (Class<? extends EncoderFactory>) Thread.currentThread().getContextClassLoader()
-                    .loadClass(factoryClass);
-                encoderFactories.put(name, factoryCls.newInstance());
+                Class<? extends EncoderFactory> factoryCls = UtilGenerics.cast(Thread.currentThread().getContextClassLoader()
+                    .loadClass(factoryClass));
+                encoderFactories.put(name, factoryCls.getConstructor().newInstance());
             } catch (Exception e) {
                 Debug.logError(e, "Error in '" + resource + "' properties configuration: "
                         + " invalid factoryClass for entry '" + name + "'", module);

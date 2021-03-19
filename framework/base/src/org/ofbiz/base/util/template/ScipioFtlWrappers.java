@@ -621,7 +621,7 @@ public abstract class ScipioFtlWrappers {
         }
         try {
             Class<?> cls = Thread.currentThread().getContextClassLoader().loadClass(clsName);
-            return (ScipioObjectWrapperFactory) cls.newInstance();
+            return (ScipioObjectWrapperFactory) cls.getConstructor().newInstance();
         } catch(Exception e) {
             Debug.logError(e, "Error reading or instantiating ScipioObjectWrapperFactory: " + e.getMessage(), module);
             return defaultValue;
@@ -693,7 +693,7 @@ public abstract class ScipioFtlWrappers {
                         if (cls != null) {
                             ScipioModelFactory factory = null;
                             try {
-                                Object inst = cls.newInstance();
+                                Object inst = cls.getConstructor().newInstance();
                                 if (inst instanceof ScipioModelFactory) {
                                     factory = (ScipioModelFactory) inst;
                                 } else if (inst instanceof ModelFactory) {

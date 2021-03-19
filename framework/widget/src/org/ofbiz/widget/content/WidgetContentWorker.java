@@ -20,6 +20,8 @@ package org.ofbiz.widget.content;
 
 import org.ofbiz.base.util.Debug;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * WidgetContentWorker Class
  */
@@ -33,12 +35,8 @@ public final class WidgetContentWorker {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             // note: loadClass is necessary for these since this class doesn't know anything about them at compile time
-            contentWorker = (ContentWorkerInterface) loader.loadClass("org.ofbiz.content.content.ContentWorker").newInstance();
-        } catch (ClassNotFoundException e) {
-            Debug.logError(e, "Could not pre-initialize dynamically loaded class: ", module);
-        } catch (IllegalAccessException e) {
-            Debug.logError(e, "Could not pre-initialize dynamically loaded class: ", module);
-        } catch (InstantiationException e) {
+            contentWorker = (ContentWorkerInterface) loader.loadClass("org.ofbiz.content.content.ContentWorker").getConstructor().newInstance();
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             Debug.logError(e, "Could not pre-initialize dynamically loaded class: ", module);
         }
     }

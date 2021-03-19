@@ -208,7 +208,8 @@ public class EntityIndexer implements Runnable {
             return defaultFactory;
         }
         try {
-            return UtilGenerics.cast(Thread.currentThread().getContextClassLoader().loadClass(factoryClass).newInstance());
+            return UtilGenerics.cast(Thread.currentThread().getContextClassLoader().loadClass(factoryClass)
+                    .getConstructor().newInstance());
         } catch(Exception e) {
             Debug.logError(e, "Could not load entity indexer factoryClass [" + factoryClass + "] from properties", module);
             return defaultFactory;

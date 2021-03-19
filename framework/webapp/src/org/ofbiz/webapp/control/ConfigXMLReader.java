@@ -53,6 +53,7 @@ import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -285,14 +286,12 @@ public class ConfigXMLReader {
             return defaultFactory;
         }
 
-        @SuppressWarnings("unchecked")
         public static ControllerConfigFactory getFactoryFromProperty(String resource, String property) {
             String factoryClassName = UtilProperties.getPropertyValue(resource, property);
             ControllerConfigFactory factory;
             try {
-                Class<? extends ControllerConfigFactory> factoryClass =
-                        (Class<? extends ControllerConfigFactory>) Thread.currentThread().getContextClassLoader().loadClass(factoryClassName);
-                factory = (ControllerConfigFactory) factoryClass.newInstance();
+                Class<? extends ControllerConfigFactory> factoryClass = UtilGenerics.cast(Thread.currentThread().getContextClassLoader().loadClass(factoryClassName));
+                factory = factoryClass.getConstructor().newInstance();
             } catch (Exception e) {
                 Debug.logError(e, "Could not initialize controller config factory '" + factoryClassName + "': " + e.getMessage(), module);
                 factory = new ControllerConfig.Factory();

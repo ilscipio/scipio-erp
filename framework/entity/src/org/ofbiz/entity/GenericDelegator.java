@@ -20,6 +20,7 @@ package org.ofbiz.entity;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -337,7 +338,7 @@ public class GenericDelegator implements Delegator {
 
             try {
                 Class<?> eecahClass = loader.loadClass(entityEcaHandlerClassName);
-                EntityEcaHandler<?> entityEcaHandler = UtilGenerics.cast(eecahClass.newInstance());
+                EntityEcaHandler<?> entityEcaHandler = UtilGenerics.cast(eecahClass.getConstructor().newInstance());
                 entityEcaHandler.setDelegator(this);
                 return entityEcaHandler;
             } catch (ClassNotFoundException e) {
@@ -348,6 +349,10 @@ public class GenericDelegator implements Delegator {
                 Debug.logWarning(e, "EntityEcaHandler class with name " + entityEcaHandlerClassName + " could not be accessed (illegal), Entity ECA Rules will be disabled", module);
             } catch (ClassCastException e) {
                 Debug.logWarning(e, "EntityEcaHandler class with name " + entityEcaHandlerClassName + " does not implement the EntityEcaHandler interface, Entity ECA Rules will be disabled", module);
+            } catch (NoSuchMethodException e) {
+                Debug.logWarning(e, "EntityEcaHandler class with name " + entityEcaHandlerClassName + " does not implement constructor, Entity ECA Rules will be disabled", module);
+            } catch (InvocationTargetException e) {
+                Debug.logWarning(e, "EntityEcaHandler class with name " + entityEcaHandlerClassName + " threw exception in constructor, Entity ECA Rules will be disabled", module);
             }
         } else if (!this.warnNoEcaHandler) {
             Debug.logInfo("Entity ECA Handler disabled for delegator [" + delegatorFullName + "]", module);
@@ -2661,7 +2666,7 @@ public class GenericDelegator implements Delegator {
 
             try {
                 Class<?> dccClass = loader.loadClass(distributedCacheClearClassName);
-                DistributedCacheClear distributedCacheClear = UtilGenerics.cast(dccClass.newInstance());
+                DistributedCacheClear distributedCacheClear = UtilGenerics.cast(dccClass.getConstructor().newInstance());
                 distributedCacheClear.setDelegator(this, this.delegatorInfo.getDistributedCacheClearUserLoginId());
                 return distributedCacheClear;
             } catch (ClassNotFoundException e) {
@@ -2672,6 +2677,10 @@ public class GenericDelegator implements Delegator {
                 Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " could not be accessed (illegal), distributed cache clearing will be disabled", module);
             } catch (ClassCastException e) {
                 Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " does not implement the DistributedCacheClear interface, distributed cache clearing will be disabled", module);
+            } catch (NoSuchMethodException e) {
+                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " does not implement a default constructor, distributed cache clearing will be disabled", module);
+            } catch (InvocationTargetException e) {
+                Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " constructor threw exception, distributed cache clearing will be disabled", module);
             }
         } else {
             if (Debug.verboseOn()) Debug.logVerbose("Distributed Cache Clear System disabled for delegator [" + delegatorFullName + "]", module);

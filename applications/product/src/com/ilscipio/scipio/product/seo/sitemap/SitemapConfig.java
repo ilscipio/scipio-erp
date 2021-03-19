@@ -10,6 +10,7 @@ import com.ilscipio.scipio.product.category.CatalogFilter;
 import com.ilscipio.scipio.product.category.CatalogFilters;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -171,9 +172,9 @@ public class SitemapConfig implements Serializable {
         SitemapGenerator.SitemapGeneratorFactory generatorFactory = null;
         if (UtilValidate.isNotEmpty(generatorFactoryClsStr)) {
             try {
-                Class<? extends SitemapGenerator.SitemapGeneratorFactory> generatorFactoryCls = (Class<? extends SitemapGenerator.SitemapGeneratorFactory>)
-                        Thread.currentThread().getContextClassLoader().loadClass(generatorFactoryClsStr);
-                generatorFactory = generatorFactoryCls.newInstance();
+                Class<? extends SitemapGenerator.SitemapGeneratorFactory> generatorFactoryCls = UtilGenerics.cast(
+                        Thread.currentThread().getContextClassLoader().loadClass(generatorFactoryClsStr));
+                generatorFactory = generatorFactoryCls.getConstructor().newInstance();
             } catch(Exception e) {
                 throw new IllegalArgumentException("Error loading generatorFactory " + generatorFactoryClsStr, e);
             }
@@ -199,14 +200,14 @@ public class SitemapConfig implements Serializable {
                 } else if (catalogFilterObj instanceof Class) {
                     Class<? extends CatalogFilter> filterCls = (Class<? extends CatalogFilter>) catalogFilterObj;
                     try {
-                        catalogFilters.add(filterCls.newInstance());
+                        catalogFilters.add(filterCls.getConstructor().newInstance());
                     } catch(Exception e) {
                         throw new IllegalArgumentException("Error loading catalogFilter " + filterCls.getName(), e);
                     }
                 } else if (catalogFilterObj instanceof String) {
                     try {
-                        Class<? extends CatalogFilter> filterCls = (Class<? extends CatalogFilter>) Thread.currentThread().getContextClassLoader().loadClass((String) catalogFilterObj);
-                        catalogFilters.add(filterCls.newInstance());
+                        Class<? extends CatalogFilter> filterCls = UtilGenerics.cast(Thread.currentThread().getContextClassLoader().loadClass((String) catalogFilterObj));
+                        catalogFilters.add(filterCls.getConstructor().newInstance());
                     } catch(Exception e) {
                         throw new IllegalArgumentException("Error loading catalogFilter " + catalogFilterObj, e);
                     }
@@ -221,8 +222,8 @@ public class SitemapConfig implements Serializable {
                 catalogFilters = new ArrayList<>(catalogFilterClsStrFull.length);
                 for(String catalogFilterClsStr : catalogFilterClsStrFull) {
                     try {
-                        Class<? extends CatalogFilter> filterCls = (Class<? extends CatalogFilter>) Thread.currentThread().getContextClassLoader().loadClass(catalogFilterClsStr);
-                        catalogFilters.add(filterCls.newInstance());
+                        Class<? extends CatalogFilter> filterCls = UtilGenerics.cast(Thread.currentThread().getContextClassLoader().loadClass(catalogFilterClsStr));
+                        catalogFilters.add(filterCls.getConstructor().newInstance());
                     } catch(Exception e) {
                         throw new IllegalArgumentException("Error loading catalogFilter " + catalogFilterClsStr, e);
                     }

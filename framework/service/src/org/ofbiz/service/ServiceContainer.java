@@ -52,7 +52,7 @@ public class ServiceContainer implements Container {
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try {
             Class<?> c = loader.loadClass(dispatcherFactoryProperty.value);
-            dispatcherFactory = (LocalDispatcherFactory) c.newInstance();
+            dispatcherFactory = (LocalDispatcherFactory) c.getConstructor().newInstance();
         } catch (Exception e) {
             throw new ContainerException(e);
         }

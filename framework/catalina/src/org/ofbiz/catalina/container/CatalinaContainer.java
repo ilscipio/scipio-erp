@@ -404,7 +404,8 @@ public class CatalinaContainer implements Container {
 
         ReplicationTransmitter trans = new ReplicationTransmitter();
         try {
-            MultiPointSender mps = (MultiPointSender)Class.forName(ContainerConfig.getPropertyValue(clusterProps, "replication-mode", "org.apache.catalina.tribes.transport.bio.PooledMultiSender")).newInstance();
+            MultiPointSender mps = (MultiPointSender) Class.forName(ContainerConfig.getPropertyValue(clusterProps, "replication-mode", "org.apache.catalina.tribes.transport.bio.PooledMultiSender"))
+                    .getConstructor().newInstance();
             trans.setTransport(mps);
         } catch (Exception exc) {
             throw new ContainerException("Cluster configuration requires a valid replication-mode property: " + exc.getMessage());
@@ -416,9 +417,9 @@ public class CatalinaContainer implements Container {
 
         SimpleTcpCluster cluster = new SimpleTcpCluster();
         cluster.setClusterName(clusterProps.name);
-        Manager manager = null;
+        Manager manager;
         try {
-            manager = (Manager)Class.forName(mgrClassName).newInstance();
+            manager = (Manager) Class.forName(mgrClassName).getConstructor().newInstance();
         } catch (Exception exc) {
             throw new ContainerException("Cluster configuration requires a valid manager-class property: " + exc.getMessage());
         }
@@ -573,7 +574,7 @@ public class CatalinaContainer implements Container {
             Manager sessionMgr = null;
             String mgrClassName = ContainerConfig.getPropertyValue(clusterProp, "manager-class", "org.apache.catalina.ha.session.DeltaManager");
             try {
-                sessionMgr = (Manager)Class.forName(mgrClassName).newInstance();
+                sessionMgr = (Manager) Class.forName(mgrClassName).getConstructor().newInstance();
             } catch (Exception exc) {
                 throw new ContainerException("Cluster configuration requires a valid manager-class property: " + exc.getMessage());
             }

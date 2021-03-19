@@ -19,6 +19,7 @@
 package org.ofbiz.entity.jdbc;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -123,7 +124,7 @@ public class DatabaseUtil {
         if (driverName != null) {
             if (DriverManager.getDriver(driverName) == null) {
                 try {
-                    Driver driver = (Driver) Class.forName(driverName, true, Thread.currentThread().getContextClassLoader()).newInstance();
+                    Driver driver = (Driver) Class.forName(driverName, true, Thread.currentThread().getContextClassLoader()).getConstructor().newInstance();
                     DriverManager.registerDriver(driver);
                 } catch (ClassNotFoundException e) {
                     Debug.logWarning(e, "Unable to load driver [" + driverName + "]", module);
@@ -131,6 +132,10 @@ public class DatabaseUtil {
                     Debug.logWarning(e, "Unable to instantiate driver [" + driverName + "]", module);
                 } catch (IllegalAccessException e) {
                     Debug.logWarning(e, "Illegal access exception [" + driverName + "]", module);
+                } catch (NoSuchMethodException e) {
+                    Debug.logWarning(e, "No default constructor for driver [" + driverName + "]", module);
+                } catch (InvocationTargetException e) {
+                    Debug.logWarning(e, "Default constructor for driver threw exception [" + driverName + "]", module);
                 }
             }
         }

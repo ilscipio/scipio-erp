@@ -67,7 +67,7 @@ public abstract class ShoppingCartFactory {
             if (UtilValidate.isNotEmpty(factoryClsName)) {
                 try {
                     Class<? extends Factory> factoryCls = (Class<? extends Factory>) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName);
-                    Factory factory = factoryCls.newInstance();
+                    Factory factory = factoryCls.getConstructor().newInstance();
                     factoryMap.put(productStoreId, factory);
                 } catch(Exception e) {
                     Debug.logError("Could not load factory [" + factoryClsName + "] for store [" + productStoreId + "]", module);

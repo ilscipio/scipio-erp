@@ -25,6 +25,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -270,13 +271,13 @@ public final class FreeMarkerWorker {
     }
 
     public static TemplateModel getTransformInstance(String className, ClassLoader loader)
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException { // SCIPIO
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException, NoSuchMethodException, InvocationTargetException { // SCIPIO
         return getTransformInstance(loader.loadClass(className), loader);
     }
     
     public static TemplateModel getTransformInstance(Class<?> cls, ClassLoader loader)
-            throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException { // SCIPIO
-        Object transform = cls.newInstance(); // SCIPIO
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException, NoSuchMethodException, InvocationTargetException { // SCIPIO
+        Object transform = cls.getConstructor().newInstance(); // SCIPIO
         if (transform instanceof FtlTransformFactory) {
             transform = ((FtlTransformFactory) transform).getTransform(loader);
         }

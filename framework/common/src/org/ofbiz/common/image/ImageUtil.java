@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageOp.ImageOpFactory;
@@ -91,9 +92,8 @@ public abstract class ImageUtil {
                 }
                 ImageOpFactory<T> factory;
                 try {
-                    @SuppressWarnings("unchecked")
-                    Class<ImageOpFactory<T>> cls = (Class<ImageOpFactory<T>>) Thread.currentThread().getContextClassLoader().loadClass(factoryClass);
-                    factory = cls.newInstance();
+                    Class<ImageOpFactory<T>> cls = UtilGenerics.cast(Thread.currentThread().getContextClassLoader().loadClass(factoryClass));
+                    factory = cls.getConstructor().newInstance();
                 } catch (Exception e) {
                     Debug.logError(e, "Unable to load image op factory from factory property " + propPrefix+factoryEntry+".factoryClass: " + e.getMessage(), module);
                     continue;

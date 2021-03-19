@@ -92,7 +92,7 @@ public class SolrDocBuilder {
         String factoryClassName = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.index.indexer.factoryClass", Factory.class.getName());
         try {
             Class<Factory> factoryClass = UtilGenerics.cast(SolrDocBuilder.class.getClassLoader().loadClass(factoryClassName));
-            return factoryClass.newInstance();
+            return factoryClass.getConstructor().newInstance();
         } catch (Exception e) {
             Debug.logError(e, "Error loading indexer cache from " + SolrUtil.solrConfigName + "#solr.index.indexer.factoryClass", module);
             return DEFAULT_FACTORY;

@@ -26,9 +26,11 @@
             <@td class="${styles.grid_large!}3">${uiLabelMap.OrderCustomerOrderReplacementRatio}
             </@td>
             <#if returnItemRatio gte 0.5>
-                <@td colspan="3" class="${styles.text_color_error}"> <i class="${styles.icon!} ${styles.icon_error!} "></i> ${returnItemRatio!0} <span id="orderReturnItems">(${returnItemCount!0} / ${orderItemCount!0})</span</@td>
+                <@td colspan="3" class="${styles.text_color_error}"> <i class="${styles.icon!} ${styles.icon_error!} "></i> ${returnItemRatio!0} <span id="orderReturnItems">(${returnItemCount!0} / ${orderItemCount!0})</span></@td>
+            <#elseif returnItemRatio gte 0.25>
+                <@td colspan="3" class="${styles.text_color_warning}">${returnItemRatio!0} <span id="orderReturnItems">(${returnItemCount!0} / ${orderItemCount!0})</span></@td>
             <#else>
-                <@td colspan="3">${returnItemRatio!0} <span id="orderReturnItems">(${returnItemCount!0} / ${orderItemCount!0})</span></@td>
+                <@td colspan="3" class="${styles.text_color_success}">${returnItemRatio!0} <span id="orderReturnItems">(${returnItemCount!0} / ${orderItemCount!0})</span></@td>
             </#if>
         </@tr>
     </@table>

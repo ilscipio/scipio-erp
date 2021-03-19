@@ -3895,6 +3895,34 @@
         <value xml:lang="zh">客户</value>
         <value xml:lang="zh-TW">客戶</value>
     </property>
+    <property key="OrderCustomerInfo">
+        <value xml:lang="de">Kunde Information</value>
+        <value xml:lang="en">Customer Information</value>
+    </property>
+    <property key="OrderCustomerOrderReturnRatio">
+        <value xml:lang="de">Bestell / Retouren Rate</value>
+        <value xml:lang="en">Order / Return Ratio</value>
+    </property>
+    <property key="OrderCustomerOrderReplacementRatio">
+        <value xml:lang="de">Bestell / Austausch Rate</value>
+        <value xml:lang="en">Order / Replacement Ratio</value>
+    </property>
+    <property key="OrderCustomerOrderValue">
+        <value xml:lang="de">Gesamt Bestellwert</value>
+        <value xml:lang="en">Total Order Value</value>
+    </property>
+    <property key="OrderCustomerReturnValue">
+        <value xml:lang="de">Gesamt Retouren-Wert</value>
+        <value xml:lang="en">Total Return Value</value>
+    </property>
+    <property key="OrderCustomerReplacementOrder">
+        <value xml:lang="de">Gesamt Ersatz-Lieferungen</value>
+        <value xml:lang="en">Replacement Order Total</value>
+    </property>
+    <property key="OrderCustomerReturns">
+        <value xml:lang="de">Gesamt Retouren</value>
+        <value xml:lang="en">Total returns</value>
+    </property>
     <property key="OrderCustomerPo">
         <value xml:lang="ar">الرقم البريدي للعميل</value>
         <value xml:lang="de">Kunde Beschaffungsauftragsnummer</value>

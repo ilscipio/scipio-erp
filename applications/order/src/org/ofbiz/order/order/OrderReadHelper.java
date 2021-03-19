@@ -51,6 +51,9 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.config.ProductConfigWorker;
@@ -1532,6 +1535,66 @@ public class OrderReadHelper {
             }
         }
         return emails;
+    }
+
+    /**
+     * SCIPIO: return all OrderIds that match the current email address
+     */
+    public List getAllCustomerOrderIdsFromOrderEmail() {
+            return getAllCustomerOrderIdsFromEmail(getOrderEmailString());
+    }
+
+    /**
+     * SCIPIO: return all OrderIds that match the email address
+     */
+    public List<String> getAllCustomerOrderIdsFromEmail(String emailAddress) {
+        List<String> orderList = new ArrayList<>();
+        try {
+            List<GenericValue> vl = getAllCustomerOrderIdsFromEmailGenericValue(emailAddress);
+            for (GenericValue n : vl)    {
+               String orderId = n.getString("orderId");
+               orderList.add(orderId);
+            }
+        } catch (Exception e) {
+            Debug.logError(e,module);
+        }
+
+        return orderList;
+    }
+
+    public List<GenericValue> getAllCustomerOrderIdsFromEmailGenericValue(String emailAddress) {
+        Delegator delegator = orderHeader.getDelegator();
+        List<GenericValue> orderList = new ArrayList<GenericValue>();
+        DynamicViewEntity dve = new DynamicViewEntity();
+        dve.addMemberEntity("OH", "OrderHeader");
+        dve.addMemberEntity("OHR", "OrderRole");
+        dve.addMemberEntity("OCM", "OrderContactMech");
+        dve.addMemberEntity("CM", "ContactMech");
+        dve.addAlias("OHR", "orderId", null, null, null, Boolean.TRUE, null);
+        dve.addAlias("OHR", "partyId", null, null, null, Boolean.TRUE, null);
+        dve.addAlias("OHR", "roleTypeId", null, null, null, Boolean.TRUE, null);
+        dve.addAlias("OCM", "contactMechPurposeTypeId", null, null, null, true, null);
+        dve.addAlias("CM", "emailAddress", "infoString", null, null, true, null);
+        dve.addViewLink("OH", "OHR", Boolean.FALSE, ModelKeyMap.makeKeyMapList("orderId", "orderId"));
+        dve.addViewLink("OH", "OCM", Boolean.FALSE, ModelKeyMap.makeKeyMapList("orderId", "orderId"));
+        dve.addViewLink("OCM", "CM", Boolean.FALSE, ModelKeyMap.makeKeyMapList("contactMechId", "contactMechId"));
+
+        List<EntityCondition> exprListStatus = new ArrayList<>();
+        EntityCondition expr = EntityCondition.makeCondition("emailAddress", EntityOperator.EQUALS, emailAddress);
+        exprListStatus.add(expr);
+        expr = EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER");
+        exprListStatus.add(expr);
+        expr = EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "ORDER_EMAIL");
+        exprListStatus.add(expr);
+        EntityCondition andCond = EntityCondition.makeCondition(exprListStatus, EntityOperator.AND);
+        try {
+            EntityListIterator customerOrdersIterator = delegator.findListIteratorByCondition(dve,andCond,null,UtilMisc.toList("orderId"),null,null);
+            orderList = customerOrdersIterator.getCompleteList();
+        } catch (GenericEntityException e) {
+            Debug.logError(e,module);
+        }
+
+        return orderList;
     }
 
     public BigDecimal getOrderGrandTotal() {

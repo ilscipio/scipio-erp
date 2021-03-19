@@ -94,7 +94,11 @@ if(context.orderHeader){
     context.returnCount = returnCount;
     context.returnItemValue = returnItemValue;
     context.returnItemCount = returnItemCount;
-    context.returnItemRatio =  (returnItemCount / orderItemCount).setScale(2,BigDecimal.ROUND_HALF_UP);
+    if(BigDecimal.ZERO.compareTo(returnItemRatio) == 0){
+        context.returnItemCount = BigDecimal.ZERO;
+    }else{
+        context.returnItemRatio =  (returnItemCount / orderItemCount).setScale(2,BigDecimal.ROUND_HALF_UP);
+    }
     //context.customerSupportStats = customerSupportStats;
 
 

@@ -1843,7 +1843,7 @@ public final class ProductPromoWorker {
                             if (discount.compareTo(cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment())) > 0) {
                                 discount = cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment());
                             }
-                            BigDecimal discountAmount = quantityUsed.multiply(discount).negate();
+                            BigDecimal discountAmount = quantityUsed.multiply(discount);
                             discountAmountTotal = discountAmountTotal.add(discountAmount);
                         }
                     }

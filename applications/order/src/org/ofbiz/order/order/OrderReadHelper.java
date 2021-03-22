@@ -1527,7 +1527,7 @@ public class OrderReadHelper {
     }
 
     /**
-     * SCIPIO: return all OrderIds that match the current email address
+     * SCIPIO: return all OrderIds that match the current email address and that are not rejected or cancelled
      */
     public List getAllCustomerOrderIdsFromOrderEmail() {
             return getAllCustomerOrderIdsFromEmail(getOrderEmailString());
@@ -1576,6 +1576,8 @@ public class OrderReadHelper {
         expr = EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, "PLACING_CUSTOMER");
         exprListStatus.add(expr);
         expr = EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "ORDER_EMAIL");
+        exprListStatus.add(expr);
+        expr = EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED"));
         exprListStatus.add(expr);
 
 

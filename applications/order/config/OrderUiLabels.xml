@@ -3915,8 +3915,8 @@
         <value xml:lang="en">RFM Score</value>
     </property>
     <property key="OrderCustomerOrderReplacementRatio">
-        <value xml:lang="de">Bestell- / Austausch Produkt Rate</value>
-        <value xml:lang="en">Order / Return Item Ratio</value>
+        <value xml:lang="de">Retouren- / Bestell- Produkt Rate</value>
+        <value xml:lang="en">Return / Order Item Ratio</value>
     </property>
     <property key="OrderCustomerOrderValue">
         <value xml:lang="de">Gesamt Bestellwert</value>

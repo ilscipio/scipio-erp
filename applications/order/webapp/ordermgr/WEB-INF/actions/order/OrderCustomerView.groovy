@@ -9,24 +9,6 @@ import org.ofbiz.order.order.OrderReadHelper
 
 import java.sql.Timestamp;
 
-
-/*
-Range<Integer> rfm_recency_1 = Range.between(0,UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.1",30));
-Range<Integer> rfm_recency_2 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.1",30),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.2",180));
-Range<Integer> rfm_recency_3 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.2",180),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.3",500));
-Range<Integer> rfm_recency_4 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.3",500),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.4",750));
-
-Range<Integer> rfm_frequency_1 = Range.between(0,UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.1",50));
-Range<Integer> rfm_frequency_2 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.1",50),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.2",180));
-Range<Integer> rfm_frequency_3 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.2",180),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.3",500));
-Range<Integer> rfm_frequency_4 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.3",500),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.4",750));
-
-Range<Integer> rfm_recency_1 = Range.between(0,UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.1",30));
-Range<Integer> rfm_recency_2 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.1",30),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.2",180));
-Range<Integer> rfm_recency_3 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.2",180),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.3",500));
-Range<Integer> rfm_recency_4 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.3",500),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.4",750));
-*/
-
 orderReadHelper = context.orderReadHelper;
 if(!context.orderHeader) {
     if (context.orderId) {
@@ -38,7 +20,7 @@ if(context.orderHeader){
         orderReadHelper = new OrderReadHelper(dispatcher, context.locale, context.orderHeader);
     }
     if(!context.displayParty){
-        if ("PURCHASE_ORDER".equals(orderType)) {
+        if ("PURCHASE_ORDER".equals(context.orderHeader.orderTypeId)) {
             displayParty = orderReadHelper.getSupplierAgent();
         } else {
             displayParty = orderReadHelper.getPlacingParty();
@@ -57,8 +39,8 @@ if(context.orderHeader){
     Integer returnCount = 0;
     BigDecimal orderItemValue = BigDecimal.ZERO;
     BigDecimal returnItemValue = BigDecimal.ZERO;
-    Long orderItemCount  = Long.valueOf(0);
-    Long returnItemCount = Long.valueOf(0);
+    BigDecimal orderItemCount  = BigDecimal.ZERO;
+    BigDecimal returnItemCount = BigDecimal.ZERO;
     int rfmRecency = 0;
 
 
@@ -66,7 +48,7 @@ if(context.orderHeader){
     itemEntity.addMemberEntity("OI", "OrderItem");
     itemEntity.addAlias("OI", "orderId", null, null, null, true, null);
     itemEntity.addAlias("OI", "statusId", null, null, null, true, null);
-    itemEntity.addAlias("OI", "orderItemCount", "quantity", null, null, false, "count");
+    itemEntity.addAlias("OI", "orderItemCount", "quantity", null, null, false, "sum");
     itemEntity.addAlias("OI", "orderItemValue", "unitPrice", null, null, false, "sum");
     exprListStatus = []
     exprListStatus.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
@@ -94,7 +76,7 @@ if(context.orderHeader){
 
                 BigDecimal nv = n.getBigDecimal("orderItemValue");
                 orderItemValue = orderItemValue.add(nv);
-                orderItemCount += n.getLong("orderItemCount");
+                orderItemCount = orderItemCount.add(n.getBigDecimal("orderItemCount"));
                 cIndex+=1;
             }
         }
@@ -108,7 +90,7 @@ if(context.orderHeader){
     retEntity.addAlias("OI", "returnId", null, null, null, true, null);
     retEntity.addAlias("OI", "statusId", null, null, null, true, null);
     retEntity.addAlias("OI", "returnTypeId", null, null, null, true, null);
-    retEntity.addAlias("OI", "returnItemCount", "returnQuantity", null, null, false, "count");
+    retEntity.addAlias("OI", "returnItemCount", "returnQuantity", null, null, false, "sum");
     retEntity.addAlias("OI", "returnItemValue", "returnPrice", null, null, false, "sum");
 
     try{
@@ -124,7 +106,7 @@ if(context.orderHeader){
             for(GenericValue n : returnStatsList){
                 BigDecimal nv = n.getBigDecimal("returnItemValue");
                 returnItemValue = returnItemValue.add(nv);
-                returnItemCount += n.getLong("returnItemCount");
+                returnItemCount = returnItemValue.add(n.getBigDecimal("returnItemCount"));
             }
         }
     }catch(Exception e){
@@ -135,10 +117,10 @@ if(context.orderHeader){
 
     context.orderCount = orderCount;
     context.orderItemValue = orderItemValue;
-    context.orderItemCount = orderItemCount;
+    context.orderItemCount = orderItemCount.setScale(0,BigDecimal.ROUND_HALF_UP);
     context.returnCount = returnCount;
     context.returnItemValue = returnItemValue;
-    context.returnItemCount = returnItemCount;
+    context.returnItemCount = returnItemCount.setScale(0,BigDecimal.ROUND_HALF_UP);
     if(BigDecimal.ZERO.compareTo(returnItemCount) == 0){
         context.returnItemRatio = BigDecimal.ZERO;
     }else{

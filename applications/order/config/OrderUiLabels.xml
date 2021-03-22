@@ -3899,13 +3899,24 @@
         <value xml:lang="de">Kunde Information</value>
         <value xml:lang="en">Customer Information</value>
     </property>
+    <property key="OrderCustomerOrdersReturns">
+        <value xml:lang="de">Bestellungen / Retouren</value>
+        <value xml:lang="en">Orders / Returns</value>
+    </property>
     <property key="OrderCustomerOrderReturnRatio">
         <value xml:lang="de">Bestell / Retouren Rate</value>
         <value xml:lang="en">Order / Return Ratio</value>
     </property>
+    <property key="OrderCustomerOrderReturnValue">
+        <value xml:lang="de">Bestell- / Retouren-Wert</value>
+        <value xml:lang="en">Order / Return Value</value>
+    </property>
+    <property key="OrderRFM">
+        <value xml:lang="en">RFM Score</value>
+    </property>
     <property key="OrderCustomerOrderReplacementRatio">
-        <value xml:lang="de">Bestell / Austausch Rate</value>
-        <value xml:lang="en">Order / Replacement Ratio</value>
+        <value xml:lang="de">Bestell- / Austausch Produkt Rate</value>
+        <value xml:lang="en">Order / Return Item Ratio</value>
     </property>
     <property key="OrderCustomerOrderValue">
         <value xml:lang="de">Gesamt Bestellwert</value>

@@ -3,24 +3,19 @@
     <#assign orderPrintAttribute = (delegator.findOne("OrderPrintAttribute", {"orderId", orderId!}, false))! />
     <@table type="fields">
         <@tr>
-            <@td class="${styles.grid_large!}3">${uiLabelMap.OrderOrders}
+            <@td class="${styles.grid_large!}3">${uiLabelMap.OrderCustomerOrdersReturns}
             </@td>
-            <@td colspan="3">${orderCount!0}</@td>
+            <@td colspan="3">${orderCount!0} / ${returnCount!0}</@td>
         </@tr>
         <@tr>
-            <@td class="${styles.grid_large!}3">${uiLabelMap.OrderOrderReturns}
+            <@td class="${styles.grid_large!}3">${uiLabelMap.OrderCustomerOrderReturnValue}
             </@td>
-            <@td colspan="3">${returnCount!0}</@td>
+            <@td colspan="3"><@ofbizCurrency amount=orderItemValue!0 /> / <@ofbizCurrency amount=returnItemValue!0 /></@td>
         </@tr>
         <@tr>
-            <@td class="${styles.grid_large!}3">${uiLabelMap.OrderCustomerOrderValue}
+            <@td class="${styles.grid_large!}3">${uiLabelMap.OrderRFM}
             </@td>
-            <@td colspan="3"><@ofbizCurrency amount=orderItemValue!0 /></@td>
-        </@tr>
-        <@tr>
-            <@td class="${styles.grid_large!}3">${uiLabelMap.OrderCustomerReturnValue}
-            </@td>
-            <@td colspan="3"><@ofbizCurrency amount=returnItemValue!0 /></@td>
+            <@td colspan="3"><span data-toggle="tooltip" data-placement="top" title="RFM score based on Relevancy, Frequency & Monetary segmentation">${rfmRecencyScore}-${rfmFrequencyScore}-${rfmMonetaryScore}</span></@td>
         </@tr>
         <@tr>
             <@td class="${styles.grid_large!}3">${uiLabelMap.OrderCustomerOrderReplacementRatio}

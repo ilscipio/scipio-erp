@@ -5,7 +5,27 @@ import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.entity.model.DynamicViewEntity
 import org.ofbiz.entity.model.ModelKeyMap
-import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.order.order.OrderReadHelper
+
+import java.sql.Timestamp;
+
+
+/*
+Range<Integer> rfm_recency_1 = Range.between(0,UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.1",30));
+Range<Integer> rfm_recency_2 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.1",30),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.2",180));
+Range<Integer> rfm_recency_3 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.2",180),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.3",500));
+Range<Integer> rfm_recency_4 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.3",500),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.4",750));
+
+Range<Integer> rfm_frequency_1 = Range.between(0,UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.1",50));
+Range<Integer> rfm_frequency_2 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.1",50),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.2",180));
+Range<Integer> rfm_frequency_3 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.2",180),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.3",500));
+Range<Integer> rfm_frequency_4 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.3",500),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.4",750));
+
+Range<Integer> rfm_recency_1 = Range.between(0,UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.1",30));
+Range<Integer> rfm_recency_2 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.1",30),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.2",180));
+Range<Integer> rfm_recency_3 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.2",180),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.3",500));
+Range<Integer> rfm_recency_4 = Range.between(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.3",500),UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.4",750));
+*/
 
 orderReadHelper = context.orderReadHelper;
 if(!context.orderHeader) {
@@ -39,25 +59,43 @@ if(context.orderHeader){
     BigDecimal returnItemValue = BigDecimal.ZERO;
     Long orderItemCount  = Long.valueOf(0);
     Long returnItemCount = Long.valueOf(0);
+    int rfmRecency = 0;
 
 
     DynamicViewEntity itemEntity = new DynamicViewEntity();
     itemEntity.addMemberEntity("OI", "OrderItem");
     itemEntity.addAlias("OI", "orderId", null, null, null, true, null);
+    itemEntity.addAlias("OI", "statusId", null, null, null, true, null);
     itemEntity.addAlias("OI", "orderItemCount", "quantity", null, null, false, "count");
     itemEntity.addAlias("OI", "orderItemValue", "unitPrice", null, null, false, "sum");
+    exprListStatus = []
+    exprListStatus.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+    exprListStatus.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ["ITEM_COMPLETED","ITEM_APPROVED"]));
 
-
-
-    expr = EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds);
+    EntityCondition andCond = EntityCondition.makeCondition(exprListStatus, EntityOperator.AND);
 
     try{
-        customerOrderStats = delegator.findListIteratorByCondition(itemEntity,expr,null,null,null,null);
+        customerOrderStats = delegator.findListIteratorByCondition(itemEntity,andCond,null,null,null,null);
+        Timestamp lastOrderDate, previousOrderDate;
+
         if (customerOrderStats != null) {
-            while (n = customerOrderStats.next()) {
+            int cIndex = 0;
+            orderStatsList = customerOrderStats.getCompleteList()
+            for(GenericValue n : orderStatsList){
+                if(cIndex==0){
+                    GenericValue o = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", n.getString("orderId")), true);
+                    lastOrderDate = o.getTimestamp("orderDate");
+                }
+                if(cIndex==1){
+                    GenericValue o = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", n.getString("orderId")), true);
+                    previousOrderDate = o.getTimestamp("orderDate");
+                    rfmRecency = (lastOrderDate.getTime() - previousOrderDate.getTime()) / (1000 * 60 * 60 * 24);
+                }
+
                 BigDecimal nv = n.getBigDecimal("orderItemValue");
                 orderItemValue = orderItemValue.add(nv);
                 orderItemCount += n.getLong("orderItemCount");
+                cIndex+=1;
             }
         }
     }catch(Exception e){
@@ -68,12 +106,18 @@ if(context.orderHeader){
     retEntity.addMemberEntity("OI", "ReturnItem");
     retEntity.addAlias("OI", "orderId", null, null, null, true, null);
     retEntity.addAlias("OI", "returnId", null, null, null, true, null);
+    retEntity.addAlias("OI", "statusId", null, null, null, true, null);
     retEntity.addAlias("OI", "returnTypeId", null, null, null, true, null);
     retEntity.addAlias("OI", "returnItemCount", "returnQuantity", null, null, false, "count");
     retEntity.addAlias("OI", "returnItemValue", "returnPrice", null, null, false, "sum");
 
     try{
-        returnStats = delegator.findListIteratorByCondition(retEntity,EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds),null,null,null,null);
+
+        exprListStatus = []
+        exprListStatus.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+        exprListStatus.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "RETURN_CANCELLED"));
+
+        returnStats = delegator.findListIteratorByCondition(retEntity,EntityCondition.makeCondition(exprListStatus, EntityOperator.AND),null,null,null,null);
         if (returnStats != null) {
             returnStatsList = returnStats.getCompleteList()
             returnCount = returnStatsList.size();
@@ -88,6 +132,7 @@ if(context.orderHeader){
     }
 
 
+
     context.orderCount = orderCount;
     context.orderItemValue = orderItemValue;
     context.orderItemCount = orderItemCount;
@@ -99,7 +144,47 @@ if(context.orderHeader){
     }else{
         context.returnItemRatio =  (returnItemCount / orderItemCount).setScale(2,BigDecimal.ROUND_HALF_UP);
     }
-    //context.customerSupportStats = customerSupportStats;
+    context.rfmRecency=rfmRecency;
+    rfmFrequency = orderCount;
+    context.rfmFrequency=rfmFrequency;
+    rfmMonetary = orderItemValue.subtract(returnItemValue);
+    context.rfmMonetary = rfmMonetary;
 
+    int rfmRecencyScore = 0;
+    int rfmFrequencyScore = 0;
+    int rfmMonetaryScore = 0;
 
+    if(rfmRecency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.1",30)){
+        rfmRecencyScore = 1;
+    }else if(rfmRecency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.2",30)){
+        rfmRecencyScore = 2;
+    }else if(rfmRecency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.3",30)){
+        rfmRecencyScore = 3;
+    }else{
+        rfmRecencyScore = 4;
+    }
+
+    if(rfmFrequency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.1",30)){
+        rfmFrequencyScore = 1;
+    }else if(rfmFrequency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.2",30)){
+        rfmFrequencyScore = 2;
+    }else if(rfmFrequency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.3",30)){
+        rfmFrequencyScore = 3;
+    }else{
+        rfmFrequencyScore = 4;
+    }
+
+    if(rfmMonetary.compareTo(new BigDecimal(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.monetary.1",30))) == 1){
+        rfmMonetaryScore = 1;
+    }else if(rfmMonetary.compareTo(new BigDecimal(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.monetary.2",30))) == 1){
+        rfmMonetaryScore = 2;
+    }else if(rfmMonetary.compareTo(new BigDecimal(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.monetary.3",30))) == 1){
+        rfmMonetaryScore = 3;
+    }else{
+        rfmMonetaryScore = 4;
+    }
+
+    context.rfmRecencyScore=rfmRecencyScore;
+    context.rfmFrequencyScore=rfmFrequencyScore;
+    context.rfmMonetaryScore=rfmMonetaryScore;
 }

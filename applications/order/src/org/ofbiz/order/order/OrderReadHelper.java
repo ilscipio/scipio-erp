@@ -21,18 +21,7 @@ package org.ofbiz.order.order;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -1565,14 +1554,16 @@ public class OrderReadHelper {
     public List<GenericValue> getAllCustomerOrderIdsFromEmailGenericValue(String emailAddress) {
         Delegator delegator = orderHeader.getDelegator();
         List<GenericValue> orderList = new ArrayList<GenericValue>();
+        int rfmDays = UtilProperties.getPropertyAsInteger("order.properties","order.rfm.days",730);
         DynamicViewEntity dve = new DynamicViewEntity();
         dve.addMemberEntity("OH", "OrderHeader");
         dve.addMemberEntity("OHR", "OrderRole");
         dve.addMemberEntity("OCM", "OrderContactMech");
         dve.addMemberEntity("CM", "ContactMech");
-        dve.addAlias("OHR", "orderId", null, null, null, Boolean.TRUE, null);
-        dve.addAlias("OHR", "partyId", null, null, null, Boolean.TRUE, null);
-        dve.addAlias("OHR", "roleTypeId", null, null, null, Boolean.TRUE, null);
+        dve.addAlias("OH", "orderDate",null,null,null,true,null);
+        dve.addAlias("OHR", "orderId", null, null, null, false, null);
+        dve.addAlias("OHR", "partyId", null, null, null, false, null);
+        dve.addAlias("OHR", "roleTypeId", null, null, null, false, null);
         dve.addAlias("OCM", "contactMechPurposeTypeId", null, null, null, true, null);
         dve.addAlias("CM", "emailAddress", "infoString", null, null, true, null);
         dve.addViewLink("OH", "OHR", Boolean.FALSE, ModelKeyMap.makeKeyMapList("orderId", "orderId"));
@@ -1586,9 +1577,17 @@ public class OrderReadHelper {
         exprListStatus.add(expr);
         expr = EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "ORDER_EMAIL");
         exprListStatus.add(expr);
+
+
+        if(rfmDays>0){
+            Calendar currentDayCal = Calendar.getInstance();
+            currentDayCal.setTimeInMillis(Calendar.YEAR);
+            currentDayCal.set(Calendar.DAY_OF_MONTH, -rfmDays);
+            exprListStatus.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toTimestamp(currentDayCal.getTime())));
+        }
         EntityCondition andCond = EntityCondition.makeCondition(exprListStatus, EntityOperator.AND);
         try {
-            EntityListIterator customerOrdersIterator = delegator.findListIteratorByCondition(dve,andCond,null,UtilMisc.toList("orderId"),null,null);
+            EntityListIterator customerOrdersIterator = delegator.findListIteratorByCondition(dve,andCond,null,UtilMisc.toList("orderId"),UtilMisc.toList("-orderDate"),null);
             orderList = customerOrdersIterator.getCompleteList();
         } catch (GenericEntityException e) {
             Debug.logError(e,module);

@@ -97,13 +97,13 @@ if(context.orderHeader){
     }
 
     DynamicViewEntity retEntity = new DynamicViewEntity();
-    retEntity.addMemberEntity("OI", "ReturnItem");
-    retEntity.addAlias("OI", "orderId", null, null, null, true, null);
-    retEntity.addAlias("OI", "returnId", null, null, null, true, null);
-    retEntity.addAlias("OI", "statusId", null, null, null, true, null);
-    retEntity.addAlias("OI", "returnTypeId", null, null, null, true, null);
-    retEntity.addAlias("OI", "returnItemCount", "returnQuantity", null, null, false, "sum");
-    retEntity.addAlias("OI", "returnItemValue", "returnPrice", null, null, false, "sum");
+    retEntity.addMemberEntity("RI", "ReturnItem");
+    retEntity.addAlias("RI", "orderId", null, null, null, true, null);
+    retEntity.addAlias("RI", "returnId", null, null, null, true, null);
+    retEntity.addAlias("RI", "statusId", null, null, null, true, null);
+    retEntity.addAlias("RI", "returnTypeId", null, null, null, true, null);
+    retEntity.addAlias("RI", "returnItemCount", "returnQuantity", null, null, false, "sum");
+    retEntity.addAlias("RI", "returnItemValue", "returnPrice", null, null, false, "sum");
 
     try{
 

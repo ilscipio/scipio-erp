@@ -1565,6 +1565,7 @@ public class OrderReadHelper {
         dve.addMemberEntity("OCM", "OrderContactMech");
         dve.addMemberEntity("CM", "ContactMech");
         dve.addAlias("OH", "orderDate",null,null,null,true,null);
+        dve.addAlias("OH", "statusId",null,null,null,false,null);
         dve.addAlias("OHR", "orderId", null, null, null, false, null);
         dve.addAlias("OHR", "partyId", null, null, null, false, null);
         dve.addAlias("OHR", "roleTypeId", null, null, null, false, null);

@@ -1530,16 +1530,20 @@ public class OrderReadHelper {
      * SCIPIO: return all OrderIds that match the current email address and that are not rejected or cancelled
      */
     public List getAllCustomerOrderIdsFromOrderEmail() {
-            return getAllCustomerOrderIdsFromEmail(getOrderEmailString());
+            return getAllCustomerOrderIdsFromEmail(getOrderEmailString(),new ArrayList<String>());
+    }
+
+    public List getAllCustomerOrderIdsFromOrderEmail(List<String>filteredStatusIds) {
+        return getAllCustomerOrderIdsFromEmail(getOrderEmailString(),filteredStatusIds);
     }
 
     /**
      * SCIPIO: return all OrderIds that match the email address
      */
-    public List<String> getAllCustomerOrderIdsFromEmail(String emailAddress) {
+    public List<String> getAllCustomerOrderIdsFromEmail(String emailAddress,List<String>filteredStatusIds) {
         List<String> orderList = new ArrayList<>();
         try {
-            List<GenericValue> vl = getAllCustomerOrderIdsFromEmailGenericValue(emailAddress);
+            List<GenericValue> vl = getAllCustomerOrderIdsFromEmailGenericValue(emailAddress,filteredStatusIds);
             for (GenericValue n : vl)    {
                String orderId = n.getString("orderId");
                orderList.add(orderId);
@@ -1551,7 +1555,7 @@ public class OrderReadHelper {
         return orderList;
     }
 
-    public List<GenericValue> getAllCustomerOrderIdsFromEmailGenericValue(String emailAddress) {
+    public List<GenericValue> getAllCustomerOrderIdsFromEmailGenericValue(String emailAddress, List<String>filteredStatusIds) {
         Delegator delegator = orderHeader.getDelegator();
         List<GenericValue> orderList = new ArrayList<GenericValue>();
         int rfmDays = UtilProperties.getPropertyAsInteger("order.properties","order.rfm.days",730);
@@ -1577,9 +1581,10 @@ public class OrderReadHelper {
         exprListStatus.add(expr);
         expr = EntityCondition.makeCondition("contactMechPurposeTypeId", EntityOperator.EQUALS, "ORDER_EMAIL");
         exprListStatus.add(expr);
-        expr = EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED"));
-        exprListStatus.add(expr);
-
+        if(UtilValidate.isNotEmpty(filteredStatusIds)){
+            expr = EntityCondition.makeCondition("statusId", EntityOperator.NOT_IN, filteredStatusIds);
+            exprListStatus.add(expr);
+        }
 
         if(rfmDays>0){
             Calendar currentDayCal = Calendar.getInstance();

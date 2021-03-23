@@ -34,7 +34,7 @@ if(context.orderHeader){
 
 
     //SQL magic
-    List<String> orderIds = orderReadHelper.getAllCustomerOrderIdsFromOrderEmail();
+    List<String> orderIds = orderReadHelper.getAllCustomerOrderIdsFromOrderEmail(UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED"));
     Integer orderCount = orderIds.size();
     Integer returnCount = 0;
     BigDecimal orderItemValue = BigDecimal.ZERO;

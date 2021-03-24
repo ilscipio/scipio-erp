@@ -51,7 +51,6 @@ import org.ofbiz.service.config.ServiceConfigListener;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.model.ServiceConfig;
 import org.ofbiz.service.config.model.ThreadPool;
-import org.omg.CORBA.Current;
 
 /**
  * Job poller. Queues and runs jobs.

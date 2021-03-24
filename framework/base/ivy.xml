@@ -173,6 +173,11 @@
         <dependency org="org.apache.sshd" name="sshd-sftp" rev="2.1.0" conf="base,sources"/>
         <dependency org="com.googlecode.ez-vcard" name="ez-vcard" rev="0.10.4" conf="base,sources"/><!-- stock qrcode -->
 
+        <!-- jdk11 removed JDK packages -->
+        <dependency org="javax.xml.bind" name="jaxb-api" rev="2.4.0-b180830.0359" conf="base-jdk11,sources-jdk11"/>
+        <dependency org="com.sun.xml.bind" name="jaxb-core" rev="3.0.0" conf="base-jdk11,sources-jdk11"/>
+        <dependency org="com.sun.xml.bind" name="jaxb-impl" rev="3.0.0" conf="base-jdk11,sources-jdk11"/>
+
         <!-- base qrcode jars -->
         <dependency org="com.google.zxing" name="core" rev="3.3.3" conf="base,sources"/><!-- stock qrcode -->
 

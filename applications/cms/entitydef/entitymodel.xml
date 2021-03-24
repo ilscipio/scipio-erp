@@ -41,9 +41,10 @@
         <relation type="one" fk-name="CMSACSTKN_USER_ID" rel-entity-name="UserLogin">
             <key-map field-name="userId" rel-field-name="userLoginId"/>
         </relation>
+        <!-- Not really necessary
         <relation type="one" fk-name="CMSACSTKN_PAGE" rel-entity-name="CmsPage">
             <key-map field-name="pageId"/>
-        </relation>
+        </relation>-->
     </entity>
 
     <!-- ========================================================= -->

@@ -902,6 +902,9 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         try {
             Delegator delegator = getDelegator();
 
+            // delete CmsAccessToken
+            rowsAffected += delegator.removeByAnd("CmsAccessToken", UtilMisc.toMap("pageId", this.getId()));
+
             // delete CmsPageSpecialMapping
             rowsAffected += delegator.removeByAnd("CmsPageSpecialMapping", UtilMisc.toMap("pageId", this.getId()));
 

@@ -106,7 +106,7 @@ if(context.orderHeader){
             for(GenericValue n : returnStatsList){
                 BigDecimal nv = n.getBigDecimal("returnItemValue");
                 returnItemValue = returnItemValue.add(nv);
-                returnItemCount = returnItemValue.add(n.getBigDecimal("returnItemCount"));
+                returnItemCount = returnItemCount.add(n.getBigDecimal("returnItemCount"));
             }
         }
     }catch(Exception e){

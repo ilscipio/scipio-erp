@@ -33,6 +33,21 @@ if(context.orderHeader){
 
     //SQL magic
     List<String> orderIds = orderReadHelper.getAllCustomerOrderIdsFromOrderEmail(UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED"));
+
+    //Remove orders from list that are "replacements" or "empty"
+    exl = [];
+    exl.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
+    exl.add(EntityCondition.makeCondition("grandTotal", EntityOperator.EQUALS, BigDecimal.ZERO))
+    negativeOrders = delegator.findList("OrderHeader", EntityCondition.makeCondition(exl, EntityOperator.AND),
+                                                            UtilMisc.toSet("orderId"),
+                                                            null,
+                                                            null,
+                                                            true);
+    for(GenericValue n : negativeOrders){
+        orderIds.remove(n.getString("orderId"));
+    }
+
+
     Integer orderCount = orderIds.size();
     Integer returnCount = 0;
     BigDecimal orderItemValue = BigDecimal.ZERO;

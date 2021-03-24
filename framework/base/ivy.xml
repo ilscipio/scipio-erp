@@ -37,6 +37,8 @@
 
         <!-- general configurations -->
         <conf name="base" description="download all framework/base/lib (root dir) jars required for build"/>
+        <conf name="base-jdk8" description="download all framework/base/lib (root dir) jars required for build - jdk8 only"/>
+        <conf name="base-jdk11" description="download all framework/base/lib (root dir) jars required for build - jdk11 only"/>
 
         <!-- legacy categories (these each had a folder, no longer useful) -->
         <conf name="commons" description="download all framework/base/commons jars required for build"/>
@@ -49,6 +51,8 @@
 
         <!-- sources -->
         <conf name="sources" description="download all available source jars"/>
+        <conf name="sources-jdk8" description="download all available source jars - jdk8 only"/>
+        <conf name="sources-jdk11" description="download all available source jars - jdk11 only"/>
 
         <!--
             ON-DEMAND OPTIONAL STOCK CONFIGURATIONS

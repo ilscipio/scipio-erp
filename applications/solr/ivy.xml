@@ -5,7 +5,11 @@
     <info module="solr" organisation="com.ilscipio.scipio.ce"/>
     <configurations defaultconfmapping="solr-webapp-sources->sources;%->default">
         <conf name="solr-webapp" description="download solr webapp jars required for build"/>
+        <conf name="solr-webapp-jdk8" description="download solr webapp jars required for build - jdk8 only"/>
+        <conf name="solr-webapp-jdk11" description="download solr webapp jars required for build - jdk11 only"/>
         <conf name="solr-webapp-sources" description="download solr webapp source jars"/>
+        <conf name="solr-webapp-sources-jdk8" description="download solr webapp source jars - jdk8 only"/>
+        <conf name="solr-webapp-sources-jdk11" description="download solr webapp source jars - jdk11 only"/>
     </configurations>
     <dependencies>
         <!-- NOTICE: 2018-03-19: All applications/*/lib root dir ivy dependencies are now defined in:

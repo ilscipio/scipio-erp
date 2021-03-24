@@ -796,4 +796,31 @@ Unexpectedly received empty list of builds to iterate."/>
         <taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml" classpathref="lib.ivy.class.path"/>
     </target>
 
+    <target name="get-scipio-java-version" unless="scipio.java.version.major">
+        <java classname="com.ilscipio.scipio.ce.build.util.BuildUtil" outputproperty="scipio.java.version.major">
+            <arg value="-majorver"/>
+            <classpath>
+                <path location="${ofbiz.home.dir}/tools/misc/scipio-build-tools.jar"/>
+            </classpath>
+        </java>
+        <echo level="info">scipio.java.version.major: ${scipio.java.version.major}</echo>
+    </target>
+
+    <macrodef name="get-ivy-versioned-confs">
+        <attribute name="conf"/>
+        <attribute name="ivyfile"/>
+        <attribute name="outputproperty"/>
+        <sequential>
+            <var name="@{outputproperty}" unset="true"/>
+            <java classname="com.ilscipio.scipio.ce.build.util.BuildUtil" outputproperty="@{outputproperty}">
+                <arg value="-ivyverconf"/>
+                <arg value="@{conf}"/>
+                <arg value="@{ivyfile}"/>
+                <classpath>
+                    <path location="${ofbiz.home.dir}/tools/misc/scipio-build-tools.jar"/>
+                </classpath>
+            </java>
+        </sequential>
+    </macrodef>
+
 </project>

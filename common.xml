@@ -445,7 +445,23 @@ code package.
                 <property name="lib.resolve.src.confs" value="sources"/>
             </then>
         </if>
-        
+
+        <!-- add the support -jdk8/-jdk11 switches for all confs supporting them (automated) -->
+        <get-ivy-versioned-confs conf="${lib.resolve.build.confs}" ivyfile="${basedir}/ivy.xml" outputproperty="lib.resolve.build.confs"/>
+        <echo message="lib.resolve.build.confs versioned: ${lib.resolve.build.confs}"/>
+        <if>
+            <and>
+                <equals arg1="${lib.update.sources}" arg2="true"/>
+                <isset property="lib.resolve.src.confs"/>
+                <not><equals arg1="${lib.resolve.src.confs}" arg2="none"/></not>
+                <not><equals arg1="${lib.resolve.confs}" arg2="*"/></not>
+            </and>
+            <then>
+                <get-ivy-versioned-confs conf="${lib.resolve.src.confs}" ivyfile="${basedir}/ivy.xml" outputproperty="lib.resolve.src.confs"/>
+                <echo message="lib.resolve.src.confs versioned: ${lib.resolve.src.confs}"/>
+            </then>
+        </if>
+
         <!-- determine effective confs to use in this call (either include sources or don't) -->
         <if>
             <and>

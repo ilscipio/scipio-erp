@@ -1588,8 +1588,7 @@ public class OrderReadHelper {
 
         if(rfmDays>0){
             Calendar currentDayCal = Calendar.getInstance();
-            currentDayCal.setTimeInMillis(Calendar.YEAR);
-            currentDayCal.set(Calendar.DAY_OF_MONTH, -rfmDays);
+            currentDayCal.set(Calendar.DATE, -rfmDays);
             exprListStatus.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toTimestamp(currentDayCal.getTime())));
         }
         EntityCondition andCond = EntityCondition.makeCondition(exprListStatus, EntityOperator.AND);

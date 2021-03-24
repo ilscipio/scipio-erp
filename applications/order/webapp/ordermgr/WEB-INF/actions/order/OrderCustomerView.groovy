@@ -31,8 +31,6 @@ if(context.orderHeader){
     emailAddress = orderReadHelper.getOrderEmailString();
 
 
-
-
     //SQL magic
     List<String> orderIds = orderReadHelper.getAllCustomerOrderIdsFromOrderEmail(UtilMisc.toList("ORDER_CANCELLED","ORDER_REJECTED"));
     Integer orderCount = orderIds.size();
@@ -58,7 +56,7 @@ if(context.orderHeader){
 
     try{
         customerOrderStats = delegator.findListIteratorByCondition(itemEntity,andCond,null,null,null,null);
-        Timestamp lastOrderDate, previousOrderDate;
+        Timestamp lastOrderDate;
 
         if (customerOrderStats != null) {
             int cIndex = 0;
@@ -67,13 +65,9 @@ if(context.orderHeader){
                 if(cIndex==0){
                     GenericValue o = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", n.getString("orderId")), true);
                     lastOrderDate = o.getTimestamp("orderDate");
-                }
-                if(cIndex==1){
-                    GenericValue o = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", n.getString("orderId")), true);
-                    previousOrderDate = o.getTimestamp("orderDate");
-                    rfmRecency = (lastOrderDate.getTime() - previousOrderDate.getTime()) / (1000 * 60 * 60 * 24);
-                }
+                    rfmRecency = ( System.currentTimeMillis() - lastOrderDate.getTime()) / (1000 * 60 * 60 * 24);
 
+                }
                 BigDecimal nv = n.getBigDecimal("orderItemValue");
                 orderItemValue = orderItemValue.add(nv);
                 orderItemCount = orderItemCount.add(n.getBigDecimal("orderItemCount"));
@@ -136,31 +130,31 @@ if(context.orderHeader){
     int rfmFrequencyScore = 0;
     int rfmMonetaryScore = 0;
 
-    if(rfmRecency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.1",30)){
+    if(rfmRecency <= UtilProperties.getPropertyAsInteger("order","order.rfm.recency.1",30)){
         rfmRecencyScore = 1;
-    }else if(rfmRecency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.2",30)){
+    }else if(rfmRecency <= UtilProperties.getPropertyAsInteger("order","order.rfm.recency.2",90)){
         rfmRecencyScore = 2;
-    }else if(rfmRecency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.recency.3",30)){
+    }else if(rfmRecency <= UtilProperties.getPropertyAsInteger("order","order.rfm.recency.3",375)){
         rfmRecencyScore = 3;
     }else{
         rfmRecencyScore = 4;
     }
 
-    if(rfmFrequency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.1",30)){
+    if(rfmFrequency >= UtilProperties.getPropertyAsInteger("order","order.rfm.frequency.1",50)){
         rfmFrequencyScore = 1;
-    }else if(rfmFrequency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.2",30)){
+    }else if(rfmFrequency >= UtilProperties.getPropertyAsInteger("order","order.rfm.frequency.2",30)){
         rfmFrequencyScore = 2;
-    }else if(rfmFrequency <= UtilProperties.getPropertyAsInteger("order.properties","order.rfm.frequency.3",30)){
+    }else if(rfmFrequency >= UtilProperties.getPropertyAsInteger("order","order.rfm.frequency.3",20)){
         rfmFrequencyScore = 3;
     }else{
         rfmFrequencyScore = 4;
     }
 
-    if(rfmMonetary.compareTo(new BigDecimal(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.monetary.1",30))) == 1){
+    if(rfmMonetary.compareTo(new BigDecimal(UtilProperties.getPropertyAsInteger("order","order.rfm.monetary.1",250))) == 1){
         rfmMonetaryScore = 1;
-    }else if(rfmMonetary.compareTo(new BigDecimal(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.monetary.2",30))) == 1){
+    }else if(rfmMonetary.compareTo(new BigDecimal(UtilProperties.getPropertyAsInteger("order","order.rfm.monetary.2",100))) == 1){
         rfmMonetaryScore = 2;
-    }else if(rfmMonetary.compareTo(new BigDecimal(UtilProperties.getPropertyAsInteger("order.properties","order.rfm.monetary.3",30))) == 1){
+    }else if(rfmMonetary.compareTo(new BigDecimal(UtilProperties.getPropertyAsInteger("order","order.rfm.monetary.3",50))) == 1){
         rfmMonetaryScore = 3;
     }else{
         rfmMonetaryScore = 4;

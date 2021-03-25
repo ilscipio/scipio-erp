@@ -155,11 +155,11 @@ if(context.orderHeader){
         rfmRecencyScore = 4;
     }
 
-    if(rfmFrequency >= UtilProperties.getPropertyAsInteger("order","order.rfm.frequency.1",50)){
+    if(rfmFrequency >= UtilProperties.getPropertyAsInteger("order","order.rfm.frequency.1",10)){
         rfmFrequencyScore = 1;
-    }else if(rfmFrequency >= UtilProperties.getPropertyAsInteger("order","order.rfm.frequency.2",30)){
+    }else if(rfmFrequency >= UtilProperties.getPropertyAsInteger("order","order.rfm.frequency.2",5)){
         rfmFrequencyScore = 2;
-    }else if(rfmFrequency >= UtilProperties.getPropertyAsInteger("order","order.rfm.frequency.3",20)){
+    }else if(rfmFrequency >= UtilProperties.getPropertyAsInteger("order","order.rfm.frequency.3",3)){
         rfmFrequencyScore = 3;
     }else{
         rfmFrequencyScore = 4;

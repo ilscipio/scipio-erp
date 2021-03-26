@@ -1768,16 +1768,14 @@ public final class ProductPromoWorker {
                 Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
                     BigDecimal discountAmountTotal = BigDecimal.ZERO;
+                    BigDecimal lineAmountTotal = BigDecimal.ZERO;
 
                     Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
                     List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
-                    BigDecimal totalQuantity = BigDecimal.ZERO;
-                    for (ShoppingCartItem item : lineOrderedByBasePriceList) {
-                        totalQuantity = totalQuantity.add(item.getQuantity());
-                    }
-                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? totalQuantity : productPromoAction.getBigDecimal("quantity");
+
+                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? cart.getItemsTotalQuantity(lineOrderedByBasePriceList) : productPromoAction.getBigDecimal("quantity");
                     Iterator<ShoppingCartItem> lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
-                    while (quantityDesired.compareTo(BigDecimal.ZERO) > 0 && lineOrderedByBasePriceIter.hasNext()) {
+                    while (lineOrderedByBasePriceIter.hasNext()) {
                         ShoppingCartItem cartItem = lineOrderedByBasePriceIter.next();
                         // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
                         String parentProductId = cartItem.getParentProductId();
@@ -1790,10 +1788,18 @@ public final class ProductPromoWorker {
                             BigDecimal quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
                             if (quantityUsed.compareTo(BigDecimal.ZERO) > 0) {
                                 quantityDesired = quantityDesired.subtract(quantityUsed);
+
+                                // create an adjustment and add it to the cartItem that implements the promotion action
+                                BigDecimal percentModifier = productPromoAction.get("amount") == null ? BigDecimal.ZERO : productPromoAction.getBigDecimal("amount").movePointLeft(2);
+                                BigDecimal lineAmount = cartItem.getQuantity().multiply(cartItem.getBasePrice()).multiply(cartItem.getRentalAdjustment());
+                                lineAmountTotal = lineAmountTotal.add(lineAmount);
+                                BigDecimal discountAmount = lineAmount.multiply(percentModifier).negate();
+                                discountAmountTotal = discountAmountTotal.add(discountAmount);
                             }
                         }
                     }
-                    distributeDiscountAmount(amount, cart.getGrandTotal(), getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
+
+                    distributeDiscountAmount(discountAmountTotal, lineAmountTotal, getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
                     actionResultInfo.totalDiscountAmount = discountAmountTotal;
                     actionResultInfo.quantityLeftInAction = quantityDesired;
                 } else {
@@ -1811,20 +1817,18 @@ public final class ProductPromoWorker {
                 amount = subTotal.negate();
             }
 
+
+
             if (amount.compareTo(BigDecimal.ZERO) != 0) {
+                BigDecimal lineAmountTotal = BigDecimal.ZERO;
                 Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
                     BigDecimal discountAmountTotal = BigDecimal.ZERO;
                     Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
 
                     List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
-                    BigDecimal totalQuantity = BigDecimal.ZERO;
-                    for (ShoppingCartItem item : lineOrderedByBasePriceList) {
-                        totalQuantity = totalQuantity.add(item.getQuantity());
-                    }
-                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? totalQuantity : productPromoAction.getBigDecimal("quantity");
+                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? new BigDecimal(lineOrderedByBasePriceList.size()) : productPromoAction.getBigDecimal("quantity");
                     Iterator<ShoppingCartItem> lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
-
                     while (quantityDesired.compareTo(BigDecimal.ZERO) > 0 && lineOrderedByBasePriceIter.hasNext()) {
                         ShoppingCartItem cartItem = lineOrderedByBasePriceIter.next();
                         // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
@@ -1838,17 +1842,21 @@ public final class ProductPromoWorker {
                             BigDecimal quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
                             quantityDesired = quantityDesired.subtract(quantityUsed);
 
-                            BigDecimal discount = amount.divide(totalQuantity, 2, BigDecimal.ROUND_HALF_UP);
+                            // create an adjustment and add it to the cartItem that implements the promotion action
+                            BigDecimal discount = amount.divide(new BigDecimal(lineOrderedByBasePriceList.size()));
                             // don't allow the discount to be greater than the price
                             if (discount.compareTo(cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment())) > 0) {
                                 discount = cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment());
                             }
                             BigDecimal discountAmount = quantityUsed.multiply(discount);
                             discountAmountTotal = discountAmountTotal.add(discountAmount);
+
+                            BigDecimal lineAmount = cartItem.getQuantity().multiply(cartItem.getBasePrice()).multiply(cartItem.getRentalAdjustment());
+                            lineAmountTotal = lineAmountTotal.add(lineAmount);
                         }
                     }
 
-                    distributeDiscountAmount(discountAmountTotal, cart.getGrandTotal(), getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
+                    distributeDiscountAmount(discountAmountTotal, lineAmountTotal, getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
                     actionResultInfo.totalDiscountAmount = discountAmountTotal;
                     actionResultInfo.quantityLeftInAction = quantityDesired;
                 } else {
@@ -2014,7 +2022,8 @@ public final class ProductPromoWorker {
             // to minimize rounding issues use the remaining total for the last one, otherwise use a calculated value
             if (cartItemsUsedIter.hasNext()) {
                 BigDecimal quantityUsed = cartItem.getPromoQuantityCandidateUseActionAndAllConds(productPromoAction);
-                BigDecimal ratioOfTotal = quantityUsed.multiply(cartItem.getBasePrice()).divide(totalAmount, generalRounding);
+                BigDecimal ratioOfTotal = quantityUsed.multiply(cartItem.getBasePrice()).divide(totalAmount, RoundingMode.HALF_EVEN);
+                ratioOfTotal = ratioOfTotal.setScale(5);
                 BigDecimal weightedAmount = ratioOfTotal.multiply(discountAmountTotal);
                 // round the weightedAmount to 3 decimal places, we don't want an exact number cents/whatever because this will be added up as part of a subtotal which will be rounded to 2 decimal places
                 weightedAmount = weightedAmount.setScale(3, RoundingMode.HALF_UP);

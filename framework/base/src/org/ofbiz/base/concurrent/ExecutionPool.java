@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -43,7 +44,11 @@ import org.ofbiz.base.util.UtilProperties;
 public final class ExecutionPool {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final ExecutorService GLOBAL_BATCH = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 5, TimeUnit.SECONDS, new SynchronousQueue<Runnable>(), new ExecutionPoolThreadFactory(null, "Scipio-batch"));
-    public static final ForkJoinPool GLOBAL_FORK_JOIN = new ForkJoinPool();
+    // SCIPIO: Use ForkJoinWorkerThreadFactory, essential for jdk9
+    //public static final ForkJoinPool GLOBAL_FORK_JOIN = new ForkJoinPool();
+    private static final int MAX_CAP = 0x7fff; // FIXME: inaccessible as ForkJoinPool.MAX_CAP
+    public static final ForkJoinPool GLOBAL_FORK_JOIN = new ForkJoinPool(Math.min(MAX_CAP, Runtime.getRuntime().availableProcessors()),
+            ExecutionForkJoinWorkerThreadFactory.getDefault(), null, false);
     private static final ExecutorService pulseExecutionPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors(), new ExecutionPoolThreadFactory(null, "Scipio-ExecutionPoolPulseWorker"));
     private static final Boolean logQueueSize= UtilProperties.getPropertyAsBoolean("cache", "cache.delayqeue.log.enable", false);
 
@@ -179,4 +184,28 @@ public final class ExecutionPool {
         }
     }
 
+    /**
+     * Transfers the current thread context class loader to the ForkJoinPool thread, required since jdk9.
+     * May be set using -Djava.util.concurrent.ForkJoinPool.common.threadFactory=org.ofbiz.base.concurrent.ExecutionPool$ExecutionForkJoinWorkerThreadFactory
+     */
+    public static class ExecutionForkJoinWorkerThreadFactory implements ForkJoinPool.ForkJoinWorkerThreadFactory {
+        private static final ForkJoinPool.ForkJoinWorkerThreadFactory DEFAULT = new ExecutionForkJoinWorkerThreadFactory();
+
+        public static ForkJoinPool.ForkJoinWorkerThreadFactory getDefault() {
+            return DEFAULT;
+        }
+
+        @Override
+        public final ForkJoinWorkerThread newThread(ForkJoinPool pool) {
+            return new ExecutionForkJoinWorkerThread(pool);
+        }
+
+        protected static class ExecutionForkJoinWorkerThread extends ForkJoinWorkerThread {
+            protected ExecutionForkJoinWorkerThread(final ForkJoinPool pool) {
+                super(pool);
+                // set the correct classloader here
+                setContextClassLoader(Thread.currentThread().getContextClassLoader());
+            }
+        }
+    }
 }

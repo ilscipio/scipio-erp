@@ -829,8 +829,9 @@ public class SQLProcessor implements AutoCloseable {
         _ind++;
     }
 
+    @Deprecated
     @Override
-    protected void finalize() throws Throwable {
+    protected void finalize() throws Throwable { // SCIPIO: TODO: alternative (finalize deprecated by java)
         try {
             this.close();
         } catch (Exception e) {

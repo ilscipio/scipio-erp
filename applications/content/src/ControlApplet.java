@@ -36,7 +36,9 @@ import org.ofbiz.base.util.UtilValidate;
 
 /**
  * Control Applet - Client applet for page pushing and (future) chat
+ * @deprecated SCIPIO: 2.1.0: for reference only, API deprecated
  */
+@Deprecated
 @SuppressWarnings("serial")
 public class ControlApplet extends Applet implements Runnable {
 

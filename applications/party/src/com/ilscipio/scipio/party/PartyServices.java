@@ -52,11 +52,11 @@ public class PartyServices {
         Map<String,Object> result = ServiceUtil.returnSuccess();
         if (userLogin != null) {
             if (Debug.infoOn()) Debug.logInfo("userLogin exists", module);
-            result.put("exists", new Boolean(true));
+            result.put("exists", Boolean.TRUE);
             result.put("userLogin", userLogin);
         } else {
             if (Debug.infoOn()) Debug.logInfo("userLogin does not exist", module);
-            result.put("exists", new Boolean(false));
+            result.put("exists", Boolean.FALSE);
         }
         return result;
     }
@@ -78,7 +78,7 @@ public class PartyServices {
                     ModelService.IN_PARAM);
             result = dispatcher.runSync("createPersonAndUserLogin", subContext);
         } catch (GenericServiceException e) {
-
+            Debug.logError(e, module);
         }
 
         if (!ServiceUtil.isError(result)) {
@@ -94,10 +94,8 @@ public class PartyServices {
 
                 result.putAll(resultGroups);
 
-            } catch (GenericEntityException e) {
-
-            } catch (GenericServiceException e) {
-
+            } catch (GenericEntityException | GenericServiceException e) {
+                Debug.logError(e, module);
             }
         }
 

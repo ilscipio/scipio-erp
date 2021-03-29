@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -40,7 +39,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.collections.MapState;
 import org.ofbiz.base.util.collections.RenderMapStack;
-import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -1999,7 +1997,7 @@ public class FormRenderer {
                     if (nextFormField != null) {
                         if (nextFormField.getPosition() > currentFormField.getPosition()) {
                             positionSpan = nextFormField.getPosition() - currentFormField.getPosition() - 1;
-                            nextPositionInRow = Integer.valueOf(nextFormField.getPosition());
+                            nextPositionInRow = nextFormField.getPosition();
                         } else {
                             positionSpan = positions - currentFormField.getPosition();
                         }

@@ -1707,7 +1707,7 @@ public final class UtilProperties implements Serializable {
      * Convert XML property file to Properties instance. This method will convert
      * both the Java XML properties file format and the OFBiz custom XML
      * properties file format.
-     * @deprecated SCIPIO: 2.1.0: Use {@link ResourceBundleProperties#from(String, URL, InputStream)}
+     * SCIPIO: 2.1.0: Prefer using {@link ResourceBundleProperties#from(String, URL, InputStream)}
      *
      * <p>The format of the custom XML properties file is:</p>
      * <pre>
@@ -1729,7 +1729,6 @@ public final class UtilProperties implements Serializable {
      * @param properties Optional Properties object to populate
      * @return PropertyDefs instance or null if not found
      */
-    @Deprecated
     public static Properties xmlToProperties(InputStream in, Locale locale, Properties properties) throws IOException, InvalidPropertiesFormatException {
         if (in == null) {
             throw new IllegalArgumentException("InputStream cannot be null");

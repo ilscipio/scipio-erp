@@ -81,7 +81,7 @@ public final class Paginator {
             */
         } else if (entryList instanceof PagedList) {
             PagedList<?> pagedList = (PagedList<?>) entryList;
-            listSize = pagedList.getSize();
+            listSize = pagedList.getListSize(); // SCIPIO: getSize() -> getListSize()
         }
         if (modelForm.getPaginate(context)) {
             viewIndex = getViewIndex(modelForm, context);

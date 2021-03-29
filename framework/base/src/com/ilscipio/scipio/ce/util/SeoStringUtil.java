@@ -135,7 +135,7 @@ public class SeoStringUtil {
      * @return
      */
     public static String remapInternationalCharToAscii(char c) {
-        String s = new Character(c).toString();
+        String s = Character.toString(c);
         if (c == 'ä') {
             return "ae";
         }

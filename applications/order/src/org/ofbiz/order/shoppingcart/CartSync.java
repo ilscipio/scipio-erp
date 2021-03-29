@@ -178,8 +178,9 @@ public class CartSync implements AutoCloseable, Serializable {
         return " (" + Debug.getCallerShortInfo(excludeClassesLogCaller) + ")";
     }
 
+    @Deprecated
     @Override
-    protected void finalize() throws Throwable {
+    protected void finalize() throws Throwable { // SCIPIO: TODO: alternative (finalize deprecated by java)
         if (!endCalledOrOk) {
             Debug.logError("CartSync: finalize: fatal: cart sync section was never closed - this should"
                     + " not happen - close() must always be called, usually in a try/finally or try-with-resources block"

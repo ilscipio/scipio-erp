@@ -548,9 +548,8 @@ public abstract class CmsPageServices {
      * Prewarms the cache of a static list of urls
      */
     public static Map<String, Object> prewarmContentCacheByUrl(DispatchContext dctx, Map<String, ?> context) {
-        Delegator delegator = dctx.getDelegator();
         Map<String, Object> result = ServiceUtil.returnSuccess();
-        List<String> urls = (List<String>) context.get("urls");
+        List<String> urls = UtilGenerics.cast(context.get("urls"));
         String murl = (String) context.get("url");
         if(UtilValidate.isNotEmpty(murl)){
             urls = new ArrayList<>();

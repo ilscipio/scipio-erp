@@ -198,7 +198,7 @@ public class SitemapConfig implements Serializable {
                 if (catalogFilterObj instanceof CatalogFilter) {
                     catalogFilters.add((CatalogFilter) catalogFilterObj);
                 } else if (catalogFilterObj instanceof Class) {
-                    Class<? extends CatalogFilter> filterCls = (Class<? extends CatalogFilter>) catalogFilterObj;
+                    Class<? extends CatalogFilter> filterCls = UtilGenerics.cast(catalogFilterObj);
                     try {
                         catalogFilters.add(filterCls.getConstructor().newInstance());
                     } catch(Exception e) {
@@ -257,10 +257,10 @@ public class SitemapConfig implements Serializable {
      */
 
     private static Map<String, SitemapConfig> getWebSiteMapCache() {
-        Map<String, SitemapConfig> cache = (Map<String, SitemapConfig>) websiteCache.get("_all_");
+        Map<String, SitemapConfig> cache = UtilGenerics.cast(websiteCache.get("_all_"));
         if (cache == null) {
             synchronized(SitemapConfig.class) {
-                cache = (Map<String, SitemapConfig>) websiteCache.get("_all_");
+                cache = UtilGenerics.cast(websiteCache.get("_all_"));
                 if (cache == null) {
                     cache = Collections.unmodifiableMap(readStaticConfigsFromProperties());
                     websiteCache.put("_all_", cache);

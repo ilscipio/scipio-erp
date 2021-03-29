@@ -552,9 +552,10 @@ public class EntityListIterator implements AutoCloseable, ListIterator<GenericVa
 
     /**
      * Extends {@link Object#finalize()} to make sure that the {@link EntityListIterator} is closed when it is garbage collected.
-     *
+     * SCIPIO: TODO: alternative (finalize deprecated by java)
      * {@inheritDoc}
      */
+    @Deprecated
     @Override
     protected void finalize() throws Throwable {
         try {

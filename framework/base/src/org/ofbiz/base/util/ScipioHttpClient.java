@@ -186,8 +186,9 @@ public class ScipioHttpClient implements Closeable {
         }
     }
 
+    @Deprecated
     @Override
-    protected void finalize() throws Throwable {
+    protected void finalize() throws Throwable { // SCIPIO: TODO: alternative (finalize deprecated by java)
         if (isAutoClose()) {
             close();
         }

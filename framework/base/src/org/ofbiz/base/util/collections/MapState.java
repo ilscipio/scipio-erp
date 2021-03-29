@@ -21,14 +21,13 @@ public abstract class MapState<K, V> {
             this.savedEntries = savedEntries;
         }
 
-        protected static <K, V> MapState saveKeysStd(Map<K, V> map, List<K> keys) {
-            Map<K, V> savedValues = new HashMap<>();
+        protected static <K, V> MapState<K, V> saveKeysStd(Map<K, V> map, List<K> keys) {
             List<StateEntry<K, V>> savedEntries = new ArrayList<>(keys.size());
             for(K key : keys) {
                 V value = map.get(key);
                 savedEntries.add(new StateEntry<>(key, value, value != null || map.containsKey(key)));
             }
-            return new SavedKeysMapState(savedEntries);
+            return new SavedKeysMapState<>(savedEntries);
         }
 
         @Override
@@ -66,11 +65,11 @@ public abstract class MapState<K, V> {
     /**
      * Saves the key values and presence of
      */
-    public static <K, V> MapState saveKeys(Map<K, V> map, List<K> keys) {
+    public static <K, V> MapState<K, V> saveKeys(Map<K, V> map, List<K> keys) {
         return SavedKeysMapState.saveKeysStd(MapContext.getCurrentMap(map), keys);
     }
 
-    public static <K, V> MapState saveKeys(Map<K, V> map, K... keys) {
+    public static <K, V> MapState<K, V> saveKeys(Map<K, V> map, K... keys) {
         return SavedKeysMapState.saveKeysStd(MapContext.getCurrentMap(map), Arrays.asList(keys));
     }
 

@@ -478,7 +478,7 @@ public class CmsAttributeTemplate extends CmsDataObject {
                     "targetType", getTargetType(),
                     "defaultValue", getDefaultValue(),
                     "help", getHelp(),
-                    "required", new Boolean(isRequired()).toString(),
+                    "required", Boolean.toString(isRequired()),
                     "permission", getPermission().toString(),
                     "maxLength", getMaxLength(),
                     "regularExpression", getRegularExpression().toString(),

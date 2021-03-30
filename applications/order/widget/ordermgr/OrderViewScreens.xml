@@ -102,7 +102,8 @@ code package.
                     </container>
                     <container style="${styles.grid_large}4 ${styles.grid_cell}">
                             <include-screen name="orderpaymentinfo"/>
-                            <include-screen name="projectAssoOrder"/>
+                            <include-screen name="ordercustomerinfo"/>
+                        <include-screen name="projectAssoOrder"/>
                     </container>
                 </container>
             </widgets>

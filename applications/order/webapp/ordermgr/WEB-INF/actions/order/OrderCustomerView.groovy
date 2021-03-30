@@ -14,6 +14,9 @@ if(!context.orderHeader) {
     if (context.orderId) {
         context.orderHeader = from('OrderHeader').where('orderId', context.orderId).cache(true).queryFirst();
     }
+    if (request.getAttribute("orderId")) {
+        context.orderHeader = from('OrderHeader').where('orderId', request.getAttribute("orderId")).cache(true).queryFirst();
+    }
 }
 if(context.orderHeader){
     if(!orderReadHelper){

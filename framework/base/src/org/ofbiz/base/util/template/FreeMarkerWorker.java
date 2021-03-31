@@ -90,7 +90,7 @@ public final class FreeMarkerWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static final Version version = Configuration.VERSION_2_3_30;
+    public static final Version version = Configuration.VERSION_2_3_31;
 
     private FreeMarkerWorker () {}
 

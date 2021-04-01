@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.core.*;
 import org.apache.logging.log4j.core.appender.AbstractAppender;
 import org.apache.logging.log4j.core.appender.AppenderLoggingException;
+import org.apache.logging.log4j.core.config.Property;
 import org.apache.logging.log4j.core.config.plugins.*;
 import org.apache.logging.log4j.core.layout.PatternLayout;
 import org.ofbiz.base.lang.JSON;
@@ -42,7 +43,7 @@ public final class ScipioSocketAppender extends AbstractAppender {
 
     protected ScipioSocketAppender(String name, Filter filter,
                                    Layout<? extends Serializable> layout, final boolean ignoreExceptions, String channel) {
-        super(name, filter, layout, ignoreExceptions); // FIXME: deprecated
+        super(name, filter, layout, ignoreExceptions, Property.EMPTY_ARRAY);
         this.channel = channel;
     }
 

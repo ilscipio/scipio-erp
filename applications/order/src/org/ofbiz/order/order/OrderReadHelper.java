@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -1601,7 +1602,8 @@ public class OrderReadHelper {
             Debug.logError(e,module);
         }
 
-        return orderList;
+        return orderList.stream().distinct()
+                .collect(Collectors.toList());
     }
 
     public BigDecimal getOrderGrandTotal() {
@@ -3662,10 +3664,13 @@ public class OrderReadHelper {
 
         DynamicViewEntity itemEntity = new DynamicViewEntity();
         itemEntity.addMemberEntity("OI", "OrderItem");
+        itemEntity.addMemberEntity("OH", "OrderHeader");
         itemEntity.addAlias("OI", "orderId", null, null, null, true, null);
         itemEntity.addAlias("OI", "statusId", null, null, null, true, null);
+        itemEntity.addAlias("OH", "orderDate", null, null, null, true, null);
         itemEntity.addAlias("OI", "orderItemCount", "quantity", null, null, false, "sum");
         itemEntity.addAlias("OI", "orderItemValue", "unitPrice", null, null, false, "sum");
+        itemEntity.addViewLink("OI", "OH", Boolean.FALSE, ModelKeyMap.makeKeyMapList("orderId", "orderId"));
         List<EntityCondition> exprListStatus = new ArrayList<>();
         exprListStatus.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
         if(UtilValidate.isNotEmpty(includedOrderItemStatusIds)){
@@ -3673,9 +3678,9 @@ public class OrderReadHelper {
         }
 
         EntityCondition andCond = EntityCondition.makeCondition(exprListStatus, EntityOperator.AND);
-
+        EntityListIterator customerOrderStats;
         try{
-            EntityListIterator customerOrderStats = delegator.findListIteratorByCondition(itemEntity,andCond,null,null,null,null);
+            customerOrderStats = delegator.findListIteratorByCondition(itemEntity,andCond,null,null,UtilMisc.toList("-orderDate"),null);
             Timestamp lastOrderDate;
 
             if (customerOrderStats != null) {
@@ -3683,8 +3688,7 @@ public class OrderReadHelper {
                 List<GenericValue> orderStatsList = customerOrderStats.getCompleteList();
                 for(GenericValue n : orderStatsList){
                     if(cIndex==0){
-                        GenericValue o = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", n.getString("orderId")), true);
-                        lastOrderDate = o.getTimestamp("orderDate");
+                        lastOrderDate = n.getTimestamp("orderDate");
                         rfmRecency = Math.toIntExact( (System.currentTimeMillis() - lastOrderDate.getTime() )/ (1000 * 60 * 60 * 24));
                     }
                     BigDecimal nv = n.getBigDecimal("orderItemValue");
@@ -3693,6 +3697,7 @@ public class OrderReadHelper {
                     cIndex+=1;
                 }
             }
+            customerOrderStats.close();
         }catch(Exception e){
             Debug.logError("Error while fetching orderItems "+e.getMessage(),module);
         }
@@ -3721,6 +3726,7 @@ public class OrderReadHelper {
                     returnItemCount = returnItemCount.add(n.getBigDecimal("returnItemCount"));
                 }
             }
+            returnStats.close();
         }catch(Exception e){
             Debug.logError("Error while fetching returnItems "+e.getMessage(),module);
         }

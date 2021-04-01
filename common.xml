@@ -424,10 +424,27 @@ code package.
                 <isset property="lib.resolve.build.confs"/>
             </and>
             <then>
+                <!-- lib.resolve.build.confs: add the support -jdk8/-jdk11 switches for all confs supporting them (automated) -->
+                <get-ivy-versioned-confs conf="${lib.resolve.build.confs}" ivyfile="${basedir}/ivy.xml" outputproperty="lib.resolve.build.confs"/>
+                <echo message="lib.resolve.build.confs versioned: ${lib.resolve.build.confs}"/>
+
                 <property name="lib.resolve.confs" value="${lib.resolve.build.confs}"/>
             </then>
             <else>
-                <property name="lib.resolve.confs" value="*"/>
+                <if>
+                    <and>
+                        <isset property="lib.resolve.confs"/>
+                        <not><equals arg1="${lib.resolve.confs}" arg2="*"/></not>
+                    </and>
+                    <then>
+                        <!-- lib.resolve.confs: add the support -jdk8/-jdk11 switches for all confs supporting them (automated) -->
+                        <get-ivy-versioned-confs conf="${lib.resolve.confs}" ivyfile="${basedir}/ivy.xml" outputproperty="lib.resolve.confs"/>
+                        <echo message="lib.resolve.confs versioned: ${lib.resolve.confs}"/>
+                    </then>
+                    <else>
+                        <property name="lib.resolve.confs" value="*"/>
+                    </else>
+                </if>
             </else>
         </if>
         
@@ -446,17 +463,14 @@ code package.
             </then>
         </if>
 
-        <!-- add the support -jdk8/-jdk11 switches for all confs supporting them (automated) -->
-        <get-ivy-versioned-confs conf="${lib.resolve.build.confs}" ivyfile="${basedir}/ivy.xml" outputproperty="lib.resolve.build.confs"/>
-        <echo message="lib.resolve.build.confs versioned: ${lib.resolve.build.confs}"/>
         <if>
             <and>
                 <equals arg1="${lib.update.sources}" arg2="true"/>
                 <isset property="lib.resolve.src.confs"/>
                 <not><equals arg1="${lib.resolve.src.confs}" arg2="none"/></not>
-                <not><equals arg1="${lib.resolve.confs}" arg2="*"/></not>
             </and>
             <then>
+                <!-- lib.resolve.src.confs: add the support -jdk8/-jdk11 switches for all confs supporting them (automated) -->
                 <get-ivy-versioned-confs conf="${lib.resolve.src.confs}" ivyfile="${basedir}/ivy.xml" outputproperty="lib.resolve.src.confs"/>
                 <echo message="lib.resolve.src.confs versioned: ${lib.resolve.src.confs}"/>
             </then>
@@ -504,6 +518,7 @@ code package.
     
     <!-- WARN: this can ONLY be called using depends="do-lib-resolve"! antcall will wreck it! -->
     <target name="do-lib-resolve" depends="get-lib-resolve-confs" description="Resolves lib dependencies">
+        <echo message="lib.resolve.confs.eff: ${lib.resolve.confs.eff}"/>
         <ivy:resolve refresh="${lib.update.ivy.refresh}" conf="${lib.resolve.confs.eff}"/>
         <property name="lib.resolve.changed" value="${ivy.deps.changed}"/>
     </target>

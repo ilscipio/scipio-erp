@@ -1843,7 +1843,7 @@ public final class ProductPromoWorker {
                             quantityDesired = quantityDesired.subtract(quantityUsed);
 
                             // create an adjustment and add it to the cartItem that implements the promotion action
-                            BigDecimal discount = amount.divide(new BigDecimal(lineOrderedByBasePriceList.size()));
+                            BigDecimal discount = amount.divide(new BigDecimal(lineOrderedByBasePriceList.size())).setScale(3,BigDecimal.ROUND_HALF_UP);
                             // don't allow the discount to be greater than the price
                             if (discount.compareTo(cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment())) > 0) {
                                 discount = cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment());

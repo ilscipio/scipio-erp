@@ -3692,7 +3692,7 @@ public class OrderReadHelper {
                         rfmRecency = Math.toIntExact( (System.currentTimeMillis() - lastOrderDate.getTime() )/ (1000 * 60 * 60 * 24));
                     }
                     BigDecimal nv = n.getBigDecimal("orderItemValue");
-                    orderItemValue = orderItemValue.add(nv);
+                    orderItemValue = orderItemValue.add(nv.multiply(n.getBigDecimal("orderItemCount")));
                     orderItemCount = orderItemCount.add(n.getBigDecimal("orderItemCount"));
                     cIndex+=1;
                 }
@@ -3722,7 +3722,7 @@ public class OrderReadHelper {
                 returnCount = returnStatsList.size();
                 for(GenericValue n : returnStatsList){
                     BigDecimal nv = n.getBigDecimal("returnItemValue");
-                    returnItemValue = returnItemValue.add(nv);
+                    returnItemValue = returnItemValue.add(nv.multiply(n.getBigDecimal("returnItemCount")));
                     returnItemCount = returnItemCount.add(n.getBigDecimal("returnItemCount"));
                 }
             }

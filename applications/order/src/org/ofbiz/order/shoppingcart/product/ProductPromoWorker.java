@@ -2023,7 +2023,7 @@ public final class ProductPromoWorker {
             if (cartItemsUsedIter.hasNext()) {
                 BigDecimal quantityUsed = cartItem.getPromoQuantityCandidateUseActionAndAllConds(productPromoAction);
                 BigDecimal ratioOfTotal = quantityUsed.multiply(cartItem.getBasePrice()).divide(totalAmount, RoundingMode.HALF_EVEN);
-                ratioOfTotal = ratioOfTotal.setScale(5);
+                ratioOfTotal = ratioOfTotal.setScale(3,BigDecimal.ROUND_HALF_UP);
                 BigDecimal weightedAmount = ratioOfTotal.multiply(discountAmountTotal);
                 // round the weightedAmount to 3 decimal places, we don't want an exact number cents/whatever because this will be added up as part of a subtotal which will be rounded to 2 decimal places
                 weightedAmount = weightedAmount.setScale(3, RoundingMode.HALF_UP);

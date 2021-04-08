@@ -9,31 +9,38 @@
 <#-- EDIT TEMPLATE -->
 <#if assetTemplateModel?has_content>
     <#assign editAssetUrl = makePageUrl("editAsset?assetTemplateId=${assetTemplateModel.id!}")>
+    <#assign assetType = raw(assetTemplateModel.assetType!"TEMPLATE")>
 
     <#-- Javascript functions -->
     <@script>
         <@commonCmsScripts />
-    
-        <#-- To be loaded on pageload -->
-        var pEdit = $( document ).ready(function() {
-            CodeMirror.fromTextArea($('textarea#templateBody')[0], {
-                lineNumbers: true,
-                matchBrackets: true,
-                mode: "freemarker",
-                indentUnit: 4,
-                indentWithTabs: ${indentWithTabs?string},
-                foldGutter: true,
-                gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-                extraKeys: {"Ctrl-Space": "autocomplete"}
-                }).on('change', function(cMirror){
-                    $('textarea#templateBody')[0].value = cMirror.getValue();
-                    setTemplateSource('Body');
-                }
-            );
-            
+
+        <#if "CONTENT" == assetType>
+            <@cmsContentEditorScript/>
+        <#else>
+            $(document).ready(function() {
+              <#if "TEMPLATE" == assetType>
+                CodeMirror.fromTextArea($('textarea#templateBody')[0], {
+                    lineNumbers: true,
+                    matchBrackets: true,
+                    mode: "freemarker",
+                    indentUnit: 4,
+                    indentWithTabs: ${indentWithTabs?string},
+                    foldGutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                    extraKeys: {"Ctrl-Space": "autocomplete"}
+                    }).on('change', function(cMirror){
+                        $('textarea#templateBody')[0].value = cMirror.getValue();
+                        setTemplateSource('Body');
+                    }
+                );
+              </#if>
+            });
+        </#if>
+        $(document).ready(function() {
             setupCmsDeleteActionHooks();
         });
-        
+
         <#-- Template Source auto-select code -->
         var setTemplateSource = function(val) {
             jQuery('#editorForm input[name=templateSource]').val([val]);
@@ -123,9 +130,9 @@
                     <@field type="hidden" name="assetTemplateId" id="assetTemplateId" value=assetTemplateModel.id!""/>
                 
                     <#-- General Content -->
-                    <@section title=uiLabelMap.CmsTemplate class="+editorContent">
+                    <@section title=(assetType == "TEMPLATE")?then(uiLabelMap.CmsTemplate, uiLabelMap.CmsContent) class="+editorContent">
                       <@fields type="default-compact">
-                        <@field label=uiLabelMap.CmsTemplateBody type="textarea" class="+editor" name="templateBody" id="templateBody" value=(templateBody!"") rows=30/>
+                        <@field label=(assetType == "TEMPLATE")?then(uiLabelMap.CmsTemplateBody, getLabel('OrderSendConfirmationEmailBody', 'OrderUiLabels')) type="textarea" class="+editor" name="templateBody" id="templateBody" value=(templateBody!"") rows=30/>
                       </@fields>
                         <#-- Codemirrors default font-size is tiny for the hints, so resetting here -->
                         <style type="text/css">
@@ -224,6 +231,7 @@
                     <@section title=uiLabelMap.CommonInformation class="+editorMeta">
                         <@field type="display" value=(assetTemplateModel.id!) label=uiLabelMap.CommonId/>                        
                         <@field type="input" name="templateName" value=(assetTemplateModel.name!) required=true label=uiLabelMap.CommonName/>
+                        <@field type="display" value=uiLabelMap["CmsAssetType_"+raw(assetTemplateModel.assetType!"TEMPLATE")] label=uiLabelMap.CommonType/>
                         <@field type="select" name="contentTypeId" label=uiLabelMap.ContentType>
                             <#assign contentTypeId = assetTemplateModel.contentTypeId!"">
                             <option value=""<#if !contentTypeId?has_content> selected="selected"</#if>></option>
@@ -268,7 +276,17 @@
                       <@fields type="default-compact">
                         <input type="hidden" name="isCreate" value="Y"/>
                         <@field type="input" name="templateName" value=(parameters.templateName!) id="templateName" label=uiLabelMap.CmsTemplateName placeholder=uiLabelMap.CmsMyTemplateName required=true/>
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
+                        <#if forceAssetType?has_content>
+                            <input type="hidden" name="assetType" value="${forceAssetType}"/>
+                        <#else>
+                          <@field type="select" name="assetType" label=uiLabelMap.CommonType>
+                              <#assign assetType = raw(parameters.assetType!)>
+                              <option value="TEMPLATE"<#if !assetType?has_content || assetType == "TEMPLATE"> selected="selected"</#if>>${uiLabelMap.CmsAssetType_TEMPLATE}</option>
+                              <option value="CONTENT"<#if assetType == "CONTENT"> selected="selected"</#if>>${uiLabelMap.CmsAssetType_CONTENT}</option>
+                          </@field>
+                        </#if>
+
+                          <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
                         <@webSiteSelectField name="webSiteId" value=(parameters.webSiteId!) required=false
                             tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
                         <@field type="select" name="contentTypeId" label=uiLabelMap.ContentType>

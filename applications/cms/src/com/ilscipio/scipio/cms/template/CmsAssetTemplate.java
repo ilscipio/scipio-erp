@@ -150,6 +150,7 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
         if (assoc != null) {
             descriptor.put("assoc", assoc.getDescriptor(locale));
         }
+        descriptor.put("assetType", getAssetType());
         return descriptor;
     }
 
@@ -167,6 +168,11 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
 
     public String getAssocId() { // 2016: new
         return getAssoc().getAssocId();
+    }
+
+    /** Returns asset type: TEMPLATE, CONTENT, ... */
+    public String getAssetType() {
+        return entity.getString("assetType");
     }
 
     public String getContentTypeId() {

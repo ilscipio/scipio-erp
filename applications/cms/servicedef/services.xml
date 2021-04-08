@@ -307,18 +307,6 @@
         <attribute name="pageId" mode="IN" type="String" optional="false"/>
     </service>
 
-    <!-- FIXME: DUPLICATE SERVICE NAME WITH ONE BELOW - what is this?
-    <service name="cmsCreateUpdateAsset" engine="java" auth="true"
-        location="com.ilscipio.scipio.cms.CmsServices" invoke="createUpdateAsset">
-        <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
-        <attribute name="request" mode="IN" type="javax.servlet.http.HttpServletRequest" optional="false"/>
-        <attribute name="assetId" mode="IN" type="String" optional="false"/>
-        <attribute name="id" mode="IN" type="String" optional="true"/>
-        <attribute name="permission" mode="OUT" type="String" optional="false"/>
-        <attribute name="value" mode="IN" type="String" optional="false"/>
-        <attribute name="list" mode="OUT" type="Map" optional="false"/>
-    </service>-->
-
     <service name="cmsUpdateScriptAssocInterface" engine="interface">
         <attribute name="scriptAssocId" type="String" mode="IN" optional="true"/>
         <attribute name="scriptTemplateId" type="String" mode="IN" optional="true"/><!-- always optional and should not be passed if scriptAssocId is passed -->
@@ -532,6 +520,7 @@
         <description>Creates a new asset</description>
         <permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>
         <attribute name="assetTemplateId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="assetType" type="String" mode="IN" optional="true"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="true"/>
         <attribute name="contentTypeId" type="String" mode="IN" optional="true"/>

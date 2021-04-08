@@ -331,6 +331,7 @@
     <entity entity-name="CmsAssetTemplate" package-name="com.ilscipio.scipio.cms.template"
         title="Asset Template" author="Ilscipio GmbH" version="1.0">
       <field name="assetTemplateId" type="id-ne"></field>
+      <field name="assetType" type="id"><description>High-level template body type: TEMPLATE (default), CONTENT</description></field>
       <!-- 2016: NOTE: Unlike CmsPage.webSiteId, this field is not mandatory and basically not used. -->
       <field name="webSiteId" type="id"><description>Organizational and editing page webSiteId (not used in rendering)</description></field>
       <field name="templateName" type="name"></field>

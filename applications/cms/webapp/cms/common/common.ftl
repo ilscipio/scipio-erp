@@ -831,4 +831,76 @@
     </@script>
 </#macro>
 
-
+<#-- Imported from editPage.ftl -->
+<#macro cmsContentEditorScript selector=".editor" onLoad=true>
+    function cmsSetupContentEditor() {
+        $('${escapeVal(selector, 'js')}').trumbowyg({
+            autogrow: true,
+            semantic: false,
+            btnsDef: {
+                // Customizables dropdowns
+                image: {
+                    dropdown: ['insertImage','scipio_media_image','upload','scipio_media_video','scipio_media_audio','scipio_media_file', 'base64', 'noEmbed'],
+                    ico: 'insertImage'
+                },
+                link: {
+                    dropdown: [
+                        'createLink',
+                        'unlink',
+                        <#-- DEV NOTE: autourl tries to identify the macro in the given link and
+                            open the right dialog; it falls back on createLink. but the ones below are
+                            always needed also, in order to create new links.
+                            also, autourl doesn't completely replace the stock 'createLink',
+                            because some users may need/want to edit a cmsPageUrl or ofbizUrl using
+                            the stock form instead of the helpers. -->
+                        'scipio_links_autourl',
+                        'scipio_links_cmspageurl',
+                        'scipio_links_ofbizurl',
+                        'scipio_links_ofbizcontenturl'
+                    ]
+                }
+            },
+            btns: [
+                ['viewHTML'],
+                ['formatting'],
+                'btnGrp-semantic',
+                ['superscript', 'subscript'],
+                'btnGrp-justify',
+                'btnGrp-lists',
+                ['link'],
+                ['image'],
+                ['scipio_assets'],
+                ['table'],
+                ['horizontalRule'],
+                ['removeformat'],
+                ['fullscreen']
+            ],
+            plugins: {
+                // Add imagur parameters to upload plugin
+                scipio_media: {
+                    serverPath: '<@pageUrl escapeAs='js'>getMediaFiles</@pageUrl>',
+                    mediaUrl: '<@contentUrl escapeAs='js'>/cms/media</@contentUrl>'
+                },
+                scipio_links: {
+                    getPagesServerPath: '<@pageUrl escapeAs='js'>getPages</@pageUrl>',
+                    getWebSitesServerPath: '<@pageUrl escapeAs='js'>getCmsWebSites</@pageUrl>',
+                    <#-- WARN: currentWebSiteId may become problem in future; see js source -->
+                    currentWebSiteId: '${escapeVal(webSiteId!, 'js')}'
+                },
+                scipio_assets: {
+                    getAssetTypesServerPath: '<@pageUrl escapeAs='js'>getAssetTypes</@pageUrl>',
+                    getAssetsServerPath: '<@pageUrl escapeAs='js'>getAssets</@pageUrl>',
+                    getAssetAttributesServerPath: '<@pageUrl escapeAs='js'>getAssetAttributes</@pageUrl>',
+                    getWebSitesServerPath: '<@pageUrl escapeAs='js'>getCmsWebSites</@pageUrl>',
+                    <#-- WARN: currentWebSiteId may become problem in future; see js source -->
+                    currentWebSiteId: '${escapeVal(webSiteId!, 'js')}'
+                }
+            }
+        });
+    }
+    <#if onLoad>
+    $(document).ready(function() {
+        cmsSetupContentEditor();
+    });
+    </#if>
+</#macro>

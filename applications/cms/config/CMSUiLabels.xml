@@ -1075,4 +1075,12 @@
         <value xml:lang="de">Field non empty</value>
         <value xml:lang="en">Field non empty</value>
     </property>
+    <property key="CmsAssetType_TEMPLATE">
+        <value xml:lang="de">Template</value>
+        <value xml:lang="en">Template</value>
+    </property>
+    <property key="CmsAssetType_CONTENT">
+        <value xml:lang="de">Content</value>
+        <value xml:lang="en">Content</value>
+    </property>
 </resource>

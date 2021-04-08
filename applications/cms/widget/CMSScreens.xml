@@ -83,27 +83,30 @@
             </widgets>
         </section>
     </screen>
-    
+
+    <screen name="contentEditorActions">
+        <actions>
+            <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/trumbowyg/dist/trumbowyg.min.js" global="true"/>
+            <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/trumbowyg/dist/plugins/table/trumbowyg.table.min.js" global="true"/>
+
+            <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/trumbowyg.scipio_common.js" global="true"/>
+            <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_media/trumbowyg.scipio_media.js" global="true"/>
+            <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_links/trumbowyg.scipio_links.js" global="true"/>
+            <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_assets/trumbowyg.scipio_assets.js" global="true"/>
+
+            <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>
+            <set field="layoutSettings.VT_STYLESHEET[]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
+            <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
+        </actions>
+    </screen>
+
     <screen name="editPage">
         <section>
             <actions>
                 <set field="activeSubMenu" value="Pages"/>
                 <set field="activeSubMenuItem" value="editPage"/>
-                
-                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/trumbowyg/dist/trumbowyg.min.js" global="true"/>
-                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/trumbowyg/dist/plugins/table/trumbowyg.table.min.js" global="true"/>
-                
-                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/trumbowyg.scipio_common.js" global="true"/>
-                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_media/trumbowyg.scipio_media.js" global="true"/>
-                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_links/trumbowyg.scipio_links.js" global="true"/>
-                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/js/cms/trumbowyg/scipio_assets/trumbowyg.scipio_assets.js" global="true"/>
-
-                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>    
-                <set field="layoutSettings.VT_STYLESHEET[]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
-                <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>
-                
+                <include-screen-actions name="contentEditorActions"/>
                 <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsGetPage.groovy"/>
-                
                 <include-screen-actions name="CommonScriptAssocActions"/>
             </actions>
             <widgets>
@@ -224,7 +227,8 @@
             <actions>
                 <set field="activeSubMenu" value="Templates"/>
                 <set field="activeSubMenuItem" value="editAsset"/>
-                
+
+                <include-screen-actions name="contentEditorActions"/>
                 <include-screen-actions name="CodeEditorCommonIncludes" location="component://cms/widget/CommonScreens.xml"/>
                 <include-screen-actions name="CommonEditRenderTemplateActions"/>
                 

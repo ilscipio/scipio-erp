@@ -16,6 +16,7 @@
                         <@th>${uiLabelMap.CmsTemplateName}</@th>
                         <@th>${uiLabelMap.ContentType}</@th>
                         <@th>${uiLabelMap.CommonDescription}</@th>
+                        <@th>${uiLabelMap.CommonType}</@th>
                     </@tr>
                 </@thead>
                 <#list assetList as asset>
@@ -26,6 +27,7 @@
                         <@td><a href="<@pageUrl>editAsset?assetTemplateId=${assetModel.id}</@pageUrl>">${assetModel.name!}</a></@td>
                         <@td><#if asset.contentTypeId?has_content>${(delegator.findOne("ContentType", {"contentTypeId":asset.contentTypeId}, true).get("description", locale))!asset.contentTypeId}</#if></@td>
                         <@td>${makeShortCmsDesc(assetModel.getDescription(locale)!)}</@td>
+                        <@td>${uiLabelMap["CmsAssetType_"+raw(asset.assetType!"TEMPLATE")]}</@td>
                     </@tr>
                 </#list>
             </@table>

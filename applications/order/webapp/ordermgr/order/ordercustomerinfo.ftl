@@ -1,6 +1,5 @@
 <@section title=uiLabelMap.OrderCustomerInfo>
     <#assign orderType = orderHeader.getRelatedOne("OrderType", false)/>
-    <#assign orderPrintAttribute = (delegator.findOne("OrderPrintAttribute", {"orderId", orderId!}, false))! />
     <@table type="fields">
         <@tr>
             <@td class="${styles.grid_large!}3">${uiLabelMap.OrderCustomerOrdersReturns}

@@ -302,63 +302,97 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editAsset" /><!-- save-current-view="true" -->
     </request-map>
-    
+
+    <request-map uri="contentAssets">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="contentAssets"/>
+    </request-map>
+
+    <request-map uri="editContentAsset">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editContentAsset" /><!-- save-current-view="true" -->
+    </request-map>
+
+    <request-map uri="editAssetResponse">
+        <security direct-request="false"/>
+        <event type="groovy"><script><![CDATA[
+            def envAssetType = request.getAttribute("envAssetType") ?: request.getParameter("envAssetType");
+            return ("CONTENT" == envAssetType) ? "content" : "success";
+        ]]></script></event>
+        <response name="success" type="view" value="editAsset"/>
+        <response name="content" type="view" value="editContentAsset"/>
+        <response name="error" type="view" value="editAsset"/>
+    </request-map>
+
+    <request-map uri="editAssetRedirectResponse">
+        <security direct-request="false"/>
+        <event type="groovy"><script><![CDATA[
+            def envAssetType = request.getAttribute("envAssetType") ?: request.getParameter("envAssetType");
+            return ("CONTENT" == envAssetType) ? "content" : "success";
+        ]]></script></event>
+        <response name="success" type="request-redirect" value="editAsset" save-request="messages">
+            <redirect-parameter name="assetTemplateId"/>
+        </response>
+        <response name="content" type="request-redirect" value="editContentAsset" save-request="messages">
+            <redirect-parameter name="assetTemplateId"/>
+        </response>
+        <response name="error" type="request" value="editAssetResponse"/>
+    </request-map>
+
     <request-map uri="createUpdateAsset">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsCreateUpdateAsset"/>
-        <response name="success" type="view" value="editAsset" />
-        <response name="error" type="view" value="editAsset" />
+        <response name="success" type="request" value="editAssetResponse"/>
+        <response name="error" type="request" value="editAssetResponse"/>
     </request-map>
     
     <request-map uri="copyAsset">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsCopyAsset"/>
-        <response name="success" type="request-redirect" value="editAsset" save-request="messages">
-            <redirect-parameter name="assetTemplateId"/>
-        </response>
-        <response name="error" type="view" value="editAsset" />
+        <response name="success" type="request" value="editAssetRedirectResponse"/>
+        <response name="error" type="request" value="editAssetResponse"/>
     </request-map>
 
     <request-map uri="addAttributeToAsset">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsCreateUpdateAttribute"/>
-        <response name="success" type="view" value="editAsset" />
-        <response name="error" type="view" value="editAsset" />
+        <response name="success" type="request" value="editAssetResponse"/>
+        <response name="error" type="request" value="editAssetResponse"/>
     </request-map>
     
     <request-map uri="updateAssetAttribute">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsCreateUpdateAttribute"/>
-        <response name="success" type="view" value="editAsset" />
-        <response name="error" type="view" value="editAsset" />
+        <response name="success" type="request" value="editAssetResponse"/>
+        <response name="error" type="request" value="editAssetResponse"/>
     </request-map>
     
     <request-map uri="deleteAttributeFromAsset">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsDeleteAttribute"/>
-        <response name="success" type="view" value="editAsset" />
-        <response name="error" type="view" value="editAsset" />
+        <response name="success" type="request" value="editAssetResponse"/>
+        <response name="error" type="request" value="editAssetResponse"/>
     </request-map>
     
     <request-map uri="addScriptToAsset">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsUpdateAssetTemplateScript"/>
-        <response name="success" type="view" value="editAsset" />
-        <response name="error" type="view" value="editAsset" />
+        <response name="success" type="request" value="editAssetResponse"/>
+        <response name="error" type="request" value="editAssetResponse"/>
     </request-map>
     
     <request-map uri="updateAssetScript">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsUpdateAssetTemplateScript"/>
-        <response name="success" type="view" value="editAsset" />
-        <response name="error" type="view" value="editAsset" />
+        <response name="success" type="request" value="editAssetResponse"/>
+        <response name="error" type="request" value="editAssetResponse"/>
     </request-map>
     
     <request-map uri="deleteScriptAndAssetTemplateAssoc">
         <security auth="true" https="true"/>
         <event type="service" invoke="cmsDeleteScriptAndAssetTemplateAssoc"/>
-        <response name="success" type="view" value="editAsset" />
-        <response name="error" type="view" value="editAsset" />
+        <response name="success" type="request" value="editAssetResponse"/>
+        <response name="error" type="request" value="editAssetResponse"/>
     </request-map>
     
     <!-- Asset Templates - AJAX -->
@@ -626,6 +660,8 @@
     <view-map name="editTemplate" type="screen" page="component://cms/widget/CMSScreens.xml#editTemplate"/>
     <view-map name="assets" type="screen" page="component://cms/widget/CMSScreens.xml#assets"/>
     <view-map name="editAsset" type="screen" page="component://cms/widget/CMSScreens.xml#editAsset"/>
+    <view-map name="contentAssets" type="screen" page="component://cms/widget/CMSScreens.xml#contentAssets"/>
+    <view-map name="editContentAsset" type="screen" page="component://cms/widget/CMSScreens.xml#editContentAsset"/>
     <view-map name="customImageSizePresets" type="screen" page="component://cms/widget/CMSScreens.xml#customImageSizePresets"/>
     <view-map name="scripts" type="screen" page="component://cms/widget/CMSScreens.xml#scripts"/>
     <view-map name="editScript" type="screen" page="component://cms/widget/CMSScreens.xml#editScript"/>

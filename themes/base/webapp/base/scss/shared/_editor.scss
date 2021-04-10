@@ -812,11 +812,11 @@ body.trumbowyg-body-fullscreen {
 }
 
 // extra CMS styles (non-trumbowyg)
-.cms-edit-page .page-attr-field .field-entry-title label {
+.cms-edit-page .page-attr-field .field-entry-title label, .cms-edit-asset .editor-field label {
   // NOTE: can't use inline-block because then label-detail won't wrap
   display: inline;
 }
-.cms-edit-page .page-attr-field .field-entry-title .label-detail {
+.cms-edit-page .page-attr-field .field-entry-title .label-detail, .cms-edit-asset .editor-field .label-detail {
   display: inline;
   font-size: 0.8em;
   font-style: italic;

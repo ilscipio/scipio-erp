@@ -16,6 +16,9 @@
         <menu-item name="importExport" title="${uiLabelMap.WebtoolsImportExport}">
             <link target="CmsDataExport"/>
         </menu-item>
+        <menu-item name="contentLibrary" title="${uiLabelMap.CmsContentLibrary}">
+            <link target="contentAssets"/>
+        </menu-item>
         <menu-item name="robots" title="${uiLabelMap.CommonRobots}">
             <link target="robots"/>
         </menu-item>
@@ -40,6 +43,9 @@
         </menu-item>
         <menu-item name="menus">
             <sub-menu name="Menus" include="MenuSideBar"/>
+        </menu-item>
+        <menu-item name="contentAssets">
+            <sub-menu name="ContentAsset" include="ContentAssetSideBar"/>
         </menu-item>
         <menu-item name="importExport">
             <sub-menu name="ImportExport" include="ImportExportSideBar"/>
@@ -164,5 +170,25 @@
 
     <menu name="RobotsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="RobotsTabBar" recursive="includes-only" />
+    </menu>
+
+    <menu name="ContentAssetTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="contentAssets" title="${uiLabelMap.CmsAllContentAssets}">
+            <link target="contentAssets"/>
+        </menu-item>
+        <menu-item name="editContentAsset" title="${uiLabelMap.CmsEditContentAsset}" always-expand-selected-or-ancestor="false">
+            <condition>
+                <not>
+                    <if-empty field="parameters.assetTemplateId"/>
+                </not>
+            </condition>
+            <link target="editContentAsset">
+                <parameter param-name="assetTemplateId" from-field="parameters.assetTemplateId"/>
+            </link>
+        </menu-item>
+    </menu>
+
+    <menu name="ContentAssetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <include-elements menu-name="ContentAssetTabBar" recursive="includes-only" />
     </menu>
 </menus>

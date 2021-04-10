@@ -454,7 +454,7 @@
         <@field type="text" label=uiLabelMap.CommonPosition size="30" name="inputPosition" required=false value=scriptTmpl.inputPosition!/>
 </#macro>
 
-<#macro cmsScriptTemplateAssocTable scriptTemplates updateAction="" updateFields={} deleteAction="" includeForms=true>
+<#macro cmsScriptTemplateAssocTable scriptTemplates updateAction="" updateFields={} deleteAction="" includeForms=true envAssetType="">
     <#if scriptTemplates?has_content>
         <@section title=uiLabelMap.CmsScripts class="editorScripts">
           <@table type="data-complex" autoAltRows=true responsive=true scrollable=true fixedColumnsRight=1>
@@ -492,13 +492,13 @@
           </@table>
         </@section>
         <#if includeForms>
-          <@cmsScriptTemplateAssocTableForms scriptTemplates=scriptTemplates updateAction=updateAction updateFields=updateFields deleteAction=deleteAction/>
+          <@cmsScriptTemplateAssocTableForms scriptTemplates=scriptTemplates updateAction=updateAction updateFields=updateFields deleteAction=deleteAction envAssetType=envAssetType/>
         </#if>
     </#if>
 </#macro>
 
 <#-- editPage has a single huge form so these have to be separated outside, really ugly -->
-<#macro cmsScriptTemplateAssocTableForms scriptTemplates updateAction="" updateFields={} deleteAction="">
+<#macro cmsScriptTemplateAssocTableForms scriptTemplates updateAction="" updateFields={} deleteAction="" envAssetType="">
     <#if scriptTemplates?has_content>
       <#if updateAction?has_content>
         <#list scriptTemplates as scriptTmpl>
@@ -507,7 +507,10 @@
             <form method="post" action="<@pageUrl>${updateAction}</@pageUrl>" id="edit-script-form-${escapeVal(scriptTmpl.assocId, 'html')}">
             <@fields type="default-compact">
               <input type="hidden" name="scriptAssocId" value="${scriptTmpl.assocId}" />
-            <#list updateFields?keys as fieldName>
+              <#if envAssetType?has_content>
+                <@field type="hidden" name="envAssetType" value=envAssetType/>
+              </#if>
+                <#list updateFields?keys as fieldName>
               <input type="hidden" name="${escapeVal(fieldName, 'html')}" value="${escapeVal(updateFields[fieldName]!, 'html')}" />
             </#list>
               <@cmsScriptTemplateSelectFormEditFields scriptTmpl=scriptTmpl/>
@@ -522,7 +525,10 @@
             <form id="remove_script_${escapeVal(scriptTmpl.assocId, 'html')}" method="post" action="<@pageUrl>${deleteAction}</@pageUrl>">
                 <input type="hidden" name="scriptAssocId" value="${scriptTmpl.assocId}"/>
                 <input type="hidden" name="scriptTemplateId" value="${scriptTmpl.id}"/>
-              <#list updateFields?keys as fieldName>
+                <#if envAssetType?has_content>
+                    <@field type="hidden" name="envAssetType" value=envAssetType/>
+                </#if>
+                <#list updateFields?keys as fieldName>
                 <input type="hidden" name="${escapeVal(fieldName, 'html')}" value="${escapeVal(updateFields[fieldName]!, 'html')}" />
               </#list>
             </form>

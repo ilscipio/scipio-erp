@@ -8,8 +8,15 @@
 
 <#-- EDIT TEMPLATE -->
 <#if assetTemplateModel?has_content>
-    <#assign editAssetUrl = makePageUrl("editAsset?assetTemplateId=${assetTemplateModel.id!}")>
     <#assign assetType = raw(assetTemplateModel.assetType!"TEMPLATE")>
+    <#if assetType == "CONTENT">
+        <#assign editAssetUri = "editContentAsset">
+        <#assign listAssetsUri = "contentAssets">
+    <#else>
+        <#assign editAssetUri = "editAsset">
+        <#assign listAssetsUri = "assets">
+    </#if>
+    <#assign editAssetUrl = makePageUrl(editAssetUri+"?assetTemplateId=${assetTemplateModel.id!}")>
 
     <#-- Javascript functions -->
     <@script>
@@ -64,7 +71,7 @@
             deleteCmsElement("<@pageUrl escapeAs='js'>deleteAsset</@pageUrl>", 
                 { assetTemplateId : "${(assetTemplateModel.id)!}" }, 
                 function(eventMsgs) {
-                    doCmsSuccessRedirect("<@pageUrl escapeAs='js'>assets</@pageUrl>", eventMsgs);
+                    doCmsSuccessRedirect("<@pageUrl escapeAs='js'>${listAssetsUri}</@pageUrl>", eventMsgs);
                 }
             );
         }
@@ -80,8 +87,9 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makePageUrl("editAsset") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewAsset/>
+            <@menuitem type="link" href=makePageUrl(editAssetUri) class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewAsset/>
             <@cmsCopyMenuItem target="copyAsset" title=uiLabelMap.CmsCopyAsset>
+                <@field type="hidden" name="envAssetType" value=(envAssetType!)/>
                 <@field type="hidden" name="assetTemplateId" value=(assetTemplateModel.id!)/><#-- for browsing, on error -->
                 <@field type="hidden" name="srcAssetTemplateId" value=(assetTemplateModel.id!)/>
                 <@field type="input" name="templateName" value="" required=true label=uiLabelMap.CommonName/>
@@ -93,7 +101,8 @@
                     <form method="post" action="<@pageUrl>addAttributeToAsset</@pageUrl>" id="new-attribute-form">
                     <@fields type="default-compact">
                       <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}"/>
-                      <@attributeFields/>
+                        <@field type="hidden" name="envAssetType" value=(envAssetType!)/>
+                        <@attributeFields/>
                       <@field type="submit" text=uiLabelMap.CommonAdd class="${styles.link_run_sys!} ${styles.action_add!}"/>
                     </@fields>
                     </form>
@@ -106,6 +115,7 @@
                     <@fields type="default-compact">
                         <@cmsScriptTemplateSelectForm formAction=makePageUrl("addScriptToAsset") webSiteId=((assetTemplateModel.webSiteId)!)>
                             <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}"/>
+                            <@field type="hidden" name="envAssetType" value=(envAssetType!)/>
                         </@cmsScriptTemplateSelectForm>
                     </@fields>
                 </@modal>
@@ -128,11 +138,29 @@
                 <@cell columns=9>
                   <@form method="post" id="editorForm" action=makePageUrl("createUpdateAsset")>
                     <@field type="hidden" name="assetTemplateId" id="assetTemplateId" value=assetTemplateModel.id!""/>
-                
-                    <#-- General Content -->
+                      <@field type="hidden" name="envAssetType" value=(envAssetType!)/>
+
+                      <#-- General Content -->
                     <@section title=(assetType == "TEMPLATE")?then(uiLabelMap.CmsTemplate, uiLabelMap.CmsContent) class="+editorContent">
                       <@fields type="default-compact">
-                        <@field label=(assetType == "TEMPLATE")?then(uiLabelMap.CmsTemplateBody, getLabel('OrderSendConfirmationEmailBody', 'OrderUiLabels')) type="textarea" class="+editor" name="templateBody" id="templateBody" value=(templateBody!"") rows=30/>
+                        <#assign expandLangVisible = true>
+                        <#assign labelDetail = "">
+                        <#assign tooltip = "">
+                        <#if assetType == "CONTENT">
+                          <#assign expandLang = Static["com.ilscipio.scipio.cms.template.AttributeExpander$ExpandLang"].fromStringSafe("FTL")!>
+                          <#if expandLang?has_content>
+                              <#assign supportedLangStr = "${raw(uiLabelMap.CmsSupportedLang)}: ${raw(expandLang.getDescriptionWithExample(locale)!)}"/>
+                              <#if expandLangVisible>
+                                  <#if supportedLangStr?has_content>
+                                      <#assign labelDetail><span class="label-detail">${escapeVal(supportedLangStr, 'html')}</span></#assign>
+                                  </#if>
+                              <#else>
+                                  <#assign tooltip = appendToSentence(tooltip, supportedLangStr + ".")>
+                              </#if>
+                          </#if>
+                        </#if>
+                        <@field label=(assetType == "TEMPLATE")?then(uiLabelMap.CmsTemplateBody, getLabel('OrderSendConfirmationEmailBody', 'OrderUiLabels')) type="textarea"
+                            class="+editor" containerClass="+editor-field" name="templateBody" id="templateBody" value=(templateBody!"") rows=30 labelDetail=labelDetail tooltip=tooltip/>
                       </@fields>
                         <#-- Codemirrors default font-size is tiny for the hints, so resetting here -->
                         <style type="text/css">
@@ -208,7 +236,8 @@
                             <form method="post" action="<@pageUrl>updateAssetAttribute</@pageUrl>" id="edit-attribute-form-${attrTmpl_index}">
                             <@fields type="default-compact">
                               <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}" />
-                              <@attributeFields attrTmpl=attrTmpl/>
+                                <@field type="hidden" name="envAssetType" value=(envAssetType!)/>
+                                <@attributeFields attrTmpl=attrTmpl/>
                               <@cmsUpdateAssocFormSubmitField/>
                             </@fields>
                             </form>
@@ -219,7 +248,7 @@
                     <#-- Scripts -->
                     <@cmsScriptTemplateAssocTable scriptTemplates=scriptTemplates 
                         updateAction="updateAssetScript" updateFields={"assetTemplateId":assetTemplateModel.id!""}
-                        deleteAction="deleteScriptAndAssetTemplateAssoc"/>
+                        deleteAction="deleteScriptAndAssetTemplateAssoc" envAssetType=(envAssetType!)/>
 
                 </@cell>
               
@@ -262,6 +291,7 @@
                 <form id="remove_attr_${escapeVal(attrTmpl.id!, 'html')}" method="post" action="<@pageUrl>deleteAttributeFromAsset</@pageUrl>">
                     <input type="hidden" name="attributeTemplateId" value="${attrTmpl.id!}"/>
                     <input type="hidden" name="assetTemplateId" value="${assetTemplateModel.id!}"/>
+                        <@field type="hidden" name="envAssetType" value=(envAssetType!)/>
                 </form>
             </#list>
         </#if>
@@ -274,10 +304,12 @@
                 <@form method="post" id="editorForm" action=makePageUrl("createUpdateAsset")>
                     <@section title=uiLabelMap.CmsNewAsset>
                       <@fields type="default-compact">
+                          <@field type="hidden" name="envAssetType" value=(envAssetType!)/>
+
                         <input type="hidden" name="isCreate" value="Y"/>
                         <@field type="input" name="templateName" value=(parameters.templateName!) id="templateName" label=uiLabelMap.CmsTemplateName placeholder=uiLabelMap.CmsMyTemplateName required=true/>
-                        <#if forceAssetType?has_content>
-                            <input type="hidden" name="assetType" value="${forceAssetType}"/>
+                        <#if envAssetType?has_content>
+                            <input type="hidden" name="assetType" value="${envAssetType}"/>
                         <#else>
                           <@field type="select" name="assetType" label=uiLabelMap.CommonType>
                               <#assign assetType = raw(parameters.assetType!)>

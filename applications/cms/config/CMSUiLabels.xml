@@ -1083,4 +1083,20 @@
         <value xml:lang="de">Content</value>
         <value xml:lang="en">Content</value>
     </property>
+    <property key="CmsContentLibrary">
+        <value xml:lang="de">Content Library</value>
+        <value xml:lang="en">Content Library</value>
+    </property>
+    <property key="CmsContentAssets">
+        <value xml:lang="de">Content Assets</value>
+        <value xml:lang="en">Content Assets</value>
+    </property>
+    <property key="CmsAllContentAssets">
+        <value xml:lang="de">Alle Content Assets</value>
+        <value xml:lang="en">All Content Assets</value>
+    </property>
+    <property key="CmsEditContentAsset">
+        <value xml:lang="de">Content Asset Editieren</value>
+        <value xml:lang="en">Edit Content Asset</value>
+    </property>
 </resource>

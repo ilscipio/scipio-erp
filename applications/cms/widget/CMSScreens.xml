@@ -246,6 +246,59 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="contentAssets">
+        <section>
+            <actions>
+                <set field="envAssetType" value="CONTENT"/>
+                <set field="activeSubMenu" value="ContentAsset"/>
+                <set field="activeSubMenuItem" value="contentAssets"/>
+
+                <set field="viewIndex" from-field="parameters.VIEW_INDEX" type="Integer" default-value="0"/>
+                <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="50"/>
+                <entity-condition entity-name="CmsAssetTemplate" list="assetList">
+                    <condition-expr field-name="assetType" from-field="envAssetType"/>
+                    <order-by field-name="templateName"/>
+                    <limit-view view-size="${viewSize}" view-index="${viewIndex+1}"/>
+                </entity-condition>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/assets/listAssets.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="editContentAsset">
+        <section>
+            <actions>
+                <set field="envAssetType" value="CONTENT"/>
+                <set field="activeSubMenu" value="ContentAsset"/>
+                <set field="activeSubMenuItem" value="editContentAsset"/>
+
+                <include-screen-actions name="contentEditorActions"/>
+                <include-screen-actions name="CodeEditorCommonIncludes" location="component://cms/widget/CommonScreens.xml"/>
+                <include-screen-actions name="CommonEditRenderTemplateActions"/>
+
+                <!-- Prepare Data -->
+                <script location="component://cms/script/com/ilscipio/scipio/cms/editor/CmsGetAsset.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/assets/editAsset.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <screen name="scripts">
         <section>

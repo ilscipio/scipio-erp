@@ -13,7 +13,10 @@
         <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
         <attribute name="partyGroupId" type="String" mode="IN" optional="true"/>
-        <attribute name="partyCustomerId" type="String" mode="IN" optional="true"/>
+        <!-- SCIPIO 2.0.0: Depending on orderType, this will be customerPartyId or supplierPartyId -->
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <!-- SCIPIO 2.0.0: Possible values: SALES_ORDER or PURCHASE_ORDER -->
+        <attribute name="orderType" type="String" mode="IN" optional="true"/>
     </service>
     
     <service name="createTransactionData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/TransactionData.groovy" 

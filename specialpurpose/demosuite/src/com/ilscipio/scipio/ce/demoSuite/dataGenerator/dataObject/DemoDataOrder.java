@@ -11,12 +11,14 @@ public class DemoDataOrder implements AbstractDataObject {
     private String orderName;
     private String orderType;
     private Timestamp orderDate;
+    private String createdBy;
     private String channel;
     private BigDecimal grandTotal;
     private BigDecimal remainingSubTotal;
     private List<DemoDataOrderItem> orderItems = new ArrayList<DemoDataOrderItem>();
     private List<DemoDataOrderRole> orderRoles = new ArrayList<DemoDataOrderRole>();
     private List<DemoDataOrderStatus> orderStatuses = new ArrayList<DemoDataOrderStatus>();
+    private List<DemoDataOrderContactMech> orderContactMechs = new ArrayList<DemoDataOrderContactMech>();
 
     public List<DemoDataOrderItem> getOrderItems() {
         return orderItems;
@@ -74,6 +76,14 @@ public class DemoDataOrder implements AbstractDataObject {
         this.orderDate = orderDate;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public List<DemoDataOrderStatus> getOrderStatuses() {
         return orderStatuses;
     }
@@ -84,6 +94,18 @@ public class DemoDataOrder implements AbstractDataObject {
 
     public void addOrderStatus(DemoDataOrderStatus orderStatus) {
         orderStatuses.add(orderStatus);
+    }
+
+    public List<DemoDataOrderContactMech> getOrderContactMechs() {
+        return orderContactMechs;
+    }
+
+    public void setOrderContactMechs(List<DemoDataOrderContactMech> orderContactMechs) {
+        this.orderContactMechs = orderContactMechs;
+    }
+
+    public void addOrderContactMechs(DemoDataOrderContactMech orderContactMech) {
+        orderContactMechs.add(orderContactMech);
     }
 
     public String getChannel() {
@@ -279,6 +301,32 @@ public class DemoDataOrder implements AbstractDataObject {
             this.orderStatusId = orderStatusId;
         }
 
+    }
+
+    public class DemoDataOrderContactMech {
+        private String contactMechPurposeTypeId;
+        private String contactMechId;
+
+        public DemoDataOrderContactMech(String contactMechPurposeTypeId, String contactMechId) {
+            this.contactMechPurposeTypeId = contactMechPurposeTypeId;
+            this.contactMechId = contactMechId;
+        }
+
+        public String getContactMechPurposeTypeId() {
+            return contactMechPurposeTypeId;
+        }
+
+        public void setContactMechPurposeTypeId(String contactMechPurposeTypeId) {
+            this.contactMechPurposeTypeId = contactMechPurposeTypeId;
+        }
+
+        public String getContactMechId() {
+            return contactMechId;
+        }
+
+        public void setContactMechId(String contactMechId) {
+            this.contactMechId = contactMechId;
+        }
     }
 
 }

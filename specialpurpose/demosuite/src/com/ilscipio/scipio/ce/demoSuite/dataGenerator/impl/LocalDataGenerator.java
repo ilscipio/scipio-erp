@@ -157,8 +157,26 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         BigDecimal remainingSubTotal = new BigDecimal(0.00);
         BigDecimal grandTotal = new BigDecimal(0.00);
 
+        String orderType = (String) context.get("orderType");
+
+        GenericValue party = null;
+        GenericValue userLogin = null;
+        if (orderType.equals("SALES_ORDER")) {
+            party = (GenericValue) context.get("customerParty");
+            userLogin = (GenericValue) context.get("customerUserLogin");
+        } else {
+            party = (GenericValue) context.get("supplierParty");
+            userLogin = (GenericValue) context.get("supplierUserLogin");
+        }
+        if (UtilValidate.isEmpty(party) || UtilValidate.isEmpty(userLogin)) {
+            throw new Exception("Invalid party/userLogin");
+        }
+
+        String partyId = party.getString("partyId");
+        String userLoginId = userLogin.getString("userLoginId");
+
         // Create OrderHeader
-        order.setOrderId("GEN_" + delegator.getNextSeqId("demo-orderheader"));
+        order.setOrderId("GEN_" + delegator.getNextSeqId("OrderHeader"));
 
         // Create OrderItem (between 1 and 3)
         int orderItemCount = UtilRandom.getRandomInt(1, 3);
@@ -200,45 +218,50 @@ public class LocalDataGenerator extends AbstractDataGenerator {
         }
 
         order.setOrderDate(UtilRandom.generateRandomTimestamp(context));
-        order.setOrderType(orderTypes.get(UtilRandom.random(orderTypes)));
+        order.setOrderType(orderType);
         order.setOrderName("Demo Order " + UtilDateTime.timeStampToString(order.getOrderDate(), (TimeZone) context.get("timeZone"), (Locale) context.get("locale")));
         order.setRemainingSubTotal(remainingSubTotal);
         order.setGrandTotal(grandTotal);
-
-        if (order.getOrderType().equals("SALES_ORDER")) {
-            List<GenericValue> orderSalesChannelList = EntityQuery.use(delegator).from("Enumeration").where(UtilMisc.toMap("enumTypeId", "ORDER_SALES_CHANNEL")).queryList();
-            GenericValue orderSalesChannel = orderSalesChannelList.get(UtilRandom.random(orderSalesChannelList));
-            order.setChannel(orderSalesChannel.getString("enumId"));
-        }
+        order.setCreatedBy(userLoginId);
 
         // Create basic roles
         List<DemoDataOrderRole> roles = order.getOrderRoles();
         roles.add(order.new DemoDataOrderRole("INTERNAL_ORGANIZATIO", (String) context.get("partyGroupId")));
-        roles.add(order.new DemoDataOrderRole("CUSTOMER", (String) context.get("partyCustomerId")));
 
-        // Create advanced roles, if they exist (optional)
-        GenericValue partyRoleEndUserCustomer = EntityQuery.use(delegator).from("PartyRole").where("partyId", context.get("partyCustomerId"), "roleTypeId", "END_USER_CUSTOMER")
-                .cache(true).queryOne();
-        if (UtilValidate.isNotEmpty(partyRoleEndUserCustomer)) {
-            roles.add(order.new DemoDataOrderRole((String) context.get("partyCustomerId"), "END_USER_CUSTOMER"));
-        }
-        GenericValue partyRolePlacingCustomer = EntityQuery.use(delegator).from("PartyRole").where("partyId", context.get("partyCustomerId"), "roleTypeId", "PLACING_CUSTOMER")
-                .cache(true).queryOne();
-        if (UtilValidate.isNotEmpty(partyRolePlacingCustomer)) {
-            roles.add(order.new DemoDataOrderRole((String) context.get("partyCustomerId"), "PLACING_CUSTOMER"));
-        }
-        GenericValue partyRoleShipToCustomer = EntityQuery.use(delegator).from("PartyRole").where("partyId", context.get("partyCustomerId"), "roleTypeId", "SHIP_TO_CUSTOMER")
-                .cache(true).queryOne();
-        if (UtilValidate.isNotEmpty(partyRoleShipToCustomer)) {
-            roles.add(order.new DemoDataOrderRole((String) context.get("partyCustomerId"), "SHIP_TO_CUSTOMER"));
+        if (orderType.equals("SALES_ORDER")) {
+            List<GenericValue> orderSalesChannelList = EntityQuery.use(delegator).from("Enumeration").where(UtilMisc.toMap("enumTypeId", "ORDER_SALES_CHANNEL")).queryList();
+            GenericValue orderSalesChannel = orderSalesChannelList.get(UtilRandom.random(orderSalesChannelList));
+            order.setChannel(orderSalesChannel.getString("enumId"));
+
+            // Create advanced roles
+            roles.add(order.new DemoDataOrderRole("CUSTOMER", partyId));
+            roles.add(order.new DemoDataOrderRole("PLACING_CUSTOMER", partyId));
+            roles.add(order.new DemoDataOrderRole("SHIP_TO_CUSTOMER", partyId));
+
+            // Create contact mechs
+            List<DemoDataOrder.DemoDataOrderContactMech> orderContactMechs = order.getOrderContactMechs();
+            GenericValue shippingLocation = EntityQuery.use(delegator).from("PartyContactMechAndPurpose").where("partyId", partyId, "contactMechPurposeTypeId", "SHIPPING_LOCATION").queryFirst();
+            if (UtilValidate.isNotEmpty(shippingLocation)) {
+                orderContactMechs.add(order.new DemoDataOrderContactMech("SHIPPING_LOCATION", shippingLocation.getString("contactMechId")));
+            }
+            GenericValue billingLocation = EntityQuery.use(delegator).from("PartyContactMechAndPurpose").where("partyId", partyId, "contactMechPurposeTypeId", "BILLING_LOCATION").queryFirst();
+            if (UtilValidate.isNotEmpty(billingLocation)) {
+                orderContactMechs.add(order.new DemoDataOrderContactMech("BILLING_LOCATION", billingLocation.getString("contactMechId")));
+            }
+            GenericValue emailAddress = EntityQuery.use(delegator).from("PartyContactMechAndPurpose").where("partyId", partyId, "contactMechPurposeTypeId", "EMAIL_ADDRESS").queryFirst();
+            if (UtilValidate.isNotEmpty(emailAddress)) {
+                orderContactMechs.add(order.new DemoDataOrderContactMech("EMAIL_ADDRESS", emailAddress.getString("infoString")));
+            }
+        } else {
+            roles.add(order.new DemoDataOrderRole("SUPPLIER", partyId));
         }
 
         // Create OrderStatus
-        String orderStatusId = "GEN_" + delegator.getNextSeqId("demo-orderstatusid");
+        String orderStatusId = "GEN_" + delegator.getNextSeqId("OrderStatus");
         List<DemoDataOrderStatus> statuses = order.getOrderStatuses();
         statuses.add(order.new DemoDataOrderStatus(orderStatusId, "ORDER_CREATED", order.getOrderDate()));
         if (UtilRandom.getRandomBoolean() == true) {
-            orderStatusId = "GEN_" + delegator.getNextSeqId("demo-orderstatusid");
+            orderStatusId = "GEN_" + delegator.getNextSeqId("OrderStatus");
             if (UtilRandom.getRandomBoolean() == true) {
                 statuses.add(order.new DemoDataOrderStatus(orderStatusId, "ORDER_COMPLETED", order.getOrderDate()));
             } else {

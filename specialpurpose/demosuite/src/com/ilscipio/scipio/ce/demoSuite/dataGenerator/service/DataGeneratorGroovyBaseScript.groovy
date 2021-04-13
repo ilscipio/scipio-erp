@@ -53,7 +53,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
                 }
                 try {
                     boolean beginTransaction = TransactionUtil.begin();
-                    GenericValue createdValue = delegator.create(value);
+                    GenericValue createdValue = delegator.createOrStore(value);
                     TransactionUtil.commit(beginTransaction)
                     if (!createdValue) {
                         throw new Exception("createdValue is null");
@@ -63,6 +63,7 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
                     totalStored++;
                     stat.getGeneratedValues().add(createdValue);
                 } catch (Exception e) {
+                    Debug.logError(e.getMessage(), module);
                     TransactionUtil.rollback();
                     int failed = stat.getFailed();
                     stat.setFailed(failed + 1);

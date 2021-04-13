@@ -1099,4 +1099,8 @@
         <value xml:lang="de">Content Asset Editieren</value>
         <value xml:lang="en">Edit Content Asset</value>
     </property>
+    <property key="CmsNewContentAsset">
+        <value xml:lang="de">Neues Content Asset</value>
+        <value xml:lang="en">New Content Asset</value>
+    </property>
 </resource>

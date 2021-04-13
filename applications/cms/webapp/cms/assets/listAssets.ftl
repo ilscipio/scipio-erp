@@ -1,10 +1,5 @@
 <#include "component://cms/webapp/cms/common/common.ftl">
 
-<#macro menuContent menuArgs={}>
-    <@menu args=menuArgs>
-        <@menuitem type="link" href=makePageUrl("editAsset") class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewAsset/>
-    </@menu>  
-</#macro>
 <#if "CONTENT" == envAssetType!>
     <#assign sectionTitle = uiLabelMap.CmsContentAssets>
     <#assign editUri = "editContentAsset">
@@ -12,7 +7,11 @@
     <#assign sectionTitle = uiLabelMap.CmsAssets>
     <#assign editUri = "editAsset">
 </#if>
-
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
+        <@menuitem type="link" href=makePageUrl(editUri) class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CommonNew/>
+    </@menu>  
+</#macro>
 <@section title=sectionTitle menuContent=menuContent>
     <#if assetList?has_content>
         <@paginate mode="content" url=makePageUrl("assets") viewSize=(viewSize!50) viewIndex=(viewIndex!0) listSize=(listSize!0)>

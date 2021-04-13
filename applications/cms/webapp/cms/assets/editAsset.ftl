@@ -9,7 +9,7 @@
 <#-- EDIT TEMPLATE -->
 <#if assetTemplateModel?has_content>
     <#assign assetType = raw(assetTemplateModel.assetType!"TEMPLATE")>
-    <#if assetType == "CONTENT">
+    <#if "CONTENT" == assetType>
         <#assign editAssetUri = "editContentAsset">
         <#assign listAssetsUri = "contentAssets">
     <#else>
@@ -87,7 +87,7 @@
     <#-- Content -->
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <@menuitem type="link" href=makePageUrl(editAssetUri) class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CmsNewAsset/>
+            <@menuitem type="link" href=makePageUrl(editAssetUri) class="+${styles.action_nav!} ${styles.action_add!}" text=uiLabelMap.CommonNew/>
             <@cmsCopyMenuItem target="copyAsset" title=uiLabelMap.CmsCopyAsset>
                 <@field type="hidden" name="envAssetType" value=(envAssetType!)/>
                 <@field type="hidden" name="assetTemplateId" value=(assetTemplateModel.id!)/><#-- for browsing, on error -->
@@ -302,7 +302,7 @@
         <@row>
             <@cell columns=6 last=true>
                 <@form method="post" id="editorForm" action=makePageUrl("createUpdateAsset")>
-                    <@section title=uiLabelMap.CmsNewAsset>
+                    <@section title=("CONTENT" == envAssetType!)?then(uiLabelMap.CmsNewContentAsset, uiLabelMap.CmsNewAsset)>
                       <@fields type="default-compact">
                           <@field type="hidden" name="envAssetType" value=(envAssetType!)/>
 

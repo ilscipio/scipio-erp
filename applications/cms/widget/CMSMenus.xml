@@ -44,7 +44,7 @@
         <menu-item name="menus">
             <sub-menu name="Menus" include="MenuSideBar"/>
         </menu-item>
-        <menu-item name="contentAssets">
+        <menu-item name="contentLibrary">
             <sub-menu name="ContentAsset" include="ContentAssetSideBar"/>
         </menu-item>
         <menu-item name="importExport">

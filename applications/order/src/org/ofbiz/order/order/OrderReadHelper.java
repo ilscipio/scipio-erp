@@ -1598,6 +1598,7 @@ public class OrderReadHelper {
         try {
             EntityListIterator customerOrdersIterator = delegator.findListIteratorByCondition(dve,andCond,null,UtilMisc.toList("orderId"),UtilMisc.toList("-orderDate"),null);
             orderList = customerOrdersIterator.getCompleteList();
+            customerOrdersIterator.close();
         } catch (GenericEntityException e) {
             Debug.logError(e,module);
         }

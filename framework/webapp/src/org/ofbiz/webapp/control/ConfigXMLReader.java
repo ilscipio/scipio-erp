@@ -371,10 +371,10 @@ public class ConfigXMLReader {
             protected Map<String, Event> afterLoginEventList = new LinkedHashMap<String, Event>();
             protected Map<String, Event> beforeLogoutEventList = new LinkedHashMap<String, Event>();
             protected Map<String, Event> afterLogoutEventList = new LinkedHashMap<String, Event>();
-            protected Map<String, String> eventHandlerMap = new HashMap<String, String>();
-            protected Map<String, String> viewHandlerMap = new HashMap<String, String>();
-            protected Map<String, RequestMap> requestMapMap = new HashMap<String, RequestMap>();
-            protected Map<String, ViewMap> viewMapMap = new HashMap<String, ViewMap>();
+            protected Map<String, String> eventHandlerMap = new LinkedHashMap<String, String>();
+            protected Map<String, String> viewHandlerMap = new LinkedHashMap<String, String>();
+            protected Map<String, RequestMap> requestMapMap = new LinkedHashMap<String, RequestMap>();
+            protected Map<String, ViewMap> viewMapMap = new LinkedHashMap<String, ViewMap>();
             protected ViewAsJsonConfig viewAsJsonConfig; // SCIPIO: added 2017-05-15
             protected Boolean allowViewSaveDefault; // SCIPIO: added 2018-06-13
             protected List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
@@ -498,7 +498,9 @@ public class ConfigXMLReader {
         }
 
         private static <K, V> Map<K, V> getOptMap(Map<K, V> map) { // SCIPIO: Used to optimize MapContext down to a simpler map.
-            return new HashMap<>(map); // convert MapContext to much faster HashMap
+            //return new HashMap<>(map); // convert MapContext to much faster HashMap
+            // SCIPIO: 2.1.0: Use LinkedHashMap here too for predictable order
+            return new LinkedHashMap<>(map);
         }
 
         protected static <K, V> Map<K, V> getOrderedOptMap(Map<K, V> map) { // SCIPIO: Used to optimize MapContext down to a simpler order-preserving map.
@@ -951,7 +953,7 @@ public class ConfigXMLReader {
          * because this is cached by {@link ConfigXMLReader.ResolvedControllerConfig}. Maybe review in future.
          */
         private void mergePushRequestMapMap(MapContext<String, RequestMap> result, Map<String, RequestMap> requestMapMap, ControllerConfig controllerConfig) {
-            Map<String, RequestMap> updatedRequestMapMap = new HashMap<>();
+            Map<String, RequestMap> updatedRequestMapMap = new LinkedHashMap<>();
             for(Map.Entry<String, RequestMap> entry : requestMapMap.entrySet()) {
                 String uri = entry.getKey();
                 RequestMap requestMap = entry.getValue();

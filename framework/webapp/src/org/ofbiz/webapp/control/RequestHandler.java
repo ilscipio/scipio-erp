@@ -339,6 +339,15 @@ public class RequestHandler {
                         requestMap = requestMapMap.get(defaultRequest);
                     }
                 }
+                // SCIPIO: 2.1.0: Check access
+                String viewAccess = (viewMap != null) ? viewMap.getAccess() : null;
+                if (viewAccess == null) {
+                    viewAccess = controllerConfig.getDefaultViewAccess();
+                }
+                if (viewAccess != null && !"public".equals(viewAccess)) {
+                    // use the same message as if it was missing for security reasons, ie so can't tell if it is missing or direct request is not allowed
+                    throw new RequestHandlerException(requestMissingErrorMessage);
+                }
             } catch (WebAppConfigurationException e) {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
                 throw new RequestHandlerException(e);
@@ -374,6 +383,25 @@ public class RequestHandler {
                 // SCIPIO: may now prevent this
                 if (allowOverrideViewUri) {
                     overrideViewUri = RequestHandler.getOverrideViewUri(chain);
+                    // SCIPIO: 2.1.0: added this same block as above for override view check
+                    if (overrideViewUri != null) {
+                        ConfigXMLReader.ViewMap viewMap;
+                        try {
+                            viewMap = getControllerConfig().getViewMapMap().get(overrideViewUri);
+                            // SCIPIO: 2.1.0: Check access
+                            String viewAccess = (viewMap != null) ? viewMap.getAccess() : null;
+                            if (viewAccess == null) {
+                                viewAccess = controllerConfig.getDefaultViewAccess();
+                            }
+                            if (viewAccess != null && !"public".equals(viewAccess)) {
+                                // use the same message as if it was missing for security reasons, ie so can't tell if it is missing or direct request is not allowed
+                                throw new RequestHandlerException(requestMissingErrorMessage);
+                            }
+                        } catch (WebAppConfigurationException e) {
+                            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+                            throw new RequestHandlerException(e);
+                        }
+                    }
                 }
             }
             if (overrideViewUri != null) {

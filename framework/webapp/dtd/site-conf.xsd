@@ -360,6 +360,25 @@ under the License.
                         </xs:sequence>
                      </xs:complexType>
                 </xs:element>
+                <xs:element minOccurs="0" name="view-map-settings">
+                    <xs:complexType>
+                        <xs:attribute name="default-view-access">
+                            <xs:annotation>
+                                <xs:documentation>Default visibility for all views toward public-facing services (SCIPIO).
+                                    Default: Typically configured in component://, otherwise "public" (legacy default)
+                                    When set to internal, behaves like direct-request false in request URIs: views cannot
+                                    be accessed by view switch, only by direct invocation by requests.
+                                    Warning: Default "public" but may be changed to "internal" in future or certain controllers</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:token">
+                                    <xs:enumeration value="public"/>
+                                    <xs:enumeration value="internal"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:attribute>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.common-settings"/>
         </xs:complexType>
@@ -1378,6 +1397,21 @@ under the License.
                     If the strict-transport-security is "none" then it will not be used. 
                 </xs:documentation>
             </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="access">
+            <xs:annotation>
+                <xs:documentation>Visibility of the attribute toward public-facing services (SCIPIO).
+                    Default: Typically configured in component://, otherwise "public" (legacy default)
+                    When set to internal, behaves like direct-request false in request URIs: views cannot
+                    be accessed by view switch, only by direct invocation by requests.
+                    Warning: Default "public" but may be changed to "internal" in future or certain controllers</xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="public"/>
+                    <xs:enumeration value="internal"/>
+                </xs:restriction>
+            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
 </xs:schema>

@@ -266,7 +266,7 @@ public class ConfigXMLReader {
         } catch (java.io.FileNotFoundException e) { // SCIPIO: special case: let caller log this one, IF necessary
             throw new WebAppConfigurationException(e);
         } catch (Exception e) {
-            //Scipio: not all components have a WebApp, so this should not be logged as an error.
+            // SCIPIO: not all components have a WebApp, so this should not be logged as an error.
             // Debug.logError(e, module);
             throw new WebAppConfigurationException(e);
         }
@@ -343,6 +343,7 @@ public class ConfigXMLReader {
         protected final List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
         protected final String defaultViewLastView; // SCIPIO: added 2018-10-26
         protected final Map<String, EventHandlerWrapperDef> eventHandlerWrapperMap; // SCIPIO: added 2018-11-23
+        protected final String defaultViewAccess; // SCIPIO: Added 2.1.0
 
         // SCIPIO: DEV NOTE:
         // If you add any members to this class, make sure to reflect it in ResolvedControllerConfig further below!
@@ -380,6 +381,7 @@ public class ConfigXMLReader {
             protected List<NameFilter<Boolean>> allowViewSaveViewNameFilters; // SCIPIO: added 2018-06-13
             protected String defaultViewLastView; // SCIPIO: added 2018-10-26
             protected Map<String, EventHandlerWrapperDef> eventHandlerWrapperMap = new LinkedHashMap<>(); // SCIPIO: added 2018-11-23
+            protected String defaultViewAccess; // SCIPIO: Added 2.1.0
         }
 
         public ControllerConfig(URL url) throws WebAppConfigurationException {
@@ -431,6 +433,7 @@ public class ConfigXMLReader {
             this.allowViewSaveViewNameFilters = builder.allowViewSaveViewNameFilters;
             this.defaultViewLastView = builder.defaultViewLastView;
             this.eventHandlerWrapperMap = builder.eventHandlerWrapperMap;
+            this.defaultViewAccess = builder.defaultViewAccess;
         }
 
         /**
@@ -469,6 +472,7 @@ public class ConfigXMLReader {
                 this.allowViewSaveViewNameFilters = getOptList(srcConfig.getAllowViewSaveViewNameFilters()); // SCIPIO: added 2018-06-13
                 this.defaultViewLastView = srcConfig.getDefaultViewLastView();
                 this.eventHandlerWrapperMap = getOrderedOptMap(srcConfig.getEventHandlerWrapperMap());
+                this.defaultViewAccess = srcConfig.getDefaultViewAccess();
             } else {
                 this.errorpage = srcConfig.errorpage;
                 this.protectView = srcConfig.protectView;
@@ -494,6 +498,7 @@ public class ConfigXMLReader {
                 this.allowViewSaveViewNameFilters = srcConfig.allowViewSaveViewNameFilters;
                 this.defaultViewLastView = srcConfig.defaultViewLastView;
                 this.eventHandlerWrapperMap = srcConfig.eventHandlerWrapperMap;
+                this.defaultViewAccess = srcConfig.defaultViewAccess;
             }
         }
 
@@ -1265,6 +1270,46 @@ public class ConfigXMLReader {
             }
             return null;
         }
+
+        public String getDefaultViewAccess() throws WebAppConfigurationException {
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String owner = controllerConfig.getOwner();
+                    String defaultViewAccess;
+                    if (include.recursive) {
+                        defaultViewAccess = controllerConfig.getDefaultViewAccess();
+                    } else {
+                        defaultViewAccess = controllerConfig.defaultViewAccess;
+                    }
+                    if (defaultViewAccess != null) {
+                        return defaultViewAccess;
+                    }
+                }
+            }
+            if (defaultViewAccess != null) {
+                return defaultViewAccess;
+            }
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    //String owner = controllerConfig.getOwner();
+                    String defaultViewAccess;
+                    if (include.recursive) {
+                        defaultViewAccess = controllerConfig.getDefaultViewAccess();
+                    } else {
+                        defaultViewAccess = controllerConfig.defaultViewAccess;
+                    }
+                    if (defaultViewAccess != null) {
+                        return defaultViewAccess;
+                    }
+                }
+            }
+            return null;
+        }
+
         
         protected static class Builder extends ConfigFields { // SCIPIO: 2018-11-07: ugly kludge for initialization
 
@@ -1374,6 +1419,7 @@ public class ConfigXMLReader {
             String defaultViewLastView = null;
             ArrayList<NameFilter<Boolean>> allowViewSaveViewNameFilters = null;
             Element commonSettingsElem = UtilXml.firstChildElement(rootElement, "common-settings");
+            String defaultViewAccess = null;
             if (commonSettingsElem != null) {
                 Element requestMapSettingsElem = UtilXml.firstChildElement(commonSettingsElem, "request-map-settings");
                 if (requestMapSettingsElem != null) {
@@ -1398,10 +1444,15 @@ public class ConfigXMLReader {
                         }
                     }
                 }
+                Element viewMapSettingsElem = UtilXml.firstChildElement(commonSettingsElem, "view-map-settings");
+                if (viewMapSettingsElem != null) {
+                    defaultViewAccess = UtilValidate.nullIfEmpty(viewMapSettingsElem.getAttribute("default-view-access"));
+                }
             }
             this.allowViewSaveDefault = allowViewSaveDefault;
             this.allowViewSaveViewNameFilters = allowViewSaveViewNameFilters;
             this.defaultViewLastView = (UtilValidate.isNotEmpty(defaultViewLastView) && !"_none_".equals(defaultViewLastView)) ? defaultViewLastView : null;
+            this.defaultViewAccess = defaultViewAccess;
         }
 
         private void loadHandlerMap(Element rootElement) {
@@ -1749,6 +1800,11 @@ public class ConfigXMLReader {
         @Override
         public String getDefaultViewLastView() throws WebAppConfigurationException {
             return defaultViewLastView;
+        }
+
+        @Override
+        public String getDefaultViewAccess() throws WebAppConfigurationException {
+            return defaultViewAccess;
         }
     }
 
@@ -2752,6 +2808,7 @@ public class ConfigXMLReader {
         public final String strictTransportSecurity;
         public final String description;
         public final boolean noCache; // = false;
+        public final String access; // SCIPIO
 
         public ViewMap(Element viewMapElement) {
             this.name = viewMapElement.getAttribute("name");
@@ -2764,6 +2821,7 @@ public class ConfigXMLReader {
             this.xFrameOption = viewMapElement.getAttribute("x-frame-options");
             this.strictTransportSecurity = viewMapElement.getAttribute("strict-transport-security");
             this.description = UtilXml.childElementValue(viewMapElement, "description");
+            this.access = UtilValidate.nullIfEmpty(viewMapElement.getAttribute("access"));
             if (UtilValidate.isEmpty(page)) {
                 page = this.name;
             }
@@ -2806,6 +2864,10 @@ public class ConfigXMLReader {
 
         public boolean isNoCache() {
             return noCache;
+        }
+
+        public String getAccess() {
+            return access;
         }
     }
 

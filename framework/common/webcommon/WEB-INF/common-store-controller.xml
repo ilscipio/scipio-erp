@@ -59,6 +59,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
                 <view-last default-view="main"/>
             </response-settings>
         </request-map-settings>
+        <view-map-settings default-view-access="public"/><!-- NOTE: default-view-access could change to "internal" in future -->
     </common-settings>
 
     <!-- SCIPIO: NOTE: 2018-07-09: Most requests changed to https true (now the framework default when unspecified) -->

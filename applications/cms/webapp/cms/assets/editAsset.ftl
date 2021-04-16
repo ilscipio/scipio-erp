@@ -152,7 +152,7 @@
                               <#assign supportedLangStr = "${raw(uiLabelMap.CmsSupportedLang)}: ${raw(expandLang.getDescriptionWithExample(locale)!)}"/>
                               <#if expandLangVisible>
                                   <#if supportedLangStr?has_content>
-                                      <#assign labelDetail><span class="label-detail">${escapeVal(supportedLangStr, 'html')}</span></#assign>
+                                      <#assign labelDetail><em class="label-detail" style="display: inline">${escapeVal(supportedLangStr, 'html')}</em></#assign>
                                   </#if>
                               <#else>
                                   <#assign tooltip = appendToSentence(tooltip, supportedLangStr + ".")>

@@ -43,7 +43,7 @@
         <#local rawLabelDetail = labelDetail><#-- save it -->
         <#local fieldLabel = fieldObj.displayName!"Field">
         <#if labelDetail?has_content>
-          <#local labelDetail><span class="label-detail">${escapeVal(labelDetail, 'html')}</span></#local>
+          <#local labelDetail><em class="label-detail" style="display: inline">${escapeVal(labelDetail, 'html')}</em></#local>
         </#if>
         <#if useAltTooltip>
           <#-- NOTE: 2017-04-06: MUST DISABLE REGULAR TOOLTIP entirely for LONG_TEXT, it interferes with the editor in some modes.

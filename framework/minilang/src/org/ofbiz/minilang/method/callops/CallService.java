@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -202,6 +203,11 @@ public final class CallService extends MethodOperation {
         Locale locale = methodContext.getLocale();
         if (locale != null) {
             inMap.put("locale", locale);
+        }
+        // SCIPIO: 2.0.0: always add TimeZone to context unless null
+        TimeZone timeZone= methodContext.getTimeZone();
+        if (timeZone != null) {
+            inMap.put("timeZone", timeZone);
         }
         // invoke the service
         Map<String, Object> result = null;

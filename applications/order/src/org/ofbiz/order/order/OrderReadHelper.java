@@ -3723,12 +3723,15 @@ public class OrderReadHelper {
             EntityListIterator returnStats = delegator.findListIteratorByCondition(retEntity,EntityCondition.makeCondition(returnExpL, EntityOperator.AND),null,null,null,null);
             if (returnStats != null) {
                 List<GenericValue> returnStatsList = returnStats.getCompleteList();
-                returnCount = returnStatsList.size();
+                HashSet<String> returnIds = new HashSet<String> ();
                 for(GenericValue n : returnStatsList){
                     BigDecimal nv = n.getBigDecimal("returnItemValue");
                     returnItemValue = returnItemValue.add(nv.multiply(n.getBigDecimal("returnItemCount")));
                     returnItemCount = returnItemCount.add(n.getBigDecimal("returnItemCount"));
+                    returnIds.add(n.getString("returnId"));
                 }
+                returnCount = returnIds.size();
+
             }
             returnStats.close();
         }catch(Exception e){

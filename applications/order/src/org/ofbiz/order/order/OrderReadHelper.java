@@ -3667,6 +3667,7 @@ public class OrderReadHelper {
         itemEntity.addMemberEntity("OI", "OrderItem");
         itemEntity.addMemberEntity("OH", "OrderHeader");
         itemEntity.addAlias("OI", "orderId", null, null, null, true, null);
+        itemEntity.addAlias("OI", "orderItemSeqId", null, null, null, true, null);
         itemEntity.addAlias("OI", "statusId", null, null, null, true, null);
         itemEntity.addAlias("OH", "orderDate", null, null, null, true, null);
         itemEntity.addAlias("OI", "orderItemCount", "quantity", null, null, false, "sum");
@@ -3692,9 +3693,10 @@ public class OrderReadHelper {
                         lastOrderDate = n.getTimestamp("orderDate");
                         rfmRecency = Math.toIntExact( (System.currentTimeMillis() - lastOrderDate.getTime() )/ (1000 * 60 * 60 * 24));
                     }
-                    BigDecimal nv = n.getBigDecimal("orderItemValue");
-                    orderItemValue = orderItemValue.add(nv.multiply(n.getBigDecimal("orderItemCount")));
-                    orderItemCount = orderItemCount.add(n.getBigDecimal("orderItemCount"));
+                    BigDecimal price = n.getBigDecimal("orderItemValue");
+                    BigDecimal quantity = n.getBigDecimal("orderItemCount");
+                    orderItemValue = orderItemValue.add(price.multiply(quantity));
+                    orderItemCount = orderItemCount.add(quantity);
                     cIndex+=1;
                 }
             }
@@ -3706,6 +3708,7 @@ public class OrderReadHelper {
         DynamicViewEntity retEntity = new DynamicViewEntity();
         retEntity.addMemberEntity("RI", "ReturnItem");
         retEntity.addAlias("RI", "orderId", null, null, null, true, null);
+        retEntity.addAlias("RI", "returnItemSeqId", null, null, null, true, null);
         retEntity.addAlias("RI", "returnId", null, null, null, true, null);
         retEntity.addAlias("RI", "statusId", null, null, null, true, null);
         retEntity.addAlias("RI", "returnTypeId", null, null, null, true, null);

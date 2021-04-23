@@ -261,7 +261,7 @@ public interface CmsRenderTemplate extends Serializable {
                 try {
                     // UID trick, same as used by widgets to generate unique names
                     String name = template.getName() + "_" + new UID().toString();
-                    fmTemplate = SafeOptional.ofNullable(new Template(name, new StringReader(template.getTemplateBody()), fmConfig));
+                    fmTemplate = SafeOptional.ofNullable(new Template(name, new StringReader(template.getTemplateBodyForRender()), fmConfig));
                 } catch (IOException e) {
                     throw new CmsException("Freemarker template could not be retrieved from database", e);
                 }

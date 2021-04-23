@@ -130,10 +130,19 @@ public abstract class CmsTemplate extends CmsDataObject {
     /**
      * Returns the template body.
      *
-     * @return freemarker template
+     * @return freemarker template string
      */
     public String getTemplateBody() {
         return getTemplateBodySource().getEffectiveBody();
+    }
+
+    /**
+     * Returns the template body for rendering (typically through Freemarker renderer).
+     *
+     * @return freemarker template string
+     */
+    public String getTemplateBodyForRender() {
+        return getTemplateBody();
     }
 
     /**

@@ -656,18 +656,8 @@ public abstract class AttributeExpander {
          * as long as Configuration didn't force a mode, should be no issue.
          */
         protected String enableBracketMode(String tmplStr) {
-            if (tmplStr.startsWith("<#ftl")) {
-                // if for some reason and somehow non-bracket syntax was already forced,
-                // then and only then ignore it
-                ;
-            } else if (!tmplStr.startsWith("[#ftl")) {
-                // enable bracket syntax the inline way
-                //
-                tmplStr = "[#ftl]" + tmplStr;
-            }
-            return tmplStr;
+            return CmsAssetTemplate.addContentTemplateBodyFtlPrefix(tmplStr);
         }
-
 
         protected class FtlStringParser extends StringParser {
             @Override

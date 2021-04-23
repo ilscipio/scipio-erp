@@ -35,8 +35,6 @@ import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
 import com.ilscipio.scipio.cms.template.CmsScriptTemplate.CmsScriptTemplateAssoc;
 import com.ilscipio.scipio.cms.template.CmsTemplateVersion.ActiveVersionWorker;
 
-import freemarker.core.Environment;
-
 /**
  * 2016: Asset template
  * NOTE: most code is now shared with page template.
@@ -204,6 +202,28 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
         }
 
         return rowsAffected + super.remove();
+    }
+
+    @Override
+    public String getTemplateBodyForRender() {
+        String templateBody = super.getTemplateBodyForRender();
+        if ("CONTENT".equals(getAssetType())) {
+            templateBody = addContentTemplateBodyFtlPrefix(templateBody);
+        }
+        return templateBody;
+    }
+
+    public static String addContentTemplateBodyFtlPrefix(String templateBody) {
+        if (templateBody.startsWith("<#ftl")) {
+            // if for some reason and somehow non-bracket syntax was already forced,
+            // then and only then ignore it
+            ;
+        } else if (!templateBody.startsWith("[#ftl")) {
+            // enable bracket syntax the inline way
+            //
+            templateBody = "[#ftl]" + templateBody;
+        }
+        return templateBody;
     }
 
     public static abstract class CmsAssetTemplateAssoc extends CmsDataObject {

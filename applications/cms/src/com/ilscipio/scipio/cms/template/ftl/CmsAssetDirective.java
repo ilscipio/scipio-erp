@@ -281,12 +281,12 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
             }
         } else {
             if (assetName != null) {
-                handleError(env, null, "Asset with name '" + assetName + "' not found. Please check with your supervisor"
-                            + " if all variables have been set correctly.");
+                Debug.logInfo("Asset with name '" + assetName + "' not found. Please check with your supervisor"
+                        + " if all variables have been set correctly.",module);
                 return;
             } else {
-                handleError(env, null, "Asset with id '" + assetId + "' not found. Please check with your supervisor"
-                            + " if all variables have been set correctly");
+                Debug.logInfo("Asset with id '" + assetId + "' not found. Please check with your supervisor"
+                        + " if all variables have been set correctly",module);
                 return;
             }
         }

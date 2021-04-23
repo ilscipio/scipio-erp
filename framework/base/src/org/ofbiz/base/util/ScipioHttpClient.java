@@ -26,6 +26,8 @@ import javax.net.ssl.SSLContext;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Serializable;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 
 /**
@@ -211,6 +213,7 @@ public class ScipioHttpClient implements Closeable {
         private final Boolean expectContinueEnabled;
         private final Boolean trustSelfCert;
         private final Boolean trustAnyHost;
+        private final Boolean trustAllCerts;
         private final String jksStoreFileName;
         private final String jksStorePassword;
 
@@ -225,6 +228,7 @@ public class ScipioHttpClient implements Closeable {
             this.expectContinueEnabled = UtilProperties.asBoolean(properties.get("expectContinueEnabled"), null);
             this.trustSelfCert = UtilProperties.asBoolean(properties.get("trustSelfCert"), null);
             this.trustAnyHost = UtilProperties.asBoolean(properties.get("trustAnyHost"), null);
+            this.trustAllCerts = UtilProperties.asBoolean(properties.get("trustAllCerts"), null);
             String jksStoreFileName = (String) properties.get("jksStoreFileName");
             this.jksStoreFileName = UtilValidate.isNotEmpty(jksStoreFileName) ? jksStoreFileName : DEFAULT_JKS_STORE_FILENAME;
             String jksStorePassword = (String) properties.get("jksStorePassword");
@@ -296,6 +300,15 @@ public class ScipioHttpClient implements Closeable {
         protected SSLContext getSSLContext() {
             if (Boolean.TRUE.equals(getTrustSelfCert())) {
                 try {
+                    if(Boolean.TRUE.equals(getTrustAllCerts())){
+                        return SSLContexts.custom().loadTrustMaterial(FileUtil.getFile(getJksStoreFileName()), getJksStorePassword().toCharArray(),
+                                new TrustSelfSignedStrategy() {
+                                    @Override
+                                    public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                                        return true;
+                                    }
+                                }) .build();
+                    }
                     return SSLContexts.custom().loadTrustMaterial(FileUtil.getFile(getJksStoreFileName()), getJksStorePassword().toCharArray(),
                                     new TrustSelfSignedStrategy()).build();
                 } catch (Exception e) {
@@ -305,6 +318,7 @@ public class ScipioHttpClient implements Closeable {
             }
             return SSLContexts.createDefault();
         }
+
 
         protected SSLConnectionSocketFactory getSSLConnectionSocketFactory(SSLContext sslContext) {
             if (Boolean.TRUE.equals(getTrustAnyHost())) {
@@ -413,6 +427,13 @@ public class ScipioHttpClient implements Closeable {
          */
         public Boolean getTrustAnyHost() {
             return trustAnyHost;
+        }
+
+        /**
+         * Returns true if should ignore certs.
+         */
+        public Boolean getTrustAllCerts() {
+            return trustAllCerts;
         }
 
         public String getJksStoreFileName() {

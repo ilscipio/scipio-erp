@@ -65,7 +65,7 @@ abstract class GroovyBaseScript extends Script {
         // SCIPIO: NOTE: We ONLY use the request/session for default fields (userLogin, locale, timeZone) 
         // as backward-compatibility IF their keys are not set in current context, as the renderer should have set them.
         ServiceUtil.checkSetServiceContextDefaults(serviceCtx, ModelService.COMMON_INTERNAL_IN_FIELDS,
-            (Map<String, Object>) getBindingVarSafe('context'), (HttpServletRequest) getBindingVarSafe('request'))
+                (Map) getBindingVarSafe('context'), (HttpServletRequest) getBindingVarSafe('request'))
         Map serviceContext = dctx.makeValidContext(serviceName, ModelService.IN_PARAM, serviceCtx)
         Map result = dispatcher.runSync(serviceName, serviceContext)
         if (ServiceUtil.isError(result)) {
@@ -94,11 +94,11 @@ abstract class GroovyBaseScript extends Script {
         return EntityQuery.use(binding.getVariable('delegator')).select(fields)
     }
 
-    EntityQuery select(Set<String> fields) {
+    EntityQuery select(Set fields) {
         return EntityQuery.use(binding.getVariable('delegator')).select(fields)
     }
 
-    GenericValue findOne(String entityName, Map<String, ? extends Object> fields, boolean useCache) {
+    GenericValue findOne(String entityName, Map fields, boolean useCache) {
         return binding.getVariable('delegator').findOne(entityName, fields, useCache)
     }
 

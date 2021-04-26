@@ -644,6 +644,12 @@
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+
+    <!--Settings -->
+    <request-map uri="settings">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="robots"/>
+    </request-map>
     
     <!-- **************** -->
     <!--   VIEW MAPPINGS  -->

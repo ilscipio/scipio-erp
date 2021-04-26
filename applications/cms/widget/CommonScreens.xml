@@ -107,6 +107,18 @@
             </widgets>
         </section>
     </screen>
+
+    <screen name="CommonSettingsDecorator">
+        <section>
+            <actions>
+                <set field="activeSubMenu" from-field="activeSubMenu" default-value="Settings"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     
     <screen name="CommonCmsImportExportDecorator">
         <section>

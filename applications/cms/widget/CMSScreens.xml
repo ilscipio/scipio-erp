@@ -3,7 +3,6 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
     <!-- Generic screens -->
-    
     <screen name="main">
         <section>
             <actions>
@@ -565,6 +564,7 @@
         <section>
             <actions>
                 <set field="titleProperty" value="CommonRobots"/>
+                <set field="activeSubMenuItem" value="robots"/>
                 <script lang="groovy"><![CDATA[
                     import org.ofbiz.base.util.*;
                     import com.ilscipio.scipio.cms.webapp.CmsWebappUtil
@@ -630,7 +630,7 @@
                 <set field="layoutSettings.VT_FTPR_JAVASCRIPT[]" value="/base-theme/bower_components/codemirror-mode-freemarker/freemarker/freemarker.js" global="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonCMSAppDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://cms/webapp/cms/robots/robots.ftl"/></html>

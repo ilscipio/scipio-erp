@@ -264,7 +264,10 @@
 <#if isMailChimpComponentPresent>
     <@(.get_optional_template("component://mailchimp/webapp/mailchimp/includes/scipio/lib/standard/htmlMailchimp.ftl").include!templateMissingFallback("htmlMailchimp.html")) />
 </#if>
-
+<#assign isWordpressComponentPresent = Static["org.ofbiz.base.component.ComponentConfig"].isComponentPresent("wordpress")!false>
+<#if isWordpressComponentPresent>
+    <@(.get_optional_template("component://wordpress/webapp/wordpress/wordpress-common.ftl").include!templateMissingFallback("htmlWordpress.html")) />
+</#if>
 
 <#-- After everything included, create a copy of the namespace so that macros can access 
      their global variables without possibility of override (sometimes needed)

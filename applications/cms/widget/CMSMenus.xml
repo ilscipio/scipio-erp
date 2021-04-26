@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="MainAppBar" items-sort-mode="off" title="${uiLabelMap.CMSApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <actions>
+            <script><![CDATA[groovy:
+                context.wordpressAvailable = org.ofbiz.base.component.ComponentConfig.isComponentPresent("wordpress");
+            ]]></script>
+        </actions>
         <menu-item name="pages" title="${uiLabelMap.CommonPages}">
             <link target="pages"/>
         </menu-item>
@@ -21,6 +26,12 @@
         </menu-item>
         <menu-item name="robots" title="${uiLabelMap.CommonRobots}">
             <link target="robots"/>
+        </menu-item>
+        <menu-item name="wordpress" title="Wordpress">
+            <condition>
+                <if-compare field="wordpressAvailable" operator="equals" value="true"/>
+            </condition>
+            <link target="wordpress" />
         </menu-item>
         <!--<menu-item name="settings" title="${uiLabelMap.CommonSettings}">
             <link target="editSettings"/>

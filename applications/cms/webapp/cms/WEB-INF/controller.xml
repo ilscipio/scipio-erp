@@ -2,7 +2,7 @@
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
-    <include location="component://wordpress/webapp/wordpress/WEB-INF/wordpress-controller.xml" optional="true" order="pre-local" />
+    <include location="component://wordpress/webapp/hooks/wordpress-controller.xml" optional="true" order="pre-local" />
 
     <description>Scipio CMS Webapp Configuration File</description>
 

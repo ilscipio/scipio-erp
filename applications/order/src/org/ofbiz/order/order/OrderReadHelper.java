@@ -1595,10 +1595,9 @@ public class OrderReadHelper {
             exprListStatus.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.toTimestamp(currentDayCal.getTime())));
         }
         EntityCondition andCond = EntityCondition.makeCondition(exprListStatus, EntityOperator.AND);
-        try {
-            EntityListIterator customerOrdersIterator = delegator.findListIteratorByCondition(dve,andCond,null,UtilMisc.toList("orderId"),UtilMisc.toList("-orderDate"),null);
+        try (EntityListIterator customerOrdersIterator = delegator.findListIteratorByCondition(dve, andCond, null,
+                UtilMisc.toList("orderId"), UtilMisc.toList("-orderDate"), null)) {
             orderList = customerOrdersIterator.getCompleteList();
-            customerOrdersIterator.close();
         } catch (GenericEntityException e) {
             Debug.logError(e,module);
         }

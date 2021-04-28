@@ -52,7 +52,6 @@ import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
-import sun.net.www.content.text.Generic;
 
 /**
  * Utility class for easily extracting important information from orders

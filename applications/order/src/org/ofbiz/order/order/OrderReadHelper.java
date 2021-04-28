@@ -1727,6 +1727,11 @@ public class OrderReadHelper {
         return orderItemAndShipGrp;
     }
 
+    // SCIPIO 2.0.0: New convenient method to get all shipGroupSeqIds available
+    public List<String> getShipGroupIds() {
+        return EntityUtil.getFieldListFromEntityList(getOrderItemShipGroups(), "shipGroupSeqId", true);
+    }
+
     public List<GenericValue> getOrderItemAndShipGroupAssoc(String shipGroupSeqId) {
         List<EntityExpr> exprs = UtilMisc.toList(EntityCondition.makeCondition("shipGroupSeqId", EntityOperator.EQUALS, shipGroupSeqId));
         return EntityUtil.filterByAnd(getOrderItemAndShipGroupAssoc(), exprs);

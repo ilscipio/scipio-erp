@@ -159,6 +159,9 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     /** The namespace of this service */
     public String nameSpace;
 
+    /** The namespace prefix of this service */
+    public String nameSpacePrefix;
+
     /** The package name or location of this service */
     public String location;
 
@@ -360,6 +363,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         this.description = model.description;
         this.engineName = model.engineName;
         this.nameSpace = model.nameSpace;
+        this.nameSpacePrefix = model.nameSpacePrefix;
         this.location = model.location;
         this.invoke = model.invoke;
         this.defaultEntityName = model.defaultEntityName;
@@ -497,6 +501,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         buf.append(description).append("::");
         buf.append(engineName).append("::");
         buf.append(nameSpace).append("::");
+        buf.append(nameSpacePrefix).append("::");
         buf.append(location).append("::");
         buf.append(invoke).append("::");
         buf.append(defaultEntityName).append("::");

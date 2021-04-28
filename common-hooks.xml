@@ -49,6 +49,8 @@
     <target name="post-clean-gitinfo"></target>
     <target name="pre-build-dev"></target>
     <target name="post-build-dev"></target>
+    <target name="pre-build-framework"></target>
+    <target name="post-build-framework"></target>
     <target name="pre-revert-dev"></target>
     <target name="post-revert-dev"></target>
     <target name="pre-build-test"></target>

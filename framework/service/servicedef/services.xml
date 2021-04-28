@@ -258,4 +258,37 @@ code package.
         </attribute>
     </service>
 
+    <service name="scipioClientNamePassAuthInterface" engine="interface">
+        <description>A special interface that services may implement to set basic user/password auth needed while creating connections to remote services/hosts</description>
+        <attribute name="clientLogin.username" type="String" mode="IN" optional="true">
+            <description></description>
+        </attribute>
+        <attribute name="clientLogin.password" type="String" mode="IN" optional="true">
+            <description></description>
+        </attribute>
+    </service>
+    <service name="scipioClientAuthInterface" engine="interface">
+        <description>A special interface that services may implement to set auth needed while creating connections to remote services/hosts</description>
+        <implements service="scipioClientNamePassAuthInterface"/>
+        <!-- TODO: Add token support or anything generic missing -->
+    </service>
+
+    <service name="scipioSOAPInterface" engine="interface">
+        <description>A special interface that services may implement to set specific attributes for SOAP based services</description>
+        <attribute name="soapServiceInvokerClass" type="Class" mode="IN" optional="true">
+            <description></description>
+        </attribute>
+        <attribute name="soapServiceHeader" type="java.util.List" mode="IN" optional="true">
+            <description></description>
+        </attribute>
+        <attribute name="soapServicePayload" type="Object" mode="IN" optional="true">
+            <description></description>
+        </attribute>
+        <attribute name="soapResponseDocument" type="org.w3c.dom.Document" mode="OUT" optional="true">
+            <description></description>
+        </attribute>
+
+    </service>
+
+
 </services>

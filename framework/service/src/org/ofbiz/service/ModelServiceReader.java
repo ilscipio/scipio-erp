@@ -270,7 +270,7 @@ public class ModelServiceReader implements Serializable {
         service.transactionTimeout = timeout;
 
         service.description = getCDATADef(serviceElement, "description");
-        service.nameSpace = getCDATADef(serviceElement, "namespace");
+        this.createNamespace(serviceElement, service);
 
         // construct the context
         service.contextInfo = new HashMap<>();
@@ -817,6 +817,20 @@ public class ModelServiceReader implements Serializable {
             if (Debug.verboseOn() && properties.size() > 0) {
                 Debug.logVerbose("Explicit properties for service '" + service.name + "': " + properties, module);
             }
+        }
+    }
+
+    /**
+     * SCIPIO: 2.0.0:
+     * @param baseElement
+     * @param service
+     */
+    private void createNamespace(Element baseElement, ModelService service) {
+        Element namespace = UtilXml.firstChildElement(baseElement, "namespace");
+        if (namespace != null) {
+            String nameSpace = UtilXml.elementValue(namespace);
+            service.nameSpace = (nameSpace != null) ? nameSpace.trim() : null;
+            service.nameSpacePrefix = namespace.getAttribute("prefix");
         }
     }
 

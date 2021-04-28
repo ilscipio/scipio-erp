@@ -18,8 +18,10 @@
  *******************************************************************************/
 package org.ofbiz.webapp.event;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.Writer;
@@ -153,6 +155,11 @@ public class SOAPEventHandler implements EventHandler {
         // get the service name and parameters
         try {
             InputStream inputStream = (InputStream) request.getInputStream();
+
+            BufferedReader br = new BufferedReader((new InputStreamReader(inputStream)));
+            while (br.ready()) {
+                Debug.log(br.readLine());
+            }
             SOAPModelBuilder builder = (SOAPModelBuilder) OMXMLBuilderFactory.createSOAPModelBuilder(inputStream, "UTF-8");
             reqEnv = (SOAPEnvelope) builder.getDocumentElement();
 

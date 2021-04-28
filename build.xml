@@ -788,8 +788,14 @@ code package.
                 <invokehook target="pre-build" />
                 
                 <antcall target="build-dev"/>
+
+                <!-- SCIPIO: hooks -->
+                <invokehook target="pre-build-framework" />
     
                 <antcall target="build-framework"/>
+
+                <!-- SCIPIO: hooks -->
+                <invokehook target="post-build-framework" />
                 
                 <!-- SCIPIO: 2017-01-17: support dependency resolution for themes as well
                 <externalsubant>

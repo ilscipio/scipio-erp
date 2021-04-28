@@ -34,7 +34,15 @@ under the License.
     <xs:element name="vendor" type="xs:string"/>
     <xs:element name="version" type="xs:string"/>
     <xs:element name="created" type="xs:string"/>
-    <xs:element name="namespace" type="xs:string"/>
+    <xs:element name="namespace">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="prefix" type="xs:string" use="required"/>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
     <xs:element name="service">
         <xs:complexType>
             <xs:sequence>

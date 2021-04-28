@@ -91,15 +91,18 @@ code package.
     <!-- invoke parameter is the name of the operation to invoke, for example LatLonListZipCode -->
     <!-- invoke parameter is needed when there are several possible operations for the SOAP action  -->
     <!-- FIXME For now, not sure why, this remote SOAP service does not work -->
+    <!--    http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php"-->
     <service name="testRemoteSoap1" engine="soap" export="true"
-        location="http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php"
+        location="https://graphical.weather.gov/xml/SOAP_server/ndfdXMLserver.php"
         invoke="LatLonListZipCode">
         <description>A service to invoke the NWS web service</description>
-        <namespace>
-            http://www.weather.gov/forecasts/xml/DWMLgen/wsdl/ndfdXML.wsdl#LatLonListZipCode
+        <namespace prefix="ns">
+            https://graphical.weather.gov/xml/DWMLgen/wsdl/ndfdXML.wsdl
         </namespace>
-        <attribute name="ZipCode" type="String" mode="IN"/>
-        <attribute name="invoke" type="String" mode="IN" />
+<!--        https://graphical.weather.gov/xml/DWMLgen/wsdl/ndfdXML.wsdl#LatLonListZipCode-->
+<!--        http://www.weather.gov/forecasts/xml/DWMLgen/wsdl/ndfdXML.wsdl#LatLonListZipCode-->
+        <attribute name="zipCodeList" type="String" mode="IN"/>
+<!--        <attribute name="invoke" type="String" mode="IN" />-->
         <attribute name="result" type="String" mode="OUT"/>
     </service>
     
@@ -111,7 +114,7 @@ code package.
         location="http://www.weather.gov/forecasts/xml/SOAP_server/ndfdXMLserver.php"
         invoke="LatLonListCityNames">
         <description>A service to invoke the NWS web service</description>
-        <namespace>
+        <namespace prefix="ns">
             http://www.weather.gov/forecasts/xml/DWMLgen/wsdl/ndfdXML.wsdl#LatLonListCityNames
         </namespace>
         <attribute name="CityName" type="String" mode="IN"/>

@@ -171,6 +171,7 @@ public class SOAPClientConnectConfig {
             poolingConnManager = (reuseConnManager) ? makePoolingConnectionManager(schemeRegistry) : null;
             httpClient = reuseClient ? makeHttpClient() : null;
 
+
             if (log) Debug.logInfo("SOAP config: Basic SOAP Custom HttpClient/certificate configuration finished", module);
         } else {
             if (log) Debug.logInfo("SOAP config: Custom HttpClient handling is DISABLED (automatically disables custom certficiate validation);"

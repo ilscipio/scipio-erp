@@ -32,13 +32,19 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.OMXMLBuilderFactory;
 import org.apache.axiom.om.OMXMLParserWrapper;
+import org.apache.axiom.soap.SOAPEnvelope;
+import org.apache.axiom.soap.SOAPFactory;
+import org.apache.axiom.soap.SOAPHeaderBlock;
+import org.apache.axiom.soap.SOAPModelBuilder;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.Constants;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
@@ -54,7 +60,7 @@ import org.ofbiz.service.soap.SOAPContextHandler;
 /**
  * Generic Service SOAP Interface
  */
-public final class SOAPClientEngine extends GenericAsyncEngine {
+public final class SOAPClientEngine extends GenericAsyncEngine implements SOAPServiceInvoker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -75,7 +81,18 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
      */
     @Override
     public Map<String, Object> runSync(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
-        Map<String, Object> result = serviceInvoker(modelService, context);
+        Map<String, Object> result = null;
+        Class soapServiceInvokerClass = (Class) context.get("soapServiceInvokerClass");
+        if (UtilValidate.isNotEmpty(soapServiceInvokerClass)) {
+            try {
+                SOAPServiceInvoker soapServiceInvoker = (SOAPServiceInvoker) soapServiceInvokerClass.newInstance();
+                result = soapServiceInvoker.serviceInvoker(modelService, context);
+            } catch (InstantiationException | IllegalAccessException e) {
+                Debug.logError(e.getMessage(), module);
+            }
+        } else {
+            result = serviceInvoker(modelService, context);
+        }
 
         if (result == null) {
             throw new GenericServiceException("Service did not return expected result");
@@ -84,7 +101,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
     }
 
     // Invoke the remote SOAP service
-    private Map<String, Object> serviceInvoker(ModelService modelService, Map<String, Object> context) throws GenericServiceException {
+    public Map<String, Object> serviceInvoker(ModelService modelService, Map<String, Object> context) throws GenericServiceException {
         Delegator delegator = dispatcher.getDelegator();
         if (modelService.location == null || modelService.invoke == null) {
             throw new GenericServiceException("Cannot locate service to invoke");
@@ -100,6 +117,17 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
             configureSOAPHttpClient(client, options); // SCIPIO: new 2018-07-11
             EndpointReference endPoint = new EndpointReference(this.getLocation(modelService));
             options.setTo(endPoint);
+
+
+            String soapUser = (String) context.get("clientLogin.username");
+            if (UtilValidate.isNotEmpty(soapUser)) {
+                options.setUserName(soapUser);
+            }
+            String soapPass = (String) context.get("clientLogin.password");
+            if (UtilValidate.isNotEmpty(soapPass)) {
+                options.setPassword(soapPass);
+            }
+
             client.setOptions(options);
         } catch (AxisFault e) {
             throw new GenericServiceException("RPC service error", e);
@@ -120,7 +148,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         int i = 0;
 
         Map<String, Object> parameterMap = new HashMap<>();
-        for (ModelParam p: inModelParamList) {
+        for (ModelParam p : inModelParamList) {
             if (Debug.infoOn()) {
                 Debug.logInfo("[SOAPClientEngine.invoke} : Parameter: " + p.name + " (" + p.mode + ") - " + i, module);
             }
@@ -133,21 +161,19 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         }
 
         OMElement parameterSer = null;
-
+        Map<String, Object> results = null;
         try {
             String xmlParameters = SoapSerializer.serialize(parameterMap);
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xmlParameters));
             OMXMLParserWrapper builder = OMXMLBuilderFactory.createStAXOMBuilder(reader);
             parameterSer = builder.getDocumentElement();
-        } catch (Exception e) {
-            Debug.logError(e, module);
-        }
 
-        Map<String, Object> results = null;
-        try {
             OMFactory factory = OMAbstractFactory.getOMFactory();
             OMElement payload = factory.createOMElement(serviceName);
             payload.addChild(parameterSer.getFirstElement());
+
+            Debug.log(payload.toString());
+
             OMElement respOMElement = client.sendReceive(payload);
             client.cleanupTransport();
             results = UtilGenerics.cast(SoapSerializer.deserialize(respOMElement.toString(), delegator));
@@ -172,8 +198,8 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
      * Added 2018-03-15.
      */
     public static Map<String, Object> invokeRemoteMirrorService(LocalDispatcher dispatcher, ModelService modelService,
-            String remoteService, String remoteLocation, String remoteNamespace, Map<String, Object> context, Set<String> alwaysAllowParams,
-            boolean alwaysThrowEx, SOAPContextHandler configContextHandler) throws Exception {
+                                                                String remoteService, String remoteLocation, String remoteNamespace, Map<String, Object> context, Set<String> alwaysAllowParams,
+                                                                boolean alwaysThrowEx, SOAPContextHandler configContextHandler) throws Exception {
         if (remoteService == null) remoteService = modelService.name;
         if (alwaysAllowParams == null) alwaysAllowParams = Collections.emptySet();
         Delegator delegator = dispatcher.getDelegator();
@@ -198,7 +224,8 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
 
         List<ModelParam> inModelParamList = modelService.getInModelParamList();
 
-        if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " + inModelParamList.size(), module);
+        if (Debug.infoOn())
+            Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " + inModelParamList.size(), module);
 
         if (UtilValidate.isNotEmpty(remoteNamespace)) {
             serviceName = new QName(remoteNamespace, remoteService);
@@ -209,8 +236,9 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
         int i = 0;
 
         Map<String, Object> parameterMap = new HashMap<String, Object>();
-        for (ModelParam p: inModelParamList) {
-            if (Debug.infoOn()) Debug.logInfo("[SOAPClientEngine.invoke} : Parameter: " + p.name + " (" + p.mode + ") - " + i, module);
+        for (ModelParam p : inModelParamList) {
+            if (Debug.infoOn())
+                Debug.logInfo("[SOAPClientEngine.invoke} : Parameter: " + p.name + " (" + p.mode + ") - " + i, module);
 
             // exclude params that ModelServiceReader insert into (internal params)
             if (!p.internal || (alwaysAllowParams.contains(p.name) && context.containsKey(p.name))) {
@@ -247,7 +275,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
     }
 
     public static Map<String, Object> invokeRemoteMirrorService(LocalDispatcher dispatcher, ModelService modelService,
-            String remoteService, String remoteLocation, String remoteNamespace, Map<String, Object> context, Set<String> alwaysAllowParams, boolean alwaysThrowEx) throws Exception {
+                                                                String remoteService, String remoteLocation, String remoteNamespace, Map<String, Object> context, Set<String> alwaysAllowParams, boolean alwaysThrowEx) throws Exception {
         return invokeRemoteMirrorService(dispatcher, modelService, remoteService, remoteLocation, remoteNamespace, context, alwaysAllowParams, alwaysThrowEx, null);
     }
 
@@ -260,4 +288,5 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
     public static void configureSOAPHttpClient(ServiceClient client, Options options) {
         SOAPClientConnectConfig.getDefaultInstance().configureSOAPHttpClient(client, options);
     }
+
 }

@@ -173,14 +173,16 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
       <#local scriptBuffer = getRequestVar("scipioScriptBuffer")!"">
       <#local dummy = setRequestVar("scipioScriptBuffer",scriptBuffer+nested!)>
     <#else>
-      <#if htmlwrap>
-        <script type="${escapeVal(type, 'html')}">
-        <#if cdata>//<![CDATA[</#if>
-      </#if>
-          ${nested!""}
-      <#if htmlwrap>
-        <#if cdata>//]]></#if>
-        </script>
+      <#if nested?has_content>
+        <#if htmlwrap>
+          <script type="${escapeVal(type, 'html')}">
+          <#if cdata>//<![CDATA[</#if>
+        </#if>
+            ${nested!""}
+        <#if htmlwrap>
+          <#if cdata>//]]></#if>
+          </script>
+        </#if>
       </#if>
     </#if>
   </#if>

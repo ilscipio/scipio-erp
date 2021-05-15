@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.base.util.collections;
+package com.ilscipio.scipio.ce.base.util.collections;
 
 import java.util.Collection;
 import java.util.Map;

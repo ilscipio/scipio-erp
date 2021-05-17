@@ -1,7 +1,7 @@
 package org.ofbiz.service;
 
 import org.ofbiz.base.util.UtilGenerics;
-import com.ilscipio.scipio.ce.base.util.collections.AttrMap;
+import com.ilscipio.scipio.ce.util.collections.AttrMap;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;

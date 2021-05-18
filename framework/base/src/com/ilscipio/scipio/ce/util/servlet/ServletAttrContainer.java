@@ -20,6 +20,7 @@ import org.ofbiz.base.util.UtilMisc;
  * NOTE: Unlike most Maps, servlet attribute cannot contain the value <code>null</code> (setting to
  * null removes the attribute).
  */
+@Deprecated
 public interface ServletAttrContainer {
 
     /*

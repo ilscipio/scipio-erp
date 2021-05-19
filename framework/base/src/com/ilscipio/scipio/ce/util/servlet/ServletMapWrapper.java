@@ -55,7 +55,9 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * Wraps session attributes in an explicitly synchronized and thread-safe {@link Map} wrapper.
      */
     static ServletMapWrapper wrapAttributesSync(HttpSession session) {
-        return new SyncSessionAttributeMapWrapper(session);
+        // TODO
+        //return new SyncSessionAttributeMapWrapper(session);
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -87,7 +89,9 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * Wraps serlvet context attributes in an explicitly thread-safe {@link Map} wrapper.
      */
     static ServletMapWrapper wrapAttributesSync(ServletContext servletContext) {
-        return new SyncServletContextAttributeMapWrapper(servletContext);
+        // TODO
+        //return new SyncServletContextAttributeMapWrapper(servletContext);
+        throw new UnsupportedOperationException();
     }
 
     /**

@@ -360,8 +360,11 @@ if(!cachedValue){
         downloadProductContentAndInfoList = from("ProductContentAndInfo").where("productId", productId, "productContentTypeId", "DIGITAL_DOWNLOAD").orderBy("sequenceNum ASC").cache(true).queryList();
         context.downloadProductContentAndInfoList = downloadProductContentAndInfoList;
 
-        // not the best to save info in an action, but this is probably the best place to count a view; it is done async
-        dispatcher.runAsync("countProductView", [productId : productId, weight : new Long(1)], false);
+        // SCIPIO: 2.0.0: invocation now controlled through properties
+        if (UtilProperties.getPropertyAsBoolean("serverstats", "stats.countProduct", false)) {
+            // not the best to save info in an action, but this is probably the best place to count a view; it is done async
+            dispatcher.runAsync("countProductView", [productId : productId, weight : new Long(1)], false);
+        }
 
         //get product image from image management
         productImageList = [];

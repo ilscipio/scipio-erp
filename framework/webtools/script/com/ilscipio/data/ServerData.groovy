@@ -12,9 +12,6 @@ import java.text.SimpleDateFormat;
 import java.sql.Timestamp;
 import com.ibm.icu.util.Calendar;
 
-delegator = request.getAttribute("delegator");
-
-
 /**
  * Looks up current server stats and returns a list of maps containing current information for the day
  * @return Map with the result of the service, the output parameters.

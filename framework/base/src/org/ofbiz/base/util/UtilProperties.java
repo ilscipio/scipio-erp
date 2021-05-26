@@ -1587,7 +1587,9 @@ public final class UtilProperties implements Serializable {
     public static String normResourceName(String resource) { // SCIPIO
         if (resource == null) {
             return null;
-        } else if (resource.endsWith(".xml")) {
+        }
+        resource = PathUtil.getFileNameFromPath(resource);
+        if (resource.endsWith(".xml")) {
             return resource.substring(0, resource.length() - ".xml".length());
         } else if (resource.endsWith(".properties")) {
             return resource.substring(0, resource.length() - ".properties".length());
@@ -1597,7 +1599,7 @@ public final class UtilProperties implements Serializable {
     }
 
     public static String normResourceName(URL resourceURL) { // SCIPIO
-        return normResourceName(PathUtil.getFileNameFromPath(resourceURL.toString()));
+        return normResourceName(resourceURL.toString());
     }
 
     public static boolean isPropertiesResourceNotFound(String resource, Locale locale, boolean removeExtension) {

@@ -2,6 +2,8 @@ package org.ofbiz.base.util;
 
 
 
+import org.apache.http.HttpRequestInterceptor;
+import org.apache.http.HttpResponseInterceptor;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
@@ -11,9 +13,11 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.apache.http.impl.nio.conn.PoolingNHttpClientConnectionManager;
 import org.apache.http.impl.nio.reactor.DefaultConnectingIOReactor;
@@ -28,6 +32,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -333,17 +338,27 @@ public class ScipioHttpClient implements Closeable {
 
         /** Build method for HttpClient. */
         public CloseableHttpClient createHttpClient(HttpClientConnectionManager connectionManager) {
-            if (connectionManager != null) {
-                return HttpClients.custom()
-                        .setDefaultRequestConfig(buildRequestConfig())
-                        .setConnectionManager(connectionManager)
-                        .build();
-            } else {
-                return HttpClients.custom()
-                        .setDefaultRequestConfig(buildRequestConfig())
-                        .setSSLSocketFactory(getSSLConnectionSocketFactory())
-                        .build();
+            return createHttpClient(connectionManager, null, null);
+        }
+        /** Build method for HttpClient. */
+        public CloseableHttpClient createHttpClient(HttpClientConnectionManager connectionManager, List<HttpRequestInterceptor> requestInterceptors, List<HttpResponseInterceptor> responseInterceptors) {
+            HttpClientBuilder builder = HttpClients.custom().setDefaultRequestConfig(buildRequestConfig());
+            if (UtilValidate.isNotEmpty(requestInterceptors)) {
+                for (HttpRequestInterceptor interceptor : requestInterceptors) {
+                    builder.addInterceptorLast(interceptor);
+                }
             }
+            if (UtilValidate.isNotEmpty(responseInterceptors)) {
+                for (HttpResponseInterceptor interceptor : responseInterceptors) {
+                    builder.addInterceptorLast(interceptor);
+                }
+            }
+            if (connectionManager != null) {
+                builder.setConnectionManager(connectionManager);
+            } else {
+                builder.setSSLSocketFactory(getSSLConnectionSocketFactory());
+            }
+            return builder.build();
         }
 
         /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for PoolingNHttpClientConnectionManager mainly. */
@@ -369,10 +384,23 @@ public class ScipioHttpClient implements Closeable {
 
         /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for HttpAsyncClient. */
         public CloseableHttpAsyncClient createAsyncHttpClient(NHttpClientConnectionManager connectionManager) {
-            CloseableHttpAsyncClient httpAsyncClient = HttpAsyncClients.custom()
+            return createAsyncHttpClient(connectionManager, null, null);
+        }
+        public CloseableHttpAsyncClient createAsyncHttpClient(NHttpClientConnectionManager connectionManager, List<HttpRequestInterceptor> requestInterceptors, List<HttpResponseInterceptor> responseInterceptors) {
+             HttpAsyncClientBuilder builder = HttpAsyncClients.custom()
                     .setDefaultRequestConfig(buildRequestConfig())
-                    .setConnectionManager(connectionManager)
-                    .build();
+                    .setConnectionManager(connectionManager);
+            if (UtilValidate.isNotEmpty(requestInterceptors)) {
+                for (HttpRequestInterceptor interceptor : requestInterceptors) {
+                    builder.addInterceptorLast(interceptor);
+                }
+            }
+            if (UtilValidate.isNotEmpty(responseInterceptors)) {
+                for (HttpResponseInterceptor interceptor : responseInterceptors) {
+                    builder.addInterceptorLast(interceptor);
+                }
+            }
+            CloseableHttpAsyncClient httpAsyncClient = builder.build();
             if (!httpAsyncClient.isRunning()) {
                 httpAsyncClient.start();
             }

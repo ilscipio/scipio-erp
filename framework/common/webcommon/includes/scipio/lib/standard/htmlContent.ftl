@@ -1460,7 +1460,6 @@ to be a Javascript-valid number), which may not be secure or portable, depending
       <li data-value="${escapeVal(value, 'html')}">${escapeVal(title, 'htmlmarkup')}</li>
     </#if>
   <#else>
-      ${Debug.log("title =============> " + title)}
       config.data.labels.push('${escapeVal(title!"NA", 'js')}');
       var chartValue1 = <#if value?has_content>${escapeVal(value, 'js')}<#else>0</#if>;
       var chartValue2 = <#if value2?has_content>${escapeVal(value2, 'js')}<#else>0</#if>;

@@ -336,11 +336,10 @@ if(context.product) {
         }
     }
 } else {
-    if (productId) { // SCIPIO: report this, could be due to inefficient caching or solr setup
+    if (productId) {
         if(solrProduct){
             context.product = from("Product").where("productId", productId).cache().queryOne();
-
-        }else{
+        }else{// SCIPIO: report this, could be due to inefficient caching or solr setup
             Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
         }
 

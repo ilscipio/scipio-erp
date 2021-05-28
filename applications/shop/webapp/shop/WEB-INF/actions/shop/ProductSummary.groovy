@@ -335,12 +335,17 @@ if(context.product) {
             context.totalPrice = configWrapper.getTotalPrice();
         }
     }
-
-    // make the productContentWrapper
-    productContentWrapper = new ProductContentWrapper(context.product, request);
-    context.productContentWrapper = productContentWrapper;
 } else {
-    if (productId && !solrProduct) { // SCIPIO: report this, could be due to inefficient caching or solr setup
-        Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
+    if (productId) { // SCIPIO: report this, could be due to inefficient caching or solr setup
+        if(solrProduct){
+            context.product = from("Product").where("productId", productId).cache().queryOne();
+
+        }else{
+            Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
+        }
+
     }
 }
+// make the productContentWrapper
+productContentWrapper = new ProductContentWrapper(context.product, request);
+context.productContentWrapper = productContentWrapper;

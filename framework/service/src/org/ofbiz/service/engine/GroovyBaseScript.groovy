@@ -18,11 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.service.engine
 
-import java.util.Map
-
 import javax.servlet.http.HttpServletRequest
-
-import groovy.lang.MissingPropertyException
 
 import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.util.EntityQuery
@@ -31,8 +27,11 @@ import org.ofbiz.service.LocalDispatcher
 import org.ofbiz.service.ModelService
 import org.ofbiz.service.ServiceUtil
 import org.ofbiz.service.ExecutionServiceException
-import org.ofbiz.entity.GenericValue
 
+/**
+ * GroovyBaseScript.
+ * <p>SCIPIO: 2.1.0: Removed Map, GenericValue and other generics-containing types from all method overloads for forward compatibility.</p>
+ */
 abstract class GroovyBaseScript extends Script {
     public static final String module = GroovyBaseScript.class.getName()
 
@@ -47,7 +46,7 @@ abstract class GroovyBaseScript extends Script {
         }
     }
 
-    Map runService(String serviceName, Map serviceCtx) throws ExecutionServiceException {
+    def runService(String serviceName, Object serviceCtx) throws ExecutionServiceException {
         LocalDispatcher dispatcher = binding.getVariable('dispatcher') as LocalDispatcher;
         DispatchContext dctx = dispatcher.getDispatchContext();
         /* SCIPIO: 2019-01-31: security: These were flawed and potentially dangerous due to
@@ -74,16 +73,16 @@ abstract class GroovyBaseScript extends Script {
         return result
     }
     
-    Map run(Map args) throws ExecutionServiceException {
-        return runService((String)args.get('service'), (Map)args.get('with', new HashMap()))
+    def run(Object args) throws ExecutionServiceException {
+        return runService((String) args.get('service'), (Map) args.get('with', new HashMap()))
     }
 
-    Map makeValue(String entityName) throws ExecutionServiceException {
-        return result = binding.getVariable('delegator').makeValue(entityName)
+    def makeValue(String entityName) throws ExecutionServiceException {
+        return binding.getVariable('delegator').makeValue(entityName)
     }
 
-    Map makeValue(String entityName, Map inputMap) throws ExecutionServiceException {
-        return result = binding.getVariable('delegator').makeValidValue(entityName, inputMap)
+    def makeValue(String entityName, Object inputMap) throws ExecutionServiceException {
+        return binding.getVariable('delegator').makeValidValue(entityName, inputMap)
     }
 
     EntityQuery from(def entity) {
@@ -94,11 +93,11 @@ abstract class GroovyBaseScript extends Script {
         return EntityQuery.use(binding.getVariable('delegator')).select(fields)
     }
 
-    EntityQuery select(Set fields) {
+    EntityQuery select(Object fields) {
         return EntityQuery.use(binding.getVariable('delegator')).select(fields)
     }
 
-    GenericValue findOne(String entityName, Map fields, boolean useCache) {
+    def findOne(String entityName, Object fields, boolean useCache) {
         return binding.getVariable('delegator').findOne(entityName, fields, useCache)
     }
 
@@ -119,7 +118,8 @@ abstract class GroovyBaseScript extends Script {
             }
         }
     }
-    Map failure(String message) {
+
+    def failure(String message) {
         // TODO: implement some clever i18n mechanism based on the userLogin and locale in the binding
         if (message) {
             return ServiceUtil.returnFailure(message)
@@ -127,6 +127,7 @@ abstract class GroovyBaseScript extends Script {
             return ServiceUtil.returnFailure()
         }
     }
+
     def error(String message) {
         // TODO: implement some clever i18n mechanism based on the userLogin and locale in the binding
         if (this.binding.hasVariable('request')) {
@@ -144,12 +145,15 @@ abstract class GroovyBaseScript extends Script {
             //}
         }
     }
+
     def logInfo(String message) {
         Debug.logInfo(message, module)
     }
+
     def logWarning(String message) {
         Debug.logWarning(message, module)
     }
+
     def logError(String message) {
         Debug.logError(message, module)
     }

@@ -227,26 +227,26 @@ public interface ServletMapAdapter extends Map<String, Object> {
             return container;
         }
 
-        protected abstract Object getContainerValue(String name);
+        protected abstract Object getAttribute(String name);
 
-        protected abstract Object setContainerValue(String name, Object o);
+        protected abstract Object setAttribute(String name, Object o);
 
-        protected abstract Object removeContainerValue(String name);
+        protected abstract Object removeAttribute(String name);
 
-        protected abstract Enumeration<String> getContainerValueNamesEnum();
+        protected abstract Enumeration<String> getAttributeNamesEnum();
 
         protected List<String> getAttributeNames() {
-            return Collections.list(getContainerValueNamesEnum());
+            return Collections.list(getAttributeNamesEnum());
         }
 
         protected boolean containsAttribute(String name) {
-            return (getContainerValue(name) != null);
+            return (getAttribute(name) != null);
         }
 
         @Override
         public int size() {
             int size = 0;
-            Enumeration<String> attributeNames = getContainerValueNamesEnum();
+            Enumeration<String> attributeNames = getAttributeNamesEnum();
             while(attributeNames.hasMoreElements()) {
                 attributeNames.nextElement();
                 size++;
@@ -256,12 +256,12 @@ public interface ServletMapAdapter extends Map<String, Object> {
 
         @Override
         public boolean isEmpty() {
-            return !getContainerValueNamesEnum().hasMoreElements();
+            return !getAttributeNamesEnum().hasMoreElements();
         }
 
         @Override
         public boolean containsKey(Object key) {
-            Enumeration<String> attributeNames = getContainerValueNamesEnum();
+            Enumeration<String> attributeNames = getAttributeNamesEnum();
             while(attributeNames.hasMoreElements()) {
                 Object attributeName = attributeNames.nextElement();
                 if (Objects.equals(attributeName, key)) {
@@ -273,10 +273,10 @@ public interface ServletMapAdapter extends Map<String, Object> {
 
         @Override
         public boolean containsValue(Object value) {
-            Enumeration<String> attributeNames = getContainerValueNamesEnum();
+            Enumeration<String> attributeNames = getAttributeNamesEnum();
             while(attributeNames.hasMoreElements()) {
                 String attributeName = attributeNames.nextElement();
-                Object attributeValue = getContainerValue(attributeName);
+                Object attributeValue = getAttribute(attributeName);
                 if (Objects.equals(attributeValue, value)) {
                     return true;
                 }
@@ -289,12 +289,12 @@ public interface ServletMapAdapter extends Map<String, Object> {
             if (key != null && !(key instanceof String)) {
                 throw new ClassCastException("Servlet maps only support string keys; got key of type [" + key.getClass().getName() + "]");
             }
-            return getContainerValue((String) key);
+            return getAttribute((String) key);
         }
 
         @Override
         public Object put(String key, Object value) {
-            return setContainerValue(key, value);
+            return setAttribute(key, value);
         }
 
         @Override
@@ -302,21 +302,21 @@ public interface ServletMapAdapter extends Map<String, Object> {
             if (key != null && !(key instanceof String)) {
                 throw new ClassCastException("Servlet maps only support string keys; got key of type [" + key.getClass().getName() + "]");
             }
-            return removeContainerValue((String) key);
+            return removeAttribute((String) key);
         }
 
         @Override
         public void putAll(Map<? extends String, ?> m) {
             for(Map.Entry<? extends String, ? extends Object> entry : m.entrySet()) {
-                setContainerValue(entry.getKey(), entry.getValue());
+                setAttribute(entry.getKey(), entry.getValue());
             }
         }
 
         @Override
         public void clear() {
-            Enumeration<String> attributeNames = getContainerValueNamesEnum();
+            Enumeration<String> attributeNames = getAttributeNamesEnum();
             while(attributeNames.hasMoreElements()) {
-                removeContainerValue(attributeNames.nextElement());
+                removeAttribute(attributeNames.nextElement());
             }
         }
 
@@ -334,10 +334,10 @@ public interface ServletMapAdapter extends Map<String, Object> {
 
             protected AttributeEntrySet() {
                 List<AttributeEntry> entries = new ArrayList<>();
-                Enumeration<String> attributeNames = getContainerValueNamesEnum();
+                Enumeration<String> attributeNames = getAttributeNamesEnum();
                 while(attributeNames.hasMoreElements()) {
                     String attributeName = attributeNames.nextElement();
-                    entries.add(makeEntrySet(attributeName, getContainerValue(attributeName)));
+                    entries.add(makeEntrySet(attributeName, getAttribute(attributeName)));
                 }
                 this.entries = entries;
             }
@@ -360,7 +360,7 @@ public interface ServletMapAdapter extends Map<String, Object> {
             public boolean add(Map.Entry<String, Object> e) { // NOTE: This is probably unused
                 boolean contained = containsAttribute(e.getKey());
                 if (!contained && e.getValue() != null) {
-                    setContainerValue(e.getKey(), e.getValue());
+                    setAttribute(e.getKey(), e.getValue());
                     getEntries().add(new AttributeEntry(e));
                 }
                 return contained;
@@ -399,7 +399,7 @@ public interface ServletMapAdapter extends Map<String, Object> {
 
                 @Override
                 public Object setValue(Object value) {
-                    ContainerMapAdapter.this.setContainerValue(getKey(), value);
+                    ContainerMapAdapter.this.setAttribute(getKey(), value);
                     return (value != null) ? super.setValue(value) : removeEntry(getKey());
                 }
             }
@@ -441,7 +441,7 @@ public interface ServletMapAdapter extends Map<String, Object> {
                     }
                     List<AttributeEntry> entries = getEntries();
                     if (listIndex < entries.size()) {
-                        removeContainerValue(entries.get(listIndex).getKey());
+                        removeAttribute(entries.get(listIndex).getKey());
                         entries.remove(listIndex);
                     } else {
                         throw new IllegalStateException("no next element");
@@ -464,22 +464,22 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
 
         @Override
-        protected Object getContainerValue(String name) {
+        protected Object getAttribute(String name) {
             return null;
         }
 
         @Override
-        protected Object setContainerValue(String name, Object o) {
+        protected Object setAttribute(String name, Object o) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        protected Object removeContainerValue(String name) {
+        protected Object removeAttribute(String name) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        protected Enumeration<String> getContainerValueNamesEnum() {
+        protected Enumeration<String> getAttributeNamesEnum() {
             return new Enumeration<String>() {
                 @Override
                 public boolean hasMoreElements() {
@@ -511,26 +511,26 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
 
         @Override
-        protected Object getContainerValue(String name) {
+        protected Object getAttribute(String name) {
             return getContainer().getAttribute(name);
         }
 
         @Override
-        protected Object setContainerValue(String name, Object value) {
+        protected Object setAttribute(String name, Object value) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().setAttribute(name, value);
             return oldValue;
         }
 
         @Override
-        protected Object removeContainerValue(String name) {
+        protected Object removeAttribute(String name) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().removeAttribute(name);
             return oldValue;
         }
 
         @Override
-        protected Enumeration<String> getContainerValueNamesEnum() {
+        protected Enumeration<String> getAttributeNamesEnum() {
             return getContainer().getAttributeNames();
         }
     }
@@ -542,12 +542,12 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
 
         @Override
-        protected Object setContainerValue(String name, Object value) {
+        protected Object setAttribute(String name, Object value) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        protected Object removeContainerValue(String name) {
+        protected Object removeAttribute(String name) {
             throw new UnsupportedOperationException();
         }
     }
@@ -564,26 +564,26 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
 
         @Override
-        protected Object getContainerValue(String name) {
+        protected Object getAttribute(String name) {
             return getContainer().getAttribute(name);
         }
 
         @Override
-        protected Object setContainerValue(String name, Object value) {
+        protected Object setAttribute(String name, Object value) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().setAttribute(name, value);
             return oldValue;
         }
 
         @Override
-        protected Object removeContainerValue(String name) {
+        protected Object removeAttribute(String name) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().removeAttribute(name);
             return oldValue;
         }
 
         @Override
-        protected Enumeration<String> getContainerValueNamesEnum() {
+        protected Enumeration<String> getAttributeNamesEnum() {
             return getContainer().getAttributeNames();
         }
     }
@@ -604,12 +604,12 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
 
         @Override
-        protected Object setContainerValue(String name, Object value) {
+        protected Object setAttribute(String name, Object value) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        protected Object removeContainerValue(String name) {
+        protected Object removeAttribute(String name) {
             throw new UnsupportedOperationException();
         }
     }
@@ -626,26 +626,26 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
 
         @Override
-        protected Object getContainerValue(String name) {
+        protected Object getAttribute(String name) {
             return getContainer().getAttribute(name);
         }
 
         @Override
-        protected Object setContainerValue(String name, Object value) {
+        protected Object setAttribute(String name, Object value) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().setAttribute(name, value);
             return oldValue;
         }
 
         @Override
-        protected Object removeContainerValue(String name) {
+        protected Object removeAttribute(String name) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().removeAttribute(name);
             return oldValue;
         }
 
         @Override
-        protected Enumeration<String> getContainerValueNamesEnum() {
+        protected Enumeration<String> getAttributeNamesEnum() {
             return getContainer().getAttributeNames();
         }
     }
@@ -666,12 +666,12 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
 
         @Override
-        protected Object setContainerValue(String name, Object value) {
+        protected Object setAttribute(String name, Object value) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        protected Object removeContainerValue(String name) {
+        protected Object removeAttribute(String name) {
             throw new UnsupportedOperationException();
         }
     }
@@ -695,7 +695,7 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
 
         @Override
-        protected Object getContainerValue(String name) {
+        protected Object getAttribute(String name) {
             Object parameterMode = getParameterMode();
             if (parameterMode.equals("SINGLE")) {
                 return getContainer().getParameter(name);
@@ -714,17 +714,17 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
 
         @Override
-        protected Object setContainerValue(String name, Object value) {
+        protected Object setAttribute(String name, Object value) {
             throw new UnsupportedOperationException("Request parameters are read-only");
         }
 
         @Override
-        protected Object removeContainerValue(String name) {
+        protected Object removeAttribute(String name) {
             throw new UnsupportedOperationException("Request parameters are read-only");
         }
 
         @Override
-        protected Enumeration<String> getContainerValueNamesEnum() {
+        protected Enumeration<String> getAttributeNamesEnum() {
             return getContainer().getParameterNames();
         }
     }

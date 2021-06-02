@@ -226,32 +226,32 @@
         <!-- scripting jars -->
         <!--<dependency org="antlr" name="antlr" rev="2.7.6" conf="base,scripting,sources"/> unused in code and version quite old -->
         <dependency org="bsf" name="bsf" rev="2.4.0" conf="base,scripting,sources"/><!-- NOTE: 2.x is different API than 3.x; keeping latest 2.x; see ant-apache-bsf deps -->
-        <dependency org="org.codehaus.groovy" name="groovy-all" rev="2.5.14" conf="base,scripting,groovy,sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-dateutil" rev="2.5.14" conf="base,scripting,groovy,sources"/><!-- NOTE: Not included in groovy-all since 2.5 -->
+        <dependency org="org.codehaus.groovy" name="groovy-all" rev="3.0.8" conf="base,scripting,groovy,sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-dateutil" rev="3.0.8" conf="base,scripting,groovy,sources"/><!-- NOTE: Not included in groovy-all since 2.5 -->
         <!-- The following groovy compiled JARs are included by groovy-all, but must be explicit here for the sources (since 2.5) -->
-        <dependency org="org.codehaus.groovy" name="groovy" rev="2.5.14" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy" rev="3.0.8" conf="sources"/>
         <!-- These are not accessed directly in Scipio sources, so omitting for now
-        <dependency org="org.codehaus.groovy" name="groovy-ant" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-cli-commons" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-cli-picocli" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-console" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-datetime" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-docgenerator" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-groovydoc" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-groovysh" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-jmx" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-json" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-jsr223" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-macro" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-nio" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-servlet" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-sql" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-swing" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-templates" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-test" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-test-junit5" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-testng" rev="2.5.14" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-xml" rev="2.5.14" conf="sources"/>-->
+        <dependency org="org.codehaus.groovy" name="groovy-ant" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-cli-commons" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-cli-picocli" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-console" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-datetime" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-docgenerator" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-groovydoc" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-groovysh" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-jmx" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-json" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-jsr223" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-macro" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-nio" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-servlet" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-sql" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-swing" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-templates" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-test" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-test-junit5" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-testng" rev="3.0.8" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-xml" rev="3.0.8" conf="sources"/>-->
         <!-- Jakarta ORO is provided in filesystem due to ivy dependency, and excluded below NOTE: Jakarta ORO is a closed project
         <dependency org="oro" name="oro" rev="2.0.8" conf="base,scripting,sources"/>-->
 

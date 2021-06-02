@@ -22,7 +22,7 @@ import com.ilscipio.scipio.ce.util.collections.ExtendedMap;
 
 /**
  * A convenient combination of the ServletAttributeContainer and ExtendedMap interfaces (SCIPIO).
- * @deprecated SCIPIO: 2.1.0: {@link ServletMapWrapper} is now preferred for simplicity and speed.
+ * @deprecated SCIPIO: 2.1.0: {@link ServletMapAdapter} is now preferred for simplicity and speed.
  */
 @Deprecated
 public interface ServletAttrMap extends ExtendedMap<String, Object>, ServletAttrContainer {

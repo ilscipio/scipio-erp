@@ -2,6 +2,7 @@ package com.ilscipio.scipio.ce.util.servlet;
 
 import org.ofbiz.base.util.UtilHttp;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
 import javax.servlet.ServletContext;
@@ -26,37 +27,49 @@ import java.util.Set;
  * <p>This is a simpler design to replace {@link ServletAttrMap} with fewer wrapper implementations to standardize
  * usage away from servlet API-specific code toward simple types like Map and List.</p>
  */
-public interface ServletMapWrapper extends Map<String, Object> {
+public interface ServletMapAdapter extends Map<String, Object> {
+
+    /**
+     * Returns a {@link ServletMapAdapter} equivalent to an unmodifiable map.
+     * Mainly for compabitility purposes and for the interface.
+     * @see Collections#unmodifiableMap(Map)
+     */
+    static ServletMapAdapter empty() {
+        return EmptyAttributeMapAdapter.getInstance();
+    }
 
     /**
      * Wraps request attributes in a {@link Map} wrapper.
      * <p>The request and wrapper are non-synchronized.</p>
      */
-    static ServletMapWrapper wrapAttributes(ServletRequest request) {
-        return new RequestAttributeMapWrapper(request);
+    static ServletMapAdapter wrapAttributes(ServletRequest request) {
+        return new RequestAttributeMapAdapter(request);
     }
 
     /**
      * Wraps request attributes in a {@link Map} wrapper that is only appropriate and optimized for read operations.
      */
-    static ServletMapWrapper wrapAttributesReadonly(ServletRequest request) {
-        return new ReadonlyRequestAttributeMapWrapper(request);
+    static ServletMapAdapter wrapAttributesReadonly(ServletRequest request) {
+        return new ReadonlyRequestAttributeMapAdapter(request);
     }
 
     /**
      * Wraps session attributes in an explicitly synchronized and thread-safe {@link Map} wrapper.
      * @see #wrapAttributesSync(HttpSession)
      */
-    static ServletMapWrapper wrapAttributes(HttpSession session) {
+    static ServletMapAdapter wrapAttributes(HttpSession session) {
         return wrapAttributesSync(session);
     }
 
     /**
      * Wraps session attributes in an explicitly synchronized and thread-safe {@link Map} wrapper.
      */
-    static ServletMapWrapper wrapAttributesSync(HttpSession session) {
+    static ServletMapAdapter wrapAttributesSync(HttpSession session) {
+        if (session == null) {
+            return empty();
+        }
         // TODO
-        //return new SyncSessionAttributeMapWrapper(session);
+        //return new SyncSessionAttributeMapAdapter(session);
         throw new UnsupportedOperationException();
     }
 
@@ -64,8 +77,11 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * Wraps session attributes in a {@link Map} wrapper that is only appropriate and optimized for read operations.
      * <p>Designed for thread-safe operation using immutable copies.</p>
      */
-    static ServletMapWrapper wrapAttributesReadonly(HttpSession session) {
-        return new ReadonlySessionAttributeMapWrapper(session);
+    static ServletMapAdapter wrapAttributesReadonly(HttpSession session) {
+        if (session == null) {
+            return empty();
+        }
+        return new ReadonlySessionAttributeMapAdapter(session);
     }
 
     /**
@@ -73,24 +89,27 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * to the caller.
      * @see #wrapAttributesSync(HttpSession)
      */
-    static ServletMapWrapper wrapAttributesUnsync(HttpSession session) {
-        return new SessionAttributeMapWrapper(session);
+    static ServletMapAdapter wrapAttributesUnsync(HttpSession session) {
+        if (session == null) {
+            return empty();
+        }
+        return new SessionAttributeMapAdapter(session);
     }
 
     /**
      * Wraps serlvet context attributes in an explicitly thread-safe {@link Map} wrapper.
      * @see #wrapAttributesSync(ServletContext)
      */
-    static ServletMapWrapper wrapAttributes(ServletContext servletContext) {
+    static ServletMapAdapter wrapAttributes(ServletContext servletContext) {
         return wrapAttributesSync(servletContext);
     }
 
     /**
      * Wraps serlvet context attributes in an explicitly thread-safe {@link Map} wrapper.
      */
-    static ServletMapWrapper wrapAttributesSync(ServletContext servletContext) {
+    static ServletMapAdapter wrapAttributesSync(ServletContext servletContext) {
         // TODO
-        //return new SyncServletContextAttributeMapWrapper(servletContext);
+        //return new SyncServletContextAttributeMapAdapter(servletContext);
         throw new UnsupportedOperationException();
     }
 
@@ -99,8 +118,8 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * <p>Designed for thread-safe operation using immutable copies.</p>
      * @see #wrapAttributesSync(ServletContext)
      */
-    static ServletMapWrapper wrapAttributesReadonly(ServletContext servletContext) {
-        return new ReadonlyServletContextAttributeMapWrapper(servletContext);
+    static ServletMapAdapter wrapAttributesReadonly(ServletContext servletContext) {
+        return new ReadonlyServletContextAttributeMapAdapter(servletContext);
     }
 
     /**
@@ -108,8 +127,8 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * to the caller.
      * @see #wrapAttributesSync(ServletContext)
      */
-    static ServletMapWrapper wrapAttributesUnsync(ServletContext servletContext) {
-        return new ServletContextAttributeMapWrapper(servletContext);
+    static ServletMapAdapter wrapAttributesUnsync(ServletContext servletContext) {
+        return new ServletContextAttributeMapAdapter(servletContext);
     }
 
     /**
@@ -118,8 +137,8 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * <p>The request parameters and wrapper are read-only.</p>
      * @see #wrapParametersDynamic(ServletRequest)
      */
-    static ServletMapWrapper wrapParameters(ServletRequest request, ParameterMode parameterMode) {
-        return new RequestParameterMapWrapper(request, (parameterMode != null) ? parameterMode : ParameterMode.getDefault());
+    static ServletMapAdapter wrapParameters(ServletRequest request, Object parameterMode) {
+        return new RequestParameterMapAdapter(request, parameterMode);
     }
 
     /**
@@ -127,8 +146,8 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * and returns only the first value for all parameter names.
      * <p>The request parameters and wrapper are read-only.</p>
      */
-    static ServletMapWrapper wrapParametersSingle(ServletRequest request) {
-        return wrapParameters(request, ParameterMode.SINGLE);
+    static ServletMapAdapter wrapParametersSingle(ServletRequest request) {
+        return wrapParameters(request, "SINGLE");
     }
 
     /**
@@ -136,8 +155,8 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * and always returns {@link List} as map values.
      * <p>The request parameters and wrapper are read-only.</p>
      */
-    static ServletMapWrapper wrapParametersMulti(ServletRequest request) {
-        return wrapParameters(request, ParameterMode.MULTI);
+    static ServletMapAdapter wrapParametersMulti(ServletRequest request) {
+        return wrapParameters(request, "MULTI");
     }
 
     /**
@@ -145,50 +164,23 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * for parameters with multiple values (legacy system default).
      * <p>The request parameters and wrapper are read-only.</p>
      */
-    static ServletMapWrapper wrapParametersDynamic(ServletRequest request) {
-        return wrapParameters(request, ParameterMode.DYNAMIC);
-    }
-
-    enum ParameterMode {
-        /**
-         * Sets the map values to and causes {@link Map#get} to return only the first {@link String} value for the given parameter name.
-         */
-        SINGLE,
-
-        /**
-         * Sets the map values to and causes {@link Map#get} to return {@link List} instances for the given parameter name values even if only one.
-         */
-        MULTI,
-
-        /**
-         * Sets the map values to and causes {@link Map#get} to return lists for the given parameter name values if multiple or string if one.
-         * <p><strong>WARN:</strong> Occasionally this can lead to unexpected class cast exceptions around code that
-         * handles the "parameters" map in screen rendering, but due to being the system legacy default the default is not easily changed to list,
-         * and typically for security reasons it leads to immediate render aborts when encountered.</p>
-         */
-        DYNAMIC;
-
-        /**
-         * Returns the default ParameterMode for the framework, for legacy reasons always {@link ParameterMode#DYNAMIC}.
-         */
-        public static ParameterMode getDefault() {
-            return DYNAMIC;
-        }
+    static ServletMapAdapter wrapParametersDynamic(ServletRequest request) {
+        return wrapParameters(request, "DYNAMIC");
     }
 
     /**
-     * Given a {@link Map} implemented using a ServletMapWrapper implementation, return its wrapped container
+     * Given a {@link Map} implemented using a ServletMapAdapter implementation, return its wrapped container
      * in the desired type.
      * <p>DEV NOTE: This is a static method to avoid adding public methods to the implementations, to avoid
      * problems with the bean engines.</p>
      */
     static <T> T getContainer(Object container) {
-        if (container instanceof ContainerMapWrapper) {
+        if (container instanceof ContainerMapAdapter) {
             @SuppressWarnings("unchecked")
-            T result = (T) ((ContainerMapWrapper) container).getContainer();
+            T result = (T) ((ContainerMapAdapter) container).getContainer();
             return result;
         } else {
-            throw new IllegalArgumentException("Unrecognized ServletMapWrapper container type: " +
+            throw new IllegalArgumentException("Unrecognized ServletMapAdapter container type: " +
                     (container != null ? container.getClass().getName() : "null"));
         }
     }
@@ -197,10 +189,10 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * Returns the attribute synchronization object in a HttpSession or SerlvetContext container or wrapper.
      */
     static Object getSyncObject(Object container) {
-        if (container instanceof SessionAttributeMapWrapper) {
-            return getSyncObject(((SessionAttributeMapWrapper) container).getContainer());
-        } else if (container instanceof ServletContextAttributeMapWrapper) {
-            return getSyncObject(((ServletContextAttributeMapWrapper) container).getContainer());
+        if (container instanceof SessionAttributeMapAdapter) {
+            return getSyncObject(((SessionAttributeMapAdapter) container).getContainer());
+        } else if (container instanceof ServletContextAttributeMapAdapter) {
+            return getSyncObject(((ServletContextAttributeMapAdapter) container).getContainer());
         } else if (container instanceof HttpSession) {
             return getSyncObject((HttpSession) container);
         } else if (container instanceof ServletContext) {
@@ -224,10 +216,10 @@ public interface ServletMapWrapper extends Map<String, Object> {
      * helps promote Map over the Servlet API interfaces.</p>
      */
     @NotThreadSafe
-    abstract class ContainerMapWrapper extends AbstractMap<String, Object> implements ServletMapWrapper {
+    abstract class ContainerMapAdapter extends AbstractMap<String, Object> implements ServletMapAdapter {
         private final Object container;
 
-        protected ContainerMapWrapper(Object container) {
+        protected ContainerMapAdapter(Object container) {
             this.container = container;
         }
 
@@ -235,26 +227,26 @@ public interface ServletMapWrapper extends Map<String, Object> {
             return container;
         }
 
-        protected abstract Object getAttribute(String name);
+        protected abstract Object getContainerValue(String name);
 
-        protected abstract Object setAttribute(String name, Object o);
+        protected abstract Object setContainerValue(String name, Object o);
 
-        protected abstract Object removeAttribute(String name);
+        protected abstract Object removeContainerValue(String name);
 
-        protected abstract Enumeration<String> getAttributeNamesEnum();
+        protected abstract Enumeration<String> getContainerValueNamesEnum();
 
         protected List<String> getAttributeNames() {
-            return Collections.list(getAttributeNamesEnum());
+            return Collections.list(getContainerValueNamesEnum());
         }
 
         protected boolean containsAttribute(String name) {
-            return (getAttribute(name) != null);
+            return (getContainerValue(name) != null);
         }
 
         @Override
         public int size() {
             int size = 0;
-            Enumeration<String> attributeNames = getAttributeNamesEnum();
+            Enumeration<String> attributeNames = getContainerValueNamesEnum();
             while(attributeNames.hasMoreElements()) {
                 attributeNames.nextElement();
                 size++;
@@ -264,12 +256,12 @@ public interface ServletMapWrapper extends Map<String, Object> {
 
         @Override
         public boolean isEmpty() {
-            return !getAttributeNamesEnum().hasMoreElements();
+            return !getContainerValueNamesEnum().hasMoreElements();
         }
 
         @Override
         public boolean containsKey(Object key) {
-            Enumeration<String> attributeNames = getAttributeNamesEnum();
+            Enumeration<String> attributeNames = getContainerValueNamesEnum();
             while(attributeNames.hasMoreElements()) {
                 Object attributeName = attributeNames.nextElement();
                 if (Objects.equals(attributeName, key)) {
@@ -281,10 +273,10 @@ public interface ServletMapWrapper extends Map<String, Object> {
 
         @Override
         public boolean containsValue(Object value) {
-            Enumeration<String> attributeNames = getAttributeNamesEnum();
+            Enumeration<String> attributeNames = getContainerValueNamesEnum();
             while(attributeNames.hasMoreElements()) {
                 String attributeName = attributeNames.nextElement();
-                Object attributeValue = getAttribute(attributeName);
+                Object attributeValue = getContainerValue(attributeName);
                 if (Objects.equals(attributeValue, value)) {
                     return true;
                 }
@@ -297,12 +289,12 @@ public interface ServletMapWrapper extends Map<String, Object> {
             if (key != null && !(key instanceof String)) {
                 throw new ClassCastException("Servlet maps only support string keys; got key of type [" + key.getClass().getName() + "]");
             }
-            return getAttribute((String) key);
+            return getContainerValue((String) key);
         }
 
         @Override
         public Object put(String key, Object value) {
-            return setAttribute(key, value);
+            return setContainerValue(key, value);
         }
 
         @Override
@@ -310,21 +302,21 @@ public interface ServletMapWrapper extends Map<String, Object> {
             if (key != null && !(key instanceof String)) {
                 throw new ClassCastException("Servlet maps only support string keys; got key of type [" + key.getClass().getName() + "]");
             }
-            return removeAttribute((String) key);
+            return removeContainerValue((String) key);
         }
 
         @Override
         public void putAll(Map<? extends String, ?> m) {
             for(Map.Entry<? extends String, ? extends Object> entry : m.entrySet()) {
-                setAttribute(entry.getKey(), entry.getValue());
+                setContainerValue(entry.getKey(), entry.getValue());
             }
         }
 
         @Override
         public void clear() {
-            Enumeration<String> attributeNames = getAttributeNamesEnum();
+            Enumeration<String> attributeNames = getContainerValueNamesEnum();
             while(attributeNames.hasMoreElements()) {
-                removeAttribute(attributeNames.nextElement());
+                removeContainerValue(attributeNames.nextElement());
             }
         }
 
@@ -342,10 +334,10 @@ public interface ServletMapWrapper extends Map<String, Object> {
 
             protected AttributeEntrySet() {
                 List<AttributeEntry> entries = new ArrayList<>();
-                Enumeration<String> attributeNames = getAttributeNamesEnum();
+                Enumeration<String> attributeNames = getContainerValueNamesEnum();
                 while(attributeNames.hasMoreElements()) {
                     String attributeName = attributeNames.nextElement();
-                    entries.add(makeEntrySet(attributeName, getAttribute(attributeName)));
+                    entries.add(makeEntrySet(attributeName, getContainerValue(attributeName)));
                 }
                 this.entries = entries;
             }
@@ -368,7 +360,7 @@ public interface ServletMapWrapper extends Map<String, Object> {
             public boolean add(Map.Entry<String, Object> e) { // NOTE: This is probably unused
                 boolean contained = containsAttribute(e.getKey());
                 if (!contained && e.getValue() != null) {
-                    setAttribute(e.getKey(), e.getValue());
+                    setContainerValue(e.getKey(), e.getValue());
                     getEntries().add(new AttributeEntry(e));
                 }
                 return contained;
@@ -407,7 +399,7 @@ public interface ServletMapWrapper extends Map<String, Object> {
 
                 @Override
                 public Object setValue(Object value) {
-                    setAttribute(getKey(), value);
+                    ContainerMapAdapter.this.setContainerValue(getKey(), value);
                     return (value != null) ? super.setValue(value) : removeEntry(getKey());
                 }
             }
@@ -449,7 +441,7 @@ public interface ServletMapWrapper extends Map<String, Object> {
                     }
                     List<AttributeEntry> entries = getEntries();
                     if (listIndex < entries.size()) {
-                        removeAttribute(entries.get(listIndex).getKey());
+                        removeContainerValue(entries.get(listIndex).getKey());
                         entries.remove(listIndex);
                     } else {
                         throw new IllegalStateException("no next element");
@@ -459,9 +451,57 @@ public interface ServletMapWrapper extends Map<String, Object> {
         }
     }
 
+    @ThreadSafe
+    class EmptyAttributeMapAdapter extends ContainerMapAdapter {
+        protected static final EmptyAttributeMapAdapter INSTANCE = new EmptyAttributeMapAdapter(null);
+
+        protected EmptyAttributeMapAdapter(Object container) {
+            super(container);
+        }
+
+        public static EmptyAttributeMapAdapter getInstance() {
+            return INSTANCE;
+        }
+
+        @Override
+        protected Object getContainerValue(String name) {
+            return null;
+        }
+
+        @Override
+        protected Object setContainerValue(String name, Object o) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected Object removeContainerValue(String name) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected Enumeration<String> getContainerValueNamesEnum() {
+            return new Enumeration<String>() {
+                @Override
+                public boolean hasMoreElements() {
+                    return false;
+                }
+
+                @Override
+                public String nextElement() {
+                    throw new NoSuchElementException();
+                }
+            };
+        }
+
+        @Override
+        protected List<String> getAttributeNames() {
+            return Collections.emptyList();
+        }
+    }
+
     @NotThreadSafe
-    class RequestAttributeMapWrapper extends ContainerMapWrapper {
-        protected RequestAttributeMapWrapper(ServletRequest container) {
+    class RequestAttributeMapAdapter extends ContainerMapAdapter {
+        protected RequestAttributeMapAdapter(ServletRequest container) {
             super(container);
         }
 
@@ -471,50 +511,50 @@ public interface ServletMapWrapper extends Map<String, Object> {
         }
 
         @Override
-        protected Object getAttribute(String name) {
+        protected Object getContainerValue(String name) {
             return getContainer().getAttribute(name);
         }
 
         @Override
-        protected Object setAttribute(String name, Object value) {
+        protected Object setContainerValue(String name, Object value) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().setAttribute(name, value);
             return oldValue;
         }
 
         @Override
-        protected Object removeAttribute(String name) {
+        protected Object removeContainerValue(String name) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().removeAttribute(name);
             return oldValue;
         }
 
         @Override
-        protected Enumeration<String> getAttributeNamesEnum() {
+        protected Enumeration<String> getContainerValueNamesEnum() {
             return getContainer().getAttributeNames();
         }
     }
 
     @ThreadSafe
-    class ReadonlyRequestAttributeMapWrapper extends RequestAttributeMapWrapper {
-        protected ReadonlyRequestAttributeMapWrapper(ServletRequest container) {
+    class ReadonlyRequestAttributeMapAdapter extends RequestAttributeMapAdapter {
+        protected ReadonlyRequestAttributeMapAdapter(ServletRequest container) {
             super(container);
         }
 
         @Override
-        protected Object setAttribute(String name, Object value) {
+        protected Object setContainerValue(String name, Object value) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        protected Object removeAttribute(String name) {
+        protected Object removeContainerValue(String name) {
             throw new UnsupportedOperationException();
         }
     }
 
     @NotThreadSafe
-    class SessionAttributeMapWrapper extends ContainerMapWrapper {
-        protected SessionAttributeMapWrapper(HttpSession container) {
+    class SessionAttributeMapAdapter extends ContainerMapAdapter {
+        protected SessionAttributeMapAdapter(HttpSession container) {
             super(container);
         }
 
@@ -524,33 +564,33 @@ public interface ServletMapWrapper extends Map<String, Object> {
         }
 
         @Override
-        protected Object getAttribute(String name) {
+        protected Object getContainerValue(String name) {
             return getContainer().getAttribute(name);
         }
 
         @Override
-        protected Object setAttribute(String name, Object value) {
+        protected Object setContainerValue(String name, Object value) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().setAttribute(name, value);
             return oldValue;
         }
 
         @Override
-        protected Object removeAttribute(String name) {
+        protected Object removeContainerValue(String name) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().removeAttribute(name);
             return oldValue;
         }
 
         @Override
-        protected Enumeration<String> getAttributeNamesEnum() {
+        protected Enumeration<String> getContainerValueNamesEnum() {
             return getContainer().getAttributeNames();
         }
     }
 
     @ThreadSafe
-    class SyncSessionAttributeMapWrapper extends SessionAttributeMapWrapper {
-        protected SyncSessionAttributeMapWrapper(HttpSession container) {
+    class SyncSessionAttributeMapAdapter extends SessionAttributeMapAdapter {
+        protected SyncSessionAttributeMapAdapter(HttpSession container) {
             super(container);
         }
 
@@ -558,25 +598,25 @@ public interface ServletMapWrapper extends Map<String, Object> {
     }
 
     @ThreadSafe
-    class ReadonlySessionAttributeMapWrapper extends SessionAttributeMapWrapper {
-        protected ReadonlySessionAttributeMapWrapper(HttpSession container) {
+    class ReadonlySessionAttributeMapAdapter extends SessionAttributeMapAdapter {
+        protected ReadonlySessionAttributeMapAdapter(HttpSession container) {
             super(container);
         }
 
         @Override
-        protected Object setAttribute(String name, Object value) {
+        protected Object setContainerValue(String name, Object value) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        protected Object removeAttribute(String name) {
+        protected Object removeContainerValue(String name) {
             throw new UnsupportedOperationException();
         }
     }
 
     @NotThreadSafe
-    class ServletContextAttributeMapWrapper extends ContainerMapWrapper {
-        protected ServletContextAttributeMapWrapper(ServletContext container) {
+    class ServletContextAttributeMapAdapter extends ContainerMapAdapter {
+        protected ServletContextAttributeMapAdapter(ServletContext container) {
             super(container);
         }
 
@@ -586,33 +626,33 @@ public interface ServletMapWrapper extends Map<String, Object> {
         }
 
         @Override
-        protected Object getAttribute(String name) {
+        protected Object getContainerValue(String name) {
             return getContainer().getAttribute(name);
         }
 
         @Override
-        protected Object setAttribute(String name, Object value) {
+        protected Object setContainerValue(String name, Object value) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().setAttribute(name, value);
             return oldValue;
         }
 
         @Override
-        protected Object removeAttribute(String name) {
+        protected Object removeContainerValue(String name) {
             Object oldValue = getContainer().getAttribute(name);
             getContainer().removeAttribute(name);
             return oldValue;
         }
 
         @Override
-        protected Enumeration<String> getAttributeNamesEnum() {
+        protected Enumeration<String> getContainerValueNamesEnum() {
             return getContainer().getAttributeNames();
         }
     }
 
     @ThreadSafe
-    class SyncServletContextAttributeMapWrapper extends ServletContextAttributeMapWrapper {
-        protected SyncServletContextAttributeMapWrapper(ServletContext container) {
+    class SyncServletContextAttributeMapAdapter extends ServletContextAttributeMapAdapter {
+        protected SyncServletContextAttributeMapAdapter(ServletContext container) {
             super(container);
         }
 
@@ -620,28 +660,29 @@ public interface ServletMapWrapper extends Map<String, Object> {
     }
 
     @ThreadSafe
-    class ReadonlyServletContextAttributeMapWrapper extends ServletContextAttributeMapWrapper {
-        protected ReadonlyServletContextAttributeMapWrapper(ServletContext container) {
+    class ReadonlyServletContextAttributeMapAdapter extends ServletContextAttributeMapAdapter {
+        protected ReadonlyServletContextAttributeMapAdapter(ServletContext container) {
             super(container);
         }
 
         @Override
-        protected Object setAttribute(String name, Object value) {
+        protected Object setContainerValue(String name, Object value) {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        protected Object removeAttribute(String name) {
+        protected Object removeContainerValue(String name) {
             throw new UnsupportedOperationException();
         }
     }
 
-    class RequestParameterMapWrapper extends ContainerMapWrapper {
-        private final ParameterMode parameterMode;
+    class RequestParameterMapAdapter extends ContainerMapAdapter {
+        @Nonnull
+        private final Object parameterMode;
 
-        protected RequestParameterMapWrapper(ServletRequest container, ParameterMode parameterMode) {
+        protected RequestParameterMapAdapter(ServletRequest container, Object parameterMode) {
             super(container);
-            this.parameterMode = parameterMode;
+            this.parameterMode = (parameterMode != null) ? parameterMode : "DYNAMIC";
         }
 
         @Override
@@ -649,40 +690,41 @@ public interface ServletMapWrapper extends Map<String, Object> {
             return (ServletRequest) super.getContainer();
         }
 
-        protected ParameterMode getParameterMode() {
+        protected Object getParameterMode() {
             return parameterMode;
         }
 
         @Override
-        protected Object getAttribute(String name) {
-            ParameterMode parameterMode = getParameterMode();
-            if (parameterMode == ParameterMode.SINGLE) {
+        protected Object getContainerValue(String name) {
+            Object parameterMode = getParameterMode();
+            if (parameterMode.equals("SINGLE")) {
                 return getContainer().getParameter(name);
             } else {
                 String[] parameterValues = getContainer().getParameterValues(name);
                 if (parameterValues != null) {
-                    if (parameterMode != ParameterMode.MULTI && parameterValues.length == 1) {
-                        return parameterValues[0];
-                    } else {
+                    if (parameterValues.length != 1 || parameterMode.equals("MULTI")) {
                         return Arrays.asList(parameterValues);
+                    } else {
+                        return parameterValues[0];
                     }
+                } else {
+                    return null;
                 }
             }
-            return null;
         }
 
         @Override
-        protected Object setAttribute(String name, Object value) {
+        protected Object setContainerValue(String name, Object value) {
             throw new UnsupportedOperationException("Request parameters are read-only");
         }
 
         @Override
-        protected Object removeAttribute(String name) {
+        protected Object removeContainerValue(String name) {
             throw new UnsupportedOperationException("Request parameters are read-only");
         }
 
         @Override
-        protected Enumeration<String> getAttributeNamesEnum() {
+        protected Enumeration<String> getContainerValueNamesEnum() {
             return getContainer().getParameterNames();
         }
     }

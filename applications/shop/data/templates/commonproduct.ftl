@@ -141,7 +141,7 @@ NOTE: This template does not support globals as-is (#global)
     <#else>
         <#local productContentTypeId = "ORIGINAL_IMAGE_URL">
     </#if>
-    <#local dummy = Debug.logInfo("Queueing productImageAutoRescale for product [" + productId + "}", "commonproduct.ftl")!>
+    <#local dummy = Debug.logInfo("Queueing productImageAutoRescale for product [" + productId + "]", "commonproduct.ftl")!>
     <#-- TODO: could try async-memory but it's currently unable to finish before end of data load and get canceled -->
     <ProductImageOpRequest serviceId="productImageAutoRescale" mode="sync" productId="${productId}">
         <serviceArgsJson><![CDATA[{

@@ -259,6 +259,9 @@ public class RequestHandler {
         long startTime = System.currentTimeMillis();
         HttpSession session = request.getSession();
 
+        // SCIPIO 2.1.0: Setting RequestState in request attribs
+        request.setAttribute("_REQUEST_STATE_", requestState);
+
         // get the controllerConfig once for this method so we don't have to get it over and over inside the method
         ConfigXMLReader.ControllerConfig controllerConfig = this.getControllerConfig();
 

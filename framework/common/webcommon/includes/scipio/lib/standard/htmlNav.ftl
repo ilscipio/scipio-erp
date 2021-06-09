@@ -2266,19 +2266,20 @@ It may be used in combination with cms menus:
 <#macro cmsmenu args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.cmsmenu_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
   <@cmsmenu_markup menuId=menuId items=items title=title id=id class=class type=type style=style
-    origArgs=origArgs passArgs=passArgs><#nested></@cmsmenu_markup>
+    origArgs=origArgs passArgs=passArgs attribs=attribs><#nested></@cmsmenu_markup>
 </#macro>
 
 <#-- @cms_menu markup - theme override -->
 <#macro cmsmenu_markup menuId="" items=true title="" type="generic" id="" class="" style="" 
-    origArgs={} passArgs={} catchArgs...>
+    origArgs={} passArgs={} attribs={} catchArgs...>
   <#local class = addClassArg(class, styles.cmsmenu_wrap!"")>
         <#if menuId?has_content>
             <#local menuJson = Static["com.ilscipio.scipio.cms.menu.CmsMenuUtil"].getMenuJsonById(delegator!,menuId)>
             <#if menuJson?has_content>
-                <@menu type=type title=title id=id class=class style=style itemCount=menuJson?size>
+                <@menu type=type title=title id=id class=class style=style itemCount=menuJson?size attribs=attribs>
                       <#list menuJson as item>
                             <#if (item["type"]=="link_external" || item["type"]=="link_internal") && item["data"]["path"]?has_content>
                                   <#if item["type"]=="link_external">
@@ -2314,7 +2315,7 @@ It may be used in combination with cms menus:
             </#if>
         <#else>
             <#if items?is_sequence>
-              <@menu type=type title=title id=id class=class style=style itemCount=items?size>
+              <@menu type=type title=title id=id class=class style=style itemCount=items?size attribs=attribs>
               <#list items as item>
                   <#if (item["type"]=="link_external" || item["type"]=="link_internal") && item["data"]["path"]?has_content>
                       <#if item["type"]=="link_external">

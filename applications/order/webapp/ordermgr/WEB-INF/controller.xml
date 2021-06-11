@@ -1118,6 +1118,7 @@ code package.
         <security https="true" auth="true"/>
         <event type="service" invoke="updateReturnHeader"/>
         <response name="success" type="view" value="returnhead"/>
+        <response name="error" type="view" value="returnhead"/>
     </request-map>
     <request-map uri="createReturnItems">
         <security https="true" auth="true"/>

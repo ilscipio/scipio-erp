@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentURLException.ComponentNotFoundURLException;
@@ -344,6 +345,7 @@ public class ConfigXMLReader {
         protected final String defaultViewLastView; // SCIPIO: added 2018-10-26
         protected final Map<String, EventHandlerWrapperDef> eventHandlerWrapperMap; // SCIPIO: added 2018-11-23
         protected final String defaultViewAccess; // SCIPIO: Added 2.1.0
+        protected final FieldFilter requestParamFilter;
 
         // SCIPIO: DEV NOTE:
         // If you add any members to this class, make sure to reflect it in ResolvedControllerConfig further below!
@@ -382,6 +384,7 @@ public class ConfigXMLReader {
             protected String defaultViewLastView; // SCIPIO: added 2018-10-26
             protected Map<String, EventHandlerWrapperDef> eventHandlerWrapperMap = new LinkedHashMap<>(); // SCIPIO: added 2018-11-23
             protected String defaultViewAccess; // SCIPIO: Added 2.1.0
+            protected FieldFilter requestParamFilter; // SCIPIO: Added 2.1.0
         }
 
         public ControllerConfig(URL url) throws WebAppConfigurationException {
@@ -434,6 +437,7 @@ public class ConfigXMLReader {
             this.defaultViewLastView = builder.defaultViewLastView;
             this.eventHandlerWrapperMap = builder.eventHandlerWrapperMap;
             this.defaultViewAccess = builder.defaultViewAccess;
+            this.requestParamFilter = builder.requestParamFilter;
         }
 
         /**
@@ -473,6 +477,7 @@ public class ConfigXMLReader {
                 this.defaultViewLastView = srcConfig.getDefaultViewLastView();
                 this.eventHandlerWrapperMap = getOrderedOptMap(srcConfig.getEventHandlerWrapperMap());
                 this.defaultViewAccess = srcConfig.getDefaultViewAccess();
+                this.requestParamFilter = srcConfig.getRequestParamFilter();
             } else {
                 this.errorpage = srcConfig.errorpage;
                 this.protectView = srcConfig.protectView;
@@ -499,6 +504,7 @@ public class ConfigXMLReader {
                 this.defaultViewLastView = srcConfig.defaultViewLastView;
                 this.eventHandlerWrapperMap = srcConfig.eventHandlerWrapperMap;
                 this.defaultViewAccess = srcConfig.defaultViewAccess;
+                this.requestParamFilter = srcConfig.requestParamFilter;
             }
         }
 
@@ -1310,7 +1316,36 @@ public class ConfigXMLReader {
             return null;
         }
 
-        
+        public FieldFilter getRequestParamFilter() throws WebAppConfigurationException {
+            FieldFilter requestParamFilter = FieldFilter.EMPTY;
+            for (Include include : includesPreLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        requestParamFilter = requestParamFilter.merge(controllerConfig.getRequestParamFilter());
+                    } else if (controllerConfig.requestParamFilter != null) {
+                        requestParamFilter = requestParamFilter.merge(controllerConfig.requestParamFilter);
+                    }
+                }
+            }
+            if (this.requestParamFilter != null) {
+                requestParamFilter = requestParamFilter.merge(this.requestParamFilter);
+            }
+            for (Include include : includesPostLocal) {
+                ControllerConfig controllerConfig = getControllerConfig(include);
+                if (controllerConfig != null) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        requestParamFilter = requestParamFilter.merge(controllerConfig.getRequestParamFilter());
+                    } else if (controllerConfig.requestParamFilter != null) {
+                        requestParamFilter = requestParamFilter.merge(controllerConfig.requestParamFilter);
+                    }
+                }
+            }
+            return requestParamFilter;
+        }
+
         protected static class Builder extends ConfigFields { // SCIPIO: 2018-11-07: ugly kludge for initialization
 
         private void optimizeFields() {
@@ -1453,6 +1488,15 @@ public class ConfigXMLReader {
             this.allowViewSaveViewNameFilters = allowViewSaveViewNameFilters;
             this.defaultViewLastView = (UtilValidate.isNotEmpty(defaultViewLastView) && !"_none_".equals(defaultViewLastView)) ? defaultViewLastView : null;
             this.defaultViewAccess = defaultViewAccess;
+            FieldFilter requestParamFilter = FieldFilter.EMPTY;
+            Element iofElem = UtilXml.firstChildElement(rootElement, "input-output-filters");
+            if (iofElem != null) {
+                Element rptaElem = UtilXml.firstChildElement(iofElem, "request-parameter-filter");
+                if (rptaElem != null) {
+                    requestParamFilter = new FieldFilter(rptaElem);
+                }
+            }
+            this.requestParamFilter = requestParamFilter;
         }
 
         private void loadHandlerMap(Element rootElement) {
@@ -1805,6 +1849,11 @@ public class ConfigXMLReader {
         @Override
         public String getDefaultViewAccess() throws WebAppConfigurationException {
             return defaultViewAccess;
+        }
+
+        @Override
+        public FieldFilter getRequestParamFilter() throws WebAppConfigurationException {
+            return requestParamFilter;
         }
     }
 

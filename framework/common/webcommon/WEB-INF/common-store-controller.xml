@@ -14,7 +14,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
 -->
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
-    <include location="component://common/webcommon/WEB-INF/handlers-controller.xml"/>
+    <include location="component://common/webcommon/WEB-INF/base-controller.xml"/>
     
     <!-- Social Logins - requires Social Authentication Addons -->
     <include location="component://auth-facebook/webapp/facebook/WEB-INF/auth-facebook-controller.xml" optional="true" order="pre-local" />
@@ -246,7 +246,7 @@ NOTE: This should only contain framework-level definitions, and not business-rel
     <!-- Standard json response, For security reason (OFBIZ-5409) tries to keep only the initially called service attributes -->
     <request-map uri="json">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributesRestricted"/>
+        <event type="java" path="org.ofbiz.common.CommonEvents" invoke="jsonResponseFromRequestAttributes"/>
         <response name="success" type="none"/>
     </request-map>
     <!-- SCIPIO: version of "json" that will only output attributes specifically requested in "scipioOutParams" map or "scipioOutAttrNames" list -->

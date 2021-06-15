@@ -277,16 +277,11 @@ public class CommonEvents {
 
     /**
      * SCIPIO: variant of jsonResponseFromRequestAttributes version of "json" that excludes more request attributes, more appropriate for frontend.
+     * @deprecated SCIPIO: 2.1.0: use {@link #jsonResponseFromRequestAttributes}; configure in request-parameter-filter in controller.
      */
+    @Deprecated
     public static String jsonResponseFromRequestAttributesRestricted(HttpServletRequest request, HttpServletResponse response) {
-        Map<String, Object> attrMap = JsonEventUtil.collectOutAttributesRestricted(request);
-        try {
-            JSON json = JSON.from(attrMap);
-            writeJSONtoResponse(json, request, response);
-        } catch (IOException e) {
-            return "error";
-        }
-        return "success";
+        return jsonResponseFromRequestAttributes(request, response);
     }
 
     /**

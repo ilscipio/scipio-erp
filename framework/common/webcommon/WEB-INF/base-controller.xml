@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
+    <include location="component://common/webcommon/WEB-INF/handlers-controller.xml"/>
+    <description>Base ControlServlet Configuration File - imported by common-controller and common-store-controller</description>
+
+    <!-- input-output field filter/firewall/blacklist/whitelist -->
+    <input-output-filters>
+        <!-- Request parameter/attribute filter, controls:
+            1. which request attributes are allowed to be output, such as by json requests
+            2. which request parameters may be treated as attributes, depending on the interpreting code
+            Some of the fields below are functionally redundant as-is such as the _ERROR_MESSAGE_ allow; these are
+            predefined for webapps that need to switch to default-access="deny".
+            NOTE: Defaults are public (blacklist) for legacy compatibility reasons but for sensitive webapps it may be
+                desirable to switch to internal (whitelist) by default by overriding; defaults originate from
+                and replace those of JsonEventUtil. -->
+        <request-parameter-filter>
+            <input default-access="allow">
+            </input>
+            <output default-access="allow">
+                <field name="_ERROR_MESSAGE_" access="allow"/>
+                <field name="_ERROR_MESSAGE_LIST_" access="allow"/>
+                <field name="_EVENT_MESSAGE_" access="allow"/>
+                <field name="_EVENT_MESSAGE_LIST_" access="allow"/>
+            </output>
+            <input-output>
+                <field name="javax.servlet" name-regex="javax[.]servlet[.].*" access="deny"/>
+                <field name="org.apache" name-regex="org[.]apache[.].*" access="deny"/>
+
+                <field name="_CONTEXT_ROOT_" access="deny"/>
+                <field name="_CONTROL_PATH_" access="deny"/>
+                <field name="_FORWARDED_FROM_SERVLET_" access="deny"/>
+                <field name="_SCPSEO_REQWRAP_" access="deny"/>
+                <field name="_SERVER_ROOT_URL_" access="deny"/>
+
+                <field name="cmsCtrlState" access="deny"/>
+                <field name="cmsPreviewMode" access="deny"/>
+                <field name="multiPartMap" access="deny"/>
+                <field name="requestBodyMap" access="deny"/>
+                <field name="scpCtrlMapping" access="deny"/>
+                <field name="scpCtrlServPath" access="deny"/>
+                <field name="scpOutAttrNames" access="deny"/>
+                <field name="scpOutParams" access="deny"/>
+                <field name="scpUrlReCmnSet" access="deny"/>
+                <field name="scpViewAsJson" access="deny"/>
+                <field name="scpViewAsJsonRegLogin" access="deny"/>
+                <field name="scpViewAsJsonSplitMode" access="deny"/>
+                <field name="scpViewAsJsonUpSess" access="deny"/>
+                <field name="targetRequestUri" access="deny"/>
+                <field name="thisRequestUri" access="deny"/>
+            </input-output>
+        </request-parameter-filter>
+    </input-output-filters>
+
+</site-conf>

@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Debug;
@@ -1010,40 +1011,8 @@ public class RequestHandler {
                 renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
             } else if (RequestResponse.Type.VIEW_LAST == nextRequestResponse.getTypeEnum()) { //} else if ("view-last".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
-
-                // check for an override view, only used if "success" = eventReturn
-                String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
-
-                // as a further override, look for the _SAVED and then _HOME and then _LAST session attributes
-                Map<String, Object> urlParams = null;
-                if (session.getAttribute("_SAVED_VIEW_NAME_") != null) {
-                    viewName = (String) session.getAttribute("_SAVED_VIEW_NAME_");
-                    urlParams = UtilGenerics.<String, Object>checkMap(session.getAttribute("_SAVED_VIEW_PARAMS_"));
-                } else if (session.getAttribute("_HOME_VIEW_NAME_") != null) {
-                    viewName = (String) session.getAttribute("_HOME_VIEW_NAME_");
-                    urlParams = UtilGenerics.<String, Object>checkMap(session.getAttribute("_HOME_VIEW_PARAMS_"));
-                } else if (session.getAttribute("_LAST_VIEW_NAME_") != null) {
-                    viewName = (String) session.getAttribute("_LAST_VIEW_NAME_");
-                    urlParams = UtilGenerics.<String, Object>checkMap(session.getAttribute("_LAST_VIEW_PARAMS_"));
-                } else if (UtilValidate.isNotEmpty(nextRequestResponseValue)) {
-                    viewName = nextRequestResponseValue;
-                }
-                if (viewName == null || viewName.isEmpty()) { // SCIPIO: 2018-10-26: Default/fallback view
-                    viewName = getDefaultViewLastView(viewName, nextRequestResponse, requestMap, controllerConfig, request);
-                }
-                if (urlParams != null) {
-                    RestoreAttrPolicyInvoker<?> attrPolicyInvoker = ViewLastAttrPolicy.RestorePolicy.getInvoker(request);
-                    for (Map.Entry<String, Object> urlParamEntry: urlParams.entrySet()) {
-                        String key = urlParamEntry.getKey();
-                        // Don't overwrite messages coming from the current event
-                        if (!("_EVENT_MESSAGE_".equals(key) || "_ERROR_MESSAGE_".equals(key)
-                                || "_EVENT_MESSAGE_LIST_".equals(key) || "_ERROR_MESSAGE_LIST_".equals(key))) {
-                            // SCIPIO: New RequestAttrPolicy callbacks
-                            //request.setAttribute(key, urlParamEntry.getValue());
-                            attrPolicyInvoker.filterRestoreAttrToRequest(urlParamEntry,  urlParams);
-                        }
-                    }
-                }
+                String viewName = restoreViewParamsAndGetViewName(request, overrideViewUri, eventReturn,
+                        nextRequestResponseValue, nextRequestResponse, requestMap, controllerConfig); // SCIPIO: 2.1.0: Refactored
                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
             } else if (RequestResponse.Type.VIEW_LAST_NOPARAM == nextRequestResponse.getTypeEnum()) { //} else if ("view-last-noparam".equals(nextRequestResponse.type)) {
                  if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
@@ -1094,6 +1063,52 @@ public class RequestHandler {
         if (originalRequestMap.metrics != null) {
             originalRequestMap.metrics.recordServiceRate(1, System.currentTimeMillis() - startTime);
         }
+    }
+
+    /**
+     * Restores _LAST_VIEW_PARAMS_/_HOME_VIEW_PARAMS_/_SAVED_VIEW_PARAMS_ to request attributes for request attributes,
+     * to scpReqParamsOvrd for request parameters, and returns the appropriate view name.
+     * <p>SCIPIO: 2.1.0: Factored out from {@link #doRequest}</p>
+     */
+    private String restoreViewParamsAndGetViewName(HttpServletRequest request, String overrideViewUri, String eventReturn,
+                                                   String nextRequestResponseValue, ConfigXMLReader.RequestResponse nextRequestResponse,
+                                                   RequestMap requestMap, ControllerConfig controllerConfig) throws RequestHandlerException {
+        HttpSession session = request.getSession();
+
+        // check for an override view, only used if "success" = eventReturn
+        String viewName = (UtilValidate.isNotEmpty(overrideViewUri) && (eventReturn == null || "success".equals(eventReturn))) ? overrideViewUri : nextRequestResponseValue;
+
+        // as a further override, look for the _SAVED and then _HOME and then _LAST session attributes
+        Map<String, Object> urlParams = null;
+        if (session.getAttribute("_SAVED_VIEW_NAME_") != null) {
+            viewName = (String) session.getAttribute("_SAVED_VIEW_NAME_");
+            urlParams = UtilGenerics.<String, Object>checkMap(session.getAttribute("_SAVED_VIEW_PARAMS_"));
+        } else if (session.getAttribute("_HOME_VIEW_NAME_") != null) {
+            viewName = (String) session.getAttribute("_HOME_VIEW_NAME_");
+            urlParams = UtilGenerics.<String, Object>checkMap(session.getAttribute("_HOME_VIEW_PARAMS_"));
+        } else if (session.getAttribute("_LAST_VIEW_NAME_") != null) {
+            viewName = (String) session.getAttribute("_LAST_VIEW_NAME_");
+            urlParams = UtilGenerics.<String, Object>checkMap(session.getAttribute("_LAST_VIEW_PARAMS_"));
+        } else if (UtilValidate.isNotEmpty(nextRequestResponseValue)) {
+            viewName = nextRequestResponseValue;
+        }
+        if (viewName == null || viewName.isEmpty()) { // SCIPIO: 2018-10-26: Default/fallback view
+            viewName = getDefaultViewLastView(viewName, nextRequestResponse, requestMap, controllerConfig, request);
+        }
+        if (urlParams != null) {
+            RestoreAttrPolicyInvoker<?> attrPolicyInvoker = ViewLastAttrPolicy.RestorePolicy.getInvoker(request);
+            for (Map.Entry<String, Object> urlParamEntry: urlParams.entrySet()) {
+                String key = urlParamEntry.getKey();
+                // Don't overwrite messages coming from the current event
+                if (!("_EVENT_MESSAGE_".equals(key) || "_ERROR_MESSAGE_".equals(key)
+                        || "_EVENT_MESSAGE_LIST_".equals(key) || "_ERROR_MESSAGE_LIST_".equals(key))) {
+                    // SCIPIO: New RequestAttrPolicy callbacks
+                    //request.setAttribute(key, urlParamEntry.getValue());
+                    attrPolicyInvoker.filterRestoreAttrToRequest(urlParamEntry,  urlParams);
+                }
+            }
+        }
+        return viewName;
     }
 
     /**
@@ -1457,41 +1472,50 @@ public class RequestHandler {
             // will never go into a URL, will only stay in the session and extra data will be ignored as we
             // won't go to the original request just the view); note that this is saved after the request/view processing
             // has finished so when those run they will get the value from the previous request
-            Map<String, Object> paramMap = UtilHttp.getParameterMap(req, ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL, false); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
+            // SCIPIO: 2.1.0: Here, make sure to exclude input-output filters defined in controller using paramFilter
+            Map<String, Object> parameters = UtilHttp.getParameterMap(req, ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL, false, null, true);
+
             // add in the attributes as well so everything needed for the rendering context will be in place if/when we get back to this view
-            paramMap.putAll(UtilHttp.getAttributeMap(req));
+            Map<String, Object> paramMap = UtilHttp.getAttributeMap(req);
+
+            // SCIPIO: 2.1.0: Put parameters in separate sub-map, later restored by UtilHttp.getParameterMap(),
+            // instead of putting parameters into attributes
+            paramMap.put("scpReqParamsOvrd", parameters);
+
             // SCIPIO: 2017-10-04: NEW VIEW-SAVE ATTRIBUTE EXCLUDES - these can be set by event to prevent cached and volatile results from going into session
             // NOTE: These also must prevent request parameters with same name, so just remove all these names from the map
             SaveAttrPolicyInvoker<?> attrPolicyInvoker = ViewLastAttrPolicy.SavePolicy.getInvoker(req);
             attrPolicyInvoker.filterMapAttr(paramMap); // SCIPIO: New RequestAttrPolicy callbacks
             UtilMisc.makeMapSerializable(paramMap);
+
+            HttpSession session = req.getSession();
             if (paramMap.containsKey("_LAST_VIEW_NAME_")) { // Used by lookups to keep the real view (request)
-                req.getSession().setAttribute("_LAST_VIEW_NAME_", paramMap.get("_LAST_VIEW_NAME_"));
+                session.setAttribute("_LAST_VIEW_NAME_", paramMap.get("_LAST_VIEW_NAME_"));
             } else {
-                req.getSession().setAttribute("_LAST_VIEW_NAME_", view);
+                session.setAttribute("_LAST_VIEW_NAME_", view);
             }
-            req.getSession().setAttribute("_LAST_VIEW_PARAMS_", paramMap);
+            session.setAttribute("_LAST_VIEW_PARAMS_", paramMap);
 
             if ("SAVED".equals(saveName)) {
                 //Debug.logInfo("======save current view: " + view);
-                req.getSession().setAttribute("_SAVED_VIEW_NAME_", view);
-                req.getSession().setAttribute("_SAVED_VIEW_PARAMS_", paramMap);
+                session.setAttribute("_SAVED_VIEW_NAME_", view);
+                session.setAttribute("_SAVED_VIEW_PARAMS_", paramMap);
             }
 
             if ("HOME".equals(saveName)) {
                 //Debug.logInfo("======save home view: " + view);
-                req.getSession().setAttribute("_HOME_VIEW_NAME_", view);
-                req.getSession().setAttribute("_HOME_VIEW_PARAMS_", paramMap);
+                session.setAttribute("_HOME_VIEW_NAME_", view);
+                session.setAttribute("_HOME_VIEW_PARAMS_", paramMap);
                 // clear other saved views
-                req.getSession().removeAttribute("_SAVED_VIEW_NAME_");
-                req.getSession().removeAttribute("_SAVED_VIEW_PARAMS_");
+                session.removeAttribute("_SAVED_VIEW_NAME_");
+                session.removeAttribute("_SAVED_VIEW_PARAMS_");
             }
 
             // SCIPIO: request-redirect-last
             // FIXME?: may not work when viewAsJson==true
             if ("get".equalsIgnoreCase(req.getMethod())) {
                 String lastGetUrl = getFullIncomingURL(req, resp, null); // SCIPIO: refactored
-                req.getSession().setAttribute("_SCP_LAST_GET_URL_", lastGetUrl);
+                session.setAttribute("_SCP_LAST_GET_URL_", lastGetUrl);
             }
         }
 
@@ -3281,5 +3305,17 @@ public class RequestHandler {
             checkLoginRequest = requestMapMap.get(defaultCheckLoginUri);
         }
         return checkLoginRequest;
+    }
+
+    public static FieldFilter getWebappRequestParamFilter(HttpServletRequest request) { // SCIPIO
+        RequestHandler rh = RequestHandler.getRequestHandler(request);
+        if (rh != null) {
+            try {
+                return rh.getControllerConfig().getRequestParamFilter();
+            } catch (WebAppConfigurationException e) {
+                Debug.logError(e, "Error reading request parameter to attribute filter", module);
+            }
+        }
+        return null;
     }
 }

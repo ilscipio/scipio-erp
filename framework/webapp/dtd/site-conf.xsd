@@ -37,6 +37,7 @@ under the License.
                 <xs:element minOccurs="0" ref="default-request"/>
                 <xs:element minOccurs="0" ref="view-as-json"/><!-- SCIPIO: 2017-05-15: new -->
                 <xs:element minOccurs="0" ref="common-settings"/><!-- SCIPIO: 2018-06-13: new -->
+                <xs:element minOccurs="0" ref="input-output-filters"/><!-- SCIPIO: 2.1.0: Added new -->
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="request-map"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="view-map"/>
             </xs:sequence>
@@ -462,6 +463,102 @@ under the License.
             </xs:annotation>
         </xs:attribute>
     </xs:attributeGroup>
+    <xs:element name="input-output-filters">
+        <xs:annotation>
+            <xs:documentation>
+                Allows filtering input and output parameters to and from attributes and json, like a firewall.
+                SCIPIO: 2.1.0: Added.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" name="request-parameter-filter" type="input-output-field-filter"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="input-output-field-filter">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="input">
+                <xs:annotation>
+                    <xs:documentation>
+                        Input field filters.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="field" type="input-output-field-filter-field" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                    <xs:attribute name="default-access" use="optional">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The default access level for all input, whitelist or blacklist, respectively.
+                                Default: allow (legacy system default)
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:token">
+                                <xs:enumeration value=""/>
+                                <xs:enumeration value="allow"/>
+                                <xs:enumeration value="deny"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="output">
+                <xs:annotation>
+                    <xs:documentation>
+                        Output field filters.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="field" type="input-output-field-filter-field" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                    <xs:attribute name="default-access" use="required">
+                        <xs:annotation>
+                            <xs:documentation>
+                                The default access level for all output, whitelist or blacklist, respectively.
+                                Default: allow (legacy system default)
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:token">
+                                <xs:enumeration value=""/>
+                                <xs:enumeration value="allow"/>
+                                <xs:enumeration value="deny"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" maxOccurs="1" name="input-output">
+                <xs:annotation>
+                    <xs:documentation>
+                        Field definitions placed in both input and output filters.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="field" type="input-output-field-filter-field" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="input-output-field-filter-field">
+        <xs:attribute type="xs:string" name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name-regex" use="optional"/>
+        <xs:attribute name="access" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <!--<xs:enumeration value=""/>-->
+                    <xs:enumeration value="allow"/>
+                    <xs:enumeration value="deny"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
     <xs:element name="request-map">
         <xs:annotation>
             <xs:documentation>

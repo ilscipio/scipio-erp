@@ -7,7 +7,7 @@ code package.
 
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
-    <include location="component://common/webcommon/WEB-INF/handlers-controller.xml"/>
+    <include location="component://common/webcommon/WEB-INF/base-controller.xml"/>
     <description>Common ControlServlet Configuration File</description>
 
     <errorpage>${_CONTROL_SERVPATH_}/error</errorpage> <!-- /error/error.jsp -->

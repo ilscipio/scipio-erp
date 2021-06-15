@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Debug;
@@ -1458,8 +1457,7 @@ public class RequestHandler {
             // will never go into a URL, will only stay in the session and extra data will be ignored as we
             // won't go to the original request just the view); note that this is saved after the request/view processing
             // has finished so when those run they will get the value from the previous request
-            // SCIPIO: 2.1.0: Here, make sure to exclude input-output filters defined in controller using paramFilter
-            Map<String, Object> paramMap = UtilHttp.getParameterMap(req, ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL, false, null, true); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
+            Map<String, Object> paramMap = UtilHttp.getParameterMap(req, ViewAsJsonUtil.VIEWASJSON_RENDERTARGET_REQPARAM_ALL, false); // SCIPIO: SPECIAL EXCLUDES: these will mess up rendering if they aren't excluded
             // add in the attributes as well so everything needed for the rendering context will be in place if/when we get back to this view
             paramMap.putAll(UtilHttp.getAttributeMap(req));
             // SCIPIO: 2017-10-04: NEW VIEW-SAVE ATTRIBUTE EXCLUDES - these can be set by event to prevent cached and volatile results from going into session
@@ -3283,17 +3281,5 @@ public class RequestHandler {
             checkLoginRequest = requestMapMap.get(defaultCheckLoginUri);
         }
         return checkLoginRequest;
-    }
-
-    public static FieldFilter getWebappRequestParamFilter(HttpServletRequest request) { // SCIPIO
-        RequestHandler rh = RequestHandler.getRequestHandler(request);
-        if (rh != null) {
-            try {
-                return rh.getControllerConfig().getRequestParamFilter();
-            } catch (WebAppConfigurationException e) {
-                Debug.logError(e, "Error reading request parameter to attribute filter", module);
-            }
-        }
-        return null;
     }
 }

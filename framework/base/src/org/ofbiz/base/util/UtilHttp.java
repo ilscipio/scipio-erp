@@ -24,7 +24,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.net.FileNameMap;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
@@ -57,7 +56,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 
-import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
@@ -126,7 +124,7 @@ public final class UtilHttp {
      * -- this method will only use the skip names for session and servlet context attributes.
      */
     public static Map<String, Object> getCombinedMap(HttpServletRequest request, Set<? extends String> namesToSkip) {
-        return getCombinedMap(request, namesToSkip, null);
+        return getCombinedMap(request, null, null);
     }
 
     /**
@@ -295,27 +293,14 @@ public final class UtilHttp {
      * @return The resulting Map
      */
     public static Map<String, Object> getParameterMap(HttpServletRequest request, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip, Boolean readBody) {
-        return getParameterMap(request, nameSet, onlyIncludeOrSkip, readBody, false);
-    }
-
-    /**
-     * Create a map from a HttpServletRequest (parameters) object
-     * <p>SCIPIO: 2.1.0: Added overload with paramFilter, designed for controller input-output-filters (see common-controller.xml).</p>
-     * @param onlyIncludeOrSkip If true only include, if false skip, the named parameters in the nameSet. If this is null and nameSet is not null, default to skip.
-     * @param paramFilter Either Boolean.TRUE to apply webapp filter, Boolean.FALSE to prevent or FieldFilter instance (SCIPIO)
-     * @return The resulting Map
-     */
-    public static Map<String, Object> getParameterMap(HttpServletRequest request, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip, Boolean readBody,
-                                                      Object paramFilter) {
         boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip;
         Map<String, Object> paramMap = new HashMap<>();
-        FieldFilter.SectionFilter sectionFilter = getSectionFilter(request, paramFilter); // SCIPIO
 
         // add all the actual HTTP request parameters
         Enumeration<String> e = UtilGenerics.cast(request.getParameterNames());
         while (e.hasMoreElements()) {
             String name = e.nextElement();
-            if (!isIncludeParam(name, nameSet, onlyIncludeOrSkipPrim, sectionFilter)) {
+            if (nameSet != null && (onlyIncludeOrSkipPrim ^ nameSet.contains(name))) {
                 continue;
             }
 
@@ -332,7 +317,7 @@ public final class UtilHttp {
             paramMap.put(name, value);
         }
 
-        paramMap.putAll(getPathInfoOnlyParameterMap(request, nameSet, onlyIncludeOrSkip, paramFilter));
+        paramMap.putAll(getPathInfoOnlyParameterMap(request, nameSet, onlyIncludeOrSkip));
 
         // SCIPIO: Always put anything found in the multi-part map in case anything else received along with it, otherwise consistency issues.
         //if (paramMap.size() == 0) {
@@ -343,11 +328,15 @@ public final class UtilHttp {
             //Map<String, Object> multiPartMap = getMultiPartParameterMap(request);
             Map<String, Object> multiPartMap = UtilGenerics.checkMap(request.getAttribute("multiPartMap"));
             if (UtilValidate.isNotEmpty(multiPartMap)) {
-                for(Map.Entry<String, Object> entry : multiPartMap.entrySet()) {
-                    if (!isIncludeParam(entry.getKey(), nameSet, onlyIncludeOrSkipPrim, sectionFilter)) {
-                        continue;
+                if (nameSet != null) {
+                    for(Map.Entry<String, Object> entry : multiPartMap.entrySet()) {
+                        if (onlyIncludeOrSkipPrim ^ nameSet.contains(entry.getKey())) {
+                            continue;
+                        }
+                        paramMap.put(entry.getKey(), entry.getValue());
                     }
-                    paramMap.put(entry.getKey(), entry.getValue());
+                } else {
+                    paramMap.putAll(multiPartMap);
                 }
             }
         }
@@ -355,11 +344,15 @@ public final class UtilHttp {
         // SCIPIO: Include JSON body parameters
         Map<String, Object> requestBodyMap = !Boolean.FALSE.equals(readBody) ? getRequestBodyMap(request) : UtilGenerics.cast(request.getAttribute("requestBodyMap"));
         if (UtilValidate.isNotEmpty(requestBodyMap)) {
-            for(Map.Entry<String, Object> entry : requestBodyMap.entrySet()) {
-                if (!isIncludeParam(entry.getKey(), nameSet, onlyIncludeOrSkipPrim, sectionFilter)) {
-                    continue;
+            if (nameSet != null) {
+                for(Map.Entry<String, Object> entry : requestBodyMap.entrySet()) {
+                    if (onlyIncludeOrSkipPrim ^ nameSet.contains(entry.getKey())) {
+                        continue;
+                    }
+                    paramMap.put(entry.getKey(), entry.getValue());
                 }
-                paramMap.put(entry.getKey(), entry.getValue());
+            } else {
+                paramMap.putAll(requestBodyMap);
             }
         }
 
@@ -368,60 +361,6 @@ public final class UtilHttp {
         }
 
         return canonicalizeParameterMap(paramMap);
-    }
-
-    private static boolean isIncludeParam(String name, Set<? extends String> nameSet, boolean onlyIncludeOrSkipPrim, FieldFilter.SectionFilter sectionFilter) {
-        // Explicit blacklists have priority
-        if (nameSet != null && !onlyIncludeOrSkipPrim && nameSet.contains(name)) {
-            return false;
-        } else if (sectionFilter != null && sectionFilter.deniesExplicit(name)) {
-            return false;
-        }
-
-        // Whitelists will do a logical OR because one is logically extending the whitelist of the other
-        if (nameSet != null && onlyIncludeOrSkipPrim) { // nameSet whitelist overrides sectionFilter
-            // NOTE: don't consult sectionFilter getDefaultAccess because onlyIncludeOrSkipPrim logically overrides it
-            return nameSet.contains(name) || (sectionFilter != null && sectionFilter.allowsExplicit(name));
-        }
-        return sectionFilter == null || sectionFilter.allowsExplicit(name) || "allows".equals(sectionFilter.getDefaultAccess());
-    }
-
-    private static FieldFilter.SectionFilter getSectionFilter(HttpServletRequest request, Object paramFilter) { // SCIPIO
-        FieldFilter.SectionFilter sectionFilter = null;
-        if (paramFilter != null) {
-            if (paramFilter instanceof FieldFilter.SectionFilter) {
-                sectionFilter = (FieldFilter.SectionFilter) paramFilter;
-            } else if (paramFilter instanceof FieldFilter) {
-                sectionFilter = ((FieldFilter) paramFilter).getInputFilter();
-            } else if (Boolean.TRUE.equals(paramFilter)) {
-                FieldFilter fieldFilter = getWebappRequestParamFilter(request);
-                if (fieldFilter != null) {
-                    sectionFilter = fieldFilter.getInputFilter();
-                }
-            }
-        }
-        return sectionFilter;
-    }
-
-    private static Method getWebappRequestParamFilterMethod = null;
-    private static FieldFilter getWebappRequestParamFilter(HttpServletRequest request) {
-        Method method = getWebappRequestParamFilterMethod;
-        if (method == null) {
-            try {
-                Class<?> requestHandlerCls = UtilHttp.class.getClassLoader().loadClass("org.ofbiz.webapp.control.RequestHandler");
-                method = requestHandlerCls.getMethod("getWebappRequestParamToAttrFilter", HttpServletRequest.class);
-            } catch(Exception e) {
-                throw new IllegalStateException(e);
-            }
-            getWebappRequestParamFilterMethod = method;
-        }
-        try {
-            return (FieldFilter) method.invoke(null, request);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        }
     }
 
 
@@ -514,27 +453,12 @@ public final class UtilHttp {
     }
 
     public static Map<String, Object> getPathInfoOnlyParameterMap(HttpServletRequest request, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip) {
-        return getPathInfoOnlyParameterMap(request.getPathInfo(), nameSet, onlyIncludeOrSkip, false);
-    }
-
-    public static Map<String, Object> getPathInfoOnlyParameterMap(HttpServletRequest request, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip, Object paramFilter) {
-        if (Boolean.TRUE.equals(paramFilter)) {
-            paramFilter = getWebappRequestParamFilter(request);
-            if (paramFilter != null) {
-                paramFilter = ((FieldFilter) paramFilter).getInputFilter();
-            }
-        }
-        return getPathInfoOnlyParameterMap(request.getPathInfo(), nameSet, onlyIncludeOrSkip, paramFilter);
+        return getPathInfoOnlyParameterMap(request.getPathInfo(), nameSet, onlyIncludeOrSkip);
     }
 
     public static Map<String, Object> getPathInfoOnlyParameterMap(String pathInfoStr, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip) {
-        return getPathInfoOnlyParameterMap(pathInfoStr, nameSet, onlyIncludeOrSkip, false);
-    }
-
-    public static Map<String, Object> getPathInfoOnlyParameterMap(String pathInfoStr, Set<? extends String> nameSet, Boolean onlyIncludeOrSkip, Object paramFilter) {
         boolean onlyIncludeOrSkipPrim = onlyIncludeOrSkip == null ? true : onlyIncludeOrSkip;
         Map<String, Object> paramMap = new HashMap<>();
-        FieldFilter.SectionFilter sectionFilter = (paramFilter instanceof FieldFilter.SectionFilter) ? (FieldFilter.SectionFilter) paramFilter : null;
 
         // now add in all path info parameters /~name1=value1/~name2=value2/
         // note that if a parameter with a given name already exists it will be put into a list with all values
@@ -552,7 +476,7 @@ public final class UtilHttp {
                 last = current;
                 if (element.charAt(0) == '~' && element.indexOf('=') > -1) {
                     String name = element.substring(1, element.indexOf('='));
-                    if (!isIncludeParam(name, nameSet, onlyIncludeOrSkipPrim, sectionFilter)) {
+                    if (nameSet != null && (onlyIncludeOrSkipPrim ^ nameSet.contains(name))) {
                         continue;
                     }
 
@@ -608,9 +532,8 @@ public final class UtilHttp {
             if (paramEntry.getValue() instanceof String) {
                 paramEntry.setValue(canonicalizeParameter((String) paramEntry.getValue()));
             } else if (paramEntry.getValue() instanceof Collection<?>) {
-                Collection<String> collection = UtilGenerics.<String>checkCollection(paramEntry.getValue());
-                List<String> newList = new ArrayList<>(collection.size()); // SCIPIO: Switched to ArrayList
-                for (String listEntry : collection) {
+                List<String> newList = new ArrayList<>(); // SCIPIO: Switched to ArrayList
+                for (String listEntry: UtilGenerics.<String>checkCollection(paramEntry.getValue())) {
                     newList.add(canonicalizeParameter(listEntry));
                 }
                 paramEntry.setValue(newList);
@@ -625,7 +548,7 @@ public final class UtilHttp {
         } else if (paramValue instanceof Collection<?>) {
             List<String> newList = new ArrayList<>();
             for (String listEntry: UtilGenerics.<String>checkCollection(paramValue)) {
-                newList.add(canonicalizeParameter(listEntry));
+                newList.add(canonicalizeParameter((String) listEntry));
             }
             paramValue = newList;
         }

@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.ilscipio.scipio.ce.util.servlet.ServletMapAdapter;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ScriptUtil;
@@ -526,16 +527,23 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         }
         context.put("javaScriptEnabled", UtilHttp.isJavaScriptEnabled(request));
 
-        // these ones are FreeMarker specific and will only work in FTL templates, mainly here for backward compatibility
-        context.put("sessionAttributes", new HttpSessionHashModel(session, FreeMarkerWorker.getDefaultOfbizWrapper()));
-        context.put("requestAttributes", new HttpRequestHashModel(request, FreeMarkerWorker.getDefaultOfbizWrapper()));
+        // SCIPIO: 2.1.0: Use Java types for use from anywhere; the ObjectWrapper then wraps them with SimpleMapAdapter.
+        //// these ones are FreeMarker specific and will only work in FTL templates, mainly here for backward compatibility
+        //context.put("sessionAttributes", new HttpSessionHashModel(session, FreeMarkerWorker.getDefaultOfbizWrapper()));
+        //context.put("requestAttributes", new HttpRequestHashModel(request, FreeMarkerWorker.getDefaultOfbizWrapper()));
+        context.put("applicationAttributes", ServletMapAdapter.wrapAttributes(servletContext)); // SCIPIO: new
+        context.put("sessionAttributes", ServletMapAdapter.wrapAttributes(session));
+        context.put("requestAttributes", ServletMapAdapter.wrapAttributes(request));
+
         TaglibFactory JspTaglibs = new TaglibFactory(servletContext);
         context.put("JspTaglibs", JspTaglibs);
         context.put("requestParameters",  UtilHttp.getParameterMap(request));
 
         ServletContextHashModel ftlServletContext = (ServletContextHashModel) request.getAttribute("ftlServletContext");
         context.put("Application", ftlServletContext);
-        context.put("Request", context.get("requestAttributes"));
+        // SCIPIO: backward-compat
+        //context.put("Request", context.get("requestAttributes"));
+        context.put("Request", new HttpRequestHashModel(request, FreeMarkerWorker.getDefaultOfbizWrapper()));
 
         // this is a dummy object to stand-in for the JPublish page object for backward compatibility
         // SCIPIO: DEPRECATED - TODO: REMOVE: this is long deprecated (NOTE: if remove here, should remove all other references throughout renderer)

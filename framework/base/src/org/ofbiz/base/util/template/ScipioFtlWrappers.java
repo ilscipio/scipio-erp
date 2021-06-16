@@ -12,6 +12,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.ilscipio.scipio.ce.util.servlet.ServletMapAdapter;
+import freemarker.ext.servlet.HttpRequestHashModel;
+import freemarker.ext.servlet.HttpSessionHashModel;
+import freemarker.ext.servlet.ServletContextHashModel;
+import freemarker.template.DefaultMapAdapter;
+import freemarker.template.utility.ObjectWrapperWithAPISupport;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilCodec.SimpleEncoder;
@@ -31,6 +37,8 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
+
+import javax.servlet.ServletContext;
 
 /**
  * SCIPIO: Object wrapper interfaces, classes and implementations.
@@ -78,6 +86,7 @@ public abstract class ScipioFtlWrappers {
         public StringWrapperForFtl(String str, ScipioExtendedObjectWrapper wrapper) {
             super(str, (BeansWrapper) wrapper);
         }
+
         @Override
         public String getAsString() {
             return ((ScipioExtendedObjectWrapper) wrapper).getEncoder().encode(super.getAsString());
@@ -148,6 +157,16 @@ public abstract class ScipioFtlWrappers {
             } else if (object instanceof Collection && !(object instanceof Map)) {
                 // An additional wrapper to ensure ${aCollection} is properly encoded for html
                 return new CollectionWrapperForFtl((Collection<?>) object, (ScipioExtendedObjectWrapper) objectWrapper);
+            } else if (object instanceof ServletMapAdapter) {
+                // FIXME: this adapter is auto-escaping of strings, but for now we have to keep legacy ofbiz behavior
+                //return DefaultMapAdapter.adapt((ServletMapAdapter) object, (ObjectWrapperWithAPISupport) objectWrapper);
+                if (object instanceof ServletMapAdapter.RequestAttributeMapAdapter) {
+                    return new HttpRequestHashModel(ServletMapAdapter.getContainer(object), FreeMarkerWorker.getDefaultOfbizWrapper());
+                } else if (object instanceof ServletMapAdapter.SessionAttributeMapAdapter) {
+                    return new HttpSessionHashModel(ServletMapAdapter.getContainer(object), FreeMarkerWorker.getDefaultOfbizWrapper());
+                } else if (object instanceof ServletMapAdapter.ServletContextAttributeMapAdapter) {
+                    return new ServletContextHashModel((ServletContext) ServletMapAdapter.getContainer(object), FreeMarkerWorker.getDefaultOfbizWrapper());
+                }
             }
             return null;
         }

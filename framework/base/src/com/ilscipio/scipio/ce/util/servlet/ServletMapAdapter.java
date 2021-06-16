@@ -2,9 +2,6 @@ package com.ilscipio.scipio.ce.util.servlet;
 
 import org.ofbiz.base.util.UtilHttp;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.NotThreadSafe;
-import javax.annotation.concurrent.ThreadSafe;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
@@ -58,7 +55,7 @@ public interface ServletMapAdapter extends Map<String, Object> {
      * @see #wrapAttributesSync(HttpSession)
      */
     static ServletMapAdapter wrapAttributes(HttpSession session) {
-        return wrapAttributesSync(session);
+        return wrapAttributesUnsync(session);
     }
 
     /**
@@ -97,15 +94,15 @@ public interface ServletMapAdapter extends Map<String, Object> {
     }
 
     /**
-     * Wraps serlvet context attributes in an explicitly thread-safe {@link Map} wrapper.
+     * Wraps servlet context attributes in an explicitly thread-safe {@link Map} wrapper.
      * @see #wrapAttributesSync(ServletContext)
      */
     static ServletMapAdapter wrapAttributes(ServletContext servletContext) {
-        return wrapAttributesSync(servletContext);
+        return wrapAttributesUnsync(servletContext);
     }
 
     /**
-     * Wraps serlvet context attributes in an explicitly thread-safe {@link Map} wrapper.
+     * Wraps servlet context attributes in an explicitly thread-safe {@link Map} wrapper.
      */
     static ServletMapAdapter wrapAttributesSync(ServletContext servletContext) {
         // TODO
@@ -114,7 +111,7 @@ public interface ServletMapAdapter extends Map<String, Object> {
     }
 
     /**
-     * Wraps serlvet context attributes in a {@link Map} wrapper that is only appropriate and optimized for read operations.
+     * Wraps servlet context attributes in a {@link Map} wrapper that is only appropriate and optimized for read operations.
      * <p>Designed for thread-safe operation using immutable copies.</p>
      * @see #wrapAttributesSync(ServletContext)
      */
@@ -123,7 +120,7 @@ public interface ServletMapAdapter extends Map<String, Object> {
     }
 
     /**
-     * Wraps serlvet context attributes in a possibly non-synchronized {@link Map} wrapper intended to leave synchronization
+     * Wraps servlet context attributes in a possibly non-synchronized {@link Map} wrapper intended to leave synchronization
      * to the caller.
      * @see #wrapAttributesSync(ServletContext)
      */
@@ -215,7 +212,6 @@ public interface ServletMapAdapter extends Map<String, Object> {
      * <p>DEV NOTE: Avoid adding any new public methods, to avoid problems with dynamic languages and bean engines;
      * helps promote Map over the Servlet API interfaces.</p>
      */
-    @NotThreadSafe
     abstract class ContainerMapAdapter extends AbstractMap<String, Object> implements ServletMapAdapter {
         private final Object container;
 
@@ -451,7 +447,6 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
     }
 
-    @ThreadSafe
     class EmptyAttributeMapAdapter extends ContainerMapAdapter {
         protected static final EmptyAttributeMapAdapter INSTANCE = new EmptyAttributeMapAdapter(null);
 
@@ -499,7 +494,6 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
     }
 
-    @NotThreadSafe
     class RequestAttributeMapAdapter extends ContainerMapAdapter {
         protected RequestAttributeMapAdapter(ServletRequest container) {
             super(container);
@@ -535,7 +529,6 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
     }
 
-    @ThreadSafe
     class ReadonlyRequestAttributeMapAdapter extends RequestAttributeMapAdapter {
         protected ReadonlyRequestAttributeMapAdapter(ServletRequest container) {
             super(container);
@@ -552,7 +545,6 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
     }
 
-    @NotThreadSafe
     class SessionAttributeMapAdapter extends ContainerMapAdapter {
         protected SessionAttributeMapAdapter(HttpSession container) {
             super(container);
@@ -588,16 +580,6 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
     }
 
-    @ThreadSafe
-    class SyncSessionAttributeMapAdapter extends SessionAttributeMapAdapter {
-        protected SyncSessionAttributeMapAdapter(HttpSession container) {
-            super(container);
-        }
-
-        // TODO
-    }
-
-    @ThreadSafe
     class ReadonlySessionAttributeMapAdapter extends SessionAttributeMapAdapter {
         protected ReadonlySessionAttributeMapAdapter(HttpSession container) {
             super(container);
@@ -614,7 +596,6 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
     }
 
-    @NotThreadSafe
     class ServletContextAttributeMapAdapter extends ContainerMapAdapter {
         protected ServletContextAttributeMapAdapter(ServletContext container) {
             super(container);
@@ -650,16 +631,6 @@ public interface ServletMapAdapter extends Map<String, Object> {
         }
     }
 
-    @ThreadSafe
-    class SyncServletContextAttributeMapAdapter extends ServletContextAttributeMapAdapter {
-        protected SyncServletContextAttributeMapAdapter(ServletContext container) {
-            super(container);
-        }
-
-        // TODO
-    }
-
-    @ThreadSafe
     class ReadonlyServletContextAttributeMapAdapter extends ServletContextAttributeMapAdapter {
         protected ReadonlyServletContextAttributeMapAdapter(ServletContext container) {
             super(container);
@@ -677,7 +648,6 @@ public interface ServletMapAdapter extends Map<String, Object> {
     }
 
     class RequestParameterMapAdapter extends ContainerMapAdapter {
-        @Nonnull
         private final Object parameterMode;
 
         protected RequestParameterMapAdapter(ServletRequest container, Object parameterMode) {

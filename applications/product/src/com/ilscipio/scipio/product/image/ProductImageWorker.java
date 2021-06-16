@@ -165,7 +165,7 @@ public abstract class ProductImageWorker {
         Map<ProductImageViewType, GenericValue> viewTypeMap = new LinkedHashMap<>();
         for(GenericValue pcdr : pcdrList) {
             String productContentTypeId = pcdr.getString("productContentTypeId");
-            viewTypeMap.put(ProductImageViewType.from(pctIdMap.get(productContentTypeId), false, useCache), pcdr);
+            viewTypeMap.put(ProductImageViewType.from(pctIdMap.get(productContentTypeId), useCache), pcdr);
         }
         return viewTypeMap;
     }
@@ -190,7 +190,7 @@ public abstract class ProductImageWorker {
         Map<String, GenericValue> viewTypeMap = new LinkedHashMap<>();
         for(GenericValue pcdr : pcdrList) {
             String productContentTypeId = pcdr.getString("productContentTypeId");
-            ProductImageViewType imageViewType = ProductImageViewType.from(pctIdMap.get(productContentTypeId), false, useCache);
+            ProductImageViewType imageViewType = ProductImageViewType.from(pctIdMap.get(productContentTypeId), useCache);
             viewTypeMap.put(imageViewType.getViewSize(), pcdr);
         }
         return viewTypeMap;

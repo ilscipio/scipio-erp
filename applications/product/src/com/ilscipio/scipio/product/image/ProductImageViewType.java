@@ -40,7 +40,8 @@ public class ProductImageViewType implements Serializable {
     }
 
     /** Factory method from viewType/viewNumber/viewSize with auto ProductContentType lookup. */
-    public static ProductImageViewType from(Delegator delegator, String viewType, String viewNumber, String viewSize, boolean autoUpdateData, boolean useCache) throws GeneralException, IllegalArgumentException {
+    public static ProductImageViewType from(Delegator delegator, String viewType, String viewNumber, String viewSize,
+                                            boolean autoUpdateData, boolean emulateMissing, boolean useCache) throws GeneralException, IllegalArgumentException {
         if (UtilValidate.isEmpty(viewType)) {
             throw new IllegalArgumentException("Missing viewType");
         }
@@ -53,7 +54,7 @@ public class ProductImageViewType implements Serializable {
         GenericValue productContentType = delegator.from("ProductContentType").where("viewType", viewType,
                 "viewNumber", viewNumber, "viewSize", viewSize).cache(useCache).queryFirst();
         if (productContentType == null) {
-            if (autoUpdateData && !"original".equals(viewSize)) {
+            if ((autoUpdateData || emulateMissing) && !"original".equals(viewSize)) {
                 // FIXME: needs to work with client code
                 //productContentTypeId = extractProductContentTypeId(delegator, viewType, viewNumber, viewSize);
                 GenericValue origProductContentType = delegator.from("ProductContentType")
@@ -61,60 +62,24 @@ public class ProductImageViewType implements Serializable {
                         .cache(useCache).queryFirst();
                 if (origProductContentType == null) {
                     throw new IllegalArgumentException("ProductContentType not found for parentTypeId [IMAGE_URL_FULL] viewType [" +
-                            viewType + "] viewNumber [" + viewNumber + "] viewSize [original] - cannot create child ProductContentType");
+                            viewType + "] viewNumber [" + viewNumber + "] viewSize [original] - cannot make variant ProductContentType");
                 }
-                productContentType = createProductContentTypeFromFields(delegator, origProductContentType, viewType, viewNumber, viewSize);
-                Debug.logWarning("No ProductContentType for viewType [" + viewType + "] viewNumber [" + viewNumber + "] viewSize [" +
-                        viewSize + "]; auto-created: " + productContentType, module);
-            } else {
-                /* Compatibility mode
-                productContentTypeId = extractProductContentTypeId(delegator, viewType, viewNumber, viewSize);
-                parentTypeId = determineParentTypeId(delegator, productContentTypeId, viewType, viewNumber, viewSize, true);
-                if (Debug.verboseOn()) {
+                productContentType = makeProductContentTypeFromFields(delegator, origProductContentType, viewType, viewNumber, viewSize);
+                if (autoUpdateData) {
+                    productContentType = productContentType.create();
                     Debug.logInfo("No ProductContentType for viewType [" + viewType + "] viewNumber [" + viewNumber + "] viewSize [" +
-                            viewSize + "]; compatibility-determined productContentTypeId [" + productContentTypeId + "] parentTypeId [" + parentTypeId + "]", module);
+                            viewSize + "]; auto-created: " + productContentType, module);
                 }
-                */
+            } else {
                 throw new IllegalArgumentException("ProductContentType not found for viewType [" + viewType + "] viewNumber [" + viewNumber + "] viewSize [" + viewSize + "]");
             }
         }
         return new ProductImageViewType(productContentType);
     }
 
-    /** Factory method from ProductContentType. */
-    public static ProductImageViewType from(GenericValue productContentType, boolean autoUpdateData, boolean useCache) throws GenericEntityException, IllegalArgumentException {
-        String productContentTypeId = productContentType.getString("productContentTypeId");
-        String parentTypeId = productContentType.getString("parentTypeId");
-        String viewType = productContentType.getString("viewType");
-        String viewNumber = productContentType.getString("viewNumber");
-        String viewSize = productContentType.getString("viewSize");
-
-        /* Compatibility mode
-        if (viewType == null || viewNumber == null || viewSize == null) {
-            viewType = extractProductContentTypeIdViewType(productContentType.getDelegator(), productContentTypeId);
-            viewNumber = extractProductContentTypeIdViewNumber(productContentType.getDelegator(), productContentTypeId);
-            viewSize = extractProductContentTypeIdViewSize(productContentType.getDelegator(), productContentTypeId);
-            if (autoUpdateData) {
-                // Re-query to bypass caching
-                productContentType = ensureProductContentTypeFields(productContentType.getDelegator(), productContentTypeId, viewType, viewNumber, viewSize);
-                parentTypeId = productContentType.getString("parentTypeId");
-                Debug.logWarning("No ProductContentType for viewType [" + viewType + "] viewNumber [" + viewNumber + "] viewSize [" +
-                        viewSize + "]; auto-created: " + productContentType, module);
-            } else {
-                parentTypeId = determineParentTypeId(productContentType.getDelegator(), productContentTypeId, viewType, viewNumber, viewSize, true);
-                if (Debug.verboseOn()) {
-                    Debug.logInfo("ProductContentType productContentTypeId [" + productContentTypeId + "] missing viewType/viewNumber/viewSize" +
-                            " on record; auto-determined: parentTypeId [" + parentTypeId + "] viewType [" + viewType + "] viewNumber [" + viewNumber + "] viewSize [" +
-                            viewSize + "]", module);
-                }
-            }
-        } else {
-            if (autoUpdateData && (productContentType.get("parentTypeId") == null || "IMAGE_URL_VARIANT".equals(productContentType.get("parentTypeId")))) {
-                productContentType = ensureProductContentTypeFields(productContentType.getDelegator(), productContentTypeId, viewType, viewNumber, viewSize);
-            }
-        }
-         */
-        return new ProductImageViewType(productContentType);
+    public static ProductImageViewType from(Delegator delegator, String viewType, String viewNumber, String viewSize,
+                                            boolean autoUpdateData, boolean useCache) throws GeneralException, IllegalArgumentException {
+        return from(delegator, viewType, viewNumber, viewSize, autoUpdateData, false, useCache);
     }
 
     /** Factory method from ProductContentType, with backward-compatibility autoUpdateData. */
@@ -123,7 +88,12 @@ public class ProductImageViewType implements Serializable {
         if (productContentType == null) {
             throw new IllegalArgumentException("ProductContentType not found for productContentTypeId [" + productContentTypeId + "]");
         }
-        return from(productContentType, autoUpdateData, useCache);
+        return from(productContentType, useCache);
+    }
+
+    /** Factory method from ProductContentType. */
+    public static ProductImageViewType from(GenericValue productContentType, boolean useCache) throws GenericEntityException, IllegalArgumentException {
+        return new ProductImageViewType(productContentType);
     }
 
     protected Delegator getDelegator() {
@@ -201,7 +171,7 @@ public class ProductImageViewType implements Serializable {
             return this;
         }
         GenericValue pct = getDelegator().from("ProductContentType").where("productContentTypeId", getParentTypeId()).cache(useCache).queryOne();
-        return ProductImageViewType.from(pct, false, true);
+        return ProductImageViewType.from(pct, true);
     }
 
     public String getOriginalProductContentTypeId(boolean useCache) throws GeneralException {
@@ -250,7 +220,7 @@ public class ProductImageViewType implements Serializable {
         }
         Map<ProductImageViewType, GenericValue> idMap = new LinkedHashMap<>();
         for(GenericValue pct : pctList) {
-            idMap.put(ProductImageViewType.from(pct, false, useCache), pct);
+            idMap.put(ProductImageViewType.from(pct, useCache), pct);
         }
         return idMap;
     }
@@ -424,23 +394,22 @@ public class ProductImageViewType implements Serializable {
     }
      */
 
-    protected static GenericValue createProductContentTypeFromFields(Delegator delegator, GenericValue origProductContentType, String viewType,
-                                                                     String viewNumber, String viewSize) throws GenericEntityException {
+    protected static GenericValue makeProductContentTypeFromFields(Delegator delegator, GenericValue origProductContentType, String viewType,
+                                                                   String viewNumber, String viewSize) throws GenericEntityException {
         //ensureParentProductContentTypes(delegator);
         Map<String, Object> exprCtx = UtilMisc.toMap("delegator", delegator, "origPctId", origProductContentType.get("productContentTypeId"),
                 "viewType", viewType, "viewNumber", viewNumber, "viewSize", viewSize,
                 "VIEWTYPE", viewType.toUpperCase(), "VIEWNUMBER", viewNumber.toUpperCase(), "VIEWSIZE", viewSize.toUpperCase());
         String productContentTypeId = FlexibleStringExpander.expandString(origProductContentType.getString("viewVariantId"), exprCtx);
         String description = FlexibleStringExpander.expandString(origProductContentType.getString("viewVariantDesc"), exprCtx);
-        GenericValue productContentType = delegator.makeValue("ProductContentType",
+        return delegator.makeValue("ProductContentType",
                 "productContentTypeId", productContentTypeId,
                 "parentTypeId", determineParentTypeId(delegator, productContentTypeId, viewType, viewNumber, viewSize, false),
                 "hasTable", "N",
                 "description", description,
                 "viewType", viewType,
                 "viewNumber", viewNumber,
-                "viewSize", viewSize).create();
-        return productContentType;
+                "viewSize", viewSize);
     }
 
     protected static String determineParentTypeId(Delegator delegator, String productContentTypeId, String viewType,

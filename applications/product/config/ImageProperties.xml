@@ -5,7 +5,7 @@ files 'LICENSE' and 'NOTICE', which are part of this source
 code package.
 -->
 
-<!-- SCIPIO: See component://product/config/ImageProperties.xml for file format and options -->
+<!-- SCIPIO: See component://common/config/ImageProperties.xml for file format and options -->
 <!-- 
     # The uploaded image is scaled in each size type; you can decrease or increase size types; size type name shouldn't contain space
     # Just one configured dimension on two is allowed to restrict just one image dimension, whatever its proportions

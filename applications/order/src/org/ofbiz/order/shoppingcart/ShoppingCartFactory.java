@@ -1,6 +1,7 @@
 package org.ofbiz.order.shoppingcart;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -66,7 +67,7 @@ public abstract class ShoppingCartFactory {
             String factoryClsName = entry.getValue().get("cart.factoryClass");
             if (UtilValidate.isNotEmpty(factoryClsName)) {
                 try {
-                    Class<? extends Factory> factoryCls = (Class<? extends Factory>) Thread.currentThread().getContextClassLoader().loadClass(factoryClsName);
+                    Class<? extends Factory> factoryCls = UtilGenerics.cast(Thread.currentThread().getContextClassLoader().loadClass(factoryClsName));
                     Factory factory = factoryCls.getConstructor().newInstance();
                     factoryMap.put(productStoreId, factory);
                 } catch(Exception e) {

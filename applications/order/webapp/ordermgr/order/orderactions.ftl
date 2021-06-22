@@ -154,14 +154,14 @@
         <#if currentStatus.statusId == "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED">
           <@menuitem type="link" href=makePageUrl("loadCartFromOrder?orderId=${orderId}&finalizeMode=init") text=uiLabelMap.OrderCreateReplacementOrder class="+${styles.action_run_sys!} ${styles.action_add!}"/>
         </#if>
-          <#-- SCIPIO: 21-01-29: Added ORDER_SENT in the condition so order items can't be edited if already sent -->
+          <#-- SCIPIO: 2.1.0: Added ORDER_SENT in the condition so order items can't be edited if already sent -->
         <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT">
           <@menuitem type="link" href=makePageUrl("editOrderItems?orderId=${orderId}") text=uiLabelMap.OrderEditItems class="+${styles.action_nav!}"/>
         </#if>
 
         <#-- Shipping -->
         <#-- Migreated to Shipment Information-->
-            <#-- SCIPIO: 21-01-29: Added ORDER_SENT in the condition so order items can't be edited if already sent -->
+            <#-- SCIPIO: 2.1.0: Added ORDER_SENT in the condition so order items can't be edited if already sent -->
             <#if ((!singleOrderItem?has_content || (singleOrderItem?has_content && !singleOrderItem)) &&
                 (!allOrderItemsShipped?has_content) || (allOrderItemsShipped?has_content && !allOrderItemsShipped)) &&
                 (currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT")>

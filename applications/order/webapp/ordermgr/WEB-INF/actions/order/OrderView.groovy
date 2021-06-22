@@ -36,6 +36,7 @@ import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.accounting.payment.*;
 
+module = "OrderView.groovy";
 
 orderId = parameters.orderId;
 context.orderId = orderId;
@@ -135,7 +136,7 @@ if (orderHeader) {
     orderItemList = orderReadHelper.getOrderItems();
     // Retrieve all non-promo items that aren't cancelled
     context.orderItemList = orderReadHelper.getOrderItems().findAll { item ->
-        (item.isPromo == null || item.isPromo == 'N') || !item.statusId.equals('ITEM_CANCELLED')
+          (item.isPromo == null || item.isPromo == 'N') || !item.statusId.equals('ITEM_CANCELLED')
     }
 
     shippingAddress = orderReadHelper.getShippingAddress();
@@ -197,20 +198,35 @@ if (orderHeader) {
 
     // SCIPIO: 2.0.0: new list that contains items that are in a shipGroup already having a shipment or just a single order item not requiring multiple shipGroups
     orderItemsShipped = [];
-    singleOrderItem = false;
-    if (orderItemList.size() > 1) {
-        shipGroups.each { shipGroup ->
-            shipment = from("Shipment").where("primaryOrderId", orderId, "primaryShipGroupSeqId", shipGroup.shipGroupSeqId).queryFirst();
-            if (shipment) {
-                orderItemsShipped.addAll(shipment.getRelated("ShipmentItem"));
-            }
+    singleOrderItem = true;
+    allShipGroupsNoShipping = true;
+    shipGroups.each { shipGroup ->
+        if (allShipGroupsNoShipping && shipGroup.shipmentMethodTypeId != "NO_SHIPPING") {
+            allShipGroupsNoShipping = false;
         }
-    } else {
-        singleOrderItem = true;
+        List<GenericValue> validShipments = UtilMisc.toList(
+            EntityCondition.makeCondition("primaryOrderId", orderId),
+            EntityCondition.makeCondition("primaryShipGroupSeqId", shipGroup.shipGroupSeqId)
+//            EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "")
+        );
+        shipment = from("Shipment").where(validShipments).queryFirst();
+        if (shipment) {
+            shipmentItems = shipment.getRelated("ShipmentItem");
+            Debug.log("shipmentItems: " + shipmentItems);
+            orderItemsShipped.addAll(shipmentItems);
+        }
     }
-    Debug.log("allOrderItemsShipped size: " + orderItemsShipped.size() + " orderItemList size: " + orderItemList.size());
+    if (context.orderItemList.size() > 1) {
+        singleOrderItem = false;
+    }
     context.put("allOrderItemsShipped", (orderItemList.size() <= orderItemsShipped.size()));
     context.put("singleOrderItem", singleOrderItem);
+    context.put("allShipGroupsNoShipping", allShipGroupsNoShipping);
+    Debug.logInfo("allOrderItemsShipped size: " + orderItemsShipped.size() + " orderItemList size: " + context.orderItemList.size(), module);
+    Debug.logInfo("allOrderItemsShipped: " + context.allOrderItemsShipped, module);
+    Debug.logInfo("singleOrderItem: " + singleOrderItem, module);
+    Debug.logInfo("allShipGroupsNoShipping: " + allShipGroupsNoShipping, module);
+    Debug.logInfo("orderStatus: " + orderHeader.statusId, module);
 
     orderContainsOnlyDigitalProducts = false;
     orderItemDatas = [];
@@ -266,6 +282,7 @@ if (orderHeader) {
     }
     context.put("orderItemDatas", orderItemDatas);
     context.put("orderContainsOnlyDigitalProducts", orderContainsOnlyDigitalProducts);
+    Debug.logInfo("orderContainsOnlyDigitalProducts: " + orderContainsOnlyDigitalProducts, module);
 
     // create the actualDate for calendar
     actualDateCal = Calendar.getInstance();
@@ -347,16 +364,18 @@ if (orderHeader) {
         context.purchaseOrderItemTypeList = purchaseOrderItemTypeList;
     }
 
-    // SCIPIO: 2.0.0: check if an approved order with all items completed exist
+    // SCIPIO: 2.1.0: check if an approved order with all items completed exist
     context.setOrderCompleteOption = false;
-    if ((orderContainsOnlyDigitalProducts && "ORDER_APPROVED".equals(orderHeader.statusId))
-            || "ORDER_SENT".equals(orderHeader.statusId)) {
+    if (orderContainsOnlyDigitalProducts || (context.allOrderItemsShipped && ("ORDER_APPROVED".equals(orderHeader.statusId)
+            || "ORDER_SENT".equals(orderHeader.statusId)))) {
         expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_COMPLETED");
         completedItems = orderReadHelper.getOrderItemsByCondition(expr);
-        if (!completedItems) {
+        Debug.logInfo("completedItems ===> " + completedItems, module);
+        if (UtilValidate.isEmpty(completedItems)) {
             context.setOrderCompleteOption = true;
         }
     }
+    Debug.logInfo("context.setOrderCompleteOption ===> " + context.setOrderCompleteOption, module);
 
     // get inventory summary for each shopping cart product item
     inventorySummary = runService('getProductInventorySummaryForItems', [orderItems: orderItems])
@@ -512,8 +531,8 @@ if (orderHeader) {
     emailContactMechList = ContactHelper.getContactMechByType(orderParty, "EMAIL_ADDRESS", false);
     context.emailContactMechList = emailContactMechList;
 
-    if (!context.request != null) {
-       packSession = request.getSession().getAttribute("packingSession");
+    if (context.request) {
+       packSession = context.request.getSession().getAttribute("packingSession");
        if (!packSession) {
            if (facility) {
                packSession = new PackingSession(dispatcher, userLogin, facility.facilityId, null, orderId, null);

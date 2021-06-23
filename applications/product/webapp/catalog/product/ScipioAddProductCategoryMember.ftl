@@ -35,7 +35,7 @@
         </@row>
         <@row>
             <@cell columns=12>
-                <@field type="textarea" name="comments" label=uiLabelMap.ProductComnents rows=5 columns=5 />
+                <@field type="textarea" name="comments" label=uiLabelMap.ProductComments rows=5 columns=5 />
             </@cell>
         </@row>
         <@field type="submit" text=uiLabelMap.CommonAdd class="+${styles.link_run_sys!} ${styles.action_add!}" />

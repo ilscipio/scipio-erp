@@ -1009,6 +1009,10 @@ public final class ProductWorker {
         return UtilMisc.getMapValuesForKey(getProductCategoryMembers(delegator, productId, product, moment, ordered, useCache), "productCategoryId", outCategoryIds);
     }
 
+    public static <C extends Collection<String>> C getOwnCategoryIdsForProduct(C outCategoryIds, Delegator delegator, String productId, GenericValue product, List<GenericValue> productCategoryMembers) throws GenericEntityException {
+        return UtilMisc.getMapValuesForKey(productCategoryMembers, "productCategoryId", outCategoryIds);
+    }
+
     /**
      * Gets the ProductCategoryMember category IDs NOT immediately associated to the given productId but
      * rather to its passed variants (if null, looks them up), into the outCategoryIds collection (SCIPIO).

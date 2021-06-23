@@ -19,6 +19,7 @@
                         <@th>${uiLabelMap.CommonFrom}</@th>
                         <@th>${uiLabelMap.CommonThru}</@th>
                         <@th>${uiLabelMap.ProductSequenceNum}</@th>
+                        <@th>${uiLabelMap.CommonSortPriority}</@th>
                         <@th>${uiLabelMap.ProductQuantity}</@th>
                         <@th>${uiLabelMap.ProductComments}</@th>
                         <@th>${uiLabelMap.CommonUpdate}</@th>
@@ -42,6 +43,9 @@
                             <@td><#if productCategoryMember.thruDate?has_content>${productCategoryMember.thruDate?string("yyyy-MM-dd")}</#if></@td>
                             <@td>
                                 <@field type="input" name="sequenceNum_o_${productCategoryMember_index}" value=((productCategoryMember.sequenceNum)!) size=20 maxlength=40 />
+                            </@td>
+                            <@td>
+                                <@field type="input" name="sortPriority_o_${productCategoryMember_index}" value=((productCategoryMember.sortPriority)!) size=20 maxlength=40 />
                             </@td>
                             <@td>
                                 <@field type="input" name="quantity_o_${productCategoryMember_index}" value=((productCategoryMember.quantity)!) size=20 maxlength=40 />

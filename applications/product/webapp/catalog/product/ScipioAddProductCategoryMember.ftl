@@ -25,6 +25,11 @@
         </@row>
         <@row>
             <@cell columns=12>
+                <@field type="text" name="sortPriority" label=uiLabelMap.CommonSortPriority size=20 />
+            </@cell>
+        </@row>
+        <@row>
+            <@cell columns=12>
                 <@field type="text" name="quantity" label=uiLabelMap.ProductQuantity size=20 />
             </@cell>
         </@row>

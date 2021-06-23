@@ -178,8 +178,16 @@ public class ProductDataReader {
         return virtualProductIds;
     }
 
+    public List<GenericValue> getProductCategoryMembers(DispatchContext dctx, String productId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        return ProductWorker.getProductCategoryMembers(dctx.getDelegator(), productId, moment, ordered, useCache);
+    }
+
     public Set<String> getOwnCategoryIdsForProduct(DispatchContext dctx, String productId, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {
         return ProductWorker.getOwnCategoryIdsForProduct(ordered ? new LinkedHashSet<>() : new HashSet<>(), getDelegator(dctx), productId, null, moment, ordered, useCache);
+    }
+
+    public Set<String> getOwnCategoryIdsForProduct(DispatchContext dctx, String productId, List<GenericValue> productCategoryMembers) throws GenericEntityException {
+        return ProductWorker.getOwnCategoryIdsForProduct(new LinkedHashSet<>(), getDelegator(dctx), productId, null, productCategoryMembers);
     }
 
     public Set<String> getAssocCategoryIdsForProduct(DispatchContext dctx, String productId, List<GenericValue> assocToVariant, Timestamp moment, boolean ordered, boolean useCache) throws GenericEntityException {

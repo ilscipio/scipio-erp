@@ -111,10 +111,22 @@ try {
         else if (sortOrder && !sortOrder.startsWith("Sort")) sortOrder = "Sort" + sortOrder;
         sortAscending = resultSortOrder.isAscending();
 
-        catArgs.sortBy = SolrProductUtil.getSearchSortByExpr(resultSortOrder, catArgs.priceSortField, productStore, delegator, locale)
-        catArgs.sortByReverse = (catArgs.sortBy) ? !resultSortOrder.isAscending() : null;
-        catArgs.searchSortOrderString = (catArgs.sortBy || resultSortOrder instanceof SortKeywordRelevancy) ? resultSortOrder.prettyPrintSortOrder(false, locale) : null;
+        sortByExpr = SolrProductUtil.getSearchSortByExpr(resultSortOrder, catArgs.priceSortField, productStore, delegator, locale);
+        if (sortByExpr) {
+            sortByExpr += resultSortOrder.isAscending() ? " asc" : " desc";
+        }
+        catArgs.sortByList = (sortByExpr) ? [sortByExpr] : [];
+        catArgs.searchSortOrderString = (sortByExpr || resultSortOrder instanceof SortKeywordRelevancy) ? resultSortOrder.prettyPrintSortOrder(false, locale) : null;
     }
+    // SCIPIO: 2.1.0: Added sortPriority
+    sortPrioFieldName = "sortPriority_" + SolrExprUtil.escapeFieldNamePart(productCategoryId) + "_d";
+    sortPrioExpr = "def(" + sortPrioFieldName + ", 1.0) desc";
+    if (catArgs.sortByList) {
+        catArgs.sortByList.add(0, sortPrioExpr);
+    } else {
+        catArgs.sortByList = [sortPrioExpr];
+    }
+
     context.sortOrder = sortOrder;
     context.sortAscending = sortAscending;
     context.sortOrderEff = (sortOrder != null) ? sortOrder : sortOrderDef;
@@ -171,7 +183,7 @@ try {
         // get the product category & members
         result = dispatcher.runSync("solrProductsSearch",
                 [productStore   : productStore, productCategoryId: productCategoryId, queryFilters: catArgs.queryFilters, useDefaultFilters: catArgs.useDefaultFilters,
-                 filterTimestamp: nowTimestamp, viewSize: viewSize, viewIndex: viewIndex, sortBy: catArgs.sortBy, sortByReverse: catArgs.sortByReverse,
+                 filterTimestamp: nowTimestamp, viewSize: viewSize, viewIndex: viewIndex, sortBy: catArgs.sortBy, sortByReverse: catArgs.sortByReverse, sortByList: catArgs.sortByList,
                  locale         : context.locale, userLogin: context.userLogin, timeZone: context.timeZone],
                 -1, true); // SEPARATE TRANSACTION so error doesn't crash screen
         if (!ServiceUtil.isSuccess(result)) {

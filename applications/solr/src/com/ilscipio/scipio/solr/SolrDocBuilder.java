@@ -785,6 +785,7 @@ public class SolrDocBuilder {
         protected List<GenericValue> productAssocToVariant;
         protected List<GenericValue> productAssocFromVariant;
 
+        protected List<GenericValue> productCategoryMembers;
         protected Set<String> ownCategoryIds;
         protected Set<String> assocCategoryIds;
         protected Set<String> categoryIds;
@@ -1034,6 +1035,13 @@ public class SolrDocBuilder {
             // FIXME?: Manual population of the alpha sort field required, because it's complex and not covered enough by schema
             addAlphaLocalizedContentStringMapToDoc(doc, "alphaTitleSort_", "alphaTitleSort_"+SolrLocaleUtil.I18N_GENERAL, "title_i18n_",
                     "title_i18n_"+SolrLocaleUtil.I18N_GENERAL, getTitleLocaleMap(), getLocales(), getDefaultLocale(), getLangCodeFn(), SolrLocaleUtil.I18N_GENERAL);
+            for(GenericValue productCategoryMember : getProductCategoryMembers()) {
+                BigDecimal sortPriority = productCategoryMember.getBigDecimal("sortPriority");
+                if (sortPriority != null) {
+                    String sortPrioFieldName = "sortPriority_" + SolrExprUtil.escapeFieldNamePart(productCategoryMember.getString("productCategoryId")) + "_d";
+                    doc.put(sortPrioFieldName, sortPriority.doubleValue());
+                }
+            }
         }
 
         /** Optional method for custom client code, which may be used instead of overriding other methods. */
@@ -1131,10 +1139,19 @@ public class SolrDocBuilder {
             return productAssocFromVariant;
         }
 
+        public List<GenericValue> getProductCategoryMembers() throws GeneralException {
+            List<GenericValue> productCategoryMembers = this.productCategoryMembers;
+            if (productCategoryMembers == null) {
+                productCategoryMembers = getProductData().getProductCategoryMembers(getDctx(), getProductId(), getMoment(), true, isUseEntityCache());
+                this.productCategoryMembers = productCategoryMembers;
+            }
+            return productCategoryMembers;
+        }
+
         public Collection<String> getOwnCategoryIds() throws GeneralException {
             Collection<String> ownCategoryIds = this.ownCategoryIds;
             if (ownCategoryIds == null) {
-                ownCategoryIds = getProductData().getOwnCategoryIdsForProduct(getDctx(), getProductId(), getMoment(), true, isUseEntityCache());
+                ownCategoryIds = getProductData().getOwnCategoryIdsForProduct(getDctx(), getProductId(), getProductCategoryMembers());
                 this.ownCategoryIds = UtilGenerics.cast(ownCategoryIds);
             }
             return ownCategoryIds;

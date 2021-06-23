@@ -11939,6 +11939,12 @@
         <value xml:lang="zh">排序方法</value>
         <value xml:lang="zh-TW">排序方式</value>
     </property>
+    <property key="CommonSortPriority">
+        <value xml:lang="de">Sortierpriorität</value>
+        <value xml:lang="en">Sort Priority</value>
+        <value xml:lang="es">Ordenar prioridad</value>
+        <value xml:lang="fr">Priorité de tri </value>
+    </property>
     <property key="CommonSpecifications">
         <value xml:lang="de">Technische Daten</value>
         <value xml:lang="en">Specifications</value>

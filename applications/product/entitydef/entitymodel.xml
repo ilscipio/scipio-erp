@@ -437,6 +437,7 @@ code package.
         <field name="comments" type="comment"></field>
         <field name="sequenceNum" type="numeric"></field>
         <field name="quantity" type="fixed-point"></field>
+        <field name="sortPriority" type="fixed-point"><description>Search priority; between 0-1.0 is less than default, higher prioritizes (opposite sequenceNum)</description></field><!-- SCIPIO: 2.1.0: Added -->
         <prim-key field="productCategoryId"/>
         <prim-key field="productId"/>
         <prim-key field="fromDate"/>

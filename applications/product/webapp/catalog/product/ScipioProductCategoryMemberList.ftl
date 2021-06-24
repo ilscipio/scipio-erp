@@ -45,7 +45,7 @@
                                 <@field type="input" name="sequenceNum_o_${productCategoryMember_index}" value=((productCategoryMember.sequenceNum)!) size=20 maxlength=40 />
                             </@td>
                             <@td>
-                                <@field type="input" name="sortPriority_o_${productCategoryMember_index}" value=((productCategoryMember.sortPriority)!) size=20 maxlength=40 />
+                                <@field type="input" name="categorySortPrio_o_${productCategoryMember_index}" value=((productCategoryMember.sortPriority)!) size=20 maxlength=40 />
                             </@td>
                             <@td>
                                 <@field type="input" name="quantity_o_${productCategoryMember_index}" value=((productCategoryMember.quantity)!) size=20 maxlength=40 />

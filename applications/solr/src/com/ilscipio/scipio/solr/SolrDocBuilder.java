@@ -1038,7 +1038,7 @@ public class SolrDocBuilder {
             for(GenericValue productCategoryMember : getProductCategoryMembers()) {
                 BigDecimal sortPriority = productCategoryMember.getBigDecimal("sortPriority");
                 if (sortPriority != null) {
-                    String sortPrioFieldName = "sortPriority_" + SolrExprUtil.escapeFieldNamePart(productCategoryMember.getString("productCategoryId")) + "_d";
+                    String sortPrioFieldName = "categorySortPrio_" + SolrExprUtil.escapeFieldNamePart(productCategoryMember.getString("productCategoryId")) + "_d";
                     doc.put(sortPrioFieldName, sortPriority.doubleValue());
                 }
             }

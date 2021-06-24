@@ -106,7 +106,7 @@ try {
     sortOrder = null;
     sortAscending = null;
     // SCIPIO: 2.1.0: Added sortPriority
-    sortPrioFieldName = "sortPriority_" + SolrExprUtil.escapeFieldNamePart(productCategoryId) + "_d";
+    sortPrioFieldName = "categorySortPrio_" + SolrExprUtil.escapeFieldNamePart(productCategoryId) + "_d";
     sortPrioExpr = "def(" + sortPrioFieldName + ", 1.0) desc";
     catArgs.sortByList = [sortPrioExpr];
     if (resultSortOrder != null) {

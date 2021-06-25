@@ -512,7 +512,7 @@ public class EntityIndexer implements Runnable {
         return modelEntity;
     }
 
-    protected ModelEntity getModelEntity() {
+    public ModelEntity getModelEntity() {
         ModelEntity modelEntity = this.modelEntity;
         if (modelEntity == null) {
             modelEntity = getModelEntity(getEntityName());
@@ -881,7 +881,7 @@ public class EntityIndexer implements Runnable {
         return null;
     }
 
-    protected List<Consumer> getConsumers() {
+    public List<Consumer> getConsumers() {
         List<Consumer> consumers = this.consumers;
         if (consumers == null) {
             Map<String, Map<String, Object>> consumerProps = UtilProperties.extractPropertiesWithPrefixAndId(new LinkedHashMap<>(),
@@ -929,7 +929,7 @@ public class EntityIndexer implements Runnable {
         return new Consumer(name, sequenceNum, serviceName, topics, mode, persist, priority, onError);
     }
 
-    protected static class Consumer {
+    public static class Consumer {
         private final String name;
         private final int sequenceNum;
         private final String serviceName;

@@ -583,7 +583,7 @@ public class CatalinaContainer implements Container {
 
         JarScanner jarScanner = context.getJarScanner();
         if (jarScanner != null) { // SCIPIO: 2018-10-03: Moved this out from next block independence from StandardJarScanner 
-            jarScanner.setJarScanFilter(new FilterJars(appInfo,context.getServletContext())); // SCIPIO: 2018-10-03: Pass webapp info
+            jarScanner.setJarScanFilter(new FilterJars(appInfo, context.getServletContext())); // SCIPIO: 2018-10-03: Pass webapp info
         }
         if (jarScanner instanceof StandardJarScanner) {
             StandardJarScanner standardJarScanner = (StandardJarScanner) jarScanner;

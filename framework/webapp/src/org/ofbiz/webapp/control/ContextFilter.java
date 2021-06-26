@@ -22,9 +22,11 @@ import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,9 +41,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.ServerEndpoint;
 
+import com.ilscipio.scipio.ce.base.component.ServerEndpointRegistry;
+import com.ilscipio.scipio.ce.util.PathUtil;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.WebXml;
+import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
@@ -60,6 +66,7 @@ import org.ofbiz.security.SecurityConfigurationException;
 import org.ofbiz.security.SecurityFactory;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
+import org.ofbiz.webapp.ExtWebappInfo;
 import org.ofbiz.webapp.control.RequestAttrPolicy.RedirectAttrPolicy;
 import org.ofbiz.webapp.control.RequestAttrPolicy.RestoreAttrPolicyInvoker;
 import org.ofbiz.webapp.event.RequestBodyMapHandlerFactory;
@@ -77,11 +84,12 @@ public class ContextFilter implements Filter {
     protected FilterConfig config = null;
     protected boolean debug = false;
     protected Set<String> allowedPaths = null; // SCIPIO: new: prevent parsing at every request
+    protected Set<String> webSocketPaths = null; // SCIPIO
     protected boolean forwardRootControllerUris = false; // SCIPIO: new
 
     // default charset used to decode requests body data if no encoding is specified in the request
     private String defaultCharacterEncoding;
-    private static boolean isMultitenant = EntityUtil.isMultiTenantEnabled(); // SCIPIO: made static
+    private boolean isMultitenant = EntityUtil.isMultiTenantEnabled();
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -117,6 +125,36 @@ public class ContextFilter implements Filter {
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
 
+        // SCIPIO: webSocketPaths
+        List<String> wsAllowList = new ArrayList<>();
+        List<String> wsAllowListRaw = StringUtil.split(config.getInitParameter("webSocketPaths"), ":");
+        if (wsAllowListRaw != null) {
+            for (String webSocketPath : wsAllowListRaw) {
+                wsAllowList.add(PathUtil.getFirstPathPart(webSocketPath));
+            }
+        }
+        ExtWebappInfo extWebappInfo = ExtWebappInfo.fromServletContext(config.getServletContext());
+        if (extWebappInfo != null) {
+            ServerEndpointRegistry.WebappEndpoints webappEndpoints = ServerEndpointRegistry.getInstance()
+                    .getWebappEndpoints(extWebappInfo.getWebappInfo());
+            if (webappEndpoints != null) {
+                for(Map.Entry<Class<?>, ServerEndpointRegistry.EndpointInfo> entry : webappEndpoints.getEndpointMap().entrySet()) {
+                    String endpointPath = entry.getValue().getEndpointPath();
+                    String endpointPathStart = PathUtil.getFirstPathPart(endpointPath);
+                    if (UtilValidate.isNotEmpty(endpointPathStart)) {
+                        wsAllowList.add(endpointPathStart);
+                        Debug.logInfo("Adding endpoint path [" + endpointPath + "] to allowed paths from " +
+                                "ServerEndpoint annotated class [" + entry.getKey().getName() + "] for webapp " +
+                                extWebappInfo, module);
+                    } else {
+                        Debug.logWarning("Could not determine endpoint path for ServerEndpoint annotated class [" +
+                                entry.getKey().getName() + "] for webapp " + extWebappInfo, module);
+                    }
+                }
+            }
+        }
+        this.webSocketPaths = UtilValidate.isNotEmpty(wsAllowList) ? Collections.unmodifiableSet(new LinkedHashSet<>(wsAllowList)) : null;
+
         // SCIPIO: 2017-11-14: now pre-parsing allowedPath during init
         String allowedPath = config.getInitParameter("allowedPaths");
         List<String> allowList = null;
@@ -124,7 +162,14 @@ public class ContextFilter implements Filter {
             allowList.add("/");  // No path is allowed.
             allowList.add("");   // No path is allowed.
         }
-        this.allowedPaths = (allowList != null) ? new HashSet<>(allowList) : null;
+        if (this.webSocketPaths != null) {
+            if (allowList == null) {
+                allowList = new ArrayList<>();
+            }
+            allowList.addAll(this.webSocketPaths);
+        }
+        this.allowedPaths = (allowList != null) ? new LinkedHashSet<>(allowList) : null;
+        Debug.logInfo("Allowed paths for webapp " + extWebappInfo + ": " + this.allowedPaths, module);
 
         // SCIPIO: new
         this.forwardRootControllerUris = getForwardRootControllerUrisSetting(ServletUtil.getInitParamsMapAdapter(config), false);

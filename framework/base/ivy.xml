@@ -172,6 +172,9 @@
         <dependency org="org.apache.sshd" name="sshd-core" rev="2.1.0" conf="base,sources"/>
         <dependency org="org.apache.sshd" name="sshd-sftp" rev="2.1.0" conf="base,sources"/>
         <dependency org="com.googlecode.ez-vcard" name="ez-vcard" rev="0.10.4" conf="base,sources"/><!-- stock qrcode -->
+        <!-- FIXME: Original Reflections library has fatal errors, so temporarily use its fork
+        <dependency org="org.reflections" name="reflections" rev="0.9.12" conf="base,sources"/>-->
+        <dependency org="net.oneandone.reflections8" name="reflections8" rev="0.11.5" conf="base,sources"/>
 
         <!-- jdk11 removed JDK packages -->
         <dependency org="javax.xml.bind" name="jaxb-api" rev="2.4.0-b180830.0359" conf="base-jdk11,sources-jdk11"/>

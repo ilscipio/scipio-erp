@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import com.ilscipio.scipio.ce.util.SafeOptional;
@@ -289,6 +290,13 @@ public class ExtWebappInfo implements Serializable {
      */
     public static ExtWebappInfo fromRequest(HttpServletRequest request) throws IllegalArgumentException {
         return fromContextPath(WebAppUtil.getServerId(request), request.getContextPath());
+    }
+
+    /**
+     * Returns the server webapp for the servlet context.
+     */
+    public static ExtWebappInfo fromServletContext(ServletContext servletContext) throws IllegalArgumentException {
+        return fromContextPath(WebAppUtil.getServerId(servletContext), servletContext.getContextPath());
     }
 
     /**

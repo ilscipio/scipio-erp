@@ -19,22 +19,20 @@
 package org.ofbiz.catalina.container;
 
 import java.io.File;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
-import org.apache.tomcat.JarScanFilter;
+import com.ilscipio.scipio.ce.base.component.FilterJarsScanner;
 import org.apache.tomcat.JarScanType;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
-import org.reflections.Reflections;
 
 import javax.servlet.ServletContext;
-import javax.websocket.DeploymentException;
-import javax.websocket.server.ServerContainer;
 
 /**
  * Catalina Container Jar Filter.
@@ -49,9 +47,9 @@ final class FilterJars extends StandardJarScanFilter {
     private static ServletContext servletContext = null;
 
     static {
-        Set<String> jarNames = new HashSet<>();
+        Set<String> jarNames = new LinkedHashSet<>();
         readGlobalScanEnabledJarNames(jarNames);
-        Debug.logInfo("Global server-scan enabled JAR names: " + new TreeSet<>(jarNames), module);
+        Debug.logInfo("Global server-scan enabled JAR names: " + jarNames, module);
         globalScanEnabledJarNames = jarNames;
     }
 
@@ -71,7 +69,8 @@ final class FilterJars extends StandardJarScanFilter {
     }
     
     static Set<String> getCombinedScanEnabledJarNames(WebappInfo webappInfo) {
-        Set<String> jarNames = new HashSet<>();
+        Set<String> jarNames = new LinkedHashSet<>();
+        List<File> jarFiles = new ArrayList<>();
 
         // SCIPIO: 2019-12-21: Added scanning of base jars
         String configRoot = webappInfo.componentConfig.getRootLocation();
@@ -92,14 +91,19 @@ final class FilterJars extends StandardJarScanFilter {
                 File path = new File(configRoot, dirLoc);
                 if (path.exists()) {
                     if (path.isDirectory()) {
-                        for (File file: path.listFiles()) {
-                            String fileName = file.getName().toLowerCase();
-                            if (fileName.endsWith(".jar")) {
-                                jarNames.add(file.getName());
+                        File[] files = path.listFiles();
+                        if (files != null) {
+                            for (File file : files) {
+                                String fileName = file.getName().toLowerCase();
+                                if (fileName.endsWith(".jar")) {
+                                    jarNames.add(file.getName());
+                                    jarFiles.add(file);
+                                }
                             }
                         }
                     } else {
                         jarNames.add(path.getName());
+                        jarFiles.add(path);
                     }
                 }
             }
@@ -110,8 +114,14 @@ final class FilterJars extends StandardJarScanFilter {
             return globalScanEnabledJarNames;
         }
         Debug.logInfo("Webapp-specific server-scan enabled JAR names for " 
-                + webappInfo + ": " + new TreeSet<>(jarNames), module);
+                + webappInfo + ": " + jarNames, module);
         jarNames.addAll(globalScanEnabledJarNames);
+
+        // SCIPIO
+        if (!jarFiles.isEmpty()) {
+            FilterJarsScanner.Registry.getDefault().scanJars(webappInfo, jarFiles, jarNames);
+        }
+
         return jarNames;
     }
 
@@ -123,7 +133,6 @@ final class FilterJars extends StandardJarScanFilter {
             for(File file : ComponentConfig.readClasspathSpecialJarLocations("websockets")) {
                 jarNames.add(file.getName());
             }
-
 
             /*
             https://stackoverflow.com/questions/20127800/mapping-websocketendpoints-in-a-web-xml-file

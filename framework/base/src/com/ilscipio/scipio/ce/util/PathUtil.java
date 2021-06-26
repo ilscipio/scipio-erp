@@ -240,4 +240,15 @@ public class PathUtil {
         }
         return name.isEmpty() ? null : name;
     }
+
+    public static String getFirstPathPart(String path) {
+        if (path == null || !path.startsWith("/")) {
+            return "";
+        }
+        int endIndex = path.indexOf('/', 1);
+        if (endIndex == -1) {
+            endIndex = path.length();
+        }
+        return path.substring(0, endIndex);
+    }
 }

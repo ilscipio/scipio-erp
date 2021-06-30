@@ -78,6 +78,8 @@ public class PackingSession implements java.io.Serializable {
     protected int status = 1;
     protected Map<Integer, String> shipmentBoxTypes = null;
 
+    protected boolean itemsIssued = false;
+
     private transient Delegator _delegator = null;
     private transient LocalDispatcher _dispatcher = null;
 
@@ -141,9 +143,14 @@ public class PackingSession implements java.io.Serializable {
         invLookup.put("shipGroupSeqId", shipGroupSeqId);
         List<GenericValue> reservations = this.getDelegator().findByAnd("OrderItemShipGrpInvRes", invLookup, UtilMisc.toList("quantity DESC"), false);
 
+
         // no reservations we cannot add this item
         if (UtilValidate.isEmpty(reservations)) {
-            throw new GeneralException("No inventory reservations available; cannot pack this item! [101]");
+//            throw new GeneralException("No inventory reservations available; cannot pack this item! [101]");
+            reservations = getItemIssuances(orderId, orderItemSeqId, shipGroupSeqId);
+        }
+        if (UtilValidate.isNotEmpty(reservations)) {
+            itemsIssued = true;
         }
 
         // find the inventoryItemId to use
@@ -640,16 +647,19 @@ public class PackingSession implements java.io.Serializable {
             return "EMPTY";
         }
 
-        // check for errors
-        this.checkReservations(force);
+        if (!itemsIssued) {
+            // check for errors
+            this.checkReservations(force);
+            // create the shipment
+            this.createShipment();
+            // issue the items
+            this.issueItemsToShipment();
+        }
+
         // set the status to 0
         this.status = 0;
-        // create the shipment
-        this.createShipment();
         // create the packages
         this.createPackages();
-        // issue the items
-        this.issueItemsToShipment();
         // assign items to packages
         this.applyItemsToPackages();
         // update ShipmentRouteSegments with total weight and weightUomId
@@ -1036,7 +1046,8 @@ public class PackingSession implements java.io.Serializable {
         public String productId;
 
         public ItemDisplay(GenericValue v) {
-            if ("PicklistItem".equals(v.getEntityName())) {
+            // SCIPIO 2.1.0: Added ItemIssuance
+            if ("PicklistItem".equals(v.getEntityName()) || "ItemIssuance".equals(v.getEntityName())) {
                 quantity = v.getBigDecimal("quantity").setScale(2, RoundingMode.HALF_UP);
                 try {
                     orderItem = v.getRelatedOne("OrderItem", false);

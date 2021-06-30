@@ -189,7 +189,7 @@ code package.
     <request-map uri="changeOrderStatus">
         <security https="true" auth="true"/>
         <event type="service" invoke="changeOrderStatus"/>
-        <response name="success" type="view" value="orderlist"/>
+        <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="orderview"/>
     </request-map>
     <request-map uri="changeOrderItemStatus">
@@ -275,7 +275,14 @@ code package.
         <event type="service" invoke="quickShipEntireOrder"/>
         <response name="success" type="request-redirect" value="orderview"><redirect-parameter name="orderId"/></response>
         <response name="error" type="view" value="orderview"/>
-    </request-map>    
+    </request-map>
+    <!-- SCIPIO: 2.1.0: New ship order event that covers the situation where shipment already exists (with status input, picked or packed) -->
+    <request-map uri="shipEntireOrder">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="shipEntireOrder"/>
+        <response name="success" type="request-redirect" value="orderview"><redirect-parameter name="orderId"/></response>
+        <response name="error" type="view" value="orderview"/>
+    </request-map>
     <request-map uri="createQuoteTerm">
         <security https="true" auth="true"/>
         <event type="service" invoke="createQuoteTerm"/>

@@ -196,7 +196,7 @@ if (orderHeader) {
     shipGroups = from("OrderItemShipGroup").where("orderId", orderId).orderBy("shipGroupSeqId").queryList();
     context.shipGroups = shipGroups;
 
-    // SCIPIO: 2.0.0: new list that contains items that are in a shipGroup already having a shipment or just a single order item not requiring multiple shipGroups
+    // SCIPIO: 2.1.0: new list that contains items that are in a shipGroup already having a shipment or just a single order item not requiring multiple shipGroups
     orderItemsShipped = [];
     singleOrderItem = true;
     allShipGroupsNoShipping = true;
@@ -206,13 +206,14 @@ if (orderHeader) {
         }
         List<GenericValue> validShipments = UtilMisc.toList(
             EntityCondition.makeCondition("primaryOrderId", orderId),
-            EntityCondition.makeCondition("primaryShipGroupSeqId", shipGroup.shipGroupSeqId)
-//            EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "")
+            EntityCondition.makeCondition("primaryShipGroupSeqId", shipGroup.shipGroupSeqId),
+            EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("SHIPMENT_DELIVERED", "SHIPMENT_SHIPPED"))
         );
         shipment = from("Shipment").where(validShipments).queryFirst();
         if (shipment) {
+            Debug.logInfo("shipment: " + shipment, module);
             shipmentItems = shipment.getRelated("ShipmentItem");
-            Debug.log("shipmentItems: " + shipmentItems);
+            Debug.logInfo("shipmentItems: " + shipmentItems, module);
             orderItemsShipped.addAll(shipmentItems);
         }
     }

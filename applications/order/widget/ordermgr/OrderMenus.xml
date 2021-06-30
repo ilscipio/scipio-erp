@@ -334,6 +334,12 @@ code package.
                     <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_APPROVED"/>
                 </and>
             </condition>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    org.ofbiz.base.util.Debug.log('Test: CompleteShipGroup', "OrderMenus.xml");
+                ]]>
+                </script>
+            </actions>
             <link target="changeOrderStatus">
                 <parameter param-name="orderId"/>
                 <parameter param-name="statusId" value="ORDER_COMPLETED"/>

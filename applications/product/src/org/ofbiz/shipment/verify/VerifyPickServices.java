@@ -111,6 +111,7 @@ public class VerifyPickServices {
             shipmentId = pickSession.complete(orderId, locale);
             Map<String, Object> shipment = new HashMap<String, Object>();
             shipment.put("shipmentId", shipmentId);
+            shipment.put("orderId", orderId);
             pickSession.clearAllRows();
             return shipment;
             }

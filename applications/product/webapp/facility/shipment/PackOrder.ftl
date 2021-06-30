@@ -25,50 +25,39 @@ code package.
         <#assign showInput = "Y">
     </#if>
 
-    <@section>
+    <#macro globalMenuContent menuArgs={}>
         <#if invoiceIds?has_content>
-            <@row>
-                <@cell>
-                    ${uiLabelMap.CommonView} <a href="<@pageUrl>PackingSlip.pdf?shipmentId=${shipmentId}</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
-                    ${uiLabelMap.CommonView} <a href="<@pageUrl>ShipmentBarCode.pdf?shipmentId=${shipmentId}</@pageUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@pageUrl>EditShipment?shipmentId=${shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${shipmentId}</a>
-                </@cell>
-            </@row>
-            <#if invoiceIds?exists && invoiceIds?has_content>
-                <@row>
-                    <@cell>
-                        ${uiLabelMap.AccountingInvoices}:
-                        <@menu type="button">
-                            <#list invoiceIds as invoiceId>
-                                <@menuitem type="generic">
-                                    ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
-                                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
-                                </@menuitem>
-                            </#list>
-                        </@menu>
-                    </@cell>
-                </@row>
-            </#if>
+            <@menu type="button">
+                <#list invoiceIds as invoiceId>
+                    <@menuitem type="link" href=makeServerUrl("/accounting/control/invoiceOverview?invoiceId=" + invoiceId + "&" + raw(externalKeyParam)) class="+${styles.action_nav!} ${styles.action_view!}" text=(uiLabelMap.AccountingInvoice + " " + uiLabelMap.CommonNbr + " " + invoiceId) />
+                    (<@menuitem type="link" href=makeServerUrl("/accounting/control/invoice.pdf?invoiceId=" + invoiceId + "&" + raw(externalKeyParam)) class="+${styles.action_nav!} ${styles.action_export!}" text="PDF"  />)
+                </#list>
+            </@menu>
         </#if>
+    </#macro>
 
+    <@section menuContent=globalMenuContent>
         <#-- select order form -->
         <#-- select picklist bin form -->
-        <@section>
-            <form name="selectOrderForm" method="post" action="<@pageUrl>PackOrder</@pageUrl>">
-                <input type="hidden" name="facilityId" value="${facilityId!}" />
-                <@field type="generic" label=uiLabelMap.ProductOrderId>                    
-                    <@field type="lookup" formName="selectOrderForm" name="orderId" id="orderId" size="20" maxlength="20" fieldFormName="LookupOrderHeader"/>
-                    /
-                    <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value=shipGroupSeqId!'00001'/>                    
-                </@field>
-                <@field type="generic" label=uiLabelMap.FormFieldTitle_picklistBinId>
-                    <@field type="input" name="picklistBinId" size="29" maxlength="60" value=(picklistBinId!)/>                    
-                </@field>               
-                <@field type="submitarea">                    
-                    <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackOrder />
-                    <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makePageUrl('WeightPackageOnly')}';document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text=uiLabelMap.ProductWeighPackageOnly />
-                </@field>
-            </form>
-        </@section>
+        <#if !orderId?has_content && !picklistBinId?has_content>
+            <@section>
+                <form name="selectOrderForm" method="post" action="<@pageUrl>PackOrder</@pageUrl>">
+                    <input type="hidden" name="facilityId" value="${facilityId!}" />
+                    <@field type="generic" label=uiLabelMap.ProductOrderId>
+                        <@field type="lookup" formName="selectOrderForm" name="orderId" id="orderId" size="20" maxlength="20" fieldFormName="LookupOrderHeader"/>
+                        /
+                        <@field type="input" inline=true name="shipGroupSeqId" size="6" maxlength="6" value=shipGroupSeqId!'00001'/>
+                    </@field>
+                    <@field type="generic" label=uiLabelMap.FormFieldTitle_picklistBinId>
+                        <@field type="input" name="picklistBinId" size="29" maxlength="60" value=(picklistBinId!)/>
+                    </@field>
+                    <@field type="submitarea">
+                        <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackOrder />
+                        <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makePageUrl('WeightPackageOnly')}';document.selectOrderForm.submit();" class="+${styles.link_run_sys!} ${styles.action_verify!}" text=uiLabelMap.ProductWeighPackageOnly />
+                    </@field>
+                </form>
+            </@section>
+        </#if>
 
         <form name="clearPackForm" method="post" action="<@pageUrl>ClearPackAll</@pageUrl>">
           <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -89,11 +78,23 @@ code package.
             <input type="hidden" name="inventoryItemId"/>
             <input type="hidden" name="packageSeqId"/>
         </form>
-    </@section>
+
 
     <#if showInput != "N" && ((orderHeader?exists && orderHeader?has_content))>
+        <#macro menuContent menuArgs={}>
+            <@menu type="button">
+                <@menuitem type="link" href=makePageUrl("PackingSlip.pdf?shipmentId=" + shipmentId) class="+${styles.action_nav!} ${styles.action_view!}" text=(uiLabelMap.ProductPackingSlip + " " + uiLabelMap.CommonNbr + " " + invoiceId) />
+                <@menuitem type="link" href=makePageUrl("ShipmentBarCode.pdf?shipmentId=" + shipmentId) class="+${styles.action_nav!} ${styles.action_view!}" text=(uiLabelMap.ProductPackingSlip + " " + uiLabelMap.CommonNbr + " " + invoiceId) />
+
+                <@menuitem type="link" href=makePageUrl("ShipmentBarCode.pdf?shipmentId=" + shipmentId) class="+${styles.action_nav!} ${styles.action_view!}" text=(uiLabelMap.ProductPackingSlip + " " + uiLabelMap.CommonNbr + " " + invoiceId) />
+
+                <a href="<@pageUrl>EditShipment?shipmentId=${shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${shipmentId}</a>
+
+            </@menu>
+        </#macro>
+
         <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderId}</@serverUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
-        <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup')>
+        <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent>
             <#if orderItemShipGroup?has_content>
                 <#if (orderItemShipGroup.contactMechId)?has_content>
                     <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
@@ -386,6 +387,7 @@ code package.
             </@section>
         </#if>
     </#if>
+    </@section>
 <#else>
     <@commonMsg type="error">${uiLabelMap.ProductFacilityViewPermissionError}</@commonMsg>
 </#if>

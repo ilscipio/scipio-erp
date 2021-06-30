@@ -395,12 +395,13 @@ public final class EntityUtil {
 
     /**
      *returns the values that match any of the exprs in list
+     * SCIPIO: 2.1.0: Supports a list of EntityCondition or Map as exprs. For Map exprs also supports filtering by same field with different values.
      *
      *@param values List of GenericValues
      *@param exprs the expressions that must validate to true
      *@return List of GenericValue's that match the values in fields
      */
-    public static <T extends GenericEntity> List<T> filterByOr(List<T> values, List<? extends EntityCondition> exprs) {
+    public static <T extends GenericEntity> List<T> filterByOr(List<T> values, List<? extends Object> exprs) {
         if (values == null || UtilValidate.isEmpty(exprs)) {
             return values;
         }
@@ -408,9 +409,12 @@ public final class EntityUtil {
         List<T> result = new ArrayList<>(values.size()); // SCIPIO: switched to ArrayList
         for (T value: values) {
             boolean include = false;
-
-            for (EntityCondition condition: exprs) {
-                include = condition.entityMatches(value);
+            for (Object condition: exprs) {
+                if (condition instanceof EntityCondition) {
+                    include = ((EntityCondition) condition).entityMatches(value);
+                } else if (condition instanceof Map) {
+                    include = value.matchesFields((Map<String, Object>) condition);
+                }
                 if (include) break;
             }
             if (include) {
@@ -419,7 +423,6 @@ public final class EntityUtil {
         }
         return result;
     }
-
     /**
      *returns the values in the order specified after with localized value
      *

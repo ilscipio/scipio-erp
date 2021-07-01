@@ -67,10 +67,14 @@ public abstract class AbstractEngine implements GenericEngine {
 
     // uses the lookup map to determine if the location has been aliased by a service-location element in serviceengine.xml
     protected String getLocation(ModelService model) {
-        if (locationMap.containsKey(model.location)) {
-            return locationMap.get(model.location);
+        return getMappedLocation(model.location);
+    }
+
+    protected String getMappedLocation(String location) { // SCIPIO: 2.1.0: Refactored.
+        if (locationMap.containsKey(location)) {
+            return locationMap.get(location);
         }
-        return model.location;
+        return location;
     }
 
     @Override

@@ -68,6 +68,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceContext;
+import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceSynchronization;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.mail.MimeMessageWrapper;
@@ -241,14 +242,16 @@ public class CommonServices {
 
     /**
      * Echo service; returns exactly what was sent.
-     * This service does not have required parameters and does not validate
+     * <p>This service does not have required parameters and does not validate.</p>
+     * <p>SCIPIO: 2.1.0: Refactored for tests.</p>
      */
-     public static Map<String, Object> echoService(DispatchContext dctx, Map<String, ?> context) {
-         Map<String, Object> result =  new LinkedHashMap<>();
-         result.putAll(context);
-         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-         return result;
-     }
+    public static class EchoService extends ServiceHandler.Local {
+        public Map<String, Object> exec() {
+            Map<String, Object> result = new LinkedHashMap<>(ServiceUtil.returnSuccessReadOnly());
+            result.putAll(ctx);
+            return result;
+        }
+    }
 
     /**
      * Return Error Service; Used for testing error handling
@@ -259,15 +262,37 @@ public class CommonServices {
     }
 
     /**
+     * Log all service; logs all passed parameters.
+     * <p>SCIPIO: 2.1.0: Refactored for tests.</p>
+     */
+    public static class LogAllService extends ServiceHandler.Local {
+        public LogAllService(ServiceContext ctx) { super(ctx); }
+        public Map<String, Object> exec() {
+            StringBuilder sb = new StringBuilder("Received " + ctx.size() + " arguments:");
+            for(Map.Entry<String, ?> entry : ctx.entrySet()) {
+                sb.append("\n");
+                sb.append(entry.getKey());
+                sb.append("=");
+                sb.append(entry.getValue());
+            }
+            Debug.logInfo("logAllService: " + sb, module);
+            return ServiceUtil.returnSuccess();
+        }
+    }
+
+    /**
      * Sleeps for specified number of milliseconds (SCIPIO).
      */
-    public static Map<String, Object> sleepService(DispatchContext dctx, Map<String, ?> context) {
-
-        try {
-            Thread.sleep(UtilMisc.toLong(context.get("timeMs"), null));
-        } catch (InterruptedException e) {
+    public static class SleepService extends ServiceHandler.Shared {
+        private static final SleepService DEFAULT = new SleepService();
+        public static SleepService getDefault() { return DEFAULT; }
+        public Map<String, Object> exec(DispatchContext dctx, Map<String, ?> context) {
+            try {
+                Thread.sleep(UtilMisc.toLong(context.get("timeMs"), null));
+            } catch (InterruptedException e) {
+            }
+            return ServiceUtil.returnSuccess();
         }
-        return ServiceUtil.returnSuccess();
     }
 
     /**

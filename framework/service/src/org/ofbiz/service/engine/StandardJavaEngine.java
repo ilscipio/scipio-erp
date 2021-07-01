@@ -18,6 +18,7 @@
  */
 package org.ofbiz.service.engine;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -30,11 +31,12 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceDispatcher;
+import org.ofbiz.service.ServiceHandler;
 
 /**
  * Standard Java Static Method Service Engine
  */
-public final class StandardJavaEngine extends GenericAsyncEngine {
+public class StandardJavaEngine extends GenericAsyncEngine {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -64,7 +66,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
     }
 
     // Invoke the static java method service.
-    private Object serviceInvoker(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
+    protected Object serviceInvoker(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
         // static java service methods should be: public Map<String, Object> methodName(DispatchContext dctx, Map<String, Object> context)
         DispatchContext dctx = dispatcher.getLocalContext(localName);
 
@@ -95,23 +97,12 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         }
 
         try {
-            Class<?> c = cl.loadClass(this.getLocation(modelService));
-            try {
-                Method m = c.getMethod(modelService.invoke, DispatchContext.class, Map.class);
-                if (Modifier.isStatic(m.getModifiers())) {
-                    result = m.invoke(null, dctx, context);
-                } else {
-                    result = m.invoke(c.getConstructor().newInstance(), dctx, context);
-                }
-            } catch(NoSuchMethodException e) {
-                // SCIPIO: Alternative form using ServiceContext (TODO?: cache method overload lookup?)
-                Method m = c.getMethod(modelService.invoke, ServiceContext.class);
-                if (Modifier.isStatic(m.getModifiers())) {
-                    result = m.invoke(null, ServiceContext.from(dctx, context));
-                } else {
-                    result = m.invoke(c.getConstructor().newInstance(), ServiceContext.from(dctx, context));
-                }
-            }
+            // SCIPIO: 2.1.0: Refactored getMethod vs invoke to prevent problems from NoSuchMethodException from invocations.
+            ServiceContext ctx = ServiceContext.from(dctx, context); // SCIPIO: 2.1.0: Added support for ServiceContext.
+            Class<?> c = getHandlerClass(this.getLocation(modelService), cl, modelService, ctx);
+            Method m = getHandlerMethod(c, modelService.invoke, cl, modelService, ctx);
+            Object serviceHandler = Modifier.isStatic(m.getModifiers()) ? null : getHandler(c, cl, modelService, ctx);
+            result = invokeHandler(serviceHandler, c, m, cl, modelService, ctx);
         } catch (ClassNotFoundException cnfe) {
             throw new GenericServiceException("Cannot find service [" + modelService.name + "] location class", cnfe);
         } catch (NoSuchMethodException nsme) {
@@ -133,6 +124,79 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         }
 
         return result;
+    }
+
+    protected Class<?> getHandlerClass(String location, ClassLoader cl, ModelService modelService, ServiceContext ctx) throws Throwable {
+        return cl.loadClass(location);
+    }
+
+    protected Method getHandlerMethod(Class<?> c, String methodName, ClassLoader cl, ModelService modelService, ServiceContext ctx) throws Throwable {
+        Method m;
+        try {
+            m = c.getMethod(methodName, DispatchContext.class, Map.class);
+        } catch(NoSuchMethodException e) {
+            try {
+                m = c.getMethod(methodName, ServiceContext.class);
+            } catch(NoSuchMethodException e2) {
+                m = c.getMethod(methodName);
+            }
+        }
+        return m;
+    }
+
+    protected <T> T invokeHandler(Object instance, Class<?> c, Method m, ClassLoader cl, ModelService modelService, ServiceContext ctx) throws Throwable {
+        Object result;
+        if (m.getParameterCount() == 0) {
+            result = m.invoke(instance);
+        } else if (m.getParameterCount() == 1) {
+            result = m.invoke(instance, ctx);
+        } else {
+            result = m.invoke(instance, ctx.dctx(), ctx.context());
+        }
+        return UtilGenerics.cast(result);
+    }
+
+    protected <T> T getHandler(Class<?> c, ClassLoader cl, ModelService modelService, ServiceContext ctx) throws Throwable {
+        String invoke = modelService.accessorInvoke;
+        if (invoke == null) {
+            return getDefaultHandler(c, cl, modelService, ctx);
+        }
+
+        String location = modelService.accessorLocation;
+        if (location != null) {
+            c = getHandlerClass(getMappedLocation(location), cl, modelService, ctx);
+        }
+
+        Method m = getHandlerMethod(c, invoke, cl, modelService, ctx);
+        Object accessorInst = Modifier.isStatic(m.getModifiers()) ? null : getDefaultHandler(c, cl, modelService, ctx);
+        return invokeHandler(accessorInst, c, m, cl, modelService, ctx);
+    }
+
+    protected <T> T getDefaultHandler(Class<?> c, ClassLoader cl, ModelService modelService, ServiceContext ctx) throws Throwable {
+        if (ServiceHandler.Local.class.isAssignableFrom(c)) {
+            Constructor<?> constructor;
+            try {
+                constructor = c.getConstructor(DispatchContext.class, Map.class);
+            } catch(NoSuchMethodException e) {
+                try {
+                    constructor = c.getConstructor(ServiceContext.class);
+                } catch(NoSuchMethodException e2) {
+                    constructor = c.getConstructor();
+                }
+            }
+            if (constructor.getParameterCount() == 1) {
+                return UtilGenerics.cast(constructor.newInstance(ctx));
+            } else if (constructor.getParameterCount() == 2) {
+                return UtilGenerics.cast(constructor.newInstance(ctx.dctx(), ctx.context()));
+            } else {
+                ServiceHandler.Local inst = UtilGenerics.cast(constructor.newInstance());
+                inst.init(ctx);
+                return UtilGenerics.cast(inst);
+            }
+        } else {
+            // TODO: better instance management for Shared
+            return UtilGenerics.cast(c.getConstructor().newInstance());
+        }
     }
 }
 

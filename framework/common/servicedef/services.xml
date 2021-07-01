@@ -29,7 +29,7 @@ code package.
     </service>
 
     <service name="echoService" engine="java" validate="false"
-            location="org.ofbiz.common.CommonServices" invoke="echoService">
+            location="org.ofbiz.common.CommonServices$EchoService" invoke="exec">
         <description>Echos back all passed parameters</description>
     </service>
     <service name="returnErrorService" engine="java" validate="false"
@@ -37,8 +37,13 @@ code package.
         <description>Always returns error</description>
     </service>
 
+    <service name="logAllService" engine="java" validate="false"
+             location="org.ofbiz.common.CommonServices$LogAllService" invoke="exec">
+        <description>Logs all passed parameters</description>
+    </service>
+
     <service name="sleepService" engine="java" validate="false"
-             location="org.ofbiz.common.CommonServices" invoke="sleepService">
+             location="org.ofbiz.common.CommonServices$SleepService" invoke="exec" accessor-invoke="getDefault">
         <description>Sleeps for specified number of milliseconds (SCIPIO)</description>
         <attribute name="timeMs" type="Object" mode="IN" optional="false"/>
     </service>

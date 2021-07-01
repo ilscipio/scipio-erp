@@ -187,6 +187,10 @@ public class ModelServiceReader implements Serializable {
         service.defaultEntityName = UtilXml.checkEmpty(serviceElement.getAttribute("default-entity-name")).intern();
         service.fromLoader = isFromURL ? readerURL.toExternalForm() : handler.getLoaderName();
 
+        // SCIPIO: accessor/factory
+        service.accessorLocation = UtilValidate.nullIfEmpty(serviceElement.getAttribute("accessor-location"));
+        service.accessorInvoke = UtilValidate.nullIfEmpty(serviceElement.getAttribute("accessor-invoke"));
+
         // SCIPIO: log level
         LogLevel logLevel = LogLevel.fromName(serviceElement.getAttribute("log"), null);
         if (logLevel == null) {

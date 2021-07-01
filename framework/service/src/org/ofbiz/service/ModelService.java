@@ -168,6 +168,19 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     /** The method or function to invoke for this service */
     public String invoke;
 
+    /**
+     * The package name or location of the accessor (factory) class of this service.
+     * <p>Defaults to {@link #location}.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public String accessorLocation;
+
+    /**
+     * The method or function to invoke for the accessor (factory) class of this service.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public String accessorInvoke;
+
     /** The default Entity to use for auto-attributes */
     public String defaultEntityName;
 
@@ -399,6 +412,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         this.priority = model.priority;
         this.jobPoolPersist = model.jobPoolPersist;
         this.startDelay = model.startDelay;
+        this.accessorLocation = model.accessorLocation;
+        this.accessorInvoke = model.accessorInvoke;
     }
 
     @Override
@@ -517,6 +532,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         buf.append(contextParamList).append("::");
         buf.append(inheritedParameters).append("::");
         buf.append(hideResultInLog).append("::");
+        buf.append(accessorLocation).append("::");
+        buf.append(accessorInvoke).append("::");
         return buf.toString();
     }
 
@@ -2382,7 +2399,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                         try {
                             c.getMethod(invoke, DispatchContext.class, Map.class);
                         } catch(NoSuchMethodException e) {
-                            c.getMethod(invoke, ServiceContext.class);
+                            // SCIPIO: 2.1.0: Additional overloads supported.
+                            try {
+                                c.getMethod(invoke, ServiceContext.class);
+                            } catch(NoSuchMethodException e2) {
+                                c.getMethod(invoke);
+                            }
                         }
                     } catch(ClassNotFoundException e) {
                         valid = false;

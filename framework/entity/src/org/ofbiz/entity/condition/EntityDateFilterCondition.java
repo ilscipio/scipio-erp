@@ -106,14 +106,14 @@ public final class EntityDateFilterCondition extends EntityCondition {
                 EntityCondition.makeCondition(thruDateName, EntityOperator.EQUALS, null),
                 EntityOperator.OR,
                 EntityCondition.makeCondition(thruDateName, EntityOperator.GREATER_THAN, moment)
-           ),
+            ),
             EntityOperator.AND,
             EntityCondition.makeCondition(
                 EntityCondition.makeCondition(fromDateName, EntityOperator.EQUALS, null),
                 EntityOperator.OR,
                 EntityCondition.makeCondition(fromDateName, EntityOperator.LESS_THAN_EQUAL_TO, moment)
-           )
-      );
+            )
+        );
     }
 
     /**

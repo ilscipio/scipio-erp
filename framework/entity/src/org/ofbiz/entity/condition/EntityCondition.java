@@ -131,6 +131,27 @@ public abstract class EntityCondition extends EntityConditionBase implements IsE
         return conditions;
     }
 
+    /**
+     * Makes a date range condition with specific range start and end dates on a single field.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param dateFieldName The name of the field containing the entity's date
+     * @param rangeStart    The start of the range to filter against
+     * @param rangeEnd      The end of the range to filter against
+     * @return EntityCondition representing the date range filter
+     */
+    public static EntityCondition makeDateRangeCondition(String dateFieldName, Timestamp rangeStart, Timestamp rangeEnd) {
+        EntityCondition cond = null;
+        if (rangeStart != null) {
+            cond = EntityCondition.makeCondition(dateFieldName, EntityOperator.GREATER_THAN_EQUAL_TO, rangeStart);
+        }
+        if (rangeEnd != null) {
+            EntityCondition orderThruDateCond = EntityCondition.makeCondition(dateFieldName,
+                    EntityOperator.LESS_THAN, rangeEnd);
+            cond = (cond != null) ? EntityCondition.makeCondition(cond, orderThruDateCond) : orderThruDateCond;
+        }
+        return cond;
+    }
+
     public static EntityWhereString makeConditionWhere(String sqlString) {
         return new EntityWhereString(sqlString);
     }

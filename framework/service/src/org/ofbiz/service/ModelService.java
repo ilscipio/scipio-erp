@@ -70,6 +70,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilCodec;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -327,6 +328,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * <p>SCIPIO: 2.1.0: Added start-delay service attribute.</p>
      */
     Integer startDelay;
+
+    /**
+     * Cached reflection info for StandardJavaEngine.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    Object javaServiceReflectInfo;
 
     public static class Access implements Serializable { // SCIPIO
         public static final Access PUBLIC = new Access("public");
@@ -2553,5 +2560,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public Long determinePriority(Long explicitPriority, Long defaultPriority) {
         return (explicitPriority != null) ? explicitPriority : (getPriority() != null ? getPriority() : defaultPriority);
+    }
+
+    public <T> T getJavaServiceReflectInfo() {
+        return UtilGenerics.cast(javaServiceReflectInfo);
+    }
+
+    public void setJavaServiceReflectInfo(Object javaServiceReflectInfo) {
+        this.javaServiceReflectInfo = javaServiceReflectInfo;
     }
 }

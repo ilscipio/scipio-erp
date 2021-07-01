@@ -366,18 +366,18 @@ if (orderHeader) {
     }
 
     // SCIPIO: 2.1.0: check if an approved order with all items completed exist
-    setOrderCompleteOption = false;
-    if ((orderContainsOnlyDigitalProducts || (context.allOrderItemsShipped && ("ORDER_APPROVED".equals(orderHeader.statusId)
-            || "ORDER_SENT".equals(orderHeader.statusId)))) && !setOrderCompleteOption) {
-        setOrderCompleteOption = context.allOrderItemsShipped;
+    setOrderCompleteOption = (context.allShipGroupsNoShipping || context.allOrderItemsShipped);
+    if ((orderContainsOnlyDigitalProducts || (setOrderCompleteOption && ("ORDER_APPROVED".equals(orderHeader.statusId)
+            || "ORDER_SENT".equals(orderHeader.statusId))))) {
         if (!setOrderCompleteOption) {
             expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_COMPLETED");
             completedItems = orderReadHelper.getOrderItemsByCondition(expr);
-            Debug.logInfo("completedItems ===> " + completedItems, module);
             if (UtilValidate.isEmpty(completedItems)) {
                 context.setOrderCompleteOption = true;
             }
         }
+    } else {
+        setOrderCompleteOption = false;
     }
     context.setOrderCompleteOption = setOrderCompleteOption;
     Debug.logInfo("context.setOrderCompleteOption ===> " + context.setOrderCompleteOption, module);

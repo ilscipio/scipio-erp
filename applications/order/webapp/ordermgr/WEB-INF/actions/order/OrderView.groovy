@@ -366,16 +366,20 @@ if (orderHeader) {
     }
 
     // SCIPIO: 2.1.0: check if an approved order with all items completed exist
-    context.setOrderCompleteOption = false;
-    if (orderContainsOnlyDigitalProducts || (context.allOrderItemsShipped && ("ORDER_APPROVED".equals(orderHeader.statusId)
-            || "ORDER_SENT".equals(orderHeader.statusId)))) {
-        expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_COMPLETED");
-        completedItems = orderReadHelper.getOrderItemsByCondition(expr);
-        Debug.logInfo("completedItems ===> " + completedItems, module);
-        if (UtilValidate.isEmpty(completedItems)) {
-            context.setOrderCompleteOption = true;
+    setOrderCompleteOption = false;
+    if ((orderContainsOnlyDigitalProducts || (context.allOrderItemsShipped && ("ORDER_APPROVED".equals(orderHeader.statusId)
+            || "ORDER_SENT".equals(orderHeader.statusId)))) && !setOrderCompleteOption) {
+        setOrderCompleteOption = context.allOrderItemsShipped;
+        if (!setOrderCompleteOption) {
+            expr = EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_COMPLETED");
+            completedItems = orderReadHelper.getOrderItemsByCondition(expr);
+            Debug.logInfo("completedItems ===> " + completedItems, module);
+            if (UtilValidate.isEmpty(completedItems)) {
+                context.setOrderCompleteOption = true;
+            }
         }
     }
+    context.setOrderCompleteOption = setOrderCompleteOption;
     Debug.logInfo("context.setOrderCompleteOption ===> " + context.setOrderCompleteOption, module);
 
     // get inventory summary for each shopping cart product item

@@ -81,15 +81,38 @@ code package.
 
 
     <#if showInput != "N" && ((orderHeader?exists && orderHeader?has_content))>
+        <#assign itemInfos = packingSession.getItemInfos()!>
+
         <#macro menuContent menuArgs={}>
             <@menu type="button">
-                <@menuitem type="link" href=makePageUrl("PackingSlip.pdf?shipmentId=" + shipmentId) class="+${styles.action_nav!} ${styles.action_view!}" text=(uiLabelMap.ProductPackingSlip + " " + uiLabelMap.CommonNbr + " " + invoiceId) />
-                <@menuitem type="link" href=makePageUrl("ShipmentBarCode.pdf?shipmentId=" + shipmentId) class="+${styles.action_nav!} ${styles.action_view!}" text=(uiLabelMap.ProductPackingSlip + " " + uiLabelMap.CommonNbr + " " + invoiceId) />
+                <#if shipmentId?has_content>
+                    <@menuitem type="link" href=makePageUrl("PackingSlip.pdf?shipmentId=" + shipmentId) class="+${styles.action_nav!} ${styles.action_view!}" text=(uiLabelMap.ProductPackingSlip) />
+                    <@menuitem type="link" href=makePageUrl("ShipmentBarCode.pdf?shipmentId=" + shipmentId) class="+${styles.action_nav!} ${styles.action_view!}" text=(uiLabelMap.ProductBarcode) />
+                    <@menuitem type="link" href=makePageUrl("EditShipment.pdf?shipmentId=" + shipmentId) class="+${styles.action_nav!} ${styles.action_view!}" text=(uiLabelMap.ProductShipmentId + " " + shipmentId) />
 
-                <@menuitem type="link" href=makePageUrl("ShipmentBarCode.pdf?shipmentId=" + shipmentId) class="+${styles.action_nav!} ${styles.action_view!}" text=(uiLabelMap.ProductPackingSlip + " " + uiLabelMap.CommonNbr + " " + invoiceId) />
-
-                <a href="<@pageUrl>EditShipment?shipmentId=${shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${shipmentId}</a>
-
+                    <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPack')}"/>
+                    <@modal label=sectionTitle id="modal_addProductPack" linkClass="${styles.link_nav!} ${styles.action_add!}">
+                        <#if showInput != "N" && itemInfos?has_content>
+                            <@section title=sectionTitle>
+                                <form name="singlePackForm" method="post" action="<@pageUrl>ProcessPackOrder</@pageUrl>">
+                                    <input type="hidden" name="packageSeq" value="${packingSession.getCurrentPackageSeq()}"/>
+                                    <input type="hidden" name="orderId" value="${orderId}"/>
+                                    <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId}"/>
+                                    <input type="hidden" name="facilityId" value="${facilityId!}"/>
+                                    <@field type="lookup" formName="singlePackForm" name="productId"id="productId" size="20" maxlength="20" fieldFormName="LookupProduct" label=uiLabelMap.ProductProductId/>
+                                    <@field type="input"  name="quantity" size="6" maxlength="6" value="1" label=uiLabelMap.ProductQuantity/>
+                                    <@field type="display" label=uiLabelMap.ProductCurrentPackageSequence>
+                                        ${packingSession.getCurrentPackageSeq()}
+                                    </@field>
+                                    <@field type="submitarea">
+                                        <@field type="submit" submitType="link" href="javascript:document.singlePackForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackItem />
+                                        <@field type="submit" submitType="input-button" text=uiLabelMap.ProductNextPackage onClick="javascript:document.incPkgSeq.submit();" />
+                                    </@field>
+                                </form>
+                            </@section>
+                        </#if>
+                    </@modal>
+                </#if>
             </@menu>
         </#macro>
 
@@ -143,29 +166,9 @@ code package.
                     </@cell>
                 </@row>                    
             </#if>
-    
-            <#-- manual per item form -->
-            <#assign itemInfos = packingSession.getItemInfos()!>
+
+
             <#if showInput != "N" && itemInfos?has_content>
-                <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPack')}"/>
-                <@section title=sectionTitle>
-                    <form name="singlePackForm" method="post" action="<@pageUrl>ProcessPackOrder</@pageUrl>">                    
-                        <input type="hidden" name="packageSeq" value="${packingSession.getCurrentPackageSeq()}"/>
-                        <input type="hidden" name="orderId" value="${orderId}"/>
-                        <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId}"/>
-                        <input type="hidden" name="facilityId" value="${facilityId!}"/>
-                        <@field type="lookup" formName="singlePackForm" name="productId"id="productId" size="20" maxlength="20" fieldFormName="LookupProduct" label=uiLabelMap.ProductProductId/>                        
-                        <@field type="input"  name="quantity" size="6" maxlength="6" value="1" label=uiLabelMap.ProductQuantity/>                        
-                        <@field type="display" label=uiLabelMap.ProductCurrentPackageSequence>
-                            ${packingSession.getCurrentPackageSeq()}
-                        </@field>
-                        <@field type="submitarea">
-                            <@field type="submit" submitType="link" href="javascript:document.singlePackForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text=uiLabelMap.ProductPackItem />
-                            <@field type="submit" submitType="input-button" text=uiLabelMap.ProductNextPackage onClick="javascript:document.incPkgSeq.submit();" />
-                        </@field>                    
-                    </form>
-                </@section>       
-    
                 <#-- auto grid form -->
                 <#assign sectionTitle="${rawLabel('ProductProducts')} ${rawLabel('ProductToPack')}"/>
                 <@section title=sectionTitle>
@@ -175,6 +178,7 @@ code package.
                             <input type="hidden" name="orderId" value="${orderId!}" />
                             <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}" />
                             <input type="hidden" name="originFacilityId" value="${facilityId!}" />
+                            <input type="hidden" name="shipmentId" value="${shipmentId!}" />
                             <input name="_useRowSubmit" type="hidden" value="Y"/>
                             <@table type="data-list" autoAltRows=true scrollable=true responsive=true>
                                 <@thead>
@@ -273,7 +277,6 @@ code package.
             <#assign packageSeqIds = packingSession.getPackageSeqIds()/>
 
             <#if showInput != "N" && packageSeqIds?has_content>
-                ${Debug.log("packageSeqIds ===> " + packageSeqIds)}
                 <@section>
                     <form name="completePackForm" method="post" action="<@pageUrl>CompletePack</@pageUrl>">
                         <@fields type="default-manual">
@@ -283,7 +286,7 @@ code package.
                             <input type="hidden" name="forceComplete" value="${forceComplete!'false'}"/>
                             <input type="hidden" name="weightUomId" value="${defaultWeightUomId}"/>
                             <input type="hidden" name="showInput" value="N"/>
-                            
+                            <input type="hidden" name="shipmentId" value="${shipmentId!}"/>
     
                             <@table type="fields" class="+${styles.table_spacing_tiny_hint!}">
                                 <@thead>

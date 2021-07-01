@@ -55,7 +55,7 @@ if (parameters.resetSearch) {
             invoiceIds = EntityUtil.getFieldListFromEntityList(shipmentItemBillingList, "invoiceId", true);
             if (invoiceIds) {
                 context.invoiceIds = invoiceIds;
-                parameters.orderId = null;
+//                parameters.orderId = null;
             }
         }
     }

@@ -116,7 +116,7 @@
             <input type="hidden" name="fromDate" value="${fromDate!}"/>
           </form></@menuitem>
         </#if>
-        <#-- SCIPIO: 2.0.0: Added ORDER_SENT in the condition so orders can't be cancelled if already sent -->
+        <#-- SCIPIO: 2.1.0: Added ORDER_SENT in the condition so orders can't be cancelled if already sent -->
         <#if currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT">
           <@menuitem type="link" href="javascript:document.OrderCancel.submit()" text=uiLabelMap.OrderCancelOrder class="+${styles.action_run_sys!} ${styles.action_terminate!}"><form name="OrderCancel" method="post" action="<@pageUrl>changeOrderStatus/orderview</@pageUrl>">
             <input type="hidden" name="statusId" value="ORDER_CANCELLED"/>
@@ -129,10 +129,13 @@
           </form></@menuitem>
         </#if>
         <#if setOrderCompleteOption>
-          <@menuitem type="link" href="javascript:document.OrderCompleteOrder.submit()" text=uiLabelMap.OrderCompleteOrder class="+${styles.action_run_sys!} ${styles.action_complete!} ${styles.action_importance_high!}"><form name="OrderCompleteOrder" method="post" action="<@pageUrl>changeOrderStatus</@pageUrl>">
-            <input type="hidden" name="statusId" value="ORDER_COMPLETED"/>
-            <input type="hidden" name="orderId" value="${orderId!}"/>
-          </form></@menuitem>
+          <@menuitem type="link" href="javascript:document.OrderCompleteOrder.submit()" text=uiLabelMap.OrderCompleteOrder class="+${styles.action_run_sys!} ${styles.action_complete!} ${styles.action_importance_high!}">
+            <form name="OrderCompleteOrder" method="post" action="<@pageUrl>changeOrderStatus</@pageUrl>">
+                <input type="hidden" name="statusId" value="ORDER_COMPLETED"/>
+                <input type="hidden" name="setItemStatus" value="Y"/>
+                <input type="hidden" name="orderId" value="${orderId!}"/>
+            </form>
+          </@menuitem>
         </#if>
         <#-- Migrated to OrderShippingSubTabBar
         <#if currentStatus.statusId == "ORDER_APPROVED" && orderHeader.orderTypeId == "SALES_ORDER">
@@ -174,7 +177,7 @@
             </#if>
             <#if security.hasEntityPermission("FACILITY","_CREATE", request)>
                 <#if orderHeader.orderTypeId == "SALES_ORDER">
-                    <#if orderHeader.statusId == "ORDER_APPROVED">
+                    <#if orderHeader.statusId == "ORDER_APPROVED" && !setOrderCompleteOption>
                         <@menuitem type="generic">
                             <form action="<@pageUrl>quickShipOrder</@pageUrl>" method="post">
                                 <input type="hidden" name="orderId" value="${orderId}"/>

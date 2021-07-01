@@ -300,25 +300,29 @@ public class PackingServices {
         String weightUomId = (String) context.get("weightUomId");
 
         synchronized (session) { // SCIPIO
-        session.setHandlingInstructions(instructions);
-        session.setPickerPartyId(pickerPartyId);
-        session.setAdditionalShippingCharge(additionalShippingCharge);
-        session.setWeightUomId(weightUomId);
-        setSessionPackageWeights(session, packageWeights);
-        setSessionShipmentBoxTypes(session, boxTypes);
+            session.setHandlingInstructions(instructions);
+            session.setPickerPartyId(pickerPartyId);
+            session.setAdditionalShippingCharge(additionalShippingCharge);
+            session.setWeightUomId(weightUomId);
+            setSessionPackageWeights(session, packageWeights);
+            setSessionShipmentBoxTypes(session, boxTypes);
 
-        Boolean force = (Boolean) context.get("forceComplete");
-        if (force == null) {
-            force = Boolean.FALSE;
-        }
+            if (UtilValidate.isNotEmpty(context.get("shipmentId"))) {
+                session.shipmentId = (String) context.get("shipmentId");
+            }
 
-        //String shipmentId = null; // SCIPIO: moved above
-        try {
-            shipmentId = session.complete(force);
-        } catch (GeneralException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage(), e.getMessageList());
-        }
+            Boolean force = (Boolean) context.get("forceComplete");
+            if (force == null) {
+                force = Boolean.FALSE;
+            }
+
+            //String shipmentId = null; // SCIPIO: moved above
+            try {
+                shipmentId = session.complete(force);
+            } catch (GeneralException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage(), e.getMessageList());
+            }
         }
         
         Map<String, Object> resp;

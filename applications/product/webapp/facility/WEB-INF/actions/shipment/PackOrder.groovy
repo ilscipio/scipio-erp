@@ -148,7 +148,7 @@ if (orderId) {
         }
 
         if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
-            if (shipGroupSeqId) {
+             if (shipGroupSeqId) {
                 productStoreId = orh.getProductStoreId();
                 // SCIPIO 2.1.0: Doesn't make much sense to throw an error if shipment is not null. A verified picked shipment should be eligible for packing. No shippableItems can be retrieved from OrderItemAndShipGrpInvResAndItemSum
                 // if no shipment present or ItemIssuance if a shipment (with picked status) is present.

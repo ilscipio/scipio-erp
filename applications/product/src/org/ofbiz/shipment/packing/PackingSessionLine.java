@@ -57,7 +57,8 @@ public class PackingSessionLine implements java.io.Serializable {
     protected String weightPackageSeqId = null;
     protected int packageSeq = 0;
 
-    public PackingSessionLine(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, String inventoryItemId, BigDecimal quantity, BigDecimal weight, int packageSeq) {
+    // SCIPIO: 2.1.0: Added shipmentItemSeqId used when packing session has a shipment created already
+    public PackingSessionLine(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, String inventoryItemId, BigDecimal quantity, BigDecimal weight, int packageSeq, String shipmentItemSeqId) {
         this.orderId = orderId;
         this.orderItemSeqId = orderItemSeqId;
         this.shipGroupSeqId = shipGroupSeqId;
@@ -71,6 +72,7 @@ public class PackingSessionLine implements java.io.Serializable {
         this.shipmentBoxTypeId = null;
         this.weightPackageSeqId = null;
         this.packageSeq = packageSeq;
+        this.shipmentItemSeqId = shipmentItemSeqId;
     }
 
     public String getOrderId() {

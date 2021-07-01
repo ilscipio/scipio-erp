@@ -148,16 +148,20 @@ public class PackingSession implements java.io.Serializable {
         if (UtilValidate.isEmpty(reservations)) {
 //            throw new GeneralException("No inventory reservations available; cannot pack this item! [101]");
             reservations = getItemIssuances(orderId, orderItemSeqId, shipGroupSeqId);
-        }
-        if (UtilValidate.isNotEmpty(reservations)) {
-            itemsIssued = true;
+            if (UtilValidate.isNotEmpty(reservations)) {
+                itemsIssued = true;
+            }
         }
 
         // find the inventoryItemId to use
         if (reservations.size() == 1) {
             GenericValue res = EntityUtil.getFirst(reservations);
             int checkCode = this.checkLineForAdd(res, orderId, orderItemSeqId, shipGroupSeqId, productId, quantity, packageSeqId, update);
-            this.createPackLineItem(checkCode, res, orderId, orderItemSeqId, shipGroupSeqId, productId, quantity, weight, packageSeqId);
+            if (res.getEntityName().equals("ItemIssuance")) {
+                this.createPackLineItem(checkCode, res, orderId, orderItemSeqId, shipGroupSeqId, productId, quantity, weight, packageSeqId, res.getString("shipmentItemSeqId"));
+            } else {
+                this.createPackLineItem(checkCode, res, orderId, orderItemSeqId, shipGroupSeqId, productId, quantity, weight, packageSeqId);
+            }
         } else {
             // more than one reservation found
             Map<GenericValue, BigDecimal> toCreateMap = new HashMap<GenericValue, BigDecimal>();
@@ -240,6 +244,10 @@ public class PackingSession implements java.io.Serializable {
     }
 
     protected void createPackLineItem(int checkCode, GenericValue res, String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, BigDecimal quantity, BigDecimal weight, int packageSeqId) throws GeneralException {
+        createPackLineItem(checkCode, res, orderId, orderItemSeqId, shipGroupSeqId, productId, quantity, weight, packageSeqId, null);
+    }
+
+    protected void createPackLineItem(int checkCode, GenericValue res, String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, BigDecimal quantity, BigDecimal weight, int packageSeqId, String shipmentItemSeqId) throws GeneralException {
         // process the result; add new item if necessary
         switch (checkCode) {
             case 0:
@@ -251,7 +259,7 @@ public class PackingSession implements java.io.Serializable {
             case 2:
                 // need to create a new item
                 String invItemId = res.getString("inventoryItemId");
-                packLines.add(new PackingSessionLine(orderId, orderItemSeqId, shipGroupSeqId, productId, invItemId, quantity, weight, packageSeqId));
+                packLines.add(new PackingSessionLine(orderId, orderItemSeqId, shipGroupSeqId, productId, invItemId, quantity, weight, packageSeqId, shipmentItemSeqId));
                 break;
             default:
                 // SCIPIO: 2018-10-09: Not sure how this should be handled, log as error for now...

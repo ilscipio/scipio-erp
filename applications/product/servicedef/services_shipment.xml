@@ -695,7 +695,6 @@ code package.
         <attribute name="packingSession" type="org.ofbiz.shipment.packing.PackingSession" mode="IN" optional="false"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
-        <attribute name="shipmentId" type="String" mode="IN" optional="true"/>
         <attribute name="handlingInstructions" type="String" mode="IN" optional="true"/>
         <attribute name="pickerPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="additionalShippingCharge" type="BigDecimal" mode="IN" optional="true"/>
@@ -703,7 +702,7 @@ code package.
         <attribute name="packageWeights" type="Map" string-map-prefix="packageWeight_" mode="IN" optional="true"/>
         <attribute name="dimensionUomId" type="String" mode="IN" optional="true"/>
         <attribute name="weightUomId" type="String" mode="IN" optional="true"/>
-        <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
+        <attribute name="shipmentId" type="String" mode="INOUT" optional="false"/>
         <attribute name="boxTypes" type="Map" string-map-prefix="boxType_" mode="IN" optional="true"/>
     </service>
 

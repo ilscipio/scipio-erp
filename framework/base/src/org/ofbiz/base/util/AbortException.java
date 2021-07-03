@@ -3,7 +3,7 @@ package org.ofbiz.base.util;
 import java.util.List;
 
 /** General operation abort exception (SCIPIO). */
-public class AbortException extends GeneralException {
+public class AbortException extends ControlException {
     public AbortException() {
     }
 

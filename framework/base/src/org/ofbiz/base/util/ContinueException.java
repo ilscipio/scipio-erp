@@ -3,7 +3,7 @@ package org.ofbiz.base.util;
 import java.util.List;
 
 /** General operation continue or recoverable exception (SCIPIO). */
-public class ContinueException extends GeneralException {
+public class ContinueException extends ControlException {
     public ContinueException() {
     }
 

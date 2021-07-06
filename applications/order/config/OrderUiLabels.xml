@@ -3191,6 +3191,12 @@
         <value xml:lang="zh">我的已完成的客户请求</value>
         <value xml:lang="zh-TW">個人完成請求</value>
     </property>
+    <property key="OrderCompleteShipGroup">
+        <value xml:lang="de">Komplette Versandgruppe</value>
+        <value xml:lang="en">Complete Ship Group</value>
+        <value xml:lang="fr">Groupe d'expédition complet</value>
+        <value xml:lang="es">Completar grupo de envío</value>
+    </property>
     <property key="OrderConfigure">
         <value xml:lang="ar">إعداد</value>
         <value xml:lang="de">Konfigurieren</value>

@@ -197,7 +197,7 @@ if (orderHeader) {
     context.shipGroups = shipGroups;
 
     // SCIPIO: 2.1.0: new list that contains items that are in a shipGroup already having a shipment or just a single order item not requiring multiple shipGroups
-    orderItemsShipped = [];
+    orderItemsShipped = 0;
     singleOrderItem = true;
     allShipGroupsNoShipping = true;
     shipGroups.each { shipGroup ->
@@ -214,16 +214,18 @@ if (orderHeader) {
             Debug.logInfo("shipment: " + shipment, module);
             shipmentItems = shipment.getRelated("ShipmentItem");
             Debug.logInfo("shipmentItems: " + shipmentItems, module);
-            orderItemsShipped.addAll(shipmentItems);
+            for (shipmentItem in shipmentItems) {
+                orderItemsShipped += shipmentItem.quantity;
+            }
         }
     }
     if (context.orderItemList.size() > 1) {
         singleOrderItem = false;
     }
-    context.put("allOrderItemsShipped", (orderItemList.size() <= orderItemsShipped.size()));
+    context.put("allOrderItemsShipped", (orderItemList.size() <= orderItemsShipped));
     context.put("singleOrderItem", singleOrderItem);
     context.put("allShipGroupsNoShipping", allShipGroupsNoShipping);
-    Debug.logInfo("allOrderItemsShipped size: " + orderItemsShipped.size() + " orderItemList size: " + context.orderItemList.size(), module);
+    Debug.logInfo("allOrderItemsShipped size: " + orderItemsShipped + " orderItemList size: " + context.orderItemList.size(), module);
     Debug.logInfo("allOrderItemsShipped: " + context.allOrderItemsShipped, module);
     Debug.logInfo("singleOrderItem: " + singleOrderItem, module);
     Debug.logInfo("allShipGroupsNoShipping: " + allShipGroupsNoShipping, module);
@@ -276,7 +278,7 @@ if (orderHeader) {
         orderItemData.put("quantityNotAvailable", quantityNotAvailable);
         orderItemDatas.add(orderItemData);
 
-        // SCIPIO: 2.0.0: check if an item is digital so we enable the complete order button
+        // SCIPIO: 2.1.0: check if an item is digital so we enable the complete order button
         if (!orderContainsOnlyDigitalProducts && ProductWorker.isDigital(product)) {
             orderContainsOnlyDigitalProducts = true;
         }

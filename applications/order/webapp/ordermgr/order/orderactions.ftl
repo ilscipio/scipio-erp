@@ -130,7 +130,7 @@
         </#if>
         <#if setOrderCompleteOption>
           <@menuitem type="link" href="javascript:document.OrderCompleteOrder.submit()" text=uiLabelMap.OrderCompleteOrder class="+${styles.action_run_sys!} ${styles.action_complete!} ${styles.action_importance_high!}">
-            <form name="OrderCompleteOrder" method="post" action="<@pageUrl>changeOrderStatus</@pageUrl>">
+            <form name="OrderCompleteOrder" method="post" action="<@pageUrl>orderCompleteShip</@pageUrl>">
                 <input type="hidden" name="statusId" value="ORDER_COMPLETED"/>
                 <input type="hidden" name="setItemStatus" value="Y"/>
                 <input type="hidden" name="orderId" value="${orderId!}"/>

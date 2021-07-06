@@ -85,19 +85,16 @@ code package.
         <attribute name="setPackedOnly" type="String" mode="IN" optional="true"/>
         <attribute name="shipmentId" type="String" mode="OUT" optional="false"/>
     </service>
-    <!-- SCIPIO: 2.1.0: Ships an entire order  -->
-    <service name="shipEntireOrder" engine="simple"
-             location="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="shipEntireOrder" auth="true" transaction-timeout="600">
-        <description>Quick Ships An Entire Order Creating One Shipment Per Facility and Ship Group.  All approved order items are
-            automatically issued in full and put into one package.  The shipment is created in the INPUT status and then updated to
-            PACKED and SHIPPED.
+    <!-- SCIPIO: 2.1.0: Completes an order assuming a shipment already exists. Depending on the status will detect and complete the pending stages -->
+    <service name="orderCompleteShip" engine="java"
+             location="com.ilscipio.scipio.shipment.shipment.ShipmentServices" invoke="orderCompleteShip" auth="true" transaction-timeout="600">
+        <description>Completes an order assuming a shipment already exists. All issued order items are automatically updated depending on the status.
         </description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
-        <attribute name="setPackedOnly" type="String" mode="IN" optional="true"/>
         <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
-        <!-- A List of Maps, each with a shipmentId,a facilityId, and a shipGroupSeqId for each shipment created -->
-        <attribute name="shipmentShipGroupFacilityList" type="List" mode="OUT" optional="false"/>
+        <!-- A List of Maps, each with a shipmentId,a facilityId, and a shipGroupSeqId for each shipment updated -->
+        <attribute name="shipmentShipGroupFacilityList" type="List" mode="OUT" optional="true"/>
     </service>
     <service name="quickShipPurchaseOrder" engine="simple"
             location="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipPurchaseOrder" auth="true">

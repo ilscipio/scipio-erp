@@ -1446,6 +1446,8 @@ code package.
     </simple-method>
 
     <simple-method method-name="createShipmentForFacilityAndShipGroup" short-description="Sub-method used by quickShip methods to create a shipment">
+        <log message="orderHeader.orderId: ${orderHeader.orderId}" level="always" />
+        <log message="orderItemShipGroupList: ${orderItemShipGroupList}" level="always" />
 
         <!-- for OrderItemShipGroup need to split all OISGIRs into their ship groups and create a shipment for each -->
         <iterate list="orderItemShipGroupList" entry="orderItemShipGroup">
@@ -1457,6 +1459,8 @@ code package.
             </entity-and>
 
             <set from-field="orderItemListByShGrpMap[orderItemShipGroup.shipGroupSeqId]" field="perShipGroupItemList"/>
+
+            <log message="perShipGroupItemList: ${perShipGroupItemList}" level="always" />
 
             <!-- make sure we have something to ship -->
             <if-empty field="perShipGroupItemList">

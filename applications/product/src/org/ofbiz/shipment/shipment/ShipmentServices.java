@@ -1106,7 +1106,7 @@ public class ShipmentServices {
             Debug.logError(e, "Problem getting info from database", module);
         }
 
-        // SCIPIO: added 2.0.0: Notification email is now determined by shipment
+        // SCIPIO: added 2.1.0: Notification email is now determined by shipment
         if (UtilValidate.isNotEmpty(orderHeader)) {
             String productStoreId = orderHeader.getString("productStoreId");
             GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);

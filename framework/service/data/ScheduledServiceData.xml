@@ -17,6 +17,6 @@ code package.
     
     <!-- SCIPIO: Scheduler Event Types -->
     <EnumerationType description="Scheduling Event Type" enumTypeId="SCH_EVENT_TYPE" hasTable="N" parentTypeId=""/>
-    <Enumeration description="Ofbiz startup" enumCode="STARTUP" enumId="SCH_EVENT_STARTUP" sequenceId="01" enumTypeId="SCH_EVENT_TYPE"/>
+    <Enumeration description="SCIPIO startup" enumCode="STARTUP" enumId="SCH_EVENT_STARTUP" sequenceId="01" enumTypeId="SCH_EVENT_TYPE"/>
 
 </entity-engine-xml>

@@ -814,7 +814,9 @@ public class ProductImageVariants extends ImageVariants {
             Number sizeDefNum = sizeDefEntry.getValue();
             if (UtilValidate.isNotEmpty(sizeDefKey) && sizeDefNum != null) {
                 for (Variant variant : variantList) {
-                    if (variant.getImageWidth() != null && variant.getImageWidth() >= sizeDefNum.intValue()) {
+                    Integer width = variant.getImageWidth();
+                    if (width == null) { width = variant.getConfigWidth(); }
+                    if (width != null && width >= sizeDefNum.intValue()) {
                         if (targetMimeTypeId.equals(variant.getMimeTypeId())) {
                             bestSizeTarget = variant;
                         } else {

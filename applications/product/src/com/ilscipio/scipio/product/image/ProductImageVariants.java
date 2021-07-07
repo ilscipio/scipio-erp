@@ -831,14 +831,18 @@ public class ProductImageVariants extends ImageVariants {
             if (bestSize != null) {
                 String url = bestSize.getImageUrl(context, urlArgs);
                 if (UtilValidate.isNotEmpty(url)) {
-                    srcset.put(url, bestSize.getImageWidth());
+                    Integer width = bestSize.getImageWidth();
+                    if (width == null) { width = bestSize.getConfigWidth(); }
+                    srcset.put(url, width);
                     srcsetSize.put(url, sizeDefKey);
                 }
             }
             if (bestSizeTarget != null) {
                 String url = bestSizeTarget.getImageUrl(context, urlArgs);
                 if (UtilValidate.isNotEmpty(url)) {
-                    srcsetTarget.put(url, bestSizeTarget.getImageWidth());
+                    Integer width = bestSizeTarget.getImageWidth();
+                    if (width == null) { width = bestSizeTarget.getConfigWidth(); }
+                    srcsetTarget.put(url, width);
                     srcsetSizeTarget.put(url, sizeDefKey);
                 }
             }

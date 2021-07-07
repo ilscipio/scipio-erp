@@ -1740,100 +1740,100 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
 <#-- @img main markup - theme override -->
 <#assign scpDefaultImgSrcSizesByColumns = {
 "1" : {
-"(max-width:576px)":8,
-"(max-width:766px)":24,
-"(min-width:766px)":60,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":16,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":48,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":120
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":120,
+"(max-width:576px)":8,
+"(max-width:766px)":24,
+"(min-width:766px)":60
 },
 "2" : {
-"(max-width:576px)":56,
-"(max-width:766px)":88,
-"(min-width:766px)":160,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":112,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":176,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":320
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":320,
+"(max-width:576px)":56,
+"(max-width:766px)":88,
+"(min-width:766px)":160
 },
 "3" : {
-"(max-width:576px)":104,
-"(max-width:766px)":152,
-"(min-width:766px)":260,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":208,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":304,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":520
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":520,
+"(max-width:576px)":104,
+"(max-width:766px)":152,
+"(min-width:766px)":260
 },
 "4" : {
-"(max-width:576px)":152,
-"(max-width:766px)":215,
-"(min-width:766px)":360,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":304,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":430,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":720
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":720,
+"(max-width:576px)":152,
+"(max-width:766px)":215,
+"(min-width:766px)":360
 },
 "5" : {
-"(max-width:576px)":200,
-"(max-width:766px)":280,
-"(min-width:766px)":460,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":400,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":560,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":920
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":920,
+"(max-width:576px)":200,
+"(max-width:766px)":280,
+"(min-width:766px)":460
 },
 "6" : {
-"(max-width:576px)":248,
-"(max-width:766px)":343,
-"(min-width:766px)":560,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":496,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":686,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1120
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1120,
+"(max-width:576px)":248,
+"(max-width:766px)":343,
+"(min-width:766px)":560
 },
 "7" : {
-"(max-width:576px)":296,
-"(max-width:766px)":407,
-"(min-width:766px)":660,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":592,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":814,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1320
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1320,
+"(max-width:576px)":296,
+"(max-width:766px)":407,
+"(min-width:766px)":660
 },
 "8" : {
-"(max-width:576px)":344,
-"(max-width:766px)":471,
-"(min-width:766px)":760,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":688,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":942,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1520
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1520,
+"(max-width:576px)":344,
+"(max-width:766px)":471,
+"(min-width:766px)":760
 },
 "9" : {
-"(max-width:576px)":392,
-"(max-width:766px)":535,
-"(min-width:766px)":860,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":784,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":1070,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1720
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1720,
+"(max-width:576px)":392,
+"(max-width:766px)":535,
+"(min-width:766px)":860
 },
 "10" : {
-"(max-width:576px)":440,
-"(max-width:766px)":600,
-"(min-width:766px)":960,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":880,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":1200,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1920
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":1920,
+"(max-width:576px)":440,
+"(max-width:766px)":600,
+"(min-width:766px)":960
 },
 "11" : {
-"(max-width:576px)":488,
-"(max-width:766px)":662,
-"(min-width:766px)":1060,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":976,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":1324,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":2120
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":2120,
+"(max-width:576px)":488,
+"(max-width:766px)":662,
+"(min-width:766px)":1060
 },
 "12" : {
-"(max-width:576px)":536,
-"(max-width:766px)":726,
-"(min-width:766px)":1160,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:576px)":1072,
 "(-webkit-min-device-pixel-ratio: 2) and (max-width:766px)":1452,
-"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":2320
+"(-webkit-min-device-pixel-ratio: 2) and (min-width:766px)":2320,
+"(max-width:576px)":536,
+"(max-width:766px)":726,
+"(min-width:766px)":1160
 }
 } />
 <#macro img_markup class="" id="" src="" responsiveMap={} type="" style="" width="" height="" lazy=true link=link linkTarget=linkTarget attribs={} origArgs={} passArgs={} catchArgs...>

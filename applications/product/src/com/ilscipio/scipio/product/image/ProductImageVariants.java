@@ -798,7 +798,9 @@ public class ProductImageVariants extends ImageVariants {
                 // NOTE: imageWidth is physical width, it *could* be missing for old data (and non-updated product images),
                 // so may want configWidth instead...
                 Integer width1 = o1.getImageWidth();
+                if (width1 == null) { width1 = o1.getConfigWidth(); }
                 Integer width2 = o2.getImageWidth();
+                if (width2 == null) { width2 = o2.getConfigWidth(); }
                 if (width1 == null || width2 == null) {
                     return 0;
                 }

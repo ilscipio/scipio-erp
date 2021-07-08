@@ -135,6 +135,8 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
         private final List<String> noPkFieldNames;
 
+        protected final List<ModelField> selectableFieldsList;
+
         /**
          * Main constructor. (Re)creates the fields info using a linked fields map - always pass LinkedHashMap.
          * NOTE: The pk fields order must be explicitly passed because in rare (problem?) cases prim-key order on
@@ -147,6 +149,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             ArrayList<String> pkFieldNames = (pkFieldNamesOrig != null) ? new ArrayList<>(pkFieldNamesOrig) : new ArrayList<>(fieldsMap.size());
             ArrayList<ModelField> nopks = new ArrayList<>(fieldsMap.size());
             ArrayList<String> nonPkFieldNames = new ArrayList<>(fieldsMap.size());
+            ArrayList<ModelField> selectableFieldsList = new ArrayList<>(fieldsMap.size());
             for(ModelField field : fieldsMap.values()) {
                 fieldsList.add(field);
                 fieldNames.add(field.getName());
@@ -156,6 +159,9 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
                 } else if (pkFieldNamesOrig == null) {
                     pks.add(field);
                     pkFieldNames.add(field.getName());
+                }
+                if (!Boolean.FALSE.equals(field.getSelect())) {
+                    selectableFieldsList.add(field);
                 }
             }
             if (pkFieldNamesOrig != null) {
@@ -176,6 +182,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             pkFieldNames.trimToSize();
             nopks.trimToSize();
             nonPkFieldNames.trimToSize();
+            selectableFieldsList.trimToSize();
             this.fieldsList = Collections.unmodifiableList(fieldsList);
             this.fieldsMap = Collections.unmodifiableMap(fieldsMap);
             this.fieldNames = Collections.unmodifiableList(fieldNames);
@@ -183,6 +190,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             this.pkFieldNames = Collections.unmodifiableList(pkFieldNames);
             this.noPks = Collections.unmodifiableList(nopks);
             this.noPkFieldNames = Collections.unmodifiableList(nonPkFieldNames);
+            this.selectableFieldsList = Collections.unmodifiableList(selectableFieldsList);
         }
 
         /*
@@ -203,6 +211,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
             this.pkFieldNames = Collections.emptyList();
             this.noPks = Collections.emptyList();
             this.noPkFieldNames = Collections.emptyList();
+            this.selectableFieldsList = Collections.emptyList();
         }
 
         public Fields add(ModelField newField) {
@@ -299,6 +308,8 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     /** The location of this entity's definition */
     protected String location = "";
 
+    protected Boolean aliasColumns; // SCIPIO
+
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
     public ModelEntity() {
@@ -394,6 +405,8 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before relations");
         this.populateRelated(reader, entityElement);
         this.populateIndexes(entityElement);
+
+        this.aliasColumns = UtilMisc.booleanValue(entityElement.getAttribute("alias-columns"));
     }
 
     /** DB Names Constructor */
@@ -691,7 +704,7 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
     }
 
     public boolean getHasFieldWithAuditLog() {
-        for (ModelField mf : getFieldsUnmodifiable()) {
+        for (ModelField mf : getFields()) {
             if (mf.getEnableAuditLog()) {
                 return true;
             }
@@ -863,6 +876,10 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         //return Collections.unmodifiableList(newList);
         return this.fields.fieldsList; // SCIPIO: 2018-09-29: fields member
         //}
+    }
+
+    public List<ModelField> getSelectableFields() { // SCIPIO
+        return this.fields.selectableFieldsList;
     }
 
     /** The col-name of the Field, the alias of the field if this is on a view-entity */
@@ -2039,5 +2056,9 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
 
     public String getIdSep() { // SCIPIO
         return "::";
+    }
+
+    public Boolean getAliasColumns() {
+        return aliasColumns;
     }
 }

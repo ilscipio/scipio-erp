@@ -204,6 +204,7 @@ public class ModelViewEntity extends ModelEntity {
             }
         }
         this.memberEntityDependencyOrderByAlias = (memberEntityDependencyOrderByAlias != null) ? Collections.unmodifiableList(memberEntityDependencyOrderByAlias) : null;
+        this.aliasColumns = UtilMisc.booleanValue(entityElement.getAttribute("alias-columns"));
     }
 
     public ModelViewEntity(DynamicViewEntity dynamicViewEntity, ModelReader modelReader) {
@@ -591,7 +592,8 @@ public class ModelViewEntity extends ModelEntity {
                     colValue = prefix + colValue + ")";
                 }
             }
-            ModelField field = ModelField.create(this, description, name, type, colName, colValue, fieldSet, isNotNull, isPk, encryptMethod, isAutoCreatedInternal, enableAuditLog, validators);
+            Boolean select = alias.getSelect();
+            ModelField field = ModelField.create(this, description, name, type, colName, colValue, fieldSet, isNotNull, isPk, encryptMethod, isAutoCreatedInternal, enableAuditLog, validators, select);
             // if this is a groupBy field, add it to the groupBys list
             if (alias.groupBy || groupByFields.contains(alias.name)) {
                 this.groupBys.add(field);
@@ -816,7 +818,7 @@ public class ModelViewEntity extends ModelEntity {
                     continue;
                 }
 
-                ModelAlias expandedAlias = new ModelAlias(aliasAll.getEntityAlias(), aliasName, fieldName, ModelUtil.javaNameToDbName(UtilXml.checkEmpty(aliasName)), null, groupBy, function, fieldSet, true);
+                ModelAlias expandedAlias = new ModelAlias(aliasAll.getEntityAlias(), aliasName, fieldName, ModelUtil.javaNameToDbName(UtilXml.checkEmpty(aliasName)), null, groupBy, function, fieldSet, true, aliasAll.getSelect());
                 expandedAlias.setDescription(modelField.getDescription());
 
                 aliases.add(expandedAlias);
@@ -1183,18 +1185,27 @@ public class ModelViewEntity extends ModelEntity {
         // is specified this alias is a calculated value; can be: min, max, sum, avg, count, count-distinct
         public final String function;
         public final String fieldSet;
+        /**
+         * If false, prevents automatically making part of select fields when none specified.
+         * <p>SCIPIO: 2.1.0: Added.</p>
+         */
+        public final Boolean select;
 
         @Deprecated
         public ModelAliasAll(String entityAlias, String prefix) {
-            this(entityAlias, prefix, false, null, null, null);
+            this(entityAlias, prefix, false, null, null, null, null);
         }
 
         @Deprecated
         public ModelAliasAll(String entityAlias, String prefix, boolean groupBy, String function, Collection<String> excludes) {
-            this(entityAlias, prefix, groupBy, function, null, excludes);
+            this(entityAlias, prefix, groupBy, function, null, excludes, null);
         }
 
         public ModelAliasAll(String entityAlias, String prefix, boolean groupBy, String function, String fieldSet, Collection<String> excludes) {
+            this(entityAlias, prefix, groupBy, function, fieldSet, excludes, null);
+        }
+
+        public ModelAliasAll(String entityAlias, String prefix, boolean groupBy, String function, String fieldSet, Collection<String> excludes, Boolean select) {
             this.entityAlias = entityAlias;
             this.prefix = prefix;
             this.groupBy = groupBy;
@@ -1206,6 +1217,7 @@ public class ModelViewEntity extends ModelEntity {
             } else {
                 this.fieldsToExclude = null;
             }
+            this.select = select;
         }
 
         public ModelAliasAll(Element aliasAllElement) {
@@ -1224,7 +1236,7 @@ public class ModelViewEntity extends ModelEntity {
             } else {
                 this.fieldsToExclude = null;
             }
-
+            this.select = UtilMisc.booleanValue(aliasAllElement.getAttribute("select"));
         }
 
         public String getEntityAlias() {
@@ -1245,6 +1257,10 @@ public class ModelViewEntity extends ModelEntity {
 
         public String getFieldSet() {
             return this.fieldSet;
+        }
+
+        public Boolean getSelect() {
+            return select;
         }
 
         public boolean shouldExclude(String fieldName) {
@@ -1279,6 +1295,11 @@ public class ModelViewEntity extends ModelEntity {
         public ComplexAliasMember complexAliasMember;
         // The description for documentation purposes
         public String description = "";
+        /**
+         * If false, prevents automatically making part of select fields when none specified.
+         * <p>SCIPIO: 2.1.0: Added.</p>
+         */
+        public final Boolean select; // SCIPIO
 
         public ModelAlias(Element aliasElement) {
             this.entityAlias = UtilXml.checkEmpty(aliasElement.getAttribute("entity-alias")).intern();
@@ -1302,18 +1323,20 @@ public class ModelViewEntity extends ModelEntity {
             if (complexAliasElement != null) {
                 complexAliasMember = new ComplexAlias(complexAliasElement);
             }
+
+            this.select = UtilMisc.booleanValue(aliasElement.getAttribute("select"));
         }
 
         @Deprecated
         public ModelAlias(String entityAlias, String name, String field, String colAlias, Boolean isPk, Boolean groupBy, String function) {
-            this(entityAlias, name, field, colAlias, isPk, groupBy, function, null, false);
+            this(entityAlias, name, field, colAlias, isPk, groupBy, function, null, false, null);
         }
 
         public ModelAlias(String entityAlias, String name, String field, String colAlias, Boolean isPk, Boolean groupBy, String function, String fieldSet) {
-            this(entityAlias, name, field, colAlias, isPk, groupBy, function, fieldSet, false);
+            this(entityAlias, name, field, colAlias, isPk, groupBy, function, fieldSet, false, null);
         }
 
-        protected ModelAlias(String entityAlias, String name, String field, String colAlias, Boolean isPk, Boolean groupBy, String function, String fieldSet, boolean isFromAliasAll) {
+        protected ModelAlias(String entityAlias, String name, String field, String colAlias, Boolean isPk, Boolean groupBy, String function, String fieldSet, boolean isFromAliasAll, Boolean select) {
             this.entityAlias = entityAlias;
             this.name = name;
             this.field = UtilXml.checkEmpty(field, this.name);
@@ -1327,6 +1350,7 @@ public class ModelViewEntity extends ModelEntity {
             this.function = function;
             this.fieldSet = UtilXml.checkEmpty(fieldSet).intern();
             this.isFromAliasAll = isFromAliasAll;
+            this.select = select;
         }
 
         public void setComplexAliasMember(ComplexAliasMember complexAliasMember) {
@@ -1385,6 +1409,10 @@ public class ModelViewEntity extends ModelEntity {
 
         public boolean getIsFromAliasAll() {
             return this.isFromAliasAll;
+        }
+
+        public Boolean getSelect() {
+            return select;
         }
     }
 
@@ -2114,5 +2142,13 @@ public class ModelViewEntity extends ModelEntity {
 
     public List<String> getEntityAliasesForName(String entityName) { // SCIPIO: TODO: Optimize
         return getEntityAliasesForName(new ArrayList<>(), entityName);
+    }
+
+    /**
+     * Returns the view-entity alias-columns setting; if not set this should default
+     * to {@link org.ofbiz.entity.config.model.Datasource#getAliasViewColumns()}.
+     */
+    public Boolean getAliasColumns() {
+        return aliasColumns;
     }
 }

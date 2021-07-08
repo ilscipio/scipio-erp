@@ -152,6 +152,36 @@ public abstract class EntityCondition extends EntityConditionBase implements IsE
         return cond;
     }
 
+    /**
+     * Combines both conditions using {@link #makeCondition(EntityCondition, EntityJoinOperator, EntityCondition)}}
+     * only if both conditions are non-null, otherwise returns the non-null one.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static EntityCondition combine(EntityCondition lhs, EntityJoinOperator operator, EntityCondition rhs) {
+        if (lhs == null) {
+            return rhs;
+        } else if (rhs == null) {
+            return lhs;
+        } else {
+            return makeCondition(lhs, operator, rhs);
+        }
+    }
+
+    /**
+     * Combines both conditions using {@link #makeCondition(EntityCondition, EntityJoinOperator, EntityCondition)}}
+     * only if both conditions are non-null, otherwise returns the non-null one.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static EntityCondition combine(EntityCondition lhs, EntityCondition rhs) {
+        if (lhs == null) {
+            return rhs;
+        } else if (rhs == null) {
+            return lhs;
+        } else {
+            return makeCondition(lhs, EntityOperator.AND, rhs);
+        }
+    }
+
     public static EntityWhereString makeConditionWhere(String sqlString) {
         return new EntityWhereString(sqlString);
     }

@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.NamedElement;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.jdbc.DatabaseUtil;
 import org.w3c.dom.Document;
@@ -93,7 +94,16 @@ public final class ModelField extends ModelChild implements NamedElement { // SC
         return create(modelEntity, description, name, type, colName, colValue, fieldSet, isNotNull, isPk, encrypt ? EncryptMethod.TRUE : EncryptMethod.FALSE, isAutoCreatedInternal, enableAuditLog, validators);
     }
 
-    public static ModelField create(ModelEntity modelEntity, String description, String name, String type, String colName, String colValue, String fieldSet, boolean isNotNull, boolean isPk, EncryptMethod encrypt, boolean isAutoCreatedInternal, boolean enableAuditLog, List<String> validators) {
+    public static ModelField create(ModelEntity modelEntity, String description, String name, String type, String colName,
+                                    String colValue, String fieldSet, boolean isNotNull, boolean isPk, EncryptMethod encrypt,
+                                    boolean isAutoCreatedInternal, boolean enableAuditLog, List<String> validators) {
+        return create(modelEntity, description, name, type, colName, colValue, fieldSet, isNotNull, isPk, encrypt,
+                isAutoCreatedInternal, enableAuditLog, validators, null);
+    }
+
+    public static ModelField create(ModelEntity modelEntity, String description, String name, String type, String colName,
+                                    String colValue, String fieldSet, boolean isNotNull, boolean isPk, EncryptMethod encrypt,
+                                    boolean isAutoCreatedInternal, boolean enableAuditLog, List<String> validators, Boolean select) {
         // TODO: Validate parameters.
         if (description == null) {
             description = "";
@@ -121,7 +131,7 @@ public final class ModelField extends ModelChild implements NamedElement { // SC
         if (isPk) {
             isNotNull = true;
         }
-        return new ModelField(modelEntity, description, name, type, colName, colValue, fieldSet, isNotNull, isPk, encrypt, isAutoCreatedInternal, enableAuditLog, validators);
+        return new ModelField(modelEntity, description, name, type, colName, colValue, fieldSet, isNotNull, isPk, encrypt, isAutoCreatedInternal, enableAuditLog, validators, select);
     }
 
     /**
@@ -159,7 +169,8 @@ public final class ModelField extends ModelChild implements NamedElement { // SC
             }
             validators = Collections.unmodifiableList(validators);
         }
-        return new ModelField(modelEntity, description, name, type, colName, colValue, fieldSet, isNotNull, isPk, encrypt, false, enableAuditLog, validators);
+        Boolean select = UtilMisc.booleanValue(fieldElement.getAttribute("select"));
+        return new ModelField(modelEntity, description, name, type, colName, colValue, fieldSet, isNotNull, isPk, encrypt, false, enableAuditLog, validators, select);
     }
 
     /**
@@ -180,7 +191,8 @@ public final class ModelField extends ModelChild implements NamedElement { // SC
         String fieldSet = "";
         EncryptMethod encrypt = EncryptMethod.FALSE;
         boolean enableAuditLog = false;
-        return new ModelField(modelEntity, description, name, type, colName, colValue, fieldSet, isNotNull, isPk, encrypt, false, enableAuditLog, Collections.<String>emptyList());
+        Boolean select = null;
+        return new ModelField(modelEntity, description, name, type, colName, colValue, fieldSet, isNotNull, isPk, encrypt, false, enableAuditLog, Collections.<String>emptyList(), select);
     }
 
     /*
@@ -213,7 +225,15 @@ public final class ModelField extends ModelChild implements NamedElement { // SC
     /** validators to be called when an update is done */
     private final List<String> validators;
 
-    private ModelField(ModelEntity modelEntity, String description, String name, String type, String colName, String colValue, String fieldSet, boolean isNotNull, boolean isPk, EncryptMethod encrypt, boolean isAutoCreatedInternal, boolean enableAuditLog, List<String> validators) {
+    /**
+     * If false, prevents automatically making part of select fields when none specified.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    private final Boolean select;
+
+    private ModelField(ModelEntity modelEntity, String description, String name, String type, String colName, String colValue,
+                       String fieldSet, boolean isNotNull, boolean isPk, EncryptMethod encrypt, boolean isAutoCreatedInternal,
+                       boolean enableAuditLog, List<String> validators, Boolean select) {
         super(modelEntity, description);
         this.name = name;
         this.type = type;
@@ -226,6 +246,7 @@ public final class ModelField extends ModelChild implements NamedElement { // SC
         this.enableAuditLog = enableAuditLog;
         this.isAutoCreatedInternal = isAutoCreatedInternal;
         this.validators = validators;
+        this.select = select;
     }
 
     /** Returns the name of this field. */
@@ -284,6 +305,10 @@ public final class ModelField extends ModelChild implements NamedElement { // SC
 
     public List<String> getValidators() {
         return this.validators;
+    }
+
+    public Boolean getSelect() {
+        return select;
     }
 
     @Override

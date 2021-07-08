@@ -649,7 +649,9 @@ public class GenericDAO {
                 }
             }
         } else {
-            selectFields = modelEntity.getFieldsUnmodifiable();
+            // SCIPIO: 2.1.0: Allow entity definitions to select="false" fields
+            //selectFields = modelEntity.getFieldsUnmodifiable();
+            selectFields = modelEntity.getSelectableFields();
         }
 
         StringBuilder sqlBuffer = new StringBuilder("SELECT ");
@@ -659,7 +661,12 @@ public class GenericDAO {
         }
 
         if (selectFields.size() > 0) {
-            modelEntity.colNameString(selectFields, sqlBuffer, "", ", ", "", datasource.getAliasViewColumns());
+            // SCIPIO: 2.1.0: Allow override alias-view-columns using view-entity alias-columns
+            Boolean aliasColumns = modelEntity.getAliasColumns();
+            if (aliasColumns == null) {
+                aliasColumns = datasource.getAliasViewColumns();
+            }
+            modelEntity.colNameString(selectFields, sqlBuffer, "", ", ", "", aliasColumns);
         } else {
             sqlBuffer.append("*");
         }

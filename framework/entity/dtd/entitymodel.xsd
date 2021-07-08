@@ -169,6 +169,23 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="select" default="">
+            <xs:annotation>
+                <xs:documentation>
+                    If set to false, queries with no manually specified selected fields will not include this field by default.
+                    Typically this would be used on view-entities with group-by for those fields not part of the group-by,
+                    where the alias is still required or useful for other operations without being returned.
+                    SCIPIO: 2.1.0: Added.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value=""/>
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="validate">
         <xs:complexType>
@@ -280,6 +297,26 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="alias-columns" default="">
+            <xs:annotation>
+                <xs:documentation>
+                    If set to true or false, overrides entityengine.xml's alias-view-columns setting (which is false default
+                    for most DBs for legacy reasons) for this specific entity.
+                    NOTE: Since this is generally supported by SQL, as long as the view-entity defines the view fields
+                    with SQL-compatible syntax, there is no real need for a db-specific entity setting, but they are
+                    left default false in entityengine.xml for the time being (2021-07) because of other issues that
+                    occur when turning the feature on globally.
+                    SCIPIO: 2.1.0: Added.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value=""/>
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="member-entity">
         <xs:complexType>
@@ -340,6 +377,23 @@ under the License.
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>
+        <xs:attribute name="select" default="">
+            <xs:annotation>
+                <xs:documentation>
+                    If set to false, queries with no manually specified selected fields will not include this field by default.
+                    Typically this would be used on view-entities with group-by for those fields not part of the group-by,
+                    where the alias is still required or useful for other operations without being returned.
+                    SCIPIO: 2.1.0: Added.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value=""/>
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="exclude">
         <xs:complexType>
@@ -372,6 +426,23 @@ under the License.
                     Any fields that have the same field-set will be selected together in generated queries.
                 </xs:documentation>
             </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="select" default="">
+            <xs:annotation>
+                <xs:documentation>
+                    If set to false, queries with no manually specified selected fields will not include this field by default.
+                    Typically this would be used on view-entities with group-by for those fields not part of the group-by,
+                    where the alias is still required or useful for other operations without being returned.
+                    SCIPIO: 2.1.0: Added.
+                </xs:documentation>
+            </xs:annotation>
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value=""/>
+                    <xs:enumeration value="true"/>
+                    <xs:enumeration value="false"/>
+                </xs:restriction>
+            </xs:simpleType>
         </xs:attribute>
     </xs:attributeGroup>
     <xs:element name="complex-alias">

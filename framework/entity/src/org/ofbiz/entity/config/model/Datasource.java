@@ -157,7 +157,7 @@ public final class Datasource {
             joinStyle = "ansi";
         }
         this.joinStyle = joinStyle;
-        this.aliasViewColumns = "true".equals(getAttr(name, element, "alias-view-columns"));
+        this.aliasViewColumns = "true".equals(getAttr(name, element, "alias-columns"));
         this.alwaysUseConstraintKeyword = "true".equals(getAttr(name, element, "always-use-constraint-keyword"));
         this.dropFkUseForeignKeyKeyword = "true".equals(getAttr(name, element, "drop-fk-use-foreign-key-keyword"));
         this.useBinaryTypeForBlob = "true".equals(getAttr(name, element, "use-binary-type-for-blob"));

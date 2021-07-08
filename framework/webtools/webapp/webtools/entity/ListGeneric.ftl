@@ -13,7 +13,9 @@ code package.
         <@tr class="header-row-2">
           <@th>&nbsp;</@th>
           <#list fieldList as field>
-            <@th>${field.name}</@th>
+            <#if field.selected>
+              <@th>${field.name}</@th>
+            </#if>
           </#list>
           <@th>&nbsp;</@th>
         </@tr>
@@ -26,6 +28,7 @@ code package.
                         <a href="<@pageUrl>ViewGeneric?${record.findString}&amp;enableEdit=true</@pageUrl>">${uiLabelMap.CommonEdit}</a>
                     </@td>
                     <#list fieldList as field>
+                        <#if field.selected>
                         <@td><#t/>
                             <#-- FIXME?: Maybe this may cause unexpected issue so let's keep an eye on it
                                2017-05-25: TODO?: REVIEW: if this is an issue, shouldn't it occur on other pages as well? -->
@@ -38,6 +41,7 @@ code package.
                                 </#if>
                             </#if>
                         </@td>
+                        </#if>
                     </#list>
                     <@td>
                     <#if hasDeletePermission == 'Y'>

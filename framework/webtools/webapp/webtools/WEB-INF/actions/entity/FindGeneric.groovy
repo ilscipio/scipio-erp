@@ -196,9 +196,12 @@ if ("true".equals(find)) {
             Iterator iter = modelEntity.getPksIterator();
             while (iter != null && iter.hasNext()) {
                 ModelField curField = (ModelField) iter.next();
-                pkNames.add(curField.getName());
+                // SCIPIO: 2.1.0: Don't order by fields marked select="false"
+                if (!Boolean.FALSE.equals(curField.getSelect())) {
+                    pkNames.add(curField.getName());
+                }
             }
-            resultEli = delegator.find(entityName, condition, null, fieldsToSelect, pkNames, efo);
+            resultEli = delegator.find(entityName, condition, null, fieldsToSelect, pkNames ?: null, efo);
             resultPartialList = resultEli.getPartialList(lowIndex, highIndex - lowIndex + 1);
 
             arraySize = resultEli.getResultsSizeAfterPartialList();
@@ -242,6 +245,7 @@ while (fieldIterator.hasNext()) {
     fieldMap.put("javaType", type.getJavaType());
     fieldMap.put("sqlType", type.getSqlType());
     fieldMap.put("param", (parameters.get(field.getName()) != null ? parameters.get(field.getName()) : ""));
+    fieldMap.put("selected", !Boolean.FALSE.equals(field.getSelect())); // SCIPIO: 2.1.0: skip fields market select="false"
 
     fieldList.add(fieldMap);
 }

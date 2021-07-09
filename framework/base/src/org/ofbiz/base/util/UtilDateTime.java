@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import com.ibm.icu.util.Calendar;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
 /**
  * Utility class for handling java.util.Date, the java.sql data/time classes and related
@@ -1678,5 +1679,29 @@ public final class UtilDateTime {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         return new Timestamp(cal.getTimeInMillis());
+    }
+
+    /**
+     * Formats the duration in milliseconds using specified format string, such as "HH:mm:ss.SSS".
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static String formatDuration(long milliseconds, String format) {
+        return DurationFormatUtils.formatDuration(milliseconds, format);
+    }
+
+    /**
+     * Formats the duration in milliseconds using format string "HH:mm:ss.SSS".
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static String formatDurationHMS(long milliseconds) {
+        return DurationFormatUtils.formatDurationHMS(milliseconds);
+    }
+
+    /**
+     * Formats the duration in milliseconds using iso format.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static String formatDurationISO(long milliseconds) {
+        return DurationFormatUtils.formatDurationISO(milliseconds);
     }
 }

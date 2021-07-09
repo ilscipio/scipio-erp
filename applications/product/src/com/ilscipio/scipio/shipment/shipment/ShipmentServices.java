@@ -26,8 +26,13 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.minilang.SimpleMethod;
 import org.ofbiz.minilang.method.MethodContext;
+import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContext;
@@ -54,16 +59,14 @@ public class ShipmentServices {
     public static final RoundingMode rounding = UtilNumber.getRoundingMode("order.rounding");
     public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(decimals, rounding);
 
-    public static Map<String, Object> orderCompleteShip(ServiceContext context) {
+    public static Map<String, Object> orderSendShip(ServiceContext context) {
         Map<String, Object> result = new HashMap<String, Object>();
         Delegator delegator = context.delegator();
         LocalDispatcher dispatcher = context.dispatcher();
         Locale locale = context.locale();
-        List<GenericValue> storeAll = new LinkedList<GenericValue>();
         GenericValue userLogin = context.userLogin();
 
         String orderId = context.getString("orderId");
-        String shipGroupSeqId = context.getString("shipGroupSeqId");
 
         try {
             GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
@@ -71,59 +74,95 @@ public class ShipmentServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "FacilityShipmentMissingProductStore", locale));
             }
 
-            List<GenericValue> primaryShipments = orderHeader.getRelated("PrimaryShipment", null, null, false);
-            GenericValue productStore = orderHeader.getRelatedOne("ProductStore", true);
+            OrderReadHelper orh = new OrderReadHelper(orderHeader);
 
-            List<GenericValue> orderItemShipGroupList = orderHeader.getRelated("OrderItemShipGroup");
-            Map<String, GenericValue> orderItemListByShGrpMap = getOrderItemShipGroupLists(orderId, delegator, locale);
+            EntityCondition shipmentCondition = EntityCondition.makeCondition("statusId", EntityOperator.IN,
+                    UtilMisc.toList("SHIPMENT_INPUT", "SHIPMENT_SCHEDULED", "SHIPMENT_PICKED", "SHIPMENT_PACKED"));
+            List<GenericValue> primaryShipments = EntityQuery.use(delegator).from("PrimaryShipment").where(shipmentCondition).cache(false).queryList();
+            if (UtilValidate.isNotEmpty(primaryShipments)) {
+                Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = UtilMisc.newMap();
+                for (GenericValue shipment : primaryShipments) {
+                    List<GenericValue> orderItemsNotIssued = UtilMisc.newList();
+                    for (GenericValue orderItem : orh.getOrderItems()) {
+                        List<GenericValue> itemIssuances = orh.getOrderItemIssuances(orderItem, shipment.getString("shipmentId"));
 
-            if (UtilValidate.isEmpty(primaryShipments)) {
-                if (!productStore.getBoolean("reserveInventory")) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "FacilityShipmentNotCreatedForNotReserveInventory", locale));
-                }
-                if (productStore.getBoolean("explodeOrderItems")) {
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource, "FacilityShipmentNotCreatedForExplodesOrderItems", locale));
-                }
-
-                // locate shipping facilities associated with order item rez's -->
-                List<String> orderItemShipGrpInvResFacilityIds = UtilMisc.newList();
-                List<GenericValue> orderItemAndShipGrpInvResAndItemList = delegator.findByAnd("OrderItemAndShipGrpInvResAndItem", UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_APPROVED"), null, false);
-                for (GenericValue orderItemAndShipGrpInvResAndItem : orderItemAndShipGrpInvResAndItemList) {
-                    if (!orderItemShipGrpInvResFacilityIds.contains(orderItemAndShipGrpInvResAndItem.getString("facilityId"))) {
-                        orderItemShipGrpInvResFacilityIds.add(orderItemAndShipGrpInvResAndItem.getString("facilityId"));
-                    }
-                }
-
-                for (String orderItemShipGrpInvResFacilityId : orderItemShipGrpInvResFacilityIds) {
-                    GenericValue facility = delegator.findOne("Facility", UtilMisc.toMap("facilityId", orderItemShipGrpInvResFacilityId), true);
-                    if (UtilValidate.isNotEmpty(facility)) {
-                        Map<String, Object> mcCtx = context.context();
-                        mcCtx.putAll(UtilMisc.toMap("orderHeader", orderHeader, "productStore", productStore, "orderItemListByShGrpMap", orderItemListByShGrpMap, "orderItemShipGroupList", orderItemShipGroupList));
-                        MethodContext mc = new MethodContext(dispatcher.getDispatchContext(), mcCtx, context.dctx().getClassLoader());
-                        mc.putAllEnv(mcCtx);
-                        String createShipmentForFacilityAndShipGroupResult = SimpleMethod.runSimpleMethod("component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml", "createShipmentForFacilityAndShipGroup", mc);
-                        if (!createShipmentForFacilityAndShipGroupResult.equals("success")) {
-                            result = ServiceUtil.returnError(UtilProperties.getMessage(resource, "FacilityShipmentNotCreated", locale));
+                        BigDecimal totalIssuedQuantity = BigDecimal.ZERO;
+                        for (GenericValue itemIssuance : itemIssuances) {
+                            totalIssuedQuantity.add(itemIssuance.getBigDecimal("quantity").subtract(itemIssuance.getBigDecimal("cancelQuantity")));
+                        }
+                        if (orderItem.getBigDecimal("quantity").compareTo(totalIssuedQuantity) != 0) {
+                            orderItemsNotIssued.add(orderItem);
                         }
                     }
+                    orderItemsNotIssuedPerShipment.put(shipment.getString("shipmentId"), orderItemsNotIssued);
                 }
-            } else {
+
+                if (UtilValidate.isNotEmpty(orderItemsNotIssuedPerShipment)) {
+                    // TODO: Force issue items?
+                }
+
+
+                Map<String, Object> changeOrderStatusCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_SENT", "setItemStatus", "Y", "userLogin", userLogin);
+                Map<String, Object> changeOrderStatusResult = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
+                Debug.log("changeOrderStatusResult: " + changeOrderStatusResult);
+            }
+
+        } catch (Exception e) {
+            result = ServiceUtil.returnError(UtilProperties.getMessage(resource, "FacilityShipmentMissingProductStore", locale));
+        }
+
+        if (ServiceUtil.isSuccess(result)) {
+            Debug.logInfo("Finished orderSendShip:\nshipmentShipGroupFacilityList=${shipmentShipGroupFacilityList}\nsuccessMessageList=${successMessageList}", module);
+        }
+
+        return result;
+    }
+
+    public static Map<String, Object> orderCompleteShip(ServiceContext context) {
+        Map<String, Object> result = new HashMap<String, Object>();
+        Delegator delegator = context.delegator();
+        LocalDispatcher dispatcher = context.dispatcher();
+        Locale locale = context.locale();
+        GenericValue userLogin = context.userLogin();
+
+        String orderId = context.getString("orderId");
+
+        try {
+            GenericValue orderHeader = delegator.findOne("OrderHeader", UtilMisc.toMap("orderId", orderId), false);
+            if (UtilValidate.isEmpty(orderHeader) || (UtilValidate.isNotEmpty(orderHeader) && UtilValidate.isEmpty(orderHeader.getString("productStoreId")))) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "FacilityShipmentMissingProductStore", locale));
+            }
+            OrderReadHelper orh = new OrderReadHelper(orderHeader);
+
+            EntityCondition shipmentCondition = EntityCondition.makeCondition("statusId", EntityOperator.IN,
+                    UtilMisc.toList("SHIPMENT_INPUT", "SHIPMENT_SCHEDULED", "SHIPMENT_PICKED", "SHIPMENT_PACKED", "SHIPMENT_SHIPPED"));
+            List<GenericValue> primaryShipments = EntityQuery.use(delegator).from("PrimaryShipment").where(shipmentCondition).cache(false).queryList();
+            if (UtilValidate.isNotEmpty(primaryShipments)) {
+                Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = UtilMisc.newMap();
                 for (GenericValue shipment : primaryShipments) {
-                    List<GenericValue> itemIssuances = delegator.findByAnd("ItemIssuance",
-                            UtilMisc.toMap("orderId", orderId, "shipmentId", shipment.getString("shipmentId"), "shipGroupSeqId", shipGroupSeqId),
-                            UtilMisc.toList("issuedDateTime DESC"), false);
-                    if (UtilValidate.isEmpty(itemIssuances)) {
+                    List<GenericValue> orderItemsNotIssued = UtilMisc.newList();
+                    for (GenericValue orderItem : orh.getOrderItems()) {
+                        List<GenericValue> itemIssuances = orh.getOrderItemIssuances(orderItem, shipment.getString("shipmentId"));
 
+                        BigDecimal totalIssuedQuantity = BigDecimal.ZERO;
+                        for (GenericValue itemIssuance : itemIssuances) {
+                            totalIssuedQuantity.add(itemIssuance.getBigDecimal("quantity").subtract(itemIssuance.getBigDecimal("cancelQuantity")));
+                        }
+                        if (orderItem.getBigDecimal("quantity").compareTo(totalIssuedQuantity) != 0) {
+                            orderItemsNotIssued.add(orderItem);
+                        }
                     }
+                    orderItemsNotIssuedPerShipment.put(shipment.getString("shipmentId"), orderItemsNotIssued);
+                }
 
-                    for (GenericValue itemIssuance : itemIssuances) {
-                        Debug.log("ItemIssuance: " + itemIssuance);
-                    }
+                if (UtilValidate.isNotEmpty(orderItemsNotIssuedPerShipment)) {
+                    // TODO: Force issue items?
                 }
 
                 Map<String, Object> changeOrderStatusCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_COMPLETED", "setItemStatus", "Y", "userLogin", userLogin);
-                Map<String, Object> changeOrderStatusResult = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
-                Debug.log("changeOrderStatusResult: " + changeOrderStatusResult);
+                result = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
+            } else {
+                // TODO: Throw error?
             }
         } catch (Exception e) {
             result = ServiceUtil.returnError(UtilProperties.getMessage(resource, "FacilityShipmentMissingProductStore", locale));
@@ -134,27 +173,6 @@ public class ShipmentServices {
         }
 
         return result;
-    }
-
-
-    public static Map<String, GenericValue> getOrderItemShipGroupLists(String orderId, Delegator delegator, Locale locale) throws Exception {
-        // short-description="Sub-method used by quickShip methods to get a list of OrderItemAndShipGroupAssoc and a Map of shipGroupId -> OrderItemAndShipGroupAssoc">
-        List<GenericValue> orderItemAndShipGroupAssocList = delegator.findByAnd("OrderItemAndShipGroupAssoc",
-                UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_APPROVED"), null, false);
-
-        // lookup all the approved items, doing by item because the item must be approved before shipping
-        // make sure we have something to ship
-        if (UtilValidate.isEmpty(orderItemAndShipGroupAssocList)) {
-            throw new Exception(UtilProperties.getMessage(resource, "FacilityNoItemsAvailableToShip", locale));
-        }
-
-        // group orderItems (actually OrderItemAndShipGroupAssocs) by shipGroupSeqId in a Map with List values
-        // This Map is actually used only for sales orders' shipments right now.
-        Map<String, GenericValue> orderItemListByShGrpMap = UtilMisc.newMap();
-        for (GenericValue orderItemAndShipGroupAssoc : orderItemAndShipGroupAssocList) {
-            orderItemListByShGrpMap.put(orderItemAndShipGroupAssoc.getString("shipGroupSeqId"), orderItemAndShipGroupAssoc);
-        }
-        return orderItemListByShGrpMap;
     }
 
 

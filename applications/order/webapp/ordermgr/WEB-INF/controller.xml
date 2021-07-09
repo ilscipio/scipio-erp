@@ -277,6 +277,13 @@ code package.
         <response name="error" type="view" value="orderview"/>
     </request-map>
     <!-- SCIPIO: 2.1.0: New ship order event that covers the situation where shipment already exists (with status input, picked or packed) -->
+    <request-map uri="orderSendShip">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="orderSendShip"/>
+        <response name="success" type="request-redirect" value="orderview"><redirect-parameter name="orderId"/></response>
+        <response name="error" type="view" value="orderview"/>
+    </request-map>
+    <!-- SCIPIO: 2.1.0: Completes an order shipment when already exists (with shipment status == shipped and order status == sent) -->
     <request-map uri="orderCompleteShip">
         <security https="true" auth="true"/>
         <event type="service" invoke="orderCompleteShip"/>

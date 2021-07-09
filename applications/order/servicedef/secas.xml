@@ -57,7 +57,7 @@ code package.
         <condition field-name="statusId" operator="equals" value="ITEM_COMPLETED"/>
         <action service="checkOrderItemStatus" mode="sync"/>
     </eca>
-    <!-- SCIPIO: added 2.0.0: triggering checkOrderItemStatus also for ITEM_SENT -->
+    <!-- SCIPIO: added 2.1.0: triggering checkOrderItemStatus also for ITEM_SENT -->
     <eca service="changeOrderItemStatus" event="commit">
         <condition field-name="statusId" operator="equals" value="ITEM_SENT"/>
         <action service="checkOrderItemStatus" mode="sync"/>

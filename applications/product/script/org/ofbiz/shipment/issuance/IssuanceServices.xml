@@ -241,12 +241,14 @@ code package.
                 <!-- if there are no more OIIRs for the orderItem, set the orderItem.statusId to ITEM_COMPLETED -->
                 <get-related value-field="orderItem" relation-name="OrderItemShipGrpInvRes" list="otherOiirs"/>
                 <if-empty field="otherOiirs">
+                    <get-related-one value-field="orderItemShipGrpInvRes" relation-name="OrderItemShipGroup" to-value-field="oisg" />
                     <if>
                         <condition>
-                            <and>
+                            <or>
                                 <if-compare field="orderHeader.salesChannelEnumId" value="POS_SALES_CHANNEL" operator="equals"/>
                                 <if-compare field="product.productTypeId" value="DIGITAL_GOOD" operator="equals"/>
-                            </and>
+                                <if-compare field="oisg.shipmentMethodTypeId" value="NO_SHIPPING" operator="equals"/>
+                            </or>
                         </condition>
                         <then>
                             <set value="ITEM_COMPLETED" field="changeOrderItemStatusMap.statusId"/>

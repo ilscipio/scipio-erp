@@ -341,5 +341,34 @@ code package.
         <attribute name="channel" type="String" mode="IN" optional="false"/>
     </service>
 
+    <!-- SCIPIO: 2.1.0: Added -->
+    <service name="populateBestSellingCategory" engine="java" location="com.ilscipio.scipio.order.OrderServices$PopulateBestSellingCategory" invoke="exec">
+        <description>Populates a best-selling category with products based on sales total or quantity ordered</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderByType" type="String" mode="IN" optional="true" default-value="sales-total">
+            <description>Ordering criteria, one of (extensible by overriding services):
+                sales-total: use BestSellingProductsBySalesTotal view-entity or equivalent;
+                quantity-ordered: use BestSellingProductsByQuantityOrdered view-entity or equivalent</description>
+        </attribute>
+        <attribute name="productStoreIdList" type="List" mode="IN" optional="true">
+            <description>Filter for OrderHeader.productStoreId</description>
+        </attribute>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true">
+            <description>Filter for OrderHeader.productStoreId</description>
+        </attribute>
+        <attribute name="maxProducts" type="Integer" mode="IN" optional="true"/>
+        <attribute name="orderDateStart" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="orderDateEnd" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="update">
+            <description>Update mode, one of:
+                update: update records in-place where necessary and possible;
+                create: always delete and recreate records (makes records sequenced by date)</description>
+        </attribute>
+        <attribute name="removeMode" type="String" mode="IN" optional="true" default-value="remove">
+            <description>Removal mode, one of:
+                remove: remove old records;
+                preserve: ignore old records (faster)</description>
+        </attribute>
+    </service>
 
 </services>

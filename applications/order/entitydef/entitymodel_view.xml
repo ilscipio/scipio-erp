@@ -1745,7 +1745,7 @@ code package.
 
   <!-- SCIPIO: Added 2020-01-03 -->
   <view-entity entity-name="OrderStats"
-               package-name="com.ilscipio.scipio.ce.stats"
+               package-name="com.ilscipio.scipio.ce.order.stats"
                title="Order Statistics" auto-clear-cache="true">
     <member-entity entity-alias="OH" entity-name="OrderHeader" />
     <alias entity-alias="OH" name="productStoreId" group-by="true"/>
@@ -1768,7 +1768,7 @@ code package.
 
   <!-- SCIPIO: Added 2020-04-27-->
   <view-entity entity-name="ReturnItemStats"
-               package-name="com.ilscipio.scipio.ce.stats"
+               package-name="com.ilscipio.scipio.ce.order.stats"
                title="Return item and reason stats" auto-clear-cache="true" >
     <member-entity entity-alias="RI" entity-name="ReturnItem" />
     <alias entity-alias="RI" name="statusId" group-by="true"/>
@@ -1781,5 +1781,57 @@ code package.
     <alias entity-alias="RI" name="day" field="lastUpdatedStamp" group-by="true" function="extract-day"/>
     <alias entity-alias="RI" name="month" field="lastUpdatedStamp" group-by="true" function="extract-month"/>
     <alias entity-alias="RI" name="year" field="lastUpdatedStamp" group-by="true" function="extract-year"/>
+  </view-entity>
+
+  <!-- SCIPIO: 2.1.0: Added -->
+  <view-entity entity-name="BestSellingProductsByQuantityOrdered"
+               package-name="com.ilscipio.scipio.ce.order.stats"
+               never-cache="true"
+               title="Best Selling Products By Quantity Ordered"
+               alias-columns="true">
+    <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+    <member-entity entity-alias="OI" entity-name="OrderItem"/>
+    <alias-all entity-alias="OH" select="false"/>
+    <alias-all entity-alias="OI" select="false">
+      <exclude field="productId"/>
+    </alias-all>
+    <alias entity-alias="OI" name="productId" group-by="true"/>
+    <alias entity-alias="OI" name="quantityOrdered" function="sum">
+      <complex-alias operator="-">
+        <complex-alias-field entity-alias="OI" field="quantity" default-value="0"/>
+        <complex-alias-field entity-alias="OI" field="cancelQuantity" default-value="0"/>
+      </complex-alias>
+    </alias>
+    <view-link entity-alias="OI" rel-entity-alias="OH">
+      <key-map field-name="orderId"/>
+    </view-link>
+  </view-entity>
+  <!-- SCIPIO: 2.1.0: Added -->
+  <view-entity entity-name="BestSellingProductsBySalesTotal"
+               package-name="com.ilscipio.scipio.ce.order.stats"
+               never-cache="true"
+               title="Best Selling Products By Sales Total"
+               alias-columns="true">
+    <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+    <member-entity entity-alias="OI" entity-name="OrderItem"/>
+    <alias-all entity-alias="OH" select="false"/>
+    <alias-all entity-alias="OI" select="false">
+      <exclude field="productId"/>
+    </alias-all>
+    <alias entity-alias="OH" name="orderDate" select="false"/>
+    <alias entity-alias="OI" name="productId" group-by="true"/>
+    <alias entity-alias="OI" name="salesTotal" function="sum">
+      <!-- WARN: This does not take into account currencyUomId-->
+      <complex-alias operator="*">
+        <complex-alias-field entity-alias="OI" field="unitPrice" default-value="0"/>
+        <complex-alias operator="-">
+          <complex-alias-field entity-alias="OI" field="quantity" default-value="0"/>
+          <complex-alias-field entity-alias="OI" field="cancelQuantity" default-value="0"/>
+        </complex-alias>
+      </complex-alias>
+    </alias>
+    <view-link entity-alias="OI" rel-entity-alias="OH">
+      <key-map field-name="orderId"/>
+    </view-link>
   </view-entity>
 </entitymodel>

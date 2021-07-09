@@ -65,7 +65,7 @@ public interface AttrMap<K, V> extends Map<K, V> {
     default <T> T attrIfSet(Object key, Supplier<? extends T> defaultValueSupplier) {
         return containsKey(key) ? attr(key) : defaultValueSupplier.get();
     }
-    
+
     /**
      * Returns an attribute value from the context/map and invokes toString() on it, or null.
      */

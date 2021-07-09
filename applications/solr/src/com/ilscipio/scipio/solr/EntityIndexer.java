@@ -5,6 +5,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
@@ -390,7 +391,8 @@ public class EntityIndexer implements Runnable {
                         if (entries.size() > SolrProductSearch.getMaxLogIds()) {
                             pkList.append("...");
                         }
-                        Debug.logInfo("Reading docs " + (processedEntries + 1) + "-" + (processedEntries + entries.size()) + " [" + getName() + "]: " + pkList, module);
+                        Debug.logInfo("Reading docs " + (processedEntries + 1) + "-" + (processedEntries + entries.size()) +
+                                " [" + getName() + "]: " + pkList + " (runTime: " + UtilDateTime.formatDurationHMS((System.currentTimeMillis()) - startTime) + ")", module);
                     }
                     processedEntries += entries.size();
                     totalProcessedEntries += entries.size();
@@ -419,8 +421,8 @@ public class EntityIndexer implements Runnable {
             long nowTime = System.currentTimeMillis();
             if ((nowTime - lastRunStatsTime) > getStatsInterval()) {
                 lastRunStatsTime = nowTime;
-                Debug.logInfo("Entity indexer [" + getName() + "] run doc stats: committed=" + docsCommitted + ", removed=" + docsRemoved +
-                        ", entries=" + totalProcessedEntries + ", runTime=" + (nowTime - startTime) + "ms", module);
+                Debug.logInfo("Entity indexer [" + getName() + "] run doc stats: [committed=" + docsCommitted + ", removed=" + docsRemoved +
+                        ", entries=" + totalProcessedEntries + ", runTime=" + UtilDateTime.formatDurationHMS(nowTime - startTime) + "ms]", module);
             }
         }
     }

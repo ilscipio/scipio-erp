@@ -78,6 +78,7 @@
         }
     }
 </@script>
+
 <@form name="current-job-stats-config" id="current-job-stats-config">
   <#assign pauseMarkup>
     <@field type="submit" submitType="link" class="${styles.link_run_local!} ${styles.color_green!}" text="Running"
@@ -88,6 +89,7 @@
         postfix=true postfixContent=pauseMarkup postfixColumns=1/>
 </@form>
 </#if>
+
 <@table id="current-job-stats" type="data-list" responsive=false>
     <@thead>
         <@tr>
@@ -108,7 +110,7 @@
                     <@td width="15%">${job.jobId!}</@td>
                     <@td width="15%">${job.jobType!}</@td>
                     <@td width="15%">${job.startTime!}</@td>
-                    <@td width="15%">${job.runTime!}</@td>
+                    <@td width="15%"><#if job.runTime??>${UtilDateTime.formatDurationHMS(job.runTime)}</#if></@td>
                 </@tr>
             </#list>
         <#else>

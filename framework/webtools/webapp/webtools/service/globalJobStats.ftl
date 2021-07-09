@@ -20,10 +20,10 @@
                 <@tr>
                     <@td><#if job.serviceName?has_content><a href="<@pageUrl uri='ServiceList?sel_service_name='+raw(job.serviceName)/>">${job.serviceName}</a></#if></@td>
                     <@td width="8%">${job.totalCalls!}</@td>
-                    <@td width="8%">${job.totalRuntime!}</@td>
-                    <@td width="8%">${job.minRuntime!}</@td>
-                    <@td width="8%">${job.maxRuntime!}</@td>
-                    <@td width="8%">${job.averageRuntime!}</@td>
+                    <@td width="8%"><#if job.totalRuntime??>${UtilDateTime.formatDurationHMS(job.totalRuntime)}</#if></@td>
+                    <@td width="8%"><#if job.minRuntime??>${UtilDateTime.formatDurationHMS(job.minRuntime)}</#if></@td>
+                    <@td width="8%"><#if job.maxRuntime??>${UtilDateTime.formatDurationHMS(job.maxRuntime)}</#if></@td>
+                    <@td width="8%"><#if job.averageRuntime??>${UtilDateTime.formatDurationHMS(job.averageRuntime)}</#if></@td>
                     <@td width="8%">${job.successCount!}</@td>
                     <@td width="8%">${job.failCount!}</@td>
                     <@td width="8%">${job.errorCount!}</@td>

@@ -367,7 +367,7 @@ code package.
                                 <section>
                                     <actions>
                                         <set field="jobType" value="generic"/>
-                                        <set field="title" value="Generic Jobs (non-persited)"/>
+                                        <set field="title" value="Generic Jobs (non-persisted)"/>
                                     </actions>
                                     <widgets><include-screen name="globalJobStats"/></widgets>
                                 </section>

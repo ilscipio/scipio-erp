@@ -1,5 +1,7 @@
 package com.ilscipio.scipio.ce.util.collections;
 
+import org.ofbiz.base.util.UtilValidate;
+
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -50,9 +52,23 @@ public interface AttrMap<K, V> extends Map<K, V> {
     }
 
     /**
+     * Returns an attribute value from the context/map only if {@link #containsKey(Object)} returns true, or otherwise the given default value.
+     */
+    default <T> T attrIfSet(Object key, T defaultValue) {
+        return containsKey(key) ? attr(key) : defaultValue;
+    }
+
+    /**
+     * Returns an attribute value from the context/map only if {@link #containsKey(Object)} returns true, or otherwise the given default value supplied
+     * by the given supplier callback or lambda function.
+     */
+    default <T> T attrIfSet(Object key, Supplier<? extends T> defaultValueSupplier) {
+        return containsKey(key) ? attr(key) : defaultValueSupplier.get();
+    }
+    
+    /**
      * Returns an attribute value from the context/map and invokes toString() on it, or null.
      */
-    @SuppressWarnings("unchecked")
     default String getString(Object key) {
         Object value = get(key);
         return (value != null) ? value.toString() : null;
@@ -73,6 +89,37 @@ public interface AttrMap<K, V> extends Map<K, V> {
     default String getString(Object key, Supplier<String> defaultValueSupplier) {
         String value = getString(key);
         return (value != null) ? value : defaultValueSupplier.get();
+    }
+
+    /**
+     * Returns an attribute value from the context/map and invokes toString() on it, or null.
+     */
+    default String getStringNonEmpty(Object key) {
+        return UtilValidate.nullIfEmpty(getString(key));
+    }
+
+    /**
+     * Returns an attribute value from the context/map and invokes toString() on it, or if null, the given default value.
+     */
+    default String getStringNonEmpty(Object key, String defaultValue) {
+        String value = getString(key);
+        return (value != null && !value.isEmpty()) ? value : defaultValue;
+    }
+
+    /**
+     * Returns an attribute value from the context/map and invokes toString() on it, or if null, the given default value supplied
+     * by the given supplier callback or lambda function.
+     */
+    default String getStringNonEmpty(Object key, Supplier<String> defaultValueSupplier) {
+        String value = getString(key);
+        return (value != null && !value.isEmpty()) ? value : defaultValueSupplier.get();
+    }
+
+    /**
+     * Returns an attribute value from the context/map and invokes toString() on it, or null.
+     */
+    default String getStringNonNull(Object key) {
+        return UtilValidate.emptyIfNull(getString(key));
     }
 
 }

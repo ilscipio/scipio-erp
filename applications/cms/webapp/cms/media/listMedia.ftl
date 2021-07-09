@@ -58,7 +58,7 @@
                         <#list mediaFiles as mediaFile>
                             <#assign editMediaUrl = makeAppUrl("/control/editMedia?contentId=" + raw(mediaFile.contentId)) /><#--  + "&dataResourceTypeId=" + mediaFile.dataResourceTypeId -->
                             <#if mediaFile.dataResourceTypeId == "IMAGE_OBJECT">
-                                <#assign mediaUrl = makeAppUrl("/media?contentId=" + mediaFile.contentId + "&dataResourceTypeId=" + mediaFile.dataResourceTypeId) />
+                                <#assign mediaUrl = makeAppUrl("/media?contentId=" + mediaFile.contentId + "&dataResourceTypeId=" + mediaFile.dataResourceTypeId+"&variant=small") />
                                 <@tile image=mediaUrl icon="${styles.icon} ${styles.icon_prefix}camera ${styles.icon_prefix}picture-o" link=editMediaUrl title=mediaFile.contentName!mediaFile.contentId!"" />
                             <#elseif mediaFile.dataResourceTypeId == "VIDEO_OBJECT">
                                 <@tile color="3" icon="${styles.icon} ${styles.icon_prefix}play-video ${styles.icon_prefix}video-camera" link=editMediaUrl title=mediaFile.contentName!mediaFile.contentId!"" />

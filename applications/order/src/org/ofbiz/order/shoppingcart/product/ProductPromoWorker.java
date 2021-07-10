@@ -887,6 +887,8 @@ public final class ProductPromoWorker {
                 usageInfoMap = newUsageInfoMap;
                 if(totalDiscountAmount.compareTo(BigDecimal.ZERO) != 0){
                     cart.addProductPromoUse(productPromo.getString("productPromoId"), productPromoCodeId, totalDiscountAmount, quantityLeftInActions, deltaUsageInfoMap);
+                }else{
+                    break;
                 }
             } else {
                 // the promotion was not used, don't try again until we finish a full pass and come back to see the promo conditions are now satisfied based on changes to the cart

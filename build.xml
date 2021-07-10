@@ -1300,6 +1300,20 @@ code package.
             description="Start Scipio in debug mode and prevent Solr reindex on startup">
     </target>
 
+    <!-- SCIPIO: 2.1.0: Convenience stop-wait build start tasks for developers -->
+    <target name="build-start" depends="stop-wait,build,start"
+            description="Convenience task alias for: stop-wait build start">
+    </target>
+    <target name="build-debug" depends="stop-wait,build,start-debug"
+            description="Convenience task alias for: stop-wait build start-debug">
+    </target>
+    <target name="rebuild-start" depends="stop-wait,clean,build,start"
+            description="Convenience task alias for: stop-wait clean build start">
+    </target>
+    <target name="rebuild-debug" depends="stop-wait,clean,build,start-debug"
+            description="Convenience task alias for: stop-wait clean build start-debug">
+    </target>
+
     <!-- ================================================================== -->
     <!-- Setup Scipio ERP Data                                                   -->
     <!-- ================================================================== -->

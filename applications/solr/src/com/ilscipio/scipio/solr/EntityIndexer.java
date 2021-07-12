@@ -75,6 +75,7 @@ public class EntityIndexer implements Runnable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("entityindexing", "entity.indexer.debug", false);
+    private static final int LOG_LEVEL = Debug.getLevelFromString(UtilProperties.getPropertyValue("entityindexing", "entity.indexer.log.level", "info"));
     private static final int STATS_INTERVAL = UtilProperties.getPropertyAsInteger("entityindexing", "entity.indexer.log.stats.interval", -1);
     /**
      * Maps a data source name (by convention the entity name) and data element ID (primary key) to an indexer. The
@@ -358,9 +359,10 @@ public class EntityIndexer implements Runnable {
 
         int processedEntries = 0;
         int totalProcessedEntries = 0;
-        int oldQueueSize = getQueue().size();
+        //int oldQueueSize = getQueue().size();
         int docsCommitted = 0;
         int docsRemoved = 0;
+        int pollCount = 0;
 
         // Read entries up to maxRunTime until there are no more or as long as elements were read but the buffer is still waiting for more
         while (((System.currentTimeMillis()) - startTime) < getMaxRunTime()) {
@@ -372,9 +374,18 @@ public class EntityIndexer implements Runnable {
             while (!flush && (((System.currentTimeMillis()) - startTime) < getMaxRunTime()) &&
                     ((numRead = poll(entries, getBufSize())) > 0
                             || ((docs.size() > 0 || docsToRemove.size() > 0) && (System.currentTimeMillis() - lastReadTime) < getFlushTime()))) {
+                pollCount += 1;
                 // commit if buffer full
                 if (entries.size() > 0) {
                     lastReadTime = entries.get(0).getEntryTime();
+                    processedEntries += entries.size();
+                    totalProcessedEntries += entries.size();
+                    for(Entry entry : entries) {
+                        if ("all".equals(entry.getFlush())) {
+                            flush = true;
+                            break;
+                        }
+                    }
                     if (Debug.infoOn()) {
                         StringBuilder pkList = new StringBuilder();
                         int pkCount = 0;
@@ -391,16 +402,23 @@ public class EntityIndexer implements Runnable {
                         if (entries.size() > SolrProductSearch.getMaxLogIds()) {
                             pkList.append("...");
                         }
-                        Debug.logInfo("Reading docs " + (processedEntries + 1) + "-" + (processedEntries + entries.size()) +
-                                " [" + getName() + "]: " + pkList + " (runTime: " + UtilDateTime.formatDurationHMS((System.currentTimeMillis()) - startTime) + ")", module);
-                    }
-                    processedEntries += entries.size();
-                    totalProcessedEntries += entries.size();
-                    for(Entry entry : entries) {
-                        if ("all".equals(entry.getFlush())) {
-                            flush = true;
-                            break;
+                        String extraInfo = "";
+                        if (Debug.VERBOSE == LOG_LEVEL) {
+                            extraInfo = ", flush=" + flush + ", bufSize=" + getBufSize() + ", flushTime=" +
+                                    getFlushTime() + ", numRead=" + numRead + ", docsSize=" + docs.size() +
+                                    ", docsToRemoveSize=" + docsToRemove.size() + ", startTime=" +
+                                    UtilDateTime.getTimestamp(startTime) +
+                                    ", currentTime=" + UtilDateTime.getTimestamp(System.currentTimeMillis()) +
+                                    ", maxRunTime=" + UtilDateTime.formatDurationHMS(getMaxRunTime()) +
+                                    ", pollCount=" + pollCount +
+                                    ", lastReadTime=" + UtilDateTime.getTimestamp(lastReadTime) +
+                                    ", processedEntries=" + processedEntries +
+                                    ", totalProcessedEntries=" + totalProcessedEntries;
                         }
+                        Debug.logInfo("Reading docs " + (processedEntries + 1) + "-" + (processedEntries + entries.size()) +
+                                " [" + getName() + "]: " + pkList + " (runTime: " +
+                                UtilDateTime.formatDurationHMS((System.currentTimeMillis()) - startTime) +
+                                extraInfo + ")", module);
                     }
                     readDocs(dctx, context, entries, docs, docsToRemove);
                     entries.clear();

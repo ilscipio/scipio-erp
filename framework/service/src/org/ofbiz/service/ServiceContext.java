@@ -22,7 +22,7 @@ import java.util.function.Function;
  * <p>NOTE: May be reused as base class for common implementations, but more methods may be added, so not recommended
  * for client code.</p>
  */
-public class ServiceContext implements AttrMap<String, Object> {
+public class ServiceContext implements AttrMap {
 
     private final DispatchContext dctx;
     private final Map<String, Object> context;

@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Extended Map utilities.
+ * @deprecated SCIPIO: 2.1.0: For framework and client code, please use {@link ScipioMap}.
+ */
+@Deprecated
 public interface ExtendedMap<K, V> extends Map<K, V> {
 
     default void putOnly(K key, V value) { put(key, value); }

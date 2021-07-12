@@ -40,6 +40,7 @@ import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ilscipio.scipio.ce.util.collections.ScipioMap;
 import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Base64;
@@ -79,7 +80,7 @@ import org.w3c.dom.Element;
  *
  */
 @SuppressWarnings("serial")
-public class GenericEntity implements Map<String, Object>, LocalizedMap<Object>, Serializable, Comparable<GenericEntity>, Cloneable {
+public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Object>, Serializable, Comparable<GenericEntity>, Cloneable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public static final GenericEntity NULL_ENTITY = new NullGenericEntity();

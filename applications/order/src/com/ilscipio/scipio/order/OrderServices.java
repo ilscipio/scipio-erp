@@ -54,7 +54,7 @@ public abstract class OrderServices {
             super(ctx);
             this.productCategoryId = ctx.attr("productCategoryId");
             Collection<String> productStoreIds = ctx.attr("productStoreIdList");
-            String productStoreId = ctx.getStringNonNull("productStoreIds");
+            String productStoreId = ctx.getStringNonEmpty("productStoreIds");
             if (UtilValidate.isNotEmpty(productStoreId)) {
                 Set<String> newProductStoreIds = new LinkedHashSet<>();
                 newProductStoreIds.add(productStoreId);

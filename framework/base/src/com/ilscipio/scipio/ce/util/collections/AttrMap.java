@@ -1,45 +1,51 @@
 package com.ilscipio.scipio.ce.util.collections;
 
-import org.ofbiz.base.util.UtilValidate;
-
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.Map;
 import java.util.function.Supplier;
 
 /**
- * Extensions to Map interface for service contexts and any Map implementation needing helper getters.
- * <p>SCIPIO: 2.1.0: Added for ServiceContext integration.</p>
+ * Extensions to {@link Map} interface for service contexts and any implementation needing field- and parameter-related
+ * accessors and helpers.
+ * <p>This actually extends {@link ScipioMap}, which contains generic Map language extensions; AttrMap
+ * relates specifically to service attributes, fields and contexts in Scipio entity and service frameworks. ScipioMap is
+ * formally parametrized whereas AttrMap has String keys and Object values though casting is allowed.</p>
+ * <p>SCIPIO: 2.1.0: Added for ServiceContext integration; named after the {@link #attr} method for obviousness.</p>
  */
-public interface AttrMap<K, V> extends Map<K, V> {
+public interface AttrMap extends ScipioMap<String, Object> {
 
     /**
-     * If map is an AttrMap, returns it as-is, otherwise returns a new WrapperAttrMap around the map.
+     * If map is an AttrMap, returns it as-is, otherwise returns a new {@link Wrapper} around the map, null, or
+     * IllegalArgumentException if another type.
      */
-    @SuppressWarnings("unchecked")
-    static <K, V> AttrMap<K, V> from(Map<K, V> map) {
-        return (map instanceof AttrMap) ? (AttrMap<K, V>) map : wrap(map);
+    static AttrMap from(Object map) {
+        if (map instanceof AttrMap) {
+            return (AttrMap) map;
+        } else if (map instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<String, ?> simpleMap = (Map<String, ?>) map;
+            return wrap(simpleMap);
+        } else if (map == null) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Not a map, got type [" + map.getClass().getName() + "]");
+        }
     }
 
     /**
-     * Returns a new WrapperAttrMap around the map (even if it already an AttrMap).
+     * Returns a new {@link Wrapper} around the map, even if it already one.
+     * @see #from(Object)
      */
-    static <K, V> AttrMap<K, V> wrap(Map<K, V> map) {
-        return WrapperAttrMap.wrap(map);
+    static AttrMap wrap(Map<String, ?> map) {
+        return new Wrapper(map);
     }
 
     /**
-     * Returns an attribute value from the context/map, or null.
+     * Creates a new empty unmodifiable map; currently {@link Collections#emptyMap()}.
      */
-    @SuppressWarnings("unchecked")
-    default <T> T attr(Object key) {
-        return (T) get(key);
-    }
-
-    /**
-     * Returns an attribute value from the context/map, or if null, the given default value.
-     */
-    default <T> T attr(Object key, T defaultValue) {
-        T value = attr(key);
-        return (value != null) ? value : defaultValue;
+    static AttrMap emptyMap() {
+        return AttrMap.Wrapper.EMPTY;
     }
 
     /**
@@ -52,10 +58,19 @@ public interface AttrMap<K, V> extends Map<K, V> {
     }
 
     /**
-     * Returns an attribute value from the context/map only if {@link #containsKey(Object)} returns true, or otherwise the given default value.
+     * Returns an attribute value from the context/map, or if null, the given default value.
      */
-    default <T> T attrIfSet(Object key, T defaultValue) {
-        return containsKey(key) ? attr(key) : defaultValue;
+    default <T> T attr(Object key, T defaultValue) {
+        return attr(key, () -> defaultValue);
+    }
+
+    /**
+     * Returns an attribute value from the context/map, or null.
+     */
+    default <T> T attr(Object key) {
+        @SuppressWarnings("unchecked")
+        T value = (T) get(key);
+        return value;
     }
 
     /**
@@ -67,59 +82,21 @@ public interface AttrMap<K, V> extends Map<K, V> {
     }
 
     /**
-     * Returns an attribute value from the context/map and invokes toString() on it, or null.
+     * Returns an attribute value from the context/map only if {@link #containsKey(Object)} returns true, or otherwise the given default value.
      */
-    default String getString(Object key) {
-        Object value = get(key);
-        return (value != null) ? value.toString() : null;
+    default <T> T attrIfSet(Object key, T defaultValue) {
+        return attrIfSet(key, () -> defaultValue);
     }
 
-    /**
-     * Returns an attribute value from the context/map and invokes toString() on it, or if null, the given default value.
+    /*
+     * Abstract classes and reference implementations
      */
-    default String getString(Object key, String defaultValue) {
-        String value = getString(key);
-        return (value != null) ? value : defaultValue;
-    }
 
-    /**
-     * Returns an attribute value from the context/map and invokes toString() on it, or if null, the given default value supplied
-     * by the given supplier callback or lambda function.
-     */
-    default String getString(Object key, Supplier<String> defaultValueSupplier) {
-        String value = getString(key);
-        return (value != null) ? value : defaultValueSupplier.get();
-    }
+    class Wrapper extends MapWrapper.Single<String, Object> implements AttrMap, Serializable {
+        private static final AttrMap.Wrapper EMPTY = new AttrMap.Wrapper(Collections.emptyMap());
 
-    /**
-     * Returns an attribute value from the context/map and invokes toString() on it, or null.
-     */
-    default String getStringNonEmpty(Object key) {
-        return UtilValidate.nullIfEmpty(getString(key));
+        public Wrapper(Map<String, ?> wrappedMap) {
+            super(wrappedMap);
+        }
     }
-
-    /**
-     * Returns an attribute value from the context/map and invokes toString() on it, or if null, the given default value.
-     */
-    default String getStringNonEmpty(Object key, String defaultValue) {
-        String value = getString(key);
-        return (value != null && !value.isEmpty()) ? value : defaultValue;
-    }
-
-    /**
-     * Returns an attribute value from the context/map and invokes toString() on it, or if null, the given default value supplied
-     * by the given supplier callback or lambda function.
-     */
-    default String getStringNonEmpty(Object key, Supplier<String> defaultValueSupplier) {
-        String value = getString(key);
-        return (value != null && !value.isEmpty()) ? value : defaultValueSupplier.get();
-    }
-
-    /**
-     * Returns an attribute value from the context/map and invokes toString() on it, or null.
-     */
-    default String getStringNonNull(Object key) {
-        return UtilValidate.emptyIfNull(getString(key));
-    }
-
 }

@@ -1,5 +1,8 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.service
 
+import org.ofbiz.entity.transaction.GenericTransactionException
+
+import javax.transaction.Transaction
 import java.sql.Timestamp
 import java.util.List
 import java.util.Map
@@ -51,23 +54,63 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
                 } else {
                     stat = new DataGeneratorStat(entityName);
                 }
+
+                Long dataIntervalMs = context.dataIntervalMs;
+                if (dataIntervalMs != null && dataIntervalMs > 0) {
+                    Thread.sleep(dataIntervalMs);
+                }
+                boolean sepTrans = context.dataSeparateTrans;
+
+                Transaction suspendedTransaction = null;
+                boolean beganTransaction = false;
                 try {
-                    boolean beginTransaction = TransactionUtil.begin();
-                    GenericValue createdValue = delegator.createOrStore(value);
-                    TransactionUtil.commit(beginTransaction)
-                    if (!createdValue) {
-                        throw new Exception("createdValue is null");
+                    if (sepTrans) {
+                        try {
+                            if (TransactionUtil.isTransactionInPlace()) {
+                                suspendedTransaction = TransactionUtil.suspend();
+                            }
+                        } catch (GenericTransactionException e) {
+                            Debug.logError(e, "System Error suspending transaction in sequence util", module);
+                            throw e; // don't try to continue
+                        }
+                        try {
+                            beganTransaction = TransactionUtil.begin();
+                        } catch (GenericTransactionException e) {
+                            Debug.logError(e, "Error beginning transaction", module);
+                            throw e; // don't try to continue
+                        }
                     }
-                    int stored = stat.getStored();
-                    stat.setStored(stored + 1);
-                    totalStored++;
-                    stat.getGeneratedValues().add(createdValue);
-                } catch (Exception e) {
-                    Debug.logError(e.getMessage(), module);
-                    TransactionUtil.rollback();
-                    int failed = stat.getFailed();
-                    stat.setFailed(failed + 1);
-                    totalFailed++;
+                    try {
+                        GenericValue createdValue = delegator.createOrStore(value);
+                        if (sepTrans) {
+                            TransactionUtil.commit(beganTransaction);
+                        }
+                        if (!createdValue) {
+                            throw new Exception("createdValue is null");
+                        }
+                        int stored = stat.getStored();
+                        stat.setStored(stored + 1);
+                        totalStored++;
+                        stat.getGeneratedValues().add(createdValue);
+                    } catch (Exception e) {
+                        Debug.logError(e.toString(), module);
+                        try {
+                            TransactionUtil.rollback(beganTransaction, e.getMessage(), e);
+                        } catch (GenericTransactionException e2) {
+                            Debug.logError(e2, "Unable to rollback transaction", module);
+                        }
+                        int failed = stat.getFailed();
+                        stat.setFailed(failed + 1);
+                        totalFailed++;
+                    }
+                } finally {
+                    if (suspendedTransaction != null) {
+                        try {
+                            TransactionUtil.resume(suspendedTransaction);
+                        } catch (GenericTransactionException e) {
+                            Debug.logError(e, "Error resuming suspended transaction", module);
+                        }
+                    }
                 }
                 result.put(entityName, stat);
             }
@@ -129,9 +172,9 @@ abstract class DataGeneratorGroovyBaseScript extends GroovyBaseScript {
                 }
             }
         } catch (Exception e) {
-            logError("Fatal error while generating data (aborted): " + e.getMessage());
+            Debug.logError(e, "Fatal error while generating data (aborted): " + e.toString(), module);
             // TODO: localize (but exception message cannot be localized)
-            return error("Fatal error while generating data (aborted): " + e.getMessage()) as Map;
+            return error("Fatal error while generating data (aborted): " + e.toString()) as Map;
         }
         // TODO: localize
         Map result = (totalFailed > 0) ? failure("Failed to store " + totalFailed

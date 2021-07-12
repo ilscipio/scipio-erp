@@ -26,6 +26,8 @@ code package.
         <attribute name="num" type="Integer" mode="IN" optional="true" />
         <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="dataIntervalMs" type="Long" mode="IN" optional="true" default-value="0"/>
+        <attribute name="dataSeparateTrans" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="generatedDataStats" type="java.util.List" optional="true" mode="OUT"/>
     </service>
 

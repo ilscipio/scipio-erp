@@ -60,8 +60,8 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
 
         EntityFindOptions efo = new EntityFindOptions();
         efo.setMaxRows(1);
+        def customerParty = null;
         if (orderType.equals("SALES_ORDER")) {
-            customerParty = null;
             if (partyId) {
                 customerParty = from("Party").where("PartyRole").where("partyId", partyId, "roleTypeId", "CUSTOMER").queryOne();
             }
@@ -109,7 +109,7 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
             if (!supplierParty) {
                 throw new Exception("Party customer not found or invalid.");
             }
-            supplierUserLogin = EntityUtil.getFirst(customerParty.getRelated("UserLogin"));
+            supplierUserLogin = (customerParty != null) ? EntityUtil.getFirst(customerParty.getRelated("UserLogin")) : null;
             context.supplierParty = supplierParty;
             context.supplierUserLogin = supplierUserLogin;
         }

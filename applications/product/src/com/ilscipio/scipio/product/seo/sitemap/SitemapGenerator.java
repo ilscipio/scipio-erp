@@ -447,7 +447,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected WebSitemapGenerator getSitemapGenerator(String filePrefix) throws IOException {
         File myDir = getSitemapDirFile();
         myDir.mkdirs();
-        return WebSitemapGenerator.builder(getBaseUrl(), myDir).fileNamePrefix(filePrefix).dateFormat(sitemapConfig.getDateFormat()).maxUrls(sitemapConfig.getSizemapSize()).gzip(sitemapConfig.isGzip()).build();
+        return WebSitemapGenerator.builder(getBaseUrl(), myDir).fileNamePrefix(filePrefix).dateFormat(sitemapConfig.getDateFormat()).gzip(sitemapConfig.isGzip()).build();
     }
 
     /**

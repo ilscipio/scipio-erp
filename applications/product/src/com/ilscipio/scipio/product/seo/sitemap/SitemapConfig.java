@@ -127,7 +127,7 @@ public class SitemapConfig implements Serializable {
         Integer sizemapSize = asInteger(map.get("sizemapSize"), DEFAULT_SITEMAP_SIZE);
         if (sizemapSize <= 0) sizemapSize = null; // explicit -1 means don't limit
         this.sizemapSize = sizemapSize;
-        Integer indexSize = asInteger(map.get("indexSize"), DEFAULT_SITEMAP_SIZE);
+        Integer indexSize = asInteger(map.get("indexSize"), DEFAULT_INDEX_SIZE);
         if (indexSize <= 0) indexSize = null; // explicit -1 means don't limit
         this.indexSize = indexSize;
         this.doProduct = asBoolean(map.get("doProduct"), true);

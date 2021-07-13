@@ -23,9 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -34,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.rmi.CORBA.Util;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -47,6 +44,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -56,6 +54,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.product.ProductWorker;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
@@ -66,8 +65,10 @@ import org.ofbiz.service.ServiceUtil;
 public final class CategoryWorker {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    public static final String SEPARATOR = "::";    // cache key separator
 
     public static final List<String> TOP_TRAIL = UtilMisc.unmodifiableArrayList("TOP"); // SCIPIO
+    private static final UtilCache<String, List<String>> CAT_IN_CATALOG = UtilCache.createUtilCache("category.catalogs",true);
 
     private CategoryWorker () {}
 
@@ -713,6 +714,65 @@ public final class CategoryWorker {
         results.put("trail", trailElements);
         return results;
     }
+
+
+    /**
+     *  SCIPIO: Returns a List of productStore specific catalogIds a category is assigned to for a given productstoreId
+     * */
+    public static List<String> getProductstoreCategoryCatalogIds(Delegator delegator, String productStoreId, String productCategoryId) {
+        List<String> productStoreCategoryCatalogIds = new ArrayList<String>();
+        try {
+            String cacheKey = productStoreId+SEPARATOR+productCategoryId;
+
+            List<String> cachedValue = CAT_IN_CATALOG.get(cacheKey);
+            if (cachedValue != null) {
+                return cachedValue;
+            }
+
+            List<GenericValue> catalogs = CatalogWorker.getStoreCatalogs(delegator, productStoreId);
+            List<String> storeCatalogIds = catalogs.stream().map(x -> x.getString("prodCatalogId"))
+                    .collect(Collectors.toList());
+            List<List<String>> catRollups = CategoryWorker.getCategoryRollupTrails(delegator,productCategoryId,true);
+            List<String> categoryCatalogIds = catRollups.stream().map(x -> x.get(0))
+                    .collect(Collectors.toList());
+            List<String> allProdCatalogCategories = new ArrayList<String>();
+
+
+            for(String catalogId : storeCatalogIds){
+                List<GenericValue> pccList = CatalogWorker.getProdCatalogCategories(delegator, catalogId, null, UtilDateTime.nowTimestamp(), false, true);
+                for(GenericValue pcc : pccList){
+                    allProdCatalogCategories.add(pcc.getString("productCategoryId"));
+                }
+            }
+
+            for(String categoryCatalogId : categoryCatalogIds){
+                if(allProdCatalogCategories.contains(categoryCatalogId)){
+                    productStoreCategoryCatalogIds.add(categoryCatalogId);
+                }
+            }
+
+            CAT_IN_CATALOG.put(cacheKey,productStoreCategoryCatalogIds);
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        return productStoreCategoryCatalogIds;
+    }
+
+
+    /**
+     * SCIPIO: Returns true only if the category ID is connected to the productStore
+     * <p>
+     * NOTE: is caching
+     */
+    public static boolean isCategoryUsedByProductStore(Delegator delegator, String productStoreId, String productCategoryId){
+        return UtilValidate.isNotEmpty(getProductstoreCategoryCatalogIds(delegator,productStoreId,productCategoryId));
+    }
+
+    public static boolean isCategoryUsedByProductStore(ServletRequest request,String productCategoryId) {
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);
+        return isCategoryUsedByProductStore((Delegator) request.getAttribute("delegator"),productStoreId,productCategoryId);
+    }
+
 
     /**
      * SCIPIO: Returns true only if the category ID is child of the given parent category ID.

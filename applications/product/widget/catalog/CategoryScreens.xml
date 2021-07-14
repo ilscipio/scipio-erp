@@ -48,7 +48,6 @@ code package.
             </actions>
             <widgets>
                  <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
-                    
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategory.ftl"/></html>
@@ -58,10 +57,10 @@ code package.
                         </platform-specific>
                         <section>
                         <condition>
-                                <and>
-                                    <not><if-empty field="parameters.duplicateCategory"/></not>
-                                    <if-compare value="Y" operator="equals" field="parameters.duplicateCategory"/>
-                                </and>
+                            <and>
+                                <not><if-empty field="parameters.duplicateCategory"/></not>
+                                <if-compare value="Y" operator="equals" field="parameters.duplicateCategory"/>
+                            </and>
                         </condition>
                             <widgets>
                                 <platform-specific>

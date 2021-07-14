@@ -23,9 +23,6 @@ code package.
         <input type="hidden" name="isCreate" value="true" />
       </#if>
 
-      <#if productCategory?has_content>
-        <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
-      </#if>
       <@fields type="default">
         <#--
          <@row>
@@ -45,6 +42,11 @@ code package.
         </@row>-->
         <@row>       
             <@cell columns=12>
+                <#if productCategory?has_content>
+                    <input type="hidden" name="productCategoryId" value="${productCategoryId}"/>
+                <#else>
+                    <@field type="input" label=uiLabelMap.CommonId name="productCategoryId" value=(parameters.productCategoryId!)/>
+                </#if>
                 <@field type="select" label=uiLabelMap.CommonType name="productCategoryTypeId" size="1">
                     <#assign selectedKey = "">
                     <#list productCategoryTypes as productCategoryTypeData>

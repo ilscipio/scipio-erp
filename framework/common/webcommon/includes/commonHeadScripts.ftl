@@ -2,12 +2,13 @@
 <#-- TODO: could remove output=true later and let accumulate in theme footer -->
 <#if !styles.render_common_head_script?has_content || (styles.render_common_head_script)>
         <@script compress=true><#-- REMOVED: output=true because "merge" was added instead (duplicate function) -->
+            <#-- Common Ofbiz URIs for use in javascript -->
+            <@requireScriptOfbizUrl uri="getJSONuiLabelArray" onlyIfExists=true/>
+            <@requireScriptOfbizUrl uri="getJSONuiLabel" onlyIfExists=true/>
+            <#-- This belongs in @progressScript, but Ofbiz FTL bug requires it here -->
+            <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" onlyIfExists=true/>
+
             <@utilCache cacheName="commonHeadScripts.ftl" key="general::${globalContext.visualThemeId!}" expireTime=86400000>
-                <#-- Common Ofbiz URIs for use in javascript -->
-                <@requireScriptOfbizUrl uri="getJSONuiLabelArray" onlyIfExists=true/>
-                <@requireScriptOfbizUrl uri="getJSONuiLabel" onlyIfExists=true/>
-                <#-- This belongs in @progressScript, but Ofbiz FTL bug requires it here -->
-                <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" onlyIfExists=true/>
 
                 <#-- NOTE: a screen that needs a URL in JS must call @requireScriptOfbizUrl
                      FTL macro, for now, see htmlUtilities.ftl -->

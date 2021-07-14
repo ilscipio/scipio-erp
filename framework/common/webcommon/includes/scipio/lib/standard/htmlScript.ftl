@@ -220,10 +220,10 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 -->
 <#macro requireScriptOfbizUrl uri htmlwrap=false output="" onlyIfExists=false>
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
-  <#if uri?has_content && requiredScriptOfbizUrls?is_boolean || !requiredScriptOfbizUrls.contains(uri)>
+  <#if uri?has_content && (requiredScriptOfbizUrls?is_boolean || !requiredScriptOfbizUrls.contains(uri))>
     <#if !onlyIfExists || (Static["org.ofbiz.webapp.control.RequestHandler"].controllerHasRequestUriDirect(request, uri))>
       <#if output?is_boolean && output == true>
-        <@script htmlwrap=htmlwrap output=output>
+        <@script htmlwrap=htmlwrap output=true merge=false><#-- FIXME: passing merge=false for now also (duplicate function) -->
 
           <#if requiredScriptOfbizUrls?is_boolean>
           if (typeof variable === 'undefined') {
@@ -247,9 +247,10 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 
 <#macro includeRecordedScriptOfbizUrls htmlwrap=false>
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
-  <#if (!requiredScriptOfbizUrls?is_boolean) && (!requiredScriptOfbizUrls.isEmpty())>
-    <@script output=true htmlwrap=htmlwrap>
+  <#if (!requiredScriptOfbizUrls?is_boolean) && requiredScriptOfbizUrls?has_content>
 
+    <@script htmlwrap=htmlwrap>
+      // commonOfbizUrls
       if (typeof variable === 'undefined') {
           var commonOfbizUrls = {};
       }

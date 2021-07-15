@@ -10,6 +10,8 @@
             ${basedir} is actually the root scipio/ofbiz folder.
         DEV NOTE: if you add common utilities here, they must be very uniquely named
             (when in doubt, prefix with scipio-). -->
+    <import file="${Ant - Common Hooks.dir}/macros.xml" />
+
     
     <target name="pre-clean-all"></target>
     <target name="post-clean-all"></target>

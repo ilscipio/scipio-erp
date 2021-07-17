@@ -91,11 +91,25 @@ code package.
 
     <service name="distributedClearAllUtilCaches" engine="jms" location="serviceMessenger" invoke="clearAllUtilCaches" auth="true" use-transaction="false">
         <description>Clear all util caches for all Servers listening to the topic (SCIPIO)</description>
+        <attribute name="excludeNames" type="Object" mode="IN" optional="true"/>
+        <attribute name="excludePatterns" type="Object" mode="IN" optional="true"/>
+        <attribute name="excludeTypes" type="Object" mode="IN" optional="true" default-value="system-essential">
+            <description>Supported values:
+                none: force clear all;
+                system-essential (default): excludes service models and problematic caches</description>
+        </attribute>
     </service>
     <service name="clearAllUtilCaches" engine="java" export="true"
              location="org.ofbiz.entityext.cache.EntityCacheServices" invoke="clearAllUtilCaches" auth="true" use-transaction="false">
         <description>Clears all util caches, automatically includes entity caches (SCIPIO)</description>
         <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
+        <attribute name="excludeNames" type="Object" mode="IN" optional="true"/>
+        <attribute name="excludePatterns" type="Object" mode="IN" optional="true"/>
+        <attribute name="excludeTypes" type="Object" mode="IN" optional="true" default-value="system-essential">
+            <description>Supported values:
+                none: force clear all;
+                system-essential (default): excludes service models and problematic caches</description>
+        </attribute>
     </service>
 
     <!-- HTTP Engine localhost cache clearing (example: duplicate entire block for each server) -->

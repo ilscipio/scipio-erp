@@ -20,6 +20,7 @@ package org.ofbiz.base.util.cache;
 
 import java.io.NotSerializableException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 import org.apache.poi.ss.formula.functions.T;
 import org.ofbiz.base.concurrent.ExecutionPool;
@@ -523,8 +525,30 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     }
 
     public static void clearAllCaches() {
+        clearAllCaches(null, null);
+    }
+
+    /**
+     * Clears all caches with support for excludes.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static void clearAllCaches(Collection<String> excludeNames, Collection<Pattern> excludePatterns) {
         // We make a copy since clear may take time
         for (UtilCache<?,?> cache : utilCacheTable.values()) {
+            if (excludeNames != null && excludeNames.contains(cache.getName())) {
+                continue;
+            } else if (excludePatterns != null) {
+                boolean excluded = false;
+                for(Pattern pat : excludePatterns) {
+                    if (pat.matcher(cache.getName()).matches()) {
+                        excluded = true;
+                        break;
+                    }
+                }
+                if (excluded) {
+                    continue;
+                }
+            }
             cache.clear();
         }
     }

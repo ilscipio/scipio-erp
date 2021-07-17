@@ -48,6 +48,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.iterators.EnumerationIterator;
 import org.ofbiz.base.util.collections.MapComparator;
@@ -2385,5 +2386,66 @@ public final class UtilMisc {
                 return Collections.emptySet();
             }
         }
+    }
+
+    /**
+     * SCIPIO: Returns the given parameter as a collection if it already is, otherwise puts it in the collection;
+     * if null, returns null.
+     * <p>WARN: If param is wrong type, collection type may be violated.</p>
+     */
+    public static <T> Collection<T> asCollectionNonNull(Object param, Supplier<? extends Collection<? extends T>> containerFactory) {
+        if (param == null) {
+            return null;
+        } else if (param instanceof Collection) {
+            return UtilGenerics.cast(param);
+        } else {
+            Collection<? extends T> collection = containerFactory.get();
+            collection.add(UtilGenerics.cast(param));
+            return UtilGenerics.cast(collection);
+        }
+    }
+
+    /**
+     * SCIPIO: Returns the given parameter as a collection if it already is, otherwise puts it in the collection;
+     * if null, returns null.
+     * <p>WARN: If param is wrong type, collection type may be violated.</p>
+     */
+    public static <T> Collection<T> asCollectionNonNull(Object param) {
+        return asCollectionNonNull(param, ArrayList::new);
+    }
+
+    public static <C extends Collection<Pattern>> C getPatterns(Object collectionOrPat, Supplier<C> containerFactory) {
+        C out = null;
+        if (collectionOrPat == null) {
+            ;
+        } else if (collectionOrPat instanceof Collection) {
+            Collection<?> collection = UtilGenerics.cast(collectionOrPat);
+            if (!collection.isEmpty()) {
+                out = containerFactory.get();
+                for (Object elem : collection) {
+                    if (elem instanceof Pattern) {
+                        out.add((Pattern) elem);
+                    } else if (elem instanceof String) {
+                        out.add(Pattern.compile((String) elem));
+                    } else {
+                        throw new IllegalArgumentException("Not a Pattern or String: " + (elem != null ? elem.getClass().getName() : null));
+                    }
+                }
+            }
+        } else if (collectionOrPat instanceof Pattern) {
+            out = containerFactory.get();
+            out.add((Pattern) collectionOrPat);
+        } else if (collectionOrPat instanceof String) {
+            out = containerFactory.get();
+            out.add(Pattern.compile((String) collectionOrPat));
+        } else {
+            throw new IllegalArgumentException("Unknown pattern or pattern collection argument type: " +
+                    collectionOrPat.getClass().getName());
+        }
+        return out;
+    }
+
+    public static List<Pattern> getPatterns(Object collectionOrPat) {
+        return getPatterns(collectionOrPat, ArrayList::new);
     }
 }

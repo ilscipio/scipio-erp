@@ -18,12 +18,18 @@
  *******************************************************************************/
 package org.ofbiz.entityext.cache;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -48,6 +54,14 @@ import org.ofbiz.service.ServiceUtil;
 public class EntityCacheServices implements DistributedCacheClear {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    private static final Map<String, List<String>> CACHING_EXCLUDE_NAMES = Collections.unmodifiableMap(UtilMisc.toMap(
+            "system-essential", UtilMisc.unmodifiableArrayList(
+                    "service.ModelServiceMapByModel", "service.ServiceConfig", "service.ServiceECAs",
+                    "service.ServiceGroups", "service.ModelServiceMapByDispatcher")
+    ));
+    private static final Map<String, List<Pattern>> CACHING_EXCLUDE_NAMES_PATTERNS = Collections.unmodifiableMap(UtilMisc.toMap(
+    ));
 
     protected Delegator delegator = null;
     protected LocalDispatcher dispatcher = null;
@@ -225,30 +239,47 @@ public class EntityCacheServices implements DistributedCacheClear {
     }
 
     /**
-     * SCIPIO: clearAllUtilCaches - clears all system cache (equivalent to UtilCacheEvents.clearAllEvent)
-     * TODO: REVIEW: belongs somewhere else but too messy for now, may be moved in future
-     * Added 2020-03-10.
+     * Clears all system cache (equivalent to UtilCacheEvents.clearAllEvent).
+     * <p>TODO: refactor as class so clients could override CACHING_EXCLUDE_NAMES/CACHING_EXCLUDE_NAMES_PATTERNS.</p>
+     * <p>SCIPIO: 2020-03-10: Added.</p>
      */
     public static Map<String, Object> clearAllUtilCaches(DispatchContext dctx, Map<String, ? extends Object> context) {
         Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
         Locale locale = (Locale) context.get("locale");
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         try {
-            Security security = dctx.getSecurity();
+            Collection<String> excludeNames = UtilMisc.asCollectionNonNull(context.get("excludeNames"));
+            Collection<Pattern> excludePatterns = UtilMisc.getPatterns(context.get("excludePatterns"));
+            Collection<String> excludeTypes = !"none".equals(context.get("excludeTypes")) ?
+                    UtilMisc.asCollectionNonNull(context.get("excludeTypes")) : null;
+            if (excludeTypes != null) {
+                excludeNames = (excludeNames != null) ? new ArrayList<>(excludeNames) : new ArrayList<>();
+                for(String excludeType : excludeTypes) {
+                    Collection<String> excludeNamesForType = CACHING_EXCLUDE_NAMES.get(excludeType);
+                    if (excludeNamesForType != null) {
+                        excludeNames.addAll(excludeNamesForType);
+                    }
+                    Collection<Pattern> excludeNamesPatternsForType = CACHING_EXCLUDE_NAMES_PATTERNS.get(excludeType);
+                    if (excludeNamesPatternsForType != null) {
+                        excludePatterns.addAll(excludeNamesPatternsForType);
+                    }
+                }
+            }
 
+            Security security = dctx.getSecurity();
             if (!security.hasPermission("UTIL_CACHE_EDIT", userLogin)) {
                 String errMsg = UtilProperties.getMessage("WebtoolsErrorUiLabels", "utilCacheEvents.permissionEdit", locale) + ".";
                 return ServiceUtil.returnError("Error - cache could not be cleared: " + errMsg);
             }
 
-            UtilCache.clearAllCaches();
+            UtilCache.clearAllCaches(excludeNames, excludePatterns);
 
             if (Boolean.TRUE.equals(context.get("distribute"))) {
                 DistributedCacheClear dcc = delegator.getDistributedCacheClear();
                 if (dcc != null) {
-                    dcc.clearAllUtilCaches();
+                    dcc.clearAllUtilCaches(UtilMisc.toMap("excludeNames", excludeNames, "excludePatterns", excludePatterns,
+                            "excludeTypes", "none"));
                 }
             }
 
@@ -259,20 +290,27 @@ public class EntityCacheServices implements DistributedCacheClear {
     }
 
     @Override
-    public void clearAllUtilCaches() { // SCIPIO
+    public void clearAllUtilCaches(Map<String, Object> context) { // SCIPIO
         if (this.dispatcher == null) {
             Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed clear all caches", module);
             return;
         }
+        if (context == null) {
+            context = new HashMap<>();
+        }
 
-        GenericValue userLogin = getAuthUserLogin();
-        if (userLogin == null) {
-            Debug.logWarning("The userLogin for distributed cache clear was not found with userLoginId [" + userLoginId + "], not clearing remote caches.", module);
-            return;
+        GenericValue contextUserLogin = (GenericValue) context.get("userLogin");
+        if (contextUserLogin == null) {
+            GenericValue userLogin = getAuthUserLogin();
+            if (userLogin == null) {
+                Debug.logWarning("The userLogin for distributed cache clear was not found with userLoginId [" + userLoginId + "], not clearing remote caches.", module);
+                return;
+            }
+            context.put("userLogin", userLogin);
         }
 
         try {
-            this.dispatcher.runAsync("distributedClearAllUtilCaches", UtilMisc.toMap("userLogin", userLogin), false);
+            this.dispatcher.runAsync("distributedClearAllUtilCaches", context, false);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error running the distributedClearAllUtilCaches service", module);
         }

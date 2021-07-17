@@ -45,11 +45,17 @@ public interface DistributedCacheClear {
     public void clearAllCaches();
 
     /** Clears all util caches, automatically includes entity caches (SCIPIO). */
-    public void clearAllUtilCaches(); // SCIPIO
+    default void clearAllUtilCaches() {
+        clearAllUtilCaches(null);
+    }
+
+    /** Clears all util caches, automatically includes entity caches (SCIPIO). */
+    public void clearAllUtilCaches(Map<String, Object> context);
 
     /**
      * Runs an arbitrary distributed (cache clear) service (SCIPIO).
-     * NOTE: Context may be modified (userLogin, other); userLogin only added if null in context.
+     * <p>NOTE: Context may be modified (userLogin, other) and must be modifiable. userLogin is added only if null in
+     * context.</p>
      */
     public void runDistributedService(String serviceName, Map<String, Object> context); // SCIPIO
 

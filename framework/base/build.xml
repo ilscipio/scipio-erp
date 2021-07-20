@@ -125,10 +125,10 @@ code package.
                 <regexpmapper from="^(.*?/)?[^/]+/((asm|asm-tree)-([0-9.]+\.jar))$" to="\1ant-ext/\2" handledirsep="true"/>
 
                 <!-- badly named qrcode artifacts -->
-                <regexpmapper from="^(.*?/)?com.google.zxing/([^/]+\.jar)$" to="\1zxing-\2" handledirsep="true"/>
+                <regexpmapper from="^(.*?/)?com\.google\.zxing/([^/]+\.jar)$" to="\1zxing-\2" handledirsep="true"/>
 
                 <!-- badly named twelvemonkeys artifacts -->
-                <regexpmapper from="^(.*?/)?com.twelvemonkeys.common/([^/]+\.jar)$" to="\1twelvemonkeys-\2" handledirsep="true"/>
+                <regexpmapper from="^(.*?/)?com\.twelvemonkeys\.[^/]+/([^/]+\.jar)$" to="\1twelvemonkeys-\2" handledirsep="true"/>
 
                 <!-- for rest, strip organization folder -->
                 <regexpmapper from="^(.*?/)?[^/]+/([^/]+)$" to="\1\2" handledirsep="true"/>

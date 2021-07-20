@@ -9,7 +9,15 @@ import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.MediaProfile;
 import org.ofbiz.entity.Delegator;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -134,4 +142,33 @@ public abstract class AbstractImageStorer extends AbstractImageOp implements Ima
         }
     }
 
+    protected void setOutputAndWriteIOImage(ImageWriter writer, ImageWriteParam writeParam, RenderedImage im,
+                                            String formatName, Object output, String imageProfile,
+                                            Map<String, Object> options, Delegator delegator) throws IOException {
+        // Configure the output on the ImageWriter
+        ImageOutputStream tempStream = null;
+        try {
+            if (output instanceof ImageOutputStream) {
+                writer.setOutput(output);
+            } else if (output instanceof OutputStream) {
+                tempStream = ImageIO.createImageOutputStream(output);
+                writer.setOutput(tempStream);
+            } else if (output instanceof File) {
+                ((File) output).delete(); // see ImageIO.write
+                tempStream = ImageIO.createImageOutputStream(output);
+                writer.setOutput(tempStream);
+                //writer.setOutput(new FileImageOutputStream((File) output));
+            } else {
+                // It'll do it for us if needed
+                //throw new IOException("Unsupported output: " + (output != null ? output.getClass().getName() : output));
+                writer.setOutput(output);
+            }
+            // Encode
+            writer.write(null, new IIOImage(im, null, null), writeParam);
+        } finally {
+            if (tempStream != null) {
+                tempStream.close();
+            }
+        }
+    }
 }

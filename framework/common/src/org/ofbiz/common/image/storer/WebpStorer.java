@@ -74,19 +74,17 @@ public class WebpStorer extends AbstractImageStorer {
 
         String compressionType = (String) options.get("compressionType");
         if (compressionType != null && !compressionType.isEmpty()) {
-            if ("com.luciad.imageio.webp.WebPWriteParam".equals(writeParam.getClass().getName())) {
-                writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-                if ("lossy".equals(compressionType)) {
-                    writeParam.setCompressionType(writeParam.getCompressionTypes()[0]); // WebPWriteParam.LOSSY_COMPRESSION
-                } else {
-                    writeParam.setCompressionType(writeParam.getCompressionTypes()[1]); // WebPWriteParam.LOSSLESS_COMPRESSION
+            String[] compressionTypes = writeParam.getCompressionTypes();
+            if (compressionTypes != null && compressionTypes.length > 0) {
+                // case-correction for backward-compatibility
+                for(String cType : compressionTypes) {
+                    if (compressionType.equalsIgnoreCase(cType)) {
+                        compressionType = cType;
+                        break;
+                    }
                 }
-            } else if (PARAM_WARN_COUNT < PARAM_WARN_MAX) {
-                PARAM_WARN_COUNT++;
-                Debug.logWarning("Unsupported library type for webp storer: ImageWriter: [" + writer.getClass().getName()
-                        + "] ImageWriteParam [" + writeParam.getClass().getName() + "]" +
-                        (PARAM_WARN_COUNT >= PARAM_WARN_MAX ? " (max warnings reached)" : ""), module);
             }
+            writeParam.setCompressionType(compressionType);
         }
 
         Float compressionQuality = UtilMisc.toFloat(options.get("compressionQuality"), null);

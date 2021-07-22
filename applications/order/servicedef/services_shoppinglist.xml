@@ -142,8 +142,9 @@ code package.
         <attribute name="shoppingListItemSeqId" type="String" mode="OUT" optional="false"/>
     </service>
 
-    <service name="autoDeleteAutoSaveShoppingList" engine="java" auth="true" max-retry="3" transaction-timeout="3600"
-            location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="autoDeleteAutoSaveShoppingList">
+    <service name="autoDeleteAutoSaveShoppingListAlways" engine="java" auth="true" use-transaction="false"
+             location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="autoDeleteAutoSaveShoppingList">
+        <!-- SCIPIO: removed max-retry="3" and now manual transaction handling -->
         <description>
             Automatic delete auto save shopping list for anonymous users that are not updated in last 30 days.
             Default to 30 days unless no configuration is specified.
@@ -152,6 +153,20 @@ code package.
         <!-- SCIPIO: new options -->
         <attribute name="deleteAutoSaveList" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="deleteAnonWishList" type="Boolean" mode="IN" optional="true" default-value="true"/>
+        <attribute name="sepTransBatch" type="Integer" mode="IN" optional="true" default-value="100">
+            <description>The number of shopping lists to include in a deletion transaction (0 disables separate transactions)</description>
+        </attribute>
+    </service>
+
+    <service name="autoDeleteAutoSaveShoppingList" engine="java" auth="true" use-transaction="false" semaphore="fail"
+            location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="autoDeleteAutoSaveShoppingList">
+        <description>
+            Automatic delete auto save shopping list for anonymous users that are not updated in last 30 days.
+            Default to 30 days unless no configuration is specified.
+            SCIPIO: This service now also deletes expired regular anonymous wishlists by default, and this
+            version uses a semaphore.
+        </description>
+        <implements service="autoDeleteAutoSaveShoppingListAlways"/>
     </service>
 
     <service name="createShoppingListItemSurvey" default-entity-name="ShoppingListItemSurvey" engine="entity-auto" invoke="create" auth="true">

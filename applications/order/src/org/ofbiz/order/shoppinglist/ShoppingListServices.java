@@ -20,8 +20,10 @@ package org.ofbiz.order.shoppinglist;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -60,6 +62,8 @@ import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
 
 import com.ibm.icu.util.Calendar;
+
+import javax.transaction.Transaction;
 
 /**
  * Shopping List Services
@@ -582,50 +586,66 @@ public class ShoppingListServices {
     }
 
     public static Map<String,Object> autoDeleteAutoSaveShoppingList(DispatchContext dctx, Map<String, ? extends Object> context) {
+        List<String> errorMessageList = new ArrayList<>();
         Delegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();
         List<GenericValue> shoppingList = null;
         // SCIPIO: Also clear anon ShoppingLists, if applicable
         boolean deleteAutoSaveList = !Boolean.FALSE.equals(context.get("deleteAutoSaveList"));
         boolean deleteAnonWishList = !Boolean.FALSE.equals(context.get("deleteAnonWishList"));
-        Map<String, Object> stats = new HashMap<>();
+        Integer sepTransBatch = (Integer) context.get("sepTransBatch");
+        Map<String, Object> stats = new LinkedHashMap<>();
         if (deleteAutoSaveList) {
             try {
-                shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("partyId", null, "shoppingListTypeId", "SLT_SPEC_PURP").queryList();
+                shoppingList = EntityQuery.use(delegator).select("shoppingListId", "lastAdminModified", "lastUpdatedStamp")
+                        .from("ShoppingList").where("partyId", null, "shoppingListTypeId", "SLT_SPEC_PURP").queryList();
             } catch (GenericEntityException e) {
-                Debug.logError(e.getMessage(), module);
+                Debug.logError("autoDeleteAutoSaveShoppingList: " + e, module);
+                return ServiceUtil.returnError(e.toString());
             }
             int maxDays = EntityUtilProperties.getPropertyAsInteger("order", "autosave.max.age", 30, delegator);
-            Map<String, Object> servResult = deleteExpiredShoppingLists(dctx, context, shoppingList, maxDays);
+            Map<String, Object> servResult = deleteExpiredShoppingLists(dctx, context, shoppingList, maxDays, sepTransBatch);
             if (ServiceUtil.isError(servResult)) {
                 return servResult;
+            } else if (ServiceUtil.isFailure(servResult)) {
+                errorMessageList.add(ServiceUtil.getErrorMessage(servResult));
             }
             stats.put("auto-save lists deleted", servResult.get("deleted"));
             stats.put("auto-save lists skipped still referenced", servResult.get("skippedReferenced"));
         }
         if (deleteAnonWishList) {
             try {
-                shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("partyId", null, "shoppingListTypeId", "SLT_WISH_LIST").queryList();
+                shoppingList = EntityQuery.use(delegator).select("shoppingListId", "lastAdminModified", "lastUpdatedStamp")
+                        .from("ShoppingList").where("partyId", null, "shoppingListTypeId", "SLT_WISH_LIST").queryList();
             } catch (GenericEntityException e) {
-                Debug.logError(e.getMessage(), module);
+                Debug.logError("autoDeleteAutoSaveShoppingList: " + e, module);
+                return ServiceUtil.returnError(e.toString());
             }
             int maxDays = EntityUtilProperties.getPropertyAsInteger("order", "anonwishlist.max.age", 30, delegator);
-            Map<String, Object> servResult = deleteExpiredShoppingLists(dctx, context, shoppingList, maxDays);
+            Map<String, Object> servResult = deleteExpiredShoppingLists(dctx, context, shoppingList, maxDays, sepTransBatch);
             if (ServiceUtil.isError(servResult)) {
                 return servResult;
+            } else if (ServiceUtil.isFailure(servResult)) {
+                errorMessageList.add(ServiceUtil.getErrorMessage(servResult));
             }
             stats.put("anon wishlists deleted", servResult.get("deleted"));
             stats.put("anon wishlists skipped still referenced", servResult.get("skippedReferenced"));
         }
-        String msg = "Auto-delete shopping lists finished with " + stats.toString();
-        Debug.logInfo("autoDeleteAutoSaveShoppingList: " + msg, module);
-        return ServiceUtil.returnSuccess(msg);
+        if (errorMessageList.size() > 0) {
+            String msg = "Auto-delete shopping lists finished with skippable errors " + stats;
+            errorMessageList.add(0, msg);
+            Debug.logWarning("autoDeleteAutoSaveShoppingList: " + errorMessageList, module);
+            return ServiceUtil.returnFailure(errorMessageList);
+        } else {
+            String msg = "Auto-delete shopping lists finished with " + stats;
+            Debug.logInfo("autoDeleteAutoSaveShoppingList: " + msg, module);
+            return ServiceUtil.returnSuccess(msg);
+        }
     }
 
     // SCIPIO: Refactored from autoDeleteAutoSaveShoppingList
-    // FIXME?: Individual failures currently cause whole service to fail... but separate transactions seem like overkill at the moment, usually if this fails
-    //  it reflects a coding error...
-    public static Map<String, Object> deleteExpiredShoppingLists(DispatchContext dctx, Map<String, ? extends Object> context, List<GenericValue> shoppingList, int maxDays) {
+    protected static Map<String, Object> deleteExpiredShoppingLists(DispatchContext dctx, Map<String, ? extends Object> context,
+                                                                    List<GenericValue> shoppingList, int maxDays, Integer sepTransBatch) {
+        Map<String, Object> result = null;
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -634,78 +654,132 @@ public class ShoppingListServices {
         }
         int skippedReferenced = 0;
         int deleted = 0;
-        for (GenericValue sl : shoppingList) {
-            if (maxDays > 0) {
-                // SCIPIO: do not try to delete old lists that are (for whatever reason) associated to OrderHeader, otherwise this ruins the whole execution
-                if (delegator.from("OrderHeader").where("autoOrderShoppingListId", sl.get("shoppingListId")).queryCountSafe() > 0) {
-                    skippedReferenced++;
-                    continue;
+        if (!shoppingList.isEmpty() && maxDays > 0) {
+            int total = 0;
+            if (sepTransBatch == null) {
+                sepTransBatch = 0;
+            }
+            int transEntryCount = -1;
+            Transaction parentTransaction = null; // NOTE: There should probably not be a parent transaction, but handle in case
+            boolean beganTransaction = false;
+            try {
+                if (TransactionUtil.isTransactionInPlace()) {
+                    parentTransaction = TransactionUtil.suspend();
                 }
-                Timestamp lastModified = sl.getTimestamp("lastAdminModified");
-                if (lastModified == null) {
-                    lastModified = sl.getTimestamp("lastUpdatedStamp");
-                }
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(lastModified.getTime());
-                cal.add(Calendar.DAY_OF_YEAR, maxDays);
-                Date expireDate = cal.getTime();
-                Date nowDate = new Date();
-                if (expireDate.equals(nowDate) || nowDate.after(expireDate)) {
-                    List<GenericValue> shoppingListItems = null;
-                    try {
-                        shoppingListItems = sl.getRelated("ShoppingListItem", null, null, false);
-                    } catch (GenericEntityException e) {
-                        Debug.logError("deleteExpiredShoppingLists: " + e.getMessage(), module);
-                        return ServiceUtil.returnError(e.getMessage());
-                    }
-                    if (shoppingListItems != null) {
-                        // SCIPIO: Also make sure the dates on the ShoppingListItem are also past the expired date, because
-                        // not all ShoppingList-modifying code updates the main ShoppingList instance
-                        boolean allItemsExpired = true;
-                        for (GenericValue sli : shoppingListItems) {
-                            lastModified = sli.getTimestamp("lastUpdatedStamp");
-                            cal = Calendar.getInstance();
-                            cal.setTimeInMillis(lastModified.getTime());
-                            cal.add(Calendar.DAY_OF_YEAR, maxDays);
-                            expireDate = cal.getTime();
-                            if (expireDate.equals(nowDate) || nowDate.after(expireDate)) {
-                                ; // good
-                            } else {
-                                allItemsExpired = false;
+                for (GenericValue sl : shoppingList) {
+                    if (transEntryCount < 0 || (sepTransBatch > 0 && transEntryCount >= sepTransBatch)) {
+                        try {
+                            if (transEntryCount >= 0) {
+                                Debug.logInfo("deleteExpiredShoppingLists: committing " + transEntryCount +
+                                        " ShoppingList removals (visited: " + total + "/" + shoppingList.size() + ")", module);
+                                TransactionUtil.commit(beganTransaction);
                             }
+                        } finally {
+                            beganTransaction = false;
+                            transEntryCount = 0;
                         }
-                        if (!allItemsExpired) {
-                            continue;
-                        }
-                        Debug.logInfo("deleteExpiredShoppingLists: Removing expired ShoppingList [" + sl.get("shoppingListId") + "]", module); // SCIPIO
-                        for (GenericValue sli : shoppingListItems) {
-                            try {
+                        beganTransaction = TransactionUtil.begin();
+                    }
+
+                    // SCIPIO: NOTE: ShoppingList (sl) GenericValue has limited field select, see callers
+                    // SCIPIO: do not try to delete old lists that are (for whatever reason) associated to OrderHeader, otherwise this ruins the whole execution
+                    if (delegator.from("OrderHeader").where("autoOrderShoppingListId", sl.get("shoppingListId")).queryCountSafe() > 0) {
+                        skippedReferenced++;
+                        continue;
+                    }
+                    Timestamp lastModified = sl.getTimestamp("lastAdminModified");
+                    if (lastModified == null) {
+                        lastModified = sl.getTimestamp("lastUpdatedStamp");
+                    }
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(lastModified.getTime());
+                    cal.add(Calendar.DAY_OF_YEAR, maxDays);
+                    Date expireDate = cal.getTime();
+                    Date nowDate = new Date();
+                    if (expireDate.equals(nowDate) || nowDate.after(expireDate)) {
+                        List<GenericValue> shoppingListItems = sl.getRelated("ShoppingListItem",
+                                null, null, false);
+                        if (shoppingListItems != null) {
+                            // SCIPIO: Also make sure the dates on the ShoppingListItem are also past the expired date, because
+                            // not all ShoppingList-modifying code updates the main ShoppingList instance
+                            boolean allItemsExpired = true;
+                            for (GenericValue sli : shoppingListItems) {
+                                lastModified = sli.getTimestamp("lastUpdatedStamp");
+                                cal = Calendar.getInstance();
+                                cal.setTimeInMillis(lastModified.getTime());
+                                cal.add(Calendar.DAY_OF_YEAR, maxDays);
+                                expireDate = cal.getTime();
+                                if (expireDate.equals(nowDate) || nowDate.after(expireDate)) {
+                                    ; // good
+                                } else {
+                                    allItemsExpired = false;
+                                }
+                            }
+                            if (!allItemsExpired) {
+                                continue;
+                            }
+                            Debug.logInfo("deleteExpiredShoppingLists: Removing expired ShoppingList [" + sl.get("shoppingListId") + "]", module); // SCIPIO
+                            for (GenericValue sli : shoppingListItems) {
                                 Map<String, Object> servResult = dispatcher.runSync("removeShoppingListItem", UtilMisc.toMap("shoppingListId", sl.getString("shoppingListId"),
                                         "shoppingListItemSeqId", sli.getString("shoppingListItemSeqId"),
                                         "userLogin", userLogin));
                                 if (ServiceUtil.isError(servResult)) {
                                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(servResult));
                                 }
-                            } catch (GenericServiceException e) {
-                                Debug.logError("deleteExpiredShoppingLists: " + e.getMessage(), module);
-                                return ServiceUtil.returnError(e.getMessage());
                             }
                         }
-                    }
-                    try {
                         Map<String, Object> servResult = dispatcher.runSync("removeShoppingList", UtilMisc.toMap("shoppingListId", sl.getString("shoppingListId"), "userLogin", userLogin));
                         if (ServiceUtil.isError(servResult)) {
                             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(servResult));
                         }
                         deleted++;
-                    } catch (GenericServiceException e) {
-                        Debug.logError("deleteExpiredShoppingLists: " + e.getMessage(), module);
-                        return ServiceUtil.returnError(e.getMessage());
+                        transEntryCount++;
+                    }
+                    total++;
+                }
+                try {
+                    Debug.logInfo("deleteExpiredShoppingLists: committing " + transEntryCount +
+                            " ShoppingList removals (visited: " + total + "/" + shoppingList.size() + ")", module);
+                    TransactionUtil.commit(beganTransaction);
+                } finally {
+                    beganTransaction = false;
+                    transEntryCount = 0;
+                }
+            } catch(RuntimeException e) {
+                if (beganTransaction) {
+                    try {
+                        TransactionUtil.rollback(beganTransaction, e.getMessage(), e);
+                    } catch (GenericTransactionException e2) {
+                        Debug.logError(e2, "deleteExpiredShoppingLists: Could not rollback nested transaction: " + e2, module);
+                    }
+                }
+                throw e;
+            } catch(GeneralException e) {
+                if (beganTransaction) {
+                    try {
+                        TransactionUtil.rollback(beganTransaction, e.getMessage(), e);
+                    } catch (GenericTransactionException e2) {
+                        Debug.logError(e2, "deleteExpiredShoppingLists: Could not rollback nested transaction: " + e2, module);
+                    }
+                }
+                Debug.logError("deleteExpiredShoppingLists: " + e, module);
+                return ServiceUtil.returnError(e.toString());
+            } finally {
+                if (parentTransaction != null) {
+                    try {
+                        TransactionUtil.resume(parentTransaction);
+                    } catch (GenericTransactionException e) {
+                        Debug.logError("deleteExpiredShoppingLists: Could not resume parent transaction: " + e, module);
+                        if (result == null) {
+                            result = ServiceUtil.returnError("Could not resume parent transaction: " + e);
+                        }
                     }
                 }
             }
         }
-        Map<String, Object> result = ServiceUtil.returnSuccess();
+        if (result == null) {
+            result = ServiceUtil.returnSuccess();
+        }
         result.put("skippedReferenced", skippedReferenced);
         result.put("deleted", deleted);
         return result;

@@ -14,6 +14,7 @@ import com.ilscipio.scipio.ce.util.collections.MapEntryAdapter;
  * <p>
  * NOTE: See also {@link com.ilscipio.scipio.ce.util.collections.MapEntryAdapters}.
  */
+@SuppressWarnings("deprecation")
 public final class ServletMapEntryAdapters {
 
     private ServletMapEntryAdapters() {

@@ -1110,6 +1110,8 @@ public final class RequestAttrPolicy {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
+    @Deprecated
     public static boolean setServletAttribute(ServletAttrContainer attrContainer, String attrName, Object value) {
         if (value == AttrPolicy.VALUE_IGNORE) {
             return false;

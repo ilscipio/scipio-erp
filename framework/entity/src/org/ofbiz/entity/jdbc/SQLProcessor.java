@@ -161,7 +161,7 @@ public class SQLProcessor implements AutoCloseable {
                 } catch (GenericDataSourceException rbsqle) {
                     Debug.logError(rbsqle, "Got another error when trying to rollback after error committing transaction: " + sqle.toString());
                 }
-                throw new GenericDataSourceException("SQL Exception occurred on commit", sqle);
+                throw GenericDataSourceException.from("SQL Exception occurred on commit", sqle, this, getDelegator(), null);
             }
         }
     }
@@ -186,7 +186,7 @@ public class SQLProcessor implements AutoCloseable {
                     if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:rollback() : _manualTX=" + _manualTX, module);
                 } catch (GenericTransactionException e) {
                     Debug.logError(e, "Error setting rollback only", module);
-                    throw new GenericDataSourceException("Error setting rollback only", e);
+                    throw GenericDataSourceException.from("Error setting rollback only", e, this, getDelegator(), null);
                 }
             }
         } catch (SQLException sqle2) {
@@ -261,12 +261,12 @@ public class SQLProcessor implements AutoCloseable {
             _connection = TransactionFactoryLoader.getInstance().getConnection(helperInfo);
             if (Debug.verboseOn()) Debug.logVerbose("SQLProcessor:connection() : manualTx=" + _manualTX, module);
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException("Unable to establish a connection with the database.", sqle);
+            throw GenericDataSourceException.from("Unable to establish a connection with the database.", sqle, this, getDelegator(), null);
         }
 
         // make sure we actually did get a connection
         if (_connection == null) {
-            throw new GenericDataSourceException("Unable to establish a connection with the database. Connection was null!");
+            throw GenericDataSourceException.from("Unable to establish a connection with the database. Connection was null!", null, this, getDelegator(), null);
         }
 
         // test the connection
@@ -305,7 +305,7 @@ public class SQLProcessor implements AutoCloseable {
                 }
             }
         } catch (SQLException e) {
-            throw new GenericDataSourceException("Cannot get autoCommit status from connection", e);
+            throw GenericDataSourceException.from("Cannot get autoCommit status from connection", e, this, getDelegator(), null);
         }
 
         try {
@@ -383,7 +383,7 @@ public class SQLProcessor implements AutoCloseable {
             }
             this.setFetchSize(_ps, fetchSize);
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+            throw GenericDataSourceException.from("SQL Exception while executing: " + sql, sqle, this, getDelegator(), null);
         }
     }
 
@@ -399,9 +399,8 @@ public class SQLProcessor implements AutoCloseable {
             _rs = _ps.executeQuery();
         } catch (SQLException sqle) {
             this.checkLockWaitInfo(sqle);
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
+            throw GenericDataSourceException.from("SQL Exception while executing: " + _sql, sqle, this, getDelegator(), null);
         }
-
         return _rs;
     }
 
@@ -432,7 +431,7 @@ public class SQLProcessor implements AutoCloseable {
         } catch (SQLException sqle) {
             this.checkLockWaitInfo(sqle);
             // don't display this here, may not be critical, allow handling further up... Debug.logError(sqle, "SQLProcessor.executeUpdate() : ERROR : ", module);
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
+            throw GenericDataSourceException.from("SQL Exception while executing the following:" + _sql, sqle, this, getDelegator(), null);
         }
     }
 
@@ -443,12 +442,11 @@ public class SQLProcessor implements AutoCloseable {
      * @throws GenericDataSourceException
      */
     public int executeUpdate(String sql) throws GenericDataSourceException {
-
         try (Statement stmt = _connection.createStatement()) {
             return stmt.executeUpdate(sql);
         } catch (SQLException sqle) {
             // passing on this exception as nested, no need to log it here: Debug.logError(sqle, "SQLProcessor.executeUpdate(sql) : ERROR : ", module);
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
+            throw GenericDataSourceException.from("SQL Exception while executing: " + _sql, sqle, this, getDelegator(), null);
         }
     }
 
@@ -463,7 +461,7 @@ public class SQLProcessor implements AutoCloseable {
         try {
             return _rs.next();
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
+            throw GenericDataSourceException.from("SQL Exception while executing: " + _sql, sqle, this, getDelegator(), null);
         }
     }
 
@@ -519,7 +517,7 @@ public class SQLProcessor implements AutoCloseable {
             Debug.logWarning("[SQLProcessor.execQuery]: SQL Exception while executing the following:\n" +
                 sql + "\nError was:", module);
             Debug.logWarning(sqle.getMessage(), module);
-            throw new GenericEntityException("SQL Exception while executing the following:" + _sql, sqle);
+            throw GenericDataSourceException.from("SQL Exception while executing: " + _sql, sqle, this, getDelegator(), null);
         } finally {
             close();
         }

@@ -46,6 +46,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericDataSourceException;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
@@ -661,7 +662,7 @@ public final class SqlJdbcUtil {
                     Object obj = null;
 
                     byte[] originalBytes = rs.getBytes(ind);
-                    obj = deserializeField(originalBytes, ind, curField);
+                    obj = deserializeField(originalBytes, ind, curField, entity);
 
                     if (obj != null) {
                         entity.dangerousSetNoCheckButFast(curField, obj);
@@ -684,7 +685,7 @@ public final class SqlJdbcUtil {
 
                     if (originalObject != null) {
                         // for backward compatibility, check to see if there is a serialized object and if so return that
-                        Object blobObject = deserializeField(fieldBytes, ind, curField);
+                        Object blobObject = deserializeField(fieldBytes, ind, curField, entity);
                         if (blobObject != null) {
                             entity.dangerousSetNoCheckButFast(curField, blobObject);
                         } else {
@@ -764,11 +765,12 @@ public final class SqlJdbcUtil {
                 }
             }
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException("SQL Exception while getting value : " + curField.getName() + " [" + curField.getColName() + "] (" + ind + ")", sqle);
+            throw GenericDataSourceException.from("SQL Exception while getting value : " + curField.getName() + " [" + curField.getColName() + "] (" + ind + ")",
+                    sqle, null, entity.getDelegator(), entity.getModelEntity());
         }
     }
 
-    private static Object deserializeField(byte[] fieldBytes, int ind, ModelField curField) throws GenericDataSourceException {
+    private static Object deserializeField(byte[] fieldBytes, int ind, ModelField curField, GenericEntity entity) throws GenericDataSourceException {
         // NOTE DEJ20071022: the following code is to convert the byte[] back into an object; if that fails
         //just return the byte[]; this was for the ByteWrapper thing which is now deprecated, so this may
         //be removed in the near future to enhance performance
@@ -803,7 +805,8 @@ public final class SqlJdbcUtil {
                     try {
                         in.close();
                     } catch (IOException e) {
-                        throw new GenericDataSourceException("Unable to close binary input stream while getting value : " + curField.getName() + " [" + curField.getColName() + "] (" + ind + "): " + e.toString(), e);
+                        throw GenericDataSourceException.from("Unable to close binary input stream while getting value : " + curField.getName() + " [" + curField.getColName() + "] (" + ind + "): " + e.toString(),
+                                e, null, entity.getDelegator(), entity.getModelEntity());
                     }
                 }
             }
@@ -815,10 +818,14 @@ public final class SqlJdbcUtil {
     public static void setValue(SQLProcessor sqlP, ModelField modelField, GenericEntity entity, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
         Object fieldValue = entity.dangerousGetNoCheckButFast(modelField);
 
-        setValue(sqlP, modelField, entity.getEntityName(), fieldValue, modelFieldTypeReader);
+        setValue(sqlP, modelField, entity.getEntityName(), fieldValue, modelFieldTypeReader, entity.getDelegator(), entity.getModelEntity());
     }
 
-    public static <T> void setValue(SQLProcessor sqlP, ModelField modelField, String entityName, Object fieldValue, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
+    /**
+     * Sets value.
+     * <p>SCIPIO: 2.1.0: Added delegator and modelEntity parameters for exception analysis.</p>
+     */
+    public static <T> void setValue(SQLProcessor sqlP, ModelField modelField, String entityName, Object fieldValue, ModelFieldTypeReader modelFieldTypeReader, Delegator delegator, ModelEntity modelEntity) throws GenericEntityException {
         ModelFieldType mft = modelFieldTypeReader.getModelFieldType(modelField.getType());
 
         if (mft == null) {
@@ -843,7 +850,8 @@ public final class SqlJdbcUtil {
                 sqlP.setValue(handler, handler.getJavaClass().cast(fieldValue));
                 return;
             } catch (SQLException e) {
-                throw new GenericDataSourceException("SQL Exception while setting value on field [" + modelField.getName() + "] of entity " + entityName + ": ", e);
+                throw GenericDataSourceException.from("SQL Exception while setting value on field [" + modelField.getName() + "] of entity " + entityName,
+                        e, sqlP, delegator, modelEntity);
             }
         } else {
             Debug.logWarning("JdbcValueHandler not found for java-type " + mft.getJavaType() +
@@ -951,7 +959,7 @@ public final class SqlJdbcUtil {
         } catch (GenericNotImplementedException e) {
             throw new GenericNotImplementedException("Not Implemented Exception while setting value on field [" + modelField.getName() + "] of entity " + entityName + ": " + e.toString(), e);
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException("SQL Exception while setting value on field [" + modelField.getName() + "] of entity " + entityName + ": ", sqle);
+            throw GenericDataSourceException.from("SQL Exception while setting value on field [" + modelField.getName() + "] of entity " + entityName + ": ", sqle, sqlP, delegator, modelEntity);
         }
     }
 

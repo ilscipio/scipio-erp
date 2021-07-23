@@ -273,18 +273,17 @@ public class GenericDAO {
     }
 
     public int updateByCondition(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fieldsToSet, EntityCondition condition) throws GenericEntityException {
-
         try (SQLProcessor sqlP = new SQLProcessor(delegator, helperInfo)) {
             try {
-                return updateByCondition(modelEntity, fieldsToSet, condition, sqlP);
+                return updateByCondition(delegator, modelEntity, fieldsToSet, condition, sqlP);
             } catch (GenericDataSourceException e) {
                 sqlP.rollback();
-                throw new GenericDataSourceException("Generic Entity Exception occurred in updateByCondition", e);
+                throw GenericDataSourceException.from("Generic Entity Exception occurred in updateByCondition", e, sqlP, delegator, modelEntity);
             }
         }
     }
 
-    public int updateByCondition(ModelEntity modelEntity, Map<String, ? extends Object> fieldsToSet, EntityCondition condition, SQLProcessor sqlP) throws GenericEntityException {
+    public int updateByCondition(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fieldsToSet, EntityCondition condition, SQLProcessor sqlP) throws GenericEntityException {
         if (modelEntity == null || fieldsToSet == null || condition == null)
             return 0;
         if (modelEntity instanceof ModelViewEntity) {
@@ -309,7 +308,7 @@ public class GenericDAO {
 
         sqlP.prepareStatement(sql.toString());
         for (EntityConditionParam param: params) {
-            SqlJdbcUtil.setValue(sqlP, param.getModelField(), modelEntity.getEntityName(), param.getFieldValue(), modelFieldTypeReader);
+            SqlJdbcUtil.setValue(sqlP, param.getModelField(), modelEntity.getEntityName(), param.getFieldValue(), modelFieldTypeReader, delegator, modelEntity);
         }
 
         return sqlP.executeUpdate();
@@ -727,7 +726,7 @@ public class GenericDAO {
         }
         // set all of the values from the Where EntityCondition
         for (EntityConditionParam whereEntityConditionParam: whereEntityConditionParams) {
-            SqlJdbcUtil.setValue(sqlP, whereEntityConditionParam.getModelField(), modelEntity.getEntityName(), whereEntityConditionParam.getFieldValue(), modelFieldTypeReader);
+            SqlJdbcUtil.setValue(sqlP, whereEntityConditionParam.getModelField(), modelEntity.getEntityName(), whereEntityConditionParam.getFieldValue(), modelFieldTypeReader, delegator, modelEntity);
         }
         if (verboseOn) {
             // put this inside an if statement so that we don't have to generate the string when not used...
@@ -735,7 +734,7 @@ public class GenericDAO {
         }
         // set all of the values from the Having EntityCondition
         for (EntityConditionParam havingEntityConditionParam: havingEntityConditionParams) {
-            SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader);
+            SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader, delegator, modelEntity);
         }
 
         long queryStartTime = 0;
@@ -934,7 +933,7 @@ public class GenericDAO {
                 ModelField mf = entry.getKey();
                 Object curvalue = entry.getValue();
 
-                SqlJdbcUtil.setValue(sqlP, mf, modelEntityOne.getEntityName(), curvalue, modelFieldTypeReader);
+                SqlJdbcUtil.setValue(sqlP, mf, modelEntityOne.getEntityName(), curvalue, modelFieldTypeReader, value.getDelegator(), value.getModelEntity());
             }
             sqlP.executeQuery();
             //int collsize = collist.size();
@@ -1065,7 +1064,7 @@ public class GenericDAO {
         }
         // set all of the values from the Where EntityCondition
         for (EntityConditionParam whereEntityConditionParam: whereEntityConditionParams) {
-            SqlJdbcUtil.setValue(sqlP, whereEntityConditionParam.getModelField(), modelEntity.getEntityName(), whereEntityConditionParam.getFieldValue(), modelFieldTypeReader);
+            SqlJdbcUtil.setValue(sqlP, whereEntityConditionParam.getModelField(), modelEntity.getEntityName(), whereEntityConditionParam.getFieldValue(), modelFieldTypeReader, delegator, modelEntity);
         }
         if (verboseOn) {
             // put this inside an if statement so that we don't have to generate the string when not used...
@@ -1073,7 +1072,7 @@ public class GenericDAO {
         }
         // set all of the values from the Having EntityCondition
         for (EntityConditionParam havingEntityConditionParam: havingEntityConditionParams) {
-            SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader);
+            SqlJdbcUtil.setValue(sqlP, havingEntityConditionParam.getModelField(), modelEntity.getEntityName(), havingEntityConditionParam.getFieldValue(), modelFieldTypeReader, delegator, modelEntity);
         }
 
 
@@ -1087,7 +1086,7 @@ public class GenericDAO {
             return count;
 
         } catch (SQLException e) {
-            throw new GenericDataSourceException("Error getting count value", e);
+            throw GenericDataSourceException.from("Error getting count value", e, sqlP, delegator, modelEntity);
         }
         }
     }
@@ -1098,12 +1097,11 @@ public class GenericDAO {
 
     public int delete(GenericEntity entity) throws GenericEntityException {
         try (SQLProcessor sqlP = new SQLProcessor(entity.getDelegator(), helperInfo)) {
-
         try {
             return delete(entity, sqlP);
         } catch (GenericDataSourceException e) {
             sqlP.rollback();
-            throw new GenericDataSourceException("Exception while deleting the following entity: " + entity.toString(), e);
+            throw GenericDataSourceException.from("Exception while deleting entity", e, sqlP, entity.getDelegator(), entity.getModelEntity());
         }
         }
     }
@@ -1119,22 +1117,21 @@ public class GenericDAO {
         SqlJdbcUtil.makeWhereStringFromFields(sql, modelEntity.getPkFieldsUnmodifiable(), entity, "AND");
 
         int retVal;
-
-            sqlP.prepareStatement(sql.toString());
-            SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
-            retVal = sqlP.executeUpdate();
-            entity.removedFromDatasource();
+        sqlP.prepareStatement(sql.toString());
+        SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
+        retVal = sqlP.executeUpdate();
+        entity.removedFromDatasource();
         return retVal;
     }
 
     public int deleteByCondition(Delegator delegator, ModelEntity modelEntity, EntityCondition condition) throws GenericEntityException {
         try (SQLProcessor sqlP = new SQLProcessor(delegator, helperInfo)) {
-        try {
-            return deleteByCondition(modelEntity, condition, sqlP);
-        } catch (GenericDataSourceException e) {
-            sqlP.rollback();
-            throw new GenericDataSourceException("Generic Entity Exception occurred in deleteByCondition", e);
-        }
+            try {
+                return deleteByCondition(modelEntity, condition, sqlP);
+            } catch (GenericDataSourceException e) {
+                sqlP.rollback();
+                throw GenericDataSourceException.from("Generic Entity Exception occurred in deleteByCondition", e, sqlP, delegator, modelEntity);
+            }
         }
     }
 
@@ -1152,9 +1149,9 @@ public class GenericDAO {
             sql.append(" WHERE ").append(whereCondition);
         }
 
-            sqlP.prepareStatement(sql.toString());
+        sqlP.prepareStatement(sql.toString());
 
-            return sqlP.executeUpdate();
+        return sqlP.executeUpdate();
     }
 
     /* ====================================================================== */

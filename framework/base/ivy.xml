@@ -485,6 +485,9 @@
             or by patches to the framework or any stock Scipio components or code
             may be added below this comment.
         -->
+        <!-- SCIPIO 2.1.0: OkHtttpClient 2.7.5 libraries -->
+        <dependency org="com.squareup.okhttp" name="okhttp" rev="2.7.5" conf="base,sources"/>
+        <dependency org="com.squareup.okhttp" name="logging-interceptor" rev="2.7.5" conf="base,sources"/>
 
 
         <!-- /CUSTOM/CLIENT DEPENDENCIES (END) -->

@@ -95,6 +95,8 @@ if (parameters.resetSearch) {
     context.picklistBinId = picklistBinId;
     context.isOrderStatusApproved = false;
 
+    shipmentId = context.shipmentId;
+
     if (orderId) {
         orderHeader = from("OrderHeader").where("orderId", orderId).queryOne();
         if (orderHeader) {
@@ -111,20 +113,22 @@ if (parameters.resetSearch) {
             List exprs = UtilMisc.toList(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_APPROVED"));
             orderItems = orh.getOrderItemsByCondition(exprs);
             context.orderItems = orderItems;
-            if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
-                context.isOrderStatusApproved = true;
-                if (shipGroupSeqId) {
-                    productStoreId = orh.getProductStoreId();
-                    context.productStoreId = productStoreId;
-                    if (shipments) {
-                        request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage("OrderErrorUiLabels", "OrderErrorAllItemsOfOrderAreAlreadyVerified", [orderId : orderId], locale));
+            if (!shipmentId) {
+                if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
+                    context.isOrderStatusApproved = true;
+                    if (shipGroupSeqId) {
+                        productStoreId = orh.getProductStoreId();
+                        context.productStoreId = productStoreId;
+                        if (shipments) {
+                            request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage("OrderErrorUiLabels", "OrderErrorAllItemsOfOrderAreAlreadyVerified", [orderId: orderId], locale));
+                        }
+                    } else {
+                        request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("ProductErrorUiLabels", "ProductErrorNoShipGroupSequenceIdFoundCannotProcess", locale));
                     }
                 } else {
-                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("ProductErrorUiLabels", "ProductErrorNoShipGroupSequenceIdFoundCannotProcess", locale));
+                    context.isOrderStatusApproved = false;
+                    request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("OrderErrorUiLabels", "OrderErrorOrderNotApprovedForPicking", [orderId: orderId], locale));
                 }
-            } else {
-                context.isOrderStatusApproved = false;
-                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("OrderErrorUiLabels", "OrderErrorOrderNotApprovedForPicking", [orderId : orderId], locale));
             }
         } else {
             request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("OrderErrorUiLabels", "OrderErrorOrderIdNotFound", [orderId : orderId], locale));

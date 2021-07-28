@@ -75,20 +75,26 @@ public class ShipmentServices {
             }
 
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
+            List<EntityCondition> shipmentConditions = UtilMisc.toList(
+                    EntityCondition.makeCondition("statusId", EntityOperator.IN,
+                            UtilMisc.toList("SHIPMENT_INPUT", "SHIPMENT_SCHEDULED", "SHIPMENT_PICKED", "SHIPMENT_PACKED")),
+                    EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId)
+            );
 
-            EntityCondition shipmentCondition = EntityCondition.makeCondition("statusId", EntityOperator.IN,
-                    UtilMisc.toList("SHIPMENT_INPUT", "SHIPMENT_SCHEDULED", "SHIPMENT_PICKED", "SHIPMENT_PACKED"));
-            List<GenericValue> primaryShipments = EntityQuery.use(delegator).from("PrimaryShipment").where(shipmentCondition).cache(false).queryList();
-            if (UtilValidate.isNotEmpty(primaryShipments)) {
+            List<GenericValue> shipments = EntityQuery.use(delegator).from("Shipment").where(shipmentConditions).cache(false).queryList();
+            if (UtilValidate.isNotEmpty(shipments)) {
                 Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = UtilMisc.newMap();
-                for (GenericValue shipment : primaryShipments) {
+                for (GenericValue shipment : shipments) {
                     List<GenericValue> orderItemsNotIssued = UtilMisc.newList();
                     for (GenericValue orderItem : orh.getOrderItems()) {
                         List<GenericValue> itemIssuances = orh.getOrderItemIssuances(orderItem, shipment.getString("shipmentId"));
-
                         BigDecimal totalIssuedQuantity = BigDecimal.ZERO;
                         for (GenericValue itemIssuance : itemIssuances) {
-                            totalIssuedQuantity.add(itemIssuance.getBigDecimal("quantity").subtract(itemIssuance.getBigDecimal("cancelQuantity")));
+                            totalIssuedQuantity = totalIssuedQuantity.add(itemIssuance.getBigDecimal("quantity"));
+                            BigDecimal cancelledQuantity = itemIssuance.getBigDecimal("cancelQuantity");
+                            if (UtilValidate.isNotEmpty(cancelledQuantity)) {
+                                totalIssuedQuantity = totalIssuedQuantity.subtract(cancelledQuantity);
+                            }
                         }
                         if (orderItem.getBigDecimal("quantity").compareTo(totalIssuedQuantity) != 0) {
                             orderItemsNotIssued.add(orderItem);
@@ -98,9 +104,10 @@ public class ShipmentServices {
                 }
 
                 if (UtilValidate.isNotEmpty(orderItemsNotIssuedPerShipment)) {
-                    // TODO: Force issue items?
+                    // TODO: Force issue items? Review
+                    orderHeader.set("needsInventoryIssuance", "Y");
+                    orderHeader.store();
                 }
-
 
                 Map<String, Object> changeOrderStatusCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_SENT", "setItemStatus", "Y", "userLogin", userLogin);
                 Map<String, Object> changeOrderStatusResult = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
@@ -134,9 +141,13 @@ public class ShipmentServices {
             }
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
 
-            EntityCondition shipmentCondition = EntityCondition.makeCondition("statusId", EntityOperator.IN,
-                    UtilMisc.toList("SHIPMENT_INPUT", "SHIPMENT_SCHEDULED", "SHIPMENT_PICKED", "SHIPMENT_PACKED", "SHIPMENT_SHIPPED"));
-            List<GenericValue> primaryShipments = EntityQuery.use(delegator).from("PrimaryShipment").where(shipmentCondition).cache(false).queryList();
+            List<EntityCondition> shipmentConditions = UtilMisc.toList(
+                EntityCondition.makeCondition("statusId", EntityOperator.IN,
+                    UtilMisc.toList("SHIPMENT_INPUT", "SHIPMENT_SCHEDULED", "SHIPMENT_PICKED", "SHIPMENT_PACKED", "SHIPMENT_SHIPPED")),
+                EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId)
+            );
+
+            List<GenericValue> primaryShipments = EntityQuery.use(delegator).from("PrimaryShipment").where(shipmentConditions).cache(false).queryList();
             if (UtilValidate.isNotEmpty(primaryShipments)) {
                 Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = UtilMisc.newMap();
                 for (GenericValue shipment : primaryShipments) {

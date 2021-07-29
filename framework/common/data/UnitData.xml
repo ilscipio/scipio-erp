@@ -272,6 +272,9 @@ code package.
     <UomConversion uomId="WT_lt" uomIdTo="WT_lb" conversionFactor="2240"/>
     <UomConversion uomId="WT_mt" uomIdTo="WT_kg" conversionFactor="1000"/>
     <UomConversion uomId="WT_sh_t" uomIdTo="WT_lb" conversionFactor="2000"/>
+    <!-- SCIPIO: 2.1.0: Added conversion from lbs to Kg -->
+    <UomConversion uomId="WT_lb" uomIdTo="WT_kg" conversionFactor="0.453592"/>
+
 
     <!-- =============== ENERGY_MEASURE =============== -->
     <Uom abbreviation="Btu" description="British Thermal Unit" uomId="EN_Btu" uomTypeId="ENERGY_MEASURE"/>

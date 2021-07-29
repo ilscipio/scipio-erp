@@ -145,7 +145,6 @@ public class ShipmentServices {
 
                 Map<String, Object> changeOrderStatusCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_COMPLETED", "setItemStatus", "Y", "userLogin", userLogin);
                 Map<String, Object> changeOrderStatusResult = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
-                Debug.log("changeOrderStatusResult: " + changeOrderStatusResult);
                 if (ServiceUtil.isSuccess(changeOrderStatusCtx)) {
                     for (GenericValue shipment : shipments) {
                         Map<String, Object> updateShipmentCtx = UtilMisc.toMap("shipmentId", shipment.getString("shipmentId"), "statusId", "SHIPMENT_DELIVERED", "userLogin", userLogin);

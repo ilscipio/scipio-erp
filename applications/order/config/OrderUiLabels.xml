@@ -13627,6 +13627,12 @@
         <value xml:lang="zh">发送者名称：</value>
         <value xml:lang="zh-TW">發送者名稱:</value>
     </property>
+    <property key="OrderSendOrder">
+        <value xml:lang="de">Bestellung senden</value>
+        <value xml:lang="en">Send Order</value>
+        <value xml:lang="fr">Envoyer l'ordre</value>
+        <value xml:lang="es">Enviar Pedido</value>
+    </property>
     <property key="OrderShipAfterDate">
         <value xml:lang="ar">يشحن بعد تاريخ</value>
         <value xml:lang="de">Versand nach Datum</value>

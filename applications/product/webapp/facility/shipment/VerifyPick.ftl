@@ -20,7 +20,7 @@ code package.
 
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <#if picklistBinId?has_content || orderId?has_content>
+            <#if (picklistBinId?has_content || orderId?has_content) && !shipmentId?has_content>
                 <@menuitem type="generic">
                     <@modal id="addProductToPick" label="Verify product" linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                         <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPick')}"/>

@@ -31,6 +31,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
+import javax.rmi.CORBA.Util;
+
 /**
  * PackingServices.
  * <p>
@@ -299,6 +301,11 @@ public class PackingServices {
         Map<String, String> boxTypes = UtilGenerics.checkMap(context.get("boxTypes"));
         String weightUomId = (String) context.get("weightUomId");
 
+        String orderId = (String) context.get("orderId");
+        if (UtilValidate.isNotEmpty(orderId)) {
+            orderId = session.primaryOrderId;
+        }
+
         synchronized (session) { // SCIPIO
             session.setHandlingInstructions(instructions);
             session.setPickerPartyId(pickerPartyId);
@@ -310,6 +317,7 @@ public class PackingServices {
             if (UtilValidate.isNotEmpty(context.get("shipmentId"))) {
                 session.shipmentId = (String) context.get("shipmentId");
             }
+
 
             Boolean force = (Boolean) context.get("forceComplete");
             if (force == null) {
@@ -335,6 +343,7 @@ public class PackingServices {
         }
 
         resp.put("shipmentId", shipmentId);
+        resp.put("orderId", orderId);
         return resp;
     }
 

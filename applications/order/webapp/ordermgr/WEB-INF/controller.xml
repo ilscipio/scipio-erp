@@ -378,10 +378,10 @@ code package.
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="orderview"/>
     </request-map>
-    <!-- SCIPIO: added 2.0.0: new request map for order completion -->
+    <!-- SCIPIO: added 2.1.0: new request map for order completion -->
     <request-map uri="completeSalesOrder">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="completeSalesOrder"/>
+        <event type="service" path="" invoke="orderCompleteShip"/>
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="orderview"/>
     </request-map>

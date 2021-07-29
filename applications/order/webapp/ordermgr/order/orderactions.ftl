@@ -187,7 +187,7 @@
                         <#assign shipOrderLabel = uiLabelMap.OrderQuickShipEntireOrder>
                         <#if allShipments?has_content && !(allOrderItemsShipped?has_content && allOrderItemsShipped)>
                             <#assign shipOrderAction = makePageUrl("orderSendShip")>
-                            <#assign shipOrderLabel = uiLabelMap.OrderSendShip>
+                            <#assign shipOrderLabel = uiLabelMap.OrderSendOrder>
                         </#if>
                         <@menuitem type="generic">
                             <form action="${shipOrderAction}" method="post">
@@ -195,13 +195,13 @@
                                 <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${shipOrderLabel}"/>
                             </form>
                         </@menuitem>
-<#--                    <#elseif orderHeader.statusId == "ORDER_SENT">-->
-<#--                        <@menuitem type="generic">-->
-<#--                            <form action="<@pageUrl>completeSalesOrder</@pageUrl>" method="post">-->
-<#--                                <input type="hidden" name="orderId" value="${orderId}"/>-->
-<#--                                <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderComplete}"/>-->
-<#--                            </form>-->
-<#--                        </@menuitem>-->
+                    <#elseif orderHeader.statusId == "ORDER_SENT" || setOrderCompleteOption>
+                        <@menuitem type="generic">
+                            <form action="<@pageUrl>completeSalesOrder</@pageUrl>" method="post">
+                                <input type="hidden" name="orderId" value="${orderId}"/>
+                                <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderCompleteOrder}"/>
+                            </form>
+                        </@menuitem>
                     </#if>
                 </#if>
           </#if>

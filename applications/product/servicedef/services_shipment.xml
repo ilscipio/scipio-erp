@@ -697,11 +697,12 @@ code package.
         <attribute name="packageSeqId" type="Integer" mode="IN" optional="false"/>
     </service>
 
+    <!-- SCIPIO: 2.1.0: orderId mode is now INOUT -->
     <service name="completePack" engine="java"
             location="org.ofbiz.shipment.packing.PackingServices" invoke="completePack" auth="true" transaction-timeout="7200">
         <description>Complete the packaging set the shipment to PACKED</description>
         <attribute name="packingSession" type="org.ofbiz.shipment.packing.PackingSession" mode="IN" optional="false"/>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
         <attribute name="invoiceId" type="String" mode="IN" optional="true"/>
         <attribute name="handlingInstructions" type="String" mode="IN" optional="true"/>
         <attribute name="pickerPartyId" type="String" mode="IN" optional="true"/>

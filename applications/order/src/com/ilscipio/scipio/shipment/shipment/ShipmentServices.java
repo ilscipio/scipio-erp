@@ -24,16 +24,11 @@ import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.minilang.SimpleMethod;
-import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.order.order.OrderReadHelper;
-import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
@@ -41,10 +36,10 @@ import org.ofbiz.service.ServiceUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 /**
  * SCIPIO custom ShipmentServices
@@ -64,6 +59,7 @@ public class ShipmentServices {
         Delegator delegator = context.delegator();
         LocalDispatcher dispatcher = context.dispatcher();
         Locale locale = context.locale();
+        TimeZone timeZone = context.timeZone();
         GenericValue userLogin = context.userLogin();
 
         String orderId = context.getString("orderId");
@@ -83,35 +79,26 @@ public class ShipmentServices {
 
             List<GenericValue> shipments = EntityQuery.use(delegator).from("Shipment").where(shipmentConditions).cache(false).queryList();
             if (UtilValidate.isNotEmpty(shipments)) {
-                Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = UtilMisc.newMap();
-                for (GenericValue shipment : shipments) {
-                    List<GenericValue> orderItemsNotIssued = UtilMisc.newList();
-                    for (GenericValue orderItem : orh.getOrderItems()) {
-                        List<GenericValue> itemIssuances = orh.getOrderItemIssuances(orderItem, shipment.getString("shipmentId"));
-                        BigDecimal totalIssuedQuantity = BigDecimal.ZERO;
-                        for (GenericValue itemIssuance : itemIssuances) {
-                            totalIssuedQuantity = totalIssuedQuantity.add(itemIssuance.getBigDecimal("quantity"));
-                            BigDecimal cancelledQuantity = itemIssuance.getBigDecimal("cancelQuantity");
-                            if (UtilValidate.isNotEmpty(cancelledQuantity)) {
-                                totalIssuedQuantity = totalIssuedQuantity.subtract(cancelledQuantity);
-                            }
-                        }
-                        if (orderItem.getBigDecimal("quantity").compareTo(totalIssuedQuantity) != 0) {
-                            orderItemsNotIssued.add(orderItem);
-                        }
-                    }
-                    orderItemsNotIssuedPerShipment.put(shipment.getString("shipmentId"), orderItemsNotIssued);
-                }
-
+                Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = findOrderItemsNotIssuedPerShipment(shipments, orh);
                 if (UtilValidate.isNotEmpty(orderItemsNotIssuedPerShipment)) {
                     // TODO: Force issue items? Review
                     orderHeader.set("needsInventoryIssuance", "Y");
                     orderHeader.store();
                 }
-
                 Map<String, Object> changeOrderStatusCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_SENT", "setItemStatus", "Y", "userLogin", userLogin);
                 Map<String, Object> changeOrderStatusResult = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
                 Debug.log("changeOrderStatusResult: " + changeOrderStatusResult);
+
+                if (ServiceUtil.isSuccess(changeOrderStatusCtx)) {
+                    for (GenericValue shipment : shipments) {
+                        Map<String, Object> updateShipmentCtx = UtilMisc.toMap("shipmentId", shipment.getString("shipmentId"),
+                                "primaryOrderId", orderId, "statusId", "SHIPMENT_SHIPPED", "userLogin", userLogin, "timeZone", timeZone);
+                        Map<String, Object> updateShipmentResponse = dispatcher.runSync("updateShipment", updateShipmentCtx);
+                        if (!ServiceUtil.isSuccess(updateShipmentResponse)) {
+                            // TODO: Handle this situation
+                        }
+                    }
+                }
             }
 
         } catch (Exception e) {
@@ -142,36 +129,32 @@ public class ShipmentServices {
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
 
             List<EntityCondition> shipmentConditions = UtilMisc.toList(
-                EntityCondition.makeCondition("statusId", EntityOperator.IN,
-                    UtilMisc.toList("SHIPMENT_INPUT", "SHIPMENT_SCHEDULED", "SHIPMENT_PICKED", "SHIPMENT_PACKED", "SHIPMENT_SHIPPED")),
-                EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId)
+                    EntityCondition.makeCondition("statusId", EntityOperator.IN,
+                            UtilMisc.toList("SHIPMENT_INPUT", "SHIPMENT_SCHEDULED", "SHIPMENT_PICKED", "SHIPMENT_PACKED", "SHIPMENT_SHIPPED")),
+                    EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId)
             );
 
-            List<GenericValue> primaryShipments = EntityQuery.use(delegator).from("PrimaryShipment").where(shipmentConditions).cache(false).queryList();
-            if (UtilValidate.isNotEmpty(primaryShipments)) {
-                Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = UtilMisc.newMap();
-                for (GenericValue shipment : primaryShipments) {
-                    List<GenericValue> orderItemsNotIssued = UtilMisc.newList();
-                    for (GenericValue orderItem : orh.getOrderItems()) {
-                        List<GenericValue> itemIssuances = orh.getOrderItemIssuances(orderItem, shipment.getString("shipmentId"));
-
-                        BigDecimal totalIssuedQuantity = BigDecimal.ZERO;
-                        for (GenericValue itemIssuance : itemIssuances) {
-                            totalIssuedQuantity.add(itemIssuance.getBigDecimal("quantity").subtract(itemIssuance.getBigDecimal("cancelQuantity")));
-                        }
-                        if (orderItem.getBigDecimal("quantity").compareTo(totalIssuedQuantity) != 0) {
-                            orderItemsNotIssued.add(orderItem);
-                        }
-                    }
-                    orderItemsNotIssuedPerShipment.put(shipment.getString("shipmentId"), orderItemsNotIssued);
-                }
-
+            List<GenericValue> shipments = EntityQuery.use(delegator).from("Shipment").where(shipmentConditions).cache(false).queryList();
+            if (UtilValidate.isNotEmpty(shipments)) {
+                Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = findOrderItemsNotIssuedPerShipment(shipments, orh);
                 if (UtilValidate.isNotEmpty(orderItemsNotIssuedPerShipment)) {
                     // TODO: Force issue items?
+                    orderHeader.set("needsInventoryIssuance", "Y");
+                    orderHeader.store();
                 }
 
                 Map<String, Object> changeOrderStatusCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_COMPLETED", "setItemStatus", "Y", "userLogin", userLogin);
-                result = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
+                Map<String, Object> changeOrderStatusResult = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
+                Debug.log("changeOrderStatusResult: " + changeOrderStatusResult);
+                if (ServiceUtil.isSuccess(changeOrderStatusCtx)) {
+                    for (GenericValue shipment : shipments) {
+                        Map<String, Object> updateShipmentCtx = UtilMisc.toMap("shipmentId", shipment.getString("shipmentId"), "statusId", "SHIPMENT_DELIVERED", "userLogin", userLogin);
+                        Map<String, Object> updateShipmentResponse = dispatcher.runSync("updateShipment", updateShipmentCtx);
+                        if (!ServiceUtil.isSuccess(updateShipmentResponse)) {
+                            // TODO: Handle this situation
+                        }
+                    }
+                }
             } else {
                 // TODO: Throw error?
             }
@@ -186,5 +169,29 @@ public class ShipmentServices {
         return result;
     }
 
+    private static Map<String, List<GenericValue>> findOrderItemsNotIssuedPerShipment(List<GenericValue> shipments, OrderReadHelper orh) {
+        Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = UtilMisc.newMap();
+        for (GenericValue shipment : shipments) {
+            List<GenericValue> orderItemsNotIssued = UtilMisc.newList();
+            for (GenericValue orderItem : orh.getOrderItems()) {
+                List<GenericValue> itemIssuances = orh.getOrderItemIssuances(orderItem, shipment.getString("shipmentId"));
 
+                BigDecimal totalIssuedQuantity = BigDecimal.ZERO;
+                for (GenericValue itemIssuance : itemIssuances) {
+                    totalIssuedQuantity = totalIssuedQuantity.add(itemIssuance.getBigDecimal("quantity"));
+                    BigDecimal cancelledQuantity = itemIssuance.getBigDecimal("cancelQuantity");
+                    if (UtilValidate.isNotEmpty(cancelledQuantity)) {
+                        totalIssuedQuantity = totalIssuedQuantity.subtract(cancelledQuantity);
+                    }
+                }
+                if (orderItem.getBigDecimal("quantity").compareTo(totalIssuedQuantity) != 0) {
+                    orderItemsNotIssued.add(orderItem);
+                }
+            }
+            if (UtilValidate.isNotEmpty(orderItemsNotIssued)) {
+                orderItemsNotIssuedPerShipment.put(shipment.getString("shipmentId"), orderItemsNotIssued);
+            }
+        }
+        return orderItemsNotIssuedPerShipment;
+    }
 }

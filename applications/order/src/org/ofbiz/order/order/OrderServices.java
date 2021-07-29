@@ -2520,6 +2520,8 @@ public class OrderServices {
             String newItemStatusId = null;
             if ("ORDER_APPROVED".equals(statusId)) {
                 newItemStatusId = "ITEM_APPROVED";
+            } else if ("ORDER_SENT".equals(statusId)) {
+                newItemStatusId = "ITEM_SENT";
             } else if ("ORDER_COMPLETED".equals(statusId)) {
                 newItemStatusId = "ITEM_COMPLETED";
             } else if ("ORDER_CANCELLED".equals(statusId)) {
@@ -4272,7 +4274,7 @@ public class OrderServices {
                 Map<String, Object> cancelPromoCtx = UtilMisc.<String, Object>toMap("orderId", orderId);
                 cancelPromoCtx.put("orderItemSeqId", promoItem.getString("orderItemSeqId"));
                 cancelPromoCtx.put("userLogin", userLogin);
-                Map<String, Object> cancelResp = null;
+                Map<String, Object> cancelResp;
                 try {
                     cancelResp = dispatcher.runSync("cancelOrderItemNoActions", cancelPromoCtx);
                 } catch (GenericServiceException e) {

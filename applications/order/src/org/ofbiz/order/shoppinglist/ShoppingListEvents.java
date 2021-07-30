@@ -732,8 +732,12 @@ public class ShoppingListEvents {
         if (ProductStoreWorker.autoSaveCart(delegator, productStoreId)) {
             if (UtilValidate.isEmpty(autoSaveListId)) {
                 try {
+                    String userAddr = request.getRemoteAddr();
+                    if(UtilValidate.isEmpty(request.getHeader("X-Forwarded-For"))){
+                        userAddr = request.getHeader("X-Forwarded-For");
+                    }
                     Map<String, Object> listFields = UtilMisc.<String, Object>toMap("userLogin", userLogin, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME,
-                            "userAddr", request.getRemoteAddr()); // SCIPIO: userAddr
+                            "userAddr", userAddr); // SCIPIO: userAddr
                     Map<String, Object> newListResult = dispatcher.runSync("createShoppingList", listFields);
                     if (ServiceUtil.isError(newListResult)) {
                         String errorMessage = ServiceUtil.getErrorMessage(newListResult);

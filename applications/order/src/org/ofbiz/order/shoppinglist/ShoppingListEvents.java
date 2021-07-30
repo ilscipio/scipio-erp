@@ -733,7 +733,7 @@ public class ShoppingListEvents {
             if (UtilValidate.isEmpty(autoSaveListId)) {
                 try {
                     String userAddr = request.getRemoteAddr();
-                    if(UtilValidate.isEmpty(request.getHeader("X-Forwarded-For"))){
+                    if(UtilValidate.isNotEmpty(request.getHeader("X-Forwarded-For"))){
                         userAddr = request.getHeader("X-Forwarded-For");
                     }
                     Map<String, Object> listFields = UtilMisc.<String, Object>toMap("userLogin", userLogin, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME,

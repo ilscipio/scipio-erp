@@ -195,7 +195,7 @@
                                 <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${shipOrderLabel}"/>
                             </form>
                         </@menuitem>
-                    <#elseif orderHeader.statusId == "ORDER_SENT" || setOrderCompleteOption>
+                    <#elseif (orderHeader.statusId == "ORDER_SENT" || setOrderCompleteOption) && !allShipGroupsNoShipping>
                         <@menuitem type="generic">
                             <form action="<@pageUrl>completeSalesOrder</@pageUrl>" method="post">
                                 <input type="hidden" name="orderId" value="${orderId}"/>

@@ -88,8 +88,7 @@ code package.
     <!-- SCIPIO: 2.1.0: Ships an order assuming a shipment with status == input|picked|packed already exists. -->
     <service name="orderSendShip" engine="java"
              location="com.ilscipio.scipio.shipment.shipment.ShipmentServices" invoke="orderSendShip" auth="true" transaction-timeout="600">
-        <description>Sends an order assuming a shipment already exists.
-        </description>
+        <description>Sends an order assuming a shipment already exists.</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
         <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>
@@ -99,8 +98,7 @@ code package.
     <!-- SCIPIO: 2.1.0: Completes an order assuming a shipment with status == shipped already exists. -->
     <service name="orderCompleteShip" engine="java"
              location="com.ilscipio.scipio.shipment.shipment.ShipmentServices" invoke="orderCompleteShip" auth="true" transaction-timeout="600">
-        <description>Completes an order assuming a shipment already exists.
-        </description>
+        <description>Completes an order assuming a shipment already exists.</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="originFacilityId" type="String" mode="IN" optional="true"/>
         <attribute name="eventDate" type="Timestamp" mode="IN" optional="true"/>

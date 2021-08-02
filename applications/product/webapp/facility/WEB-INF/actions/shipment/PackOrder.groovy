@@ -49,7 +49,7 @@ context.shipmentId = shipmentId;
 invoiceIds = null;
 if (shipmentId) {
     // Get the primaryOrderId from the shipment
-    shipment = from("Shipment").where("shipmentId", shipmentId).queryOne();
+    shipment = from("Shipment").where(UtilMisc.toMap("shipmentId", shipmentId)).queryOne();
     if (shipment && shipment.primaryOrderId) {
         orderItemBillingList = from("OrderItemBilling").where("orderId", shipment.primaryOrderId).orderBy("invoiceId").queryList();
         invoiceIds = EntityUtil.getFieldListFromEntityList(orderItemBillingList, "invoiceId", true);

@@ -87,9 +87,8 @@ public class ShipmentServices {
                 }
                 Map<String, Object> changeOrderStatusCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_SENT", "setItemStatus", "Y", "userLogin", userLogin);
                 Map<String, Object> changeOrderStatusResult = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
-                Debug.log("changeOrderStatusResult: " + changeOrderStatusResult);
 
-                if (ServiceUtil.isSuccess(changeOrderStatusCtx)) {
+                if (ServiceUtil.isSuccess(changeOrderStatusResult)) {
                     for (GenericValue shipment : shipments) {
                         Map<String, Object> updateShipmentCtx = UtilMisc.toMap("shipmentId", shipment.getString("shipmentId"),
                                 "primaryOrderId", orderId, "statusId", "SHIPMENT_SHIPPED", "userLogin", userLogin, "timeZone", timeZone);
@@ -128,35 +127,44 @@ public class ShipmentServices {
             }
             OrderReadHelper orh = new OrderReadHelper(orderHeader);
 
-            List<EntityCondition> shipmentConditions = UtilMisc.toList(
-                    EntityCondition.makeCondition("statusId", EntityOperator.IN,
-                            UtilMisc.toList("SHIPMENT_INPUT", "SHIPMENT_SCHEDULED", "SHIPMENT_PICKED", "SHIPMENT_PACKED", "SHIPMENT_SHIPPED")),
-                    EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId)
-            );
+            for (GenericValue orderItemShipGroup : orh.getOrderItemShipGroups()) {
+                Debug.log("orderItemShipGroup: " + orderItemShipGroup);
 
-            List<GenericValue> shipments = EntityQuery.use(delegator).from("Shipment").where(shipmentConditions).cache(false).queryList();
-            if (UtilValidate.isNotEmpty(shipments)) {
-                Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = findOrderItemsNotIssuedPerShipment(shipments, orh);
-                if (UtilValidate.isNotEmpty(orderItemsNotIssuedPerShipment)) {
-                    // TODO: Force issue items?
-                    orderHeader.set("needsInventoryIssuance", "Y");
-                    orderHeader.store();
+                List<GenericValue> shipments = null;
+                boolean isNoShipping = orderItemShipGroup.getString("shipmentMethodTypeId").equals("NO_SHIPPING");
+                if (!isNoShipping) {
+                    List<EntityCondition> shipmentConditions = UtilMisc.toList(
+                            EntityCondition.makeCondition("statusId", EntityOperator.IN,
+                                    UtilMisc.toList("SHIPMENT_INPUT", "SHIPMENT_SCHEDULED", "SHIPMENT_PICKED", "SHIPMENT_PACKED", "SHIPMENT_SHIPPED")),
+                            EntityCondition.makeCondition("primaryOrderId", EntityOperator.EQUALS, orderId)
+                    );
+                    shipments = EntityQuery.use(delegator).from("Shipment").where(shipmentConditions).cache(false).queryList();
                 }
 
-                Map<String, Object> changeOrderStatusCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_COMPLETED", "setItemStatus", "Y", "userLogin", userLogin);
-                Map<String, Object> changeOrderStatusResult = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
-                if (ServiceUtil.isSuccess(changeOrderStatusCtx)) {
-                    for (GenericValue shipment : shipments) {
-                        Map<String, Object> updateShipmentCtx = UtilMisc.toMap("shipmentId", shipment.getString("shipmentId"), "statusId", "SHIPMENT_DELIVERED", "userLogin", userLogin);
-                        Map<String, Object> updateShipmentResponse = dispatcher.runSync("updateShipment", updateShipmentCtx);
-                        if (!ServiceUtil.isSuccess(updateShipmentResponse)) {
-                            // TODO: Handle this situation
+                if (UtilValidate.isNotEmpty(shipments) || isNoShipping) {
+                    Map<String, List<GenericValue>> orderItemsNotIssuedPerShipment = findOrderItemsNotIssuedPerShipment(shipments, orh);
+                    if (UtilValidate.isNotEmpty(orderItemsNotIssuedPerShipment)) {
+                        // TODO: Force issue items?
+                        orderHeader.set("needsInventoryIssuance", "Y");
+                        orderHeader.store();
+                    }
+
+                    Map<String, Object> changeOrderStatusCtx = UtilMisc.toMap("orderId", orderId, "statusId", "ORDER_COMPLETED", "setItemStatus", "Y", "userLogin", userLogin);
+                    Map<String, Object> changeOrderStatusResult = dispatcher.runSync("changeOrderStatus", changeOrderStatusCtx);
+                    if (ServiceUtil.isSuccess(changeOrderStatusResult)) {
+                        for (GenericValue shipment : shipments) {
+                            Map<String, Object> updateShipmentCtx = UtilMisc.toMap("shipmentId", shipment.getString("shipmentId"), "statusId", "SHIPMENT_DELIVERED", "userLogin", userLogin);
+                            Map<String, Object> updateShipmentResponse = dispatcher.runSync("updateShipment", updateShipmentCtx);
+                            if (!ServiceUtil.isSuccess(updateShipmentResponse)) {
+                                // TODO: Handle this situation
+                            }
                         }
                     }
+                } else {
+                    // TODO: Throw error?
                 }
-            } else {
-                // TODO: Throw error?
             }
+
         } catch (Exception e) {
             result = ServiceUtil.returnError(UtilProperties.getMessage(resource, "FacilityShipmentMissingProductStore", locale));
         }

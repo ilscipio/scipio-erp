@@ -211,9 +211,7 @@ if (orderHeader) {
         );
         shipment = from("Shipment").where(validShipments).queryFirst();
         if (shipment) {
-            Debug.logInfo("shipment: " + shipment, module);
             shipmentItems = shipment.getRelated("ShipmentItem");
-            Debug.logInfo("shipmentItems: " + shipmentItems, module);
             for (shipmentItem in shipmentItems) {
                 orderItemsShipped += shipmentItem.quantity;
             }

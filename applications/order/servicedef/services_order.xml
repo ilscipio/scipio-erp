@@ -357,8 +357,15 @@ code package.
             <description>Filter for OrderHeader.productStoreId</description>
         </attribute>
         <attribute name="maxProducts" type="Integer" mode="IN" optional="true"/>
-        <attribute name="orderDateStart" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="orderDateEnd" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="orderDateStart" type="Timestamp" mode="IN" optional="true">
+            <description>Absolute start date if specified</description>
+        </attribute>
+        <attribute name="orderDateEnd" type="Timestamp" mode="IN" optional="true">
+            <description>Absolute end date if specified; defaults to now</description>
+        </attribute>
+        <attribute name="orderDateDays" type="Integer" mode="IN" optional="true" default-value="30">
+            <description>Days to substract from orderDateEnd to get absolute start date</description>
+        </attribute>
         <attribute name="updateMode" type="String" mode="IN" optional="true" default-value="update">
             <description>Update mode, one of:
                 update: update records in-place where necessary and possible;

@@ -17,6 +17,7 @@ import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceValidationException;
 
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -49,6 +50,8 @@ public abstract class OrderServices {
         protected Set<String> topProductIds = new LinkedHashSet<>();
         protected Collection<String> productStoreIds = null;
         protected long sequenceNum = 1;
+        protected Timestamp orderDateStart;
+        protected Timestamp orderDateEnd;
 
         public PopulateBestSellingCategory(ServiceContext ctx) throws GeneralException {
             super(ctx);
@@ -64,6 +67,18 @@ public abstract class OrderServices {
                 productStoreIds = newProductStoreIds;
             }
             this.productStoreIds = UtilValidate.isNotEmpty(productStoreIds) ? productStoreIds : null;
+
+            Timestamp orderDateStart = ctx.attr("orderDateStart");
+            Timestamp orderDateEnd = ctx.attr("orderDateEnd"); // don't force here: UtilDateTime::nowTimestamp
+            Integer orderDateDays = ctx.attr("orderDateDays");
+            if (orderDateStart == null && orderDateDays != null && orderDateDays > 0) {
+                if (orderDateEnd == null) {
+                    orderDateEnd = UtilDateTime.nowTimestamp();
+                }
+                orderDateStart = UtilDateTime.addDaysToTimestamp(orderDateEnd, -orderDateDays);
+            }
+            this.orderDateStart = orderDateStart;
+            this.orderDateEnd = orderDateEnd;
         }
 
         public Map<String, Object> exec() throws ServiceValidationException {
@@ -163,8 +178,7 @@ public abstract class OrderServices {
         }
 
         protected EntityCondition makeCommonCondition() throws GeneralException {
-            EntityCondition cond = EntityCondition.makeDateRangeCondition("orderDate",
-                    ctx.attr("orderDateStart"), ctx.attr("orderDateEnd"));
+            EntityCondition cond = EntityCondition.makeDateRangeCondition("orderDate", orderDateStart, orderDateEnd);
             if (UtilValidate.isNotEmpty(productStoreIds)) {
                 cond = EntityCondition.combine(cond,
                         EntityCondition.makeCondition("productStoreId", EntityOperator.IN, productStoreIds));

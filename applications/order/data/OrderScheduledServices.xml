@@ -18,5 +18,49 @@ code package.
     <JobSandbox jobId="8007" jobName="Replacement Held Order Auto-Cancel" runTime="2000-01-01 00:00:00.000" serviceName="autoCancelReplacementOrders" poolId="pool" runAsUser="system" tempExprId="MIDNIGHT_DAILY" maxRecurrenceCount="-1"/>
     <JobSandbox jobId="8008" jobName="Create Also Bought Product Associations" runTime="2000-01-01 00:00:00.000" serviceName="createAlsoBoughtProductAssocs" poolId="pool" runAsUser="system" tempExprId="MIDNIGHT_DAILY" maxRecurrenceCount="-1"/>
     <JobSandbox jobId="8009" jobName="Delete auto-save shopping list for anonymous users" runTime="2000-01-01 00:00:00.000" serviceName="autoDeleteAutoSaveShoppingList" poolId="pool" runAsUser="system" tempExprId="MIDNIGHT_DAILY" maxRecurrenceCount="-1"/>
-    <JobSandbox jobId="8010" jobName="Run Nominated Service on Subscription Expiry" runTime="2014-04-21 00:00:00.000" serviceName="runServiceOnSubscriptionExpiry" poolId="pool" runAsUser="system" tempExprId="MIDNIGHT_DAILY" maxRecurrenceCount="-1"/> 
+    <JobSandbox jobId="8010" jobName="Run Nominated Service on Subscription Expiry" runTime="2014-04-21 00:00:00.000" serviceName="runServiceOnSubscriptionExpiry" poolId="pool" runAsUser="system" tempExprId="MIDNIGHT_DAILY" maxRecurrenceCount="-1"/>
+
+    <!-- Example populateBestSellingCategory job
+    <RuntimeData runtimeDataId="POPBESTSELLCAT">
+        <runtimeInfo><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+            <ofbiz-ser>
+                <map-HashMap>
+                    <map-Entry>
+                        <map-Key>
+                            <std-String value="productCategoryId"/>
+                        </map-Key>
+                        <map-Value>
+                            <std-String value="BEST-SELL-2"/>
+                        </map-Value>
+                    </map-Entry>
+                    <map-Entry>
+                        <map-Key>
+                            <std-String value="productStoreId"/>
+                        </map-Key>
+                        <map-Value>
+                            <std-String value="ScipioShop"/>
+                        </map-Value>
+                    </map-Entry>
+                    <map-Entry>
+                        <map-Key>
+                            <std-String value="maxProducts"/>
+                        </map-Key>
+                        <map-Value>
+                            <std-Integer value="100"/>
+                        </map-Value>
+                    </map-Entry>
+                    <map-Entry>
+                        <map-Key>
+                            <std-String value="orderDateDays"/>
+                        </map-Key>
+                        <map-Value>
+                            <std-Integer value="30"/>
+                        </map-Value>
+                    </map-Entry>
+                </map-HashMap>
+            </ofbiz-ser>
+        ]]></runtimeInfo>
+    </RuntimeData>
+    <JobSandbox jobId="POPBESTSELLCAT" jobName="Populate best-selling category" runTime="2014-04-21 00:00:00.000" serviceName="populateBestSellingCategory" runtimeDataId="POPBESTSELLCAT" poolId="pool" runAsUser="system" tempExprId="MIDNIGHT_DAILY" maxRecurrenceCount="-1"/>
+    -->
 </entity-engine-xml>

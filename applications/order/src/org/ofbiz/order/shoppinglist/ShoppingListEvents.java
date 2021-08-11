@@ -865,7 +865,7 @@ public class ShoppingListEvents {
         String autoSaveListId = cart.getAutoSaveListId();
         String autoSaveListAuthToken = cart.getAutoSaveListAuthToken();
         // TODO: REVIEW: should we clear if empty? For now may have side effects...
-        if (UtilValidate.isNotEmpty(autoSaveListId) && UtilValidate.isNotEmpty(autoSaveListAuthToken)) {
+        if (UtilValidate.isNotEmpty(autoSaveListId)) {
             ShoppingListCookieInfo.refreshShoppingListCookie(request, response, ShoppingListCookieInfo.AUTO_SAVE_LIST,
                     ShoppingListCookieInfo.getAutoSaveShoppingListCookieName(request), autoSaveListId, autoSaveListAuthToken);
         }

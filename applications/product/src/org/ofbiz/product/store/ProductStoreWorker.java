@@ -189,6 +189,10 @@ public final class ProductStoreWorker {
         return productStore == null ? false : "Y".equalsIgnoreCase(productStore.getString("autoSaveCart"));
     }
 
+    public static boolean autoSaveCart(HttpServletRequest request) { // SCIPIO: 2.1.0: Added
+        return autoSaveCart(getProductStore(request));
+    }
+
     public static String getProductStorePayToPartyId(String productStoreId, Delegator delegator) {
         return getProductStorePayToPartyId(getProductStore(productStoreId, delegator));
     }

@@ -121,72 +121,72 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     // SCIPIO: NOTE: 2018-11-22: Many default values have been moved to the constructors, or removed and defaults used (null/false)
 
-    private String orderType = "SALES_ORDER"; // default orderType
-    private String channel = "UNKNWN_SALES_CHANNEL"; // default channel enum
+    protected String orderType = "SALES_ORDER"; // default orderType
+    protected String channel = "UNKNWN_SALES_CHANNEL"; // default channel enum
 
-    private String poNumber;
-    private String orderId;
-    private String orderName;
-    private String orderStatusId;
-    private String orderStatusString;
-    private String firstAttemptOrderId;
-    private String externalId;
-    private String internalCode;
-    private String billingAccountId;
-    private BigDecimal billingAccountAmt = BigDecimal.ZERO;
-    private String agreementId;
-    private String quoteId;
-    private String workEffortId;
-    private long nextItemSeq = 1;
+    protected String poNumber;
+    protected String orderId;
+    protected String orderName;
+    protected String orderStatusId;
+    protected String orderStatusString;
+    protected String firstAttemptOrderId;
+    protected String externalId;
+    protected String internalCode;
+    protected String billingAccountId;
+    protected BigDecimal billingAccountAmt = BigDecimal.ZERO;
+    protected String agreementId;
+    protected String quoteId;
+    protected String workEffortId;
+    protected long nextItemSeq = 1;
 
-    private String defaultItemDeliveryDate;
-    private String defaultItemComment;
+    protected String defaultItemDeliveryDate;
+    protected String defaultItemComment;
 
-    private String orderAdditionalEmails;
-    private boolean viewCartOnAdd; // = false;
-    private boolean readOnlyCart; // = false;
+    protected String orderAdditionalEmails;
+    protected boolean viewCartOnAdd; // = false;
+    protected boolean readOnlyCart; // = false;
 
-    private Timestamp lastListRestore;
-    private String autoSaveListId;
-
-    // SCIPIO: Changed all LinkedList to ArrayList
+    protected Timestamp lastListRestore;
+    protected String autoSaveListId;
+    protected String autoSaveListAuthToken; // SCIPIO
+    protected Map<String, Object> autoSaveListParams = Collections.emptyMap(); // SCIPIO
 
     /** Holds value of order adjustments. */
-    private List<GenericValue> adjustments = new ArrayList<>();
+    protected List<GenericValue> adjustments = new ArrayList<>();
     // OrderTerms
-    private boolean orderTermSet; // = false;
-    private List<GenericValue> orderTerms = new ArrayList<>();
+    protected boolean orderTermSet; // = false;
+    protected List<GenericValue> orderTerms = new ArrayList<>();
 
-    private List<ShoppingCartItem> cartLines = new ArrayList<>();
-    private Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = new HashMap<>();
+    protected List<ShoppingCartItem> cartLines = new ArrayList<>();
+    protected Map<String, ShoppingCartItemGroup> itemGroupByNumberMap = new HashMap<>();
     protected long nextGroupNumber = 1;
-    private List<CartPaymentInfo> paymentInfo = new ArrayList<>();
-    private List<CartShipInfo> shipInfo = new ArrayList<>();
-    private Map<String, String> contactMechIdsMap = new HashMap<>();
-    private Map<String, String> orderAttributes = new HashMap<>();
-    private Map<String, Object> attributes = new HashMap<>(); // user defined attributes
+    protected List<CartPaymentInfo> paymentInfo = new ArrayList<>();
+    protected List<CartShipInfo> shipInfo = new ArrayList<>();
+    protected Map<String, String> contactMechIdsMap = new HashMap<>();
+    protected Map<String, String> orderAttributes = new HashMap<>();
+    protected Map<String, Object> attributes = new HashMap<>(); // user defined attributes
     // Lists of internal/public notes: when the order is stored they are transformed into OrderHeaderNotes
-    private List<String> internalOrderNotes = new ArrayList<>(); // internal notes
-    private List<String> orderNotes = new ArrayList<>(); // public notes (printed on documents etc.)
+    protected List<String> internalOrderNotes = new ArrayList<>(); // internal notes
+    protected List<String> orderNotes = new ArrayList<>(); // public notes (printed on documents etc.)
 
     /** contains a list of partyId for each roleTypeId (key) */
-    private Map<String, List<String>> additionalPartyRole = new HashMap<>();
+    protected Map<String, List<String>> additionalPartyRole = new HashMap<>();
 
     /** these are defaults for all ship groups */
-    private Timestamp defaultShipAfterDate;
-    private Timestamp defaultShipBeforeDate;
+    protected Timestamp defaultShipAfterDate;
+    protected Timestamp defaultShipBeforeDate;
 
     /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
-    private List<ProductPromoUseInfo> productPromoUseInfoList = new ArrayList<>();
+    protected List<ProductPromoUseInfo> productPromoUseInfoList = new ArrayList<>();
     /** Contains the promo codes entered */
-    private Set<String> productPromoCodes = new HashSet<>();
-    private List<GenericValue> freeShippingProductPromoActions = new ArrayList<>();
+    protected Set<String> productPromoCodes = new HashSet<>();
+    protected List<GenericValue> freeShippingProductPromoActions = new ArrayList<>();
     /** Note that even though this is promotion info, it should NOT be cleared when the promos are cleared, it is a preference that will be used in the next promo calculation */
-    private Map<GenericPK, String> desiredAlternateGiftByAction = new HashMap<>();
-    private Timestamp cartCreatedTs = UtilDateTime.nowTimestamp();
+    protected Map<GenericPK, String> desiredAlternateGiftByAction = new HashMap<>();
+    protected Timestamp cartCreatedTs = UtilDateTime.nowTimestamp();
 
-    private transient Delegator delegator;
-    private String delegatorName;
+    protected transient Delegator delegator;
+    protected String delegatorName;
 
     protected String productStoreId;
     protected boolean doPromotions = true;
@@ -309,6 +309,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             this.readOnlyCart = cart.readOnlyCart;
             this.lastListRestore = cart.lastListRestore;
             this.autoSaveListId = cart.autoSaveListId;
+            this.autoSaveListAuthToken = cart.autoSaveListAuthToken;
+            this.autoSaveListParams = cart.autoSaveListParams;
             this.orderTermSet = cart.orderTermSet;
             this.orderTerms = new ArrayList<>(cart.orderTerms);
             this.nextGroupNumber = cart.nextGroupNumber;
@@ -546,6 +548,8 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         ShoppingCart.ensureExactEquals(this.readOnlyCart, other.readOnlyCart, "ShoppingCart.readOnlyCart", errorMessages);
         ShoppingCart.ensureExactEquals(this.lastListRestore, other.lastListRestore, "ShoppingCart.lastListRestore", errorMessages);
         ShoppingCart.ensureExactEquals(this.autoSaveListId, other.autoSaveListId, "ShoppingCart.autoSaveListId", errorMessages);
+        ShoppingCart.ensureExactEquals(this.autoSaveListAuthToken, other.autoSaveListAuthToken, "ShoppingCart.autoSaveListAuthToken", errorMessages);
+        ShoppingCart.ensureExactEquals(this.autoSaveListParams, other.autoSaveListParams, "ShoppingCart.autoSaveListParams", errorMessages);
         ShoppingCart.ensureExactEquals(this.adjustments, other.adjustments, "ShoppingCart.adjustments", errorMessages);
         ShoppingCart.ensureExactEquals(this.orderTermSet, other.orderTermSet, "ShoppingCart.orderTermSet", errorMessages);
         ShoppingCart.ensureExactEquals(this.orderTerms, other.orderTerms, "ShoppingCart.orderTerms", errorMessages);
@@ -1799,6 +1803,57 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return this.autoSaveListId;
     }
 
+    /**
+     * Sets the auto-save list ID.
+     * SCIPIO: WARNING: The system implicitly trusts this ID - caller is responsible for ensuring security - use {@link ShoppingListWorker#checkShoppingListSecurity}.
+     */
+    public void setAutoSaveListAuthToken(String authToken) {
+        this.autoSaveListAuthToken = authToken;
+    }
+
+    /**
+     * Gets autoSaveList auth token.
+     * <p>FIXME: Currently this is often null and mainly used by fillAutoSaveList to communite the token back to post-processor event.</p>
+     */
+    public String getAutoSaveListAuthToken() {
+        return this.autoSaveListAuthToken;
+    }
+
+    public void setAutoSaveListParams(Map<String, Object> params) {
+        this.autoSaveListParams = UtilValidate.isNotEmpty(params) ? Collections.unmodifiableMap(new HashMap<>(params)) : Collections.emptyMap();
+    }
+
+    public void setAutoSaveListParams(Object... params) {
+        this.autoSaveListParams = UtilValidate.isNotEmpty(params) ? Collections.unmodifiableMap(UtilMisc.toMap(params)) : Collections.emptyMap();
+    }
+
+    public void addAutoSaveListParams(Map<String, Object> params) {
+        if (UtilValidate.isEmpty(params)) {
+            return;
+        }
+        Map<String, Object> autoSaveListParams = this.autoSaveListParams;
+        if (UtilValidate.isNotEmpty(autoSaveListParams)) {
+            autoSaveListParams = new HashMap<>(autoSaveListParams);
+            autoSaveListParams.putAll(params);
+            this.autoSaveListParams = Collections.unmodifiableMap(autoSaveListParams);
+        } else {
+            this.autoSaveListParams = Collections.unmodifiableMap(new HashMap<>(params));
+        }
+    }
+
+    public void addAutoSaveListParams(Object... params) {
+        if (UtilValidate.isEmpty(params)) {
+            return;
+        }
+        Map<String, Object> autoSaveListParams = this.autoSaveListParams;
+        autoSaveListParams = UtilValidate.isNotEmpty(autoSaveListParams) ? new HashMap<>(autoSaveListParams) : new HashMap<>();
+        this.autoSaveListParams = Collections.unmodifiableMap(UtilMisc.putAll(autoSaveListParams, params));
+    }
+
+    public Map<String, Object> getAutoSaveListParams() {
+        return this.autoSaveListParams;
+    }
+
     public void setLastListRestore(Timestamp time) {
         this.lastListRestore = time;
     }
@@ -1901,7 +1956,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             // load the auto-save list ID
             if (autoSaveListId == null) {
                 try {
-                    autoSaveListId = ShoppingListEvents.getAutoSaveListId(this.getDelegator(), null, null, ul, this.getProductStoreId());
+                    Map<String, Object> autoSaveListInfo = ShoppingListEvents.getAutoSaveListInfo(this.getDelegator(),
+                            null, null, ul, this.getProductStoreId(), false, this.autoSaveListParams);
+                    autoSaveListId = (autoSaveListInfo != null) ? (String) autoSaveListInfo.get("shoppingListId") : null;
                 } catch (GeneralException e) {
                     Debug.logError(e, module);
                 }
@@ -1917,6 +1974,10 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             }
             this.lastListRestore = null;
             this.autoSaveListId = null;
+            this.autoSaveListAuthToken = null;
+            // SCIPIO: TODO: REVIEW: Do not do this for now. These parameters can simply be overridden and due to
+            // relying on after-login events, if we clear here some of the info would be lost across cart clears
+            //this.autoSaveListParams = Collections.emptyMap();
         }
 
         // SCIPIO (2020-10-28): Added missing fields (used in mPOS addon)

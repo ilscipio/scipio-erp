@@ -25,7 +25,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -47,6 +49,7 @@ import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.CartUpdate;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.config.ProductConfigWorker;
@@ -250,12 +253,14 @@ public class ShoppingListEvents {
         // get the shopping list
         GenericValue shoppingList = null;
         List<GenericValue> shoppingListItems = null;
+        String shoppingListAuthToken = null; // SCIPIO: 2.1.0: Now handled
         try {
             shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("shoppingListId", shoppingListId).queryOne();
             if (shoppingList == null) {
                 errMsg = UtilProperties.getMessage(resource_error,"shoppinglistevents.error_getting_shopping_list_and_items", cart.getLocale());
                 throw new RecordNotFoundException(errMsg); // SCIPIO: switched IllegalArgumentException to RecordNotFoundException
             }
+            shoppingListAuthToken = shoppingList.getString("shoppingListAuthToken");
 
             shoppingListItems = shoppingList.getRelated("ShoppingListItem", null, null, false);
             if (shoppingListItems == null) {
@@ -286,8 +291,10 @@ public class ShoppingListEvents {
         // check if we are to clear the cart first
         if (!append) {
             cart.clear();
+
             // Prevent the system from creating a new shopping list every time the cart is restored for anonymous user.
             cart.setAutoSaveListId(shoppingListId);
+            cart.setAutoSaveListAuthToken(shoppingListAuthToken); // SCIPIO
         }
 
         // get the survey info for all the items
@@ -398,29 +405,34 @@ public class ShoppingListEvents {
 
     /**
      * Finds or creates a specialized (auto-save) shopping list used to record shopping bag contents between user visits.
-     * <p>
-     * SCIPIO: WARNING: Do not pass partyId from unverified input without checking {@link ShoppingListWorker#checkShoppingListSecurity}.
+     * <p>SCIPIO: WARNING: Do not pass partyId from unverified input without checking {@link ShoppingListWorker#checkShoppingListSecurity}.</p>
+     * <p>SCIPIO: 2.1.0: Replaced getAutoSaveListId implementation.</p>
      */
-    public static String getAutoSaveListId(Delegator delegator, LocalDispatcher dispatcher, String partyId, GenericValue userLogin, String productStoreId) throws GenericEntityException, GenericServiceException {
+    public static Map<String, Object> getAutoSaveListInfo(Delegator delegator, LocalDispatcher dispatcher, String partyId, GenericValue userLogin,
+                                                          String productStoreId, boolean createIfMissing, Map<String, ?> createParams) throws GenericEntityException, GenericServiceException {
         if (partyId == null && userLogin != null) {
             partyId = userLogin.getString("partyId");
         }
 
-        String autoSaveListId = null;
+        Map<String, Object> autoSaveListInfo = null;
         GenericValue list = null;
         // TODO: add sorting, just in case there are multiple...
         if (partyId != null) {
-            Map<String, Object> findMap = UtilMisc.<String, Object>toMap("partyId", partyId, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
+            Map<String, Object> findMap = UtilMisc.toMap("partyId", partyId, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
             List<GenericValue> existingLists = EntityQuery.use(delegator).from("ShoppingList").where(findMap).queryList();
             Debug.logInfo("Finding existing auto-save shopping list with:\nfindMap: " + findMap + "\nlists: " + existingLists, module);
 
             if (UtilValidate.isNotEmpty(existingLists)) {
                 list = EntityUtil.getFirst(existingLists);
-                autoSaveListId = list.getString("shoppingListId");
+                autoSaveListInfo = list;
             }
         }
-        if (list == null && dispatcher != null) {
-            Map<String, Object> listFields = UtilMisc.<String, Object>toMap("userLogin", userLogin, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
+        if (createIfMissing && list == null && dispatcher != null) {
+            Map<String, Object> listFields = UtilMisc.toMap("userLogin", userLogin, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME);
+            if (listFields != null) {
+                listFields.putAll(createParams);
+            }
+            listFields = dispatcher.makeValidContext("createShoppingList", ModelService.IN_PARAM, listFields); // SCIPIO
             Map<String, Object> newListResult = dispatcher.runSync("createShoppingList", listFields);
             if (ServiceUtil.isError(newListResult)) {
                 String errorMessage = ServiceUtil.getErrorMessage(newListResult);
@@ -428,11 +440,21 @@ public class ShoppingListEvents {
                 return null;
             }
             if (newListResult != null) {
-                autoSaveListId = (String) newListResult.get("shoppingListId");
+                autoSaveListInfo = newListResult;
             }
         }
 
-        return autoSaveListId;
+        return autoSaveListInfo;
+    }
+
+    /**
+     * Finds or creates a specialized (auto-save) shopping list used to record shopping bag contents between user visits.
+     * <p>SCIPIO: WARNING: Do not pass partyId from unverified input without checking {@link ShoppingListWorker#checkShoppingListSecurity}.</p>
+     */
+    @Deprecated
+    public static String getAutoSaveListId(Delegator delegator, LocalDispatcher dispatcher, String partyId, GenericValue userLogin, String productStoreId) throws GenericEntityException, GenericServiceException {
+        Map<String, Object> autoSaveListInfo = getAutoSaveListInfo(delegator, dispatcher, partyId, userLogin, productStoreId, true, null);
+        return (autoSaveListInfo != null) ? (String) autoSaveListInfo.get("shoppingListId") : null;
     }
 
     /**
@@ -443,14 +465,38 @@ public class ShoppingListEvents {
             GenericValue userLogin = ShoppingListEvents.getCartUserLogin(cart);
             Delegator delegator = cart.getDelegator();
             String autoSaveListId = cart.getAutoSaveListId();
-            boolean hadAutoSaveList = (autoSaveListId != null); // SCIPIO
+            String autoSaveListAuthToken = cart.getAutoSaveListAuthToken();
             if (autoSaveListId == null) {
-                autoSaveListId = getAutoSaveListId(delegator, dispatcher, null, userLogin, cart.getProductStoreId());
-                cart.setAutoSaveListId(autoSaveListId);
+                Map<String, Object> autoSaveListInfo = getAutoSaveListInfo(delegator, dispatcher, null, userLogin,
+                        cart.getProductStoreId(), true, cart.getAutoSaveListParams());
+                if (autoSaveListInfo != null) {
+                    autoSaveListId = (String) autoSaveListInfo.get("shoppingListId");
+                    autoSaveListAuthToken = (String) autoSaveListInfo.get("shoppingListAuthToken");
+                    cart.setAutoSaveListId(autoSaveListId);
+                    cart.setAutoSaveListAuthToken(autoSaveListAuthToken);
+                }
             }
+            /* SCIPIO: added this, but is now redundant with getAutoSaveListInfo
+            if (autoSaveListId == null) {
+                // SCIPIO: 2.1.0: We now create the list here instead of after-login event
+                Map<String, Object> newListResult = createGuestShoppingList(delegator, dispatcher, userLogin,
+                        cart.getProductStoreId(), cart.getAutoSaveListParams());
+                if (!ServiceUtil.isSuccess(newListResult)) {
+                    throw new GeneralException(ServiceUtil.getErrorMessage(newListResult));
+                }
+                autoSaveListId = (String) newListResult.get("shoppingListId");
+                // Now done in post-processor event
+                //ShoppingListCookieInfo.createShoppingListCookie(request, response,
+                //        ShoppingListCookieInfo.AUTO_SAVE_LIST, guestShoppingUserName, autoSaveListId,
+                //        shoppingListAuthToken);
+                cart.setAutoSaveListId(autoSaveListId);
+                cart.setAutoSaveListAuthToken((String) newListResult.get("shoppingListAuthToken"));
+            }
+             */
+
             GenericValue shoppingList = EntityQuery.use(delegator).from("ShoppingList").where("shoppingListId", autoSaveListId).queryOne();
             Integer currentListSize = 0;
-            if (UtilValidate.isNotEmpty(shoppingList)) {
+            if (shoppingList != null) {
                 List<GenericValue> shoppingListItems = shoppingList.getRelated("ShoppingListItem", null, null, false);
                 if (UtilValidate.isNotEmpty(shoppingListItems)) {
                     currentListSize = shoppingListItems.size();
@@ -472,7 +518,7 @@ public class ShoppingListEvents {
                 }
             } else {
                 String partyId = (userLogin != null) ? userLogin.getString("partyId") : null;
-                Debug.logWarning("fillAutoSaveList: could not find auto-save list '" + autoSaveListId + "' (" + (hadAutoSaveList ? "ID from cart" : "ID looked up for party '" + partyId + "'") + ")", module);
+                Debug.logWarning("fillAutoSaveList: could not find auto-save list '" + autoSaveListId + "' (" + (autoSaveListId != null ? "ID from cart" : "ID looked up for party '" + partyId + "'") + ")", module);
             }
         }
     }
@@ -484,6 +530,10 @@ public class ShoppingListEvents {
         // SCIPIO: Introduced request attribute/parameter to skip restore if requested (non-sensitive functionality, so parameter permissible)
         String skipSaveCartToAutoSaveList = (String) request.getAttribute("skipSaveCartToAutoSaveList");
         if ("Y".equals(skipSaveCartToAutoSaveList) || (skipSaveCartToAutoSaveList == null && "Y".equals(request.getParameter("skipSaveCartToAutoSaveList")))) {
+            return "success";
+        }
+        if (!ProductStoreWorker.autoSaveCart(ProductStoreWorker.getProductStore(request))) {
+            // SCIPIO: 2.1.0: Added missing check
             return "success";
         }
 
@@ -540,25 +590,40 @@ public class ShoppingListEvents {
 
         // find the list ID
         String autoSaveListId = cart.getAutoSaveListId();
+        String autoSaveListAuthToken = cart.getAutoSaveListAuthToken();
         if (autoSaveListId == null) {
+            Map<String, Object> autoSaveListInfo = null;
             try {
-                autoSaveListId = getAutoSaveListId(delegator, dispatcher, null, userLogin, cart.getProductStoreId());
+                autoSaveListInfo = getAutoSaveListInfo(delegator, dispatcher, null, userLogin, cart.getProductStoreId(), false, cart.getAutoSaveListParams());
             } catch (GeneralException e) {
                 Debug.logError(e, module);
             }
-            cart.setAutoSaveListId(autoSaveListId);
+            if (autoSaveListInfo != null) {
+                autoSaveListId = (String) autoSaveListInfo.get("shoppingListId");
+                autoSaveListAuthToken = (String) autoSaveListInfo.get("shoppingListAuthToken");
+                cart.setAutoSaveListId(autoSaveListId);
+                cart.setAutoSaveListAuthToken(autoSaveListAuthToken);
+            }
         } else if (userLogin != null) {
+            Map<String, Object> existingAutoSaveListInfo = null;
             String existingAutoSaveListId = null;
+            String existingAutoSaveListAuthToken = null;
             try {
-                existingAutoSaveListId = getAutoSaveListId(delegator, dispatcher, null, userLogin, cart.getProductStoreId());
+                existingAutoSaveListInfo = getAutoSaveListInfo(delegator, dispatcher, null, userLogin, cart.getProductStoreId(), false, cart.getAutoSaveListParams());
             } catch (GeneralException e) {
                 Debug.logError(e, module);
+            }
+            if (existingAutoSaveListInfo != null) {
+                existingAutoSaveListId = (String) existingAutoSaveListInfo.get("shoppingListId");
+                existingAutoSaveListAuthToken = (String) existingAutoSaveListInfo.get("shoppingListAuthToken");
             }
             if (existingAutoSaveListId != null) {
                 if (!existingAutoSaveListId.equals(autoSaveListId)) {
                     // Replace with existing shopping list
                     cart.setAutoSaveListId(existingAutoSaveListId);
+                    cart.setAutoSaveListAuthToken(existingAutoSaveListAuthToken);
                     autoSaveListId = existingAutoSaveListId;
+                    autoSaveListAuthToken = existingAutoSaveListAuthToken;
                     cart.setLastListRestore(null);
                 } else {
                     // CASE: User first login and logout and then re-login again. This condition does not require a restore at all
@@ -705,12 +770,15 @@ public class ShoppingListEvents {
     public static String createGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        HttpSession session = request.getSession(true);
-        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        String guestShoppingUserName = ShoppingListCookieInfo.getAutoSaveShoppingListCookieName(request); // SCIPIO
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
+        if (!ProductStoreWorker.autoSaveCart(delegator, productStoreId)) { // SCIPIO: Skip entire event if auto-save list disabled
+            return "success";
+        }
+        HttpSession session = request.getSession(false);
+        GenericValue userLogin = (session != null) ? (GenericValue) session.getAttribute("userLogin") : null;
+        String guestShoppingUserName = ShoppingListCookieInfo.getAutoSaveShoppingListCookieName(request); // SCIPIO
         String autoSaveListId = null;
-        String shoppingListAuthToken = null; // SCIPIO: shoppingListAuthToken for lists with no partyId
+        String autoSaveListAuthToken = null; // SCIPIO: shoppingListAuthToken for lists with no partyId
 
         // check userLogin
         if (userLogin != null) {
@@ -725,45 +793,81 @@ public class ShoppingListEvents {
         // SCIPIO: We must do a security check here, because the autoSaveListId is just read out of the cart by other code
         if (autoSaveCookieInfo != null && ShoppingListWorker.getValidUserShoppingList(request, autoSaveCookieInfo, userLogin, false) != null) {
             autoSaveListId = autoSaveCookieInfo.getShoppingListId();
-            shoppingListAuthToken = autoSaveCookieInfo.getAuthToken();
+            autoSaveListAuthToken = autoSaveCookieInfo.getAuthToken();
         }
 
-        // clear the auto-save info
-        if (ProductStoreWorker.autoSaveCart(delegator, productStoreId)) {
-            if (UtilValidate.isEmpty(autoSaveListId)) {
-                try {
-                    String userAddr = request.getRemoteAddr();
-                    if(UtilValidate.isNotEmpty(request.getHeader("X-Forwarded-For"))){
-                        userAddr = request.getHeader("X-Forwarded-For");
-                    }
-                    Map<String, Object> listFields = UtilMisc.<String, Object>toMap("userLogin", userLogin, "productStoreId", productStoreId, "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME,
-                            "userAddr", userAddr); // SCIPIO: userAddr
-                    Map<String, Object> newListResult = dispatcher.runSync("createShoppingList", listFields);
-                    if (ServiceUtil.isError(newListResult)) {
-                        String errorMessage = ServiceUtil.getErrorMessage(newListResult);
-                        Debug.logError(errorMessage, module);
-                        return null;
-                    }
-                    if (newListResult != null) {
-                        autoSaveListId = (String) newListResult.get("shoppingListId");
-                        shoppingListAuthToken = (String) newListResult.get("shoppingListAuthToken"); // SCIPIO
-                    }
-                } catch (GeneralException e) {
-                    Debug.logError(e, module);
+        /* SCIPIO: 2.1.0: Now done in fillAutoSaveList and post-processor
+        if (UtilValidate.isEmpty(autoSaveListId)) {
+            try {
+                Map<String, Object> newListResult = createGuestShoppingList(request, response, delegator,
+                        dispatcher, userLogin, productStoreId, null);
+                if (ServiceUtil.isError(newListResult)) {
+                    String errorMessage = ServiceUtil.getErrorMessage(newListResult);
+                    Debug.logError(errorMessage, module);
+                    return null;
                 }
-                // SCIPIO: include shoppingListAuthToken
-                //Cookie guestShoppingListCookie = new Cookie(guestShoppingUserName, autoSaveListId);
-                ShoppingListCookieInfo.createShoppingListCookie(request, response, ShoppingListCookieInfo.AUTO_SAVE_LIST, guestShoppingUserName, autoSaveListId, shoppingListAuthToken);
+                if (newListResult != null) {
+                    autoSaveListId = (String) newListResult.get("shoppingListId");
+                    shoppingListAuthToken = (String) newListResult.get("shoppingListAuthToken"); // SCIPIO
+                }
+            } catch (GeneralException e) {
+                Debug.logError(e, module);
+            }
+            ShoppingListCookieInfo.createShoppingListCookie(request, response,
+                    ShoppingListCookieInfo.AUTO_SAVE_LIST, guestShoppingUserName, autoSaveListId,
+                    shoppingListAuthToken);
+        }
+         */
+
+        if (UtilValidate.isNotEmpty(autoSaveListId)) {
+            try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) {
+                ShoppingCart cart = cartUpdate.getCartForUpdate();
+
+                cart.setAutoSaveListId(autoSaveListId);
+                cart.setAutoSaveListAuthToken(autoSaveListAuthToken);
+
+                String userAddr = request.getRemoteAddr();
+                if (UtilValidate.isNotEmpty(request.getHeader("X-Forwarded-For"))) {
+                    userAddr = request.getHeader("X-Forwarded-For");
+                }
+                cart.setAutoSaveListParams("userAddr", userAddr);
+
+                cartUpdate.commit(cart); // SCIPIO
             }
         }
-        if (UtilValidate.isNotEmpty(autoSaveListId)) {
-            try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) { // SCIPIO
-            ShoppingCart cart = cartUpdate.getCartForUpdate();
+        return "success";
+    }
 
-            cart.setAutoSaveListId(autoSaveListId);
+    protected static Map<String, Object> createGuestShoppingList(Delegator delegator, LocalDispatcher dispatcher,
+                                                                 GenericValue userLogin, String productStoreId,
+                                                                 Map<String, ?> createParams) throws GeneralException { // SCIPIO
+        Map<String, Object> listFields = UtilMisc.toMap("userLogin", userLogin, "productStoreId", productStoreId,
+                "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME); // SCIPIO: userAddr
+        if (createParams != null) {
+            listFields.putAll(createParams);
+        }
+        return dispatcher.runSync("createShoppingList",
+                dispatcher.makeValidContext("createShoppingList", ModelService.IN_PARAM, listFields));
+    }
 
-            cartUpdate.commit(cart); // SCIPIO
-            }
+    /**
+     * Checks if cart auto-save list should be transferred, meant as post-processor event after cart add and fillAutoSaveList calls.
+     * <p>SCIPIO: 2.1.0: Added for post-processor.</p>
+     */
+    public static String refreshGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
+        if (!ProductStoreWorker.autoSaveCart(request)) {
+            return "success";
+        }
+        ShoppingCart cart = ShoppingCartEvents.getCartObjectIfExists(request);
+        if (cart == null) {
+            return "success";
+        }
+        String autoSaveListId = cart.getAutoSaveListId();
+        String autoSaveListAuthToken = cart.getAutoSaveListAuthToken();
+        // TODO: REVIEW: should we clear if empty? For now may have side effects...
+        if (UtilValidate.isNotEmpty(autoSaveListId) && UtilValidate.isNotEmpty(autoSaveListAuthToken)) {
+            ShoppingListCookieInfo.refreshShoppingListCookie(request, response, ShoppingListCookieInfo.AUTO_SAVE_LIST,
+                    ShoppingListCookieInfo.getAutoSaveShoppingListCookieName(request), autoSaveListId, autoSaveListAuthToken);
         }
         return "success";
     }

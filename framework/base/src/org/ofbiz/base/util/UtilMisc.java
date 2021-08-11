@@ -152,6 +152,24 @@ public final class UtilMisc {
         return map;
     }
 
+    /**
+     * Create a map from passed nameX, valueX parameters, into provided map (currently LinkedHashMap).
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @return The same map (for chaining)
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V, M extends Map<K, V>> M putAll(M map, Object... data) {
+        if (data.length % 2 != 0) {
+            IllegalArgumentException e = new IllegalArgumentException("You must pass an even sized array to the toMap method (size = " + data.length + ")");
+            Debug.logInfo(e, module);
+            throw e;
+        }
+        for (int i = 0; i < data.length;) {
+            map.put((K) data[i++], (V) data[i++]);
+        }
+        return map;
+    }
+
     public static <K, V> String printMap(Map<? extends K, ? extends V> theMap) {
         StringBuilder theBuf = new StringBuilder();
         for (Map.Entry<? extends K, ? extends V> entry: theMap.entrySet()) {

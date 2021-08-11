@@ -87,79 +87,79 @@ public class ShoppingCartItem implements java.io.Serializable {
     public static final MathContext generalRounding = new MathContext(10);
 
     // SCIPIO: Removed trivial defaults (null)
-    
-    private transient Delegator delegator;
+
+    protected transient Delegator delegator;
     /** the actual or variant product */
-    private transient GenericValue _product;
+    protected transient GenericValue _product;
     /** the virtual product if _product is a variant */
-    private transient GenericValue _parentProduct;
+    protected transient GenericValue _parentProduct;
 
-    private String delegatorName;
-    private String prodCatalogId;
-    private String productId;
-    private String supplierProductId;
-    private String parentProductId;
-    private String externalId;
+    protected String delegatorName;
+    protected String prodCatalogId;
+    protected String productId;
+    protected String supplierProductId;
+    protected String parentProductId;
+    protected String externalId;
     /** ends up in orderItemTypeId */
-    private String itemType;
-    private ShoppingCart.ShoppingCartItemGroup itemGroup;
-    private String productCategoryId;
-    private String itemDescription;
+    protected String itemType;
+    protected ShoppingCart.ShoppingCartItemGroup itemGroup;
+    protected String productCategoryId;
+    protected String itemDescription;
     /** for reservations: date start*/
-    private Timestamp reservStart;
+    protected Timestamp reservStart;
     /** for reservations: length */
-    private BigDecimal reservLength = BigDecimal.ZERO;
+    protected BigDecimal reservLength = BigDecimal.ZERO;
     /** for reservations: number of persons using */
-    private BigDecimal reservPersons = BigDecimal.ZERO;
-    private String accommodationMapId;
-    private String accommodationSpotId;
-    private BigDecimal quantity = BigDecimal.ZERO;
-    private BigDecimal basePrice = BigDecimal.ZERO;
-    private BigDecimal displayPrice;
-    private BigDecimal recurringBasePrice;
-    private BigDecimal recurringDisplayPrice;
+    protected BigDecimal reservPersons = BigDecimal.ZERO;
+    protected String accommodationMapId;
+    protected String accommodationSpotId;
+    protected BigDecimal quantity = BigDecimal.ZERO;
+    protected BigDecimal basePrice = BigDecimal.ZERO;
+    protected BigDecimal displayPrice;
+    protected BigDecimal recurringBasePrice;
+    protected BigDecimal recurringDisplayPrice;
     /** comes from price calc, used for special promo price promotion action */
-    private BigDecimal specialPromoPrice;
+    protected BigDecimal specialPromoPrice;
     /** for reservations: extra % 2nd person */
-    private BigDecimal reserv2ndPPPerc = BigDecimal.ZERO;
+    protected BigDecimal reserv2ndPPPerc = BigDecimal.ZERO;
     /** for reservations: extra % Nth person */
-    private BigDecimal reservNthPPPerc = BigDecimal.ZERO;
-    private BigDecimal listPrice = BigDecimal.ZERO;
+    protected BigDecimal reservNthPPPerc = BigDecimal.ZERO;
+    protected BigDecimal listPrice = BigDecimal.ZERO;
     /** flag to know if the price have been modified */
-    private boolean isModifiedPrice; // = false;
-    private BigDecimal selectedAmount = BigDecimal.ZERO;
-    private String requirementId;
-    private String quoteId;
-    private String quoteItemSeqId;
+    protected boolean isModifiedPrice; // = false;
+    protected BigDecimal selectedAmount = BigDecimal.ZERO;
+    protected String requirementId;
+    protected String quoteId;
+    protected String quoteItemSeqId;
     // The following three optional fields are used to collect information for the OrderItemAssoc entity
-    private String associatedOrderId; // the order Id, if any, to which the given item is associated (typically a sales order item can be associated to a purchase order item, for example in drop shipments)
-    private String associatedOrderItemSeqId; // the order item Id, if any, to which the given item is associated
-    private String orderItemAssocTypeId = "PURCHASE_ORDER"; // the type of association between this item and an external item; by default, for backward compatibility, a PURCHASE association is used (i.e. the extarnal order is a sales order and this item is a purchase order item created to fulfill the sales order item
+    protected String associatedOrderId; // the order Id, if any, to which the given item is associated (typically a sales order item can be associated to a purchase order item, for example in drop shipments)
+    protected String associatedOrderItemSeqId; // the order item Id, if any, to which the given item is associated
+    protected String orderItemAssocTypeId = "PURCHASE_ORDER"; // the type of association between this item and an external item; by default, for backward compatibility, a PURCHASE association is used (i.e. the extarnal order is a sales order and this item is a purchase order item created to fulfill the sales order item
 
-    private String statusId;
-    private Map<String, String> orderItemAttributes;
-    private Map<String, Object> attributes;
-    private String orderItemSeqId;
-    private Locale locale;
-    private Timestamp shipBeforeDate;
-    private Timestamp shipAfterDate;
-    private Timestamp estimatedShipDate;
-    private Timestamp cancelBackOrderDate;
+    protected String statusId;
+    protected Map<String, String> orderItemAttributes;
+    protected Map<String, Object> attributes;
+    protected String orderItemSeqId;
+    protected Locale locale;
+    protected Timestamp shipBeforeDate;
+    protected Timestamp shipAfterDate;
+    protected Timestamp estimatedShipDate;
+    protected Timestamp cancelBackOrderDate;
 
     // SCIPIO: Changed all LinkedList to ArrayList
 
-    private Map<String, String> contactMechIdsMap = new HashMap<>();
-    private List<GenericValue> orderItemPriceInfos;
-    private List<GenericValue> itemAdjustments = new ArrayList<>();
-    private boolean isPromo; // = false;
-    private BigDecimal promoQuantityUsed = BigDecimal.ZERO;
-    private Map<GenericPK, BigDecimal> quantityUsedPerPromoCandidate = new HashMap<>();
-    private Map<GenericPK, BigDecimal> quantityUsedPerPromoFailed = new HashMap<>();
-    private Map<GenericPK, BigDecimal> quantityUsedPerPromoActual = new HashMap<>();
-    private Map<String, GenericValue> additionalProductFeatureAndAppls = new HashMap<>();
-    private List<String> alternativeOptionProductIds;
-    private ProductConfigWrapper configWrapper;
-    private List<GenericValue> featuresForSupplier = new ArrayList<>();
+    protected Map<String, String> contactMechIdsMap = new HashMap<>();
+    protected List<GenericValue> orderItemPriceInfos;
+    protected List<GenericValue> itemAdjustments = new ArrayList<>();
+    protected boolean isPromo; // = false;
+    protected BigDecimal promoQuantityUsed = BigDecimal.ZERO;
+    protected Map<GenericPK, BigDecimal> quantityUsedPerPromoCandidate = new HashMap<>();
+    protected Map<GenericPK, BigDecimal> quantityUsedPerPromoFailed = new HashMap<>();
+    protected Map<GenericPK, BigDecimal> quantityUsedPerPromoActual = new HashMap<>();
+    protected Map<String, GenericValue> additionalProductFeatureAndAppls = new HashMap<>();
+    protected List<String> alternativeOptionProductIds;
+    protected ProductConfigWrapper configWrapper;
+    protected List<GenericValue> featuresForSupplier = new ArrayList<>();
 
     /**
      * SCIPIO: A parameter structure to help manage new options to the extremely

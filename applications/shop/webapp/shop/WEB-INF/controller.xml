@@ -34,11 +34,9 @@ code package.
     </preprocessor>
 
     <!-- Events to run on every request after all other processing (chains exempt) -->
-    <!--
     <postprocessor>
-        <event name="test" type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
+        <event name="refreshGuestShoppingListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="refreshGuestShoppingListCookies"/>
     </postprocessor>
-    -->
 
     <after-login>
         <event name="updateAssociatedDistributor" type="java" path="com.ilscipio.scipio.shop.misc.ThirdPartyEvents" invoke="updateAssociatedDistributor"/>

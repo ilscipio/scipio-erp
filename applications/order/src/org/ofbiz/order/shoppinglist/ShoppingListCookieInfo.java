@@ -10,6 +10,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
+import java.util.Objects;
 
 public class ShoppingListCookieInfo { // SCIPIO
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
@@ -137,12 +138,12 @@ public class ShoppingListCookieInfo { // SCIPIO
         return fromCookie(request, getShoppingListCookieName(request, ANON_WISH_LIST));
     }
 
-    public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String listType, String guestShoppingUserName, ShoppingListCookieInfo cookieInfo) { // SCIPIO: refactored from createGuestShoppingListCookies
-        createShoppingListCookie(request, response, listType, new Cookie(guestShoppingUserName, cookieInfo.toValueString()));
+    public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String listType, String cookieName, ShoppingListCookieInfo cookieInfo) { // SCIPIO: refactored from createGuestShoppingListCookies
+        createShoppingListCookie(request, response, listType, new Cookie(cookieName, cookieInfo.toValueString()));
     }
 
-    public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String listType, String guestShoppingUserName, String shoppingListId, String authToken) { // SCIPIO: refactored from createGuestShoppingListCookies
-        createShoppingListCookie(request, response, listType, new Cookie(guestShoppingUserName, toValueString(shoppingListId, authToken)));
+    public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String listType, String cookieName, String shoppingListId, String authToken) { // SCIPIO: refactored from createGuestShoppingListCookies
+        createShoppingListCookie(request, response, listType, new Cookie(cookieName, toValueString(shoppingListId, authToken)));
     }
 
     public static void createShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String listType, Cookie guestShoppingListCookie) { // SCIPIO: refactored from createGuestShoppingListCookies
@@ -153,11 +154,21 @@ public class ShoppingListCookieInfo { // SCIPIO
         response.addCookie(guestShoppingListCookie);
     }
 
-    public static void clearShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String guestShoppingUserName) { // SCIPIO: refactored from clearGuestShoppingListCookies
-        Cookie guestShoppingListCookie = new Cookie(guestShoppingUserName, null);
-        guestShoppingListCookie.setMaxAge(0);
-        guestShoppingListCookie.setPath("/");
-        response.addCookie(guestShoppingListCookie);
+    public static void clearShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String cookieName) { // SCIPIO: refactored from clearGuestShoppingListCookies
+        Cookie cookie = new Cookie(cookieName, null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
+    public static void refreshShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String listType,
+                                                 String cookieName, String shoppingListId, String authToken) {
+        ShoppingListCookieInfo oldCookieInfo = fromCookie(request, cookieName);
+        if (oldCookieInfo != null && Objects.equals(shoppingListId, oldCookieInfo.getShoppingListId()) &&
+                Objects.equals(authToken, oldCookieInfo.getAuthToken())) {
+            return;
+        }
+        ShoppingListCookieInfo.createShoppingListCookie(request, response, listType, cookieName, shoppingListId, authToken);
     }
 
 }

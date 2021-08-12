@@ -1974,7 +1974,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             if (autoSaveListId != null) {
                 try {
                     org.ofbiz.order.shoppinglist.ShoppingListEvents.clearListInfo(this.getDelegator(), autoSaveListId);
-                } catch (GenericEntityException e) {
+                } catch (GeneralException e) { // SCIPIO: Changed to GeneralException
                     Debug.logError(e, module);
                 }
             }

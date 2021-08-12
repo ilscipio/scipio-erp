@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,36 +47,66 @@ public class DynamicViewEntity {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     /** The entity-name of the Entity */
-    protected String entityName = "DynamicViewEntity";
+    protected String entityName;
 
     /** The package-name of the Entity */
-    protected String packageName = "org.ofbiz.dynamicview";
+    protected String packageName;
 
     /** The default-resource-name of the Entity, used with the getResource call to check for a value in a resource bundle */
-    protected String defaultResourceName = "";
+    protected String defaultResourceName;
 
     /** The title for documentation purposes */
-    protected String title = "";
+    protected String title;
 
     /** Contains member-entity alias name definitions: key is alias, value is ModelMemberEntity */
-    protected Map<String, ModelMemberEntity> memberModelMemberEntities = new HashMap<String, ModelMemberEntity>();
+    protected Map<String, ModelMemberEntity> memberModelMemberEntities;
 
     /** List of alias-alls which act as a shortcut for easily pulling over member entity fields */
-    protected List<ModelAliasAll> aliasAlls = new ArrayList<ModelAliasAll>();
+    protected List<ModelAliasAll> aliasAlls;
 
     /** List of aliases with information in addition to what is in the standard field list */
-    protected List<ModelAlias> aliases = new ArrayList<ModelAlias>();
+    protected List<ModelAlias> aliases;
 
     /** List of fields to group by */
     protected List<String> groupBy;
 
     /** List of view links to define how entities are connected (or "joined") */
-    protected List<ModelViewLink> viewLinks = new ArrayList<ModelViewLink>();
+    protected List<ModelViewLink> viewLinks;
 
     /** relations defining relationships between this entity and other entities */
-    protected List<ModelRelation> relations = new ArrayList<ModelRelation>();
+    protected List<ModelRelation> relations;
 
+    /**
+     * Default constructor.
+     */
     public DynamicViewEntity() {
+        this.entityName = "DynamicViewEntity";
+        this.packageName = "org.ofbiz.dynamicview";
+        this.defaultResourceName = "";
+        this.title = "";
+        this.memberModelMemberEntities = new LinkedHashMap<>(); // SCIPIO: Switched to LinkedHashMap from HashMap
+        this.aliasAlls = new ArrayList<>();
+        this.aliases = new ArrayList<>();
+        this.viewLinks = new ArrayList<>();
+        this.relations = new ArrayList<>();
+    }
+
+    /**
+     * Constructor from ModelViewEntity for static definition reuse.
+     * <p>WARN: FIXME: {@link ModelAlias#setComplexAliasMember(ComplexAliasMember)} should not be used on existing aliases.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public DynamicViewEntity(ModelViewEntity viewEntity) {
+        this.entityName = viewEntity.getEntityName() + "DynamicViewEntity";
+        this.packageName = "org.ofbiz.dynamicview";
+        this.defaultResourceName = viewEntity.getDefaultResourceName();
+        this.title = UtilValidate.emptyIfNull(viewEntity.getTitle()) + " Dynamic View Entity";
+        this.memberModelMemberEntities = new LinkedHashMap<>(viewEntity.getMemberModelMemberEntities());
+        this.aliasAlls = new ArrayList<>(viewEntity.getAliasAlls());
+        this.aliases = new ArrayList<>(viewEntity.getAliases()); // FIXME: ModelAlias is not immutable and should be duplicated or fixed here
+        this.viewLinks = new ArrayList<>(viewEntity.getViewLinks());
+        this.relations = new ArrayList<>(viewEntity.getRelations());
+        this.groupBy = (viewEntity.getGroupByFields() != null) ? new ArrayList<>(viewEntity.getGroupByFields()) : null;
     }
 
     public ModelViewEntity makeModelViewEntity(Delegator delegator) {

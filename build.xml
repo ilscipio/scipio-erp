@@ -1301,6 +1301,12 @@ code package.
     </target>
 
     <!-- SCIPIO: 2.1.0: Convenience stop-wait build start tasks for developers -->
+    <target name="restart" depends="stop-wait,start"
+            description="Convenience task alias for: stop-wait start">
+    </target>
+    <target name="restart-debug" depends="stop-wait,start-debug"
+            description="Convenience task alias for: stop-wait start-debug">
+    </target>
     <target name="build-start" depends="stop-wait,build,start"
             description="Convenience task alias for: stop-wait build start">
     </target>

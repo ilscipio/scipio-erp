@@ -20,7 +20,7 @@ code package.
     <firstvisit>
         <event name="checkTrackingCodeCookies" type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkTrackingCodeCookies"/>
         <event name="setDefaultStoreSettings" type="java" path="org.ofbiz.product.product.ProductEvents" invoke="setDefaultStoreSettings"/>
-        <event name="createGuestShoppingListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="createGuestShoppingListCookies"/>
+        <event name="applyAutoSaveListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="applyAutoSaveListCookies"/>
         <event name="restoreAutoSaveList" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="restoreAutoSaveList"/>
     </firstvisit>
 
@@ -31,11 +31,12 @@ code package.
         <event name="checkTrackingCodeUrlParam" type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkTrackingCodeUrlParam"/>
         <event name="checkPartnerTrackingCodeUrlParam" type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkPartnerTrackingCodeUrlParam"/>
         <event name="keepCartUpdated" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="keepCartUpdated"/>
+        <event name="applyAutoSaveListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="applyAutoSaveListCookies"/><!-- SCIPIO: 2.1.0: Added -->
     </preprocessor>
 
     <!-- Events to run on every request after all other processing (chains exempt) -->
     <postprocessor>
-        <event name="refreshGuestShoppingListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="refreshGuestShoppingListCookies"/>
+        <event name="refreshAutoSaveListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="refreshAutoSaveListCookies"/>
     </postprocessor>
 
     <after-login>
@@ -45,7 +46,7 @@ code package.
         <event name="restoreAutoSaveList" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="restoreAutoSaveList"/>
         <!-- after login and restoring from the auto-save list, save everything to the auto-save list to handle anything that may have already been in the cart before login -->
         <event name="saveCartToAutoSaveList" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="saveCartToAutoSaveList"/>
-        <event name="clearGuestShoppingListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="clearGuestShoppingListCookies"/>
+        <event name="clearAutoSaveListCookies" type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="clearAutoSaveListCookies"/>
     </after-login>
 
     <after-logout>

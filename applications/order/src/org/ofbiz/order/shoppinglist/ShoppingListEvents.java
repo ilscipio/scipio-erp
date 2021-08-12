@@ -761,76 +761,47 @@ public class ShoppingListEvents {
     }
 
     /**
-     * Create the guest cookies for a shopping list.
+     * Checks the auto-save list cookies and applies to ShoppingCart.
      * <p>
      * SCIPIO: NOTE: This does NOT create the new Scipio anon shopping list cookies; those are created on-demand
      * by {@link #addItemToShoppingList(HttpServletRequest, HttpServletResponse)} and similar calls, otherwise
      * too many needless lists will be created.
      */
-    public static String createGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        String productStoreId = ProductStoreWorker.getProductStoreId(request);
-        if (!ProductStoreWorker.autoSaveCart(delegator, productStoreId)) { // SCIPIO: Skip entire event if auto-save list disabled
+    public static String applyAutoSaveListCookies(HttpServletRequest request, HttpServletResponse response) {
+        if (!ProductStoreWorker.autoSaveCart(request)) {
             return "success";
         }
+        String autoSaveListCookieName = ShoppingListCookieInfo.getAutoSaveShoppingListCookieName(request); // SCIPIO
+        ShoppingListCookieInfo autoSaveCookieInfo = ShoppingListCookieInfo.fromCookie(request, autoSaveListCookieName);
+        if (autoSaveCookieInfo == null) {
+            // SCIPIO: Return because the cookie is now set later and we only read it here
+            return "success";
+        }
+        // SCIPIO: For performance, check if the cart already contains the cookie and quit if so
+        ShoppingCart cart = ShoppingCartEvents.getCartObjectIfExists(request);
+        if (cart != null && autoSaveCookieInfo.valueEquals(cart.getAutoSaveListId(), cart.getAutoSaveListAuthToken())) {
+            return "success";
+        }
+
         HttpSession session = request.getSession(false);
         GenericValue userLogin = (session != null) ? (GenericValue) session.getAttribute("userLogin") : null;
-        String guestShoppingUserName = ShoppingListCookieInfo.getAutoSaveShoppingListCookieName(request); // SCIPIO
-        String autoSaveListId = null;
-        String autoSaveListAuthToken = null; // SCIPIO: shoppingListAuthToken for lists with no partyId
-
-        // check userLogin
         if (userLogin != null) {
-            String partyId = userLogin.getString("partyId");
-            if (UtilValidate.isEmpty(partyId)) {
+            if (UtilValidate.isEmpty(userLogin.getString("partyId"))) {
                 return "success";
             }
         }
 
-        // find shopping list ID
-        ShoppingListCookieInfo autoSaveCookieInfo = ShoppingListCookieInfo.fromCookie(request, guestShoppingUserName);
         // SCIPIO: We must do a security check here, because the autoSaveListId is just read out of the cart by other code
-        if (autoSaveCookieInfo != null && ShoppingListWorker.getValidUserShoppingList(request, autoSaveCookieInfo, userLogin, false) != null) {
-            autoSaveListId = autoSaveCookieInfo.getShoppingListId();
-            autoSaveListAuthToken = autoSaveCookieInfo.getAuthToken();
-        }
-
-        /* SCIPIO: 2.1.0: Now done in fillAutoSaveList and post-processor
-        if (UtilValidate.isEmpty(autoSaveListId)) {
-            try {
-                Map<String, Object> newListResult = createGuestShoppingList(request, response, delegator,
-                        dispatcher, userLogin, productStoreId, null);
-                if (ServiceUtil.isError(newListResult)) {
-                    String errorMessage = ServiceUtil.getErrorMessage(newListResult);
-                    Debug.logError(errorMessage, module);
-                    return null;
-                }
-                if (newListResult != null) {
-                    autoSaveListId = (String) newListResult.get("shoppingListId");
-                    shoppingListAuthToken = (String) newListResult.get("shoppingListAuthToken"); // SCIPIO
-                }
-            } catch (GeneralException e) {
-                Debug.logError(e, module);
-            }
-            ShoppingListCookieInfo.createShoppingListCookie(request, response,
-                    ShoppingListCookieInfo.AUTO_SAVE_LIST, guestShoppingUserName, autoSaveListId,
-                    shoppingListAuthToken);
-        }
-         */
-
-        if (UtilValidate.isNotEmpty(autoSaveListId)) {
+        if (ShoppingListWorker.getValidUserShoppingList(request, autoSaveCookieInfo, userLogin, false) != null) {
             try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) {
-                ShoppingCart cart = cartUpdate.getCartForUpdate();
-
-                cart.setAutoSaveListId(autoSaveListId);
-                cart.setAutoSaveListAuthToken(autoSaveListAuthToken);
+                cart = cartUpdate.getCartForUpdate();
 
                 String userAddr = request.getRemoteAddr();
                 if (UtilValidate.isNotEmpty(request.getHeader("X-Forwarded-For"))) {
                     userAddr = request.getHeader("X-Forwarded-For");
                 }
-                cart.setAutoSaveListParams("userAddr", userAddr);
+                cart.addAutoSaveListParams("userAddr", userAddr);
+                cart.setAutoSaveList(autoSaveCookieInfo);
 
                 cartUpdate.commit(cart); // SCIPIO
             }
@@ -838,23 +809,20 @@ public class ShoppingListEvents {
         return "success";
     }
 
-    protected static Map<String, Object> createGuestShoppingList(Delegator delegator, LocalDispatcher dispatcher,
-                                                                 GenericValue userLogin, String productStoreId,
-                                                                 Map<String, ?> createParams) throws GeneralException { // SCIPIO
-        Map<String, Object> listFields = UtilMisc.toMap("userLogin", userLogin, "productStoreId", productStoreId,
-                "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME); // SCIPIO: userAddr
-        if (createParams != null) {
-            listFields.putAll(createParams);
-        }
-        return dispatcher.runSync("createShoppingList",
-                dispatcher.makeValidContext("createShoppingList", ModelService.IN_PARAM, listFields));
+    /**
+     * Creates guest shopping list cookies.
+     * @deprecated SCIPIO: 2.1.0: Cookies are now created in post-processor event {@link #refreshAutoSaveListCookies}.
+     */
+    @Deprecated
+    public static String createGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
+        return applyAutoSaveListCookies(request, response);
     }
 
     /**
      * Checks if cart auto-save list should be transferred, meant as post-processor event after cart add and fillAutoSaveList calls.
      * <p>SCIPIO: 2.1.0: Added for post-processor.</p>
      */
-    public static String refreshGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
+    public static String refreshAutoSaveListCookies(HttpServletRequest request, HttpServletResponse response) {
         if (!ProductStoreWorker.autoSaveCart(request)) {
             return "success";
         }
@@ -875,7 +843,7 @@ public class ShoppingListEvents {
     /**
      * Clear the guest cookies for a shopping list
      */
-    public static String clearGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
+    public static String clearAutoSaveListCookies(HttpServletRequest request, HttpServletResponse response) {
         ShoppingListCookieInfo.clearShoppingListCookie(request, response, ShoppingListCookieInfo.getAutoSaveShoppingListCookieName(request));
         if (ShoppingListWorker.useAnonShoppingList(request)) { // SCIPIO
             ShoppingListCookieInfo.clearShoppingListCookie(request, response, ShoppingListCookieInfo.getAnonShoppingListCookieName(request));
@@ -883,6 +851,25 @@ public class ShoppingListEvents {
         // SCIPIO: After login (where this event should be hooked), make sure to clear the session list to get rid of the anon list
         clearCurrentShoppingList(request, response);
         return "success";
+    }
+
+    /**
+     * Clear the guest cookies for a shopping list
+     */
+    public static String clearGuestShoppingListCookies(HttpServletRequest request, HttpServletResponse response) {
+        return clearAutoSaveListCookies(request, response);
+    }
+
+    protected static Map<String, Object> createGuestShoppingList(Delegator delegator, LocalDispatcher dispatcher,
+                                                                 GenericValue userLogin, String productStoreId,
+                                                                 Map<String, ?> createParams) throws GeneralException { // SCIPIO
+        Map<String, Object> listFields = UtilMisc.toMap("userLogin", userLogin, "productStoreId", productStoreId,
+                "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME); // SCIPIO: userAddr
+        if (createParams != null) {
+            listFields.putAll(createParams);
+        }
+        return dispatcher.runSync("createShoppingList",
+                dispatcher.makeValidContext("createShoppingList", ModelService.IN_PARAM, listFields));
     }
 
     public static String clearCurrentShoppingList(HttpServletRequest request, HttpServletResponse response) { // SCIPIO

@@ -63,6 +63,7 @@ import org.ofbiz.order.finaccount.FinAccountHelper;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper;
+import org.ofbiz.order.shoppinglist.ShoppingListCookieInfo;
 import org.ofbiz.order.shoppinglist.ShoppingListEvents;
 import org.ofbiz.order.shoppinglist.ShoppingListWorker;
 import org.ofbiz.party.contact.ContactHelper;
@@ -1791,12 +1792,17 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         return partyId;
     }
 
+    public void setAutoSaveList(ShoppingListCookieInfo ci) {
+        setAutoSaveListId((ci != null) ? ci.getShoppingListId() : null);
+        setAutoSaveListAuthToken((ci != null) ? ci.getAuthToken() : null);
+    }
+
     /**
      * Sets the auto-save list ID.
      * SCIPIO: WARNING: The system implicitly trusts this ID - caller is responsible for ensuring security - use {@link ShoppingListWorker#checkShoppingListSecurity}.
      */
     public void setAutoSaveListId(String id) {
-        this.autoSaveListId = id;
+        this.autoSaveListId = UtilValidate.nullIfEmpty(id);
     }
 
     public String getAutoSaveListId() {
@@ -1808,7 +1814,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
      * SCIPIO: WARNING: The system implicitly trusts this ID - caller is responsible for ensuring security - use {@link ShoppingListWorker#checkShoppingListSecurity}.
      */
     public void setAutoSaveListAuthToken(String authToken) {
-        this.autoSaveListAuthToken = authToken;
+        this.autoSaveListAuthToken = UtilValidate.nullIfEmpty(authToken);
     }
 
     /**

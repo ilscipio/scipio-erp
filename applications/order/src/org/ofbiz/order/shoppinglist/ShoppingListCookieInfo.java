@@ -25,7 +25,7 @@ public class ShoppingListCookieInfo { // SCIPIO
 
     private ShoppingListCookieInfo(String shoppingListId, String authToken, Cookie cookie) {
         this.shoppingListId = shoppingListId;
-        this.authToken = authToken;
+        this.authToken = UtilValidate.nullIfEmpty(authToken);
         this.cookie = cookie;
     }
 
@@ -33,7 +33,7 @@ public class ShoppingListCookieInfo { // SCIPIO
         if (UtilValidate.isEmpty(shoppingListId)) {
             return null;
         }
-        return new ShoppingListCookieInfo(shoppingListId, UtilValidate.isNotEmpty(authToken) ? authToken : null, cookie);
+        return new ShoppingListCookieInfo(shoppingListId, authToken, cookie);
     }
 
     public static ShoppingListCookieInfo fromFields(String shoppingListId, String authToken) {
@@ -53,7 +53,7 @@ public class ShoppingListCookieInfo { // SCIPIO
         }
         String[] parts = value.split("::", 2);
         if (parts.length >= 2 && UtilValidate.isNotEmpty(parts[0])) {
-            return new ShoppingListCookieInfo(parts[0], UtilValidate.isNotEmpty(parts[1]) ? parts[1] : null, cookie);
+            return new ShoppingListCookieInfo(parts[0], parts[1], cookie);
         }
         return null;
     }
@@ -90,6 +90,14 @@ public class ShoppingListCookieInfo { // SCIPIO
     @Override
     public String toString() {
         return toValueString(getShoppingListId(), getAuthToken() != null ? "[auth-token]" : null);
+    }
+
+    public boolean valueEquals(String shoppingListId, String authToken) {
+        return (Objects.equals(getShoppingListId(), shoppingListId) && Objects.equals(getAuthToken(), authToken));
+    }
+
+    public boolean valueEquals(ShoppingListCookieInfo other) {
+        return (other != null && valueEquals(other.getShoppingListId(), other.getAuthToken()));
     }
 
     public Map<String, Object> toFields(Map<String, Object> fields) {
@@ -164,8 +172,7 @@ public class ShoppingListCookieInfo { // SCIPIO
     public static void refreshShoppingListCookie(HttpServletRequest request, HttpServletResponse response, String listType,
                                                  String cookieName, String shoppingListId, String authToken) {
         ShoppingListCookieInfo oldCookieInfo = fromCookie(request, cookieName);
-        if (oldCookieInfo != null && Objects.equals(shoppingListId, oldCookieInfo.getShoppingListId()) &&
-                Objects.equals(authToken, oldCookieInfo.getAuthToken())) {
+        if (oldCookieInfo != null && oldCookieInfo.valueEquals(shoppingListId, authToken)) {
             return;
         }
         ShoppingListCookieInfo.createShoppingListCookie(request, response, listType, cookieName, shoppingListId, authToken);

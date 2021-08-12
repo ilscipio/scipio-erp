@@ -60,49 +60,54 @@ import org.w3c.dom.NodeList;
 public class ModelViewEntity extends ModelEntity {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private static final Map<String, String> functionPrefixMap = new HashMap<>();
-    private static final Set<String> numericFunctionsSet = new HashSet<>(); // names of functions that return a numeric type
+    private static final Map<String, String> functionPrefixMap;
+    private static final Set<String> numericFunctionsSet; // names of functions that return a numeric type
     static {
-        functionPrefixMap.put("min", "MIN(");
-        functionPrefixMap.put("max", "MAX(");
-        functionPrefixMap.put("sum", "SUM(");
-        functionPrefixMap.put("avg", "AVG(");
-        functionPrefixMap.put("count", "COUNT(");
-        functionPrefixMap.put("count-distinct", "COUNT(DISTINCT ");
-        functionPrefixMap.put("upper", "UPPER(");
-        functionPrefixMap.put("lower", "LOWER(");
-        functionPrefixMap.put("extract-year", "EXTRACT(YEAR FROM ");
-        functionPrefixMap.put("extract-month", "EXTRACT(MONTH FROM ");
-        functionPrefixMap.put("extract-day", "EXTRACT(DAY FROM ");
-        functionPrefixMap.put("extract-hour", "EXTRACT(HOUR FROM ");    // SCIPIO Extension
-        functionPrefixMap.put("extract-minute", "EXTRACT(MINUTE FROM ");// SCIPIO Extension
-        functionPrefixMap.put("year", "YEAR(");        // SCIPIO Extension
-        functionPrefixMap.put("month", "MONTH(");    // SCIPIO Extension
-        functionPrefixMap.put("day", "DAY(");        // SCIPIO Extension
-        functionPrefixMap.put("hour", "HOUR(");        // SCIPIO Extension
-        functionPrefixMap.put("minute", "MINUTE(");    // SCIPIO Extension
-        numericFunctionsSet.add("count");
-        numericFunctionsSet.add("count-distinct");
-        numericFunctionsSet.add("extract-year");
-        numericFunctionsSet.add("extract-month");
-        numericFunctionsSet.add("extract-day");
-        numericFunctionsSet.add("extract-hour");    // SCIPIO Extension
-        numericFunctionsSet.add("extract-minute");     // SCIPIO Extension
-        numericFunctionsSet.add("year");    // SCIPIO Extension
-        numericFunctionsSet.add("month");    // SCIPIO Extension
-        numericFunctionsSet.add("day");        // SCIPIO Extension
-        numericFunctionsSet.add("hour");    // SCIPIO Extension
-        numericFunctionsSet.add("minute");     // SCIPIO Extension
+        Map<String, String> fpm = new HashMap<>();
+        fpm.put("min", "MIN(");
+        fpm.put("max", "MAX(");
+        fpm.put("sum", "SUM(");
+        fpm.put("avg", "AVG(");
+        fpm.put("count", "COUNT(");
+        fpm.put("count-distinct", "COUNT(DISTINCT ");
+        fpm.put("upper", "UPPER(");
+        fpm.put("lower", "LOWER(");
+        fpm.put("extract-year", "EXTRACT(YEAR FROM ");
+        fpm.put("extract-month", "EXTRACT(MONTH FROM ");
+        fpm.put("extract-day", "EXTRACT(DAY FROM ");
+        fpm.put("extract-hour", "EXTRACT(HOUR FROM ");    // SCIPIO Extension
+        fpm.put("extract-minute", "EXTRACT(MINUTE FROM ");// SCIPIO Extension
+        fpm.put("year", "YEAR(");        // SCIPIO Extension
+        fpm.put("month", "MONTH(");    // SCIPIO Extension
+        fpm.put("day", "DAY(");        // SCIPIO Extension
+        fpm.put("hour", "HOUR(");        // SCIPIO Extension
+        fpm.put("minute", "MINUTE(");    // SCIPIO Extension
+        functionPrefixMap = Collections.unmodifiableMap(fpm);
+
+        Set<String> nfs = new HashSet<>();
+        nfs.add("count");
+        nfs.add("count-distinct");
+        nfs.add("extract-year");
+        nfs.add("extract-month");
+        nfs.add("extract-day");
+        nfs.add("extract-hour");    // SCIPIO Extension
+        nfs.add("extract-minute");     // SCIPIO Extension
+        nfs.add("year");    // SCIPIO Extension
+        nfs.add("month");    // SCIPIO Extension
+        nfs.add("day");        // SCIPIO Extension
+        nfs.add("hour");    // SCIPIO Extension
+        nfs.add("minute");     // SCIPIO Extension
+        numericFunctionsSet = Collections.unmodifiableSet(nfs);
     }
 
     /** Contains member-entity alias name definitions: key is alias, value is ModelMemberEntity */
-    protected Map<String, ModelMemberEntity> memberModelMemberEntities = new HashMap<>();
+    protected Map<String, ModelMemberEntity> memberModelMemberEntities = new LinkedHashMap<>();
 
     /** A list of all ModelMemberEntity entries; this is mainly used to preserve the original order of member entities from the XML file */
     protected List<ModelMemberEntity> allModelMemberEntities = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
     /** Contains member-entity ModelEntities: key is alias, value is ModelEntity; populated with fields */
-    protected Map<String, String> memberModelEntities = new HashMap<>();
+    protected Map<String, String> memberModelEntities = new LinkedHashMap<>();
 
     /** List of alias-alls which act as a shortcut for easily pulling over member entity fields */
     protected List<ModelAliasAll> aliasAlls = new ArrayList<>(); // SCIPIO: switched to ArrayList
@@ -267,7 +272,7 @@ public class ModelViewEntity extends ModelEntity {
     protected Map<String, ModelMemberEntityExt> getMemberEntitiesByAliasOrNameSingle() { // SCIPIO
         Map<String, ModelMemberEntityExt> map = this.memberEntitiesByAliasOrNameSingle;
         if (map == null) {
-            map = new HashMap<>();
+            map = new LinkedHashMap<>();
             for(Map.Entry<String, String> entry : memberModelEntities.entrySet()) {
                 ModelMemberEntity memberEntity = memberModelMemberEntities.get(entry.getKey());
                 map.put(entry.getValue(), new ModelMemberEntityExt(memberEntity));
@@ -325,6 +330,10 @@ public class ModelViewEntity extends ModelEntity {
         return null;
     }
 
+    public List<ModelAliasAll> getAliasAlls() { // SCIPIO
+        return Collections.unmodifiableList(aliasAlls);
+    }
+
     public List<ModelAlias> getAliases() { // SCIPIO
         return Collections.unmodifiableList(this.aliases); // FIXME: should be stored unmodifiable after expansion
     }
@@ -340,6 +349,14 @@ public class ModelViewEntity extends ModelEntity {
     public List<ModelAlias> getAliasesCopy() {
         List<ModelAlias> newList = new ArrayList<>(this.aliases);
         return newList;
+    }
+
+    public List<ModelField> getGroupBys() { // SCIPIO: 2.1.0: Added.
+        return Collections.unmodifiableList(groupBys);
+    }
+
+    public List<String> getGroupByFields() { // SCIPIO: 2.1.0: Added.
+        return Collections.unmodifiableList(groupByFields);
     }
 
     public int getGroupBysSize() {
@@ -630,7 +647,7 @@ public class ModelViewEntity extends ModelEntity {
     }
 
     public void populateReverseLinks() {
-        Map<String, List<String>> containedModelFields = new HashMap<>();
+        Map<String, List<String>> containedModelFields = new LinkedHashMap<>();
         Iterator<ModelAlias> it = getAliasesIterator();
         while (it.hasNext()) {
             ModelViewEntity.ModelAlias alias = it.next();
@@ -1115,7 +1132,7 @@ public class ModelViewEntity extends ModelEntity {
 
         protected Map<String, String> makeMemberEntityViewToMemberFieldMap() { // SCIPIO
             ModelEntity modelEntity = getMemberModelEntity(entityAlias);
-            Map<String, String> fieldMap = new HashMap<>();
+            Map<String, String> fieldMap = new LinkedHashMap<>(); // SCIPIO: 2.1.0: LinkedHashMap instead of HashMap
             // Check alias-all and explicit aliases
             for(ModelAlias fieldAlias : aliases) {
                 if (fieldAlias.entityAlias.equals(entityAlias)) {

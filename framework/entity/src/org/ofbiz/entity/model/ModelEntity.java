@@ -991,6 +991,10 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         return nameList;
     }
 
+    public List<ModelRelation> getRelations() { // SCIPIO: 2.1.0: Added
+        return Collections.unmodifiableList(this.relations);
+    }
+
     public int getRelationsSize() {
         return this.relations.size();
     }

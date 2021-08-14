@@ -5,11 +5,14 @@ import org.ofbiz.base.util.ContinueException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.ServiceContext;
@@ -52,6 +55,7 @@ public abstract class OrderServices {
         protected long sequenceNum = 1;
         protected Timestamp orderDateStart;
         protected Timestamp orderDateEnd;
+        protected String filterCategoryId;
 
         public PopulateBestSellingCategory(ServiceContext ctx) throws GeneralException {
             super(ctx);
@@ -79,6 +83,7 @@ public abstract class OrderServices {
             }
             this.orderDateStart = orderDateStart;
             this.orderDateEnd = orderDateEnd;
+            this.filterCategoryId = ctx.attr("filterCategoryId");
         }
 
         public Map<String, Object> exec() throws ServiceValidationException {
@@ -186,18 +191,32 @@ public abstract class OrderServices {
             return cond;
         }
 
+        protected EntityCondition addFilterCategoryIdCond(EntityCondition cond, DynamicViewEntity dve) {
+            if (filterCategoryId != null) {
+                if (dve != null) {
+                    dve.addMemberEntity("PCM", "ProductCategoryMember");
+                    dve.addAlias("PCM", "filterCategoryId", "productCategoryId", false, null, false);
+                    dve.addViewLink("OI", "PCM", false,
+                            UtilMisc.toList(new ModelKeyMap("productId", "productId")));
+                }
+                EntityCondition filterCond = EntityCondition.makeCondition("filterCategoryId", filterCategoryId);
+                cond = EntityCondition.makeCondition(cond, EntityOperator.AND, filterCond);
+            }
+            return cond;
+        }
+
         protected EntityQuery makeSalesTotalQuery() throws GeneralException {
-            // NOTE: This used to be here but it becomes constraining: .maxRows(ctx.attr("maxProducts"));
-            return ctx.delegator().from("BestSellingProductsBySalesTotal")
-                    .where(makeCommonCondition())
-                    .orderBy("-salesTotal").cache(false);
+            DynamicViewEntity dve = ctx.delegator().makeDynamicViewEntity("BestSellingProductsBySalesTotal");
+            EntityCondition cond = makeCommonCondition();
+            cond = addFilterCategoryIdCond(cond, dve);
+            return ctx.delegator().from(dve).where(cond).orderBy("-salesTotal").cache(false);
         }
 
         protected EntityQuery makeQuantityOrderedQuery() throws GeneralException {
-            // NOTE: This used to be here but it becomes constraining: .maxRows(ctx.attr("maxProducts"));
-            return ctx.delegator().from("BestSellingProductsByQuantityOrdered")
-                    .where(makeCommonCondition())
-                    .orderBy("-quantityOrdered").cache(false);
+            DynamicViewEntity dve = ctx.delegator().makeDynamicViewEntity("BestSellingProductsByQuantityOrdered");
+            EntityCondition cond = makeCommonCondition();
+            cond = addFilterCategoryIdCond(cond, dve);
+            return ctx.delegator().from(dve).where(cond).orderBy("-quantityOrdered").cache(false);
         }
 
         protected EntityQuery makeCustomQuery() throws GeneralException {

@@ -356,6 +356,9 @@ code package.
         <attribute name="productStoreId" type="String" mode="IN" optional="true">
             <description>Filter for OrderHeader.productStoreId</description>
         </attribute>
+        <attribute name="filterCategoryId" type="String" mode="IN" optional="true">
+            <description>Only products belonging to this category are considered</description>
+        </attribute>
         <attribute name="maxProducts" type="Integer" mode="IN" optional="true"/>
         <attribute name="orderDateStart" type="Timestamp" mode="IN" optional="true">
             <description>Absolute start date if specified</description>

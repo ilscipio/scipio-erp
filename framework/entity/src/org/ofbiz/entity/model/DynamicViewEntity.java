@@ -102,7 +102,9 @@ public class DynamicViewEntity {
         this.defaultResourceName = viewEntity.getDefaultResourceName();
         this.title = UtilValidate.emptyIfNull(viewEntity.getTitle()) + " Dynamic View Entity";
         this.memberModelMemberEntities = new LinkedHashMap<>(viewEntity.getMemberModelMemberEntities());
-        this.aliasAlls = new ArrayList<>(viewEntity.getAliasAlls());
+        // No need to import alias-all because they will already have been expanded by ModelViewEntity
+        //this.aliasAlls = new ArrayList<>(viewEntity.getAliasAlls());
+        this.aliasAlls = new ArrayList<>();
         this.aliases = new ArrayList<>(viewEntity.getAliases()); // FIXME: ModelAlias is not immutable and should be duplicated or fixed here
         this.viewLinks = new ArrayList<>(viewEntity.getViewLinks());
         this.relations = new ArrayList<>(viewEntity.getRelations());
@@ -285,22 +287,37 @@ public class DynamicViewEntity {
     }
 
     public DynamicViewEntity addAlias(String entityAlias, String name) {
-        this.addAlias(entityAlias, name, null, null, null, null, null);
-        return this;
+        return addAlias(entityAlias, name, null, null, null, null, null);
+    }
+
+    public DynamicViewEntity addAlias(String entityAlias, String name, String field) { // SCIPIO: 2.1.0: Added overload
+        return addAlias(entityAlias, name, field, null, null, null, null, null, null, null);
+    }
+
+    public DynamicViewEntity addAlias(String entityAlias, String name, String field, Boolean groupBy, String function, Boolean select) { // SCIPIO: 2.1.0: Added overload
+        return addAlias(entityAlias, name, field, null, null, groupBy, function, null, null, select);
     }
 
     /** Add an alias, full detail. All parameters can be null except entityAlias and name. */
     public DynamicViewEntity addAlias(String entityAlias, String name, String field, String colAlias, Boolean primKey, Boolean groupBy, String function) {
-        addAlias(entityAlias, name, field, colAlias, primKey, groupBy, function, null, null);
-        return this;
+        return addAlias(entityAlias, name, field, colAlias, primKey, groupBy, function, null, null);
+    }
+
+    /** Add an alias, full detail. All parameters can be null except entityAlias and name. */
+    public DynamicViewEntity addAlias(String entityAlias, String name, String field, String colAlias, Boolean primKey, Boolean groupBy, String function, Boolean select) { // SCIPIO: 2.1.0: Added overload
+        return addAlias(entityAlias, name, field, colAlias, primKey, groupBy, function, null, null, select);
     }
 
     public DynamicViewEntity addAlias(String entityAlias, String name, String field, String colAlias, Boolean primKey, Boolean groupBy, String function, ComplexAliasMember complexAliasMember) {
-        addAlias(entityAlias, name, field, colAlias, primKey, groupBy, function, null, complexAliasMember);
-        return this;
+        return addAlias(entityAlias, name, field, colAlias, primKey, groupBy, function, null, complexAliasMember);
     }
 
     public DynamicViewEntity addAlias(String entityAlias, String name, String field, String colAlias, Boolean primKey, Boolean groupBy, String function, String fieldSet, ComplexAliasMember complexAliasMember) {
+        return addAlias(entityAlias, name, field, colAlias, primKey, groupBy, function, fieldSet, complexAliasMember, null);
+    }
+
+    public DynamicViewEntity addAlias(String entityAlias, String name, String field, String colAlias, Boolean primKey, Boolean groupBy, String function, String fieldSet, ComplexAliasMember complexAliasMember, Boolean select) {
+        // SCIPIO: Added alias
         if (entityAlias == null && complexAliasMember == null) {
             throw new IllegalArgumentException("entityAlias cannot be null if this is not a complex alias in call to DynamicViewEntity.addAlias");
         }
@@ -308,7 +325,7 @@ public class DynamicViewEntity {
             throw new IllegalArgumentException("name cannot be null in call to DynamicViewEntity.addAlias");
         }
 
-        ModelAlias alias = new ModelAlias(entityAlias, name, field, colAlias, primKey, groupBy, function, fieldSet);
+        ModelAlias alias = new ModelAlias(entityAlias, name, field, colAlias, primKey, groupBy, function, fieldSet, false, select);
         if (complexAliasMember != null) {
             alias.setComplexAliasMember(complexAliasMember);
         }

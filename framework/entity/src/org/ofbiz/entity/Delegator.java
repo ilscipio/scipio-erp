@@ -38,6 +38,7 @@ import org.ofbiz.entity.model.ModelFieldType;
 import org.ofbiz.entity.model.ModelFieldTypeReader;
 import org.ofbiz.entity.model.ModelGroupReader;
 import org.ofbiz.entity.model.ModelReader;
+import org.ofbiz.entity.model.ModelViewEntity;
 import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityCrypto;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -531,6 +532,44 @@ public interface Delegator {
      *         entityName
      */
     ModelEntity getModelEntity(String entityName);
+
+    /**
+     * Gets the instance of ModelViewEntity that corresponds to this delegator and
+     * the specified entityName
+     * <p>SCIPIO: 2.1.0: Added as helper.</p>
+     *
+     * @param viewEntityName
+     *            The name of the view-entity to get
+     * @return ModelViewEntity that corresponds to this delegator and the specified
+     *         entityName
+     */
+    default ModelViewEntity getModelViewEntity(String viewEntityName) {
+        return (ModelViewEntity) getModelEntity(viewEntityName);
+    }
+
+    /**
+     * Gets the instance of ModelViewEntity that corresponds to this delegator and
+     * the specified entityName and returns a new editable DynamicViewEntity.
+     * <p>SCIPIO: 2.1.0: Added as helper.</p>
+     *
+     * @param viewEntityName
+     *            The name of the view-entity to get
+     * @return DynamicViewEntity that corresponds to this delegator and the specified
+     *         entityName
+     */
+    default DynamicViewEntity makeDynamicViewEntity(String viewEntityName) {
+        return new DynamicViewEntity(getModelViewEntity(viewEntityName));
+    }
+
+    /**
+     * Makes a new empty DynamicViewEntity.
+     * <p>SCIPIO: 2.1.0: Added as helper.</p>
+     *
+     * @return a new emtpy DynamicViewEntity
+     */
+    default DynamicViewEntity makeDynamicViewEntity() {
+        return new DynamicViewEntity();
+    }
 
     /**
      * Gets a Map of entity name and entity model pairs that are in the named

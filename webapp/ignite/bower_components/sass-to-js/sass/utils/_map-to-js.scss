@@ -1,0 +1,29 @@
+//----------
+// Converts Sass map to JSON string
+//----------
+@function sassToJs_Map($list-map) {
+  //--- VARS ---
+  $list-map-length: length($list-map);
+  $iteration: 0;
+  $json: '{'; // open curly brackets
+
+  // add each property from Sass map
+  @each $propName, $propValue in $list-map {
+    // PROP NAME
+    $json: $json + sassToJs_formatAsString($propName) + ':';
+
+    // PROP VALUE
+    $json: $json + sassToJs($propValue);
+
+    // Add comma if not the last item
+    $iteration: $iteration + 1;
+    @if ($iteration < $list-map-length) {
+      $json: $json + ',';
+    }
+  }
+
+  $json: $json + '}'; // close curly brackets
+
+  //--- RETURN ---
+  @return $json;
+}

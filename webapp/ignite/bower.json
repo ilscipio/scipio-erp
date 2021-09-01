@@ -1,0 +1,17 @@
+{
+  "name": "CoreUI",
+  "version": "1.0.0-alpha.2 (jQuery & Static Version)",
+  "dependencies": {
+    "bootstrap": "4.0.0-alpha.6",
+    "moment": "latest",
+    "eonasdan-bootstrap-datetimepicker":"latest",
+    "tether": "latest",
+    "jquery": "^3.0.0",
+    "fontawesome": "~4",
+    "simple-line-icons": "latest",
+    "pace": "latest",
+    "Chart.js": "~2.4",
+    "sass-to-js": "~1.1.0"
+  },
+  "private": true
+}

@@ -1,0 +1,54 @@
+@import "../bower_components/sass-to-js/sass/sass-to-js";
+
+$chartMap: (
+  primaryFillColor: rgba($brand-primary,.7),
+  primaryStrokeColor: rgba($brand-primary,.9),
+  primaryPointStrokeColor: rgba($brand-primary,.7),
+  secondaryFillColor: rgba($gray-light,.7),
+  secondaryStrokeColor: rgba($gray-light,.9),
+  secondaryPointStrokeColor: rgba($gray-light,.7),
+  pieFillColor1: rgba($brand-primary,1),
+  pieFillColor2: rgba($gray-light,1),
+  pieFillColor3: rgba($brand-danger,1),
+  pieFillColor4: rgba($brand-success,1),
+  pieFillColor5: rgba($brand-warning,1),
+  pieFillColor6: rgba($brand-info,1),
+  pieHighlightColor1: rgba($brand-primary,.6),
+  pieHighlightColor2: rgba($gray-light,.6),
+  pieHighlightColor3: rgba($brand-danger,.6),
+  pieHighlightColor4: rgba($brand-success,.6),
+  pieHighlightColor5: rgba($brand-warning,.6),
+  pieHighlightColor6: rgba($brand-info,.6),
+  pointColor: $white,
+  pointHighlightFill: $gray-lighter,
+  pointHighlightStroke: $gray-dark,
+  pointDot : true,
+  scaleType: "linear",
+  scaleDisplay : true,
+  scaleGridLineColor: "rgba(0,0,0,.1)",
+  scaleLabelFontFamily: $font-family-sans-serif,
+  scaleLabelFontColor: $body-color,
+  scaleLabelDisplay: false,
+  angleShowLineOut : true,
+  scaleBeginAtZero : true,
+  showTooltips: true,
+  color: #F7464A,
+  highlight : #FF5A5E,
+  dataLabels: false
+);
+
+.chart-data{
+        /*width: 100% !important;
+        max-width: 800px;
+        height: auto !important;*/
+        display:none;
+  
+  &:before{
+    content: sassToJs($chartMap);
+    display: none;
+  }
+}
+
+canvas {
+    margin: 0.5em 0;
+}

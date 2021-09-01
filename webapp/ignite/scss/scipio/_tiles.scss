@@ -1,0 +1,240 @@
+/* Experimental Tiles Design */
+.tiles-container {
+        position: relative;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        margin: 4em 2%;
+        align:center;
+}
+
+.tile {
+    width: 150px; 
+    height:150px;
+    display: block;
+    float: left;
+    margin: 5px;
+    position: relative;
+    overflow: hidden;
+
+    .tile-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: inherit;
+        overflow: hidden;
+
+        :first-child {
+            display: block;
+        }
+        
+        .tile-icon {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            font-size: 64px;
+            top: 50%;
+            margin-top: -40px;
+            left: 50%;
+            margin-left: -32px;
+            text-align: center;
+        }
+        
+        .tile-title {
+            position: absolute;
+            bottom: 0;
+            //left: .625rem;
+            padding: .425rem .425rem;
+            width:100%;
+            border-bottom: 1px solid #eee;
+            // let tile-color-x do this
+            //background-color: $snow;
+            color: $body-color;
+            -moz-background-clip: padding;
+            -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+        }
+        
+        .tile-title-common {
+            border-bottom: 1px solid #eee;
+            // let tile-color-x do this
+            //background-color: $snow;
+            color: $body-color;
+            -moz-background-clip: padding;
+            -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+        }
+        
+        .tile-title-default {
+        }
+        
+        .tile-title-generic { // usually will not receive .tile-title-common
+        }
+  
+        .tile-overlay-slide-up {
+            width: 100%;
+            height: inherit;
+            display: block;
+            position: absolute;
+            box-shadow: inset 0 0 1px #FFFFCC;
+            padding: 30px 15px 15px 15px;
+            top: 200%;
+            z-index: 1000;
+            height: 100%;
+            transition: all 0.3s ease;
+            // This is now specified using tile-color-xxx classes
+            //background: $brand-primary-color;
+        }
+
+        .tile-overlay-static {
+            width: 100%;
+            height: inherit;
+            display: block;
+            height: 100%;
+        }
+    }
+    
+    .tile-image { // for all tile images
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+    
+    .tile-image-common { // for common tile images
+        background-color: #ffffff;
+        transition: all 0.6s ease;
+    }
+    
+    .tile-image-cover {
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+    
+    .tile-image-contain {
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;  // usually looks better
+    }
+    
+    .tile-image-generic { // usually will not receive tile-image-common
+    }
+    
+}
+
+.tile-common {
+    cursor: pointer;
+    color:#fff;
+    background-color: #eeeeee;
+    box-shadow: inset 0 0 1px #FFFFCC;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    
+    a, a:active, a:visited { color: #fff;}
+    
+    &:hover {
+        outline: #999999 solid 3px;
+ 
+        .tile-overlay-slide-up {
+                top: 0;
+                transition: all 0.3s ease;
+              }   
+              
+        .tile-image-cover {
+            -webkit-transform: scale(1.5);
+            transform: scale(1.5);
+            transition: all 0.6s ease;
+        }
+        
+        .tile-image-contain {
+            -webkit-transform: scale(1.5);
+            transform: scale(1.5);
+            transition: all 0.6s ease;
+        }
+    }
+}
+
+.tile-default {
+}
+
+.tile-generic { // usually will not receive .tile-common
+}
+
+
+// tile sizes
+.tile-small {
+       width: 70px; 
+       height:70px;
+       
+       .tile-content {
+           .tile-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 32px;
+                margin-top: -30px;
+                margin-left: -16px;
+                }
+            }
+}
+
+.tile-normal{width: 150px; height:150px;} 
+.tile-wide  {width: 310px; height:150px;}
+.tile-large {width: 310px; height:310px;
+   .tile-content {
+       .tile-icon {
+            width: 128px;
+            height: 128px;
+            font-size: 128px;
+            margin-top: -90px;
+            margin-left: -64px;
+            }
+        }
+
+}
+.tile-big   {width: 470px; height:470px;
+    .tile-content {
+       .tile-icon {
+            width: 172px;
+            height: 172px;
+            font-size: 172px;
+            margin-top: -120px;
+            margin-left: -96px;
+            }
+        }
+
+}
+.tile-super {width: 630px; height:630px;
+.tile-content {
+       .tile-icon {
+            width: 256px;
+            height: 256px;
+            font-size: 256px;
+            margin-top: -180px;
+            margin-left: -128px;
+            }
+        }
+
+}
+
+// tile colors   
+// !important is needed so as to always override the colors set by other styles 
+.tile-color-0, .tile-color-primary {background-color:$brand-primary !important;}
+.tile-color-1, .tile-color-secondary {background-color: #fff !important;}
+.tile-color-2, .tile-color-alert {background-color:$brand-danger !important;}
+.tile-color-3, .tile-color-success {background-color:$brand-success !important;}
+.tile-color-4, .tile-color-warning {background-color:$brand-warning !important;}
+.tile-color-5, .tile-color-info {background-color:$brand-info !important;}
+.tile-color-6 {background-color:$gray-dark !important;}
+.tile-color-7 {background-color:$gray !important;}
+.tile-color-8, .tile-color-default-title {background-color:$gray-lighter !important;}
+
+// FIXME: this is a re-hardcoding of colors in _global.scss but adding alpha. should unhardcode somehow.
+.tile-color-50l, .tile-color-primary-alpha-light, 
+  .tile-color-gallery-overlay-bg {background-color:rgba(0, 140, 186, 0.3) !important;}
+.tile-color-50h, .tile-color-primary-alpha-heavy {background-color:rgba(0, 140, 186, 0.7) !important;}
+.tile-color-58l, .tile-color-snow-alpha-light,
+  .tile-color-gallery-title-bg {background-color:rgba(249, 249, 249, 0.3) !important;}
+.tile-color-58h, .tile-color-snow-alpha-heavy {background-color:rgba(249, 249, 249, 0.7) !important;}

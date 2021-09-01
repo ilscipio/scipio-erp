@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+- '0.12'
+before_install:
+- npm install -g grunt-cli
+install:
+- npm install
+before_script:
+- grunt build
+deploy:
+  provider: npm
+  email: sgospodarets@gmail.com
+  api_key:
+    secure: AEKgdOu7Jk/DG/nnLZegEstgvazzk2dREXonbbl4C8yZnl31dmW8v22YRWPNGWfEelP9A2Z+wB6B9QUoVtkdluuGqmZc6nhfB9Ba1/Nr11Ge8f50mrEzu7LvcmeXQziylXk1cu8QKwCeQwrXbqjLlavSyXEaKUsTlB8AY4k105A=
+  on:
+    tags: true
+    all_branches: true

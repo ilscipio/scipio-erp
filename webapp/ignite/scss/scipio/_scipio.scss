@@ -1,0 +1,196 @@
+/*
+ Grid bugfix for wrong div structure (guerantees that the theme will play nice even if row col-lg* is not followed entirely)
+*/
+#main-content {
+    .row {
+        > div:not([class*="col-"]) {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+            padding-left: 15px;
+            float:left;
+            width:100%;
+        }
+    }
+}
+
+// Fix margin on rows
+.row {
+    .row {
+        margin-bottom:4px;        
+    }
+}
+
+// Logo
+.navbar-brand >img { 
+        width: auto;
+        height: 22px;
+}
+
+.radio-item-inline.radio-item-separator {
+  display:none;
+}
+.checkbox-item-inline.checkbox-item-separator {
+  display:none;
+}
+
+legend {font-size: 0.9em; padding-top:10px; color: $brand-info;cursor:pointer;}
+
+pre.scrollable {
+    max-height:500px;
+    overflow-x:scroll;
+}
+
+.collapsehide{
+    background: rgb(240, 240, 240);
+    padding: 10px;
+}
+
+.input-group-addon {
+    button, [type="button"], [type="reset"], [type="submit"] {
+       background:none;
+       border:none;
+       color: $input-color;
+    }
+}
+
+.btn-group input, .btn-group form {    
+		position: relative;
+        float: left;
+		
+		&:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+			border-radius: 0;
+			}
+}
+
+div.form-control, .form-group div.form-control,.field-entry-type-display {background:none;}
+
+
+.nav-tabs {
+    background:none;
+    border-bottom:0px;
+}
+
+#pre-content-section {
+    display:block;
+}
+
+// Fields
+input.field-inline, select.field-inline, textarea.field-inline {
+  display: inline;
+  width: auto;
+}
+
+.carousel-caption{
+    background-color: #e7e7e7;
+    border-color: #c7c7c7;
+    color: #4f4f4f;
+}
+
+// Product Detail Image gallery fix
+#bsPhotoGalleryModal .modal-content {
+    border-radius:0;
+}
+#bsPhotoGalleryModal .modal-dialog img {
+    text-align:center;
+    margin:0 auto;
+    width:100%;
+}
+#bsPhotoGalleryModal .modal-body {
+    padding:0px !important;
+}
+#bsPhotoGalleryModal .bsp-close {
+  position: absolute;
+  right: 14px;
+  top: 11px;
+  font-size: 30px;
+  color:#fff;
+  text-shadow: 1px 1px 18px #000;
+}
+
+#bsPhotoGalleryModal .bsp-close:hover {
+  cursor: pointer;
+  opacity:.6;
+  text-shadow: none;
+
+}
+.bspHasModal {
+  cursor: pointer;
+}
+.bspHasModal .text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.imgWrapper {
+  overflow: hidden;
+  max-height: 99px;
+}
+
+a.bsp-controls,
+a.bsp-controls:visited,
+a.bsp-controls:active {
+  position: absolute;
+  top: 44%;
+  font-size: 26px;
+  color: #fff;
+  text-shadow: 1px 1px 18px #000;
+}
+a.bsp-controls.next {
+  right:8px;
+}
+a.bsp-controls.previous {
+  left:8px;
+}
+a.bsp-controls:hover {
+  opacity:.6;
+  text-shadow: none;
+}
+.bsp-text-container {
+  clear:both;
+  display:block;
+  padding-bottom: 5px;
+}
+#bsPhotoGalleryModal h6{
+  margin-bottom: 0;
+  font-weight: bold;
+  color: #000;
+  font-size: 14px;
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-bottom: 5px;
+}
+#bsPhotoGalleryModal .pText {
+  font-size: 11px;
+  margin-bottom: 0px;
+  padding: 0 12px 5px;
+}
+
+.review{
+    margin:0px;
+    background-color: $card-bg;
+    border: $card-border-width solid $card-border-color;
+    @include border-radius($card-border-radius);
+    padding-top: $card-spacer-x;
+    
+    .avatar{
+        //padding-top: $card-spacer-x;
+    }
+}
+
+.review:nth-child(2n) {
+  background: darken($card-bg,5%);
+}
+
+@media screen and (max-width: 380px){
+   .col-xxs-12 {
+     width:100%;
+   }
+   .col-xxs-12 img {
+     width:100%;
+   }
+}
+
+.ui-widget {
+    z-index:9999 !important;
+}

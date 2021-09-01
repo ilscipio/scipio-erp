@@ -1,0 +1,726 @@
+// Here you can add other styles
+
+// Chart.js
+@import "scipio/scipio";
+@import "scipio/chartsjs";
+@import "scipio/tiles";
+@import "scipio/calendar";
+@import "scipio/steps";
+
+
+// GENERAL
+.row.display {
+  background: #eee;
+  font-size: 11px;
+  margin-bottom: 10px;
+  line-height: 2rem;
+  border: solid 1px #c6c6c6;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.row.display .columns:nth-child(even), .row.display .columns.small-centered, .row.display .columns.large-centered {
+  background: #e1e1e1;
+}
+
+.main {
+    .container-fluid {
+        padding-top:20px;
+    }
+}
+
+header.navbar .nav-item {
+     margin: 0 10px 0 0!important;
+    }
+
+.section-screenlet-container{
+    margin-bottom:10px
+}
+
+#main-content {
+    form {
+        background: #fff;
+        padding: 1em;
+        
+        label {
+            display: inherit;
+            //word-break: break-word;
+            i {
+                text-align:center;
+                line-height: 1.25;
+                display: block;
+                width: 100%;
+                padding: 0.5rem 0.75rem;
+                font-size: 0.875rem;
+                color: #607d8b;
+            }
+        }
+    }
+    
+    .btn-group form {padding: 0px;}
+}
+
+// Navigation
+
+a.dropdown-item {
+
+  &:last-child {
+    border-bottom: 1px solid $dropdown-border-color;
+  }
+
+}
+
+
+.dropdown-menu :last-child {
+    a.dropdown-item {
+         border-bottom: 0;
+    }
+} 
+
+
+.sidebar nav {
+    
+     ul.nav {
+        max-width:200px;
+        width:100%;
+     }
+
+     ul.nav li.nav-item li {
+        padding-left:10px;
+        font-size: 0.7875rem;
+    }
+    
+    // Hack for adding icon to the sidebar 
+
+    ul.nav li{
+        &.active a {color:$gray;}
+        &.active a:hover {color:#fff;}
+        
+    
+         a:before {
+            font-family: FontAwesome;
+            margin-right:5px;
+        }
+        
+        &.active a:before {
+            color: $gray;
+        }
+        
+        &.active:hover a:before {
+            color: #fff;
+        }
+        
+        &.dashboard a:before {
+            content: "\f015";
+        }
+        
+        &.dashboard a{
+            background: $gray-dark;
+            color: $gray-lightest;
+        }
+    }
+    
+    .nav-dropdown-toggle {
+
+          &::before {
+            position: absolute;
+            top: ($sidebar-nav-link-padding-y + ($font-size-base / 4));
+            right: $sidebar-nav-link-padding-x;
+            display: block;
+            width: ($font-size-base);
+            height: ($font-size-base);
+            padding: 0;
+            font-size: $font-size-base;
+            line-height: ($font-size-base * 3 / 4);
+            text-align: center;
+            content: "\2039";
+            transition: .3s;
+          }
+        }
+    
+}
+
+
+.other-content{
+    background: #fff;
+    border-top: 1px solid #eee;
+    color: #555;
+    line-height: 22px;
+    padding: 30px 0px 30px;
+    margin-top: 20px;
+    text-align:center;
+    
+    i {
+        font-size: 100px;
+        margin-bottom:10px;
+    }
+    
+    h2 {
+        line-height:100px;
+        margin-bottom:10px;
+    }
+    
+    ul {
+        list-style: none;
+        padding: 0px;
+        
+        li {
+            
+        }
+    }
+}
+/*
+FOOTER
+*/
+.other-content{
+    .columns {}
+}
+
+/*
+CONTENT
+*/
+.section-screenlet {
+    margin-bottom:1.5rem;
+}
+
+
+// Fix to the pagination elements
+.page-item {
+  span {
+  position: relative;
+  display: block;
+  padding: $pagination-padding-y $pagination-padding-x;
+  margin-left: -1px;
+  line-height: $pagination-line-height;
+  color: $pagination-disabled-color;
+  background-color: $pagination-bg;
+  border: $pagination-border-width solid $pagination-border-color;
+  }
+  
+  &:first-child {
+    span {
+      margin-left: 0;
+      @include border-left-radius($border-radius);
+    }
+  }
+  &:last-child {
+    span {
+      @include border-right-radius($border-radius);
+    }
+  }
+
+  &.active span {
+    z-index: 2;
+    color: $pagination-active-color;
+    background-color: $pagination-active-bg;
+    border-color: $pagination-active-border;
+  }
+
+  &.disabled span {
+    color: $pagination-disabled-color;
+    pointer-events: none;
+    cursor: $cursor-disabled; // While `pointer-events: none` removes the cursor in modern browsers, we provide a disabled cursor as a fallback.
+    background-color: $pagination-disabled-bg;
+    border-color: $pagination-disabled-border;
+  }
+}
+
+// Pricing table
+.card-columns {
+    ul {
+        list-style-type: none;
+        padding-left:0;
+    }
+}
+
+.block-grid{
+    display: flex;
+    flex-flow: row wrap;
+    list-style: none; 
+    
+    li {
+        list-style-type: none;
+        margin: 0 1% 20px;
+        width: 30%;
+        display:inline-block;
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .block-grid {
+        li {
+            display: inline-block; // Don't let them vertically span multiple columns
+            width: 100% !important; // Don't let their width change
+        }
+    }
+}
+
+.card{    
+    .scipio-image-container {
+    }
+    .card-block{
+        padding: 8px 0px;
+        margin:0; 
+        border-bottom:solid 1px #eee; 
+        text-align:justify
+    }
+    
+    .card-block {
+        padding:10px 10px;
+    }
+    
+    .card-link a {
+        width:100%;
+    }
+    
+    p {
+        padding-top:8px; 
+    }
+    
+    .btn{margin-top:10px;}    
+    
+    
+    &.callout {
+    padding:0px;
+    }
+}
+
+.callout {
+    background:#fff;
+    
+    h2 {
+    margin-top:8px; 
+    font-size:1.1rem;}
+}
+
+
+ul.card {
+    list-style-type: none;
+    padding-left:0;
+}
+
+.address-panel {
+    width:200px;
+}
+
+//Tables
+.table{
+    background:#fff;
+    td {display:table-cell;flex:inherit;}
+    .col-lg-1 {
+        width: 8.33333%; }
+
+    .col-lg-2 {
+        width: 16.66667%; }
+
+    .col-lg-3 {
+        width: 25%; }
+
+    .col-lg-4 {
+        width: 33.33333%; }
+
+    .col-lg-5 {
+        width: 41.66667%; }
+
+    .col-lg-6 {
+        width: 50%; }
+
+    .col-lg-7 {
+        width: 58.33333%; }
+
+    .col-lg-8 {
+        width: 66.66667%; }
+
+    .col-lg-9 {
+        width: 75%; }
+
+    .col-lg-10 {
+        width: 83.33333%; }
+
+    .col-lg-11 {
+        width: 91.66667%; }
+
+    .col-lg-12 {
+        width: 100%; }
+    
+    td, th {border-top:none;}   
+}
+
+.table-type-data, .table-type-data-complex{
+    td {border-top:none;}
+}
+
+/*table fixes*/
+.table-condensed {
+  font-size:0.9em; 
+    }
+
+
+/*
+ * Off Canvas
+ * --------------------------------------------------
+ */
+@media screen and (max-width: 991px) {
+  .row-offcanvas {
+    position: static;
+    -webkit-transition: all .25s ease-out;
+         -o-transition: all .25s ease-out;
+            transition: all .25s ease-out;
+  }
+
+  .row-offcanvas-right {
+    right: 0;
+  }
+
+  .row-offcanvas-left {
+    left: 0;
+  }
+
+  .row-offcanvas-right
+  .sidebar-offcanvas {
+    right: -100%; /* 12 columns */
+  }
+
+  .row-offcanvas-right.active
+  .sidebar-offcanvas {
+    right: -50%; /* 6 columns */
+  }
+
+  .row-offcanvas-left
+  .sidebar-offcanvas {
+    //left: -100%; /* 12 columns */
+    //left: -200px;
+    left:0;
+    padding:0;
+    height:100%;
+    padding-top:$navbar-height;
+    z-index:10;
+  }
+
+  .row-offcanvas-left.active
+  .sidebar-offcanvas {
+    left: -50%; /* 6 columns */
+  }
+
+  .row-offcanvas-right.active {
+    right: 50%; /* 6 columns */
+  }
+
+  .row-offcanvas-left.active {
+    left: 50%; /* 6 columns */
+  }
+
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: 50%; /* 6 columns */
+  }
+}
+
+
+/*******
+* SHOP
+********/
+// Navigation
+#right-nav {
+   > .nav-item {
+    line-height:36px;
+   }
+}
+
+#microcart{
+    line-height:36px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+}
+
+#microCartIcon{
+    width: 36px;
+    height: 36px;
+    background: #009bcb;
+    border-radius: 0;
+    text-align: center;
+    font-size: 16px;
+    color: #fff;
+    order:1;
+}
+
+#microCartTotal{
+    order:-1;
+    margin: 0 10px 0 10px;
+    
+}
+
+#content-main-section {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    flex-shrink: 0;
+    margin-top:20px;
+}
+
+.keywordsearch {
+    .columns {padding:0px;font-size: 16px;}
+    .btn{ 
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+        @include button-variant($btn-warning-color, $btn-warning-bg, $btn-warning-border);
+        font-size: 16px;
+        height:35px;
+    }
+    margin: 0 10px 0 10px;
+}
+
+// Ribbon
+.carousel-item{
+    li {}
+}
+.ribbon {
+    width:85px;
+    height:88px;
+    overflow: hidden;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    }
+.ribbon span{
+    position: relative;
+    padding: 7px 0;
+    left: -40px;
+    top:8px;
+    display:block;
+    font-size:9px;
+    width: 120px;
+    padding:4px;
+    background-color: $brand-success;
+    color:#fff;
+    text-align: center;
+      -webkit-transform: rotate(-45deg);
+      -moz-transform:    rotate(-45deg);
+      -ms-transform:     rotate(-45deg);
+      -o-transform:      rotate(-45deg);
+    }
+
+// hero
+.scipio-image::after {
+    content:"";
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    background-repeat: repeat;
+    opacity: 0.3;
+    background-image: url(../img/overlays/black-horizontal-stripes.png);
+}
+
+// Slider
+ .slider{
+     visibility:hidden;
+     opacity:0;  
+     transition: opacity 1s;
+
+    &.slick-initialized{
+        visibility:visible;
+        opacity:1;
+    }
+
+
+    .item{
+        display:none ;
+        
+        &::first-child{
+            display:block; 
+            visibility:hidden;
+        } 
+    }
+    
+    & .slick-initialized .item{
+        display:block;
+        visibility:
+        visible!important;
+    }
+    
+}
+
+.slick-list {
+    margin: 0 -10px;
+}
+
+.slick-slide {
+     margin: 0 10px; 
+}
+
+.slick-slider .slick-slide{
+    display: none;
+}
+ .slick-slider .slick-slide:first-child{
+    display: block;
+}
+.slick-initialized.slick-slider .slick-slide,
+.slick-initialized.slick-slider .slick-slide:first-child{
+    display: block;
+}
+
+
+
+/* Carousel base class */
+.carousel {
+
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+  bottom: 3rem;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel-item {
+  height: 32rem;
+  background-color: #777;
+}
+.carousel-item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 32rem;
+}
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-lg-4 {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.marketing h2 {
+  font-weight: normal;
+}
+.marketing .col-lg-4 p {
+  margin-right: .75rem;
+  margin-left: .75rem;
+}
+
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 5rem 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.05rem;
+}
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+
+@media (min-width: 40em) {
+  /* Bump up size of carousel content */
+  .carousel-caption p {
+    margin-bottom: 1.25rem;
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+
+  .featurette-heading {
+    font-size: 50px;
+  }
+}
+
+@media (min-width: 62em) {
+  .featurette-heading {
+    margin-top: 7rem;
+  }
+}
+
+// Thumbnails
+.clearing-thumbs {
+    @include list-unstyled;
+    margin-top:10px;
+    
+    li {
+        display: inline-block;
+
+        &:not(:last-child) {
+            margin-right: $list-inline-padding;
+        }
+    }
+}
+
+// CODE
+pre {
+    /* original is white background with no border */
+    background-color: #fff;
+    white-space: pre-wrap; /* CSS3 */
+    white-space: -moz-pre-wrap; /* Mozilla, post millennium */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word;
+    padding: 4px;
+    color: #333;
+    font-size: 11px;
+    line-height: 16px;
+    margin-bottom: 20px;
+    background-color: #f8f8f8;
+    border-color: #dfdfdf;
+    border-style: solid;
+    border-width: 1px;
+}
+
+pre, code {
+}
+
+code {
+    margin:0px;
+    padding:0px;
+    border:none;
+    background:none;
+    .INFO {color:$brand-info;}
+    .DEBUG {}
+    .WARN {color:$brand-warning;}
+    .ERROR {color:$brand-danger;}
+    .FATAL {color:$brand-danger;font-weight:bold;}
+    .TRACE {color:$gray-light;}
+}
+
+pre.scrollable {
+    max-height:500px;
+    overflow-x:scroll;
+}
+
+
+btn {
+ &.btn-default {
+    @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+  }
+}
+
+$mdb-input-padding-xs-vertical:       2px !default; // 1
+$mdb-input-padding-xs-horizontal:     0 !default; // 5
+$mdb-btn-font-size-xs: 10px !default;
+
+.btn-xs,.btn-group-xs {
+    padding: 4px 15px;
+    font-size: $mdb-btn-font-size-xs;
+}
+
+.btn-default {
+  @include button-variant($btn-primary-color, $btn-primary-bg, $btn-primary-border);
+}

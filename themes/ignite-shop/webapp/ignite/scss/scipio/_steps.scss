@@ -1,0 +1,85 @@
+/*
+* Based on the works of Lyn http://foundation.zurb.com/forum/posts/18131-step-by-step-list
+*/
+.steps {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 0px;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    line-height: 1;
+    box-sizing: border-box;
+    padding-left: 0;
+    margin:0;
+    
+    &.expanded {
+        display: block;
+    }
+    
+    &.radius {
+        border-radius: 5px;
+        border-radius: 1000px;
+    }
+
+    li {
+        display: inline-block;
+        position: relative;
+        padding: 1em 2em 1em 3em;
+        vertical-align: top;
+        background-color: #fafafa;
+        box-sizing: border-box;
+        font-size: 0.825rem;
+    }
+    
+    &.even-2 li {width: 50%;}
+    &.even-3 li {width: 33.33334%;}
+    &.even-4 li {width: 25%;}
+    &.even-5 li {width: 20%;}
+    &.even-6 li {width: 16.66667%;}
+    
+    li:after {
+        display: block;
+        position: absolute;
+        z-index: 2;
+        content: "";
+        top: 0.36em;
+        right: -1.2em;
+        width: 2.3em;
+        height: 2.3em;
+        background-color: #fafafa;
+        transform: rotate(-45deg);
+        border-right: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+    }
+    
+    li:first-child {
+        padding-left: 2.5em;
+    }
+    
+    li:last-child {
+       padding-right: 2.5em;
+    }
+    
+    li:hover, li:hover:after {
+        background-color: #e6f4f9;
+    }
+
+    li.active,
+    li.active:after {
+        background-color: #007295;
+        color: #fff;
+    }
+    
+    li.active {     
+        a, a:hover, a:visited, a:active, a:focus {
+            color: #fff;
+        }
+    }
+    
+    li.disabled,
+    li.disabled:after {
+        background-color: #fff;
+        color: #aaa;
+        cursor: default;
+    }
+}

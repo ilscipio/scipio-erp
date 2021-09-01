@@ -1,0 +1,558 @@
+// Here you can add other styles
+
+// Chart.js
+@import "scipio/scipio";
+@import "scipio/chartsjs";
+@import "scipio/tiles";
+@import "scipio/calendar";
+@import "scipio/steps";
+@import "scipio/jqueryui";
+
+
+
+// GENERAL
+.row.display {
+  background: #eee;
+  font-size: 11px;
+  margin-bottom: 10px;
+  line-height: 2rem;
+  border: solid 1px #c6c6c6;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.row.display .columns:nth-child(even), .row.display .columns.small-centered, .row.display .columns.large-centered {
+  background: #e1e1e1;
+}
+
+.main {
+    .container-fluid {
+        padding-top:20px;
+    }
+}
+
+header.navbar .nav-item {
+     margin: 0 10px 0 0!important;
+    }
+
+.section-screenlet-container{
+    margin-bottom:10px
+}
+
+// Navigation
+
+a.dropdown-item {
+
+  &:last-child {
+    border-bottom: 1px solid $dropdown-border-color;
+  }
+
+}
+
+
+.dropdown-menu :last-child {
+    a.dropdown-item {
+         border-bottom: 0;
+    }
+}
+
+.aside-menu{
+
+    .tab-content {
+        height: calc(100vh - 2.375rem - 55px);
+        overflow-x: scroll;
+    }
+}
+
+.sidebar nav {
+
+    .toplevel {
+        flex-wrap: nowrap;
+        max-height:inherit;
+    }
+	
+	.nav-dropdown-items{}
+
+     ul.nav li.nav-item li {
+        padding-left:10px;
+        font-size: 0.7875rem;
+    }
+    
+    // Hack for adding icon to the sidebar 
+
+    ul.nav li{
+        width: 100%;
+
+         a:before {
+            font-family: FontAwesome;
+            margin-right:5px;
+        }
+
+        &.active {
+            background: $sidebar-nav-link-active-bg;
+
+            a{
+               color: $sidebar-nav-link-active-color;
+
+               @include borders($sidebar-nav-link-active-borders);
+
+               &:before {
+                   color: $brand-primary;
+               }
+             }
+
+            &:hover a:before {
+                 color: #fff;
+             }
+
+        }
+
+        &.dashboard a:before {
+            content: "\f015";
+        }
+
+        &.scipio-nav-actions-menu-item{
+             background-color: darken($brand-primary,15%);
+             &.active {
+                 background: lighten($brand-primary,5%);
+
+                 a{
+                    color: $sidebar-nav-link-active-color;
+                  }
+             }
+        }
+
+        &.nav-title {
+            background: #111;
+            //border-top: 1px solid #444;
+            color: #757575;
+            display: block;
+            padding: 0.3rem 0.9375rem;
+            font-weight:bold;
+            //margin-top:1rem;
+            text-align:right;
+
+            &:first-child {
+             margin-top:0px;
+             border-top:none;
+            }
+        }
+
+    }
+
+
+    
+}
+
+// Fix to the pagination elements
+.page-item {
+  span {
+  position: relative;
+  display: block;
+  padding: $pagination-padding-y $pagination-padding-x;
+  margin-left: -1px;
+  line-height: $pagination-line-height;
+  color: $pagination-color;
+  background-color: $pagination-bg;
+  border: $pagination-border-width solid $pagination-border-color;
+  }
+  
+  &:first-child {
+    span {
+      margin-left: 0;
+      @include border-left-radius($border-radius);
+    }
+  }
+  &:last-child {
+    span {
+      @include border-right-radius($border-radius);
+    }
+  }
+
+  &.active span {
+    z-index: 2;
+    color: $pagination-active-color;
+    background-color: $pagination-active-bg;
+    border-color: $pagination-active-border-color;
+  }
+
+  &.disabled span {
+    color: $pagination-disabled-color;
+    pointer-events: none;
+    cursor: $cursor-disabled; // While `pointer-events: none` removes the cursor in modern browsers, we provide a disabled cursor as a fallback.
+    background-color: $pagination-disabled-bg;
+    border-color: $pagination-disabled-border-color;
+  }
+}
+
+// Pricing table
+.card-columns {
+    ul {
+        list-style-type: none;
+        padding-left:0;
+    }
+
+}
+
+.card{    
+    .scipio-image-container {
+    }
+    .card-block{
+        padding: 8px 0px;
+        margin:0; 
+        border-bottom:solid 1px #eee; 
+        text-align:justify
+    }
+    
+    .card-block {
+        padding:10px 10px;
+    }
+    
+    .card-link a {
+        width:100%;
+    }
+    
+    p {
+        padding-top:8px; 
+    }
+    
+    .btn{margin-top:10px;}    
+    
+    
+    &.callout {
+    padding:0px;
+    }
+}
+
+.callout {background:#fff;}
+
+ul.ui-autocomplete {
+  display: none;
+  float: left;
+  min-width: 160px;
+  width:300px;
+  overflow:auto;
+  max-height:250px;
+  padding: 0px 0px 0px 26px;
+  margin: 2px 0 0;
+  list-style: circle;
+  font-size: 14px;
+  text-align: left;
+  background-color: #ffffff;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+
+    li {
+        div {
+           hyphens:auto;
+           display:block;
+           padding: 3px 20px;
+           clear: both;
+           font-weight: normal;
+           line-height: 1.42857143;
+           color: $brand-primary;
+           overflow-wrap: break-word;
+           word-break: break-word;
+        }
+    }
+
+}
+
+.ui-state-hover,
+.ui-state-active,
+.ui-state-focus {
+  text-decoration: none;
+  color: $brand-primary;
+  background-color: $gray-lightest;
+  cursor: pointer;
+}
+
+.ui-helper-hidden-accessible {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+// CODE
+pre {
+    /* original is white background with no border */
+    background-color: #fff;
+    white-space: pre-wrap; /* CSS3 */
+    white-space: -moz-pre-wrap; /* Mozilla, post millennium */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word;
+    padding: 4px;
+    color: #333;
+    font-size: 11px;
+    line-height: 16px;
+    margin-bottom: 20px;
+    background-color: #f8f8f8;
+    border-color: #dfdfdf;
+    border-style: solid;
+    border-width: 1px;
+}
+
+pre, code {
+}
+
+code {
+    margin:0px;
+    padding:0px;
+    border:none;
+    background:none;
+    .INFO {color:$brand-info;}
+    .DEBUG {}
+    .WARN {color:$brand-warning;}
+    .ERROR {color:$brand-danger;}
+    .FATAL {color:$brand-danger;font-weight:bold;}
+    .TRACE {color:$gray-light;}
+}
+
+pre.scrollable {
+    max-height:500px;
+    overflow-x:scroll;
+}
+
+//Tables
+.table{
+    td {display:table-cell;flex:inherit;}
+    .col-lg-1 {
+        width: 8.33333%; }
+
+    .col-lg-2 {
+        width: 16.66667%; }
+
+    .col-lg-3 {
+        width: 25%; }
+
+    .col-lg-4 {
+        width: 33.33333%; }
+
+    .col-lg-5 {
+        width: 41.66667%; }
+
+    .col-lg-6 {
+        width: 50%; }
+
+    .col-lg-7 {
+        width: 58.33333%; }
+
+    .col-lg-8 {
+        width: 66.66667%; }
+
+    .col-lg-9 {
+        width: 75%; }
+
+    .col-lg-10 {
+        width: 83.33333%; }
+
+    .col-lg-11 {
+        width: 91.66667%; }
+
+    .col-lg-12 {
+        width: 100%; }
+        
+    td, th {border-top:none;}    
+
+}
+.table-type-data, .table-type-data-complex{
+    td {border-top:none;}
+}
+
+
+//Buttons
+.btn-group, .menu-type-section{
+    button {
+        @include button-variant($gray-lighter, $gray-lighter);
+    }
+    .btn {
+        @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
+    }
+}
+
+
+
+.slider-parent{
+    min-width: 100%; width: 0;
+}
+
+.slick-prev:before,.slick-next:before {
+    color:$brand-primary !important;
+}
+
+.slick-prev {
+    left:25px !important;
+    z-index:100;
+}
+
+.slick-next {
+    right:25px !important;
+    z-index:100;
+}
+
+
+/* Carousel base class */
+.carousel {
+
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+  bottom: 3rem;
+}
+
+/* Declare heights because of positioning of img element */
+
+.carousel-item {
+  height: 32rem;
+  background-color: #777;
+}
+.carousel-item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: 32rem;
+}
+
+@include media-breakpoint-down(md){
+    .carousel-inner{
+        width: 100% !important;
+        height: 300px !important;
+    }
+    .carousel-inner img{
+        width: 100% !important;
+        hegith: 100% !important;
+    }
+}
+
+$mdb-input-padding-xs-vertical:       2px !default; // 1
+$mdb-input-padding-xs-horizontal:     0 !default; // 5
+$mdb-btn-font-size-xs: 10px !default;
+
+.btn-xs,.btn-group-xs {
+    padding: 4px 15px;
+    font-size: $mdb-btn-font-size-xs;
+}
+
+.btn-default {
+  @include button-variant(theme-color('primary'), theme-color('primary'));
+}
+
+.input-group-text button, .input-group-text [type="button"], .input-group-text [type="reset"], .input-group-text [type="submit"] {
+    background: none;
+    border: none;
+    color: #607d8b;
+    width:100%;
+
+}
+
+
+.page-noauth, .page-requirePasswordChange {
+    background: url('/ignite-admin-theme/images/background.jpg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    
+    #main-content{
+            min-height: 100%;
+            min-height: 80vh;
+            margin-bottom:-50px
+    }
+	
+	.align-self-center{
+        min-height: 100%;
+        min-height: 80vh;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+    }
+
+
+     #login {
+        min-width:200px;
+        margin:5px;
+    }
+    @include media-breakpoint-up(md) {
+        column-count: 1;
+            #login {
+                min-width:450px;
+            }
+    }
+
+        
+    .col-form-label {
+        width:100%;
+        text-align:center;
+        background: #eee;
+        border: 1px solid $border-color;
+    }  
+}
+
+
+@include media-breakpoint-down(sm){
+    .btn + .btn,
+    .btn + .btn-group,
+    .btn-group + .btn,
+    .btn-group + .btn-group {
+      margin-top: -1px;
+      margin-left: 0;
+    }
+
+
+    .btn-group{
+      position: relative;
+      display: block;
+      vertical-align: middle;
+      margin: 0;
+      .btn {
+        display: block;
+        float: none;
+        max-width: 100%;
+
+      }
+      .btn:not(:first-child):not(:last-child) {
+        border-radius: 0;
+      }
+      .btn:first-child:not(:last-child) {
+        border-top-right-radius: 4px;
+        border-top-left-radius: 4px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+      .btn:last-child:not(:first-child) {
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+        border-bottom-right-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+
+    }
+    .btn-group:not(:first-child):not(:last-child) {
+      .btn {
+        border-radius: 0;
+      }
+    }
+
+    .btn-group:first-child:not(:last-child) {
+      .btn:last-child, .dropdown-toggle {
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+
+    .btn-group:last-child:not(:first-child) {
+      .btn:first-child {
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+      }
+    }
+}

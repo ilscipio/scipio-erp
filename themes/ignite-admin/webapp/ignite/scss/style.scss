@@ -1,0 +1,74 @@
+/*!
+ * CoreUI - Open Source Dashboard UI Kit
+ * @version v2.1.9
+ * @link https://coreui.io
+ * Copyright (c) 2018 creativeLabs Łukasz Holeczek
+ * Licensed under MIT (https://coreui.io/license)
+ */
+
+// Override Boostrap variables
+//@import "@coreui/coreui/scss/bootstrap";
+@import "@coreui/coreui/scss/variables";
+@import "bootstrap-variables";
+@import "custom-variables";
+
+// Import Bootstrap source files
+@import "@coreui/coreui/scss/bootstrap/bootstrap"; // from bootstrap node_modules
+
+// Mixins
+@import "@coreui/coreui/scss/mixins";
+
+// Animations
+@import "@coreui/coreui/scss/animate";
+
+// Vendors
+@import "@coreui/coreui/scss/vendors";
+
+// Components
+@import "@coreui/coreui/scss/aside";
+@import "@coreui/coreui/scss/avatars";
+@import "@coreui/coreui/scss/badge";
+@import "@coreui/coreui/scss/breadcrumb-menu";
+@import "@coreui/coreui/scss/breadcrumb";
+@import "@coreui/coreui/scss/brand-card";
+@import "@coreui/coreui/scss/brand-buttons";
+@import "@coreui/coreui/scss/button-group";
+@import "@coreui/coreui/scss/buttons";
+@import "@coreui/coreui/scss/callout";
+@import "@coreui/coreui/scss/card";
+@import "@coreui/coreui/scss/charts";
+@import "@coreui/coreui/scss/dropdown";
+@import "@coreui/coreui/scss/footer";
+@import "@coreui/coreui/scss/grid";
+@import "@coreui/coreui/scss/header";
+@import "@coreui/coreui/scss/input-group";
+@import "@coreui/coreui/scss/images";
+@import "@coreui/coreui/scss/list-group";
+@import "@coreui/coreui/scss/modal";
+@import "@coreui/coreui/scss/nav";
+@import "@coreui/coreui/scss/progress";
+@import "@coreui/coreui/scss/progress-group";
+@import "@coreui/coreui/scss/sidebar";
+@import "@coreui/coreui/scss/switches";
+@import "@coreui/coreui/scss/tables";
+@import "@coreui/coreui/scss/widgets";
+
+// Layout Options
+@import "@coreui/coreui/scss/layout";
+
+@import "@coreui/coreui/scss/others";
+
+// Utility classes
+@import "@coreui/coreui/scss/utilities";
+
+// Right-to-left
+@import "@coreui/coreui/scss/rtl";
+
+// Custom Properties support for Internet Explorer
+@import "@coreui/coreui/scss/ie-custom-properties";
+
+// temp fixes
+@import "@coreui/coreui/scss/fixes";
+
+// Custom styles
+@import "custom";

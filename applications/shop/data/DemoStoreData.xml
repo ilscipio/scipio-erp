@@ -45,7 +45,7 @@ code package.
         headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
         itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
         storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
-        visualThemeId="FOUNDATION_SHOP" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"
+        visualThemeId="IGNITE_SHOP" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"
         isContentReference="Y"/>
         <!-- SCIPIO: 2019-03-07: These now default to localized values in OrderEntityLabels.xml:
         authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."

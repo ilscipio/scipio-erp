@@ -1,0 +1,117 @@
+.ui-autocomplete {
+	position: absolute;
+	top: 0;
+	right: 0;
+    cursor: pointer;
+    background: #fff;
+    ul {
+        list-style-type:none;
+        padding:none;
+    }
+}
+
+.ui-helper-hidden-accessible{display:none}
+
+.ui-dialog {
+	overflow: hidden;
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: .2em;
+    outline: 0;
+    background: #fff;
+
+    h2 {
+        font-size: 1.2em;
+        margin-top:10px;
+    }
+
+    .row .row {
+        margin-bottom:0px;
+    }
+
+    .field-entry-widget{
+
+        select {
+             padding: 0.5rem 0.25rem;
+        }
+
+    }
+}
+
+/* Component containers
+----------------------------------*/
+.ui-widget {
+    z-index:9999 !important;
+    border: 1px solid $gray-lighter;
+}
+.ui-dialog-titlebar {
+    position:relative;
+    height:24px;
+}
+
+.ui-dialog-titlebar-close {
+  padding: 5px;
+  padding-top:0px;
+  margin-right:2px;
+  color: $gray !important;
+  font-weight:bold !important;
+  font-size:1.1em !important;
+  border:none;
+  background:none !important;
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+  float: right;
+  
+  &:hover{
+    background:none;
+    color: $gray-lighter !important;
+  }
+    
+}
+
+.ui-dialog-titlebar-close:after {
+  content:'X'; 
+  visibility: visible;
+  display: block;
+  padding: 5px;
+  padding-top:2px;
+  margin-left:2px;
+  color: $gray;
+  font-weight:bold;
+  font-size:1.1em;
+}
+
+
+.ui-widget .ui-widget {
+	font-size: 0.9em;
+}
+.ui-widget input,
+.ui-widget select,
+.ui-widget textarea,
+.ui-widget button {
+	font-size: 0.9em;
+}
+.ui-dialog-content {
+    background: #ffffff;
+    overflow:auto;
+    padding: 0 30px;
+    font-size:0.9em;
+
+
+
+    button {
+        @include button-variant(theme-color('primary'), theme-color('primary'));
+        @include button-size($btn-padding-y-sm, $btn-padding-x-sm, $btn-font-size-sm, $btn-line-height-sm, $btn-border-radius-sm);
+    }
+
+}
+.ui-widget-content a {
+}
+.ui-widget-header {
+    background: #f5f5f5;
+
+}
+.ui-widget-header a {
+}

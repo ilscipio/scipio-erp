@@ -94,6 +94,24 @@ public final class CommonWorkers {
         return geoList;
     }
 
+    // SCIPIO 2.1.0: Added new method to get specific countryGeoIds.
+    // Convenient while working with countriesExtraPreOptions/countriesExtraPostOptions in countries.ftl
+    public static List<GenericValue> getCountryList(Delegator delegator, List<String> countryGeoIds) {
+        List<GenericValue> countriesList = UtilMisc.newList();
+        try {
+            for (String countryGeoId : countryGeoIds) {
+                GenericValue country = EntityQuery.use(delegator).from("Geo").where("geoId", countryGeoId).cache(true).queryOne();
+                if (UtilValidate.isNotEmpty(country) && country.getString("geoTypeId").equals("COUNTRY")) {
+                    countriesList.add(country);
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot lookup Geo", module);
+        }
+
+        return countriesList;
+    }
+
     public static List<GenericValue> getStateList(Delegator delegator) {
         List<GenericValue> geoList = new LinkedList<>();
         EntityCondition condition = EntityCondition.makeCondition(EntityOperator.OR, EntityCondition.makeCondition("geoTypeId", "STATE"), EntityCondition.makeCondition("geoTypeId", "PROVINCE"), EntityCondition.makeCondition("geoTypeId", "TERRITORY"),

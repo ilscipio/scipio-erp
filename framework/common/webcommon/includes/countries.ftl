@@ -13,6 +13,10 @@ code package.
 <#assign countriesPreselectInline = countriesPreselect && !countriesPreselectFirst>
 <#assign countriesUseDefault = countriesUseDefault!true>
 <#assign selectedOption = {}>
+<#assign hasOptGroups = false>
+<#if (countriesExtraPreOptions?has_content || countriesExtraPostOptions?has_content) && useOptGroup!false>
+    <#assign hasOptGroups = true>
+</#if>
 <#macro countryOptions optionList>
   <#if optionList?has_content>
   <#list optionList as option>
@@ -50,20 +54,21 @@ code package.
             caller has to detect and handle (e.g.: <@render ... ctxVars={"currentCountryGeoId":parameters.countryGeoId!"NONE"} />) -->
         <option value=""<#if countriesPreselect && currentCountryGeoId?? && currentCountryGeoId == (countriesEmptyValue!"NONE")> selected="selected"</#if>></option>
   </#if>
-
-  <#if countriesExtraPreOptions?has_content && includeExtraOptionInOptGroup!false>
-      <optgroup>
+  <#if hasOptGroups>
+      <optgroup <#if optGroupLabels?has_content>label="${optGroupLabels['preLabel']!}"</#if>>
   </#if>
   <@countryOptions optionList=(countriesExtraPreOptions![]) />
-  <#if countriesExtraPreOptions?has_content && includeExtraOptionInOptGroup!false>
+  <#if hasOptGroups>
       </optgroup>
+      <optgroup <#if optGroupLabels?has_content>label="${optGroupLabels['mainLabel']!}"</#if>>
   </#if>
   <@countryOptions optionList=countries />
-  <#if countriesExtraPostOptions?has_content && includeExtraOptionInOptGroup!false>
-      <optgroup>
+  <#if hasOptGroups>
+      </optgroup>
+      <optgroup <#if optGroupLabels?has_content>label="${optGroupLabels['postLabel']!}"</#if>>
   </#if>
   <@countryOptions optionList=(countriesExtraPostOptions![]) />
-  <#if countriesExtraPostOptions?has_content && includeExtraOptionInOptGroup!false>
+  <#if hasOptGroups>
       </optgroup>
   </#if>
 </#assign>

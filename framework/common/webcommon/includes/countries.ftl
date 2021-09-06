@@ -43,15 +43,29 @@ code package.
   </#list>
   </#if>
 </#macro>
+
 <#assign countryMarkup>
   <#if (countriesAllowEmpty!false)>
-        <#-- SCIPIO: NOTE: we usually can't use actual empty value for this test, because of FTL empty vs null semantics when the current gets passed to this template... 
+        <#-- SCIPIO: NOTE: we usually can't use actual empty value for this test, because of FTL empty vs null semantics when the current gets passed to this template...
             caller has to detect and handle (e.g.: <@render ... ctxVars={"currentCountryGeoId":parameters.countryGeoId!"NONE"} />) -->
         <option value=""<#if countriesPreselect && currentCountryGeoId?? && currentCountryGeoId == (countriesEmptyValue!"NONE")> selected="selected"</#if>></option>
   </#if>
+
+  <#if countriesExtraPreOptions?has_content && includeExtraOptionInOptGroup!false>
+      <optgroup>
+  </#if>
   <@countryOptions optionList=(countriesExtraPreOptions![]) />
+  <#if countriesExtraPreOptions?has_content && includeExtraOptionInOptGroup!false>
+      </optgroup>
+  </#if>
   <@countryOptions optionList=countries />
+  <#if countriesExtraPostOptions?has_content && includeExtraOptionInOptGroup!false>
+      <optgroup>
+  </#if>
   <@countryOptions optionList=(countriesExtraPostOptions![]) />
+  <#if countriesExtraPostOptions?has_content && includeExtraOptionInOptGroup!false>
+      </optgroup>
+  </#if>
 </#assign>
 <#if countriesPreselectFirst && currentCountryGeoId?has_content && selectedOption?has_content>
         <option value="${selectedOption.optVal!}">${selectedOption.optLabel!}</option>

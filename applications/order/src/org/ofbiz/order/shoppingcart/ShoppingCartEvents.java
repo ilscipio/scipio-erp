@@ -110,8 +110,8 @@ public class ShoppingCartEvents {
             
             cartUpdate.commit(cart);
             }
+            request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resource, "OrderPromoAppliedSuccessfully", UtilMisc.toMap("productPromoCodeId", productPromoCodeId), locale));
         }
-        if(UtilValidate.isNotEmpty(productPromoCodeId)) request.setAttribute("_EVENT_MESSAGE_", UtilProperties.getMessage(resource, "OrderPromoAppliedSuccessfully", UtilMisc.toMap("productPromoCodeId", productPromoCodeId), locale));
         return "success";
     }
 

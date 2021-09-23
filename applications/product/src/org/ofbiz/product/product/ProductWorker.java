@@ -1149,7 +1149,9 @@ public final class ProductWorker {
      */
     public static GenericValue getParentProductAssoc(String productId, Delegator delegator, Timestamp moment, boolean useCache) { // SCIPIO: added useCache 2017-09-05
         if (productId == null) {
-            Debug.logWarning("Bad product id", module);
+            // SCIPIO: This only worsens it
+            //Debug.logWarning("Bad product id", module);
+            return null;
         }
 
         try {

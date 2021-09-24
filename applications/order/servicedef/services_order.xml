@@ -345,10 +345,12 @@ code package.
     <service name="populateBestSellingCategory" engine="java" location="com.ilscipio.scipio.order.OrderServices$PopulateBestSellingCategory" invoke="exec">
         <description>Populates a best-selling category with products based on sales total or quantity ordered</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderByType" type="String" mode="IN" optional="true" default-value="sales-total">
+        <attribute name="orderByType" type="String" mode="IN" optional="true" default-value="quantity-ordered">
             <description>Ordering criteria, one of (extensible by overriding services):
                 sales-total: use BestSellingProductsBySalesTotal view-entity or equivalent;
-                quantity-ordered: use BestSellingProductsByQuantityOrdered view-entity or equivalent</description>
+                quantity-ordered: use BestSellingProductsByQuantityOrdered view-entity or equivalent;
+                order-item-count: use BestSellingProductsByQuantityOrdered view-entity or equivalent;
+            </description>
         </attribute>
         <attribute name="productStoreIdList" type="List" mode="IN" optional="true">
             <description>Filter for OrderHeader.productStoreId</description>
@@ -357,8 +359,12 @@ code package.
             <description>Filter for OrderHeader.productStoreId</description>
         </attribute>
         <attribute name="filterCategoryId" type="String" mode="IN" optional="true">
-            <description>Only products belonging to this category are considered</description>
+            <description>Only products belonging to this category and sold from this category are considered, using OrderItem.productCategoryId</description>
         </attribute>
+        <attribute name="filterCategoryIdWithParents" type="String" mode="IN" optional="true">
+            <description>Only products belonging to this category or whose (virtual) parents are in the category or are considered</description>
+        </attribute>
+        <attribute name="filterSalesDiscDate" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="maxProducts" type="Integer" mode="IN" optional="true"/>
         <attribute name="orderDateStart" type="Timestamp" mode="IN" optional="true">
             <description>Absolute start date if specified</description>

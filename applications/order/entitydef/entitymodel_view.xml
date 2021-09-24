@@ -1834,4 +1834,22 @@ code package.
       <key-map field-name="orderId"/>
     </view-link>
   </view-entity>
+  <!-- SCIPIO: 2.1.0: Added -->
+  <view-entity entity-name="BestSellingProductsByOrderItemCount"
+               package-name="com.ilscipio.scipio.ce.order.stats"
+               never-cache="true"
+               title="Best Selling Products By Order Item Count"
+               alias-columns="true">
+    <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+    <member-entity entity-alias="OI" entity-name="OrderItem"/>
+    <alias-all entity-alias="OH" select="false"/>
+    <alias-all entity-alias="OI" select="false">
+      <exclude field="productId"/>
+    </alias-all>
+    <alias entity-alias="OI" name="productId" group-by="true"/>
+    <alias entity-alias="OI" name="orderItemCount" field="orderItemSeqId" function="count"/>
+    <view-link entity-alias="OI" rel-entity-alias="OH">
+      <key-map field-name="orderId"/>
+    </view-link>
+  </view-entity>
 </entitymodel>

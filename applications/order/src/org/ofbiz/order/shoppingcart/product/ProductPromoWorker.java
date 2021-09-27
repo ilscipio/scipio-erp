@@ -1768,7 +1768,7 @@ public final class ProductPromoWorker {
             BigDecimal percentage = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : (productPromoAction.getBigDecimal("amount").movePointLeft(2))).negate();
             BigDecimal amount = cart.getSubTotalForPromotions().multiply(percentage);
 
-            if (amount.compareTo(BigDecimal.ZERO) != 0) {
+            if (amount.compareTo(BigDecimal.ZERO) > 0) {
                 Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
                     BigDecimal discountAmountTotal = BigDecimal.ZERO;
@@ -1810,8 +1810,11 @@ public final class ProductPromoWorker {
                     doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
                     actionResultInfo.totalDiscountAmount = amount;
                 }
-                actionResultInfo.ranAction = true;
-
+                if (actionResultInfo.totalDiscountAmount.compareTo(BigDecimal.ZERO) > 0) {
+                    actionResultInfo.ranAction = true;
+                } else {
+                    actionResultInfo.ranAction = false;
+                }
             }
         } else if ("PROMO_ORDER_AMOUNT".equals(productPromoActionEnumId)) {
             BigDecimal amount = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : productPromoAction.getBigDecimal("amount")).negate();
@@ -1821,9 +1824,7 @@ public final class ProductPromoWorker {
                 amount = subTotal.negate();
             }
 
-
-
-            if (amount.compareTo(BigDecimal.ZERO) != 0) {
+            if (amount.compareTo(BigDecimal.ZERO) > 0) {
                 BigDecimal lineAmountTotal = BigDecimal.ZERO;
                 Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
@@ -1867,7 +1868,11 @@ public final class ProductPromoWorker {
                     doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
                     actionResultInfo.totalDiscountAmount = amount;
                 }
-                actionResultInfo.ranAction = true;
+                if (actionResultInfo.totalDiscountAmount.compareTo(BigDecimal.ZERO) > 0) {
+                    actionResultInfo.ranAction = true;
+                } else {
+                    actionResultInfo.ranAction = false;
+                }
             }
         } else if ("PROMO_PROD_SPPRC".equals(productPromoActionEnumId)) {
             // if there are productIds associated with the action then restrict to those productIds, otherwise apply for all products

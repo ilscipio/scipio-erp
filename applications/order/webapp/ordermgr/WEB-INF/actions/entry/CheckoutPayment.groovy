@@ -50,7 +50,7 @@ context.checkOutPaymentId = checkOutPaymentId;
 paymentMethodList = EntityUtil.filterByDate(party?.getRelated("PaymentMethod", null, ["paymentMethodTypeId"], false), true);
 context.paymentMethodList = paymentMethodList;
 
-billingAccountList = (party) ? BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher) : null; // SCIPIO: missing party check
+billingAccountList = (party && userLogin) ? BillingAccountWorker.makePartyBillingAccountList(userLogin, currencyUomId, partyId, delegator, dispatcher) : null; // SCIPIO: missing party check
 if (billingAccountList) {
     context.selectedBillingAccountId = cart.getBillingAccountId();
     context.billingAccountList = billingAccountList;

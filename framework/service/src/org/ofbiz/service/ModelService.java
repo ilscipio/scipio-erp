@@ -23,21 +23,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.AbstractMap;
-import java.util.AbstractSet;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.TimeZone;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.wsdl.Binding;
@@ -144,6 +130,14 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     // SCIPIO: Added 2019-01-31
     public static final List<String> COMMON_INTERNAL_IN_FIELDS = UtilMisc.unmodifiableArrayList("userLogin", "locale", "timeZone");
+
+    /**
+     * Stack overflow limit for interfaceUpdate.
+     * <p>SCIPIO: 2.1.0: Added for user-friendliness.</p>
+     */
+    private static final int IFC_MAXCALLS = 1000;
+
+    private static final ThreadLocal<Integer> IFC_CALLS = new ThreadLocal<>();
 
     /** The name of this service */
     public String name;
@@ -421,6 +415,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         this.startDelay = model.startDelay;
         this.accessorLocation = model.accessorLocation;
         this.accessorInvoke = model.accessorInvoke;
+        this.overriddenService = model.overriddenService;
     }
 
     @Override
@@ -1410,125 +1405,144 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public synchronized void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {
         if (!inheritedParameters) {
-            // SCIPIO: Also update overriddenService
-            if (overriddenService != null && !overriddenService.inheritedParameters) {
-                overriddenService.interfaceUpdate(dctx);
+            // SCIPIO: prevent stack overflows
+            Integer maxCalls = IFC_CALLS.get();
+            if (maxCalls != null && maxCalls > IFC_MAXCALLS) {
+                throw new GenericServiceException("Interface update stack overflow for service [" + name + "]; " +
+                        IFC_MAXCALLS + " calls reached");
             }
+            try {
+                IFC_CALLS.set(maxCalls != null ? maxCalls + 1 : 1);
 
-            // services w/ engine 'group' auto-implement the grouped services
-            if ("group".equals(this.engineName) && implServices.size() == 0) {
-                GroupModel group = internalGroup;
-                if (group == null) {
-                    group = ServiceGroupReader.getGroupModel(this.location);
+                // SCIPIO: Also update overriddenService
+                if (overriddenService != null && !overriddenService.inheritedParameters) {
+                    overriddenService.interfaceUpdate(dctx);
                 }
-                if (group != null) {
-                    for (GroupServiceModel sm: group.getServices()) {
-                        implServices.add(new ModelServiceIface(sm.getName(), sm.isOptional()));
-                        if (Debug.verboseOn()) Debug.logVerbose("Adding service [" + sm.getName() + "] as interface of: [" + this.name + "]", module);
+
+                // services w/ engine 'group' auto-implement the grouped services
+                if ("group".equals(this.engineName) && implServices.size() == 0) {
+                    GroupModel group = internalGroup;
+                    if (group == null) {
+                        group = ServiceGroupReader.getGroupModel(this.location);
+                    }
+                    if (group != null) {
+                        for (GroupServiceModel sm : group.getServices()) {
+                            implServices.add(new ModelServiceIface(sm.getName(), sm.isOptional()));
+                            if (Debug.verboseOn())
+                                Debug.logVerbose("Adding service [" + sm.getName() + "] as interface of: [" + this.name + "]", module);
+                        }
                     }
                 }
-            }
 
-            // handle interfaces
-            if (UtilValidate.isNotEmpty(implServices) && dctx != null) {
-                // SCIPIO: newImplServices strips the overriddenService from the definition (makeshift solution for now)
-                // so that other code that needs to process service defs don't get stuck in endless loop (compatilibyt)
-                Set<ModelServiceIface> newImplServices = new LinkedHashSet<>();
-                for (ModelServiceIface iface: implServices) {
-                    String serviceName = iface.getService();
-                    boolean optional = iface.isOptional();
+                // handle interfaces
+                if (UtilValidate.isNotEmpty(implServices) && dctx != null) {
+                    // SCIPIO: newImplServices strips the overriddenService from the definition (makeshift solution for now)
+                    // so that other code that needs to process service defs don't get stuck in endless loop (compatilibyt)
+                    Set<ModelServiceIface> newImplServices = new LinkedHashSet<>();
+                    for (ModelServiceIface iface : implServices) {
+                        String serviceName = iface.getService();
+                        boolean optional = iface.isOptional();
 
-                    // SCIPIO
-                    //ModelService model = dctx.getModelService(serviceName);
-                    ModelService model;
-                    if (overriddenService != null && serviceName.equals(overriddenService.name)) {
-                        model = overriddenService;
-                    } else {
-                        model = dctx.getModelService(serviceName);
-                        newImplServices.add(iface);
-                    }
-                    if (model != null) {
-                        for (ModelParam newParam: model.contextParamList) {
-                            ModelParam existingParam = this.contextInfo.get(newParam.name);
-                            if (existingParam != null) {
-                                // if the existing param is not INOUT and the newParam.mode is different from existingParam.mode, make the existing param optional and INOUT
-                                // TODO: this is another case where having different optional/required settings for IN and OUT would be quite valuable...
-                                if (!IN_OUT_PARAM.equals(existingParam.mode) && !existingParam.mode.equals(newParam.mode)) {
-                                    existingParam.mode = IN_OUT_PARAM;
-                                    if (existingParam.optional || newParam.optional) {
-                                        existingParam.optional = true;
+                        // SCIPIO
+                        //ModelService model = dctx.getModelService(serviceName);
+                        ModelService model;
+                        if (overriddenService != null && serviceName.equals(overriddenService.name)) {
+                            model = overriddenService;
+                        } else {
+                            model = dctx.getModelService(serviceName);
+                            newImplServices.add(iface);
+                        }
+                        if (model != null) {
+                            for (ModelParam newParam : model.contextParamList) {
+                                ModelParam existingParam = this.contextInfo.get(newParam.name);
+                                if (existingParam != null) {
+                                    // if the existing param is not INOUT and the newParam.mode is different from existingParam.mode, make the existing param optional and INOUT
+                                    // TODO: this is another case where having different optional/required settings for IN and OUT would be quite valuable...
+                                    if (!IN_OUT_PARAM.equals(existingParam.mode) && !existingParam.mode.equals(newParam.mode)) {
+                                        existingParam.mode = IN_OUT_PARAM;
+                                        if (existingParam.optional || newParam.optional) {
+                                            existingParam.optional = true;
+                                        }
                                     }
+                                } else {
+                                    ModelParam newParamClone = new ModelParam(newParam);
+                                    if (optional) {
+                                        // default option is to make this optional, however the service can override and
+                                        // force the clone to use the parents setting.
+                                        newParamClone.optional = true;
+                                    }
+                                    this.addParam(newParamClone);
                                 }
-                            } else {
-                                ModelParam newParamClone = new ModelParam(newParam);
-                                if (optional) {
-                                    // default option is to make this optional, however the service can override and
-                                    // force the clone to use the parents setting.
-                                    newParamClone.optional = true;
+                            }
+
+                            // SCIPIO: 2018-11-23: Inherit custom properties
+                            if (!model.properties.isEmpty()) {
+                                Map<String, Object> newProperties = new HashMap<>(model.properties);
+                                newProperties.putAll(this.properties);
+                                this.properties = Collections.unmodifiableMap(newProperties);
+                                if (Debug.verboseOn() && newProperties.size() > 0) {
+                                    Debug.logVerbose("Merged properties for service '" + this.name + "': " + newProperties, module);
                                 }
-                                this.addParam(newParamClone);
                             }
+                        } else {
+                            Debug.logWarning("Inherited model [" + serviceName + "] not found for [" + this.name + "]", module);
                         }
-                        
-                        // SCIPIO: 2018-11-23: Inherit custom properties
-                        if (!model.properties.isEmpty()) {
-                            Map<String, Object> newProperties = new HashMap<>(model.properties);
-                            newProperties.putAll(this.properties);
-                            this.properties = Collections.unmodifiableMap(newProperties);
-                            if (Debug.verboseOn() && newProperties.size() > 0) {
-                                Debug.logVerbose("Merged properties for service '" + this.name + "': " + newProperties, module);
-                            }
-                        }
-                    } else {
-                        Debug.logWarning("Inherited model [" + serviceName + "] not found for [" + this.name + "]", module);
+                    }
+                    if (newImplServices.size() != implServices.size()) {
+                        implServices = newImplServices;
                     }
                 }
-                if (newImplServices.size() != implServices.size()) {
-                    implServices = newImplServices;
-                }
-            }
 
-            // handle any override parameters
-            if (UtilValidate.isNotEmpty(overrideParameters)) {
-                for (ModelParam overrideParam: overrideParameters) {
-                    ModelParam existingParam = contextInfo.get(overrideParam.name);
+                // handle any override parameters
+                if (UtilValidate.isNotEmpty(overrideParameters)) {
+                    for (ModelParam overrideParam : overrideParameters) {
+                        ModelParam existingParam = contextInfo.get(overrideParam.name);
 
-                    // keep the list clean, remove it then add it back
-                    contextParamList.remove(existingParam);
+                        // keep the list clean, remove it then add it back
+                        contextParamList.remove(existingParam);
 
-                    if (existingParam != null) {
-                        // now re-write the parameters
-                        if (UtilValidate.isNotEmpty(overrideParam.type)) {
-                            existingParam.type = overrideParam.type;
+                        if (existingParam != null) {
+                            // now re-write the parameters
+                            if (UtilValidate.isNotEmpty(overrideParam.type)) {
+                                existingParam.type = overrideParam.type;
+                            }
+                            if (UtilValidate.isNotEmpty(overrideParam.mode)) {
+                                existingParam.mode = overrideParam.mode;
+                            }
+                            if (UtilValidate.isNotEmpty(overrideParam.entityName)) {
+                                existingParam.entityName = overrideParam.entityName;
+                            }
+                            if (UtilValidate.isNotEmpty(overrideParam.fieldName)) {
+                                existingParam.fieldName = overrideParam.fieldName;
+                            }
+                            if (UtilValidate.isNotEmpty(overrideParam.formLabel)) {
+                                existingParam.formLabel = overrideParam.formLabel;
+                            }
+                            if (overrideParam.getDefaultValue() != null) {
+                                existingParam.copyDefaultValue(overrideParam);
+                            }
+                            if (overrideParam.overrideFormDisplay) {
+                                existingParam.formDisplay = overrideParam.formDisplay;
+                            }
+                            if (overrideParam.overrideOptional) {
+                                existingParam.optional = overrideParam.optional;
+                            }
+                            if (UtilValidate.isNotEmpty(overrideParam.allowHtml)) {
+                                existingParam.allowHtml = overrideParam.allowHtml;
+                            }
+                            addParam(existingParam);
+                        } else {
+                            Debug.logWarning("Override param found but no parameter existing; ignoring: " + overrideParam.name, module);
                         }
-                        if (UtilValidate.isNotEmpty(overrideParam.mode)) {
-                            existingParam.mode = overrideParam.mode;
-                        }
-                        if (UtilValidate.isNotEmpty(overrideParam.entityName)) {
-                            existingParam.entityName = overrideParam.entityName;
-                        }
-                        if (UtilValidate.isNotEmpty(overrideParam.fieldName)) {
-                            existingParam.fieldName = overrideParam.fieldName;
-                        }
-                        if (UtilValidate.isNotEmpty(overrideParam.formLabel)) {
-                            existingParam.formLabel = overrideParam.formLabel;
-                        }
-                        if (overrideParam.getDefaultValue() != null) {
-                            existingParam.copyDefaultValue(overrideParam);
-                        }
-                        if (overrideParam.overrideFormDisplay) {
-                            existingParam.formDisplay = overrideParam.formDisplay;
-                        }
-                        if (overrideParam.overrideOptional) {
-                            existingParam.optional = overrideParam.optional;
-                        }
-                        if (UtilValidate.isNotEmpty(overrideParam.allowHtml)) {
-                            existingParam.allowHtml = overrideParam.allowHtml;
-                        }
-                        addParam(existingParam);
-                    } else {
-                        Debug.logWarning("Override param found but no parameter existing; ignoring: " + overrideParam.name, module);
                     }
+                }
+
+            } finally {
+                // SCIPIO
+                if (maxCalls != null) {
+                    IFC_CALLS.set(maxCalls);
+                } else {
+                    IFC_CALLS.remove();
                 }
             }
 
@@ -2509,6 +2523,26 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     public ModelService getOverriddenService() {
         return overriddenService;
+    }
+
+    /**
+     * SCIPIO: Sets the service this one overrode, or null, or updates the parent overridden
+     * service if already set - intended for loading only.
+     * <p>This exists because the initial overriddenService is null when it comes from
+     * another services xml file, but if there is both a service in a separate file and the
+     * same, then you have to update the correct service back-pointer.</p>
+     */
+    protected void updateOverriddenService(ModelService overriddenService) {
+        ModelService prevOverriddenService = this.overriddenService;
+        if (prevOverriddenService != null) {
+            prevOverriddenService.updateOverriddenService(overriddenService);
+        } else {
+            this.overriddenService = overriddenService;
+            Debug.logInfo("Service [" + name +
+                    "] redefinition: previous: [" + Objects.hashCode(overriddenService) + ", " +
+                    overriddenService.contextParamList.size() + " params]; new: [" + Objects.hashCode(this) + ", " +
+                    contextParamList.size() + " params]", module);
+        }
     }
 
     /**

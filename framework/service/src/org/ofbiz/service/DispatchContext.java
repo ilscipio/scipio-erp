@@ -19,13 +19,7 @@
 package org.ofbiz.service;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
@@ -371,7 +365,7 @@ public class DispatchContext implements Serializable {
     private Map<String, ModelService> getGlobalServiceMap() {
         Map<String, ModelService> serviceMap = modelServiceMapByModel.get(this.model);
         if (serviceMap == null) {
-            serviceMap = new HashMap<>();
+            serviceMap = new LinkedHashMap<>(); // SCIPIO: Switched to LinkedHashMap: new HashMap<>()
 
             List<Future<Map<String, ModelService>>> futures = new ArrayList<>(); // SCIPIO: switched to ArrayList: new LinkedList<>()
             List<GlobalServices> globalServicesList = null;
@@ -393,7 +387,17 @@ public class DispatchContext implements Serializable {
             }
             for (Map<String, ModelService> servicesMap: ExecutionPool.getAllFutures(futures)) {
                 if (servicesMap != null) {
-                    serviceMap.putAll(servicesMap);
+                    // SCIPIO: 2.1.0: Check duplicates for overriddenService
+                    //serviceMap.putAll(servicesMap);
+                    for(Map.Entry<String, ModelService> servicesEntry : servicesMap.entrySet()) {
+                         String serviceName = servicesEntry.getKey();
+                         ModelService modelService = servicesEntry.getValue();
+                         ModelService prevModelService = serviceMap.get(serviceName);
+                         if (prevModelService != null) {
+                             modelService.updateOverriddenService(prevModelService);
+                         }
+                         serviceMap.put(serviceName, modelService);
+                    }
                 }
             }
 

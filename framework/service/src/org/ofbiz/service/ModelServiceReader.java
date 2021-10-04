@@ -175,7 +175,11 @@ public class ModelServiceReader implements Serializable {
         return modelServices;
     }
 
-    private ModelService createModelService(Element serviceElement, String resourceLocation, ModelService overriddenService) { // SCIPIO: added overriddenService
+    /**
+     * createModelService.
+     * <p>SCIPIO: 2.1.0: Added overriddenService here - NOTE: MAY BE NULL - rechecked in {@link DispatchContext#getGlobalServiceMap()}</p>>
+     */
+    private ModelService createModelService(Element serviceElement, String resourceLocation, ModelService overriddenService) {
         ModelService service = new ModelService();
 
         service.name = UtilXml.checkEmpty(serviceElement.getAttribute("name")).intern();
@@ -316,7 +320,9 @@ public class ModelServiceReader implements Serializable {
             ((ArrayList<ModelPermGroup>) service.permissionGroups).trimToSize();
         }
 
-        service.overriddenService = overriddenService; // SCIPIO
+        if (overriddenService != null) {
+            service.updateOverriddenService(overriddenService); // SCIPIO
+        }
 
         // SCIPIO
         String priorityStr = serviceElement.getAttribute("priority");

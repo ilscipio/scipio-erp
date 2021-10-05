@@ -385,6 +385,7 @@ code package.
                 remove: remove old records;
                 preserve: ignore old records (faster)</description>
         </attribute>
+        <attribute name="logEvery" type="Integer" mode="IN" optional="true" default-value="50"/>
     </service>
 
 </services>

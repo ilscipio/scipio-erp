@@ -51,6 +51,7 @@ public abstract class OrderServices {
         protected boolean removeOld = "remove".equals(ctx.attr("removeMode"));
         protected boolean createNew = "create".equals(ctx.attr("updateMode"));
         protected boolean filterSalesDiscDate = ctx.attr("filterSalesDiscDate", true);
+        protected Integer logEvery;
 
         public PopulateBestSellingCategory(ServiceContext ctx) throws GeneralException {
             super(ctx);
@@ -82,6 +83,7 @@ public abstract class OrderServices {
             this.orderDateEnd = orderDateEnd;
             this.filterCategoryId = ctx.attr("filterCategoryId");
             this.filterCategoryIdWithParents = ctx.attr("filterCategoryIdWithParents");
+            this.logEvery = ctx.attr("logEvery");
         }
 
         public Map<String, Object> exec() throws ServiceValidationException {
@@ -135,6 +137,7 @@ public abstract class OrderServices {
 
             Iterator<? extends Map<String, Object>> prodIt = null;
             try {
+                Debug.logInfo("Beginning query on category [" + productCategoryId + "]", module);
                 prodIt = UtilMisc.asIterator(getProducts());
                 Integer maxProducts = ctx.attr("maxProducts");
                 Map<String, Object> productEntry;
@@ -151,6 +154,9 @@ public abstract class OrderServices {
                     sequenceNum++;
                     if (pcm != null) {
                         productCount++;
+                    }
+                    if (logEvery != null && (sequenceNum % logEvery == 0)) {
+                        Debug.logInfo("Visited " + sequenceNum + " records, added " + productCount + " products", module);
                     }
                 }
             } catch(GeneralException e) {
@@ -347,12 +353,13 @@ public abstract class OrderServices {
         }
 
         protected boolean hasCategoryIdWithParents(ProductInfo info) throws GeneralException {
-            return hasCategoryIdWithParents(info.getProductId(), info.getProduct());
+            return hasCategoryIdWithParents(info.getProductId(), info.getProduct(), filterCategoryIdWithParents);
         }
 
-        protected boolean hasCategoryIdWithParents(String productId, Map<String, Object> product) throws GeneralException {
+        protected boolean hasCategoryIdWithParents(String productId, Map<String, Object> product,
+                                                   String filterCatId) throws GeneralException {
             if (ctx.delegator().from("ProductCategoryMember")
-                    .where("productCategoryId", productCategoryId, "productId", productId)
+                    .where("productCategoryId", filterCatId, "productId", productId)
                     .filterByDate(nowTimestamp).queryCount() > 0) {
                 return true;
             }
@@ -365,7 +372,7 @@ public abstract class OrderServices {
             }
             String parentProductId = getParentProductId(productId, product);
             if (parentProductId != null) {
-                return hasCategoryIdWithParents(parentProductId, null);
+                return hasCategoryIdWithParents(parentProductId, null, filterCatId);
             }
             return false;
         }

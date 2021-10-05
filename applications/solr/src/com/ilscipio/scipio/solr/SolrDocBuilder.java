@@ -860,6 +860,7 @@ public class SolrDocBuilder {
             doc.put("cat", getCategoryTrails());
             doc.put("ownCat_ss", getOwnCategoryTrails());
             doc.put("catalog", getCatalogIds());
+            putCategorySequenceNums(doc, "catSeq_", "_i");
             checkStoresAndCatalogs();
         }
 
@@ -965,7 +966,7 @@ public class SolrDocBuilder {
                 if ("_total_".equals(entry.getKey())) {
                     doc.put("inStock", entry.getValue().toBigInteger().intValue());
                 } else {
-                    String fieldName = "storeStock_" + SolrExprUtil.escapeFieldNamePart(entry.getKey()) + "_pi";
+                    String fieldName = makeStoreStockFieldName(entry.getKey());
                     if (doc.containsKey(fieldName)) {
                         Debug.logError("Solr: DATA ERROR - DUPLICATE PRODUCT STORE storeStock_ VARIABLE DETECTED (" + fieldName
                                 + ", for productStoreId '" + entry.getKey() + "') - productStoreId clash - Solr cannot index data for this store!"
@@ -973,10 +974,16 @@ public class SolrDocBuilder {
                                 + " too similar so they cannot be uniquely represented in the Solr schema field names."
                                 + " You will need to change the ID of one of the ProductStores and reindex using rebuildSolrIndex.", module);
                     } else {
-                        doc.put(fieldName, entry.getValue().toBigInteger().intValue());
+                        int value = entry.getValue().toBigInteger().intValue();
+                        doc.put(fieldName, value);
                     }
                 }
             }
+        }
+
+        public String makeStoreStockFieldName(String productStoreId) {
+            // TODO: change to _i (clients can override again for backward support)
+            return "storeStock_" + SolrExprUtil.escapeFieldNamePart(productStoreId) + "_pi";
         }
 
         public void populateDocInventoryStatus(Map<String, Object> doc) throws GeneralException {
@@ -1309,6 +1316,18 @@ public class SolrDocBuilder {
                 this.categoryTrails = UtilGenerics.cast(categoryTrails);
             }
             return categoryTrails;
+        }
+
+        public void putCategorySequenceNums(Map<String, Object> doc, String namePrefix, String nameSuffix) throws GeneralException {
+            List<GenericValue> pcmList = getProductCategoryMembers();
+            if (pcmList != null) {
+                for(GenericValue pcm : pcmList) {
+                    Long sequenceNum = pcm.getLong("sequenceNum");
+                    if (sequenceNum != null) {
+                        doc.put(namePrefix + SolrExprUtil.escapeFieldNamePart(pcm.getString("productCategoryId")) + nameSuffix, sequenceNum.intValue());
+                    }
+                }
+            }
         }
 
         public String getProductTypeId() throws GeneralException {

@@ -128,7 +128,7 @@
                 <@field type="input" label=uiLabelMap.lotId name="lotId" size="10"/>
 
                 <#-- facility location(s) -->
-                <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", {"facilityId":facilityId}, null, false))!/>
+                <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", {"facilityId":facilityId}, ["createdStamp"], false))!/>
                 <@field type="generic" label=uiLabelMap.ProductFacilityLocation>
                     <#if facilityLocations?has_content>
                         <@field type="select" name="locationSeqId">

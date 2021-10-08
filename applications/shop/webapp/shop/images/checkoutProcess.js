@@ -677,8 +677,12 @@ function processOrder() {
 }
 function getAssociatedBillingStateList(formName, divId) {
     var optionList = [];
+    var requestToSend = 'getAssociatedStateList';
+    if (typeof getOfbizUrl === 'function') {
+        requestToSend = getOfbizUrl(requestToSend, requestToSend);
+    }
     jQuery.ajax({
-        url: "getAssociatedStateList",
+        url: requestToSend,
         data: jQuery(formName).serialize(),
         async: false,
         success: function(transport) {

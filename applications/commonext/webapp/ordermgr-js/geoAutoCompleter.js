@@ -21,8 +21,12 @@ function getCountryList() {
     countryTargetField = jQuery('#shipToCountryGeo');
     countryDivToPopulate = jQuery('#shipToCountries');
     countryHiddenTarget = jQuery('#shipToCountryGeoId');
+    var requestToSend = 'getCountryList';
+    if (typeof getOfbizUrl === 'function') {
+        requestToSend = getOfbizUrl(requestToSend, requestToSend);
+    }
     jQuery.ajax({
-        url: "getCountryList",
+        url: requestToSend,
         type: "POST",
         async: false,
         success: callCountryAutocompleter
@@ -44,8 +48,12 @@ function getAssociatedStateListForAutoComplete() {
     stateTargetField = jQuery('#shipToStateProvinceGeo');
     stateDivToPopulate = jQuery('#shipToStates');
     stateHiddenTarget = jQuery('#shipToStateProvinceGeoId');
+    var requestToSend = 'getAssociatedStateList';
+    if (typeof getOfbizUrl === 'function') {
+        requestToSend = getOfbizUrl(requestToSend, requestToSend);
+    }
     return jQuery.ajax({
-        url: "getAssociatedStateList",
+        url: requestToSend,
         type: "POST",
         data: jQuery('#shippingForm').serialize(),
         async: false,
@@ -89,9 +97,9 @@ function getAssociatedStateListEx(options) {
     var divId = options.divId;
     
     var countryGeoId = jQuery("#" + countryId).val();
-    var requestToSend = "getAssociatedStateList";
-    if (jQuery('#orderViewed').length) {
-        requestToSend = "/ordermgr/control/getAssociatedStateList"
+    var requestToSend = 'getAssociatedStateList';
+    if (typeof getOfbizUrl === 'function') {
+        requestToSend = getOfbizUrl(requestToSend, requestToSend);
     }
     // SCIPIO: check for async
     var async = true;

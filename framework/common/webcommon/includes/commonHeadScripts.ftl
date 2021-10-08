@@ -7,16 +7,19 @@
             <@requireScriptOfbizUrl uri="getJSONuiLabel" onlyIfExists=true/>
             <#-- This belongs in @progressScript, but Ofbiz FTL bug requires it here -->
             <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" onlyIfExists=true/>
+            <@requireScriptOfbizUrl uri="getCountryList" onlyIfExists=true/>
+            <@requireScriptOfbizUrl uri="getAssociatedStateList" onlyIfExists=true/>
 
             <@utilCache cacheName="commonHeadScripts.ftl" key="general::${globalContext.visualThemeId!}" expireTime=86400000>
 
                 <#-- NOTE: a screen that needs a URL in JS must call @requireScriptOfbizUrl
                      FTL macro, for now, see htmlUtilities.ftl -->
-                function getOfbizUrl(url) {
-                    if (url in commonOfbizUrls) {
+                function getOfbizUrl(url, defUrl) {
+                    if ((typeof commonOfbizUrls === 'object') && (url in commonOfbizUrls)) {
                         return commonOfbizUrls[url];
-                    }
-                    else {
+                    } else if (typeof defUrl !== 'undefined') {
+                        return defUrl;
+                    } else {
                         return "";
                     }
                 }

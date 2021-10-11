@@ -62,10 +62,12 @@ under the License.
             <xs:annotation>
                 <xs:documentation>
                     Controller location, in component:// notation.
-                    SCIPIO: 2018-11-08: Now supports wildcard component using:
-                      component://*/somefile.xxx
-                    This includes the named file from each component, following the load order; only makes sense with optional="true".
-                    (NOTE: At current time, only component name can be wildcarded)
+                    SCIPIO: 2.1.0: Now supports wildcard component name in the form:
+                        component://*/somefile.xxx
+                    This includes the named file from each component, following the load order; optional="true" must
+                    always be specified, and now supports order="pre-local" and order="post-local". e.g.:
+                    * location="component://*/webapp/hooks/ordermgr-controller-pre.xml" optional="true" order="pre-local"
+                    * location="component://*/webapp/hooks/ordermgr-controller-post.xml" optional="true" order="post-local"
                 </xs:documentation>
             </xs:annotation>
         </xs:attribute>

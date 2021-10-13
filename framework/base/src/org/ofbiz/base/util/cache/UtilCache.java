@@ -244,60 +244,88 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return (cachedValue != null? cachedValue: value);
     }
 
-    CacheLine<V> createSoftRefCacheLine(final Object key, V value, long loadTimeNanos, long expireTimeNanos) {
-        return tryRegister(loadTimeNanos, new SoftRefCacheLine<V>(value, loadTimeNanos, expireTimeNanos) {
+    /**
+     * Creates soft-ref cache line.
+     * <p>SCIPIO: 2.1.0: Added registerPulse to allow caller to defer the registration on initial creation.</p>
+     */
+    CacheLine<V> createSoftRefCacheLine(final Object key, V value, long loadTimeNanos, long expireTimeNanos, boolean registerPulse) {
+        CacheLine<V> cacheLine = new SoftRefCacheLine<V>(value, loadTimeNanos, expireTimeNanos) {
             @Override
             CacheLine<V> changeLine(boolean useSoftReference, long expireTimeNanos) {
                 if (useSoftReference) {
                     if (differentExpireTime(expireTimeNanos)) {
                         return this;
                     }
-                    return createSoftRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos);
+                    return createSoftRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos, true);
                 }
-                return createHardRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos);
+                return createHardRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos, true);
             }
 
             @Override
             void remove() {
                 removeInternal(key, this);
             }
-        });
+        };
+        if (registerPulse) {
+            tryRegister(cacheLine);
+        }
+        return cacheLine;
     }
 
-    CacheLine<V> createHardRefCacheLine(final Object key, V value, long loadTimeNanos, long expireTimeNanos) {
-        return tryRegister(loadTimeNanos, new HardRefCacheLine<V>(value, loadTimeNanos, expireTimeNanos) {
+    /**
+     * Creates soft-ref cache line.
+     * <p>SCIPIO: 2.1.0: Added registerPulse to allow caller to defer the registration on initial creation.</p>
+     */
+    CacheLine<V> createHardRefCacheLine(final Object key, V value, long loadTimeNanos, long expireTimeNanos, boolean registerPulse) {
+        CacheLine<V> cacheLine = new HardRefCacheLine<V>(value, loadTimeNanos, expireTimeNanos) {
             @Override
             CacheLine<V> changeLine(boolean useSoftReference, long expireTimeNanos) {
                 if (useSoftReference) {
-                    return createSoftRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos);
+                    return createSoftRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos, true);
                 }
                 if (differentExpireTime(expireTimeNanos)) {
                     return this;
                 }
-                return createHardRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos);
+                return createHardRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos, true);
             }
 
             @Override
             void remove() {
                 removeInternal(key, this);
             }
-        });
+        };
+        if (registerPulse) {
+            tryRegister(cacheLine);
+        }
+        return cacheLine;
     }
 
-    private CacheLine<V> tryRegister(long loadTimeNanos, CacheLine<V> line) {
-        if (loadTimeNanos > 0) {
+    /**
+     * Registers the cache line as execution pulse for delayed removal if enabled.
+     * <p>SCIPIO: 2.1.0: Removed loadTimeNanos parameter since already recorded in cache line.</p>
+     */
+    private CacheLine<V> tryRegister(CacheLine<V> line) {
+        if (line.getLoadTimeNanos() > 0) {
             ExecutionPool.addPulse(line);
         }
         return line;
     }
 
-    private CacheLine<V> createCacheLine(K key, V value, long expireTimeNanos) {
+    /**
+     * Creates cache line.
+     * <p>SCIPIO: 2.1.0: To avoid pulses expiring before the cache line is added to memoryTable, this has been split
+     * so that the initial cache line creation defers the tryRegister() call to after the memoryTable put calls;
+     * this also avoids putIfAbsent unnecessarily adding execution pulses that are never actually added to memoryTable.
+     * registerPulse new parameter controls the initial registry, now deferred by caller.</p>
+     */
+    private CacheLine<V> createCacheLine(K key, V value, long expireTimeNanos, boolean registerPulse) {
         long loadTimeNanos = expireTimeNanos > 0 ? System.nanoTime() : 0;
         if (useSoftReference) {
-            return createSoftRefCacheLine(key, value, loadTimeNanos, expireTimeNanos);
+            return createSoftRefCacheLine(key, value, loadTimeNanos, expireTimeNanos, registerPulse);
         }
-        return createHardRefCacheLine(key, value, loadTimeNanos, expireTimeNanos);
+        return createHardRefCacheLine(key, value, loadTimeNanos, expireTimeNanos, registerPulse);
     }
+
     private V cancel(CacheLine<V> line) {
         // FIXME: this is a race condition, the item could expire
         // between the time it is replaced, and it is cancelled
@@ -327,7 +355,10 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     V putInternal(K key, V value, long expireTimeNanos) {
         if (!enabled) return null; // SCIPIO: 2018-03: no-op
         Object nulledKey = fromKey(key);
-        CacheLine<V> oldCacheLine = memoryTable.put(nulledKey, createCacheLine(key, value, expireTimeNanos));
+        // SCIPIO: 2.1.0: Now defer the initial pulse register to after memoryTable.put (see createCacheLine)
+        CacheLine<V> newCacheLine = createCacheLine(key, value, expireTimeNanos, false);
+        CacheLine<V> oldCacheLine = memoryTable.put(nulledKey, newCacheLine);
+        tryRegister(newCacheLine);
         V oldValue = oldCacheLine == null ? null : cancel(oldCacheLine);
         if (oldValue == null) {
             noteAddition(key, value);
@@ -341,13 +372,17 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         if (!enabled) return null; // SCIPIO: 2018-03: no-op
         Object nulledKey = fromKey(key);
         V oldValue;
-        CacheLine<V> newCacheLine = createCacheLine(key, value, expireTimeNanos);
+        // SCIPIO: 2.1.0: Now defer the initial pulse register to after memoryTable.put (see createCacheLine)
+        CacheLine<V> newCacheLine = createCacheLine(key, value, expireTimeNanos, false);
         CacheLine<V> oldCacheLine = memoryTable.putIfAbsent(nulledKey, newCacheLine);
         if (oldCacheLine == null) {
             oldValue = null;
+            // SCIPIO: 2.1.0: As above, now simply run tryRegister() here after the line is actually added
+            tryRegister(newCacheLine);
         } else {
             oldValue = oldCacheLine.getValue();
-            cancel(newCacheLine);
+            // SCIPIO: 2.1.0: As above, there is no longer need to cancel the cache line since it was never registered.
+            //cancel(newCacheLine);
         }
         if (oldValue == null) {
             noteAddition(key, value);

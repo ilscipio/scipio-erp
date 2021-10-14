@@ -246,19 +246,20 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     /**
      * Creates soft-ref cache line.
-     * <p>SCIPIO: 2.1.0: Added registerPulse to allow caller to defer the registration on initial creation.</p>
+     * <p>SCIPIO: 2.1.0: Now omits registering pulses, which is left to callers to do after adding to memortyTable
+     * via {@link #tryRegister(CacheLine)}.</p>
      */
-    CacheLine<V> createSoftRefCacheLine(final Object key, V value, long loadTimeNanos, long expireTimeNanos, boolean registerPulse) {
-        CacheLine<V> cacheLine = new SoftRefCacheLine<V>(value, loadTimeNanos, expireTimeNanos) {
+    CacheLine<V> createSoftRefCacheLine(final Object key, V value, long loadTimeNanos, long expireTimeNanos) {
+        return new SoftRefCacheLine<V>(value, loadTimeNanos, expireTimeNanos) {
             @Override
             CacheLine<V> changeLine(boolean useSoftReference, long expireTimeNanos) {
                 if (useSoftReference) {
                     if (differentExpireTime(expireTimeNanos)) {
                         return this;
                     }
-                    return createSoftRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos, true);
+                    return createSoftRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos);
                 }
-                return createHardRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos, true);
+                return createHardRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos);
             }
 
             @Override
@@ -266,27 +267,24 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
                 removeInternal(key, this);
             }
         };
-        if (registerPulse) {
-            tryRegister(cacheLine);
-        }
-        return cacheLine;
     }
 
     /**
      * Creates soft-ref cache line.
-     * <p>SCIPIO: 2.1.0: Added registerPulse to allow caller to defer the registration on initial creation.</p>
+     * <p>SCIPIO: 2.1.0: Now omits registering pulses, which is left to callers to do after adding to memortyTable
+     * via {@link #tryRegister(CacheLine)}.</p>
      */
-    CacheLine<V> createHardRefCacheLine(final Object key, V value, long loadTimeNanos, long expireTimeNanos, boolean registerPulse) {
-        CacheLine<V> cacheLine = new HardRefCacheLine<V>(value, loadTimeNanos, expireTimeNanos) {
+    CacheLine<V> createHardRefCacheLine(final Object key, V value, long loadTimeNanos, long expireTimeNanos) {
+        return new HardRefCacheLine<V>(value, loadTimeNanos, expireTimeNanos) {
             @Override
             CacheLine<V> changeLine(boolean useSoftReference, long expireTimeNanos) {
                 if (useSoftReference) {
-                    return createSoftRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos, true);
+                    return createSoftRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos);
                 }
                 if (differentExpireTime(expireTimeNanos)) {
                     return this;
                 }
-                return createHardRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos, true);
+                return createHardRefCacheLine(key, getValue(), loadTimeNanos, expireTimeNanos);
             }
 
             @Override
@@ -294,10 +292,6 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
                 removeInternal(key, this);
             }
         };
-        if (registerPulse) {
-            tryRegister(cacheLine);
-        }
-        return cacheLine;
     }
 
     /**
@@ -314,16 +308,16 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     /**
      * Creates cache line.
      * <p>SCIPIO: 2.1.0: To avoid pulses expiring before the cache line is added to memoryTable, this has been split
-     * so that the initial cache line creation defers the tryRegister() call to after the memoryTable put calls;
+     * so that the initial cache line creation defers the {@link #tryRegister(CacheLine)} call to after the memoryTable put calls;
      * this also avoids putIfAbsent unnecessarily adding execution pulses that are never actually added to memoryTable.
      * registerPulse new parameter controls the initial registry, now deferred by caller.</p>
      */
-    private CacheLine<V> createCacheLine(K key, V value, long expireTimeNanos, boolean registerPulse) {
+    private CacheLine<V> createCacheLine(K key, V value, long expireTimeNanos) {
         long loadTimeNanos = expireTimeNanos > 0 ? System.nanoTime() : 0;
         if (useSoftReference) {
-            return createSoftRefCacheLine(key, value, loadTimeNanos, expireTimeNanos, registerPulse);
+            return createSoftRefCacheLine(key, value, loadTimeNanos, expireTimeNanos);
         }
-        return createHardRefCacheLine(key, value, loadTimeNanos, expireTimeNanos, registerPulse);
+        return createHardRefCacheLine(key, value, loadTimeNanos, expireTimeNanos);
     }
 
     private V cancel(CacheLine<V> line) {
@@ -356,7 +350,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         if (!enabled) return null; // SCIPIO: 2018-03: no-op
         Object nulledKey = fromKey(key);
         // SCIPIO: 2.1.0: Now defer the initial pulse register to after memoryTable.put (see createCacheLine)
-        CacheLine<V> newCacheLine = createCacheLine(key, value, expireTimeNanos, false);
+        CacheLine<V> newCacheLine = createCacheLine(key, value, expireTimeNanos);
         CacheLine<V> oldCacheLine = memoryTable.put(nulledKey, newCacheLine);
         tryRegister(newCacheLine);
         V oldValue = oldCacheLine == null ? null : cancel(oldCacheLine);
@@ -373,7 +367,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         Object nulledKey = fromKey(key);
         V oldValue;
         // SCIPIO: 2.1.0: Now defer the initial pulse register to after memoryTable.put (see createCacheLine)
-        CacheLine<V> newCacheLine = createCacheLine(key, value, expireTimeNanos, false);
+        CacheLine<V> newCacheLine = createCacheLine(key, value, expireTimeNanos);
         CacheLine<V> oldCacheLine = memoryTable.putIfAbsent(nulledKey, newCacheLine);
         if (oldCacheLine == null) {
             oldValue = null;
@@ -713,7 +707,10 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         if (expireTimeMillis > 0) {
             this.expireTimeNanos = TimeUnit.NANOSECONDS.convert(expireTimeMillis, TimeUnit.MILLISECONDS);
             for (Map.Entry<?, CacheLine<V>> entry: memoryTable.entrySet()) {
-                entry.setValue(entry.getValue().changeLine(useSoftReference, expireTimeNanos));
+                // SCIPIO: 2.1.0: Defer pulse registration following memoryTable update
+                CacheLine<V> newCacheLine = entry.getValue().changeLine(useSoftReference, expireTimeNanos);
+                entry.setValue(newCacheLine);
+                tryRegister(newCacheLine);
             }
         } else {
             this.expireTimeNanos = 0;
@@ -733,7 +730,10 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         if (this.useSoftReference != useSoftReference) {
             this.useSoftReference = useSoftReference;
             for (Map.Entry<?, CacheLine<V>> entry: memoryTable.entrySet()) {
-                entry.setValue(entry.getValue().changeLine(useSoftReference, expireTimeNanos));
+                // SCIPIO: 2.1.0: Defer pulse registration following memoryTable update
+                CacheLine<V> newCacheLine = entry.getValue().changeLine(useSoftReference, expireTimeNanos);
+                entry.setValue(newCacheLine);
+                tryRegister(newCacheLine);
             }
         }
     }

@@ -20,9 +20,7 @@ package org.ofbiz.base.util;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import org.ofbiz.base.util.PropertyMessageEx.SettablePropertyMessageEx;
 
@@ -54,24 +52,33 @@ public class GeneralException extends Exception implements SettablePropertyMessa
     }
 
     /**
-     * SCIPIO: a PropertyMessage version of the main exception message.
+     * A PropertyMessage version of the main exception message.
+     * <p>SCIPIO: 2.0.0: Added earlier.</p>
      */
-    private PropertyMessage propertyMessage = null;
+    private PropertyMessage propertyMessage;
+
     /**
      * Additional messages, that work in service-like manner, in ADDITION to the main exception message.
      * The main exception message is NOT counted in this.
-     * SCIPIO: Modified to contain PropertyMessage instances instead of Strings.
-     * NOTE: we also make this safer by always wrapping in a new ArrayList that caller can't mess up.
-     * Added 2017-11-21.
+     * <p>SCIPIO: Modified to contain PropertyMessage instances instead of Strings.
+     * NOTE: we also make this safer by always wrapping in a new ArrayList that caller can't mess up.</p>
+     * <p>SCIPIO: 2017-11-21: Added.</p>
      */
-    private List<PropertyMessage> messages = null;
+    private List<PropertyMessage> propertyMessageList;
+
+    /**
+     * General-purposes readable exception properties, similar to *.properties files, for passing information to
+     * internal code, debugging and logging; should not be printed to public output.
+     * <p>NOTE: Not thread-safe; written for correctness; uses {@link LinkedHashMap} but may be overridden using
+     * {@link #setProperties(Map)}.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    private Map<String, Object> properties;
 
     /**
      * Creates new <code>GeneralException</code> without detail message.
      */
-    public GeneralException() {
-        super();
-    }
+    public GeneralException() { }
 
     /**
      * Constructs an <code>GeneralException</code> with the specified detail message.
@@ -102,44 +109,43 @@ public class GeneralException extends Exception implements SettablePropertyMessa
      * Constructs an <code>GeneralException</code> with the specified detail message, list and nested Exception.
      * SCIPIO: 2017-11-21: messages can be either pre-localized or hardcoded Strings or PropertyMessage instances.
      * @param msg the detail message.
-     * @param messages error message list.
+     * @param messageList error message list.
      */
-    public GeneralException(String msg, List<?> messages) {
+    public GeneralException(String msg, Collection<?> messageList) {
         super(msg);
-        this.messages = PropertyMessageExUtil.makePropertyMessageList(messages); // SCIPIO: make property messages
+        this.propertyMessageList = PropertyMessageExUtil.makePropertyMessageList(messageList); // SCIPIO: make property messages
     }
 
     /**
      * Constructs an <code>GeneralException</code> with the specified detail message, list and nested Exception.
      * SCIPIO: 2017-11-21: messages can be either pre-localized or hardcoded Strings or PropertyMessage instances.
      * @param msg the detail message.
-     * @param messages error message list.
+     * @param messageList error message list.
      * @param nested the nexted exception
      */
-    public GeneralException(String msg, List<?> messages, Throwable nested) {
+    public GeneralException(String msg, Collection<?> messageList, Throwable nested) {
         super(msg, nested);
-        this.messages = PropertyMessageExUtil.makePropertyMessageList(messages); // SCIPIO: make property messages
+        this.propertyMessageList = PropertyMessageExUtil.makePropertyMessageList(messageList); // SCIPIO: make property messages
     }
 
     /**
      * Constructs an <code>GeneralException</code> with the specified detail message list and nested Exception.
      * SCIPIO: 2017-11-21: messages can be either pre-localized or hardcoded Strings or PropertyMessage instances.
-     * @param messages error message list.
+     * @param messageList error message list.
      * @param nested the nested exception.
      */
-    public GeneralException(List<?> messages, Throwable nested) {
+    public GeneralException(Collection<?> messageList, Throwable nested) {
         super(nested);
-        this.messages = PropertyMessageExUtil.makePropertyMessageList(messages); // SCIPIO: make property messages
+        this.propertyMessageList = PropertyMessageExUtil.makePropertyMessageList(messageList); // SCIPIO: make property messages
     }
 
     /**
      * Constructs an <code>GeneralException</code> with the specified detail message list.
      * SCIPIO: 2017-11-21: messages can be either pre-localized or hardcoded Strings or PropertyMessage instances.
-     * @param messages error message list.
+     * @param messageList error message list.
      */
-    public GeneralException(List<?> messages) {
-        super();
-        this.messages = PropertyMessageExUtil.makePropertyMessageList(messages); // SCIPIO: make property messages
+    public GeneralException(Collection<?> messageList) {
+        this.propertyMessageList = PropertyMessageExUtil.makePropertyMessageList(messageList); // SCIPIO: make property messages
     }
 
     /**
@@ -181,8 +187,96 @@ public class GeneralException extends Exception implements SettablePropertyMessa
      */
     @Override
     public GeneralException setPropertyMessageList(Collection<?> messageList) {
-        this.messages = PropertyMessageExUtil.makePropertyMessageList(messageList); // SCIPIO: make property messages
+        this.propertyMessageList = PropertyMessageExUtil.makePropertyMessageList(messageList); // SCIPIO: make property messages
         return this;
+    }
+
+    /**
+     * Replaces the general-purpose exception properties, similar to *.properties files, for passing information
+     * to internal code, debugging and logging; should not be printed to public output.
+     * <p>NOTE: Not thread-safe; written for correctness; uses {@link LinkedHashMap} but not enforced by this method as
+     * the properties map type is specified entirely by the caller and used as-is; pass null to clear properties.
+     * The extending class may also override {@link #makeProperties(Map)} to change the default map type.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public GeneralException setProperties(Map<String, ?> properties) {
+        this.properties = UtilGenerics.cast(properties);
+        return this;
+    }
+
+    /**
+     * Replaces the general-purpose exception properties, similar to *.properties files, for passing information
+     * to internal code, debugging and logging; should not be printed to public output.
+     * <p>NOTE: Not thread-safe; written for correctness; uses {@link LinkedHashMap}.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public GeneralException setProperties(Object... properties) {
+        return setProperties(UtilMisc.toOrderedMap(properties));
+    }
+
+    /**
+     * Adds and replaces general-purpose exception properties, similar to *.properties files, for passing information to
+     * internal code, debugging and logging; should not be printed to public output.
+     * <p>NOTE: Not thread-safe; written for correctness; uses {@link LinkedHashMap}.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public GeneralException addProperties(Map<String, ?> properties) {
+        if (UtilValidate.isEmpty(properties)) {
+            return this;
+        }
+        Map<String, Object> currentProperties = this.properties;
+        boolean newProperties = false;
+        if (currentProperties == null) {
+            newProperties = true;
+            currentProperties = makeProperties(null);
+        }
+        currentProperties.putAll(properties);
+        if (newProperties) {
+            this.properties = currentProperties;
+        }
+        return this;
+    }
+
+    /**
+     * Replaces the general-purpose exception properties, similar to *.properties files, for passing information
+     * to internal code, debugging and logging; should not be printed to public output.
+     * <p>NOTE: Not thread-safe; written for correctness; uses {@link LinkedHashMap}.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public GeneralException addProperties(Object... properties) {
+        return addProperties(UtilMisc.toOrderedMap(properties));
+    }
+
+    /**
+     * Makes a new exception properties map untied to the exception, for internal and client factory and code use.
+     * <p>NOTE: Not thread-safe; written for correctness; uses {@link LinkedHashMap} but extending classes may override
+     * to change the default map type.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public Map<String, Object> makeProperties(Map<String, ?> sourceProperties) {
+        return UtilValidate.isNotEmpty(sourceProperties) ? new LinkedHashMap<>(sourceProperties) : new LinkedHashMap<>();
+    }
+
+    /**
+     * Clears the general-purpose exception properties, similar to *.properties files, for passing information
+     * to internal code, debugging and logging; should not be printed to public output.
+     * <p>NOTE: Not thread-safe; written for correctness; uses {@link LinkedHashMap}.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public GeneralException clearProperties() {
+        this.properties = null;
+        return this;
+    }
+
+    /**
+     * Returns read-only general-purpose exception properties, similar to *.properties files, for passing information
+     * to internal code, debugging and logging; should not be printed to public output.
+     * <p>NOTE: Not thread-safe; written for correctness; uses {@link LinkedHashMap}.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public Map<String, Object> getProperties() {
+        Map<String, Object> properties = this.properties;
+        return UtilValidate.isNotEmpty(properties) ? Collections.unmodifiableMap(properties) : Collections.emptyMap();
     }
 
     /**
@@ -219,35 +313,39 @@ public class GeneralException extends Exception implements SettablePropertyMessa
 
     /**
      * Returns the list of messages attached to this exception.
-     * <p>
-     * SCIPIO: Use of this is now discouraged (even if caller pre-localized);
+     * <p>SCIPIO: Use of this is now discouraged (even if caller pre-localized);
      * use {@link #getPropertyMessageList()} or {@link #getMessageList(Locale)} instead.
      * This returns only non-localized messages, unless the exception sender
      * pre-localized them. It uses the default/fallback property locale ({@link UtilProperties#getFallbackLocale()}),
-     * because this fits the majority use cases.
+     * because this fits the majority use cases.</p>
+     * <p>SCIPIO: 2.0.0: Modified earlier to produce message list using propertyMessageList and default locale.</p>
+     * @see #getMessageList(Locale)
+     * @see #getPropertyMessageList()
      */
     public List<String> getMessageList() {
-        return PropertyMessage.getDefPropLocaleMessages(this.messages); // SCIPIO: property messages
+        return PropertyMessage.getDefPropLocaleMessages(this.propertyMessageList); // SCIPIO: property messages
     }
 
     /**
-     * SCIPIO: Returns the list of messages attached to this exception, localized if possible.
-     * <p>
-     * NOTE: Depending on how the messages were added to the exception, these are not guaranteed
-     * to be localized or may even be in a different language.
+     * Returns the list of messages attached to this exception, localized if possible.
+     * <p>NOTE: Depending on how the messages were added to the exception, these are not guaranteed
+     * to be localized or may even be in a different language.</p>
+     * <p>SCIPIO: 2.0.0: Modified earlier to produce message list using propertyMessageList and specified locale.</p>
+     * @see #getPropertyMessageList()
      */
     public List<String> getMessageList(Locale locale) {
-        return PropertyMessage.getMessages(this.messages, locale); // SCIPIO: property messages
+        return PropertyMessage.getMessages(this.propertyMessageList, locale); // SCIPIO: property messages
     }
 
     /**
-     * SCIPIO: Returns the list of attached messages as PropertyMessage instances.
-     * May be null.
-     * This can be passed to {@link PropertyMessage} helper methods to get localized messages.
+     * Returns the list of attached messages as PropertyMessage instances; may be null.
+     * <p>Can be passed to {@link PropertyMessage} helper methods to produce localized messages.</p>
+     * <p>SCIPIO: 2.0.0: Added earlier.</p>
+     * @see #getMessageList(Locale)
      */
     @Override
     public List<PropertyMessage> getPropertyMessageList() {
-        return messages;
+        return propertyMessageList;
     }
 
     /** Returns the detail message, NOT including the message from the nested exception. */

@@ -1,5 +1,5 @@
 package com.ilscipio.scipio.web;
-;
+
 import javax.websocket.HandshakeResponse;
 import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpointConfig;

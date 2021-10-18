@@ -2745,5 +2745,16 @@ code package.
             <description>List of config names in seo-urls.properties, in format: seourl.datafile.[configName].[params]</description>
         </attribute>
     </service>
-    
+
+    <!-- SCIPIO: 2.1.0: Added for testing purposes (TODO: add filters) -->
+    <service name="precacheProductContentWrapper" engine="java"
+             location="com.ilscipio.scipio.product.product.ProductServices$PrecacheProductContentWrapper" invoke="exec">
+        <description>Pre-caches ProductContentWrapper records for all found products</description>
+        <attribute name="productContentTypeIdList" type="List" mode="IN" optional="false"/>
+        <attribute name="partyIdList" type="List" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdList" type="List" mode="IN" optional="true"/>
+        <attribute name="encoderTypeList" type="List" mode="IN" optional="true"/>
+        <attribute name="mimeTypeIdList" type="List" mode="IN" optional="true"/>
+        <attribute name="localeList" type="List" mode="IN" optional="true"/>
+    </service>
 </services>

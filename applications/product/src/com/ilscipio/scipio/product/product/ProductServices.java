@@ -1,21 +1,18 @@
 package com.ilscipio.scipio.product.product;
 
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.product.product.ProductContentWrapper;
+import org.ofbiz.service.*;
 
 /*******************************************************************************
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -78,4 +75,67 @@ public abstract class ProductServices {
         return ServiceUtil.returnSuccess();
     }
 
+    public static class PrecacheProductContentWrapper extends ServiceHandler.Local {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+        protected Collection<String> productContentTypeIdList;
+        protected Collection<String> partyIdList;
+        protected Collection<String> roleTypeIdList;
+        protected Collection<String> encoderTypeList;
+        protected Collection<String> mimeTypeIdList;
+        protected Collection<Locale> localeList;
+
+        protected int productCount = 0;
+
+        public PrecacheProductContentWrapper(ServiceContext ctx) {
+            super(ctx);
+            productContentTypeIdList = ctx.attr("productContentTypeIdList", Collections::emptyList);
+            partyIdList = ctx.attr("partyIdList", () -> UtilMisc.toList((String) null));
+            roleTypeIdList = ctx.attr("roleTypeIdList", () -> UtilMisc.toList((String) null));
+            encoderTypeList = ctx.attr("encoderTypeList", () -> UtilMisc.toList("raw"));
+            mimeTypeIdList = ctx.attr("mimeTypeIdList", () -> UtilMisc.toList(CommonContentWrapper.getDefaultMimeTypeId(ctx.delegator())));
+            Collection<?> localeObjList = ctx.attr("localeList", Collections::emptyList);
+            Collection<Locale> newLocaleList = new ArrayList<>(localeObjList.size());
+            for(Object localeObj : localeObjList) {
+                if (localeObj instanceof Locale) {
+                    newLocaleList.add((Locale) localeObj);
+                } else {
+                    newLocaleList.add(UtilMisc.parseLocale((String) localeObj));
+                }
+            }
+            if (newLocaleList.isEmpty()) {
+                newLocaleList = UtilMisc.toList(Locale.ENGLISH);
+            }
+            localeList = newLocaleList;
+        }
+
+        public Map<String, Object> exec() throws ServiceValidationException {
+            try(EntityListIterator eli = ctx.delegator().from("Product").queryIterator()) {
+                GenericValue product;
+                while((product = eli.next()) != null) {
+                    //String productId = product.getString("productId");
+                    for(String productContentTypeId : productContentTypeIdList) {
+                        for(Locale locale : localeList) {
+                            for(String partyId : partyIdList) {
+                                for(String roleTypeId : roleTypeIdList) {
+                                    for(String mimeTypeId : mimeTypeIdList) {
+                                        for(String encoderType : encoderTypeList) {
+                                            ProductContentWrapper.getProductContentAsText(product, productContentTypeId,
+                                                    locale, mimeTypeId, partyId, roleTypeId, ctx.delegator(),
+                                                    ctx.dispatcher(),true, encoderType);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    productCount++;
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.toString());
+            }
+            return ServiceUtil.returnSuccess("Precached ProductContentWrapper for " + productCount + " products");
+        }
+    }
 }

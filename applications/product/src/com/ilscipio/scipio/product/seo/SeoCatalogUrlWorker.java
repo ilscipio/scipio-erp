@@ -1078,18 +1078,21 @@ public class SeoCatalogUrlWorker implements Serializable {
      * Returned whenever we find a URL that appears to be an SEO URL, even if the request is not for a valid product or category.
      */
     public static class PathMatch implements Serializable {
-        protected final String path;
-        protected final List<String> pathElements; // path elements (after mount-point, if any)
-        protected final Locale locale;
-        protected final PathPartMatch targetMatch; // The actual match
-        protected final List<String> trailCategoryIds;
-        protected final boolean explicitProductRequest;
-        protected final boolean explicitCategoryRequest;
+        protected String path;
+        protected List<String> pathElements; // path elements (after mount-point, if any)
+        protected Locale locale;
+        protected PathPartMatch targetMatch; // The actual match
+        protected List<String> trailCategoryIds;
+        protected boolean explicitProductRequest;
+        protected boolean explicitCategoryRequest;
 
-        protected PathMatch(String path, String contextPath, String webSiteId, String currentCatalogId,
-                            Timestamp moment, PathPartAndTrailMatch pathPartAndTrailMatch,
-                            boolean explicitProductRequest, boolean explicitCategoryRequest,
-                            List<String> pathElements, Locale locale) {
+        public PathMatch() {
+        }
+
+        public PathMatch(String path, String contextPath, String webSiteId, String currentCatalogId,
+                         Timestamp moment, PathPartAndTrailMatch pathPartAndTrailMatch,
+                         boolean explicitProductRequest, boolean explicitCategoryRequest,
+                         List<String> pathElements, Locale locale) {
             this.targetMatch = (pathPartAndTrailMatch != null) ? pathPartAndTrailMatch.getTargetMatch() : null;
             this.trailCategoryIds = (pathPartAndTrailMatch != null && pathPartAndTrailMatch.getTrailCategoryIds() != null) ? pathPartAndTrailMatch.getTrailCategoryIds() : Collections.emptyList();
             this.path = path;
@@ -1097,6 +1100,16 @@ public class SeoCatalogUrlWorker implements Serializable {
             this.explicitCategoryRequest = explicitCategoryRequest;
             this.pathElements = ensurePathList(pathElements);
             this.locale = locale;
+        }
+
+        public PathMatch(PathMatch other) {
+            this.targetMatch = other.targetMatch;
+            this.trailCategoryIds = other.trailCategoryIds;
+            this.path = other.path;
+            this.explicitProductRequest = other.explicitProductRequest;
+            this.explicitCategoryRequest = other.explicitCategoryRequest;
+            this.pathElements = other.pathElements;
+            this.locale = other.locale;
         }
 
         /** Returns the original path that was matched. **/
@@ -1126,6 +1139,41 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         public boolean isProductRequest() { return isExplicitProductRequest() || hasTargetProduct(); }
         public boolean isCategoryRequest() { return isExplicitCategoryRequest() || hasTargetCategory(); }
+
+        public PathMatch setPath(String path) {
+            this.path = path;
+            return this;
+        }
+
+        public PathMatch setPathElements(List<String> pathElements) {
+            this.pathElements = pathElements;
+            return this;
+        }
+
+        public PathMatch setLocale(Locale locale) {
+            this.locale = locale;
+            return this;
+        }
+
+        public PathMatch setTargetMatch(PathPartMatch targetMatch) {
+            this.targetMatch = targetMatch;
+            return this;
+        }
+
+        public PathMatch setTrailCategoryIds(List<String> trailCategoryIds) {
+            this.trailCategoryIds = trailCategoryIds;
+            return this;
+        }
+
+        public PathMatch setExplicitProductRequest(boolean explicitProductRequest) {
+            this.explicitProductRequest = explicitProductRequest;
+            return this;
+        }
+
+        public PathMatch setExplicitCategoryRequest(boolean explicitCategoryRequest) {
+            this.explicitCategoryRequest = explicitCategoryRequest;
+            return this;
+        }
     }
 
     /**

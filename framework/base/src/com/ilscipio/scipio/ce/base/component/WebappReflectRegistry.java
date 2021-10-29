@@ -12,6 +12,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Per-webapp reflection and annotation scanner.
+ * <p>Abstracts the jar file locations and bundles them using {@link ReflectQuery}.</p>
+ * <p>SCIPIO: 2.1.0: Added for annotations support.</p>
+ */
 public class WebappReflectRegistry {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Map<String, WebappReflectInfo> REGISTRY = new ConcurrentHashMap<>();
@@ -40,6 +45,10 @@ public class WebappReflectRegistry {
 
     public static Collection<WebappReflectInfo> getWebappReflectInfos() {
         return REGISTRY.values();
+    }
+
+    public static WebappReflectInfo getWebappReflectInfo(ComponentConfig.WebappInfo webappInfo) {
+        return REGISTRY.get(toKey(webappInfo));
     }
 
     protected static String toKey(ComponentConfig.WebappInfo webappInfo) {

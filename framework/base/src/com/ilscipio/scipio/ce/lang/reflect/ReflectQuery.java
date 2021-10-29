@@ -15,6 +15,7 @@ import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
@@ -26,7 +27,9 @@ import java.util.stream.Collectors;
 
 /**
  * Wrapper around org.reflections/org.reflections8 library for simplified use.
- * <p>DEV NOTE: This does not currently abstract Reflections; it's intended to add helper calls around expensive cached operations.</p>
+ * <p>DEV NOTE: This does not currently fully abstract Reflections; it's intended to add helper calls around expensive
+ * cached operations, but some abstractions are available and more may be added.</p>
+ * <p>SCIPIO: 2.1.0: Added for annotations support.</p>
  */
 public class ReflectQuery {
 
@@ -87,19 +90,34 @@ public class ReflectQuery {
      * Queries
      */
 
-    public Set<Class<?>> getAnnotatedClasses(Class<? extends Annotation> annotationCls) {
-        return getReflections().getTypesAnnotatedWith(annotationCls);
+    public Set<Class<?>> getAnnotatedClasses(Class<? extends Annotation> cls) {
+        return getReflections().getTypesAnnotatedWith(cls);
     }
 
-    public Set<Class<?>> getAnnotatedClasses(Collection<Class<? extends Annotation>> annotationClsList) {
+    public Set<Class<?>> getAnnotatedClasses(Collection<Class<? extends Annotation>> clsList) {
         Set<Class<?>> allClasses = new LinkedHashSet<>();
-        for(Class<? extends Annotation> annotationCls : annotationClsList) {
+        for(Class<? extends Annotation> annotationCls : clsList) {
             Set<Class<?>> classes = getAnnotatedClasses(annotationCls);
             if (classes != null) {
                 allClasses.addAll(classes);
             }
         }
         return allClasses;
+    }
+
+    public Set<Method> getAnnotatedMethods(Class<? extends Annotation> cls) {
+        return getReflections().getMethodsAnnotatedWith(cls);
+    }
+
+    public Set<Method> getAnnotatedMethods(Collection<Class<? extends Annotation>> clsList) {
+        Set<Method> allMethods = new LinkedHashSet<>();
+        for(Class<? extends Annotation> annotationCls : clsList) {
+            Set<Method> methods = getAnnotatedMethods(annotationCls);
+            if (methods != null) {
+                allMethods.addAll(methods);
+            }
+        }
+        return allMethods;
     }
 
     public static List<URL> getJarUrlsForFiles(Collection<File> jarFiles) {

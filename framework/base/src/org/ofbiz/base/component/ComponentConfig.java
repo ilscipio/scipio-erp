@@ -1281,6 +1281,51 @@ public final class ComponentConfig {
     }
 
     /**
+     * For a component:// URL to a file under a webapp, returns the webapp, or optionally the default webapp
+     * if the resource is outside the webapp path.
+     */
+    public static WebappInfo getWebappInfoFromComponentResource(String componentUrl, boolean useDefault) {
+        if (!"component://".startsWith(componentUrl)) {
+            throw new IllegalArgumentException("Cannot get webapp info from component resource: not a component:// URL [" +
+                    componentUrl + "]");
+        }
+        int nextSlash = componentUrl.indexOf('/', "component://".length());
+        if (nextSlash <= 0) {
+            throw new IllegalArgumentException("Cannot get webapp info from component resource: invalid component:// URL [" +
+                    componentUrl + "]");
+        }
+        String componentName = componentUrl.substring("component://".length(), nextSlash);
+        if (UtilValidate.isEmpty(componentName)) {
+            throw new IllegalArgumentException("Cannot get webapp info from component resource: invalid component name in URL [" +
+                    componentUrl + "]");
+        }
+        ComponentConfig cc;
+        try {
+            cc = getComponentConfig(componentName);
+        } catch (ComponentException e) {
+            throw new IllegalArgumentException(e);
+        }
+        if (cc == null) {
+            throw new IllegalArgumentException("Cannot get webapp info from component resource: invalid component name [" +
+                    componentName + "] in URL [" + componentUrl + "]");
+        }
+        if (UtilValidate.isEmpty(cc.getWebappInfos())) {
+            return null;
+        }
+        String relPath = componentUrl.substring(nextSlash + 1);
+        for (WebappInfo wi : cc.getWebappInfos()) {
+            if (relPath.equals(wi.location) || relPath.startsWith(wi.location + "/")) {
+                return wi;
+            }
+        }
+        if (useDefault) {
+            return cc.getWebappInfos().get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * An object that models the <code>&lt;classpath&gt;</code> element.
      *
      * @see <code>ofbiz-component.xsd</code>

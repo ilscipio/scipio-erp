@@ -48,6 +48,9 @@
         <value xml:lang="zh-CN">页</value>
         <value xml:lang="zh-TW">共用網頁</value>
     </property>
+    <property key="CommonRedirects">
+        <value xml:lang="en">Redirects</value>
+    </property>
     <property key="CommonRobots">
         <value xml:lang="en">Robots.txt</value>
     </property>

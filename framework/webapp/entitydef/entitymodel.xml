@@ -239,6 +239,7 @@ code package.
         <description>SCIPIO: URL path prefix appended between the domain/port and the webapp context path in generated links,
             for webapp and navigation links (@pageUrl); must start with slash but end with no slash. (added 2018-07-27)</description>
       </field>
+      <field name="redirects" type="very-long"><description>A field for redirect data</description></field>
       <field name="robots" type="very-long"><description>A field for robots.txt data</description></field>
       <field name="prewarmcache" type="very-long"><description>A field for prewarm cache urls, line separated</description></field>
       <prim-key field="webSiteId"/>

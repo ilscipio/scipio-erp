@@ -560,6 +560,35 @@
         </section>
     </screen>
 
+    <screen name="redirects">
+        <section>
+            <actions>
+                <set field="titleProperty" value="CommonRedirects"/>
+                <set field="activeSubMenuItem" value="redirects"/>
+                 <script lang="groovy"><![CDATA[
+                    import org.ofbiz.entity.util.*;
+                    import org.ofbiz.entity.condition.*;
+                    import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
+
+                    List<GenericValue> websites = EntityQuery.use(delegator).select("webSiteId").from("WebSite").where(EntityCondition.makeCondition("productStoreId", EntityJoinOperator.NOT_EQUAL, null)).orderBy("siteName").queryList()
+                    import org.ofbiz.entity.GenericValue;
+
+                    ctx = globalContext;
+                    ctx.websites = websites;
+                ]]></script>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonSettingsDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://cms/webapp/cms/redirect/redirects.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <screen name="robots">
         <section>
             <actions>
@@ -569,6 +598,8 @@
                     import org.ofbiz.base.util.*;
                     import com.ilscipio.scipio.cms.webapp.CmsWebappUtil
                     import org.ofbiz.entity.GenericValue
+                    import org.ofbiz.entity.util.*;
+                    import org.ofbiz.entity.condition.*;
 
                     ctx = globalContext;
 
@@ -598,8 +629,11 @@
 
                     ctx.indentWithTabs = UtilProperties.getPropertyAsBoolean("cms", "cms.editor.indentWithTabs", false);
 
+                    List<GenericValue> websites = EntityQuery.use(delegator).select("webSiteId").from("WebSite").where(EntityCondition.makeCondition("productStoreId", EntityJoinOperator.NOT_EQUAL, null)).orderBy("siteName").queryList()
+                    //List<GenericValue> websites = CmsWebappUtil.getWebSiteList(delegator);
 
-                    List<GenericValue> websites = CmsWebappUtil.getWebSiteList(delegator);
+                    ctx = globalContext;
+
                     ctx.websites = websites;
                 ]]></script>
 

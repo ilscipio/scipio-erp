@@ -1065,4 +1065,14 @@
         <attribute name="menuJson" type="String" mode="OUT" optional="false"/>
     </service>
 
+
+    <!-- Redirects-->
+    <service name="cmsGetRedirects" engine="java"
+             location="com.ilscipio.scipio.cms.media.CmsMediaServices" invoke="getRedirects" auth="true">
+        <description>Get a JSON list of all redirects</description>
+        <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
+        <attribute name="websiteId" type="String" mode="IN" optional="true"/>
+        <attribute name="redirectsJson" type="List" mode="OUT" optional="false"/>
+    </service>
+
 </services>

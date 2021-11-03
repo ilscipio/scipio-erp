@@ -1942,7 +1942,7 @@ public class RequestHandler {
         //String initialLink = this.makeLink(request, response, url, fullPath, secure, encode);
         //String queryString = this.makeQueryString(request, requestResponse);
         //return initialLink + queryString;
-        return this.makeLink(request, response, url + this.makeQueryString(request, requestResponse), fullPath, secure, encode);
+        return this.makeLink(request, response, url + this.makeQueryString(request, requestResponse, extraParameters), fullPath, secure, encode);
     }
 
     /**

@@ -8,10 +8,8 @@ import java.util.*;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.ofbiz.base.conversion.ConversionException;
 import org.ofbiz.base.conversion.NumberConverters.StringToInteger;
-import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.PropertyMessage;
@@ -29,7 +27,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
-import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
@@ -996,16 +993,11 @@ public abstract class CmsMediaServices {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         String websiteId = (String)context.get("websiteId");
         try {
-            String value = EntityQuery.use(delegator).from("WebSite").where("webSiteId", websiteId).cache().queryOne().getString("redirects");
-            if(UtilValidate.isNotEmpty(value)){
-                List resultJson = JSON.from(value).toObject(ArrayList.class);
-                result.put("redirectsJson", resultJson);
-            }else{
-                result.put("redirectsJson", new ArrayList<>());
-            }
+            GenericValue webSite = delegator.from("WebSite").where("webSiteId", websiteId).queryOne();
+            result.put("redirectsJson", webSite != null ? webSite.getJsonList("redirects") : Collections.emptyList());
             return result;
-        } catch (Exception var8) {
-            FormattedError err = errorFmt.format(var8, "Error getting redirects", (PropertyMessage)null, context);
+        } catch (Exception e) {
+            FormattedError err = errorFmt.format(e, "Error getting redirects", (PropertyMessage)null, context);
             Debug.logError(err.getEx(), err.getLogMsg(), module);
             return err.returnFailure();
         }

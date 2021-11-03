@@ -266,6 +266,12 @@ public class ContextFilter implements Filter {
         String requestPath = null;
         String contextUri = null;
         if (httpRequest.getAttribute(ContextFilter.FORWARDED_FROM_SERVLET) == null) {
+            // SCIPIO: 2.1.0: Process website redirects
+            // FIXME: this should be done later below for multitenant support, but the filters below will prevent this from working
+            if (processWebSiteRedirects(httpRequest, httpResponse)) {
+                return;
+            }
+
             // Debug.logInfo("In ContextFilter.doFilter, FORWARDED_FROM_SERVLET is NOT set", module);
             //String allowedPath = config.getInitParameter("allowedPaths"); // SCIPIO: see init
             String redirectPath = config.getInitParameter("redirectPath");
@@ -728,5 +734,78 @@ public class ContextFilter implements Filter {
         }
         // 1: at least is subclass, but lowest because stock Ofbiz overextended ContextFilter everywhere
         return 1;
+    }
+
+    /**
+     * Redirects using WebSite.redirects.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @return true if redirect triggered
+     */
+    public static boolean processWebSiteRedirects(HttpServletRequest request, HttpServletResponse response) {
+        String matchPath = request.getServletPath();
+        String pathInfo = request.getPathInfo();
+        if (pathInfo != null) {
+            matchPath += pathInfo;
+        }
+        //String matchPath = request.getRequestURL();
+        GenericValue webSite = null;
+        if (request.getAttribute("delegator") != null) {
+            webSite = WebSiteWorker.getWebSite(request);
+        } else {
+            String webSiteId = WebSiteWorker.getWebSiteId(request);
+            if (UtilValidate.isNotEmpty(webSiteId)) {
+                Delegator delegator = (Delegator) request.getServletContext().getAttribute("delegator");
+                if (delegator == null) {
+                    delegator = DelegatorFactory.getDefaultDelegator();
+                    if (delegator == null) {
+                        return false;
+                    }
+                }
+                webSite = WebSiteWorker.findWebSite(delegator, webSiteId);
+            }
+        }
+        if (webSite == null) {
+            return false;
+        }
+        List<Map<String, Object>> redirects;
+        try {
+            redirects = webSite.getJsonList("redirects");
+        } catch(Exception e) {
+            Debug.logError(e, "Could not parse redirects JSON from WebSite [" + webSite.get("webSiteId"), "]", module);
+            return false;
+        }
+        if (UtilValidate.isEmpty(redirects)) {
+            return false;
+        }
+        for(Map<String, Object> redirectEntry : redirects) {
+            String fromPath = (String) redirectEntry.get("from");
+            if (fromPath != null) {
+                fromPath = PathUtil.ensureStartAndNoTrailDelim(fromPath);
+                if ((fromPath.length() > 1) && (fromPath.equals(matchPath) || matchPath.startsWith(fromPath + "/"))) {
+                    String toPath = (String) redirectEntry.get("to");
+                    if (toPath != null) {
+                        toPath = PathUtil.ensureStartDelim(toPath);
+                        Integer statusCode = UtilMisc.toInteger(redirectEntry.get("type"), 301);
+                        boolean keepParams = UtilMisc.booleanValueVersatile(redirectEntry.get("keepParams"), true);
+                        if (keepParams) {
+                            // TODO: REVIEW: query string is not URL-decoded here and is not merged with any params on "to"
+                            String queryString = request.getQueryString();
+                            if (UtilValidate.isNotEmpty(queryString)) {
+                                toPath += (toPath.contains("?") ? "&" : "?") + queryString;
+                            }
+                        }
+                        String newUrl = RequestLinkUtil.makeLinkAuto(request, response, toPath, false, false,
+                                webSite.getString("webSiteId"), false, true, true, true);
+                        if (UtilValidate.isEmpty(newUrl)) {
+                            return false;
+                        }
+                        response.setStatus(statusCode);
+                        response.setHeader("Location", newUrl);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

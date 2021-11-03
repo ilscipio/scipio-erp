@@ -563,7 +563,7 @@ public abstract class ProductImageServices {
 
                 if (!"ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
                     ImageVariantConfig.VariantInfo variantInfo = (ImageVariantConfig.VariantInfo) sizeTypeInfo.get("variantInfo");
-                    Map<String, Object> prevJsonMap = dataResource.getJsonAsMapOrEmpty("srcPresetJson");
+                    Map<String, Object> prevJsonMap = dataResource.getJsonMap("srcPresetJson");
                     if (variantInfo != null) {
                         Map<String, Object> newJsonMap = variantInfo.configToMap();
                         if (!new TreeMap<>(newJsonMap).equals(new TreeMap<>(prevJsonMap))) {
@@ -665,7 +665,7 @@ public abstract class ProductImageServices {
 
                         if (!"ORIGINAL_IMAGE_URL".equals(productContentTypeId)) {
                             ImageVariantConfig.VariantInfo variantInfo = (ImageVariantConfig.VariantInfo) sizeTypeInfo.get("variantInfo");
-                            Map<String, Object> prevJsonMap = details.getJsonAsMapOrEmpty(fieldPrefix + "PresetJson");
+                            Map<String, Object> prevJsonMap = details.getJsonMap(fieldPrefix + "PresetJson");
                             if (variantInfo != null) {
                                 Map<String, Object> newJsonMap = variantInfo.configToMap();
                                 if (!new TreeMap<>(newJsonMap).equals(new TreeMap<>(prevJsonMap))) {
@@ -1036,7 +1036,7 @@ public abstract class ProductImageServices {
         GenericValue opReq = ctx.attr("opReq");
         String serviceId = opReq.getString("serviceId");
         String mode = opReq.getString("mode");
-        Map<String, Object> serviceArgs = opReq.getJsonAsMapOrEmpty("serviceArgsJson");
+        Map<String, Object> serviceArgs = opReq.getJsonMap("serviceArgsJson");
 
         Map<String, Object> servCtx = new HashMap<>(serviceArgs);
         Map<String, Object> servResult = null;

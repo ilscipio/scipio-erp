@@ -2301,13 +2301,13 @@ public final class UtilMisc {
         if (collection == null) {
             return null;
         } else if (collection instanceof List) {
-            return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableList(UtilGenerics.cast(collection)) : Collections.emptyList());
+            return UtilGenerics.cast(!collection.isEmpty() ? Collections.unmodifiableList(UtilGenerics.cast(collection)) : Collections.emptyList());
         } else if (collection instanceof NavigableSet) {
-            return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableNavigableSet(UtilGenerics.cast(collection)) : Collections.emptyNavigableSet());
+            return UtilGenerics.cast(!collection.isEmpty() ? Collections.unmodifiableNavigableSet(UtilGenerics.cast(collection)) : Collections.emptyNavigableSet());
         } else if (collection instanceof SortedSet) {
-            return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableSortedSet(UtilGenerics.cast(collection)) : Collections.emptySortedSet());
+            return UtilGenerics.cast(!collection.isEmpty() ? Collections.unmodifiableSortedSet(UtilGenerics.cast(collection)) : Collections.emptySortedSet());
         } else if (collection instanceof Set) {
-            return UtilGenerics.cast(collection.isEmpty() ? Collections.unmodifiableSet(UtilGenerics.cast(collection)) : Collections.emptySet());
+            return UtilGenerics.cast(!collection.isEmpty() ? Collections.unmodifiableSet(UtilGenerics.cast(collection)) : Collections.emptySet());
         } else {
             // NOTE: This may produce ClassCastException if wrong result type, but let's let caller handles this case, for simplicity
             return UtilGenerics.cast(Collections.unmodifiableCollection(collection));
@@ -2321,11 +2321,26 @@ public final class UtilMisc {
         if (map == null) {
             return null;
         } else if (map instanceof NavigableMap) {
-            return UtilGenerics.cast(map.isEmpty() ? Collections.unmodifiableNavigableMap(UtilGenerics.cast(map)) : Collections.emptyNavigableMap());
+            return UtilGenerics.cast(!map.isEmpty() ? Collections.unmodifiableNavigableMap(UtilGenerics.cast(map)) : Collections.emptyNavigableMap());
         } else if (map instanceof SortedMap) {
-            return UtilGenerics.cast(map.isEmpty() ? Collections.unmodifiableSortedMap(UtilGenerics.cast(map)) : Collections.emptySortedMap());
+            return UtilGenerics.cast(!map.isEmpty() ? Collections.unmodifiableSortedMap(UtilGenerics.cast(map)) : Collections.emptySortedMap());
         } else {
-            return UtilGenerics.cast(map.isEmpty() ? Collections.unmodifiableMap(map) : Collections.emptyMap());
+            return UtilGenerics.cast(!map.isEmpty() ? Collections.unmodifiableMap(map) : Collections.emptyMap());
+        }
+    }
+
+    /**
+     * SCIPIO: Returns the Collections.unmodifiableXxx or Collections.emptyXxx instance corresponding to the underlying type of map, best-effort.
+     */
+    public static <T> T unmodifiableGeneric(Object collOrMap) {
+        if (collOrMap == null) {
+            return null;
+        } else if (collOrMap instanceof Collection) {
+            return UtilGenerics.cast(unmodifiableAdapted((Collection<?>) collOrMap));
+        } else if (collOrMap instanceof Map) {
+            return UtilGenerics.cast(unmodifiableAdapted((Map<?, ?>) collOrMap));
+        } else {
+            throw new IllegalArgumentException("Unsupported type for unmodifiable collections: " + collOrMap.getClass().getName());
         }
     }
 

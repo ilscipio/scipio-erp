@@ -26,6 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.ofbiz.base.util.Assert;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.ofbiz.base.util.UtilGenerics;
 
 /** A JSON object. */
 @ThreadSafe
@@ -119,9 +120,36 @@ public final class JSON {
      * @throws IOException
      */
     public <T> T toObject(Class<T> targetClass) throws IOException {
+        return toObject(jsonString, targetClass);
+    }
+
+    /**
+     * Converts the given json string to the specified type.
+     * <p>SCIPIO: 2.1.0: Added to support avoiding this class.</p>
+     * @param targetClass
+     * @return an object of the specified type
+     * @throws IOException
+     */
+    public static <T> T toObject(String jsonString, Class<?> targetClass) throws IOException {
         Assert.notNull("targetClass", targetClass);
         try {
-            return mapper.readValue(jsonString, targetClass);
+            return UtilGenerics.cast(mapper.readValue(jsonString, targetClass));
+        } catch (IOException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new IOException(e);
+        }
+    }
+
+    /**
+     * Converts the given object value to a JSON string.
+     * <p>SCIPIO: 2.1.0: Added to support avoiding this class.</p>
+     * @return an object of the specified type
+     * @throws IOException
+     */
+    public static String toString(Object object) throws IOException {
+        try {
+            return mapper.writeValueAsString(object);
         } catch (IOException e) {
             throw e;
         } catch (Exception e) {

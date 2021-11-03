@@ -25,37 +25,17 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.sql.Blob;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ilscipio.scipio.ce.util.collections.ScipioMap;
 import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.lang.JSON;
+import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.Base64;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.Observable;
 import org.ofbiz.base.util.Observer;
-import org.ofbiz.base.util.TimeDuration;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilIO;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.LocalizedMap;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityFieldMap;
@@ -122,6 +102,12 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /** This is an internal field used to specify that a value has come from a sync process and that the auto-stamps should not be over-written */
     private boolean isFromEntitySync = false;
+
+    /**
+     * Parsed json objects by field name.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    private transient Map<String, Object> jsonCache;
 
     /** Creates new GenericEntity - Should never be used, prefer the other options. */
     protected GenericEntity() { }
@@ -583,6 +569,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
      */
     public Object set(String name, Object value, boolean setIfNull) {
         assertIsMutable();
+        clearJsonCache(name); // SCIPIO: 2.1.0: Added
         ModelField modelField = getModelEntity().getField(name);
         if (modelField == null) {
             // SCIPIO: 2018-09-29: Throw more helpful EntityFieldNotFoundException instead
@@ -900,188 +887,321 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
     }
 
     /**
-     * SCIPIO: Interprets the given field as a JSON object, or null if the field is null/empty.
-     * Added 2019-09-24/2.1.0.
+     * Interprets the given field as a JSON object, or null if the field is null/empty.
+     * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public JSON getJson(String name) {
         String jsonString = getString(name);
-        return jsonString == null ? null : JSON.from(jsonString);
+        return (jsonString != null) ? JSON.from(jsonString) : null;
     }
 
     /**
-     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Java type, or null if the field is null/empty.
-     * Added 2019-09-24/2.1.0.
-     */
-    public <T> T getJson(String name, Class<T> targetClass) {
-        JSON json = getJson(name);
-        try {
-            return json == null ? null : json.toObject(targetClass);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " + getEntityName() + " from JSON to Java type [" + targetClass + "]", e);
-        }
-    }
-
-    /**
-     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Map Java type, or null if the field is null/empty.
-     * Added 2019-09-24/2.1.0.
-     */
-    public <K, V> Map<K, V> getJsonAsMap(String name) {
-        return UtilGenerics.cast(getJson(name, Map.class));
-    }
-
-    /**
-     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Map Java type, or unmodifiable empty map if the field is null/empty.
-     * Added 2020-04-01/2.1.0.
-     */
-    public <K, V> Map<K, V> getJsonAsMapOrEmpty(String name) {
-        Map<K, V> result = UtilGenerics.cast(getJson(name, Map.class));
-        return (result != null) ? result : Collections.emptyMap();
-    }
-
-    /**
-     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a Map Java type, or new map if the field is null/empty.
-     * Added 2020-04-01/2.1.0.
-     */
-    public <K, V> Map<K, V> getJsonAsMapOrNew(String name) {
-        Map<K, V> result = UtilGenerics.cast(getJson(name, Map.class));
-        return (result != null) ? result : createJsonMap();
-    }
-
-    /**
-     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a List Java type, or null if the field is null/empty.
-     * Added 2019-09-24/2.1.0.
-     */
-    public <E> List<E> getJsonAsList(String name) {
-        return UtilGenerics.cast(getJson(name, List.class));
-    }
-
-    /**
-     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a List Java type, or unmodifiable empty list if the field is null/empty.
-     * Added 2019-09-24/2.1.0.
-     */
-    public <E> List<E> getJsonAsListOrEmpty(String name) {
-        List<E> result = UtilGenerics.cast(getJson(name, List.class));
-        return (result != null) ? result : Collections.<E>emptyList();
-    }
-
-    /**
-     * SCIPIO: Interprets the given field as a JSON object and evaluates it to a List Java type, or new list if the field is null/empty.
-     * Added 2020-04-01/2.1.0.
-     */
-    public <E> List<E> getJsonAsListOrNew(String name) {
-        List<E> result = UtilGenerics.cast(getJson(name, List.class));
-        return (result != null) ? result : createJsonList();
-    }
-
-    /**
-     * SCIPIO: Returns a new json Map.
-     * Added 2020-04-01/2.1.0.
-     */
-    public <K, V> Map<K, V> createJsonMap() {
-        return new LinkedHashMap<>();
-    }
-
-    /**
-     * SCIPIO: Returns a new json Map.
-     * Added 2020-04-01/2.1.0.
-     */
-    public <E> List<E> createJsonList() {
-        return new ArrayList<>();
-    }
-
-    private static final ObjectMapper jsonMapper = new ObjectMapper(); // SCIPIO: TODO?: Share instance with JSON class?
-
-    /**
-     * SCIPIO: Converts the given Java object to a JSON string and writes it to the field.
-     * Added 2019-09-24/2.1.0.
+     * Converts the given Java object or JSON wrapper to a JSON string and writes it to the field.
+     * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public void setJson(String name, Object object) {
-        if (object != null) {
+        if (object instanceof String) {
+            ;
+        } else if (object instanceof JSON) {
+            object = object.toString();
+        } else if (object != null) {
             try {
-                object = jsonMapper.writeValueAsString(object);
+                object = JSON.toString(object);
             } catch(Exception e) {
-                throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " + getEntityName() + " from Java type [" + object.getClass() + "] to JSON string", e);
+                throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " +
+                        getEntityName() + " from Java type [" + object.getClass() + "] to JSON string", e);
             }
         }
         set(name, object);
     }
 
     /**
-     * SCIPIO: Interprets the standard entityJson field as a JSON object, or null if the field is null/empty.
-     * Added 2019-09-24/2.1.0.
+     * Interprets the named field as a JSON object and evaluates it to a Java type, or null if the field is null/empty,
+     * with support for caching of parsed json to/from {@link #jsonCache} for read-only objects.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param name the field name
+     * @param targetType the target type, either <code>Map.class</code> or <code>List.class</code>
+     * @param returnDefault if true, when result is null, either a new collection (when useJsonCache false) or empty
+     *                      collection returned (when useJsonCache true); if false returns null
+     * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
      */
-    public JSON getEntityJson() {
-        return getJson(ModelEntity.ENTITY_JSON_FIELD);
+    public <T> T getJsonObject(String name, Class<?> targetType, boolean returnDefault, boolean useJsonCache) {
+        T jsonObject;
+        Map<String, Object> jsonCache = null;
+        if (useJsonCache) {
+            jsonCache = this.jsonCache;
+            if (jsonCache != null) {
+                jsonObject = UtilGenerics.cast(jsonCache.get(name));
+                if (jsonObject != null) {
+                    return jsonObject;
+                }
+            }
+        }
+        String jsonString = getString(name);
+        if (jsonString == null) {
+            return null;
+        }
+        try {
+            jsonObject = JSON.toObject(jsonString, targetType);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " + getEntityName() +
+                    " from JSON to Java type [" + targetType + "]", e);
+        }
+        if (useJsonCache) {
+            if (jsonObject != null) { // NOTE: We don't need any null-flag objects because get() empty string is fast
+                jsonObject = UtilMisc.unmodifiableGeneric(jsonObject);
+                // NOTE: Due to threading cached results may be lost due to replacing the cache, but this is minor
+                Map<String, Object> jsonCacheNew = (jsonCache != null) ? new HashMap<>(jsonCache) : new HashMap<>();
+                jsonCacheNew.put(name, jsonObject);
+                this.jsonCache = Collections.unmodifiableMap(jsonCacheNew);
+            }
+        } else {
+            if (returnDefault && jsonObject == null) {
+                jsonObject = makeJsonObject(targetType);
+            }
+        }
+        return jsonObject;
     }
 
     /**
-     * SCIPIO: Return the standard entityJson field as its original string, or null if the field is null/empty.
-     * Added 2019-09-24/2.1.0.
+     * Creates an empty json collection, normally <code>Map.class</code> or <code>List.class</code>.
+     * <p>SCIPIO: 2.1.0: Added.</p>
      */
-    public String getEntityJsonAsString() {
-        return getString(ModelEntity.ENTITY_JSON_FIELD);
+    public <T> T makeJsonObject(Class<?> targetType, Object initialValues) {
+        if (Map.class.isAssignableFrom(targetType)) {
+            return UtilGenerics.cast(makeJsonMap(UtilGenerics.cast(initialValues)));
+        } else if (List.class.isAssignableFrom(targetType)) {
+            return UtilGenerics.cast(makeJsonList(UtilGenerics.cast(initialValues)));
+        } else if (Set.class.isAssignableFrom(targetType)) {
+            return UtilGenerics.cast(makeJsonSet(UtilGenerics.cast(initialValues)));
+        } else if (Collection.class.isAssignableFrom(targetType)) {
+            return UtilGenerics.cast(makeJsonList(UtilGenerics.cast(initialValues)));
+        } else {
+            throw new IllegalArgumentException("Unsupported json collection type: " + targetType);
+        }
     }
 
     /**
-     * SCIPIO: Interprets the standard entityJson field as a JSON object and evaluates it to a Map Java type, or null if the field is null/empty.
-     * Added 2019-09-24/2.1.0.
+     * Creates an empty json collection, normally <code>Map.class</code> or <code>List.class</code>.
+     * <p>SCIPIO: 2.1.0: Added.</p>
      */
-    public Map<String, Object> getEntityJsonAsMap() {
-        return getJsonAsMap(ModelEntity.ENTITY_JSON_FIELD);
+    public <T> T makeJsonObject(Class<?> targetType) {
+        return makeJsonObject(targetType, null);
     }
 
     /**
-     * SCIPIO: Interprets the standard entityJson field as a JSON object and evaluates it to a Map Java type;
-     * if none, creates a new map (insertion-order preserving) without affecting the entity (you must call
-     * {@link #setEntityJson} to update the entity after modifying the map).
-     * Added 2019-09-24/2.1.0.
+     * Interprets the named json field as a read-only map.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param name the field name
+     * @param returnDefault if true, when result is null, either a new collection (when useJsonCache false) or empty
+     *                      collection returned (when useJsonCache true); if false returns null
+     * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
      */
-    public Map<String, Object> getEntityJsonAsMapOrNew() {
-        Map<String, Object> map = getJsonAsMap(ModelEntity.ENTITY_JSON_FIELD);
-        return (map != null) ? map : createEntityJsonMap();
+    public <K, V> Map<K, V> getJsonMap(String name, boolean returnDefault, boolean useJsonCache) {
+        return getJsonObject(name, Map.class, returnDefault, useJsonCache);
     }
 
     /**
-     * SCIPIO: Interprets the standard entityJson field as a JSON object and evaluates it to a Map Java type;
-     * if none, returns an unmodifiable empty map (you must call
-     * {@link #setEntityJson} to update the entity after modifying the map). Helper for read operations.
-     * Added 2019-09-24/2.1.0.
+     * Interprets the named json field as a read-only map, or empty map if null, with local json caching.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param name the field name
      */
-    public Map<String, Object> getEntityJsonAsMapOrEmpty() {
-        Map<String, Object> map = getJsonAsMap(ModelEntity.ENTITY_JSON_FIELD);
-        return (map != null) ? map : Collections.emptyMap();
+    public <K, V> Map<K, V> getJsonMap(String name) {
+        return getJsonMap(name, true, true);
     }
 
     /**
-     * SCIPIO: Returns a new entityJson Map.
-     * Added 2019-09-24/2.1.0.
+     * Interprets the named json field as a map copy, or new map if null, with no caching.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param name the field name
+     * @param returnDefault if true, when result is null, returns a new collection; if false returns null
      */
-    public Map<String, Object> createEntityJsonMap() {
-        return createJsonMap();
+    public <K, V> Map<K, V> getJsonMapCopy(String name, boolean returnDefault) {
+        return getJsonMap(name, returnDefault, false);
     }
 
     /**
-     * SCIPIO: Converts the given Java Map to a JSON string and writes it to the standard entityJson field.
-     * Added 2019-09-24/2.1.0.
+     * Returns a new json map.
+     * <p>SCIPIO: 2.1.0: Added.</p>
      */
-    public void setEntityJson(Map<String, ?> jsonMap) {
+    public <K, V> Map<K, V> makeJsonMap(Map<? extends K, ? extends V> initialValues) {
+        return (initialValues != null) ? new LinkedHashMap<>(initialValues) : new LinkedHashMap<>();
+    }
+
+    /**
+     * Returns a new json map.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public <K, V> Map<K, V> makeJsonMap() {
+        return makeJsonMap(null);
+    }
+
+    /**
+     * Interprets the named json field as a read-only list.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param name the field name
+     * @param returnDefault if true, when result is null, either a new collection (when useJsonCache false) or empty
+     *                      collection returned (when useJsonCache true); if false returns null
+     * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
+     */
+    public <T> List<T> getJsonList(String name, boolean returnDefault, boolean useJsonCache) {
+        return getJsonObject(name, List.class, returnDefault, useJsonCache);
+    }
+
+    /**
+     * Interprets the named json field as a read-only list, or empty list if null, with local json caching.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param name the field name
+     */
+    public <T> List<T> getJsonList(String name) {
+        return getJsonList(name, true, true);
+    }
+
+    /**
+     * Interprets the named json field as a list copy, or new list if null, with no caching.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param name the field name
+     * @param returnDefault if true, when result is null, returns a new collection; if false returns null
+     */
+    public <T> List<T> getJsonListCopy(String name, boolean returnDefault) {
+        return getJsonList(name, returnDefault, false);
+    }
+
+    /**
+     * Returns a new json list.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public <E> List<E> makeJsonList(Collection<? extends E> initialValues) {
+        return (initialValues != null) ? new ArrayList<>(initialValues) : new ArrayList<>();
+    }
+
+    /**
+     * Returns a new json list.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public <E> List<E> makeJsonList() {
+        return makeJsonList(null);
+    }
+
+    /**
+     * Interprets the named json field as a read-only set.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param name the field name
+     * @param returnDefault if true, when result is null, either a new collection (when useJsonCache false) or empty
+     *                      collection returned (when useJsonCache true); if false returns null
+     * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
+     */
+    public <T> Set<T> getJsonSet(String name, boolean returnDefault, boolean useJsonCache) {
+        return getJsonObject(name, Set.class, returnDefault, useJsonCache);
+    }
+
+    /**
+     * Interprets the named json field as a read-only set, or empty set if null, with local json caching.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param name the field name
+     */
+    public <T> Set<T> getJsonSet(String name) {
+        return getJsonSet(name, true, true);
+    }
+
+    /**
+     * Interprets the named json field as a set copy, or new set if null, with no caching.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param name the field name
+     * @param returnDefault if true, when result is null, returns a new collection; if false returns null
+     */
+    public <T> Set<T> getJsonSetCopy(String name, boolean returnDefault) {
+        return getJsonSet(name, returnDefault, false);
+    }
+
+    /**
+     * Returns a new json set.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public <E> Set<E> makeJsonSet(Collection<? extends E> initialValues) {
+        return (initialValues != null) ? new LinkedHashSet<>(initialValues) : new LinkedHashSet<>();
+    }
+
+    /**
+     * Returns a new json set.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public <E> Set<E> makeJsonSet() {
+        return makeJsonSet(null);
+    }
+
+    /**
+     * Interprets the standard entityJson field as a read-only map.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param returnDefault if true, when result is null, either a new collection (when useJsonCache false) or empty
+     *                      collection returned (when useJsonCache true); if false returns null
+     * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
+     */
+    public <K, V> Map<K, V> getEntityJsonMap(boolean returnDefault, boolean useJsonCache) {
+        return getJsonMap(ModelEntity.ENTITY_JSON_FIELD, returnDefault, useJsonCache);
+    }
+
+    /**
+     * Interprets the named json field as a read-only map, or empty map if null, with local json caching.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public <K, V> Map<K, V> getEntityJsonMap() {
+        return getEntityJsonMap(true, true);
+    }
+
+    /**
+     * Interprets the standard entityJson field as a map copy, or new map if null, with no caching.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param returnDefault if true, when result is null, returns a new collection; if false returns null
+     */
+    public <K, V> Map<K, V> getEntityJsonMapCopy(boolean returnDefault) {
+        return getEntityJsonMap(returnDefault, false);
+    }
+
+    /**
+     * Converts the given map to JSON string and writes it to the standard entityJson field.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public void setEntityJsonMap(Map<String, ?> jsonMap) {
         setJson(ModelEntity.ENTITY_JSON_FIELD, jsonMap);
     }
 
     /**
-     * SCIPIO: Sets the standard entityJson field using the given JSON string.
-     * Added 2019-09-24/2.1.0.
+     * Returns a new json map for the standard entityJson field.
+     * <p>SCIPIO: 2.1.0: Added.</p>
      */
-    public void setEntityJson(String jsonString) {
-        set(ModelEntity.ENTITY_JSON_FIELD, jsonString);
+    public <K, V> Map<K, V> makeEntityJsonMap(Map<? extends K, ? extends V> initialValues) {
+        return makeJsonMap(initialValues);
     }
 
     /**
-     * SCIPIO: Sets the standard entityJson field using the given JSON string.
-     * Added 2020-03-31/2.1.0.
+     * Returns a new json map for the standard entityJson field.
+     * <p>SCIPIO: 2.1.0: Added.</p>
      */
-    public void setEntityJson(JSON json) {
-        set(ModelEntity.ENTITY_JSON_FIELD, (json != null) ? json.toString() : null);
+    public <K, V> Map<K, V> makeEntityJsonMap() {
+        return makeEntityJsonMap(null);
+    }
+
+    /**
+     * Clears last json Map/List cache.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public void clearJsonCache() {
+        this.jsonCache = null;
+    }
+
+    /**
+     * Clears last json Map/List cache for the field name.
+     * <p>NOTE: Currently forces a full clear.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public void clearJsonCache(String name) {
+        // TODO: REVIEW
+        //Map<String, Object> jsonCache = this.jsonCache;
+        //if (jsonCache != null) {
+        //    jsonCache.remove(name);
+        //}
+        clearJsonCache();
     }
 
     @SuppressWarnings("deprecation")

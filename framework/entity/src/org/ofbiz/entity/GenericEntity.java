@@ -926,7 +926,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
      * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
      */
     public <T> T getJsonObject(String name, Class<?> targetType, boolean returnDefault, boolean useJsonCache) {
-        T jsonObject;
+        T jsonObject = null;
         Map<String, Object> jsonCache = null;
         if (useJsonCache) {
             jsonCache = this.jsonCache;
@@ -938,14 +938,13 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
             }
         }
         String jsonString = getString(name);
-        if (jsonString == null) {
-            return null;
-        }
-        try {
-            jsonObject = JSON.toObject(jsonString, targetType);
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " + getEntityName() +
-                    " from JSON to Java type [" + targetType + "]", e);
+        if (jsonString != null) {
+            try {
+                jsonObject = JSON.toObject(jsonString, targetType);
+            } catch (IOException e) {
+                throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " + getEntityName() +
+                        " from JSON to Java type [" + targetType + "]", e);
+            }
         }
         if (useJsonCache) {
             if (jsonObject != null) { // NOTE: We don't need any null-flag objects because get() empty string is fast
@@ -954,10 +953,16 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
                 Map<String, Object> jsonCacheNew = (jsonCache != null) ? new HashMap<>(jsonCache) : new HashMap<>();
                 jsonCacheNew.put(name, jsonObject);
                 this.jsonCache = Collections.unmodifiableMap(jsonCacheNew);
+            } else {
+                if (returnDefault) {
+                    jsonObject = UtilMisc.emptyGeneric(targetType);
+                }
             }
         } else {
-            if (returnDefault && jsonObject == null) {
-                jsonObject = makeJsonObject(targetType);
+            if (jsonObject == null) {
+                if (returnDefault) {
+                    jsonObject = makeJsonObject(targetType);
+                }
             }
         }
         return jsonObject;

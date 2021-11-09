@@ -2345,6 +2345,31 @@ public final class UtilMisc {
     }
 
     /**
+     * SCIPIO: Returns the Collections.emptyXxx instance corresponding to the specified type, best-effort.
+     */
+    public static <T> T emptyGeneric(Class<?> type) {
+        if (List.class.isAssignableFrom(type)) {
+            return UtilGenerics.cast(Collections.emptyList());
+        } else if (NavigableSet.class.isAssignableFrom(type)) {
+            return UtilGenerics.cast(Collections.emptyNavigableSet());
+        } else if (SortedSet.class.isAssignableFrom(type)) {
+            return UtilGenerics.cast(Collections.emptySortedSet());
+        } else if (Set.class.isAssignableFrom(type)) {
+            return UtilGenerics.cast(Collections.emptySet());
+        } else if (NavigableMap.class.isAssignableFrom(type)) {
+            return UtilGenerics.cast(Collections.emptyNavigableMap());
+        } else if (SortedMap.class.isAssignableFrom(type)) {
+            return UtilGenerics.cast(Collections.emptySortedMap());
+        } else if (Map.class.isAssignableFrom(type)) {
+            return UtilGenerics.cast(Collections.emptyMap());
+        } else if (Collection.class.isAssignableFrom(type)) {
+            return UtilGenerics.cast(Collections.emptyList());
+        } else {
+            throw new IllegalArgumentException("Unrecognized collection type: " + type);
+        }
+    }
+
+    /**
      * SCIPIO: Attempts to optimize the given collection.
      * Currently simply trims ArrayLists.
      * NOTE: future versions may return a different instance, so the result must be used.

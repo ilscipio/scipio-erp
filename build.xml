@@ -1313,6 +1313,9 @@ code package.
     <target name="build-debug" depends="stop-wait,build,start-debug"
             description="Convenience task alias for: stop-wait build start-debug">
     </target>
+    <target name="rebuild" depends="stop-wait,clean,build"
+            description="Convenience task alias for: stop-wait clean build">
+    </target>
     <target name="rebuild-start" depends="stop-wait,clean,build,start"
             description="Convenience task alias for: stop-wait clean build start">
     </target>

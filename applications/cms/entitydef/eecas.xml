@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<entity-eca xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
+
+    <!-- Push products to bing -->
+    <eca entity="Product" operation="store" event="return">
+        <and>
+            <condition field-name="productId" operator="is-not-empty"/>
+            <condition field-name="readyForSale" operator="not-equals" value="N"/>
+        </and>
+        <action service="submitProductToBingIndex" mode="async" persist="true"/>
+    </eca>
+
+</entity-eca>

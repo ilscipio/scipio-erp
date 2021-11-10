@@ -1075,4 +1075,12 @@
         <attribute name="redirectsJson" type="List" mode="OUT" optional="false"/>
     </service>
 
+    <!-- Other -->
+    <service name="submitProductToBingIndex" engine="java"
+             location="com.ilscipio.scipio.cms.CmsServices" invoke="submitProductToBingIndex" auth="true">
+        <description>Get Bing to index a new product page (requires key to be set in properties)</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+    </service>
+
 </services>

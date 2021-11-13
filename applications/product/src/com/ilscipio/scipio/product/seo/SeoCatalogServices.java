@@ -484,13 +484,11 @@ public abstract class SeoCatalogServices {
         // because setting ID here could be masking the issue at the same time as
         // causing potiential double IDs in URL parts...
         Debug.logWarning(logPrefix+"Could not determine a SEO alternative URL value for ALTERNATIVE_URL primary Content record"
-                + " for " + prodOrCatEntity.getEntityName() + " '" + prodOrCatEntity.getPkShortValueString() + "'"
+                + " for " + prodOrCatEntity.getEntityName() + " [" + prodOrCatEntity.getPkShortValueString() + "]"
                 + "; no valid XXX_NAME Content records or xxxName entity fields are available; record's textData will be empty", module);
 
         return null;
     }
-
-
 
     /**
      * Replaces the textData of the the ALTERNATIVE_URL Content and its associated ALTERNATE_LOCALE Contents

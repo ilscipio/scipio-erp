@@ -467,7 +467,13 @@ public abstract class LocalizedContentWorker {
             }
             mainContent = createSimpleTextContent(delegator, dispatcher, mainLocaleString, mainTextData, newRecordContentFields, newRecordDataResourceFields, newId, newId);
         } else {
-            LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, mainContent, mainLocaleString, mainTextData);
+            if (UtilValidate.isNotEmpty(mainTextData)) {
+                LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, mainContent, mainLocaleString, mainTextData);
+            } else {
+                // TODO: REVIEW: 2.1.0: For data safety, don't replace existing text data if incoming is empty
+                Debug.logWarning("Not updating main simple text content [" + mainContent.get("contentId") + "] [" +
+                        mainLocaleString + "]: empty value", module);
+            }
         }
 
         // SPECIAL: 2017-11-28: we must remove the mainLocaleString from remainingLocales because
@@ -496,7 +502,13 @@ public abstract class LocalizedContentWorker {
             String textData = LocalizedSimpleTextInfo.getLocaleMapTextData(localeEntryMap.get(localeString));
             if (UtilValidate.isNotEmpty(textData)) {
                 if (!removeDupLocales || remainingLocales.contains(localeString)) {
-                    LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, content, localeString, textData);
+                    if (UtilValidate.isNotEmpty(textData)) {
+                        LocalizedContentWorker.updateSimpleTextContent(delegator, dispatcher, content, localeString, textData);
+                    } else {
+                        // TODO: REVIEW: 2.1.0: For data safety, don't replace existing text data if incoming is empty
+                        Debug.logWarning("Not updating localized simple text content [" + mainContent.get("contentId") +
+                                "] [" + localeString + "]: empty value", module);
+                    }
                     remainingLocales.remove(localeString);
                 } else {
                     removeContentAndRelated(delegator, dispatcher, context, content);

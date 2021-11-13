@@ -137,10 +137,10 @@ code package.
     <!-- TODO: 
     
     <eca service="createProduct" event="commit">
-        <action service="generateProductAlternativeUrlsCore" mode="sync"/>
+        <action service="generateProductAlternativeUrlsCore" mode="sync" value-attr="product" reload-value="true"/>
     </eca>
     <eca service="updateProduct" event="commit">
-        <action service="generateProductAlternativeUrlsCore" mode="sync"/>
+        <action service="generateProductAlternativeUrlsCore" mode="sync" value-attr="product" reload-value="true"/>
     </eca>
     
     -->

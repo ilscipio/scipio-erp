@@ -356,5 +356,14 @@ under the License.
             <xs:annotation><xs:documentation>If set and service is persist="false" (default), only runs the eca if the named
                 pool is named as run-from-pool="[name]" in serviceengine.xml; if persist="true", creates the job using the named pool. (SCIPIO)</xs:documentation></xs:annotation>
         </xs:attribute>
+        <xs:attribute type="xs:boolean" name="reload-value" default="false">
+            <xs:annotation>
+                <xs:documentation>
+                    For "store" operation only: instead of passing the original entity value to be stored, which may
+                    be incomplete, it will be reloaded from the data source by its primary key before being passed in
+                    the attribute denoted by value-attr. SCIPIO: 2.1.0: Added.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
     </xs:attributeGroup>
 </xs:schema>

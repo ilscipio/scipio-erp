@@ -53,6 +53,7 @@ public final class EntityEcaAction implements java.io.Serializable {
     protected final Long priority; // SCIPIO
     private final String jobPool; // SCIPIO
     private transient Boolean quiet = null; // SCIPIO: if true, don't log when this gets triggered
+    private final boolean reloadValue; // SCIPIO
 
     public EntityEcaAction(Element action) {
         this.serviceName = action.getAttribute("service");
@@ -77,6 +78,7 @@ public final class EntityEcaAction implements java.io.Serializable {
         this.priority = priority;
         String jobPool = action.getAttribute("job-pool");
         this.jobPool = UtilValidate.isNotEmpty(jobPool) ? jobPool : null;
+        this.reloadValue = UtilMisc.booleanValue(action.getAttribute("reload-value"), false);
     }
 
     public String getServiceName() {
@@ -84,7 +86,8 @@ public final class EntityEcaAction implements java.io.Serializable {
     }
 
     /**
-     * SCIPIO: True if the service this refers to has log-eca="quiet" by default.
+     * Returns true if the service this refers to has log-eca="quiet" by default.
+     * <p>SCIPIO: 2.0.0: Added.</p>
      */
     public boolean isQuiet(DispatchContext dctx) {
         Boolean quiet = this.quiet;
@@ -98,6 +101,14 @@ public final class EntityEcaAction implements java.io.Serializable {
             this.quiet = quiet;
         }
         return quiet;
+    }
+
+    /**
+     * Returns true if should reload value from source, for "store" operation.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public boolean isReloadValue() {
+        return reloadValue;
     }
 
     public void runAction(DispatchContext dctx, Map<String, ? extends Object> context, GenericEntity newValue) throws GenericEntityException {

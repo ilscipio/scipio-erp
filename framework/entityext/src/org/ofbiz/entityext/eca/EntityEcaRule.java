@@ -60,6 +60,7 @@ public final class EntityEcaRule implements java.io.Serializable {
     private boolean enabled = true;
     private final List<String> conditionFieldNames  = new ArrayList<String>();
     protected transient Boolean initEnabled = null;
+    private final boolean reloadValue; // SCIPIO
 
     public EntityEcaRule(Element eca) {
         this.entityName = eca.getAttribute("entity");
@@ -69,6 +70,7 @@ public final class EntityEcaRule implements java.io.Serializable {
         this.enabled = !"false".equals(eca.getAttribute("enabled"));
         ArrayList<EntityEcaCondition> conditions = new ArrayList<EntityEcaCondition>();
         ArrayList<Object> actionsAndSets = new ArrayList<Object>();
+        boolean reloadValue = false;
         for (Element element: UtilXml.childElementList(eca)) {
             // SCIPIO: refactored to EntityEcaCondition
             EntityEcaCondition condition = EntityEcaCondition.getCondition(element);
@@ -76,7 +78,11 @@ public final class EntityEcaRule implements java.io.Serializable {
                 conditions.add(condition);
                 conditionFieldNames.addAll(condition.getFieldNames());
             } else if ("action".equals(element.getNodeName())) {
-                actionsAndSets.add(new EntityEcaAction(element));
+                EntityEcaAction ecaAction = new EntityEcaAction(element);
+                if (ecaAction.isReloadValue()) {
+                    reloadValue = true;
+                }
+                actionsAndSets.add(ecaAction);
             } else if ("set".equals(element.getNodeName())) {
                 actionsAndSets.add(new EntityEcaSetField(element));
             } else {
@@ -87,6 +93,7 @@ public final class EntityEcaRule implements java.io.Serializable {
         this.conditions = Collections.unmodifiableList(conditions);
         actionsAndSets.trimToSize();
         this.actionsAndSets = Collections.unmodifiableList(actionsAndSets);
+        this.reloadValue = reloadValue; // SCIPIO
         if (Debug.verboseOn()) {
             Debug.logVerbose("Conditions: " + conditions, module);
             Debug.logVerbose("actions and sets (intermixed): " + actionsAndSets, module);
@@ -115,6 +122,14 @@ public final class EntityEcaRule implements java.io.Serializable {
 
     public List<EntityEcaCondition> getConditions() {
         return this.conditions;
+    }
+
+    /**
+     * Returns true if should reload value from source, for "store" operation.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public boolean isReloadValue() {
+        return reloadValue;
     }
 
     public void eval(String currentOperation, DispatchContext dctx, GenericEntity value, boolean isError, Set<String> actionsRun) throws GenericEntityException {

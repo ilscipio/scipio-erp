@@ -34,6 +34,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.eca.EntityEcaHandler;
 import org.ofbiz.entityext.EntityServiceFactory;
 import org.ofbiz.service.DispatchContext;
@@ -105,8 +106,35 @@ public class DelegatorEcaHandler implements EntityEcaHandler<EntityEcaRule> {
 
         if (!rules.isEmpty() && Debug.verboseOn()) Debug.logVerbose("Running ECA (" + event + ").", module);
         Set<String> actionsRun = new TreeSet<String>();
+        GenericEntity reloadedValue = null; // SCIPIO: 2.1.0: reload-value support for store operation
+        boolean checkReload = EntityEcaHandler.OP_STORE.equals(currentOperation);
         for (EntityEcaRule eca: rules) {
-            eca.eval(currentOperation, this.getDispatchContext(), value, isError, actionsRun);
+            GenericEntity effectiveValue = value;
+            if (checkReload && eca.isReloadValue()) {
+                if (reloadedValue == null) {
+                    if (!value.containsPrimaryKey()) {
+                        // This shouldn't happen for store operation, so throw exception because the service relies
+                        // on us to provide a complete value.
+                        throw new GenericEntityException("ECA for entity [" + eca.getEntityName() + "] for store" +
+                                " operation invoked with missing or incomplete primary key; cannot honor reload-value");
+                    }
+                    if (value instanceof GenericValue) {
+                        value.getDelegator().clearCacheLine((GenericValue) value);
+                    }
+                    reloadedValue = value.getDelegator().findOne(value.getEntityName(), value.getPrimaryKey(), false);
+                    if (reloadedValue == null) {
+                        throw new GenericEntityException("ECA for entity [" + eca.getEntityName() + "] for store" +
+                                " operation cannot be invoked due to missing record in data source for primary key [" +
+                                value.getPrimaryKey() + "; cannot honor reload-value");
+                    }
+                    // If called before the actual store operation (not recommended), merge with incoming value
+                    if (EntityEcaHandler.EV_VALIDATE.equals(event) || EntityEcaHandler.EV_RUN.equals(event)) {
+                        reloadedValue.putAll(value);
+                    }
+                }
+                effectiveValue = reloadedValue;
+            }
+            eca.eval(currentOperation, this.getDispatchContext(), effectiveValue, isError, actionsRun);
         }
     }
 }

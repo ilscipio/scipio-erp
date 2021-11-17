@@ -441,6 +441,30 @@ public class ShipmentServices {
                 }
                 if (UtilValidate.isNotEmpty(currentEstimate.getString("geoIdTo"))) {
                     prioritySum += PRIORITY_GEO;
+                    try {
+                        GenericValue geo = EntityQuery.use(delegator).from("Geo").where("geoId", currentEstimate.getString("geoIdTo")).cache().queryOne();
+                        switch (geo.getString("geoTypeId")) {
+                            case "CITY":
+                            case "COUNTY-CITY":
+                                prioritySum += 5;
+                                break;
+                            case "PROVINCE":
+                                prioritySum += 4;
+                                break;
+                            case "COUNTY":
+                                prioritySum += 3;
+                                break;
+                            case "STATE":
+                            case "REGION":
+                                prioritySum += 2;
+                                break;
+                            case "COUNTRY":
+                                prioritySum += 1;
+                                break;
+                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e.getMessage(), module);
+                    }
                 }
                 if (UtilValidate.isNotEmpty(currentEstimate.getString("weightBreakId"))) {
                     prioritySum += PRIORITY_WEIGHT;

@@ -40,7 +40,6 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -148,19 +147,7 @@ public class ServiceEventHandler implements EventHandler {
         // SCIPIO: application/json request body parameters
         Map<String, Object> requestBodyMap = RequestBodyMapHandlerFactory.getRequestBodyMap(request);
 
-        // SCIPIO: set of parameters meant to be skipped while getting rawParametersMap below,
-        // only done if they happen to be present in request parameters in the first place.
-        // In this way we ensure that whatever that comes in request parameters takes precedence in special situations.
-        Map<String, Object> parametersMap = UtilHttp.getParameterMap(request);
-        String[] parametersToSkip = UtilProperties.getPropertyValue("service", "service.handler.parameters.skip", "").split(",");
-        Set<String> parametersToSkipFiltered = UtilMisc.newSet();
-        for (String parameterToSkip : parametersToSkip) {
-            if (parametersMap.containsKey(parameterToSkip.trim())) {
-                parametersToSkipFiltered.add(parameterToSkip.trim());
-            }
-        }
-
-        Map<String, Object> rawParametersMap = UtilHttp.getCombinedMap(request, parametersToSkipFiltered);
+        Map<String, Object> rawParametersMap = UtilHttp.getCombinedMap(request);
         Set<String> urlOnlyParameterNames = UtilHttp.getUrlOnlyParameterMap(request).keySet();
 
         // we have a service and the model; build the context

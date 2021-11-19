@@ -22,14 +22,7 @@ import static org.ofbiz.base.util.UtilGenerics.checkMap;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -48,13 +41,7 @@ import com.ilscipio.scipio.ce.util.PathUtil;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilObject;
-import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
@@ -571,13 +558,25 @@ public class ContextFilter implements Filter {
     }
 
     protected void putAllInitParametersInAttributes() {
-        Enumeration<String> initParamEnum = UtilGenerics.cast(config.getServletContext().getInitParameterNames());
+        ServletContext servletContext = config.getServletContext();
+
+        // SCIPIO: 2.1.0: Parse special params and excludes
+        Set<String> scpExclApplParams = UtilHttp.getContextParamAttrAsNameSet(servletContext, "scpExclApplParams", true);
+        Set<String> scpExclApplAttribs = UtilHttp.getContextParamAttrAsNameSet(servletContext, "scpExclApplAttribs", false);
+
+        Enumeration<String> initParamEnum = UtilGenerics.cast(servletContext.getInitParameterNames());
         while (initParamEnum.hasMoreElements()) {
             String initParamName = initParamEnum.nextElement();
+            if ((scpExclApplAttribs != null && scpExclApplParams.contains(initParamName)) ||
+                    "scpExclApplParams".equals(initParamName) || "scpExclApplAttribs".equals(initParamName)) {
+                continue;
+            }
             String initParamValue = config.getServletContext().getInitParameter(initParamName);
-            if (Debug.verboseOn()) Debug.logVerbose("Adding web.xml context-param to application attribute with name [" + initParamName + "] and value [" + initParamValue + "]", module);
-            config.getServletContext().setAttribute(initParamName, initParamValue);
+            if (Debug.verboseOn())
+                Debug.logVerbose("Adding web.xml context-param to application attribute with name [" + initParamName + "] and value [" + initParamValue + "]", module);
+            servletContext.setAttribute(initParamName, initParamValue);
         }
+
         String GeronimoMultiOfbizInstances = (String) config.getServletContext().getAttribute("GeronimoMultiOfbizInstances");
         if (UtilValidate.isNotEmpty(GeronimoMultiOfbizInstances)) {
             String ofbizHome = System.getProperty("ofbiz.home");

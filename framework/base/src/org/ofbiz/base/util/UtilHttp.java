@@ -134,11 +134,25 @@ public final class UtilHttp {
      * -- this method will only use the skip names for session and servlet context attributes.
      * <p>SCIPIO: 2.1.0: This method now excludes parameters defined in controller request-parameter-filter to prevent
      * unintended manipulation of screens when corresponding request attributes are missing.</p>
+     * <p>SCIPIO: 2.1.0: This method now supports preventing servlet context map attributes from being included
+     * that are named by scpExclApplParams.</p>
      */
     public static Map<String, Object> getCombinedMap(HttpServletRequest request, Set<? extends String> namesToSkip, Boolean readBody) {
         Map<String, Object> combinedMap = new HashMap<>();
         combinedMap.putAll(getParameterMap(request, null, null, readBody, true));                   // parameters override nothing
-        combinedMap.putAll(getServletContextMap(request, namesToSkip)); // bottom level application attributes
+        Set<? extends String> namesToSkipAppl;
+        Set<? extends String> scpExclApplParams = UtilHttp.getContextParamAttrAsNameSet(request.getServletContext(), "scpExclApplParams", true);
+        if (UtilValidate.isNotEmpty(scpExclApplParams)) {
+            if (UtilValidate.isNotEmpty(namesToSkip)) {
+                namesToSkipAppl = new HashSet<String>(namesToSkip);
+                namesToSkipAppl.addAll(UtilGenerics.cast(scpExclApplParams));
+            } else {
+                namesToSkipAppl = scpExclApplParams;
+            }
+        } else {
+            namesToSkipAppl = namesToSkip;
+        }
+        combinedMap.putAll(getServletContextMap(request, namesToSkipAppl)); // bottom level application attributes
         combinedMap.putAll(getSessionMap(request, namesToSkip));        // session overrides application
         combinedMap.putAll(getAttributeMap(request));                   // attributes trump them all
         return combinedMap;
@@ -2589,5 +2603,31 @@ public final class UtilHttp {
      */
     public static UtilHttp getStaticInstance() {
         return INSTANCE;
+    }
+
+    /**
+     * Returns the web.xml context-param as a name set.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static Set<String> getContextParamAttrAsNameSet(ServletContext servletContext, String attrName, boolean useAttrCache) {
+        Object value = servletContext.getAttribute(attrName);
+        if (value == null) {
+            value = servletContext.getInitParameter(attrName);
+            if (value == null) {
+                value = UtilProperties.getPropertyValueOrNull("scipioWebapp", "webapp.contextParam." + attrName);
+            }
+        }
+        Set<String> values = null;
+        if (value instanceof Set) {
+            values = UtilGenerics.cast(value);
+        } else if (value instanceof Collection) {
+            values = new LinkedHashSet<>(UtilGenerics.cast(value));
+        } else if (value instanceof String && !((String) value).isEmpty()) {
+            values = new LinkedHashSet<>(Arrays.asList(((String) value).split("[:,;]")));
+            if (useAttrCache) {
+                servletContext.setAttribute(attrName, values);
+            }
+        }
+        return values;
     }
 }

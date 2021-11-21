@@ -408,7 +408,7 @@ code package.
                     </#if>
                 </#assign>
 
-                <@modal id="modal_rule_action_${(productPromoCond.productPromoRuleId)!}_${(productPromoCond.productPromoCondSeqId)!}" label=wrapAsRaw(actionLabel, 'htmlmarkup')>
+                <@modal id="modal_rule_action_${(productPromoAction.productPromoRuleId)}_${(productPromoAction.productPromoActionSeqId)!}" label=wrapAsRaw(actionLabel, 'htmlmarkup')>
                     <@section title=(uiLabelMap.ProductActionForRule + productPromoRule.productPromoRuleId)!>
                       <#-- <b> ${uiLabelMap.ProductAction} ${(productPromoAction.productPromoActionSeqId)!}</b> -->
                       <form method="post" action="<@pageUrl>updateProductPromoAction</@pageUrl>">

@@ -351,11 +351,11 @@ code package.
       <@menu args=menuArgs><#-- type="button" -->
         <@menuitem type="submit" text=uiLabelMap.WebtoolsExport class="+${styles.action_run_sys!} ${styles.action_export!}" />
       <#if includeToggleAdv>
-         <@menuitem type="link" text=uiLabelMap.CommonAdvanced class="+${styles.action_run_local!} ${styles.action_show!} dataexport-toggle-advanced" />
+         <@menuitem type="link" text=uiLabelMap.CommonAdvanced class="+${styles.action_run_local!} ${styles.action_show!}" contentClass="+dataexport-toggle-advanced"/>
       </#if>
       <#if includeCheckAll>
-        <@menuitem type="link" text=uiLabelMap.WebtoolsCheckAllPlain class="+${styles.action_run_local!} ${styles.action_select!} dataexport-entitysel-checkall" />
-        <@menuitem type="link" text=uiLabelMap.WebtoolsUnCheckAll class="+${styles.action_run_local!} ${styles.action_select!} dataexport-entitysel-uncheckall" />
+        <@menuitem type="link" text=uiLabelMap.WebtoolsCheckAllPlain class="+${styles.action_run_local!} ${styles.action_select!}" contentClass="+dataexport-entitysel-checkall"/>
+        <@menuitem type="link" text=uiLabelMap.WebtoolsUnCheckAll class="+${styles.action_run_local!} ${styles.action_select!}" contentClass="+dataexport-entitysel-uncheckall"/>
       </#if>
       </@menu>
     </#macro>

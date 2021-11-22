@@ -340,8 +340,19 @@ public class ScipioHttpClient implements Closeable {
         public CloseableHttpClient createHttpClient(HttpClientConnectionManager connectionManager) {
             return createHttpClient(connectionManager, null, null);
         }
+
         /** Build method for HttpClient. */
         public CloseableHttpClient createHttpClient(HttpClientConnectionManager connectionManager, List<HttpRequestInterceptor> requestInterceptors, List<HttpResponseInterceptor> responseInterceptors) {
+            return createHttpClientBuilder(connectionManager, requestInterceptors, responseInterceptors).build();
+        }
+
+        /** Build method for HttpClient. */
+        public HttpClientBuilder createHttpClientBuilder(HttpClientConnectionManager connectionManager) {
+            return createHttpClientBuilder(connectionManager, null, null);
+        }
+
+        /** Build method for HttpClient. */
+        public HttpClientBuilder createHttpClientBuilder(HttpClientConnectionManager connectionManager, List<HttpRequestInterceptor> requestInterceptors, List<HttpResponseInterceptor> responseInterceptors) {
             HttpClientBuilder builder = HttpClients.custom().setDefaultRequestConfig(buildRequestConfig());
             if (UtilValidate.isNotEmpty(requestInterceptors)) {
                 for (HttpRequestInterceptor interceptor : requestInterceptors) {
@@ -358,7 +369,7 @@ public class ScipioHttpClient implements Closeable {
             } else {
                 builder.setSSLSocketFactory(getSSLConnectionSocketFactory());
             }
-            return builder.build();
+            return builder;
         }
 
         /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for PoolingNHttpClientConnectionManager mainly. */
@@ -382,12 +393,41 @@ public class ScipioHttpClient implements Closeable {
             return cm;
         }
 
-        /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for HttpAsyncClient. */
+        /**
+         * Build method for HttpAsyncClient.
+         * <p>SCIPIO: 2020-01-14: NEW ASYNC SUPPORT</p>
+         */
         public CloseableHttpAsyncClient createAsyncHttpClient(NHttpClientConnectionManager connectionManager) {
             return createAsyncHttpClient(connectionManager, null, null);
         }
+
+        /**
+         * Build method for HttpAsyncClient.
+         * <p>SCIPIO: 2020-01-14: NEW ASYNC SUPPORT</p>
+         */
         public CloseableHttpAsyncClient createAsyncHttpClient(NHttpClientConnectionManager connectionManager, List<HttpRequestInterceptor> requestInterceptors, List<HttpResponseInterceptor> responseInterceptors) {
-             HttpAsyncClientBuilder builder = HttpAsyncClients.custom()
+            CloseableHttpAsyncClient httpAsyncClient = createAsyncHttpClientBuilder(connectionManager, requestInterceptors, responseInterceptors).build();
+            if (!httpAsyncClient.isRunning()) {
+                httpAsyncClient.start();
+            }
+            return httpAsyncClient;
+        }
+
+        /**
+         * Build method for HttpAsyncClient.
+         * <p>SCIPIO: 2020-01-14: NEW ASYNC SUPPORT</p>
+         */
+        public HttpAsyncClientBuilder createAsyncHttpClientBuilder(NHttpClientConnectionManager connectionManager) {
+            return createAsyncHttpClientBuilder(connectionManager, null, null);
+        }
+
+        /**
+         * Build method for HttpAsyncClient.
+         * <p>NOTE: If using this method, make sure to call {@link CloseableHttpAsyncClient#start()} if not {@link CloseableHttpAsyncClient#isRunning()}.</p>
+         * <p>SCIPIO: 2020-01-14: NEW ASYNC SUPPORT</p>
+         */
+        public HttpAsyncClientBuilder createAsyncHttpClientBuilder(NHttpClientConnectionManager connectionManager, List<HttpRequestInterceptor> requestInterceptors, List<HttpResponseInterceptor> responseInterceptors) {
+            HttpAsyncClientBuilder builder = HttpAsyncClients.custom()
                     .setDefaultRequestConfig(buildRequestConfig())
                     .setConnectionManager(connectionManager);
             if (UtilValidate.isNotEmpty(requestInterceptors)) {
@@ -400,11 +440,7 @@ public class ScipioHttpClient implements Closeable {
                     builder.addInterceptorLast(interceptor);
                 }
             }
-            CloseableHttpAsyncClient httpAsyncClient = builder.build();
-            if (!httpAsyncClient.isRunning()) {
-                httpAsyncClient.start();
-            }
-            return httpAsyncClient;
+            return builder;
         }
 
         public Factory getFactory() {

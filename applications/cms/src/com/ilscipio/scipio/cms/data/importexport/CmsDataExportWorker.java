@@ -206,7 +206,7 @@ public abstract class CmsDataExportWorker implements Serializable {
 
         /**
          * this is used to apply the entity names from the preset to the lateral entity traversing instead
-         * of the bulk main queries. In order for this to take effect,
+         * of the bulk main queries.
          */
         protected void setEnterEntityNamesFromPresetInternal(PresetConfig preset) {
             if (preset != null) {
@@ -216,7 +216,7 @@ public abstract class CmsDataExportWorker implements Serializable {
 
         /**
          * this is used to apply the entity names from the preset to the lateral entity traversing instead
-         * of the bulk main queries. In order for this to take effect,
+         * of the bulk main queries.
          */
         protected void setEnterMajorEntityNamesFromPresetInternal(PresetConfig preset) {
             if (preset != null) {
@@ -734,7 +734,7 @@ public abstract class CmsDataExportWorker implements Serializable {
 
             // NOTE: the variants take up huge space, so we exclude them by default
             b.newConfig("CmsAllEntities").setEntityNames(ei.copyCmsEntityNames(null, ei.getCombinedCmsEntityNames(), b.list("CmsMediaVariants"))).complete();
-            b.newConfig("CmsAllEntitiesNoMedia").setEntityNames(ei.getCmsEntityNames()).complete();
+            b.newConfig("CmsAllEntitiesNoMedia").setEntityNames(UtilMisc.excludedSet(ei.getCmsEntityNames(), "ImageSizePreset")).complete();
 
             // NOTE: CmsPages includes the CmsProcessMapping and CmsPageSpecialMapping in order to save the primary path
             b.newConfig("CmsPages").setPmpsMappingTypeId("CMS_PGSPCMAP_PRIMARY").setEntityNames(ei.copyCmsEntityNames(b.list(pfx+"content"), b.list("CmsProcessMapping", "CmsProcessViewMapping", "CmsPageSpecialMapping"))).complete();
@@ -752,8 +752,8 @@ public abstract class CmsDataExportWorker implements Serializable {
             b.newConfig("CmsMenus").setEntityNames(ei.copyCmsEntityNames(null, b.list("CmsMenu"))).complete();
 
             // SPECIAL CASES
-            b.newConfig("CmsMedia").setEntityNames(UtilMisc.toHashSet("CmsMedia")).complete();
-            b.newConfig("CmsMediaWithVariants").setEntityNames(UtilMisc.toHashSet("CmsMedia", "CmsMediaVariants")).complete();
+            b.newConfig("CmsMedia").setEntityNames(UtilMisc.toHashSet("ImageSizePreset", "CmsMedia")).complete();
+            b.newConfig("CmsMediaWithVariants").setEntityNames(UtilMisc.toHashSet("ImageSizePreset", "CmsMedia", "CmsMediaVariants")).complete();
 
             // Simplified (non-advanced) list of names to show in the UI...
             // this must be separate because internally we need access to all the presets
@@ -1502,7 +1502,14 @@ public abstract class CmsDataExportWorker implements Serializable {
             this.handleFileBegin(writer);
 
             for(String curEntityName : getTargetEntityNames()) {
-                numberWritten += exportEntityRecords(null, curEntityName, numberWritten);
+                Collection<String> slaveRecords = entityInfo.getMajorEntityNamesExpandMap().get(curEntityName);
+                if (slaveRecords != null) {
+                    for(String slaveEntityName : slaveRecords) {
+                        numberWritten += exportEntityRecords(null, slaveEntityName, numberWritten);
+                    }
+                } else {
+                    numberWritten += exportEntityRecords(null, curEntityName, numberWritten);
+                }
             }
 
             if (specialTypeGrouping) {
@@ -1667,6 +1674,7 @@ public abstract class CmsDataExportWorker implements Serializable {
             this.handleFileBegin(writer);
 
             Set<String> targetMajorEntityNames = entityInfo.filterMajorCmsEntityNames(this.getTargetEntityNames());
+            boolean imageSizePreset = targetMajorEntityNames.remove("ImageSizePreset");
 
             // SPECIAL: in record-grouping mode, if CMS_PGSPCMAP_PRIMARY was targeted and CmsPage
             // was included, we'll remove CmsProcessMapping from the entities to target because already included in the CmsPage visiting
@@ -1687,9 +1695,23 @@ public abstract class CmsDataExportWorker implements Serializable {
             visitor.setEnterMajorEntityNames(enterMajorEntityNames);
 
             for(String curEntityName : targetMajorEntityNames) {
-                numberWritten += exportEntityRecords(visitor, curEntityName, numberWritten);
+                Collection<String> slaveRecords = entityInfo.getMajorEntityNamesExpandMap().get(curEntityName);
+                if (slaveRecords != null) {
+                    for(String slaveEntityName : slaveRecords) {
+                        numberWritten += exportEntityRecords(visitor, slaveEntityName, numberWritten);
+                    }
+                } else {
+                    numberWritten += exportEntityRecords(visitor, curEntityName, numberWritten);
+                }
             }
 
+            if (imageSizePreset || getTargetSpecialEntityNames().contains("ImageSizePreset")) {
+                for(String entityName : entityInfo.getMajorEntityNamesExpandMap().get("ImageSizePreset")) {
+                    // FIXME: non-integrated solution for now (NOTE: do not pass visitor!)
+                    numberWritten += exportEntityRecords(null, entityName, numberWritten);
+                }
+            }
+            // FIXME: non-integrated solution for now
             if (getTargetSpecialEntityNames().contains("CmsMedia")) {
                 // FIXME: non-integrated solution for now (NOTE: do not pass visitor!)
                 numberWritten += exportEntityRecords(null, "CmsMedia", numberWritten);
@@ -1891,7 +1913,14 @@ public abstract class CmsDataExportWorker implements Serializable {
                 this.handleBegin();
 
                 for(String curEntityName : getTargetEntityNames()) {
-                    fileNumber += exportEntityRecords(null, curEntityName, result, fileNumber, outdir, true);
+                    Collection<String> slaveRecords = entityInfo.getMajorEntityNamesExpandMap().get(curEntityName);
+                    if (slaveRecords != null) {
+                        for(String slaveEntityName : slaveRecords) {
+                            fileNumber += exportEntityRecords(null, slaveEntityName, result, fileNumber, outdir, true);
+                        }
+                    } else {
+                        fileNumber += exportEntityRecords(null, curEntityName, result, fileNumber, outdir, true);
+                    }
                 }
 
                 Map<String, List<GenericValue>> valuesByEntity = Collections.emptyMap();

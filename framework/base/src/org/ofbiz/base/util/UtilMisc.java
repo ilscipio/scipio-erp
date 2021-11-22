@@ -2506,4 +2506,16 @@ public final class UtilMisc {
     public static List<Pattern> getPatterns(Object collectionOrPat) {
         return getPatterns(collectionOrPat, ArrayList::new);
     }
+
+    public static <V> Set<V> excludedSet(Collection<? extends V> in, Collection<? extends V> excludes) {
+        Set<V> set = (in != null) ? new LinkedHashSet<>(in) : new LinkedHashSet<>();
+        if (excludes != null) {
+            set.removeAll(excludes);
+        }
+        return set;
+    }
+
+    public static <V> Set<V> excludedSet(Collection<? extends V> in, V... excludes) {
+        return excludedSet(in, Arrays.asList(excludes));
+    }
 }

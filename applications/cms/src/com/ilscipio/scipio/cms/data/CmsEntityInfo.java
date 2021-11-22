@@ -39,7 +39,8 @@ public class CmsEntityInfo {
     public static final String CMS_ENTITY_BASE_PKG = "com.ilscipio.scipio.cms";
     public static final String CMS_ENTITY_BASE_PKG_PREFIX = CMS_ENTITY_BASE_PKG + ".";
 
-    static final List<String> cmsEntityPkgExcludes = UtilMisc.unmodifiableArrayList("com.ilscipio.scipio.cms.internal"); // NOTE: acts as prefix
+    static final List<String> cmsEntityPkgExcludes = UtilMisc.unmodifiableArrayList("com.ilscipio.scipio.cms.internal",
+            "com.ilscipio.scipio.cms.media"); // NOTE: acts as prefix
 
     /**
      * Default preferred CMS entity order, mainly for data export, but anything that lists the entities
@@ -69,7 +70,9 @@ public class CmsEntityInfo {
             "CmsPage", "CmsPageAuthorization", "CmsPageProductAssoc", "CmsPageScriptAssoc",
             "CmsPageVersion", "CmsPageVersionState",
 
-            "CmsProcessMapping", "CmsPageSpecialMapping", "CmsProcessViewMapping", "CmsViewMapping"
+            "CmsProcessMapping", "CmsPageSpecialMapping", "CmsProcessViewMapping", "CmsViewMapping",
+
+            "ImageSizePreset"
     );
 
     /**
@@ -77,11 +80,14 @@ public class CmsEntityInfo {
      */
     static final Set<String> majorCmsEntityNames = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(new String[] {
             "CmsMenu", "CmsScriptTemplate", "CmsAssetTemplate", "CmsPageTemplate", "CmsPage",
-            "CmsProcessMapping", "CmsViewMapping"
+            "CmsProcessMapping", "CmsViewMapping", "ImageSizePreset"
     })));
 
+    static final Map<String, Set<String>> majorCmsEntityNamesExpandMap = UtilMisc.toMap("ImageSizePreset",
+            UtilMisc.toSet("ImageSizePreset", "ImageSizeDimension", "ImageSize"));
+
     static final Set<String> extCmsEntityNames = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(new String[] {
-            "Content", "DataResource", "ElectronicText"
+            "Content", "DataResource", "ElectronicText", "ImageSize", "ImageSizeDimension"
     })));
 
     /**
@@ -136,6 +142,8 @@ public class CmsEntityInfo {
     protected final Set<String> combinedCmsEntityNames;
     protected final Map<String, Set<String>> combinedCmsEntityNamesByPkg;
     protected final Set<String> combinedMajorCmsEntityNames;
+
+    protected final Map<String, Set<String>> majorEntityNamesExpandMap;
 
     protected final ModelReader modelReader;
 
@@ -208,6 +216,7 @@ public class CmsEntityInfo {
         this.combinedCmsEntityNames = Collections.emptySet();
         this.combinedCmsEntityNamesByPkg = Collections.emptyMap();
         this.combinedMajorCmsEntityNames = Collections.emptySet();
+        this.majorEntityNamesExpandMap = Collections.emptyMap();
     }
 
     /**
@@ -260,7 +269,14 @@ public class CmsEntityInfo {
         // FIXME: order is being imposed here
         Map<String, Set<String>> combinedCmsEntityNamesByPkg = orderMode.makeEntityPkgMap();
         combinedCmsEntityNamesByPkg.putAll(cmsEntityNamesByPkg);
-        combinedCmsEntityNamesByPkg.putAll(specialCmsEntityNamesByPkg);
+        for(Map.Entry<String, Set<String>> entry : specialCmsEntityNamesByPkg.entrySet()) {
+            Set<String> prevList = combinedCmsEntityNamesByPkg.get(entry.getKey());
+            if (prevList != null) {
+                prevList.addAll(entry.getValue());
+            } else {
+                combinedCmsEntityNamesByPkg.put(entry.getKey(), new LinkedHashSet<>(entry.getValue()));
+            }
+        }
         this.combinedCmsEntityNamesByPkg = readOnly ? Collections.unmodifiableMap(combinedCmsEntityNamesByPkg) : combinedCmsEntityNamesByPkg;
 
         // FIXME: order is being imposed here
@@ -268,6 +284,7 @@ public class CmsEntityInfo {
         combinedMajorCmsEntityNames.addAll(majorCmsEntityNames);
         combinedMajorCmsEntityNames.addAll(specialMajorCmsEntityNames);
         this.combinedMajorCmsEntityNames = readOnly ? Collections.unmodifiableSet(combinedMajorCmsEntityNames) : combinedMajorCmsEntityNames;
+        this.majorEntityNamesExpandMap = majorCmsEntityNamesExpandMap;
     }
 
     /******************************************************/
@@ -392,6 +409,10 @@ public class CmsEntityInfo {
      */
     public Set<String> getCombinedMajorCmsEntityNames() {
         return combinedMajorCmsEntityNames;
+    }
+
+    public Map<String, Set<String>> getMajorEntityNamesExpandMap() {
+        return majorEntityNamesExpandMap;
     }
 
     public Set<String> copyCmsEntityNamesNoFilter(Collection<String> pkgNames, Collection<String> addEntityNames, Collection<String> removeEntityNames) {
@@ -740,7 +761,7 @@ public class CmsEntityInfo {
             if (pkgName != null && pkgName.startsWith(CMS_ENTITY_BASE_PKG_PREFIX)) {
                 boolean isExcluded = false;
                 for(String pkgExcl : cmsEntityPkgExcludes) {
-                    if (pkgExcl.equals(pkgName) || pkgName.startsWith(pkgExcl + ".")) {
+                    if ((pkgExcl.equals(pkgName) || pkgName.startsWith(pkgExcl + ".")) && !majorCmsEntityNames.contains(name)) {
                         isExcluded = true;
                         break;
                     }

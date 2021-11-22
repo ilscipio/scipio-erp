@@ -1372,7 +1372,7 @@ code package.
   <!-- ========================================================= -->
   <!-- com.ilscipio.scipio.image -->
   <!-- ========================================================= -->
-    <entity entity-name="ImageSizePreset" package-name="com.ilscipio.scipio.image"
+    <entity entity-name="ImageSizePreset" package-name="com.ilscipio.scipio.cms.media"
         title="Image sizes preset" author="Ilscipio GmbH" version="1.0">
         <field name="presetId" type="id-ne"><description>The preset ID, now stored as Content.mediaProfile for associated images (only since 2020-09-21)</description></field>
         <field name="presetName" type="name"></field>
@@ -1384,7 +1384,7 @@ code package.
 
     <!-- WARN: Despite schema, each ImageSizeDimension must be associated to a single ImageSizePreset only
          otherwise image regeneration will not work for data created prior to 2020-09-21. -->
-    <entity entity-name="ImageSize" package-name="com.ilscipio.scipio.image"
+    <entity entity-name="ImageSize" package-name="com.ilscipio.scipio.cms.media"
         title="Image size dimension preset" author="Ilscipio GmbH" version="1.0">
         <field name="presetId" type="id-ne"></field>
         <field name="sizeId" type="id-ne"></field>
@@ -1400,7 +1400,7 @@ code package.
         </relation>
     </entity>
 
-    <entity entity-name="ImageSizeDimension" package-name="com.ilscipio.scipio.image"
+    <entity entity-name="ImageSizeDimension" package-name="com.ilscipio.scipio.cms.media"
         title="Image dimensions" author="Ilscipio GmbH" version="1.0">
         <field name="sizeId" type="id-ne"></field>
         <field name="sizeName" type="name"></field>

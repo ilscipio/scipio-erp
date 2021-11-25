@@ -56,7 +56,7 @@ public class CartEventListener implements HttpSessionListener {
     public void sessionDestroyed(HttpSessionEvent event) {
         HttpSession session = event.getSession();
         ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
-        if (cart == null) {
+        if (cart == null || (cart != null && cart.items().size() == 0)) {
             Debug.logInfo("No cart to save, doing nothing.", module);
             return;
         }
@@ -83,6 +83,15 @@ public class CartEventListener implements HttpSessionListener {
 
             Debug.logInfo("Saving abandoned cart", module);
             int seqId = 1;
+
+            // SCIPIO: 2.1.0: New enclosing entity for abandoned cart lines
+            GenericValue cartAbandoned = delegator.makeValue("CartAbandoned");
+            cartAbandoned.set("visitId", visit.get("visitId"));
+            cartAbandoned.set("productStoreId", cart.getProductStoreId());
+            cartAbandoned.set("webSiteId", cart.getWebSiteId());
+            cartAbandoned.set("locale", cart.getLocale().toString());
+            cartAbandoned.set("currencyUomId", cart.getCurrency());
+            cartAbandoned.create();
 
             for (ShoppingCartItem cartItem : cart) {
                 GenericValue cartAbandonedLine = delegator.makeValue("CartAbandonedLine");

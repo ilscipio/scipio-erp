@@ -207,6 +207,29 @@ code package.
             </widgets>
         </section>
     </screen>
+
+    <!-- SCIPIO: added 2.1.0: New email notification for abandoned carts -->
+    <screen name="RecoverAbandonedCart">
+        <section>
+            <actions>
+                <property-map resource="ShopUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+                <property-map resource="OrderUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="title" value="${uiLabelMap.PageTitleShipmentSentNotice}"/>
+                <set field="baseEcommerceSecureUrl" value="${baseSecureUrl}${baseWebappPath}/control"/>
+                <script location="component://shop/webapp/shop/WEB-INF/actions/cart/PrepareCartRecovery.groovy"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="ScipioEmailDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <platform-specific><email><html-template location="component://shop/templates/email/RecoverAbandonedCart.ftl"/></email></platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
     <screen name="ShipmentCompleteNotice">
         <section>
             <actions>
@@ -245,6 +268,17 @@ code package.
             </actions>
             <widgets>
                 <platform-specific><email><html-template location="component://shop/webapp/shop/order/orderitems.ftl"/></email></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="showcart">
+        <section>
+            <actions>
+<!--                <script location="component://shop/webapp/shop/WEB-INF/actions/cart/ShowCart.groovy"/>-->
+            </actions>
+            <widgets>
+                <platform-specific><email><html-template location="component://shop/templates/email/emailcart.ftl"/></email></platform-specific>
             </widgets>
         </section>
     </screen>

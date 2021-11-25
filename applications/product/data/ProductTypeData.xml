@@ -113,6 +113,9 @@ code package.
     <Enumeration description="Quote Confirmation" enumCode="QUO_CONFIRM" enumId="PRDS_QUO_CONFIRM" enumTypeId="PRDS_EMAIL" sequenceId="17"/>
     <Enumeration description="Shipment Complete" enumCode="SHP_COMPLETE" enumId="PRDS_ODR_SHIP_COMPLT" enumTypeId="PRDS_EMAIL" sequenceId="18"/>
 
+    <!-- SCIPIO: added 2.1.0: new email notification type for recovening abandoned carts -->
+    <Enumeration description="Recover Abandoned Cart" enumCode="RCVR_ABNDND_CRT" enumId="PRDS_RCVR_ABNDND_CRT" enumTypeId="PRDS_EMAIL" sequenceId="20"/>
+
     <EnumerationType description="Facility Location Type" enumTypeId="FACLOC_TYPE" hasTable="N" parentTypeId=""/>
     <Enumeration description="Pick/Primary" enumCode="PICKLOC" enumId="FLT_PICKLOC" enumTypeId="FACLOC_TYPE" sequenceId="01"/>
     <Enumeration description="Bulk" enumCode="BULK" enumId="FLT_BULK" enumTypeId="FACLOC_TYPE" sequenceId="02"/>

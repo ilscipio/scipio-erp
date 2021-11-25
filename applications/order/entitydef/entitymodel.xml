@@ -2801,6 +2801,31 @@ code package.
   <!-- org.ofbiz.order.shoppingcart -->
   <!-- ========================================================= -->
 
+    <!-- SCIPIO: 2.1.0: Added new entity for enclosing abandoned carts -->
+    <entity entity-name="CartAbandoned"
+          package-name="org.ofbiz.order.shoppingcart"
+          never-cache="true"
+          title="Order Abandoned">
+      <field name="visitId" type="id-ne"></field>
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="webSiteId" type="id-ne"></field>
+      <field name="currencyUomId" type="id"></field>
+      <field name="locale" type="very-short"></field>
+      <prim-key field="visitId"/>
+      <relation type="one" fk-name="CART_AB_VST" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
+      </relation>
+      <relation type="one" fk-name="CART_AB_WS" rel-entity-name="WebSite">
+        <key-map field-name="webSiteId"/>
+      </relation>
+      <relation type="one" fk-name="CART_AB_PRDSTR" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="CART_AB_CUOM" title="Currency" rel-entity-name="Uom">
+        <key-map field-name="currencyUomId" rel-field-name="uomId"/>
+      </relation>
+    </entity>
+
     <entity entity-name="CartAbandonedLine"
             package-name="org.ofbiz.order.shoppingcart"
             never-cache="true"
@@ -2826,6 +2851,9 @@ code package.
       </relation>
       <relation type="one" fk-name="CART_ABLN_PRDCAT" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
+      </relation>
+      <relation type="one" fk-name="CART_ABNDND" rel-entity-name="CartAbandoned">
+        <key-map field-name="visitId"/>
       </relation>
     </entity>
 

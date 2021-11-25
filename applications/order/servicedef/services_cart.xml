@@ -165,4 +165,41 @@ code package.
         <description>Delete CartAbandonedLine record</description>
         <auto-attributes include="pk" mode="IN"/>
     </service>
+
+    <!-- SCIPIO: NEW ABANDONED CART SERVICES -->
+    <!-- SCIPIO: Added 2.1.0: Finds abandoned carts -->
+    <service name="findAbandonedCarts" engine="java" location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="findAbandonedCarts" auth="true">
+        <description>Finds abandoned carts</description>
+        <attribute name="daysOffset" mode="IN" type="Integer" optional="true" />
+        <attribute name="productStoreId" mode="IN" type="String" optional="true" />
+        <attribute name="abandonedCarts" type="java.util.List" mode="OUT" optional="false"/>
+    </service>
+    <!-- SCIPIO: Added 2.1.0: Send abandoned cart email reminder -->
+    <service name="sendAbandonedCartEmailReminder" engine="java" location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="sendAbandonedCartEmailReminder" auth="true">
+        <description>Send abandoned cart email reminder</description>
+        <attribute name="productStoreId" mode="IN" type="String" optional="true" />
+        <attribute name="abandonedCarts" type="java.util.List" mode="IN" optional="false"/>
+    </service>
+    <!-- SCIPIO: Added 2.1.0: Load abandoned carts into ShoppingCart -->
+    <service name="loadCartFromAbandonedCart" engine="java" auth="true"
+             location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="loadCartFromAbandonedCart">
+        <description>Create a ShoppingCart Object based on an existing abandoned cart.</description>
+        <attribute name="visitId" type="String" mode="IN" optional="false"/>
+        <attribute name="abandonedCart" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
+        <attribute name="abandonedCartLines" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="applyStorePromotions" type="String" mode="IN" optional="true"/>
+        <attribute name="cartPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="OUT" optional="false"/>
+    </service>
+
+    <!-- SCIPIO: Added 2.1.0: Finds abandoned carts and sends reminder emails. Meant to be used as scheduled service -->
+    <service name="findAbandonedCartsAndSendReminderEmails" engine="group" transaction-timeout="36000">
+        <description></description>
+        <group send-mode="all">
+            <invoke name="findAbandonedCarts" mode="sync" parameters="preserve" result-to-context="true"/>
+            <invoke name="sendAbandonedCartEmailReminder" mode="sync" />
+        </group>
+    </service>
+
+
 </services>

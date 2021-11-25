@@ -18,18 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.order.shoppingcart;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -43,6 +31,8 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.model.DynamicViewEntity;
+import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
@@ -50,12 +40,27 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart.CartShipInfo;
 import org.ofbiz.order.shoppingcart.ShoppingCart.CartShipInfo.CartShipItemInfo;
+import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Shopping Cart Services
@@ -1218,6 +1223,320 @@ public class ShoppingCartServices {
                 }
             }
         }
+        return result;
+    }
+
+    /**
+     * SCIPIO: 2.1.0: Finds abandoned carts
+     *
+     * @param ctx
+     * @return Map with the result of the service, the output parameters.
+     */
+    public static Map<String, Object> findAbandonedCarts(ServiceContext ctx) {
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        Delegator delegator = ctx.delegator();
+        Locale locale = ctx.locale();
+        GenericValue userLogin = ctx.userLogin();
+
+        Timestamp fromDate = (Timestamp) ctx.get("fromDate");
+        Integer daysOffset = (Integer) ctx.get("daysOffset");
+        String productStoreId = (String) ctx.get("productStoreId");
+
+        DynamicViewEntity dve = new DynamicViewEntity();
+        dve.addMemberEntity("CA", "CartAbandoned");
+        dve.addMemberEntity("V", "Visit");
+        dve.addMemberEntity("P", "Party");
+        dve.addMemberEntity("UL", "UserLogin");
+
+        // Get the latest for any given party visit
+        dve.addAlias("CA", "visitId", null, null, null, false, "max");
+        dve.addAlias("CA", "productStoreId", null, null, null, true, null);
+        dve.addAlias("CA", "webSiteId", null, null, null, true, null);
+        dve.addAlias("CA", "locale", null, null, null, true, null);
+        dve.addAlias("CA", "currencyUomId", null, null, null, true, null);
+        dve.addAlias("V", "partyId", null, null, null, true, null);
+        dve.addAlias("V", "userLoginId", null, null, null, true, null);
+
+        dve.addViewLink("CA", "V", false, UtilMisc.toList(ModelKeyMap.makeKeyMapList("visitId")));
+        dve.addViewLink("V", "P", true, UtilMisc.toList(ModelKeyMap.makeKeyMapList("partyId")));
+        dve.addViewLink("V", "UL", true, UtilMisc.toList(ModelKeyMap.makeKeyMapList("userLoginId")));
+
+        dve.addRelation("one", null, "Party", ModelKeyMap.makeKeyMapList("partyId"));
+        dve.addRelation("many", null, "CartAbandonedLine", ModelKeyMap.makeKeyMapList("visitId"));
+        dve.addRelation("one", null, "Visit", ModelKeyMap.makeKeyMapList("visitId"));
+        dve.addRelation("one", null, "UserLogin", ModelKeyMap.makeKeyMapList("userLoginId"));
+
+        EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(
+                EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, null),
+                EntityCondition.makeCondition("userLoginId", EntityOperator.NOT_EQUAL, null)
+        ), EntityOperator.OR);
+
+        if (UtilValidate.isNotEmpty(productStoreId)) {
+            condition = EntityCondition.makeCondition(condition, EntityOperator.AND, EntityCondition.makeCondition("productStoreId", productStoreId));
+        }
+        try {
+            List<GenericValue> abandonedCarts = EntityQuery.use(delegator).from(dve).where(condition).queryList();
+            result.put("abandonedCarts", abandonedCarts);
+        } catch (GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        return result;
+    }
+
+    /**
+     * SCIPIO: 2.1.0: Send abandoned cart email reminders
+     *
+     * @param ctx
+     * @return
+     */
+    public static Map<String, Object> sendAbandonedCartEmailReminder(ServiceContext ctx) {
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        LocalDispatcher dispatcher = ctx.dispatcher();
+        Delegator delegator = ctx.delegator();
+        Locale locale = ctx.locale();
+
+        String productStoreId = ctx.getString("productStoreId");
+
+        GenericValue userLogin = ctx.userLogin();
+        List<GenericValue> abandonedCarts = (List<GenericValue>) ctx.get("abandonedCarts");
+
+        String emailType = "PRDS_RCVR_ABNDND_CRT";
+        for (GenericValue abandonedCart : abandonedCarts) {
+            // get the email setting and send the mail
+            Map<String, Object> sendMap = new HashMap<>();
+
+            GenericValue productStoreEmail = null;
+            try {
+                String abandonedCartProductStoreId = productStoreId;
+                if (UtilValidate.isEmpty(abandonedCartProductStoreId)) {
+                    abandonedCartProductStoreId = abandonedCart.getString("productStoreId");
+                }
+
+                Locale resolvedLocale = locale;
+                String abandonedCartLocale = abandonedCart.getString("locale");
+                if (UtilValidate.isNotEmpty(abandonedCartLocale)) {
+                    resolvedLocale = new Locale(abandonedCartLocale);
+                }
+                String webSiteId = abandonedCart.getString("webSiteId");
+                if (UtilValidate.isEmpty(webSiteId)) {
+                    webSiteId = ProductStoreWorker.getStoreWebSiteIdForEmail(delegator, abandonedCartProductStoreId, webSiteId, true);
+                }
+                if (webSiteId != null) {
+                    sendMap.put("webSiteId", webSiteId);
+                } else {
+                    // This is only technically an error if the email contains links back to a website.
+                    Debug.logWarning("sendReturnNotificationScreen: No webSiteId determined for store '" + abandonedCartProductStoreId + "' email", module);
+                }
+
+                List<GenericValue> abandonedCartLines = abandonedCart.getRelatedCache("CartAbandonedLine");
+                productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", abandonedCartProductStoreId, "emailType", emailType).cache().queryOne();
+
+                GenericValue customerParty = abandonedCart.getRelatedOne("Party");
+                GenericValue customerEmailAddress =
+                        EntityUtil.getFirst(UtilMisc.toList(ContactHelper.getContactMechByType(customerParty, "EMAIL_ADDRESS", false)));
+
+                if (productStoreEmail != null && customerEmailAddress != null) {
+                    String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
+                    if (UtilValidate.isEmpty(bodyScreenLocation)) {
+                        bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
+                    }
+                    sendMap.put("bodyScreenUri", bodyScreenLocation);
+
+                    Map<String, Object> bodyParameters = UtilMisc.<String, Object>toMap("customerParty", customerParty,
+                            "abandonedCart", abandonedCart, "abandonedCartLines", abandonedCartLines,
+                            "locale", resolvedLocale, "userLogin", userLogin);
+                    bodyParameters.put("productStoreId", abandonedCartProductStoreId); // SCIPIO
+                    sendMap.put("bodyParameters", bodyParameters);
+                    sendMap.put("subject", productStoreEmail.getString("subject"));
+                    sendMap.put("contentType", productStoreEmail.get("contentType"));
+                    sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
+                    sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
+                    sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
+                    sendMap.put("sendTo", customerEmailAddress.getString("infoString"));
+                    sendMap.put("sendAs", productStoreEmail.get("sendAs"));
+                    sendMap.put("partyId", customerParty.getString("partyId"));
+                    sendMap.put("userLogin", userLogin);
+                    sendMap.put("locale", resolvedLocale);
+
+                    Map<String, Object> sendResp = null;
+                    try {
+                        sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
+                        if (ServiceUtil.isError(sendResp)) {
+                            sendResp.put("emailType", emailType);
+                            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                                    "OrderProblemSendingEmail", locale), null, null, sendResp);
+                        }
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, "Problem sending mail", module);
+                        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                                "OrderProblemSendingEmail", locale));
+                    }
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * SCIPIO: 2.1.0: Load cart from abandoned cart
+     *
+     * @param ctx
+     * @return Map with the result of the service, the output parameters.
+     */
+    public static Map<String, Object> loadCartFromAbandonedCart(ServiceContext ctx) {
+        LocalDispatcher dispatcher = ctx.dispatcher();
+        Delegator delegator = ctx.delegator();
+        Map<String, Object> context = ctx.context();
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        GenericValue abandonedCart = (GenericValue) context.get("abandonedCart");
+        List<GenericValue> abandonedCartLines = (List<GenericValue>) context.get("abandonedCartLines");
+        String visitId = (String) context.get("visitId");
+        String cartPartyId = (String) context.get("cartPartyId");
+        Locale locale = (Locale) context.get("locale");
+
+        // get abandoned cart
+        if (UtilValidate.isEmpty(abandonedCart) && UtilValidate.isNotEmpty(visitId)) {
+            try {
+                abandonedCart = EntityQuery.use(delegator).from("CartAbandoned").where("visitId", visitId).queryOne();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+        if (UtilValidate.isEmpty(abandonedCart)) {
+            return ServiceUtil.returnError("Can't find a valid abandoned cart nor a visitId");
+        }
+
+        GenericValue visit = null;
+        GenericValue abandonedCartUserLogin = null;
+        try {
+            visit = abandonedCart.getRelatedOneCache("Visit");
+            abandonedCartUserLogin = abandonedCart.getRelatedOneCache("UserLogin");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // initial required cart info
+        String productStoreId = abandonedCart.getString("productStoreId");
+        String currency = abandonedCart.getString("currencyUomId");
+        // If no currency has been set in the ShoppingList, use the ProductStore default currency
+        if (currency == null) {
+            try {
+                GenericValue productStore = abandonedCart.getRelatedOne("ProductStore", false);
+                if (productStore != null) {
+                    currency = productStore.getString("defaultCurrencyUomId");
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+        // If we still have no currency, use the default from general.properties.  Failing that, use USD
+        if (currency == null) {
+            currency = EntityUtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD", delegator);
+        }
+
+        // create the cart
+        ShoppingCart cart = ShoppingCartFactory.createShoppingCart(delegator, productStoreId, locale, currency); // SCIPIO: use factory
+
+        try {
+            cart.setUserLogin(abandonedCartUserLogin, dispatcher);
+        } catch (CartItemModifyException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // set the role information
+        if (UtilValidate.isNotEmpty(cartPartyId)) {
+            cart.setOrderPartyId(cartPartyId);
+        } else {
+            cart.setOrderPartyId(visit.getString("partyId"));
+        }
+
+        if (UtilValidate.isEmpty(abandonedCartLines)) {
+            try {
+                abandonedCartLines = abandonedCart.getRelated("CartAbandonedLine", null, null, false);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+
+        long nextItemSeq = 0;
+        if (UtilValidate.isNotEmpty(abandonedCartLines)) {
+            Pattern pattern = Pattern.compile("\\P{Digit}");
+            for (GenericValue abandonedCartLine : abandonedCartLines) {
+                // get the next item sequence id
+                String cartItemSeqId = abandonedCartLine.getString("cartAbandonedLineSeqId");
+                Matcher pmatcher = pattern.matcher(cartItemSeqId);
+                cartItemSeqId = pmatcher.replaceAll("");
+                try {
+                    long seq = Long.parseLong(cartItemSeqId);
+                    if (seq > nextItemSeq) {
+                        nextItemSeq = seq;
+                    }
+                } catch (NumberFormatException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+                BigDecimal modifiedPrice = abandonedCartLine.getBigDecimal("totalWithAdjustments");
+                BigDecimal quantity = abandonedCartLine.getBigDecimal("quantity");
+                if (quantity == null) {
+                    quantity = BigDecimal.ZERO;
+                }
+                int itemIndex = -1;
+                if (abandonedCartLine.get("productId") != null) {
+                    // product item
+                    String productId = abandonedCartLine.getString("productId");
+                    ProductConfigWrapper configWrapper = null;
+                    if (UtilValidate.isNotEmpty(abandonedCartLine.getString("configId"))) {
+                        configWrapper = ProductConfigWorker.loadProductConfigWrapper(delegator, dispatcher, abandonedCartLine.getString("configId"), productId, productStoreId, null, null, currency, locale, userLogin);
+                    }
+                    try {
+                        itemIndex = cart.addItemToEnd(productId, null, quantity, null, null, null, null, null, configWrapper, dispatcher, Boolean.TRUE, Boolean.TRUE);
+                    } catch (ItemNotFoundException | CartItemModifyException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+
+                    // set the modified price
+                    if (modifiedPrice != null && modifiedPrice.doubleValue() != 0) {
+                        ShoppingCartItem item = cart.findCartItem(itemIndex);
+                        if (item != null) {
+                            item.setIsModifiedPrice(true);
+                            item.setBasePrice(modifiedPrice);
+                        }
+                    }
+                }
+
+                // flag the item w/ the orderItemSeqId so we can reference it
+                ShoppingCartItem cartItem = cart.findCartItem(itemIndex);
+                cartItem.setOrderItemSeqId(cartItemSeqId);
+            }
+
+        }
+
+        // set the item seq in the cart
+        if (nextItemSeq > 0) {
+            try {
+                cart.setNextItemSeq(nextItemSeq + 1);
+            } catch (GeneralException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+        }
+
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        result.put("shoppingCart", cart);
         return result;
     }
 }

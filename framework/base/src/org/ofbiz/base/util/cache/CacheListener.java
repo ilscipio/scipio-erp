@@ -18,6 +18,10 @@
  *******************************************************************************/
 package org.ofbiz.base.util.cache;
 
+/**
+ * Cache listener interface for {@link UtilCache}.
+ * <p>SCIPIO: 2.1.0: NOTE: Do not use cache listeners except best-effort stats; cache modifications not synchronized.</p>
+ */
 public interface CacheListener<K, V> {
 
     public void noteKeyRemoval(UtilCache<K, V> cache, K key, V oldValue);

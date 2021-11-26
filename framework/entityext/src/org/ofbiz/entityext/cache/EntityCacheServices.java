@@ -18,14 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.entityext.cache;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.ofbiz.base.util.Debug;
@@ -43,10 +36,7 @@ import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entityext.EntityServiceFactory;
 import org.ofbiz.security.Security;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.*;
 
 /**
  * Entity Engine Cache Services
@@ -337,6 +327,106 @@ public class EntityCacheServices implements DistributedCacheClear {
             this.dispatcher.runAsync(serviceName, context, false);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error running distributed service [" + serviceName + "]", module);
+        }
+    }
+
+    public static abstract class UtilCacheFilterOp extends ServiceHandler.Local {
+    }
+
+    /**
+     * Counts key/value UtilCache entries by key pattern filter (slow operation).
+     * <p>SCIPIO: 2.1.0: Added for {@link UtilCache} improvements.</p>
+     */
+    public static class UtilCacheCountBy extends UtilCacheFilterOp {
+        public Map<String, Object> exec() throws ServiceValidationException {
+            try {
+                UtilCache<?, ?> cache = UtilCache.findCache(ctx.getStringOrEmpty("cacheName"));
+                if (cache == null) {
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Cache not found or not yet initialized"),
+                            "count", 0L);
+                }
+                UtilCache.CacheEntryFilter<?, ?> entryFilter = ctx.attr("entryFilter");
+                if (entryFilter != null) {
+                    int count = cache.countByFilter(UtilGenerics.cast(entryFilter));
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Cache entries matching filter: " + count),
+                            "count", count);
+                }
+                String keyPrefix = ctx.getStringNonEmpty("keyPrefix");
+                if (keyPrefix != null) {
+                    int count = cache.countByKeyPrefix(keyPrefix);
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Cache entries matching key prefix: " + count),
+                            "count", count);
+                }
+                Object keyPat = ctx.attr("keyPat");
+                if (keyPat instanceof Pattern) {
+                    int count = cache.countByKeyPat((Pattern) keyPat);
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Cache entries matching key pattern: " + count),
+                            "count", count);
+                } else if (keyPat instanceof String && !((String) keyPat).isEmpty()) {
+                    int count = cache.countByKeyPat((String) keyPat);
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Cache entries matching key pattern: " + count),
+                            "count", count);
+                } else if (keyPat != null) {
+                    throw new ServiceValidationException("Invalid keyPat argument type (Pattern or String)", ctx.getModelService());
+                }
+                long count = cache.size();
+                return UtilMisc.put(ServiceUtil.returnSuccess("Cache entries total: " + count),
+                        "count", count);
+            } catch(ServiceValidationException e) {
+                throw e;
+            } catch(Exception e) {
+                return ServiceUtil.returnError(e.toString());
+            }
+        }
+    }
+
+    /**
+     * Removes key/value UtilCache entries by key pattern filter (slow operation).
+     * <p>SCIPIO: 2.1.0: Added for {@link UtilCache} improvements.</p>
+     */
+    public static class UtilCacheRemoveBy extends UtilCacheFilterOp {
+        public Map<String, Object> exec() throws ServiceValidationException {
+            try {
+                UtilCache<?, ?> cache = UtilCache.findCache(ctx.getStringOrEmpty("cacheName"));
+                if (cache == null) {
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Cache not found or not yet initialized"),
+                            "removed", 0);
+                }
+                if (ctx.attr("allEntries", false)) {
+                    int removed = cache.clear();
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Removed all entries: " + removed),
+                            "removed", removed);
+                }
+                UtilCache.CacheEntryFilter<?, ?> entryFilter = ctx.attr("entryFilter");
+                if (entryFilter != null) {
+                    int removed = cache.removeByFilter(UtilGenerics.cast(entryFilter));
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Removed entries matching filter: " + removed),
+                            "removed", removed);
+                }
+                String keyPrefix = ctx.getStringNonEmpty("keyPrefix");
+                if (keyPrefix != null) {
+                    int removed = cache.removeByKeyPrefix(keyPrefix);
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Removed entries matching key prefix: " + removed),
+                            "removed", removed);
+                }
+                Object keyPat = ctx.attr("keyPat");
+                if (keyPat instanceof Pattern) {
+                    int removed = cache.removeByKeyPat((Pattern) keyPat);
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Removed entries matching key pattern: " + removed),
+                            "removed", removed);
+                } else if (keyPat instanceof String && !((String) keyPat).isEmpty()) {
+                    int removed = cache.removeByKeyPat((String) keyPat);
+                    return UtilMisc.put(ServiceUtil.returnSuccess("Removed entries matching key pattern: " + removed),
+                            "removed", removed);
+                } else if (keyPat != null) {
+                    throw new ServiceValidationException("Invalid keyPat argument type (Pattern or String)", ctx.getModelService());
+                }
+                throw new ServiceValidationException("Missing filter argument: (entryFilter|keyPat|keyPrefix|allEntries)", ctx.getModelService());
+            } catch(ServiceValidationException e) {
+                throw e;
+            } catch(Exception e) {
+                return ServiceUtil.returnError(e.toString());
+            }
         }
     }
 }

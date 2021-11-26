@@ -20,35 +20,18 @@ package org.ofbiz.base.util.cache;
 
 import java.io.NotSerializableException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import org.apache.poi.ss.formula.functions.T;
 import org.ofbiz.base.concurrent.ExecutionPool;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.ObjectType;
-import org.ofbiz.base.util.UtilGenerics;
-import org.ofbiz.base.util.UtilObject;
-import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.*;
 
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
 import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap.Builder;
@@ -63,12 +46,17 @@ import com.googlecode.concurrentlinkedhashmap.EvictionListener;
  *   <li>Using the expireTime can report whether a given element has expired
  *   <li>Counts misses and hits
  * </ul>
- *
+ * <p>FIXME: Although cache operations are thread-safe, UtilCache instances themselves are not automatically thread-safe
+ * and may need to be safe-published in static variables and thread-safe containers.</p>
+ * <p>SCIPIO: 2.1.0: synchronized methods and blocks for {@link #removeInternal} and bulk remove calls have been
+ * removed as they were largely unnecessary for {@link ConcurrentHashMap} in the absence of listeners and need for
+ * accurate stats.</p>
  */
 @SuppressWarnings("serial")
 public class UtilCache<K, V> implements Serializable, EvictionListener<Object, CacheLine<V>> {
 
     public static final String SEPARATOR = "::";    // cache key separator
+    public static final Pattern SEPARATOR_PAT = Pattern.compile(SEPARATOR); // SCIPIO: 2.1.0: Added
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -113,8 +101,13 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     /** Specifies whether or not to use soft references for this cache, defaults to false */
     protected boolean useSoftReference = false;
 
-    /** The set of listeners to receive notifications when items are modified (either deliberately or because they were expired). */
-    protected Set<CacheListener<K, V>> listeners = new CopyOnWriteArraySet<>();
+    /**
+     * The set of listeners to receive notifications when items are modified (either deliberately or because they were expired).
+     * <p>SCIPIO: NOTE: Should now have volatile, but never used in serious code and typically can be safe-published
+     * by holding class (static variable), and often publishing time will be arbitrary to begin with.</p>
+     * <p>SCIPIO: 2.1.0: Optimized with empty.</p>
+     */
+    protected Collection<CacheListener<K, V>> listeners = Collections.emptySet();
 
     protected ConcurrentMap<Object, CacheLine<V>> memoryTable = null;
 
@@ -214,9 +207,8 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return key == null ? ObjectType.NULL : key;
     }
 
-    @SuppressWarnings("unchecked")
     private K toKey(Object key) {
-        return key == ObjectType.NULL ? null : (K) key;
+        return key == ObjectType.NULL ? null : UtilGenerics.cast(key);
     }
 
     public Object getCacheLineTable() {
@@ -241,12 +233,12 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     public V putIfAbsentAndGet(K key, V value) {
         V cachedValue = putIfAbsent(key, value);
-        return (cachedValue != null? cachedValue: value);
+        return (cachedValue != null ? cachedValue: value);
     }
 
     /**
      * Creates soft-ref cache line.
-     * <p>SCIPIO: 2.1.0: Now omits registering pulses, which is left to callers to do after adding to memortyTable
+     * <p>SCIPIO: 2.1.0: Now omits registering pulses, which is left to callers to do after adding to memoryTable
      * via {@link #tryRegister(CacheLine)}.</p>
      */
     CacheLine<V> createSoftRefCacheLine(final Object key, V value, long loadTimeNanos, long expireTimeNanos) {
@@ -264,7 +256,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
             @Override
             void remove() {
-                removeInternal(key, this);
+                removeInternal(key, this, false);
             }
         };
     }
@@ -289,7 +281,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
             @Override
             void remove() {
-                removeInternal(key, this);
+                removeInternal(key, this, false);
             }
         };
     }
@@ -347,11 +339,12 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     }
 
     V putInternal(K key, V value, long expireTimeNanos) {
-        if (!enabled) return null; // SCIPIO: 2018-03: no-op
-        Object nulledKey = fromKey(key);
+        if (!enabled) {
+            return null; // SCIPIO: 2018-03: no-op
+        }
         // SCIPIO: 2.1.0: Now defer the initial pulse register to after memoryTable.put (see createCacheLine)
         CacheLine<V> newCacheLine = createCacheLine(key, value, expireTimeNanos);
-        CacheLine<V> oldCacheLine = memoryTable.put(nulledKey, newCacheLine);
+        CacheLine<V> oldCacheLine = memoryTable.put(fromKey(key), newCacheLine);
         tryRegister(newCacheLine);
         V oldValue = oldCacheLine == null ? null : cancel(oldCacheLine);
         if (oldValue == null) {
@@ -363,12 +356,13 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     }
 
     V putIfAbsentInternal(K key, V value, long expireTimeNanos) {
-        if (!enabled) return null; // SCIPIO: 2018-03: no-op
-        Object nulledKey = fromKey(key);
+        if (!enabled) {
+            return null; // SCIPIO: 2018-03: no-op
+        }
         V oldValue;
         // SCIPIO: 2.1.0: Now defer the initial pulse register to after memoryTable.put (see createCacheLine)
         CacheLine<V> newCacheLine = createCacheLine(key, value, expireTimeNanos);
-        CacheLine<V> oldCacheLine = memoryTable.putIfAbsent(nulledKey, newCacheLine);
+        CacheLine<V> oldCacheLine = memoryTable.putIfAbsent(fromKey(key), newCacheLine);
         if (oldCacheLine == null) {
             oldValue = null;
             // SCIPIO: 2.1.0: As above, now simply run tryRegister() here after the line is actually added
@@ -390,10 +384,11 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
      * @return The value of the element specified by the key
      */
     public V get(Object key) {
-        if (!enabled) return null; // SCIPIO: 2018-03: no-op
+        if (!enabled) {
+            return null; // SCIPIO: 2018-03: no-op
+        }
         boolean countGet = true;
-        Object nulledKey = fromKey(key);
-        CacheLine<V> line = memoryTable.get(nulledKey);
+        CacheLine<V> line = memoryTable.get(fromKey(key));
         if (line == null) {
             missCountNotFound.incrementAndGet();
         } else {
@@ -455,7 +450,54 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return totalSize;
     }
 
-    /** Removes an element from the cache according to the specified key
+    /**
+     * Counts all element from the cache matching the given filter.
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.0.0: Added.</p>
+     * <p>SCIPIO: 2.1.0: Removed synchronized because only used on remove calls and ConcurrentHashMap can usually
+     * handle bulk removal iterations without it.</p>
+     * @param entryFilter The entry filter - return true to remove key
+     */
+    public int countByFilter(CacheEntryFilter<K, V> entryFilter) { // SCIPIO: 2.1.0: Removed synchronized
+        int count = 0;
+        for (Map.Entry<Object, CacheLine<V>> entry : memoryTable.entrySet()) {
+            if (entryFilter.filter(UtilGenerics.cast(toKey(entry.getKey())), UtilGenerics.cast(entry.getValue().getValue()))) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Counts all element from the cache matching the given key regex pattern (uses {@link java.util.regex.Matcher#matches()} on each key).
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.1.0: Added.
+     */
+    public int countByKeyPat(Pattern keyPat) {
+        return countByFilter(new KeyPatternCacheEntryFilter<>(keyPat));
+    }
+
+    /**
+     * Counts all element from the cache matching the given key regex pattern (uses {@link java.util.regex.Matcher#matches()} on each key).
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.1.0: Added.
+     */
+    public int countByKeyPat(String keyPat) {
+        return countByFilter(new KeyPatternCacheEntryFilter<>(keyPat));
+    }
+
+    /**
+     * Counts all element from the cache matching the given key prefix.
+     * <p>NOTE: Typically one should suffix prefixes with {@link #SEPARATOR} (not added).</p>
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.1.0: Added.
+     */
+    public int countByKeyPrefix(String keyPrefix) {
+        return countByFilter(new KeyPrefixCacheEntryFilter<>(keyPrefix));
+    }
+
+    /**
+     * Removes an element from the cache according to the specified key
      * @param key The key for the element, used to reference it in the hashtables and LRU linked list
      * @return The value of the removed element specified by the key
      */
@@ -463,24 +505,19 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return this.removeInternal(key, true);
     }
 
-    /** This is used for internal remove calls because we only want to count external calls */
-    @SuppressWarnings("unchecked")
-    protected synchronized V removeInternal(Object key, boolean countRemove) {
-        if (key == null) {
-            if (Debug.verboseOn()) {
-                Debug.logVerbose("In UtilCache tried to remove with null key, using NullObject" + this.name, module);
-            }
-        }
-        Object nulledKey = fromKey(key);
-        CacheLine<V> oldCacheLine;
-        V oldValue;
-        oldCacheLine = memoryTable.remove(nulledKey);
-        oldValue = oldCacheLine != null ? oldCacheLine.getValue() : null;
+    /**
+     * Internal remove operation; only use if existing cache line not available (see {@link #removeInternal(Object, CacheLine, boolean)}).  
+     * <p>SCIPIO: 2.1.0: Removed synchronized because only used on remove calls and ConcurrentHashMap can usually handle bulk removal iterations without it.</p>
+     * @see #removeInternal(Object, CacheLine, boolean)
+     */
+    protected V removeInternal(Object key, boolean countRemove) { // SCIPIO: 2.1.0: Removed synchronized
+        CacheLine<V> oldCacheLine = memoryTable.remove(fromKey(key));
+        V oldValue = (oldCacheLine != null) ? oldCacheLine.getValue() : null;
         if (oldCacheLine != null) {
             cancel(oldCacheLine);
         }
         if (oldValue != null) {
-            noteRemoval((K) key, oldValue);
+            noteRemoval(UtilGenerics.cast(key), oldValue);
             if (countRemove) {
                 removeHitCount.incrementAndGet();
             }
@@ -492,65 +529,291 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return null;
     }
 
-    protected synchronized void removeInternal(Object key, CacheLine<V> existingCacheLine) {
-        Object nulledKey = fromKey(key);
-        cancel(existingCacheLine);
-        if (!memoryTable.remove(nulledKey, existingCacheLine)) {
-            return;
-        }
-        noteRemoval(UtilGenerics.<K>cast(key), existingCacheLine.getValue());
-    }
-
-    /** Removes all elements from this cache */
-    public synchronized void erase() {
-        Iterator<Map.Entry<Object, CacheLine<V>>> it = memoryTable.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Object, CacheLine<V>> entry = it.next();
-            noteRemoval(toKey(entry.getKey()), entry.getValue().getValue());
-            removeHitCount.incrementAndGet();
-            it.remove();
-        }
-    }
-
-    /** Removes all element from the cache matching the given filter (SCIPIO).
-     * WARN: Slow on large caches (TODO: optimize)
-     * @param entryFilter The entry filter - return true to remove key
+    /**
+     * Internal remove operation; if existingCacheLine non-null, only removes key if matching existing cache line.
+     * <p>SCIPIO: 2.1.0: Removed synchronized because only used on remove calls and ConcurrentHashMap can usually handle bulk removal iterations without it.</p>
+     * <p>SCIPIO: 2.1.0: cancel() call now occurs after memoryTable remove for consistency between overloads and double-cancel prevention.</p>
      */
-    public synchronized void removeByFilter(CacheEntryFilter<K, V> entryFilter) {
-        Iterator<Map.Entry<Object, CacheLine<V>>> it = memoryTable.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<Object, CacheLine<V>> entry = it.next();
-            K key = toKey(entry.getKey());
-            V value = entry.getValue().getValue();
-            if (entryFilter.filter(key, value)) {
-                noteRemoval(key, value);
-                removeHitCount.incrementAndGet();
-                it.remove();
+    protected boolean removeInternal(Object key, CacheLine<V> existingCacheLine, boolean countRemove) { // SCIPIO: 2.1.0: Removed synchronized, added countRemove
+        //cancel(existingCacheLine); // SCIPIO: 2.1.0: Moved below so that only called once actually removed
+        if (memoryTable.remove(fromKey(key), existingCacheLine)) {
+            V oldValue = existingCacheLine.getValue();
+            cancel(existingCacheLine);
+            if (oldValue != null) {
+                noteRemoval(UtilGenerics.cast(key), oldValue);
+                if (countRemove) {
+                    removeHitCount.incrementAndGet();
+                }
+                return true;
             }
         }
+        if (countRemove) {
+            removeMissCount.incrementAndGet();
+        }
+        return false;
     }
 
-    public interface CacheEntryFilter<K, V> { // SCIPIO
+    /**
+     * Removes all elements from this cache.
+     * <p>SCIPIO: 2.1.0: Replaced implementation because <code>it.remove()</code> is key-based without specific value check.</p>
+     * <p>SCIPIO: 2.1.0: Removed synchronized as only used on remove calls and ConcurrentMap can usually handle bulk removal iterations without.</p>
+     */
+    public int erase() { // SCIPIO: 2.1.0: Removed synchronized
+        int removed = 0;
+        for (Map.Entry<Object, CacheLine<V>> entry : memoryTable.entrySet()) {
+            if (removeInternal(entry.getKey(), entry.getValue(), true)) {
+                removed++;
+            }
+        }
+        return removed;
+    }
+
+    /**
+     * Removes all element from the cache matching the given filter.
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.0.0: Added.</p>
+     * <p>SCIPIO: 2.1.0: Removed synchronized because only used on remove calls and ConcurrentHashMap can usually
+     * handle bulk removal iterations without it.</p>
+     * @param entryFilter The entry filter - return true to remove key
+     */
+    public int removeByFilter(CacheEntryFilter<K, V> entryFilter) { // SCIPIO: 2.1.0: Removed synchronized
+        int removed = 0;
+        for (Map.Entry<Object, CacheLine<V>> entry : memoryTable.entrySet()) {
+            if (entryFilter.filter(UtilGenerics.cast(toKey(entry.getKey())), UtilGenerics.cast(entry.getValue().getValue()))) {
+                if (removeInternal(entry.getKey(), entry.getValue(), true)) {
+                    removed++;
+                }
+            }
+        }
+        return removed;
+    }
+
+    /**
+     * Removes all element from the cache matching the given key regex pattern (uses {@link java.util.regex.Matcher#matches()} on each key).
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.1.0: Added.
+     */
+    public int removeByKeyPat(Pattern keyPat) {
+        return removeByFilter(new KeyPatternCacheEntryFilter<>(keyPat));
+    }
+
+    /**
+     * Removes all element from the cache matching the given key regex pattern (uses {@link java.util.regex.Matcher#matches()} on each key).
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.1.0: Added.
+     */
+    public int removeByKeyPat(String keyPat) {
+        return removeByFilter(new KeyPatternCacheEntryFilter<>(keyPat));
+    }
+
+    /**
+     * Removes all element from the cache matching the given key prefix.
+     * <p>NOTE: Typically one should suffix prefixes with {@link #SEPARATOR} (not added).</p>
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.1.0: Added.
+     */
+    public int removeByKeyPrefix(String keyPrefix) {
+        return removeByFilter(new KeyPrefixCacheEntryFilter<>(keyPrefix));
+    }
+
+    /**
+     * Removes all element from the cache having the given key substring.
+     * <p>NOTE: Typically one should suffix prefixes with {@link #SEPARATOR} (not added).</p>
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.1.0: Added.
+     */
+    public int removeByKeySubstring(String keySub) {
+        return removeByFilter(new KeySubstringCacheEntryFilter<>(keySub));
+    }
+
+    /**
+     * Removes all element from the cache matching the given key parts (pre-separated).
+     * <p>null and empty string key parts are treated as wildcards matching any value in the key at that position.</p>
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.1.0: Added.
+     */
+    public int removeByKeyParts(Collection<String> keyParts) {
+        return removeByFilter(new KeyPartsCacheEntryFilter<>(keyParts));
+    }
+
+    /**
+     * Removes all element from the cache matching the given key parts (pre-separated).
+     * <p>null and empty string key parts are treated as wildcards matching any value in the key at that position.</p>
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.1.0: Added.
+     */
+    public int removeByKeyParts(String... keyParts) {
+        return removeByFilter(new KeyPartsCacheEntryFilter<>(keyParts));
+    }
+
+    /**
+     * Removes all element from the cache matching the given key part string delimited by {@link #SEPARATOR}.
+     * <p>null and empty string key parts are treated as wildcards matching any value in the key at that position.</p>
+     * <p>e.g.: <code>"default::*::PH-1000"</code> (<code>delegator::productStoreId::productId::featureId</code>)</p>
+     * <p>WARN: Slow on large caches.</p>
+     * <p>SCIPIO: 2.1.0: Added.
+     */
+    public int removeByKeyPartString(String key) {
+        return removeByFilter(new KeyPartsCacheEntryFilter<>(splitKey(key)));
+    }
+
+    /**
+     * Cache entry filter.
+     * <p>SCIPIO: 2.0.0: Added.</p>
+     * @see #removeByFilter(CacheEntryFilter)
+     */
+    public interface CacheEntryFilter<K, V> {
         boolean filter(K key, V value);
     }
 
-    public static class KeyPrefixCacheEntryFilter<V> implements CacheEntryFilter<String, V> { // SCIPIO
+    /**
+     * Negating cache entry filter.
+     * <p>SCIPIO: 2.0.0: Added.</p>
+     * @see #removeByFilter(CacheEntryFilter)
+     */
+    public static class NotCacheEntryFilter<K, V> implements CacheEntryFilter<K, V> {
+        private final CacheEntryFilter<K, V> negatedFilter;
+
+        public NotCacheEntryFilter(CacheEntryFilter<K, V> negatedFilter) {
+            this.negatedFilter = negatedFilter;
+        }
+
+        public CacheEntryFilter<K, V> getNegatedFilter() {
+            return negatedFilter;
+        }
+
+        @Override
+        public boolean filter(K key, V value) {
+            return !getNegatedFilter().filter(key, value);
+        }
+    }
+
+    /**
+     * Key pattern regex filter.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @see #removeByFilter(CacheEntryFilter)}
+     */
+    public static class KeyPatternCacheEntryFilter<K, V> implements CacheEntryFilter<K, V> {
+        private final Pattern keyPat;
+
+        public KeyPatternCacheEntryFilter(Pattern keyPat) {
+            this.keyPat = keyPat;
+        }
+
+        public KeyPatternCacheEntryFilter(String keyPat) {
+            this(Pattern.compile(keyPat));
+        }
+
+        protected Pattern getKeyPat() {
+            return keyPat;
+        }
+
+        @Override
+        public boolean filter(K key, V value) {
+            return (key != null && key != ObjectType.NULL && getKeyPat().matcher(key.toString()).matches());
+        }
+    }
+
+    /**
+     * Key prefix filter.
+     * <p>NOTE: Typically one should suffix prefixes with {@link #SEPARATOR} (not added).</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @see #removeByFilter(CacheEntryFilter)}
+     * @see String#startsWith(String)
+     */
+    public static class KeyPrefixCacheEntryFilter<K, V> implements CacheEntryFilter<K, V> {
         private final String keyPrefix;
 
         public KeyPrefixCacheEntryFilter(String keyPrefix) {
             this.keyPrefix = keyPrefix;
         }
 
+        protected String getKeyPrefix() {
+            return keyPrefix;
+        }
+
         @Override
-        public boolean filter(String key, V value) {
-            return (key != null && key.startsWith(key));
+        public boolean filter(K key, V value) {
+            return (key != null && key != ObjectType.NULL && key.toString().startsWith(getKeyPrefix()));
+        }
+    }
+
+    /**
+     * Key substring filter.
+     * <p>NOTE: Typically one should prefix and/or suffix prefixes with {@link #SEPARATOR} (not added).</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @see #removeByFilter(CacheEntryFilter)}
+     * @see String#startsWith(String)
+     */
+    public static class KeySubstringCacheEntryFilter<K, V> implements CacheEntryFilter<K, V> {
+        private final String keySub;
+
+        public KeySubstringCacheEntryFilter(String keySub) {
+            this.keySub = keySub;
+        }
+
+        protected String getKeySub() {
+            return keySub;
+        }
+
+        @Override
+        public boolean filter(K key, V value) {
+            return (key != null && key != ObjectType.NULL && key.toString().contains(getKeySub()));
+        }
+    }
+
+    /**
+     * Key parts filter, where each string in the key parts array corresponds to a delimited part of the target key,
+     * or accepts any value if null.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @see #removeByFilter(CacheEntryFilter)}
+     */
+    public static class KeyPartsCacheEntryFilter<K, V> implements CacheEntryFilter<K, V> {
+        private final List<String> keyParts;
+
+        public KeyPartsCacheEntryFilter(Collection<String> keyParts) {
+            this.keyParts = keyParts.stream()
+                    .map(p -> (p != null && !p.isEmpty()) ? p : null)
+                    .collect(Collectors.toCollection(ArrayList::new));
+        }
+
+        public KeyPartsCacheEntryFilter(String... keyParts) {
+            this(Arrays.asList(keyParts));
+        }
+
+        protected List<String> getKeyParts() {
+            return keyParts;
+        }
+
+        @Override
+        public boolean filter(K key, V value) {
+            List<String> keyParts = getKeyParts();
+            if (keyParts.isEmpty()) {
+                return true; // Accept all (wilcard by default)
+            }
+            if (key == null || key == ObjectType.NULL) {
+                return false;
+            }
+
+            List<String> splitParts = StringUtil.split(null, key.toString(), SEPARATOR);
+            if (splitParts == null) {
+                return keyParts.isEmpty();
+            }
+            for(int i = 0; i < keyParts.size(); i++) {
+                String keyPart = keyParts.get(i);
+                if (keyPart != null && (i >= splitParts.size() || !keyPart.equals(splitParts.get(i)))) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
     /** Removes all elements from this cache */
-    public void clear() {
-        erase();
+    public int clear() {
+        int removed = erase();
         clearCounters();
+        return removed;
     }
 
     public static void clearAllCaches() {
@@ -670,19 +933,17 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     public void setMaxInMemory(int newInMemory) {
         this.maxInMemory = newInMemory;
         Map<Object, CacheLine<V>> oldmap = this.memoryTable;
-
         if (newInMemory > 0) {
             if (this.memoryTable instanceof ConcurrentLinkedHashMap<?, ?>) {
                 ((ConcurrentLinkedHashMap<?, ?>) this.memoryTable).setCapacity(newInMemory);
                 return;
             }
-            this.memoryTable =new Builder<Object, CacheLine<V>>()
+            this.memoryTable = new Builder<Object, CacheLine<V>>()
                     .maximumWeightedCapacity(newInMemory)
                     .build();
         } else {
             this.memoryTable = new ConcurrentHashMap<>();
         }
-
         this.memoryTable.putAll(oldmap);
     }
 
@@ -743,32 +1004,32 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return this.useSoftReference;
     }
 
-    /** Returns the number of elements currently in the cache
+    /**
+     * Returns the number of elements currently in the cache
      * @return The number of elements currently in the cache
      */
     public int size() {
         return memoryTable.size();
     }
 
-    /** Returns a boolean specifying whether or not an element with the specified key is in the cache.
+    /**
+     * Returns a boolean specifying whether or not an element with the specified key is in the cache.
      * @param key The key for the element, used to reference it in the hashtables and LRU linked list
      * @return True is the cache contains an element corresponding to the specified key, otherwise false
      */
     public boolean containsKey(Object key) {
-        Object nulledKey = fromKey(key);
-        CacheLine<V> line = memoryTable.get(nulledKey);
-        return line != null;
+        return (memoryTable.get(fromKey(key)) != null);
     }
 
     /**
-     * NOTE: this returns an unmodifiable copy of the keySet, so removing from here won't have an effect,
+     * Gets cache line keys.
+     * <p>NOTE: this returns an unmodifiable copy of the keySet, so removing from here won't have an effect,
      * and calling a remove while iterating through the set will not cause a concurrent modification exception.
-     * This behavior is necessary for now for the persisted cache feature.
+     * This behavior is necessary for now for the persisted cache feature.</p>
      */
     public Set<? extends K> getCacheLineKeys() {
         // note that this must be a HashSet and not a FastSet in order to have a null value
         Set<Object> keys;
-
         if (memoryTable.containsKey(ObjectType.NULL)) {
             keys = new HashSet<>(memoryTable.keySet());
             keys.remove(ObjectType.NULL);
@@ -776,7 +1037,6 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         } else {
             keys = memoryTable.keySet();
         }
-
         return Collections.unmodifiableSet(UtilGenerics.<Set<? extends K>>cast(keys));
     }
 
@@ -785,9 +1045,8 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     }
 
     private Map<String, Object> createLineInfo(int keyNum, K key, CacheLine<V> line) {
-        Map<String, Object> lineInfo = new HashMap<>();
+        Map<String, Object> lineInfo = new LinkedHashMap<>();
         lineInfo.put("elementKey", key);
-
         if (line.getLoadTimeNanos() > 0) {
             lineInfo.put("expireTimeMillis", TimeUnit.MILLISECONDS.convert(line.getExpireTimeNanos() - System.nanoTime(), TimeUnit.NANOSECONDS));
         }
@@ -797,11 +1056,11 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     }
 
     public Collection<? extends Map<String, Object>> getLineInfos() {
-        List<Map<String, Object>> lineInfos = new LinkedList<>();
+        Set<? extends K> cacheLineKeys = getCacheLineKeys();
+        List<Map<String, Object>> lineInfos = new ArrayList<>(cacheLineKeys.size());
         int keyIndex = 0;
-        for (K key: getCacheLineKeys()) {
-            Object nulledKey = fromKey(key);
-            CacheLine<V> line = memoryTable.get(nulledKey);
+        for (K key : cacheLineKeys) {
+            CacheLine<V> line = memoryTable.get(fromKey(key));
             if (line != null) {
                 lineInfos.add(createLineInfo(keyIndex, key, line));
             }
@@ -812,33 +1071,59 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     /** Send a key addition event to all registered listeners */
     protected void noteAddition(K key, V newValue) {
-        for (CacheListener<K, V> listener: listeners) {
+        Collection<CacheListener<K, V>> listeners = this.listeners;
+        for (CacheListener<K, V> listener : listeners) {
             listener.noteKeyAddition(this, key, newValue);
         }
     }
 
     /** Send a key removal event to all registered listeners */
     protected void noteRemoval(K key, V oldValue) {
-        for (CacheListener<K, V> listener: listeners) {
+        Collection<CacheListener<K, V>> listeners = this.listeners;
+        for (CacheListener<K, V> listener : listeners) {
             listener.noteKeyRemoval(this, key, oldValue);
         }
     }
 
     /** Send a key update event to all registered listeners */
     protected void noteUpdate(K key, V newValue, V oldValue) {
-        for (CacheListener<K, V> listener: listeners) {
+        Collection<CacheListener<K, V>> listeners = this.listeners;
+        for (CacheListener<K, V> listener : listeners) {
             listener.noteKeyUpdate(this, key, newValue, oldValue);
         }
     }
 
-    /** Adds an event listener for key removals */
-    public void addListener(CacheListener<K, V> listener) {
-        listeners.add(listener);
+    /**
+     * Adds an event listener for key removals.
+     * <p>SCIPIO: 2.1.0: NOTE: Do not use cache listeners except best-effort stats; cache modifications not synchronized.</p>
+     * <p>SCIPIO: 2.1.0: Added synchronization and optimized.</p>
+     */
+    public synchronized UtilCache<K, V> addListener(CacheListener<K, V> listener) {
+        Collection<CacheListener<K, V>> listeners = this.listeners;
+        if (listeners.isEmpty()) {
+            listeners = new CopyOnWriteArraySet<>();
+            listeners.add(listener);
+            this.listeners = listeners;
+        } else {
+            listeners.add(listener);
+        }
+        return this;
     }
 
-    /** Removes an event listener for key removals */
-    public void removeListener(CacheListener<K, V> listener) {
-        listeners.remove(listener);
+    /**
+     * Removes an event listener for key removals.
+     * <p>SCIPIO: 2.1.0: NOTE: Do not use cache listeners except best-effort stats; cache modifications not synchronized.</p>
+     * <p>SCIPIO: 2.1.0: Added synchronization and optimized.</p>
+     */
+    public synchronized UtilCache<K, V>  removeListener(CacheListener<K, V> listener) {
+        Collection<CacheListener<K, V>> listeners = this.listeners;
+        if (!listeners.isEmpty()) {
+            listeners.remove(listener);
+            if (listeners.isEmpty()) {
+                this.listeners = Collections.emptySet();
+            }
+        }
+        return this;
     }
 
     /** Checks for a non-expired key in a specific cache */
@@ -852,50 +1137,51 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return false;
     }
 
-    public static void clearCachesThatStartWith(String startsWith) {
-        for (Map.Entry<String, UtilCache<?, ?>> entry: utilCacheTable.entrySet()) {
+    /**
+     * Splits key parts from a separator-delimited key.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static <C extends Collection<String>> C splitKey(C out, String key) {
+        return StringUtil.split(out, key, SEPARATOR);
+    }
+
+    /**
+     * Splits key parts from a separator-delimited key.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static List<String> splitKey(String key) {
+        return splitKey(new ArrayList<>(), key);
+    }
+
+    public static void clearCachesThatStartWith(String cacheNamePrefix) {
+        for (Map.Entry<String, UtilCache<?, ?>> entry : utilCacheTable.entrySet()) {
             String name = entry.getKey();
-            if (name.startsWith(startsWith)) {
-                UtilCache<?, ?> cache = entry.getValue();
-                cache.clear();
+            if (name.startsWith(cacheNamePrefix)) {
+                entry.getValue().clear();
             }
         }
     }
 
-    public static void clearKeysThatStartWithFromCache(String cacheName, String startsWithKey) {
-        try{
-            UtilCache cacheObj = utilCacheTable.get(cacheName);
-            if(cacheObj!=null){
-                cacheObj.removeByFilter(new UtilCache.CacheEntryFilter<String, Object>() {
-                    @Override
-                    public boolean filter(String key, Object value) {
-                        return key.startsWith(startsWithKey);
-                    }
-                });
-
+    public static void clearKeysThatStartWithFromCache(String cacheName, String keyPrefix) {
+        try {
+            UtilCache<?, ?> cacheObj = utilCacheTable.get(cacheName);
+            if (cacheObj != null) {
+                cacheObj.removeByKeyPrefix(keyPrefix);
             }
-        }catch(Exception e){
-            Debug.logWarning("Could not find or clear caches from cache "+cacheName,module);
+        } catch(Exception e) {
+            Debug.logWarning("Could not find or clear caches from cache [" + cacheName + "]", module);
         }
-
     }
 
-    public static void clearKeysThatContainFromCache(String cacheName, String containsKey) {
+    public static void clearKeysThatContainFromCache(String cacheName, String keySub) {
         try{
-            UtilCache cacheObj = utilCacheTable.get(cacheName);
-            if(cacheObj!=null){
-                cacheObj.removeByFilter(new UtilCache.CacheEntryFilter<String, Object>() {
-                    @Override
-                    public boolean filter(String key, Object value) {
-                        return key.contains(containsKey);
-                    }
-                });
-
+            UtilCache<?, ?> cacheObj = utilCacheTable.get(cacheName);
+            if (cacheObj != null) {
+                cacheObj.removeByKeySubstring(keySub);
             }
-        }catch(Exception e){
+        } catch(Exception e) {
             Debug.logWarning("Could not find or clear caches from cache "+cacheName,module);
         }
-
     }
 
     public static void clearCache(String cacheName) {
@@ -908,10 +1194,9 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     /**
      * Removal of individual cache objects by key
-     * <p>
-     * SCIPIO: 2020-03-02: Added new function
+     * <p>SCIPIO: 2.1.0: Added.</p>
      */
-    public synchronized void clearCacheValue(String cacheName,String key) {
+    public void clearCacheValue(String cacheName,String key) {
         UtilCache<?, ?> cache = findCache(cacheName);
         if (cache == null) {
             return;
@@ -996,7 +1281,8 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     @Override
     public void onEviction(Object key, CacheLine<V> value) {
-        ExecutionPool.removePulse(value);
+        cancel(value); // SCIPIO: 2.1.0: Perform a full cancel() call so that soft refs may clean up faster
+        ExecutionPool.removePulse(value); // SCIPIO: FIXME: Only left here because currently removed from cancel()
     }
 
     /**

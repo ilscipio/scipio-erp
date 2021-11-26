@@ -163,6 +163,30 @@ public class StringUtil {
     }
 
     /**
+     * Splits a String on a delimiter into a List of Strings, with a
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     * @param out the collection to add tokenized results to
+     * @param str the String to split
+     * @param delim the delimiter character(s) to join on (null will split on whitespace)
+     * @return a list of Strings
+     */
+    public static <C extends Collection<String>> C split(C out, String str, String delim) {
+        if (str == null) {
+            return out;
+        }
+        StringTokenizer st = (delim != null) ? new StringTokenizer(str, delim) : new StringTokenizer(str);
+        if (st.hasMoreTokens()) {
+            if (out == null) {
+                out = UtilGenerics.cast(new ArrayList<String>());
+            }
+            while (st.hasMoreTokens()) {
+                out.add(st.nextToken());
+            }
+        }
+        return out;
+    }
+
+    /**
      * Splits a String on a delimiter into a List of Strings.
      * @param str the String to split
      * @param delim the delimiter character(s) to join on (null will split on whitespace)

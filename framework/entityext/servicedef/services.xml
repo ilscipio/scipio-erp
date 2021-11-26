@@ -112,6 +112,43 @@ code package.
         </attribute>
     </service>
 
+    <!-- SCIPIO: 2.1.0: Added for UtilCache improvements -->
+    <service name="utilCacheFilterOpCommon" engine="interface">
+        <description>Counts key/value UtilCache entries by key pattern filter (slow operation)</description>
+        <attribute name="cacheName" type="String" mode="IN" optional="false">
+            <description>The cache name</description>
+        </attribute>
+        <attribute name="entryFilter" type="org.ofbiz.base.util.cache.UtilCache$CacheEntryFilter" mode="IN" optional="true">
+            <description>Filters keys by the provided filter matched against each entry (key, value)</description>
+        </attribute>
+        <attribute name="keyPat" type="Object" mode="IN" optional="true">
+            <description>Filters keys by the provided regular expression (regex) pattern matched against each key,
+                as string or java.util.regex.Pattern. Uses java.util.regex.Matcher#matches()</description>
+        </attribute>
+        <attribute name="keyPrefix" type="String" mode="IN" optional="true">
+            <description>Filters keys by the provided key prefix</description>
+        </attribute>
+    </service>
+
+    <!-- SCIPIO: 2.1.0: Added for UtilCache improvements -->
+    <service name="utilCacheCountBy" engine="java" export="true"
+             location="org.ofbiz.entityext.cache.EntityCacheServices$UtilCacheCountBy" invoke="exec" auth="true" use-transaction="false">
+        <description>Counts key/value UtilCache entries by key pattern filter (slow operation)</description>
+        <implements service="utilCacheFilterOpCommon"/>
+        <attribute name="count" type="Long" mode="OUT" optional="true"/>
+    </service>
+
+    <!-- SCIPIO: 2.1.0: Added for UtilCache improvements -->
+    <service name="utilCacheRemoveBy" engine="java" export="true"
+             location="org.ofbiz.entityext.cache.EntityCacheServices$UtilCacheRemoveBy" invoke="exec" auth="true" use-transaction="false">
+        <description>Removes key/value UtilCache entries by key pattern filter (slow operation)</description>
+        <implements service="utilCacheFilterOpCommon"/>
+        <attribute name="allEntries" type="Boolean" mode="IN" optional="true">
+            <description>Removes all entries and resets counters</description>
+        </attribute>
+        <attribute name="removed" type="Long" mode="OUT" optional="true"/>
+    </service>
+
     <!-- HTTP Engine localhost cache clearing (example: duplicate entire block for each server) -->
     <service name="localhostClearAllEntityCaches" engine="http"
             location="eedcc-test" invoke="clearAllEntityCaches">

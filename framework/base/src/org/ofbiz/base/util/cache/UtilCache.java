@@ -69,7 +69,11 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     /** The name of the UtilCache instance, is also the key for the instance in utilCacheTable. */
     private final String name;
 
-    /** SCIPIO: If false, the cache will never store value on put, and always return null on get (added 2018-03). Can be set false using "enabled" cache property. */
+    /**
+     * If false, the cache will never store value on put, and always return null on get.
+     * <p>Can be set false using "enabled" cache property.</p>
+     * <p>SCIPIO: 2018-03: Added.</p>
+     */
     private boolean enabled = true;
 
     /** A count of the number of cache hits */
@@ -87,14 +91,16 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     /** A count of the number of cache misses on removes */
     protected AtomicLong removeMissCount = new AtomicLong(0);
 
-    /** The maximum number of elements in the cache.
-     * If set to 0, there will be no limit on the number of elements in the cache.
+    /**
+     * The maximum number of elements in the cache.
+     * <p>If set to 0, there will be no limit on the number of elements in the cache.</p>
      */
     protected int sizeLimit = 0;
     protected int maxInMemory = 0;
 
-    /** Specifies the amount of time since initial loading before an element will be reported as expired.
-     * If set to 0, elements will never expire.
+    /**
+     * Specifies the amount of time since initial loading before an element will be reported as expired.
+     * <p>If set to 0, elements will never expire.</p>
      */
     protected long expireTimeNanos = 0;
 
@@ -111,7 +117,13 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     protected ConcurrentMap<Object, CacheLine<V>> memoryTable = null;
 
-    /** Constructor which specifies the cacheName as well as the sizeLimit, expireTime and useSoftReference.
+    /**
+     * Used to exclude {@link #erase()} and {@link #clear()} operations for performance reasons (not essential).
+     */
+    protected final Object eraseLockObj = new Serializable(){};
+
+    /**
+     * Constructor which specifies the cacheName as well as the sizeLimit, expireTime and useSoftReference.
      * The passed sizeLimit, expireTime and useSoftReference will be overridden by values from cache.properties if found.
      * @param sizeLimit The sizeLimit member is set to this value
      * @param expireTimeMillis The expireTime member is set to this value
@@ -219,7 +231,8 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return memoryTable.isEmpty();
     }
 
-    /** Puts or loads the passed element into the cache
+    /**
+     * Puts or loads the passed element into the cache.
      * @param key The key for the element, used to reference it in the hashtables and LRU linked list
      * @param value The value of the element
      */
@@ -233,7 +246,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     public V putIfAbsentAndGet(K key, V value) {
         V cachedValue = putIfAbsent(key, value);
-        return (cachedValue != null ? cachedValue: value);
+        return (cachedValue != null) ? cachedValue : value;
     }
 
     /**
@@ -263,7 +276,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     /**
      * Creates soft-ref cache line.
-     * <p>SCIPIO: 2.1.0: Now omits registering pulses, which is left to callers to do after adding to memortyTable
+     * <p>SCIPIO: 2.1.0: Now omits registering pulses, which is left to callers to do after adding to memoryTable
      * via {@link #tryRegister(CacheLine)}.</p>
      */
     CacheLine<V> createHardRefCacheLine(final Object key, V value, long loadTimeNanos, long expireTimeNanos) {
@@ -325,7 +338,8 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return oldValue;
     }
 
-    /** Puts or loads the passed element into the cache
+    /**
+     * Puts or loads the passed element into the cache.
      * @param key The key for the element, used to reference it in the hashtables and LRU linked list
      * @param value The value of the element
      * @param expireTimeMillis how long to keep this key in the cache
@@ -379,7 +393,8 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return oldValue;
     }
 
-    /** Gets an element from the cache according to the specified key.
+    /**
+     * Gets an element from the cache according to the specified key.
      * @param key The key for the element, used to reference it in the hashtables and LRU linked list
      * @return The value of the element specified by the key
      */
@@ -555,14 +570,17 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
 
     /**
      * Removes all elements from this cache.
+     * <p>SCIPIO: NOTE: This method will retain synchronized(UtilCache.this) </p>
      * <p>SCIPIO: 2.1.0: Replaced implementation because <code>it.remove()</code> is key-based without specific value check.</p>
-     * <p>SCIPIO: 2.1.0: Removed synchronized as only used on remove calls and ConcurrentMap can usually handle bulk removal iterations without.</p>
+     * <p>SCIPIO: 2.1.0: Now synchronizes on dedicated eraseLockObj for performance reasons; only {@link #erase()} should lock on it.</p>
      */
-    public int erase() { // SCIPIO: 2.1.0: Removed synchronized
+    public int erase() {
         int removed = 0;
-        for (Map.Entry<Object, CacheLine<V>> entry : memoryTable.entrySet()) {
-            if (removeInternal(entry.getKey(), entry.getValue(), true)) {
-                removed++;
+        synchronized(eraseLockObj) { // SCIPIO: 2.1.0: Added eraseLockObj
+            for (Map.Entry<Object, CacheLine<V>> entry : memoryTable.entrySet()) {
+                if (removeInternal(entry.getKey(), entry.getValue(), true)) {
+                    removed++;
+                }
             }
         }
         return removed;
@@ -809,7 +827,9 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         }
     }
 
-    /** Removes all elements from this cache */
+    /**
+     * Removes all elements from this cache and clears counters.
+     */
     public int clear() {
         int removed = erase();
         clearCounters();
@@ -851,7 +871,8 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return set;
     }
 
-    /** Getter for the name of the UtilCache instance.
+    /**
+     * Getter for the name of the UtilCache instance.
      * @return The name of the instance
      */
     public String getName() {
@@ -859,52 +880,57 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
     }
 
     /**
-     * SCIPIO: Returns whether cache is enabled or set to bypass get/put ops.
-     * Added 2018-03.
-     * @return true if enabled, false if not.
+     * Returns whether cache is enabled or set to bypass get and put ops.
+     * <p>SCIPIO: 2018-03: Added.</p>
+     * @return true if enabled, false if not
      */
     public boolean isEnabled() {
         return enabled;
     }
 
     /**
-     * SCIPIO: Set whether cache is enabled or set to bypass get/put ops.
-     * Added 2018-03.
-     * @return true if enabled, false if not.
+     * Set whether cache is enabled or set to bypass get and put ops.
+     * <p>SCIPIO: 2018-03: Added.</p>
+     * @return true if enabled, false if not
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    /** Returns the number of successful hits on the cache
+    /**
+     * Returns the number of successful hits on the cache.
      * @return The number of successful cache hits
      */
     public long getHitCount() {
         return this.hitCount.get();
     }
 
-    /** Returns the number of cache misses from entries that are not found in the cache
+    /**
+     * Returns the number of cache misses from entries that are not found in the cache.
      * @return The number of cache misses
      */
     public long getMissCountNotFound() {
         return this.missCountNotFound.get();
     }
 
-    /** Returns the number of cache misses from entries that are expired
+    /**
+     * Returns the number of cache misses from entries that are expired.
      * @return The number of cache misses
      */
     public long getMissCountExpired() {
         return this.missCountExpired.get();
     }
 
-    /** Returns the number of cache misses from entries that are have had the soft reference cleared out (by garbage collector and such)
+    /**
+     * Returns the number of cache misses from entries that are have had the soft reference cleared out (by garbage collector and such).
      * @return The number of cache misses
      */
     public long getMissCountSoftRef() {
         return this.missCountSoftRef.get();
     }
 
-    /** Returns the number of cache misses caused by any reason
+    /**
+     * Returns the number of cache misses caused by any reason.
      * @return The number of cache misses
      */
     public long getMissCountTotal() {
@@ -919,8 +945,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return this.removeMissCount.get();
     }
 
-    /** Clears the hit and miss counters
-     */
+    /** Clears the hit and miss counters. */
     public void clearCounters() {
         this.hitCount.set(0);
         this.missCountNotFound.set(0);
@@ -959,7 +984,8 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return sizeLimit;
     }
 
-    /** Sets the expire time for the cache elements.
+    /**
+     * Sets the expire time for the cache elements.
      * If 0, elements never expire.
      * @param expireTimeMillis The expire time for the cache elements
      */
@@ -979,7 +1005,8 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         }
     }
 
-    /** return the current expire time for the cache elements
+    /**
+     * Return the current expire time for the cache elements.
      * @return The expire time for the cache elements
      */
     public long getExpireTime() {

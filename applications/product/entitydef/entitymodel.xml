@@ -4247,6 +4247,43 @@ code package.
         <field name="reviewsPurchased" type="indicator"><description>SCIPIO: Default N. If Y, the store will support product reviews for purchased products.</description></field>
         <field name="multipleReviews" type="indicator"><description>SCIPIO: Default N. If Y, the store will support multiple product reviews for unregistered per user.</description></field>
     </extend-entity>
+
+    <!-- SCIPIO: 2.1.0: Added new ProductStoreAttribute entity in order to hold non-standard store fields -->
+    <entity entity-name="ProductStoreAttribute"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Attribute"
+            default-resource-name="ProductEntityLabels">
+        <field name="productStoreId" type="id-ne"></field>
+        <field name="attrName" type="id-long-ne"></field>
+        <field name="attrValue" type="value"></field>
+        <field name="attrType" type="id-long-ne"></field>
+        <field name="attrDescription" type="description"></field>
+        <prim-key field="productStoreId"/>
+        <prim-key field="attrName"/>
+        <prim-key field="attrType"/>
+        <relation type="one" fk-name="PROD_STR_ATTR" rel-entity-name="ProductStore">
+            <key-map field-name="productStoreId"/>
+        </relation>
+        <relation type="many" rel-entity-name="ProductStoreTypeAttr">
+            <key-map field-name="attrType"/>
+        </relation>
+    </entity>
+    <entity entity-name="ProductStoreTypeAttr"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Type Attribute">
+        <field name="productStoreId" type="id-ne"></field>
+        <field name="attrType" type="id-long-ne"></field>
+        <field name="description" type="description"></field>
+        <prim-key field="productStoreId"/>
+        <prim-key field="attrType"/>
+        <relation type="many" rel-entity-name="ProductStoreAttribute">
+            <key-map field-name="attrType"/>
+        </relation>
+        <relation type="many" rel-entity-name="ProductStore">
+            <key-map field-name="productStoreId"/>
+        </relation>
+    </entity>
+
     <entity entity-name="ProductStoreCatalog"
             package-name="org.ofbiz.product.store"
             title="Product Store Catalog Association">

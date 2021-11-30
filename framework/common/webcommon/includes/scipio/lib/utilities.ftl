@@ -5506,3 +5506,21 @@ Generates a unique element cache key from request object and additional paramete
     </#if>
   </#if>
 </#function>
+
+<#--
+*************
+* getCurrentUrl
+************
+Retrieves the current original url
+
+  * Parameters *
+    secure                 = ((Boolean)) Use secure url (https)
+    useQueryString         = ((Boolean)) Append with parameters
+
+  * History *
+    Added for 2.1.0.
+
+-->
+<#function getCurrentUrl secure=true useQueryString=false>
+  <#return Static["org.ofbiz.webapp.control.RequestLinkUtil"].rebuildOriginalRequestURL(request,response,secure,useQueryString)!""/>
+</#function>

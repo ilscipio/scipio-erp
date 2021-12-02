@@ -170,8 +170,9 @@ code package.
     <!-- SCIPIO: Added 2.1.0: Finds abandoned carts -->
     <service name="findAbandonedCarts" engine="java" location="org.ofbiz.order.shoppingcart.ShoppingCartServices" invoke="findAbandonedCarts" auth="true">
         <description>Finds abandoned carts</description>
-        <attribute name="daysOffset" mode="IN" type="Integer" optional="true" />
-        <attribute name="productStoreId" mode="IN" type="String" optional="true" />
+        <attribute name="productStoreId" mode="IN" type="String" optional="false" />
+        <attribute name="fromDate" mode="IN" type="Timestamp" optional="true" />
+        <attribute name="daysOffset" mode="IN" type="Long" optional="true" />
         <attribute name="abandonedCarts" type="java.util.List" mode="OUT" optional="false"/>
     </service>
     <!-- SCIPIO: Added 2.1.0: Send abandoned cart email reminder -->
@@ -187,6 +188,7 @@ code package.
         <attribute name="visitId" type="String" mode="IN" optional="false"/>
         <attribute name="abandonedCart" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="abandonedCartLines" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="isUserInSession" type="Boolean" mode="IN" optional="true" default-value="false"/>
         <attribute name="applyStorePromotions" type="String" mode="IN" optional="true"/>
         <attribute name="cartPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="shoppingCart" type="org.ofbiz.order.shoppingcart.ShoppingCart" mode="OUT" optional="false"/>

@@ -29,6 +29,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityDateFilterCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
@@ -37,6 +38,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.entity.util.QueryDateFilter;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart.CartShipInfo;
 import org.ofbiz.order.shoppingcart.ShoppingCart.CartShipInfo.CartShipItemInfo;
@@ -1245,6 +1247,7 @@ public class ShoppingCartServices {
 
         DynamicViewEntity dve = new DynamicViewEntity();
         dve.addMemberEntity("CA", "CartAbandoned");
+        dve.addMemberEntity("CAS", "CartAbandonedStatus");
         dve.addMemberEntity("V", "Visit");
         dve.addMemberEntity("P", "Party");
         dve.addMemberEntity("UL", "UserLogin");
@@ -1255,10 +1258,14 @@ public class ShoppingCartServices {
         dve.addAlias("CA", "webSiteId", null, null, null, true, null);
         dve.addAlias("CA", "locale", null, null, null, true, null);
         dve.addAlias("CA", "currencyUomId", null, null, null, true, null);
+        dve.addAlias("CA", "fromDate", null, null, null, true, null);
+        dve.addAlias("CA", "thruDate", null, null, null, true, null);
+        dve.addAlias("CAS", "statusId", null, null, null, true, null);
         dve.addAlias("V", "partyId", null, null, null, true, null);
         dve.addAlias("V", "userLoginId", null, null, null, true, null);
 
         dve.addViewLink("CA", "V", false, UtilMisc.toList(ModelKeyMap.makeKeyMapList("visitId")));
+        dve.addViewLink("CA", "CAS", false, UtilMisc.toList(ModelKeyMap.makeKeyMapList("visitId")));
         dve.addViewLink("V", "P", true, UtilMisc.toList(ModelKeyMap.makeKeyMapList("partyId")));
         dve.addViewLink("V", "UL", true, UtilMisc.toList(ModelKeyMap.makeKeyMapList("userLoginId")));
 
@@ -1268,16 +1275,41 @@ public class ShoppingCartServices {
         dve.addRelation("one", null, "UserLogin", ModelKeyMap.makeKeyMapList("userLoginId"));
 
         EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(
-                EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, null),
-                EntityCondition.makeCondition("userLoginId", EntityOperator.NOT_EQUAL, null)
-        ), EntityOperator.OR);
-
-        if (UtilValidate.isNotEmpty(productStoreId)) {
-            condition = EntityCondition.makeCondition(condition, EntityOperator.AND, EntityCondition.makeCondition("productStoreId", productStoreId));
+                EntityCondition.makeCondition(UtilMisc.toList(
+                        EntityCondition.makeCondition("partyId", EntityOperator.NOT_EQUAL, null),
+                        EntityCondition.makeCondition("userLoginId", EntityOperator.NOT_EQUAL, null)
+                        ), EntityOperator.OR),
+                EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("AB_PENDING", "AB_IN_PROGRESS")),
+                EntityCondition.makeCondition("productStoreId", productStoreId)
+        ), EntityOperator.AND);
+        GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+        if (UtilValidate.isEmpty(daysOffset)) {
+            daysOffset = productStore.getInteger("abandonedCartReminderDayOffset");
         }
+        if (UtilValidate.isEmpty(daysOffset)) {
+            daysOffset = 0;
+        }
+
+        if (UtilValidate.isNotEmpty(fromDate)) {
+            condition = EntityCondition.makeCondition(
+                    condition,
+                    EntityCondition.makeCondition("fromDate", UtilDateTime.addDaysToTimestamp(fromDate, daysOffset))
+            );
+        }
+
         try {
-            List<GenericValue> abandonedCarts = EntityQuery.use(delegator).from(dve).where(condition).queryList();
+            List<GenericValue> abandonedCarts = EntityQuery.use(delegator).from(dve).where(condition).filterByDate().queryList();
             result.put("abandonedCarts", abandonedCarts);
+            if (UtilValidate.isEmpty(fromDate)) {
+                Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+                List<GenericValue> filteredAbandonedCarts = UtilMisc.newList();
+                for (GenericValue abandonedCart : abandonedCarts) {
+                    if (UtilDateTime.addDaysToTimestamp(abandonedCart.getTimestamp("fromDate"), daysOffset).compareTo(nowTimestamp) >= 0) {
+                        filteredAbandonedCarts.add(abandonedCart);
+                    }
+                }
+                result.put("abandonedCarts", filteredAbandonedCarts);
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
             return ServiceUtil.returnError(e.getMessage());
@@ -1398,6 +1430,7 @@ public class ShoppingCartServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         GenericValue abandonedCart = (GenericValue) context.get("abandonedCart");
         List<GenericValue> abandonedCartLines = (List<GenericValue>) context.get("abandonedCartLines");
+        Boolean isUserInSession = (Boolean) context.get("isUserInSession");
         String visitId = (String) context.get("visitId");
         String cartPartyId = (String) context.get("cartPartyId");
         Locale locale = (Locale) context.get("locale");
@@ -1419,7 +1452,9 @@ public class ShoppingCartServices {
         GenericValue abandonedCartUserLogin = null;
         try {
             visit = abandonedCart.getRelatedOneCache("Visit");
-            abandonedCartUserLogin = abandonedCart.getRelatedOneCache("UserLogin");
+            if (UtilValidate.isEmpty(userLogin)) {
+                abandonedCartUserLogin = EntityQuery.use(delegator).from("UserLogin").where(UtilMisc.toMap("userLoginId", visit.getString("userLoginId"))).cache().queryOne();
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
@@ -1448,11 +1483,13 @@ public class ShoppingCartServices {
         // create the cart
         ShoppingCart cart = ShoppingCartFactory.createShoppingCart(delegator, productStoreId, locale, currency); // SCIPIO: use factory
 
-        try {
-            cart.setUserLogin(abandonedCartUserLogin, dispatcher);
-        } catch (CartItemModifyException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError(e.getMessage());
+        if (isUserInSession) {
+            try {
+                cart.setUserLogin(abandonedCartUserLogin, dispatcher);
+            } catch (CartItemModifyException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
         }
 
         // set the role information

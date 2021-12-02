@@ -6,4 +6,14 @@ code package.
 -->
 <entity-engine-xml>
 
+    <!-- SCIPIO: 2.1.0: Abadoned Cart Status Type-->
+    <StatusType description="Abandoned Cart Status" hasTable="N" parentTypeId="" statusTypeId="ABANDONED_CART_STATUS"/>
+    <StatusItem description="Pending" sequenceId="01" statusCode="PENDING" statusId="AB_PENDING" statusTypeId="ABANDONED_CART_STATUS"/>
+    <StatusItem description="In-Progress" sequenceId="02" statusCode="IN-PROGRESS" statusId="AB_IN_PROGRESS" statusTypeId="ABANDONED_CART_STATUS"/>
+    <StatusItem description="Recovered" sequenceId="03" statusCode="RECOVERED" statusId="AB_RECOVERED" statusTypeId="ABANDONED_CART_STATUS"/>
+    <StatusItem description="Cancelled" sequenceId="04" statusCode="CANCELLED" statusId="AB_CANCELLED" statusTypeId="ABANDONED_CART_STATUS"/>
+    <StatusValidChange statusId="AB_PENDING" statusIdTo="AB_IN_PROGRESS" transitionName="Abandoned Cart Recovery in progress"/>
+    <StatusValidChange statusId="AB_IN_PROGRESS" statusIdTo="AB_RECOVERED" transitionName="Abandoned Cart Recovery recovered"/>
+    <StatusValidChange statusId="AB_IN_PROGRESS" statusIdTo="AB_CANCELLED" transitionName="Abandoned Cart Recovery cancelled"/>
+
 </entity-engine-xml>

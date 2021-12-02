@@ -269,6 +269,12 @@ code package.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="UpdateCart"/>
     </request-map>
+    <request-map uri="loadCartFromAbandonedCart">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="loadCartFromAbandonedCart"/>
+        <response name="error" type="view" value="showcart"/>
+        <response name="success" type="view" value="showcart"/>
+    </request-map>
 
     <request-map uri="setDesiredAlternateGwpProductId">
         <security https="true" auth="false"/>

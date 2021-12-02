@@ -2805,8 +2805,10 @@ code package.
     <entity entity-name="CartAbandoned"
           package-name="org.ofbiz.order.shoppingcart"
           never-cache="true"
-          title="Order Abandoned">
+          title="Cart Abandoned">
       <field name="visitId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
       <field name="productStoreId" type="id-ne"></field>
       <field name="webSiteId" type="id-ne"></field>
       <field name="currencyUomId" type="id"></field>
@@ -2825,11 +2827,28 @@ code package.
         <key-map field-name="currencyUomId" rel-field-name="uomId"/>
       </relation>
     </entity>
+    <!-- SCIPIO: 2.1.0: Added new entity for abandoned carts status -->
+    <entity entity-name="CartAbandonedStatus"
+            package-name="org.ofbiz.order.shoppingcart"
+            never-cache="true"
+            title="Cart Abandoned Status">
+      <field name="visitId" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
+      <field name="visitHash" type="long-varchar"></field>
+      <field name="userNotificationRetryNum" type="numeric"></field>
+      <prim-key field="visitId"/>
+      <relation type="one" fk-name="CART_AB_STTS_STI" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="CART_AB_STTS" rel-entity-name="CartAbandoned">
+        <key-map field-name="visitId"/>
+      </relation>
+    </entity>
 
     <entity entity-name="CartAbandonedLine"
             package-name="org.ofbiz.order.shoppingcart"
             never-cache="true"
-            title="Order Abandoned Line">
+            title="Cart Abandoned Line">
       <field name="visitId" type="id-ne"></field>
       <field name="cartAbandonedLineSeqId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
@@ -2856,6 +2875,7 @@ code package.
         <key-map field-name="visitId"/>
       </relation>
     </entity>
+
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.order.shoppinglist -->

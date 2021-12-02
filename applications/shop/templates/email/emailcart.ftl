@@ -5,50 +5,6 @@ code package.
 -->
 <#include "component://shop/webapp/shop/cart/cartcommon.ftl">
 
-<#-- SCIPIO: TODO: Rewrite the following javascript -->
-<@script>
-function addToList() {
-    var cform = document.cartform;
-    cform.action = "<@pageUrl>addBulkToShoppingList</@pageUrl>";
-    cform.submit();
-}
-function gwAll(e) {
-    var cform = document.cartform;
-    var len = cform.elements.length;
-    var selectedValue = e.value;
-    if (selectedValue == "") {
-        return;
-    }
-
-    var cartSize = ${shoppingCartSize};
-    var passed = 0;
-    for (var i = 0; i < len; i++) {
-        var element = cform.elements[i];
-        var ename = element.name;
-        var sname = ename.substring(0,16);
-        if (sname == "option^GIFT_WRAP") {
-            var options = element.options;
-            var olen = options.length;
-            var matching = -1;
-            for (var x = 0; x < olen; x++) {
-                var thisValue = element.options[x].value;
-                if (thisValue == selectedValue) {
-                    element.selectedIndex = x;
-                    passed++;
-                }
-            }
-        }
-    }
-    if (cartSize > passed && selectedValue != "NO^") {
-        showErrorAlert("${escapeVal(uiLabelMap.CommonErrorMessage2, 'js')}","${escapeVal(uiLabelMap.EcommerceSelectedGiftWrap, 'js')}");
-    }
-    cform.submit();
-}
-
-function setAlternateGwp(field) {
-  window.location=field.value;
-};
-</@script>
 
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems() /> <#-- change display format when rental items exist in the shoppingcart -->
 
@@ -59,38 +15,13 @@ function setAlternateGwp(field) {
 
 <#assign cartHasItems = (shoppingCartSize > 0)>
 <#assign cartEmpty = (!cartHasItems)>
-<#-- SCIPIO: Access session only once -->
-<#assign lastViewedProducts = lastViewedProducts!>
-<#if sessionAttributes?has_content>
-    <#assign lastViewedProducts = sessionAttributes.lastViewedProducts!>
-</#if>
-<#if ((lastViewedProducts)?has_content && (lastViewedProducts?size > 0))>
-    <#if (requestParameters?has_content && requestParameters.category_id?has_content)>
-        <#assign categoryId = requestParameters.category_id>
-    </#if>
-    <#assign continueLink><@catalogAltUrl productCategoryId=categoryId!"" productId=(lastViewedProducts.get(0)) rawParams=true/></#assign>
-<#else>
-  <#assign continueLink = makePageUrl("main")>
-</#if>
 
-
-<#macro menuContent menuArgs={}>
-    <@menu args=menuArgs>
-        <#if shoppingCart.items()?has_content>
-            <@menuitem type="link" href="javascript:document.cartform.submit();" class="+${styles.action_nav!} ${styles.action_update!}" text=uiLabelMap.EcommerceRecalculateCart disabled=cartEmpty />
-            <@menuitem type="link" href=makePageUrl("emptycart") class="+${styles.action_run_session!} ${styles.action_clear!}" text=uiLabelMap.EcommerceEmptyCart disabled=cartEmpty />
-            <@menuitem type="link" href="javascript:removeSelected('cartform');" class="+${styles.action_run_session!} ${styles.action_remove!}" text=uiLabelMap.EcommerceRemoveSelected disabled=cartEmpty />
-        </#if>
-    </@menu>
-</#macro>
-
-<@section menuContent=menuContent>
+<@section>
 
   <#if (shoppingCartSize > 0)>
     <#assign itemsFromList = false />
     <#assign promoItems = false />
-    <form method="post" action="<@pageUrl>modifycart</@pageUrl>" name="cartform">
-    <@fields fieldArgs={"checkboxType":"simple-standard"}><#-- TODO: type="..." -->
+
       <input type="hidden" name="removeSelected" value="false" />
         <@table type="data-complex" role="grid">
             <@thead>
@@ -101,10 +32,9 @@ function setAlternateGwp(field) {
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceUnitPrice}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceAdjustments}</@th>
                     <@th width="15%" class="${styles.text_right!}">${uiLabelMap.EcommerceItemTotal}</@th>
-                    <@th width="5%"><@field type="checkbox" widgetOnly=true name="selectAll" value=(uiLabelMap.CommonY) onClick="javascript:toggleAll(this, 'cartform', 'selectedItem');" /></@th>
                 </@tr>
             </@thead>
-            
+
             <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
             <#macro orderItemAttrInfo cartLine>
                 <#-- SCIPIO: OrderItemAttributes and ProductConfigWrappers -->
@@ -128,14 +58,14 @@ function setAlternateGwp(field) {
                     </ul>
                 </#if>
             </#macro>
-            
+
             <@tbody>
                 <#assign itemClass = "2">
                 <#list shoppingCart.items() as cartLine>
                     <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine) />
                     <#assign lineOptionalFeatures = cartLine.getOptionalProductFeatures() />
-               
-                    <#if itemClass == "1"><#assign rowColor=styles.row_alt!><#else><#assign rowColor=styles.row_reg!></#if> 
+
+                    <#if itemClass == "1"><#assign rowColor=styles.row_alt!><#else><#assign rowColor=styles.row_reg!></#if>
                     <#assign itemProduct = cartLine.getProduct() />
                     <#-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... -->
 <#--                    <#assign isStoreInventoryNotRequiredAndNotAvailable = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequiredAndAvailable(request, itemProduct, cartLine.getQuantity(), false, false) />-->
@@ -143,7 +73,7 @@ function setAlternateGwp(field) {
 <#--                        <@tr type="meta"><@td colspan="6"><@commonMsg type="warning">${itemProduct.inventoryMessage}</@commonMsg></@td></@tr>-->
 <#--                    </#if>-->
                     <@tr class="${rowColor!}">
-                        <@td> 
+                        <@td>
                         <#if cartLine.getProductId()??>
                             <#-- product item -->
                             <#if cartLine.getParentProductId()??>
@@ -156,8 +86,8 @@ function setAlternateGwp(field) {
                         <#else>
                             <#-- non-product item -->
                             ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!}
-                            <@orderItemAttrInfo cartLine=cartLine/>                        
-                            <#-- 
+                            <@orderItemAttrInfo cartLine=cartLine/>
+                            <#--
                             <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                               Show alternate gifts if there are any...
                               <div class="tableheadtext">${uiLabelMap.OrderChooseFollowingForGift}:</div>
@@ -176,7 +106,7 @@ function setAlternateGwp(field) {
                         <#if surveyResponses?has_content>
                           <@orderItemSurvResList survResList=surveyResponses/>
                         </#if>
-                   
+
                         </@td>
                         <#-- giftWrap & promotion info -->
                         <@td>
@@ -192,16 +122,14 @@ function setAlternateGwp(field) {
                             <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP! />
                             <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")! />
                             <#if giftWrapOption?has_content>
-                              <select name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:this.form.submit();">
-                                <option value="NO^">${uiLabelMap.EcommerceNoGiftWrap}</option>
                                 <#list giftWrapOption as option>
-                                  <option value="${option.productFeatureId}"<#if ((selectedOption.productFeatureId)?? && selectedOption.productFeatureId == option.productFeatureId)> selected="selected"</#if>>${option.description} : ${option.amount!0}</option>
+                                    <#if ((selectedOption.productFeatureId)?? && selectedOption.productFeatureId == option.productFeatureId)>
+                                        ${option.description} : ${option.amount!0}
+                                    </#if>
                                 </#list>
                               </select>
                             <#elseif showNoGiftWrapOptions>
-                              <select name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:this.form.submit();">
-                                <option value="">${uiLabelMap.EcommerceNoGiftWrap}</option>
-                              </select>
+                                ${uiLabelMap.EcommerceNoGiftWrap}
                             </#if>
                         </@td>
                         <#-- end gift wrap option -->
@@ -211,14 +139,14 @@ function setAlternateGwp(field) {
                             <#if cartLine.getIsPromo() || cartLine.getShoppingListId()??>
                                 <#if fixedAssetExist == true && cartLine.getReservStart()??>
                                   <#-- SCIPIO: NOTE: stock bugfixes applied here -->
-                                  <@modal id="${raw(cartLine.productId)}_q" label=cartLine.getQuantity()?string.number>   
-                                    <@fields type="default-compact"> 
+                                  <@modal id="${raw(cartLine.productId)}_q" label=cartLine.getQuantity()?string.number>
+                                    <@fields type="default-compact">
                                       <@field type="display" label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) />
                                       <@field type="display" label=uiLabelMap.CommonDays value=(cartLine.getReservLength()?string.number) />
                                       <@field type="display" label=uiLabelMap.CommonPersons value=(cartLine.getReservPersons()?string.number) />
                                       <@field type="display" label=uiLabelMap.CommonQuantity value=(cartLine.getQuantity()?string.number) />
                                     </@fields>
-                                  </@modal>                                                 
+                                  </@modal>
                                 <#else><#-- fixedAssetExist -->
                                     ${cartLine.getQuantity()?string.number}
                                 </#if>
@@ -226,40 +154,25 @@ function setAlternateGwp(field) {
                                 <#if fixedAssetExist == true>
                                     <#-- SCIPIO:FIXME?: can't put in modal easily because inputs end up outside form -->
                                     <#if cartLine.getReservStart()??>
-                                      <@fields type="default-compact"> 
-                                        <@field type="datetime" dateType="date" name="reservStart_${cartLineIndex}" maxlength=10 label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) 
-                                          postfix=false datePostfix=false/><#-- FIXME: not enough space for postfix right now -->
-                                        <@field type="input" name="reservLength_${cartLineIndex}"  label=uiLabelMap.CommonDays value=(cartLine.getReservLength()?string.number) />
-                                        <@field type="input" name="reservPersons_${cartLineIndex}" label=uiLabelMap.CommonPersons value=(cartLine.getReservPersons()?string.number) />
-                                        <@field type="input" name="update_${cartLineIndex}" label=uiLabelMap.CommonQuantity value=(cartLine.getQuantity()?string.number) onChange="javascript:this.form.submit();"/> 
-                                      </@fields>
+                                        <@modal id="${raw(cartLine.productId)}_q" label=cartLine.getQuantity()?string.number>
+                                            <@fields type="default-compact">
+                                                <@field type="display" label=uiLabelMap.EcommerceStartdate value=(cartLine.getReservStart()?string("yyyy-MM-dd")) />
+                                                <@field type="display" label=uiLabelMap.CommonDays value=(cartLine.getReservLength()?string.number) />
+                                                <@field type="display" label=uiLabelMap.CommonPersons value=(cartLine.getReservPersons()?string.number) />
+                                                <@field type="display" label=uiLabelMap.CommonQuantity value=(cartLine.getQuantity()?string.number) />
+                                            </@fields>
+                                        </@modal>
                                     <#else>
-                                      <@field type="input" widgetOnly=true name="update_${cartLineIndex}" value=(cartLine.getQuantity()?string.number) onChange="javascript:this.form.submit();"/> 
+                                        ${(cartLine.getQuantity()?string.number)}
                                     </#if>
                                 <#else><#-- fixedAssetExist -->
-                                    <@field type="select" widgetOnly=true name="update_${cartLineIndex}" onChange="javascript:this.form.submit();">
-                                        <#if (cartLine.getQuantity() < 1)>
-                                            <@field type="option" value=cartLine.getQuantity() selected=true>${cartLine.getQuantity()}</@field>
-                                        </#if>
-                                        <#list 1..99 as x>
-                                            <#if cartLine.getQuantity() == x>
-                                                <#assign selected = true/>
-                                            <#else>
-                                                <#assign selected = false/>
-                                            </#if>
-                                            <@field type="option" value=(x) selected=selected>${x}</@field>
-                                        </#list>
-                                        <#if (cartLine.getQuantity() > 99)>
-                                            <@field type="option" value=cartLine.getQuantity() selected=true>${cartLine.getQuantity()}</@field>
-                                        </#if>
-                                    </@field>
+                                    ${cartLine.getQuantity()}
                                 </#if>
                             </#if>
                         </@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></@td>
                         <@td class="${styles.text_right!}"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></@td>
-                        <@td><#if !cartLine.getIsPromo()><@field type="checkbox" widgetOnly=true name="selectedItem" value=(cartLineIndex) onClick="javascript:checkToggle(this,'cartform','selectedItem');" /><#else>&nbsp;</#if></@td>
                     </@tr>
 
                     <#-- now show adjustment details per line item -->
@@ -303,7 +216,7 @@ function setAlternateGwp(field) {
                       </#list>
                    </#if>
                 </#list>
-            <#-- SCIPIO: styling issues: 
+            <#-- SCIPIO: styling issues:
             </@tbody>
             <@tfoot>-->
                     <@tr>
@@ -344,7 +257,7 @@ function setAlternateGwp(field) {
                   </@tr>
                 </#if>
 
-                
+
                 <#-- grand total -->
                 <@tr>
                     <@td colspan="5"></@td>
@@ -361,110 +274,17 @@ function setAlternateGwp(field) {
                     <@td>&nbsp;</@td>
                 </@tr>
 
-            <#-- SCIPIO: styling issues: 
+            <#-- SCIPIO: styling issues:
             </@tfoot>-->
             </@tbody>
         </@table>
-    </@fields>
-    </form>
     <@row>
-        <@cell columns=3>
-            <@menu type="button">
-                <@menuitem type="link" href=continueLink text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
-            </@menu>
-        </@cell>
         <@cell columns=9 class="${styles.text_right!}">
             <@menu type="button">
-                <@menuitem type="link" href=makePageUrl("checkoutoptionslogin") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckout disabled=cartEmpty/>
-                <#--<@menuitem type="link" href=makePageUrl("quickcheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.OrderCheckoutQuick disabled=cartEmpty/>-->
-                <@menuitem type="link" href=makePageUrl("onePageCheckout") class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.EcommerceOnePageCheckout disabled=cartEmpty/>
-            </@menu>
-        </@cell>
-    </@row>    
-  <#else>
-    <@commonMsg type="result-norecord">${uiLabelMap.EcommerceYourShoppingCartEmpty}.</@commonMsg>
-    <@row>
-        <@cell>
-            <@menu type="button">
-                <@menuitem type="link" href=continueLink text=uiLabelMap.EcommerceContinueShopping class="+${styles.action_nav!} ${styles.action_cancel!}"/>
+                <@menuitem type="link" href=makePageUrl("loadCartFromAbandonedCart?visitId=" + abandonedCart.visitId) class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.AbandonedCartContinueToShow disabled=cartEmpty/>
             </@menu>
         </@cell>
     </@row>
+
   </#if>
 </@section>
-
-
-<@section> <#-- SCIPIO: look strange: title=uiLabelMap.ProductPromotions -->
-    <@row>
-        <@cell columns=6>
-            <@section title=uiLabelMap.ProductPromoCodes>
-                <form method="post" action="<@pageUrl>addpromocode<#if requestAttributes?has_content && requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@pageUrl>" name="addpromocodeform">
-                    <input type="text" size="15" name="productPromoCodeId" value="" />
-                    <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddCode}" />
-                    <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())! />
-                    <#if productPromoCodeIds?has_content>
-                        ${uiLabelMap.ProductPromoCodesEntered}
-                        <ul>
-                          <#list productPromoCodeIds as productPromoCodeId>
-                            <li>${productPromoCodeId}</li>
-                          </#list>
-                        </ul>
-                    </#if>
-                </form>
-            </@section>
-        </@cell>
-        <@cell columns=6>
-            <#if showPromoText?? && showPromoText>
-                <@panel type="callout" title=uiLabelMap.OrderSpecialOffers>
-                  <@section>
-                    <ol>
-                      <#list productPromos as productPromo>
-                        <li>${productPromo.promoName!}
-                           <#--${productPromo.promoText!}<br/>--><#-- Enable for further promotion information -->
-                           <a href="<@pageUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@pageUrl>" class="${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
-                        </li>
-                      </#list>
-                    </ol>
-                    <a href="<@pageUrl>showAllPromotions</@pageUrl>" class="${styles.link_nav!}">${uiLabelMap.OrderViewAllPromotions}</a>
-                  </@section>
-                </@panel>
-            </#if>
-        </@cell>
-    </@row>
-</@section>
-
-<#if associatedProducts?has_content>
-  <@section title="${rawLabel('EcommerceYouMightAlsoIntrested')}:">
-    <@grid columns=5>
-        <#list associatedProducts as assocProduct>
-            <li>
-                <#-- Product summary 
-                    <@render resource="component://shop/widget/CatalogScreens.xml#productsummary" reqAttribs={"optProduct":assocProduct, "listIndex":assocProduct_index}/>
-                -->
-                <#-- mini product summary -->
-                <@render resource="component://shop/widget/CatalogScreens.xml#miniproductsummary" reqAttribs={"optProductId": assocProduct.productId, "productId": assocProduct.productId, "listIndex": assocProduct_index} />
-            </li>
-        </#list>
-    </@grid>
-  </@section>
-</#if>
-
-<#-- SCIPIO: Uncomment for a quick-add form; allows users to add products to the cart on the fly -->
-<#--
-<@section title=uiLabelMap.CommonQuickAdd>
-    <form method="post" action="<@pageUrl>additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@pageUrl>" name="quickaddform">
-        <fieldset>
-        ${uiLabelMap.EcommerceProductNumber}<input type="text" name="add_product_id" value="${requestParameters.add_product_id!}" />
-         // check if rental data present  insert extra fields in Quick Add
-        <#if (product?? && product.getString("productTypeId") == "ASSET_USAGE") || (product?? && product.getString("productTypeId") == "ASSET_USAGE_OUT_IN")>
-            ${uiLabelMap.EcommerceStartDate}: <input type="text" size="10" name="reservStart" value="${requestParameters.reservStart!""}" />
-            ${uiLabelMap.EcommerceLength}: <input type="text" size="2" name="reservLength" value="${requestParameters.reservLength!""}" />
-            </div>
-            <div>
-            &nbsp;&nbsp;${uiLabelMap.OrderNbrPersons}: <input type="text" size="3" name="reservPersons" value="${requestParameters.reservPersons!"1"}" />
-        </#if>
-        ${uiLabelMap.CommonQuantity}: <input type="text" size="5" name="quantity" value="${requestParameters.quantity!"1"}" />
-        <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToCart}" />
-        </fieldset>
-    </form>
-</@section>-->

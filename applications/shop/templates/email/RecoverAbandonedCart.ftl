@@ -13,13 +13,9 @@ code package.
     <h1>${title!}</h1>
     <#if !isDemoStore?? || isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>
     <#if note??><p>${note}</p></#if>
-<#--    <#if orderHeader??>-->
-<#--    <@render resource="component://shop/widget/EmailOrderScreens.xml#orderheader" />-->
     <br />
-    <@render resource="component://shop/widget/EmailOrderScreens.xml#showcart" />
-<#--    <#else>-->
-<#--    <h1>Order not found with ID [${orderId!}], or not allowed to view.</h1>-->
-<#--    </#if>-->
+    <@render resource="component://shop/widget/EmailOrderScreens.xml#emailcart" />
+
 
                                 
 

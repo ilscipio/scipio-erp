@@ -68,6 +68,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.control.LoginWorker;
 import org.ofbiz.webapp.control.RequestAttrPolicy.RequestAttrNamePolicy;
 import org.ofbiz.webapp.control.RequestAttrPolicy.RequestSavingAttrPolicy;
 import org.ofbiz.webapp.control.RequestHandler;
@@ -2859,4 +2860,89 @@ public class ShoppingCartEvents {
         request.setAttribute("orderId", orderId);
         return  "success";
     }
+
+    /**
+     * SCIPIO: 2.1.0:
+     * @param request
+     * @param response
+     * @return
+     */
+    public static String loadCartFromAbandonedCart(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        boolean isUserInSession = true;
+
+        String visitHash = request.getParameter("visitHash");
+        String visitId = null;
+
+        GenericValue cartAbandonedStatus = null;
+
+        try {
+            // visitHash takes precedence as it means it comes from an email or other communication to user
+            // and customer is recovering it
+            if (UtilValidate.isNotEmpty(visitHash)) {
+                List<EntityCondition> condition = UtilMisc.toList(
+                    EntityCondition.makeCondition("visitHash", visitHash),
+                    EntityCondition.makeCondition("statusId", EntityOperator.IN, UtilMisc.toList("AB_PENDING", "AB_IN_PROGRESS"))
+                );
+                cartAbandonedStatus = EntityQuery.use(delegator).from("CartAbandonedStatus").where(condition).queryFirst();
+                visitId = cartAbandonedStatus.getString("visitId");
+            }
+            if (UtilValidate.isEmpty(visitId)) {
+                visitId = request.getParameter("visitId");
+            }
+            if (UtilValidate.isEmpty(visitId)) {
+                request.setAttribute("_ERROR_MESSAGE_", "An error occurred while recovering cart");
+                return "error";
+            }
+
+            if (UtilValidate.isEmpty(userLogin)) {
+                isUserInSession = false;
+                GenericValue abandonedCart = EntityQuery.use(delegator).from("CartAbandoned").where(UtilMisc.toMap("visitId", visitId)).cache().queryOne();
+                GenericValue visit = abandonedCart.getRelatedOne("Visit", true);
+                if (UtilValidate.isEmpty(visit)) {
+                    request.setAttribute("_ERROR_MESSAGE_", "Invalid data, can't recover cart");
+                    return "error";
+                }
+                userLogin = EntityQuery.use(delegator).from("UserLogin").where(UtilMisc.toMap("userLoginId", visit.getString("userLoginId"))).cache().queryOne();
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+        }
+
+        String autoUserLoginId = LoginWorker.getAutoUserLoginId(request);
+        if (UtilValidate.isNotEmpty(autoUserLoginId) && UtilValidate.isNotEmpty(userLogin)
+            && autoUserLoginId.equals(userLogin.getString("userLoginId"))) {
+            LoginWorker.autoLoginCheck(request, response);
+            GenericValue autoUserLogin = (GenericValue) session.getAttribute("autoUserLogin");
+            if (UtilValidate.isNotEmpty(autoUserLogin)) {
+                isUserInSession = true;
+            }
+        }
+
+        ShoppingCart cart = null;
+        try {
+            Map<String, Object> outMap = dispatcher.runSync("loadCartFromAbandonedCart", UtilMisc.<String, Object>toMap("visitId", visitId,
+                            "userLogin", userLogin, "isUserInSession", isUserInSession));
+            if (ServiceUtil.isError(outMap)) {
+                String errorMessage = ServiceUtil.getErrorMessage(outMap);
+                request.setAttribute("_ERROR_MESSAGE_", errorMessage);
+                Debug.logError(errorMessage, module);
+                return "error";
+            }
+            cart = (ShoppingCart)outMap.get("shoppingCart");
+        } catch (GenericServiceException exc) {
+            request.setAttribute("_ERROR_MESSAGE_", exc.getMessage());
+            return "error";
+        }
+
+        setSyncCartObjectAndAttr(request, cart); // SCIPIO: refactored
+
+        return "success";
+    }
+
+
+
 }

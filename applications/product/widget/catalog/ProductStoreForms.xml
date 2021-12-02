@@ -87,6 +87,15 @@
             <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
 
+        <field name="saveAbandonedCart" position="2">
+            <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field name="sendAbandonedCartReminder" position="2">
+            <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+        <field name="maxAbandonedCartReminderRetry" position="2"><text/></field>
+        <field name="abandonedCartReminderDayOffset" position="2"><text/></field>
+
         <field name="isDemoStore" position="2">
             <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
@@ -326,6 +335,12 @@
         <field name="orderDecimalQuantity" tooltip="${uiLabelMap.ProductOrderDecimalQuantityExistsToOverride}">
             <drop-down allow-empty="true" ><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
+
+        <field name="reqReturnInventoryReceive" position="2">
+            <drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
+        </field>
+
+
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <sort-order>
             <field-group>
@@ -364,8 +379,12 @@
                 <sort-field name="addToCartReplaceUpsell"/>
                 <sort-field name="addToCartRemoveIncompat"/>
                 <sort-field name="showCheckoutGiftOptions"/>
+                <sort-field name="saveAbandonedCart"/>
                 <sort-field name="prodSearchExcludeVariants"/>
+                <sort-field name="sendAbandonedCartReminder"/>
                 <sort-field name="orderDecimalQuantity"/>
+                <sort-field name="maxAbandonedCartReminderRetry"/>
+                <sort-field name="abandonedCartReminderDayOffset"/>
             </field-group>
             <field-group title="${uiLabelMap.CommonOrders}" collapsible="true" initially-collapsed="true">
                 <sort-field name="orderNumberPrefix"/>

@@ -4246,6 +4246,12 @@ code package.
         <field name="defaultPriority" type="numeric"><description>SCIPIO: Default store lookup priority when looking up a store for a product; lower value means higher priority. Used in conjunction with isContentReference and elsewhere.</description></field>
         <field name="reviewsPurchased" type="indicator"><description>SCIPIO: Default N. If Y, the store will support product reviews for purchased products.</description></field>
         <field name="multipleReviews" type="indicator"><description>SCIPIO: Default N. If Y, the store will support multiple product reviews for unregistered per user.</description></field>
+        
+        <!-- SCIPIO: added 2.1.0: New indicator field that enables abandoned cart storing + abandoned cart email reminders config -->
+        <field name="saveAbandonedCart" type="indicator"><description>SCIPIO: Default Y. If Y, ShoppingCart will be save as an abandoned cart when session expires.</description></field>
+        <field name="sendAbandonedCartReminder" type="indicator"><description>SCIPIO: Default N. If Y, abandoned ShoppingCart reminder email will be sent to customers.</description></field>
+        <field name="maxAbandonedCartReminderRetry" type="numeric"><description>SCIPIO: Default 1. Number of retry times email reminder will be sent</description></field>
+        <field name="abandonedCartReminderDayOffset" type="numeric"><description>SCIPIO: Default 1. Number of days after abandoned cart is created email reminder will start</description></field>
     </extend-entity>
 
     <!-- SCIPIO: 2.1.0: Added new ProductStoreAttribute entity in order to hold non-standard store fields -->

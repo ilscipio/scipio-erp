@@ -27,8 +27,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
@@ -61,6 +65,7 @@ public class ShippingEstimateWrapper {
     protected final Locale locale; // SCIPIO: 2018-11-09: Added locale
     protected final List<GenericValue> validShippingMethods; // SCIPIO: 2018-11-09
     protected final boolean allowMissingShipEstimates; // SCIPIO
+    protected final Map<String, BigDecimal> validShippingMethodShippingPromos; //SCIPIO: 2.1.0:
 
     public static ShippingEstimateWrapper getWrapper(LocalDispatcher dispatcher, ShoppingCart cart, int shipGroup) {
         return new ShippingEstimateWrapper(dispatcher, cart, shipGroup);
@@ -96,6 +101,42 @@ public class ShippingEstimateWrapper {
             }
         }
         this.validShippingMethods = validShippingMethods;
+
+        // SCIPIO: 2.1.0: Find PROMO_SHIP_CHARGE per carrier from validShippingMethods
+        Map<String, BigDecimal> validShippingMethodShippingPromos = UtilMisc.newMap();
+        for (GenericValue cartAdjustment : cart.getAdjustments()) {
+            if (cartAdjustment.getString("orderAdjustmentTypeId").equals("PROMOTION_ADJUSTMENT")) {
+                try {
+                    GenericValue productPromoAction = cartAdjustment.getRelatedOne("ProductPromoAction", true);
+                    if (productPromoAction.get("productPromoActionEnumId").equals("PROMO_SHIP_CHARGE")) {
+                        List<GenericValue> productPromoConds = EntityQuery.use(delegator).from("ProductPromoCond")
+                            .where("productPromoId", productPromoAction.getString("productPromoId"), "productPromoRuleId", productPromoAction.getString("productPromoRuleId")).queryList();
+                        String carrierShipmentMethodAndParty = "@ALL";
+                        for (GenericValue productPromoCond : productPromoConds) {
+                            if (UtilValidate.isNotEmpty(productPromoCond.getString("otherValue"))) {
+                                String otherValue = productPromoCond.getString("otherValue");
+                                if (otherValue != null && otherValue.contains("@")) {
+                                    String carrierPartyId = otherValue.substring(0, otherValue.indexOf('@'));
+                                    String shippingMethod = otherValue.substring(otherValue.indexOf('@') + 1);
+                                    carrierShipmentMethodAndParty = shippingMethod + "@" + carrierPartyId;
+                                }
+                                break;
+                            }
+                        }
+
+                        for (GenericValue carrierShipmentMethod : validShippingMethods) {
+                            String currentCarrierShipmentMethodAndParty = carrierShipmentMethod.getString("shipmentMethodTypeId") + "@" + carrierShipmentMethod.getString("partyId");
+                            if (currentCarrierShipmentMethodAndParty.equals(carrierShipmentMethodAndParty) || carrierShipmentMethodAndParty.equals("@ALL")) {
+                                validShippingMethodShippingPromos.put(carrierShipmentMethodAndParty, cartAdjustment.getBigDecimal("amount"));
+                            }
+                        }
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e.getMessage(), module);
+                }
+            }
+        }
+        this.validShippingMethodShippingPromos = validShippingMethodShippingPromos;
     }
 
     protected List<GenericValue> loadShippingMethods() { // SCIPIO: Added return value
@@ -229,5 +270,12 @@ public class ShippingEstimateWrapper {
             return true;
         }
         return ("NO_SHIPPING".equals(storeCarrierShipMethod.get("shipmentMethodTypeId"))) && shippingEstimates.containsKey(storeCarrierShipMethod); // Special case
+    }
+
+    /**
+     * SCIPIO: 2.1.0: Returns shipping promos applied to valid shipping methods per shippingMethodTypeId@carrierId, when they are present
+     */
+    public Map<String, BigDecimal> getValidShippingMethodShippingPromos() {
+        return validShippingMethodShippingPromos;
     }
 }

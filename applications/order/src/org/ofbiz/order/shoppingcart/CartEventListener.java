@@ -123,6 +123,8 @@ public class CartEventListener implements HttpSessionListener {
                     dve.addViewLink("V", "P", true, UtilMisc.toList(ModelKeyMap.makeKeyMapList("partyId")));
                     dve.addViewLink("V", "UL", true, UtilMisc.toList(ModelKeyMap.makeKeyMapList("userLoginId")));
 
+                    dve.addRelation("one", null, "CartAbandonedStatus", ModelKeyMap.makeKeyMapList("visitId"));
+
                     EntityCondition condition = EntityCondition.makeCondition(UtilMisc.toList(
                             EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, partyId),
                             EntityCondition.makeCondition("userLoginId", EntityOperator.EQUALS, userLogin.getString("userLoginId"))
@@ -158,7 +160,8 @@ public class CartEventListener implements HttpSessionListener {
                 GenericValue cartAbandonedStatus = delegator.makeValue("CartAbandonedStatus");
                 cartAbandonedStatus.set("visitId", visit.get("visitId"));
                 cartAbandonedStatus.set("statusId", "AB_PENDING");
-                cartAbandonedStatus.set("visitHash", visitHash);
+                cartAbandonedStatus.set("visitHash", visitHash.substring(visitHash.lastIndexOf("{MD5}")));
+                cartAbandonedStatus.set("reminderRetrySeq", 0);
                 cartAbandonedStatus.create();
 
                 int seqId = 1;

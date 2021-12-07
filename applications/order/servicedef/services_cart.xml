@@ -187,6 +187,7 @@ code package.
         <description>Create a ShoppingCart Object based on an existing abandoned cart.</description>
         <attribute name="visitId" type="String" mode="IN" optional="false"/>
         <attribute name="abandonedCart" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
+        <attribute name="abandonedCartStatus" type="org.ofbiz.entity.GenericValue" mode="IN" optional="true"/>
         <attribute name="abandonedCartLines" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="isUserInSession" type="Boolean" mode="IN" optional="true" default-value="false"/>
         <attribute name="applyStorePromotions" type="String" mode="IN" optional="true"/>

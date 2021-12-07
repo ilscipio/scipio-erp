@@ -2835,7 +2835,7 @@ code package.
       <field name="visitId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
       <field name="visitHash" type="long-varchar"></field>
-      <field name="userNotificationRetryNum" type="numeric"></field>
+      <field name="reminderRetrySeq" type="numeric"></field>
       <prim-key field="visitId"/>
       <relation type="one" fk-name="CART_AB_STTS_STI" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>

@@ -281,7 +281,7 @@ code package.
     <@row>
         <@cell columns=9 class="${styles.text_right!}">
             <@menu type="button">
-                <@menuitem type="link" href=makePageUrl("loadCartFromAbandonedCart?visitId=" + abandonedCart.visitId) class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.AbandonedCartContinueToShow disabled=cartEmpty/>
+                <@menuitem type="link" href=makePageUrl("loadCartFromAbandonedCart?visitHash=" + abandonedCartStatus.visitHash) class="+${styles.action_run_session!} ${styles.action_continue!}" text=uiLabelMap.AbandonedCartContinueToShow disabled=cartEmpty/>
             </@menu>
         </@cell>
     </@row>

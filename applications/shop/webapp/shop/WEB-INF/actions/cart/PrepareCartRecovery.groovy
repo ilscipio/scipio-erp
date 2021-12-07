@@ -4,6 +4,7 @@ import org.ofbiz.service.ServiceUtil
 
 
 abandonedCart = context.abandonedCart
+abandonedCartStatus = context.abandonedCartStatus
 abandonedCartLines = context.abandonedCartLines
 userLogin = context.userLogin
 
@@ -20,7 +21,7 @@ if (abandonedCart) {
     if (!visitId) {
         visitId = abandonedCart.visitId
     }
-    loadCartFromAbandonedCartCtx = ["visitId" : visitId, "abandonedCart": abandonedCart, "abandonedCartLines": abandonedCartLines,
+    loadCartFromAbandonedCartCtx = ["visitId" : visitId, "abandonedCart": abandonedCart, "abandonedCartStatus": abandonedCartStatus, "abandonedCartLines": abandonedCartLines,
                                     "applyStorePromotions": applyStorePromotions, "cartPartyId": cartPartyId, "userLogin": userLogin]
 
     loadCartFromAbandonedCartResult = dispatcher.runSync("loadCartFromAbandonedCart", loadCartFromAbandonedCartCtx);

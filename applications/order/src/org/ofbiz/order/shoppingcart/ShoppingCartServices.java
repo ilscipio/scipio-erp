@@ -29,7 +29,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityDateFilterCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.DynamicViewEntity;
@@ -38,7 +37,6 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityTypeUtil;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
-import org.ofbiz.entity.util.QueryDateFilter;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart.CartShipInfo;
 import org.ofbiz.order.shoppingcart.ShoppingCart.CartShipInfo.CartShipItemInfo;
@@ -1241,8 +1239,10 @@ public class ShoppingCartServices {
         Locale locale = ctx.locale();
         GenericValue userLogin = ctx.userLogin();
 
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+
         Timestamp fromDate = (Timestamp) ctx.get("fromDate");
-        Integer daysOffset = (Integer) ctx.get("daysOffset");
+        Long daysOffset = (Long) ctx.get("daysOffset");
         String productStoreId = (String) ctx.get("productStoreId");
 
         DynamicViewEntity dve = new DynamicViewEntity();
@@ -1261,6 +1261,7 @@ public class ShoppingCartServices {
         dve.addAlias("CA", "fromDate", null, null, null, true, null);
         dve.addAlias("CA", "thruDate", null, null, null, true, null);
         dve.addAlias("CAS", "statusId", null, null, null, true, null);
+        dve.addAlias("CAS", "reminderRetrySeq", null, null, null, true, null);
         dve.addAlias("V", "partyId", null, null, null, true, null);
         dve.addAlias("V", "userLoginId", null, null, null, true, null);
 
@@ -1271,6 +1272,7 @@ public class ShoppingCartServices {
 
         dve.addRelation("one", null, "Party", ModelKeyMap.makeKeyMapList("partyId"));
         dve.addRelation("many", null, "CartAbandonedLine", ModelKeyMap.makeKeyMapList("visitId"));
+        dve.addRelation("one", null, "CartAbandonedStatus", ModelKeyMap.makeKeyMapList("visitId"));
         dve.addRelation("one", null, "Visit", ModelKeyMap.makeKeyMapList("visitId"));
         dve.addRelation("one", null, "UserLogin", ModelKeyMap.makeKeyMapList("userLoginId"));
 
@@ -1284,32 +1286,60 @@ public class ShoppingCartServices {
         ), EntityOperator.AND);
         GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
         if (UtilValidate.isEmpty(daysOffset)) {
-            daysOffset = productStore.getInteger("abandonedCartReminderDayOffset");
+            daysOffset = productStore.getLong("abandonedCartReminderDayOffset");
         }
         if (UtilValidate.isEmpty(daysOffset)) {
-            daysOffset = 0;
+            daysOffset = 0L;
         }
 
+        // If fromDate present, apply filterByDate manually
         if (UtilValidate.isNotEmpty(fromDate)) {
             condition = EntityCondition.makeCondition(
-                    condition,
-                    EntityCondition.makeCondition("fromDate", UtilDateTime.addDaysToTimestamp(fromDate, daysOffset))
+                condition,
+                EntityCondition.makeCondition(
+                    EntityCondition.makeCondition(
+                        EntityCondition.makeCondition("thruDate", EntityOperator.EQUALS, null),
+                        EntityOperator.OR,
+                        EntityCondition.makeCondition("thruDate", EntityOperator.GREATER_THAN, nowTimestamp)
+                    ),
+                    EntityOperator.AND,
+                    EntityCondition.makeCondition(
+                        EntityCondition.makeCondition("fromDate", EntityOperator.EQUALS, null),
+                        EntityOperator.OR,
+                        EntityCondition.makeCondition("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, fromDate)
+                    )
+                )
+            );
+        }
+        Long maxAbandonedCartReminderRetry = productStore.getLong("maxAbandonedCartReminderRetry");
+        if (UtilValidate.isNotEmpty(maxAbandonedCartReminderRetry)) {
+            condition = EntityCondition.makeCondition(
+                condition,
+                EntityCondition.makeCondition("reminderRetrySeq", EntityOperator.LESS_THAN_EQUAL_TO, maxAbandonedCartReminderRetry)
             );
         }
 
         try {
-            List<GenericValue> abandonedCarts = EntityQuery.use(delegator).from(dve).where(condition).filterByDate().queryList();
+            List<GenericValue> abandonedCarts = EntityQuery.use(delegator).from(dve).where(condition).queryList();
             result.put("abandonedCarts", abandonedCarts);
-            if (UtilValidate.isEmpty(fromDate)) {
-                Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-                List<GenericValue> filteredAbandonedCarts = UtilMisc.newList();
-                for (GenericValue abandonedCart : abandonedCarts) {
-                    if (UtilDateTime.addDaysToTimestamp(abandonedCart.getTimestamp("fromDate"), daysOffset).compareTo(nowTimestamp) >= 0) {
-                        filteredAbandonedCarts.add(abandonedCart);
-                    }
+            // Loop and filter abandoned carts applying daysOffset
+            List<GenericValue> filteredAbandonedCarts = UtilMisc.newList();
+            for (GenericValue abandonedCart : abandonedCarts) {
+                Timestamp abandonedCartFromDate = abandonedCart.getTimestamp("fromDate");
+                Timestamp abandonedCartThruDate = abandonedCart.getTimestamp("thruDate");
+                Timestamp abandonedCartFromDateWithDaysOffset = UtilDateTime.addDaysToTimestamp(abandonedCartFromDate, daysOffset.intValue());
+                Debug.log("abandonedCartFromDate: " + abandonedCartFromDate, module);
+                Debug.log("abandonedCartThruDate: " + abandonedCartThruDate, module);
+                Debug.log("abandonedCartFromDateWithDaysOffset: " + abandonedCartFromDateWithDaysOffset, module);
+
+                Debug.log("nowTimestamp greater than abandonedCartFromDate: " + (nowTimestamp.compareTo(abandonedCartFromDateWithDaysOffset) >= 0), module);
+
+                if ((UtilValidate.isEmpty(abandonedCartFromDate) || (UtilValidate.isNotEmpty(abandonedCartFromDate) && nowTimestamp.compareTo(abandonedCartFromDateWithDaysOffset) >= 0))
+                    && (UtilValidate.isEmpty(abandonedCartThruDate) || (UtilValidate.isNotEmpty(abandonedCartThruDate) && abandonedCartThruDate.compareTo(nowTimestamp) < 0))) {
+                    filteredAbandonedCarts.add(abandonedCart);
                 }
-                result.put("abandonedCarts", filteredAbandonedCarts);
             }
+            result.put("abandonedCarts", filteredAbandonedCarts);
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
             return ServiceUtil.returnError(e.getMessage());
@@ -1361,51 +1391,70 @@ public class ShoppingCartServices {
                     sendMap.put("webSiteId", webSiteId);
                 } else {
                     // This is only technically an error if the email contains links back to a website.
-                    Debug.logWarning("sendReturnNotificationScreen: No webSiteId determined for store '" + abandonedCartProductStoreId + "' email", module);
+                    Debug.logWarning("sendAbandonedCartEmailReminder: No webSiteId determined for store '" + abandonedCartProductStoreId + "' email", module);
                 }
 
+                GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+
                 List<GenericValue> abandonedCartLines = abandonedCart.getRelatedCache("CartAbandonedLine");
-                productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", abandonedCartProductStoreId, "emailType", emailType).cache().queryOne();
+                GenericValue abandonedCartStatus = abandonedCart.getRelatedOneCache("CartAbandonedStatus");
+                if (UtilValidate.isNotEmpty(abandonedCartStatus)) {
+                    Long reminderRetrySeq = abandonedCartStatus.getLong("reminderRetrySeq");
 
-                GenericValue customerParty = abandonedCart.getRelatedOne("Party");
-                GenericValue customerEmailAddress =
-                        EntityUtil.getFirst(UtilMisc.toList(ContactHelper.getContactMechByType(customerParty, "EMAIL_ADDRESS", false)));
+                    if ((abandonedCartStatus.getString("statusId").equals("AB_PENDING") || abandonedCartStatus.getString("statusId").equals("AB_IN_PROGRESS"))
+                        && reminderRetrySeq <= productStore.getLong("maxAbandonedCartReminderRetry")) {
 
-                if (productStoreEmail != null && customerEmailAddress != null) {
-                    String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
-                    if (UtilValidate.isEmpty(bodyScreenLocation)) {
-                        bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
-                    }
-                    sendMap.put("bodyScreenUri", bodyScreenLocation);
-
-                    Map<String, Object> bodyParameters = UtilMisc.<String, Object>toMap("customerParty", customerParty,
-                            "abandonedCart", abandonedCart, "abandonedCartLines", abandonedCartLines,
-                            "locale", resolvedLocale, "userLogin", userLogin);
-                    bodyParameters.put("productStoreId", abandonedCartProductStoreId); // SCIPIO
-                    sendMap.put("bodyParameters", bodyParameters);
-                    sendMap.put("subject", productStoreEmail.getString("subject"));
-                    sendMap.put("contentType", productStoreEmail.get("contentType"));
-                    sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
-                    sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
-                    sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
-                    sendMap.put("sendTo", customerEmailAddress.getString("infoString"));
-                    sendMap.put("sendAs", productStoreEmail.get("sendAs"));
-                    sendMap.put("partyId", customerParty.getString("partyId"));
-                    sendMap.put("userLogin", userLogin);
-                    sendMap.put("locale", resolvedLocale);
-
-                    Map<String, Object> sendResp = null;
-                    try {
-                        sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
-                        if (ServiceUtil.isError(sendResp)) {
-                            sendResp.put("emailType", emailType);
-                            return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-                                    "OrderProblemSendingEmail", locale), null, null, sendResp);
+                        abandonedCartStatus.put("reminderRetrySeq", reminderRetrySeq + 1);
+                        if (reminderRetrySeq == productStore.getLong("maxAbandonedCartReminderRetry")) {
+                            abandonedCartStatus.put("statusId", "AB_COMPLETED");
+                        } else {
+                            abandonedCartStatus.put("statusId", "AB_IN_PROGRESS");
                         }
-                    } catch (GenericServiceException e) {
-                        Debug.logError(e, "Problem sending mail", module);
-                        return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
-                                "OrderProblemSendingEmail", locale));
+                        abandonedCartStatus.store();
+
+                        productStoreEmail = EntityQuery.use(delegator).from("ProductStoreEmailSetting").where("productStoreId", abandonedCartProductStoreId, "emailType", emailType).cache().queryOne();
+
+                        GenericValue customerParty = abandonedCart.getRelatedOne("Party");
+                        GenericValue customerEmailAddress =
+                                EntityUtil.getFirst(UtilMisc.toList(ContactHelper.getContactMechByType(customerParty, "EMAIL_ADDRESS", false)));
+
+                        if (productStoreEmail != null && customerEmailAddress != null) {
+                            String bodyScreenLocation = productStoreEmail.getString("bodyScreenLocation");
+                            if (UtilValidate.isEmpty(bodyScreenLocation)) {
+                                bodyScreenLocation = ProductStoreWorker.getDefaultProductStoreEmailScreenLocation(emailType);
+                            }
+                            sendMap.put("bodyScreenUri", bodyScreenLocation);
+
+                            Map<String, Object> bodyParameters = UtilMisc.<String, Object>toMap("customerParty", customerParty,
+                                    "abandonedCart", abandonedCart, "abandonedCartStatus", abandonedCartStatus, "abandonedCartLines", abandonedCartLines,
+                                    "locale", resolvedLocale, "userLogin", userLogin);
+                            bodyParameters.put("productStoreId", abandonedCartProductStoreId); // SCIPIO
+                            sendMap.put("bodyParameters", bodyParameters);
+                            sendMap.put("subject", productStoreEmail.getString("subject"));
+                            sendMap.put("contentType", productStoreEmail.get("contentType"));
+                            sendMap.put("sendFrom", productStoreEmail.get("fromAddress"));
+                            sendMap.put("sendCc", productStoreEmail.get("ccAddress"));
+                            sendMap.put("sendBcc", productStoreEmail.get("bccAddress"));
+                            sendMap.put("sendTo", customerEmailAddress.getString("infoString"));
+                            sendMap.put("sendAs", productStoreEmail.get("sendAs"));
+                            sendMap.put("partyId", customerParty.getString("partyId"));
+                            sendMap.put("userLogin", userLogin);
+                            sendMap.put("locale", resolvedLocale);
+
+                            Map<String, Object> sendResp = null;
+                            try {
+                                sendResp = dispatcher.runSync("sendMailFromScreen", sendMap);
+                                if (ServiceUtil.isError(sendResp)) {
+                                    sendResp.put("emailType", emailType);
+                                    return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                                            "OrderProblemSendingEmail", locale), null, null, sendResp);
+                                }
+                            } catch (GenericServiceException e) {
+                                Debug.logError(e, "Problem sending mail", module);
+                                return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
+                                        "OrderProblemSendingEmail", locale));
+                            }
+                        }
                     }
                 }
             } catch (GenericEntityException e) {

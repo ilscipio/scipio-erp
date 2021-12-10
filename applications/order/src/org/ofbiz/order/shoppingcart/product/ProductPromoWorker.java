@@ -846,7 +846,15 @@ public final class ProductPromoWorker {
                 while (productPromoCondIter != null && productPromoCondIter.hasNext()) {
                     GenericValue productPromoCond = productPromoCondIter.next();
 
-                    boolean conditionSatisfied = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
+                    // SCIPIO: 2.1.0: If otherValue is set, check first whether the condition meets carrier shipping method in cart. This basically assumes that whenever
+                    // otherValue is set and has a shipmentMethodTypeId@carrierId format it must be honored no matter the type of condition instead of only PPIP_ORDER_SHIPTOTAL
+                    boolean conditionSatisfied = true;
+                    if (UtilValidate.isNotEmpty(productPromoCond.getString("otherValue"))) {
+                        conditionSatisfied = checkCarrierShippingMethodCondition(productPromoCond.getString("otherValue"), cart);
+                    }
+                    if (conditionSatisfied) {
+                        conditionSatisfied = checkCondition(productPromoCond, cart, delegator, dispatcher, nowTimestamp);
+                    }
 
                     // any false condition will cause it to NOT perform the action
                     if (!conditionSatisfied) {
@@ -931,18 +939,12 @@ public final class ProductPromoWorker {
         return deltaUsageInfoMap;
     }
 
-    protected static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, Delegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp) throws GenericEntityException {
+    public static boolean checkCondition(GenericValue productPromoCond, ShoppingCart cart, Delegator delegator, LocalDispatcher dispatcher, Timestamp nowTimestamp) throws GenericEntityException {
         String condValue = productPromoCond.getString("condValue");
         String otherValue = productPromoCond.getString("otherValue");
         String inputParamEnumId = productPromoCond.getString("inputParamEnumId");
         String operatorEnumId = productPromoCond.getString("operatorEnumId");
-        String shippingMethod = "";
-        String carrierPartyId = "";
-        if (otherValue != null && otherValue.contains("@")) {
-            carrierPartyId = otherValue.substring(0, otherValue.indexOf('@'));
-            shippingMethod = otherValue.substring(otherValue.indexOf('@') + 1);
-            otherValue = "";
-        }
+
         String partyId = cart.getPartyId();
         GenericValue userLogin = cart.getUserLogin();
         if (userLogin == null) {
@@ -1271,7 +1273,7 @@ public final class ProductPromoWorker {
                     }
                 }
             }
-        } else if ("PPIP_ORDER_SHIPTOTAL".equals(inputParamEnumId) && shippingMethod.equals(cart.getShipmentMethodTypeId()) && carrierPartyId.equals(cart.getCarrierPartyId())) {
+        } else if ("PPIP_ORDER_SHIPTOTAL".equals(inputParamEnumId)) {
             if (UtilValidate.isNotEmpty(condValue)) {
                 BigDecimal orderTotalShipping = cart.getTotalShipping();
                 if (Debug.verboseOn()) { Debug.logVerbose("Doing order total Shipping compare: ordertotalShipping=" + orderTotalShipping, module); }
@@ -1951,7 +1953,7 @@ public final class ProductPromoWorker {
                     if (UtilValidate.isNotEmpty(optionalProductFeatures) && optionalProductFeatures.containsKey("GIFT_WRAP")) {
                         List<GenericValue> giftWrapFeatures = optionalProductFeatures.get("GIFT_WRAP");
                         for (GenericValue giftWrapFeature : giftWrapFeatures) {
-                            BigDecimal defaultAmount= giftWrapFeature.getBigDecimal("defaultAmount");
+                            BigDecimal defaultAmount = giftWrapFeature.getBigDecimal("defaultAmount");
 
                             Map<String, String> fields = UtilMisc.<String, String>toMap("productId", itemProductId, "productFeatureId", giftWrapFeature.get("productFeatureId"));
                             GenericValue productFeatureAppl = null;
@@ -2362,5 +2364,24 @@ public final class ProductPromoWorker {
         public UseLimitException(String str) {
             super(str);
         }
+    }
+
+    /**
+     * SCIPIO: 2.1.0: check if the carrier shipping method is valid, when present in the condition.
+     * @param otherValue
+     * @param cart
+     * @return
+     */
+    public static boolean checkCarrierShippingMethodCondition(String otherValue, ShoppingCart cart) {
+        if (UtilValidate.isNotEmpty(otherValue) && otherValue.contains("@")) {
+            Delegator delegator = cart.getDelegator();
+            String shippingMethod = otherValue.substring(otherValue.indexOf('@') + 1);
+            String carrierPartyId = otherValue.substring(0, otherValue.indexOf('@'));
+            if (UtilValidate.isNotEmpty(ProductStoreWorker.getProductStoreShipmentMethod(delegator, cart.getProductStoreId(),
+                shippingMethod, carrierPartyId, "CARRIER"))) {
+                return shippingMethod.equals(cart.getShipmentMethodTypeId()) && carrierPartyId.equals(cart.getCarrierPartyId());
+            }
+        }
+        return true;
     }
 }

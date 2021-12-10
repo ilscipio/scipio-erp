@@ -161,7 +161,7 @@ public class CartEventListener implements HttpSessionListener {
                 cartAbandonedStatus.set("visitId", visit.get("visitId"));
                 cartAbandonedStatus.set("statusId", "AB_PENDING");
                 cartAbandonedStatus.set("visitHash", visitHash.substring(visitHash.lastIndexOf("{MD5}")));
-                cartAbandonedStatus.set("reminderRetrySeq", 0);
+                cartAbandonedStatus.set("reminderRetrySeq", 0L);
                 cartAbandonedStatus.create();
 
                 int seqId = 1;

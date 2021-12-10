@@ -59,6 +59,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductSearch;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;

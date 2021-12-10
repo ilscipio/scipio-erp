@@ -27,13 +27,16 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
@@ -102,39 +105,52 @@ public class ShippingEstimateWrapper {
         }
         this.validShippingMethods = validShippingMethods;
 
-        // SCIPIO: 2.1.0: Find PROMO_SHIP_CHARGE per carrier from validShippingMethods
+        // SCIPIO: 2.1.0: Find PROMO_SHIP_CHARGE per carrier from validShippingMethods for informational purposes (ie: show to customer shipping promos)
+        // This is a bit problematic as we can't rely only on cart adjustments as they may not applied yet. So we are kinda forced to check promo condition on our own when not present.
+        // TODO: Ideally this should work also for PPIP_ORDER_SHIPTOTAL ProductPromoCond type, but that one doesn't really work as expected
         Map<String, BigDecimal> validShippingMethodShippingPromos = UtilMisc.newMap();
-        for (GenericValue cartAdjustment : cart.getAdjustments()) {
-            if (cartAdjustment.getString("orderAdjustmentTypeId").equals("PROMOTION_ADJUSTMENT")) {
-                try {
-                    GenericValue productPromoAction = cartAdjustment.getRelatedOne("ProductPromoAction", true);
-                    if (productPromoAction.get("productPromoActionEnumId").equals("PROMO_SHIP_CHARGE")) {
-                        List<GenericValue> productPromoConds = EntityQuery.use(delegator).from("ProductPromoCond")
-                            .where("productPromoId", productPromoAction.getString("productPromoId"), "productPromoRuleId", productPromoAction.getString("productPromoRuleId")).queryList();
-                        String carrierShipmentMethodAndParty = "@ALL";
-                        for (GenericValue productPromoCond : productPromoConds) {
+        try {
+            GenericValue shippingPromoAction = EntityQuery.use(delegator).from("ProductPromoAction").where("productPromoActionEnumId", "PROMO_SHIP_CHARGE", "orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT").queryFirst();
+            if (UtilValidate.isNotEmpty(shippingPromoAction) && UtilValidate.isNotEmpty(shippingPromoAction.getBigDecimal("amount"))) {
+                GenericValue shippingPromo = shippingPromoAction.getRelatedOne("ProductPromo", false);
+                GenericValue shippingPromoStore = EntityUtil.getFirst(shippingPromo.getRelated("ProductStorePromoAppl", UtilMisc.toMap("productStoreId", cart.getProductStoreId()), null, false));
+                if (UtilValidate.isNotEmpty(shippingPromoStore) && UtilValidate.isNotEmpty(EntityUtil.filterByDate(UtilMisc.toList(shippingPromoStore)))) {
+                    List<GenericValue> productPromoConds = EntityQuery.use(delegator).from("ProductPromoCond")
+                            .where("productPromoId", shippingPromoAction.getString("productPromoId"), "productPromoRuleId", shippingPromoAction.getString("productPromoRuleId")).queryList();
+                    String carrierShipmentMethodAndParty = null;
+                    GenericValue currentProductPromoShipAmount = null;
+                    int adjustmetCartIndex = cart.getAdjustmentPromoIndex(shippingPromoAction.getString("productPromoId"));
+                    if (adjustmetCartIndex > -1 && cart.getAdjustments().size() > adjustmetCartIndex) {
+                        currentProductPromoShipAmount = cart.getAdjustment(adjustmetCartIndex);
+                    }
+                    for (GenericValue productPromoCond : productPromoConds) {
+                        if (UtilValidate.isNotEmpty(currentProductPromoShipAmount) ||
+                                ProductPromoWorker.checkCondition(productPromoCond, cart, delegator, dispatcher, UtilDateTime.nowTimestamp())) {
                             if (UtilValidate.isNotEmpty(productPromoCond.getString("otherValue"))) {
                                 String otherValue = productPromoCond.getString("otherValue");
                                 if (otherValue != null && otherValue.contains("@")) {
-                                    String carrierPartyId = otherValue.substring(0, otherValue.indexOf('@'));
-                                    String shippingMethod = otherValue.substring(otherValue.indexOf('@') + 1);
-                                    carrierShipmentMethodAndParty = shippingMethod + "@" + carrierPartyId;
+                                    carrierShipmentMethodAndParty = otherValue.substring(otherValue.indexOf('@') + 1) + "@" + otherValue.substring(0, otherValue.indexOf('@'));
                                 }
                                 break;
-                            }
-                        }
-
-                        for (GenericValue carrierShipmentMethod : validShippingMethods) {
-                            String currentCarrierShipmentMethodAndParty = carrierShipmentMethod.getString("shipmentMethodTypeId") + "@" + carrierShipmentMethod.getString("partyId");
-                            if (currentCarrierShipmentMethodAndParty.equals(carrierShipmentMethodAndParty) || carrierShipmentMethodAndParty.equals("@ALL")) {
-                                validShippingMethodShippingPromos.put(carrierShipmentMethodAndParty, cartAdjustment.getBigDecimal("amount"));
+                            } else {
+                                carrierShipmentMethodAndParty = "N@A";
                             }
                         }
                     }
-                } catch (GenericEntityException e) {
-                    Debug.logError(e.getMessage(), module);
+
+                    if (UtilValidate.isNotEmpty(carrierShipmentMethodAndParty)) {
+                        for (GenericValue carrierShipmentMethod : validShippingMethods) {
+                            String currentCarrierShipmentMethodAndParty = carrierShipmentMethod.getString("shipmentMethodTypeId") + "@" + carrierShipmentMethod.getString("partyId");
+                            if (currentCarrierShipmentMethodAndParty.equals(carrierShipmentMethodAndParty) || carrierShipmentMethodAndParty.equals("N@A")) {
+                                BigDecimal shipmentEstimateWithPromoApplied = getShippingEstimate(carrierShipmentMethod).multiply(shippingPromoAction.getBigDecimal("amount")).divide(new BigDecimal(100));
+                                validShippingMethodShippingPromos.put(carrierShipmentMethodAndParty, shipmentEstimateWithPromoApplied);
+                            }
+                        }
+                    }
                 }
             }
+        } catch(GenericEntityException e){
+            Debug.logError(e.getMessage(), module);
         }
         this.validShippingMethodShippingPromos = validShippingMethodShippingPromos;
     }

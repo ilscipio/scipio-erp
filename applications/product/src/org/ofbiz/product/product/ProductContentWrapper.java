@@ -49,9 +49,8 @@ import com.ilscipio.scipio.product.image.ProductImageWorker;
 import org.ofbiz.service.LocalDispatcher;
 
 /**
- * Product Content Worker: gets product content to display
- * <p>
- * SCIPIO: NOTE: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.
+ * Product Content Worker: gets product content to display.
+ * <p>SCIPIO: 2017: This ContentWrapper is heavily updated from stock for localization behavior, caching, and other fixes.</p>
  */
 @SuppressWarnings("serial")
 public class ProductContentWrapper extends CommonContentWrapper {
@@ -100,7 +99,8 @@ public class ProductContentWrapper extends CommonContentWrapper {
     }
 
     /**
-     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     * Gets content as text, with option to bypass wrapper cache.
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         return getProductContentAsText(product, productContentTypeId, locale, null, null, null, null, dispatcher, useCache, encoderType);
@@ -108,7 +108,7 @@ public class ProductContentWrapper extends CommonContentWrapper {
 
     /**
      * Gets content as text, with wrapper cache enabled.
-     * SCIPIO: delegating.
+     * <p>SCIPIO: 2.x.x: Changed to delegate.</p>
      */
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, String partyId,
             String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
@@ -116,12 +116,17 @@ public class ProductContentWrapper extends CommonContentWrapper {
     }
 
     /**
-     * SCIPIO: Gets content as text, with option to bypass wrapper cache.
+     * Gets content as text, with option to bypass wrapper cache.
+     * <p>SCIPIO: 1.x.x: Changed main implementation overload.</p>
      */
     public static String getProductContentAsText(GenericValue product, String productContentTypeId, Locale locale, String mimeTypeId, String partyId,
             String roleTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         if (product == null) {
             return null;
+        }
+        if (delegator == null) { // SCIPIO: This should be set and cases should be investigated
+            Debug.logWarning("Delegator is null when getting product content; using default delegator", module);
+            delegator = Delegator.getDefaultDelegator();
         }
 
         UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
@@ -150,11 +155,7 @@ public class ProductContentWrapper extends CommonContentWrapper {
                 productContentCache.put(cacheKey, outString);
             }
             return outString;
-        } catch (GeneralException e) {
-            Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
-            String candidateOut = product.getModelEntity().isField(candidateFieldName) ? product.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.sanitize(candidateOut);
-        } catch (IOException e) {
+        } catch (GeneralException | IOException e) {
             Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
             String candidateOut = product.getModelEntity().isField(candidateFieldName) ? product.getString(candidateFieldName): "";
             return candidateOut == null? "" : encoder.sanitize(candidateOut);
@@ -210,30 +211,29 @@ public class ProductContentWrapper extends CommonContentWrapper {
         }
 
         if (productModel.isField(candidateFieldName)) {
-                String candidateValue = product.getString(candidateFieldName);
-                if (UtilValidate.isNotEmpty(candidateValue)) {
-                    outWriter.write(candidateValue);
-                    return;
-                } else if ("Y".equals(product.getString("isVariant"))) {
-                    // look up the virtual product
-                    GenericValue parent = ProductWorker.getParentProduct(productId, delegator, cache);
-                    if (parent != null) {
-                        candidateValue = parent.getString(candidateFieldName);
-                        if (UtilValidate.isNotEmpty(candidateValue)) {
-                            outWriter.write(candidateValue);
-                            return;
-                        }
+            String candidateValue = product.getString(candidateFieldName);
+            if (UtilValidate.isNotEmpty(candidateValue)) {
+                outWriter.write(candidateValue);
+                return;
+            } else if ("Y".equals(product.getString("isVariant"))) {
+                // look up the virtual product
+                GenericValue parent = ProductWorker.getParentProduct(productId, delegator, cache);
+                if (parent != null) {
+                    candidateValue = parent.getString(candidateFieldName);
+                    if (UtilValidate.isNotEmpty(candidateValue)) {
+                        outWriter.write(candidateValue);
+                        return;
                     }
                 }
+            }
         }
-
     }
 
     /**
-     * SCIPIO: Gets the entity field value corresponding to the given productContentTypeId.
+     * Gets the entity field value corresponding to the given productContentTypeId.
      * DO NOT USE FROM TEMPLATES - NOT CACHED - intended for code that must replicate ProductContentWrapper behavior.
      * DEV NOTE: LOGIC DUPLICATED FROM getProductContentAsText ABOVE - PLEASE KEEP IN SYNC.
-     * Added 2017-09-05.
+     * <p>SCIPIO: 2017-09-05: Added.</p>
      */
     public static String getEntityFieldValue(GenericValue product, String productContentTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean cache) throws GeneralException, IOException {
         String productId = product.getString("productId");
@@ -280,9 +280,10 @@ public class ProductContentWrapper extends CommonContentWrapper {
     }
 
     /**
-     * Returns {@link ProductImageVariants} (SCIPIO).
+     * Returns {@link ProductImageVariants}
      * NOTE: In newer code this is preferable to {@link #getImageUrl(String)} and uses its own dedicated cache
      * (<code>product.image.variants</code>) separate from the ProductContentWrapper cache.
+     * <p>SCIPIO: 2.x.x: Added.</p>
      * @param productContentTypeId The original image content type ID (not variants), usually one of: ORIGINAL_IMAGE_URL, ADDITIONAL_IMAGE_x
      */
     public ProductImageVariants getImageVariants(String productContentTypeId) {

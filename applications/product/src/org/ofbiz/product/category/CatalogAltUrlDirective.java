@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.LocalDispatcher;
@@ -78,7 +79,7 @@ import freemarker.template.TemplateModel;
  * SCIPIO: 2019-02-05: Reimplemented as TemplateDirectiveModel (was previously: OfbizCatalogAltUrlTransform)
  */
 public class CatalogAltUrlDirective implements TemplateDirectiveModel {
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     static CatalogAltUrlDirective INSTANCE = new CatalogAltUrlDirective();
 
@@ -120,6 +121,10 @@ public class CatalogAltUrlDirective implements TemplateDirectiveModel {
                 FullWebappInfo targetWebappInfo = FullWebappInfo.fromWebSiteIdOrContextPathOrNull(TransformUtil.getStringArg(args, "webSiteId", rawParams),
                         TransformUtil.getStringArg(args, "prefix", rawParams), request, null);
                 HttpServletResponse response = ContextFtlUtil.getResponse(env);
+                if (request.getAttribute("delegator") == null) { // SCIPIO: Sanity check
+                    String msg = "Delegator is null in request attributes [template: " + env.getCurrentTemplate().getSourceName() + "]";
+                    Debug.logError(new NullPointerException(msg), msg, module);
+                }
                 url = CatalogUrlFilter.makeCatalogAltLink(request, response, locale, productCategoryId, productId, previousCategoryId, urlParams, targetWebappInfo,
                         fullPath, secure, encode, viewSize, viewIndex, viewSort, searchString);
             } else {

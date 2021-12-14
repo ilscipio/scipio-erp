@@ -55,6 +55,22 @@ public interface Delegator {
 
     enum OperationType {INSERT, UPDATE, DELETE}
 
+    /**
+     * Returns the named delegator from central factory.
+     * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
+     */
+    static Delegator getDelegator(String delegatorName) {
+        return DelegatorFactory.getDelegator(delegatorName);
+    }
+
+    /**
+     * Returns the default delegator from central factory.
+     * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
+     */
+    static Delegator getDefaultDelegator() {
+        return DelegatorFactory.getDefaultDelegator();
+    }
+
     void clearAllCacheLinesByDummyPK(Collection<GenericPK> dummyPKs);
 
     void clearAllCacheLinesByValue(Collection<GenericValue> values);

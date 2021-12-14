@@ -141,15 +141,16 @@ public class ShippingEstimateWrapper {
                     if (UtilValidate.isNotEmpty(carrierShipmentMethodAndParty)) {
                         for (GenericValue carrierShipmentMethod : validShippingMethods) {
                             String currentCarrierShipmentMethodAndParty = carrierShipmentMethod.getString("shipmentMethodTypeId") + "@" + carrierShipmentMethod.getString("partyId");
-                            if (currentCarrierShipmentMethodAndParty.equals(carrierShipmentMethodAndParty) || carrierShipmentMethodAndParty.equals("N@A")) {
+                            if ((currentCarrierShipmentMethodAndParty.equals(carrierShipmentMethodAndParty) || carrierShipmentMethodAndParty.equals("N@A"))
+                                    && UtilValidate.isNotEmpty(shippingPromoAction.getBigDecimal("amount"))) {
                                 BigDecimal shipmentEstimateWithPromoApplied = getShippingEstimate(carrierShipmentMethod).multiply(shippingPromoAction.getBigDecimal("amount")).divide(new BigDecimal(100));
-                                validShippingMethodShippingPromos.put(carrierShipmentMethodAndParty, shipmentEstimateWithPromoApplied);
+                                validShippingMethodShippingPromos.put(currentCarrierShipmentMethodAndParty, shipmentEstimateWithPromoApplied);
                             }
                         }
                     }
                 }
             }
-        } catch(GenericEntityException e){
+        } catch(Exception e){
             Debug.logError(e.getMessage(), module);
         }
         this.validShippingMethodShippingPromos = validShippingMethodShippingPromos;

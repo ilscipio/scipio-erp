@@ -10,10 +10,7 @@ code package.
 
     <!-- Push products to bing -->
     <eca entity="Product" operation="store" event="return">
-        <and>
-            <condition field-name="productId" operator="is-not-empty"/>
-            <condition field-name="readyForSale" operator="not-equals" value="N"/>
-        </and>
+        <condition field-name="productId" operator="is-not-empty"/>
         <action service="submitProductToBingIndex" mode="async" persist="true"/>
     </eca>
 

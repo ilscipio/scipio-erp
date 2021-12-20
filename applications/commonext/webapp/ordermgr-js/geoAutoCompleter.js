@@ -90,11 +90,13 @@ function setKeyAsParameter(event, ui) {
 // New parameters:
 // async : boolean, whether to send sync or async (default: true)
 // SCIPIO: 2017-10-09: Now returns the jQuery.ajax object (instead of void).
+// SCIPIO: 2.1.0: Added listOrderBy option
 function getAssociatedStateListEx(options) {
     var countryId = options.countryId;
     var stateId = options.stateId;
     var errorId = options.errorId;
     var divId = options.divId;
+    var listOrderBy = options.listOrderBy;
     
     var countryGeoId = jQuery("#" + countryId).val();
     var requestToSend = 'getAssociatedStateList';
@@ -106,11 +108,16 @@ function getAssociatedStateListEx(options) {
     if (options.async === false) {
         async = false;
     }
+
+    data = {countryGeoId: countryGeoId};
+    if (listOrderBy) {
+        data['listOrderBy'] = listOrderBy;
+    }
     return jQuery.ajax({
         url: requestToSend,
         async: async,
         type: "POST",
-        data: {countryGeoId: countryGeoId},
+        data: data,
         success: function(data) {
             if (data._ERROR_MESSAGE_ ) {
                 // no data found/ error occurred
@@ -151,15 +158,17 @@ function getAssociatedStateListEx(options) {
 //Generic function for fetching country's associated state list.
 // SCIPIO: NOTE: this is the original Ofbiz function overload.
 // SCIPIO: 2017-10-09: Now returns the jQuery.ajax object (instead of void).
-function getAssociatedStateList(countryId, stateId, errorId, divId) {
+// SCIPIO: 2.1.0: Added listOrderBy option
+function getAssociatedStateList(countryId, stateId, errorId, divId, listOrderBy) {
     return getAssociatedStateListEx({countryId: countryId, stateId: stateId,
-        errorId: errorId, divId: divId});
+        errorId: errorId, divId: divId, listOrderBy: listOrderBy});
 }
 
 // SCIPIO: Generic function for fetching country's associated state list - synchronous drop-in replacement.
 // SCIPIO: 2017-10-09: Now returns the jQuery.ajax object (instead of void).
-function getAssociatedStateListSync(countryId, stateId, errorId, divId) {
+// SCIPIO: 2.1.0: Added listOrderBy option
+function getAssociatedStateListSync(countryId, stateId, errorId, divId, listOrderBy) {
     return getAssociatedStateListEx({countryId: countryId, stateId:
-        stateId, errorId: errorId, divId: divId, async: false});
+        stateId, errorId: errorId, divId: divId, async: false, listOrderBy: listOrderBy});
 }
 

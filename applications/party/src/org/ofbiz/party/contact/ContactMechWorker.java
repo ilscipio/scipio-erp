@@ -65,17 +65,20 @@ public class ContactMechWorker {
         try {
             // SCIPIO: 2018-10-19: Added filterByDate to initial pre-query instead of manual post-query filter, and handle contactMechTypeId in smarter way
             // DEV NOTE: WARN: DO NOT ADD A cache() CALL HERE!
+            // SCIPIO: 2.1.0: Ordering party contactMechs formDate DESC so latest ones come first
             if (contactMechTypeId != null) {
                 allPartyContactMechs = EntityQuery.use(delegator)
                         .from("PartyContactMechAndContactMech")
                         .where("partyId", partyId, "contactMechTypeId", contactMechTypeId)
                         .filterByDate(!showOld)
+                        .orderBy("-fromDate")
                         .queryList();
             } else {
                 allPartyContactMechs = EntityQuery.use(delegator)
                         .from("PartyContactMechAndContactMech")
                         .where("partyId", partyId)
                         .filterByDate(!showOld)
+                        .orderBy("-fromDate")
                         .queryList();
             }
             /*

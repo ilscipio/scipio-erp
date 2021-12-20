@@ -27,6 +27,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
@@ -96,6 +97,21 @@ public class WebShoppingCart extends ShoppingCart {
     /** SCIPIO: Creates a new cloned ShoppingCart Object, exact copy. */
     public WebShoppingCart(ShoppingCart cart, boolean exactCopy) {
         super(cart, exactCopy);
+    }
+
+    // SCIPIO: 2.1.0: Added missing constructor
+    public WebShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom, String billToCustomerPartyId, String billFromVendorPartyId) {
+        super(delegator, productStoreId, webSiteId, locale, currencyUom, billToCustomerPartyId, billFromVendorPartyId);
+    }
+
+    // SCIPIO: 2.1.0: Added missing constructor
+    public WebShoppingCart(Delegator delegator, String productStoreId, String webSiteId, Locale locale, String currencyUom) {
+        super(delegator, productStoreId, webSiteId, locale, currencyUom);
+    }
+
+    // SCIPIO: 2.1.0: Added missing constructor
+    public WebShoppingCart(Delegator delegator, String productStoreId, Locale locale, String currencyUom) {
+        super(delegator, productStoreId, locale, currencyUom);
     }
 
     /** SCIPIO: Performs a copy of the instance. Added 2019-09-05. */

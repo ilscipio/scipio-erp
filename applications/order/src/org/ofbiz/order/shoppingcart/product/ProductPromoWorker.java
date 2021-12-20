@@ -1957,7 +1957,6 @@ public final class ProductPromoWorker {
                             BigDecimal defaultAmount = giftWrapFeature.getBigDecimal("defaultAmount");
 
                             Map<String, String> fields = UtilMisc.<String, String>toMap("productId", itemProductId, "productFeatureId", giftWrapFeature.get("productFeatureId"));
-                            GenericValue productFeatureAppl = null;
                             List<GenericValue> features = null;
                             try {
                                 features = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where(fields).orderBy("-fromDate").filterByDate().queryList();
@@ -1974,6 +1973,13 @@ public final class ProductPromoWorker {
                                     }
                                 }
                             }
+                            BigDecimal quantity = cartItem.getQuantity();
+                            if (UtilValidate.isNotEmpty(productPromoAction.get("quantity"))) {
+                                if (quantity.compareTo(productPromoAction.getBigDecimal("quantity")) > 1) {
+                                    quantity = productPromoAction.getBigDecimal("quantity");
+                                }
+                            }
+                            amount = amount.multiply(quantity);
 
                             BigDecimal percentage = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : (productPromoAction.getBigDecimal("amount").movePointLeft(2))).negate();
                             BigDecimal finalAmount = amount.multiply(percentage);

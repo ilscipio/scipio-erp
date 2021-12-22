@@ -85,6 +85,7 @@ code package.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="poolId" title="${uiLabelMap.WebtoolsPool}"><text/></field><!-- SCIPIO: 2.1.0: Added -->
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}" position="1">
             <submit button-type="button"/>
         </field>

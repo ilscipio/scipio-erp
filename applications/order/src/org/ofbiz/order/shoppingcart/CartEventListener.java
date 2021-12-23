@@ -134,7 +134,7 @@ public class CartEventListener implements HttpSessionListener {
                     List<GenericValue> currentAbandonedCarts = EntityQuery.use(delegator).from(dve).where(condition).queryList();
                     List<GenericValue> abandonedCartsAndStatus = UtilMisc.toList();
                     for (GenericValue currentAbandonedCart : currentAbandonedCarts) {
-                        GenericValue currentAbandonedCartStatus = currentAbandonedCart.getRelatedOne("AbandonedCartStatus");
+                        GenericValue currentAbandonedCartStatus = currentAbandonedCart.getRelatedOne("CartAbandonedStatus");
                         currentAbandonedCartStatus.put("statusId", "AB_CANCELLED");
                         currentAbandonedCart.put("thruDate", UtilDateTime.nowTimestamp());
                         abandonedCartsAndStatus.add(currentAbandonedCart);

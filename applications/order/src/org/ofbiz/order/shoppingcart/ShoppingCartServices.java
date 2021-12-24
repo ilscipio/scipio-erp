@@ -40,6 +40,8 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.ShoppingCart.CartShipInfo;
 import org.ofbiz.order.shoppingcart.ShoppingCart.CartShipInfo.CartShipItemInfo;
+import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
+import org.ofbiz.order.shoppingcart.shipping.ShippingEstimateWrapper;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
@@ -203,7 +205,7 @@ public class ShoppingCartServices {
         String currentStatusString = orh.getCurrentStatusString();
 
         // create the cart
-        ShoppingCart cart = ShoppingCartFactory.createShoppingCart(delegator, productStoreId, website, locale, currency); // SCIPIO: use factory
+        ShoppingCart cart = ShoppingCartFactory.get(delegator, productStoreId).createShoppingCart(delegator, productStoreId, website, locale, currency); // SCIPIO: use factory
 
         cart.setDoPromotions(!includePromoItems);
         cart.setOrderType(orderTypeId);
@@ -349,6 +351,7 @@ public class ShoppingCartServices {
             cartShipInfo.setVendorPartyId(orderItemShipGroup.getString("vendorPartyId"));
             cartShipInfo.setShipGroupSeqId(orderItemShipGroup.getString("shipGroupSeqId"));
             cartShipInfo.shipTaxAdj.addAll(orh.getOrderHeaderAdjustmentsTax(orderItemShipGroup.getString("shipGroupSeqId")));
+            cartShipInfo.setContactMechId(orderItemShipGroup.getString("contactMechId"));
         }
 
         List<GenericValue> orderItems = orh.getOrderItems();
@@ -638,6 +641,30 @@ public class ShoppingCartServices {
                                 }
                             }
                         }
+
+                        // SCIPIO: 2.1.0: loading shipping costs and shipping method from order when we got a shipping destination
+                        if (UtilValidate.isNotEmpty(csi.getContactMechId())) {
+                            ShippingEstimateWrapper shippingEstimateWrapper = ShippingEstimateWrapper.getWrapper(dispatcher, cart, cartShipGroupIndex);
+                            try {
+                                List<GenericValue> productStoreShipmentMeths = EntityQuery.use(delegator).from("ProductStoreShipmentMethView").where(UtilMisc.toMap(
+                                        "shipmentMethodTypeId", csi.shipmentMethodTypeId,
+                                        "partyId", csi.carrierPartyId,
+                                        "productStoreId", productStoreId,
+                                        "roleTypeId","CARRIER"
+                                )).queryList();
+                                if (productStoreShipmentMeths.size() > 1) {
+                                    Debug.logWarning("Found multiple ProductStoreShipmentMeth for partyId[" + csi.carrierPartyId
+                                            + "] shipmentMethodTypeId[" + csi.shipmentMethodTypeId + "] "
+                                            + "] productStoreId[ " + productStoreId
+                                            + "] roleTypeId[CARRIER]", module);
+                                }
+                                GenericValue productStoreShipmentMeth = EntityUtil.getFirst(productStoreShipmentMeths);
+                                csi.shipEstimate = shippingEstimateWrapper.getShippingEstimate(productStoreShipmentMeth);
+                                csi.productStoreShipMethId = productStoreShipmentMeth.getString("productStoreShipMethId");
+                            } catch (GenericEntityException e) {
+                                Debug.logError(e.getMessage(), module);
+                            }
+                        }
                     }
                     itemIndex ++;
                 }
@@ -662,6 +689,8 @@ public class ShoppingCartServices {
                 cart.addProductPromoUse(productPromoUse.getString("productPromoId"), productPromoUse.getString("productPromoCodeId"), productPromoUse.getBigDecimal("totalDiscountAmount"), productPromoUse.getBigDecimal("quantityLeftInActions"), new HashMap<ShoppingCartItem, BigDecimal>());
             }
         }
+        // SCIPIO: 2.1.0: apply promotions
+        ProductPromoWorker.doPromotions(cart, dispatcher);
 
         List<GenericValue> adjustments = orh.getOrderHeaderAdjustments();
         // If applyQuoteAdjustments is set to false then standard cart adjustments are used.

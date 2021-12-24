@@ -19,6 +19,7 @@
 package org.ofbiz.service.engine;
 
 import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -82,12 +83,12 @@ public final class SOAPClientEngine extends GenericAsyncEngine implements SOAPSe
     @Override
     public Map<String, Object> runSync(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
         Map<String, Object> result = null;
-        Class soapServiceInvokerClass = (Class) context.get("soapServiceInvokerClass");
+        Class<?> soapServiceInvokerClass = (Class<?>) context.get("soapServiceInvokerClass");
         if (UtilValidate.isNotEmpty(soapServiceInvokerClass)) {
             try {
-                SOAPServiceInvoker soapServiceInvoker = (SOAPServiceInvoker) soapServiceInvokerClass.newInstance();
+                SOAPServiceInvoker soapServiceInvoker = (SOAPServiceInvoker) soapServiceInvokerClass.getConstructor().newInstance();
                 result = soapServiceInvoker.serviceInvoker(modelService, context);
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
                 Debug.logError(e.getMessage(), module);
             }
         } else {
@@ -117,7 +118,6 @@ public final class SOAPClientEngine extends GenericAsyncEngine implements SOAPSe
             configureSOAPHttpClient(client, options); // SCIPIO: new 2018-07-11
             EndpointReference endPoint = new EndpointReference(this.getLocation(modelService));
             options.setTo(endPoint);
-
 
             String soapUser = (String) context.get("clientLogin.username");
             if (UtilValidate.isNotEmpty(soapUser)) {

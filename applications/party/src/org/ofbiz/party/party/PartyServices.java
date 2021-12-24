@@ -167,9 +167,23 @@ public class PartyServices {
             if (UtilValidate.isNotEmpty(externalId)) {
                 newPartyMap.put("externalId", externalId);
             }
+
+            boolean userLoginExists = false;
             if (userLogin != null) {
-                newPartyMap.put("createdByUserLogin", userLogin.get("userLoginId"));
-                newPartyMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+                // SCIPIO: 2.1.0: checking if the userLogin exists before adding its userLoginId to the new Party being created
+                try {
+                    GenericValue existingUserLogin = EntityQuery.use(delegator).from("UserLogin")
+                        .where(UtilMisc.toMap("userLoginId", userLogin.getString("userLoginId"))).queryOne();
+                    if (UtilValidate.isNotEmpty(existingUserLogin)) {
+                        userLoginExists = true;
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+                if (userLoginExists) {
+                    newPartyMap.put("createdByUserLogin", userLogin.get("userLoginId"));
+                    newPartyMap.put("lastModifiedByUserLogin", userLogin.get("userLoginId"));
+                }
             }
             party = delegator.makeValue("Party", newPartyMap);
             toBeStored.add(party);
@@ -177,7 +191,7 @@ public class PartyServices {
             // create the status history
             GenericValue statusRec = delegator.makeValue("PartyStatus",
                     UtilMisc.toMap("partyId", partyId, "statusId", statusId, "statusDate", now));
-            if (userLogin != null) {
+            if (userLoginExists) {
                 statusRec.put("changeByUserLoginId", userLogin.get("userLoginId"));
             }
             toBeStored.add(statusRec);

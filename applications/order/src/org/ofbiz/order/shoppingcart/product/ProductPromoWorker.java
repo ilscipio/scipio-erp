@@ -1771,7 +1771,7 @@ public final class ProductPromoWorker {
             BigDecimal percentage = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : (productPromoAction.getBigDecimal("amount").movePointLeft(2))).negate();
             BigDecimal amount = cart.getSubTotalForPromotions().multiply(percentage);
 
-            if (amount.compareTo(BigDecimal.ZERO) > 0) {
+            if (amount.compareTo(BigDecimal.ZERO) != 0) {
                 Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
                     BigDecimal discountAmountTotal = BigDecimal.ZERO;

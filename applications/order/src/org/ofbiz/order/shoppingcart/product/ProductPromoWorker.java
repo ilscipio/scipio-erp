@@ -359,7 +359,16 @@ public final class ProductPromoWorker {
                     newProductPromo.set("useLimitPerOrder", uses);
                 }
                 usesPerPromo.put(promoUse.getProductPromoId(), uses);
-                sortedExplodedProductPromoList.add(newProductPromo);
+                // SCIPIO: 2.1.0: We must check this here too as all order related conds & actions MUST be the last ones to take place, otherwise it conflicts with the rest.
+                if (hasOrderTotalCondition(productPromo, delegator) || hasOrderTotalAction(productPromo, delegator)) {
+                    sortedExplodedProductPromoList.add(newProductPromo);
+                } else {
+                    if (indexOfFirstOrderTotalPromo != -1) {
+                        sortedExplodedProductPromoList.add(indexOfFirstOrderTotalPromo, productPromo);
+                    } else {
+                        sortedExplodedProductPromoList.add(0, productPromo);
+                    }
+                }
                 if (indexOfFirstOrderTotalPromo == -1 && BigDecimal.ZERO.equals(promoUse.getUsageWeight())) {
                     indexOfFirstOrderTotalPromo = sortedExplodedProductPromoList.size() - 1;
                 }
@@ -369,7 +378,8 @@ public final class ProductPromoWorker {
             }
 
             for (GenericValue productPromo : productPromoList) {
-                if (hasOrderTotalCondition(productPromo, delegator)) {
+                // SCIPIO: 2.1.0: checking for orderTotal actions too
+                if (hasOrderTotalCondition(productPromo, delegator) || hasOrderTotalAction(productPromo, delegator)) {
                     if (!usesPerPromo.containsKey(productPromo.getString("productPromoId"))) {
                         sortedExplodedProductPromoList.add(productPromo);
                     }
@@ -406,6 +416,29 @@ public final class ProductPromoWorker {
             String inputParamEnumId = productPromoCond.getString("inputParamEnumId");
             // SCIPIO (10/28/2018): added new enumId in order to distinguish between totals and subtotals
             if ("PPIP_ORDER_TOTAL".equals(inputParamEnumId) || "PPIP_ORDER_SUBTOTAL".equals(inputParamEnumId)) {
+                hasOtCond = true;
+                break;
+            }
+        }
+        return hasOtCond;
+    }
+
+    /**
+     * SCIPIO: 2.1.0: Added this check for promoAction order types
+     * @param productPromo
+     * @param delegator
+     * @return
+     * @throws GenericEntityException
+     */
+    protected static boolean hasOrderTotalAction(GenericValue productPromo, Delegator delegator) throws GenericEntityException {
+        boolean hasOtCond = false;
+        List<GenericValue> productPromoActions = EntityQuery.use(delegator).from("ProductPromoAction")
+                .where("productPromoId", productPromo.get("productPromoId"))
+                .orderBy("productPromoActionSeqId")
+                .cache(true).queryList();
+        for (GenericValue productPromoAction : productPromoActions) {
+            String inputParamEnumId = productPromoAction.getString("productPromoActionEnumId");
+            if ("PROMO_ORDER_PERCENT".equals(inputParamEnumId) || "PROMO_ORDER_AMOUNT".equals(inputParamEnumId)) {
                 hasOtCond = true;
                 break;
             }

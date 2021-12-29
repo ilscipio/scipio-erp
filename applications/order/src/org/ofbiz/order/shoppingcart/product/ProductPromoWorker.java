@@ -1771,7 +1771,7 @@ public final class ProductPromoWorker {
             BigDecimal percentage = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : (productPromoAction.getBigDecimal("amount").movePointLeft(2))).negate();
             BigDecimal amount = cart.getSubTotalForPromotions().multiply(percentage);
 
-            if (amount.compareTo(BigDecimal.ZERO) != 0) {
+            if (amount.compareTo(BigDecimal.ZERO) < 0) {
                 Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
                     BigDecimal discountAmountTotal = BigDecimal.ZERO;
@@ -1789,7 +1789,7 @@ public final class ProductPromoWorker {
                         GenericValue product = cartItem.getProduct();
                         boolean passedItemConds = checkConditionsForItem(productPromoAction, cart, cartItem, delegator, dispatcher, nowTimestamp);
                         if (passedItemConds && !cartItem.getIsPromo() &&
-                                (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
+                                (productIds.isEmpty() || productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
                                 (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                             // reduce quantity still needed to qualify for promo (quantityNeeded)
                             BigDecimal quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
@@ -1813,7 +1813,8 @@ public final class ProductPromoWorker {
                     doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
                     actionResultInfo.totalDiscountAmount = amount;
                 }
-                if (actionResultInfo.totalDiscountAmount.compareTo(BigDecimal.ZERO) > 0) {
+                // SCIPIO: 2.1.0: This must be a negative value, otherwise there's no discount thus ranAction=false
+                if (actionResultInfo.totalDiscountAmount.compareTo(BigDecimal.ZERO) < 0) {
                     actionResultInfo.ranAction = true;
                 } else {
                     actionResultInfo.ranAction = false;
@@ -1827,7 +1828,7 @@ public final class ProductPromoWorker {
                 amount = subTotal.negate();
             }
 
-            if (amount.compareTo(BigDecimal.ZERO) > 0) {
+            if (amount.compareTo(BigDecimal.ZERO) < 0) {
                 BigDecimal lineAmountTotal = BigDecimal.ZERO;
                 Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
@@ -1844,7 +1845,7 @@ public final class ProductPromoWorker {
                         GenericValue product = cartItem.getProduct();
                         boolean passedItemConds = checkConditionsForItem(productPromoAction, cart, cartItem, delegator, dispatcher, nowTimestamp);
                         if (passedItemConds && !cartItem.getIsPromo() &&
-                                (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
+                                (productIds.isEmpty() || productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
                                 (product == null || !"N".equals(product.getString("includeInPromotions")))) {
                             // reduce quantity still needed to qualify for promo (quantityNeeded)
                             BigDecimal quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
@@ -1871,7 +1872,8 @@ public final class ProductPromoWorker {
                     doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
                     actionResultInfo.totalDiscountAmount = amount;
                 }
-                if (actionResultInfo.totalDiscountAmount.compareTo(BigDecimal.ZERO) > 0) {
+                // SCIPIO: 2.1.0: This must be a negative value, otherwise there's no discount thus ranAction=false
+                if (actionResultInfo.totalDiscountAmount.compareTo(BigDecimal.ZERO) < 0) {
                     actionResultInfo.ranAction = true;
                 } else {
                     actionResultInfo.ranAction = false;
@@ -1937,7 +1939,7 @@ public final class ProductPromoWorker {
             // if there are productIds associated with the action then restrict to those productIds, otherwise apply for all products
             Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
 
-            // go through the cart items and for each product that has a specialPromoPrice use that price
+            // go through the cart items and for each product find and apply promo for GIFT_WRAP optional features
             for (ShoppingCartItem cartItem : cart.items()) {
                 String itemProductId = cartItem.getProductId();
                 if (UtilValidate.isEmpty(itemProductId)) {
@@ -1950,46 +1952,14 @@ public final class ProductPromoWorker {
 
                 Integer existingPromoAdjustments = findAdjustment(productPromoAction, cartItem.getAdjustments());
                 if (UtilValidate.isEmpty(existingPromoAdjustments) || existingPromoAdjustments.intValue() == 0) {
-                    Map<String, List<GenericValue>> optionalProductFeatures = cartItem.getOptionalProductFeatures();
-                    if (UtilValidate.isNotEmpty(optionalProductFeatures) && optionalProductFeatures.containsKey("GIFT_WRAP")) {
-                        List<GenericValue> giftWrapFeatures = optionalProductFeatures.get("GIFT_WRAP");
-                        for (GenericValue giftWrapFeature : giftWrapFeatures) {
-                            BigDecimal defaultAmount = giftWrapFeature.getBigDecimal("defaultAmount");
-
-                            Map<String, String> fields = UtilMisc.<String, String>toMap("productId", itemProductId, "productFeatureId", giftWrapFeature.get("productFeatureId"));
-                            List<GenericValue> features = null;
-                            try {
-                                features = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where(fields).orderBy("-fromDate").filterByDate().queryList();
-                            } catch (GenericEntityException e) {
-                                Debug.logError(e, module);
-                            }
-                            BigDecimal amount = BigDecimal.ZERO;
-                            for (GenericValue feature : features) {
-                                GenericValue featureAppl = cartItem.getAdditionalProductFeatureAndAppl(feature.getString("productFeatureTypeId"));
-                                if (UtilValidate.isNotEmpty(featureAppl)) {
-                                    amount = amount.add(feature.getBigDecimal("amount"));
-                                    if (amount.compareTo(BigDecimal.ZERO) <= 0 && defaultAmount.compareTo(BigDecimal.ZERO) > 0) {
-                                        amount = defaultAmount;
-                                    }
-                                }
-                            }
-                            BigDecimal quantity = cartItem.getQuantity();
-                            if (UtilValidate.isNotEmpty(productPromoAction.get("quantity"))) {
-                                if (quantity.compareTo(productPromoAction.getBigDecimal("quantity")) > 1) {
-                                    quantity = productPromoAction.getBigDecimal("quantity");
-                                }
-                            }
-                            amount = amount.multiply(quantity);
-
-                            BigDecimal percentage = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : (productPromoAction.getBigDecimal("amount").movePointLeft(2))).negate();
-                            BigDecimal finalAmount = amount.multiply(percentage);
-                            if (finalAmount.compareTo(BigDecimal.ZERO) != 0) {
-                                doOrderItemPromoAction(productPromoAction, cartItem, finalAmount, "amount", delegator);
-                                actionResultInfo.ranAction = true;
-                                actionResultInfo.totalDiscountAmount = finalAmount;
-                            } else {
-                                actionResultInfo.ranAction = false;
-                            }
+                    Map<String, BigDecimal> optionalFeaturePromotions = cartItem.getOptionalFeaturePromotionsAmountForPromoAction(productPromoAction, "GIFT_WRAP", itemProductId);
+                    for (BigDecimal finalAmount : optionalFeaturePromotions.values()) {
+                        if (finalAmount.compareTo(BigDecimal.ZERO) != 0) {
+                            doOrderItemPromoAction(productPromoAction, cartItem, finalAmount, "amount", delegator);
+                            actionResultInfo.ranAction = true;
+                            actionResultInfo.totalDiscountAmount = finalAmount;
+                        } else {
+                            actionResultInfo.ranAction = false;
                         }
                     }
                 } else {

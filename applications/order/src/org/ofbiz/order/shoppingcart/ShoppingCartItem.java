@@ -2959,4 +2959,53 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
         return responses;
     }
+
+    /**
+     * SCIPIO: 2.1.0: Traverse optional features for a given cart item and apply promo actions. Returns a map containing featureId -> promoAmount.
+     * @param productPromoAction
+     * @param optionalProductFeatureType
+     * @param itemProductId
+     * @return
+     */
+    public Map<String, BigDecimal> getOptionalFeaturePromotionsAmountForPromoAction(GenericValue productPromoAction, String optionalProductFeatureType, String itemProductId) {
+        Map<String, BigDecimal> amountPerGiftWrapFeature = UtilMisc.newMap();
+        Map<String, List<GenericValue>> optionalProductFeatures = this.getOptionalProductFeatures();
+        if (UtilValidate.isNotEmpty(optionalProductFeatures) && optionalProductFeatures.containsKey(optionalProductFeatureType)) {
+            List<GenericValue> giftWrapFeatures = optionalProductFeatures.get(optionalProductFeatureType);
+            for (GenericValue giftWrapFeature : giftWrapFeatures) {
+                BigDecimal defaultAmount = giftWrapFeature.getBigDecimal("defaultAmount");
+
+                Map<String, String> fields = UtilMisc.<String, String>toMap("productId", itemProductId, "productFeatureId", giftWrapFeature.get("productFeatureId"));
+                List<GenericValue> features = null;
+                try {
+                    features = EntityQuery.use(delegator).from("ProductFeatureAndAppl").where(fields).orderBy("-fromDate").filterByDate().queryList();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                }
+                BigDecimal amount = BigDecimal.ZERO;
+                for (GenericValue feature : features) {
+                    GenericValue featureAppl = this.getAdditionalProductFeatureAndAppl(feature.getString("productFeatureTypeId"));
+                    if (UtilValidate.isNotEmpty(featureAppl)) {
+                        amount = amount.add(feature.getBigDecimal("amount"));
+                        if (amount.compareTo(BigDecimal.ZERO) <= 0 && defaultAmount.compareTo(BigDecimal.ZERO) > 0) {
+                            amount = defaultAmount;
+                        }
+                    }
+                }
+                BigDecimal quantity = this.getQuantity();
+                if (UtilValidate.isNotEmpty(productPromoAction.get("quantity"))) {
+                    if (quantity.compareTo(productPromoAction.getBigDecimal("quantity")) > 1) {
+                        quantity = productPromoAction.getBigDecimal("quantity");
+                    }
+                }
+                amount = amount.multiply(quantity);
+
+                BigDecimal percentage = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : (productPromoAction.getBigDecimal("amount").movePointLeft(2))).negate();
+                BigDecimal finalAmount = amount.multiply(percentage);
+                amountPerGiftWrapFeature.put(giftWrapFeature.getString("productFeatureId"), finalAmount);
+            }
+        }
+        return amountPerGiftWrapFeature;
+    }
+
 }

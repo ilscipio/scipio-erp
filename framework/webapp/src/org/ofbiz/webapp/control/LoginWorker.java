@@ -826,15 +826,25 @@ public class LoginWorker {
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         String domain = EntityUtilProperties.getPropertyValue("url", "cookie.domain", delegator);
         if (isAutoUserLoginEnabled(request) && userLogin != null) { // SCIPIO: 2018-07-11: only set if enabled for webapp
-            Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), userLogin.getString("userLoginId"));
-            // SCIPIO
-            //autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
-            autoLoginCookie.setMaxAge(getAutoLoginCookieMaxAge(request));
-            autoLoginCookie.setDomain(domain);
-            autoLoginCookie.setPath("/");
-            autoLoginCookie.setSecure(true);
-            autoLoginCookie.setHttpOnly(true);
-            response.addCookie(autoLoginCookie);
+            // SCIPIO: 2.1.0: We don't want to screw the whole registration because of this non essential cookie creation
+            String cookieName = getAutoLoginCookieName(request);
+            // SCIPIO: 2.1.0: newer versions of Tomcat follow RFC6265 so no spaces and other chars are allowed.
+            // For now just trim userLoginId to avoid common mistakes entering user names.
+            String cookieValue = userLogin.getString("userLoginId").trim();
+            try {
+                Cookie autoLoginCookie = new Cookie(cookieName, cookieValue);
+                // SCIPIO
+                //autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
+                autoLoginCookie.setMaxAge(getAutoLoginCookieMaxAge(request));
+                autoLoginCookie.setDomain(domain);
+                autoLoginCookie.setPath("/");
+                autoLoginCookie.setSecure(true);
+                autoLoginCookie.setHttpOnly(true);
+                response.addCookie(autoLoginCookie);
+            } catch (Exception e) {
+                Debug.logError("Failed to create cookie " + cookieName + " with value " + cookieValue, module);
+                Debug.logError(e, module);
+            }
             return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
         } else {
             return "success";

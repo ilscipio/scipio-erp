@@ -149,7 +149,7 @@ code package.
                 <platform-specific><html><html-template location="component://order/webapp/ordermgr/entry/cart/promotionproducts.ftl"/></html></platform-specific>
             </widgets>
             <fail-widgets>
-                <label style="common-msg-error" text="${uiLabelMap.OrderErrorNoPromotionFoundWithID} [${productPromoId?if_exists}]" />
+                <label style="common-msg-error" text="${uiLabelMap.OrderErrorNoPromotionFoundWithID} [${productPromoId!}]" />
             </fail-widgets>
         </section>
     </screen>

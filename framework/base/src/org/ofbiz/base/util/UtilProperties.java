@@ -35,7 +35,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
@@ -119,6 +118,7 @@ public final class UtilProperties implements Serializable {
     // NOTE: Here even omitting volatile because this does not appear to be critical or one-time information (mainly performance?).
     //private static final Set<String> propertiesNotFound = new HashSet<String>();
     private static Set<String> propertiesNotFound = Collections.emptySet();
+    private static final int propertiesNotFoundMax = 300;
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
      * @param resource The name of the resource - if the properties file is 'webevent.properties', the resource name is 'webevent'
@@ -1692,7 +1692,7 @@ public final class UtilProperties implements Serializable {
         } catch (Exception e) {
             Debug.logInfo("Properties resolver: invalid URL - " + e.getMessage(), module);
         }
-        if (propertiesNotFound.size() <= 300) {
+        if (propertiesNotFound.size() <= propertiesNotFoundMax) {
             // Sanity check - list could get quite large
             // SCIPIO: 2018-07-18: HashSet is not thread-safe, so can't do this.
             // However, also want to avoid locking globally on this, so use an immutable collection copy.
@@ -2042,7 +2042,7 @@ public final class UtilProperties implements Serializable {
      * Added 2017-07-10.
      */
     public static Set<String> getPropertyNamesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
-        return getPropertyNamesWithPrefixSuffix(new HashSet<>(), properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
+        return getPropertyNamesWithPrefixSuffix(new LinkedHashSet<>(), properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
     }
 
     /**
@@ -2158,7 +2158,7 @@ public final class UtilProperties implements Serializable {
      * and end with given suffix, with option to forbid dots in between, in an unordered map.
      */
     public static Map<String, String> getPropertiesWithPrefixSuffix(Properties properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
-        return putPropertiesWithPrefixSuffix(new HashMap<>(), properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
+        return putPropertiesWithPrefixSuffix(new LinkedHashMap<>(), properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
     }
 
     /**
@@ -2166,7 +2166,7 @@ public final class UtilProperties implements Serializable {
      * with option to forbid dots in name, in an unordered map.
      */
     public static Map<String, String> getPropertiesWithPrefix(Properties properties, String prefix, boolean allowDots, boolean returnPrefix) {
-        return putPropertiesWithPrefix(new HashMap<>(), properties, prefix, allowDots, returnPrefix);
+        return putPropertiesWithPrefix(new LinkedHashMap<>(), properties, prefix, allowDots, returnPrefix);
     }
 
     /**
@@ -2174,7 +2174,7 @@ public final class UtilProperties implements Serializable {
      * stripping the prefix and allowing dots in names, in an unordered map.
      */
     public static Map<String, String> getPropertiesWithPrefix(Properties properties, String prefix) {
-        return putPropertiesWithPrefix(new HashMap<>(), properties, prefix, true, false);
+        return putPropertiesWithPrefix(new LinkedHashMap<>(), properties, prefix, true, false);
     }
 
     /**
@@ -2192,7 +2192,7 @@ public final class UtilProperties implements Serializable {
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public static Map<String, String> getPropertiesWithPrefixSuffix(Map<String, ?> properties, String prefix, String suffix, boolean allowDots, boolean returnPrefix, boolean returnSuffix) {
-        return putPropertiesWithPrefixSuffix(new HashMap<>(), properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
+        return putPropertiesWithPrefixSuffix(new LinkedHashMap<>(), properties, prefix, suffix, allowDots, returnPrefix, returnSuffix);
     }
 
     /**
@@ -2201,7 +2201,7 @@ public final class UtilProperties implements Serializable {
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public static Map<String, String> getPropertiesWithPrefix(Map<String, ?> properties, String prefix, boolean allowDots, boolean returnPrefix) {
-        return putPropertiesWithPrefix(new HashMap<>(), properties, prefix, allowDots, returnPrefix);
+        return putPropertiesWithPrefix(new LinkedHashMap<>(), properties, prefix, allowDots, returnPrefix);
     }
 
     /**
@@ -2210,7 +2210,7 @@ public final class UtilProperties implements Serializable {
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public static Map<String, String> getPropertiesWithPrefix(Map<String, ?> properties, String prefix) {
-        return putPropertiesWithPrefix(new HashMap<>(), properties, prefix, true, false);
+        return putPropertiesWithPrefix(new LinkedHashMap<>(), properties, prefix, true, false);
     }
 
     /**
@@ -2242,10 +2242,12 @@ public final class UtilProperties implements Serializable {
                     String value = (String) entry.getValue();
                     Map<String, T> subMap = out.get(id);
                     if (subMap == null) {
-                        subMap = new HashMap<>();
+                        subMap = new LinkedHashMap<>();
+                        subMap.put(subName, (T) value);
                         out.put(id, subMap);
+                    } else {
+                        subMap.put(subName, (T) value);
                     }
-                    subMap.put(subName, (T) value);
                 }
             }
         }
@@ -2287,7 +2289,7 @@ public final class UtilProperties implements Serializable {
      * Added 2018-08-23.
      */
     public static Map<String, String> getPropertiesMatching(Properties properties, Pattern nameRegexp, boolean returnFirstGroup) {
-        return putPropertiesMatching(new HashMap<>(), properties, nameRegexp, returnFirstGroup);
+        return putPropertiesMatching(new LinkedHashMap<>(), properties, nameRegexp, returnFirstGroup);
     }
 
     /**
@@ -2296,7 +2298,7 @@ public final class UtilProperties implements Serializable {
      * Added 2018-08-23.
      */
     public static Map<String, String>  getPropertiesMatching(Properties properties, Pattern nameRegexp) {
-        return putPropertiesMatching(new HashMap<>(), properties, nameRegexp, false);
+        return putPropertiesMatching(new LinkedHashMap<>(), properties, nameRegexp, false);
     }
 
     /**
@@ -2332,7 +2334,7 @@ public final class UtilProperties implements Serializable {
      * with option to return names from the first numbered regexp group.
      */
     public static Map<String, String> getPropertiesMatching(Map<?, ?> properties, Pattern nameRegexp, boolean returnFirstGroup) {
-        return putPropertiesMatching(new HashMap<>(), properties, nameRegexp, returnFirstGroup);
+        return putPropertiesMatching(new LinkedHashMap<>(), properties, nameRegexp, returnFirstGroup);
     }
 
     /**
@@ -2340,7 +2342,7 @@ public final class UtilProperties implements Serializable {
      * The names are unchanged.
      */
     public static Map<String, String>  getPropertiesMatching(Map<?, ?> properties, Pattern nameRegexp) {
-        return putPropertiesMatching(new HashMap<>(), properties, nameRegexp, false);
+        return putPropertiesMatching(new LinkedHashMap<>(), properties, nameRegexp, false);
     }
 
     /**
@@ -2889,7 +2891,7 @@ public final class UtilProperties implements Serializable {
                 return;
             }
             resource = StringUtil.removeSuffix(resource, ".properties", ".xml");
-            Set<String> resources = new HashSet<>();
+            Set<String> resources = new LinkedHashSet<>();
             resources.add(resource);
             List<String> aliases = getResourceNameAliasMap().get(resource);
             if (aliases != null) {
@@ -3203,7 +3205,7 @@ public final class UtilProperties implements Serializable {
     }
 
     private static Map<String, Map<String, String>> getCommandLinePropertyOverrides(boolean log) { // SCIPIO
-        Map<String, Map<String, String>> allProps = new HashMap<>();
+        Map<String, Map<String, String>> allProps = new LinkedHashMap<>();
         Map<String, String> startupServices = UtilProperties.getPropertiesMatching(System.getProperties(),
                 Pattern.compile("^scipio\\.property\\.(.+)"), true);
         for(Map.Entry<String, String> entry : startupServices.entrySet()) {
@@ -3228,7 +3230,7 @@ public final class UtilProperties implements Serializable {
             if (resource.length() > 0 && property.length() > 0) {
                 Map<String, String> resourceProps = allProps.get(resource);
                 if (resourceProps == null) {
-                    resourceProps = new HashMap<>();
+                    resourceProps = new LinkedHashMap<>();
                     resourceProps.put(property, value);
                     allProps.put(resource, resourceProps);
                 } else {
@@ -3311,7 +3313,7 @@ public final class UtilProperties implements Serializable {
         }
 
         static Map<String, List<String>> readResourceNameAliasMap() {
-            Map<String, Set<String>> aliasMap = new HashMap<>();
+            Map<String, Set<String>> aliasMap = new LinkedHashMap<>();
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             Enumeration<URL> resources;
             try {
@@ -3345,7 +3347,7 @@ public final class UtilProperties implements Serializable {
                     }
                 }
             }
-            Map<String, List<String>> optAliasMap = new HashMap<>();
+            Map<String, List<String>> optAliasMap = new LinkedHashMap<>();
             for(Map.Entry<String, Set<String>> entry : aliasMap.entrySet()) {
                 Collection<String> aliases = entry.getValue();
                 if (aliases.size() > 0) {
@@ -3356,7 +3358,7 @@ public final class UtilProperties implements Serializable {
         }
 
         static Map<String, List<String>> makeResourceNameAliasAndReverseAliasMap(Map<String, List<String>> aliasMap) {
-            Map<String, Set<String>> fullMap = new HashMap<>();
+            Map<String, Set<String>> fullMap = new LinkedHashMap<>();
             for(Map.Entry<String, List<String>> entry : aliasMap.entrySet()) {
                 String resource = entry.getKey();
                 List<String> aliases = entry.getValue();
@@ -3378,7 +3380,7 @@ public final class UtilProperties implements Serializable {
                     }
                 }
             }
-            Map<String, List<String>> optAliasMap = new HashMap<>();
+            Map<String, List<String>> optAliasMap = new LinkedHashMap<>();
             for(Map.Entry<String, Set<String>> entry : fullMap.entrySet()) {
                 Collection<String> aliases = entry.getValue();
                 if (aliases.size() > 0) {
@@ -3389,7 +3391,7 @@ public final class UtilProperties implements Serializable {
         }
 
         static Map<String, String> makeVirtualToRealResourceNameMap(Map<String, List<String>> aliasMap) { // SCIPIO
-            Map<String, String> vtorMap = new HashMap<>();
+            Map<String, String> vtorMap = new LinkedHashMap<>();
             for(Map.Entry<String, List<String>> entry : aliasMap.entrySet()) {
                 for(String alias : entry.getValue()) {
                     vtorMap.put(alias, entry.getKey());

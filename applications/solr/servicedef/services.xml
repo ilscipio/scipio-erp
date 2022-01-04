@@ -188,13 +188,13 @@ code package.
         <override mode="IN" name="topics" type="List" optional="true" default-value="[solr]"/>
     </service>
     <service name="addToSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="addToSolr"
-        transaction-timeout="72000">
+        transaction-timeout="72000" priority="90">
         <description>Immediately adds product to solr index by product instance or by productId, manual helper - NOT intended for use with ECAs/SECAs anymore (use registerUpdateToSolr/updateToSolr)</description>
         <implements service="updateToSolr"/>
         <override name="action" default-value="add"/>
     </service>
     <service name="removeFromSolr" engine="java" location="com.ilscipio.scipio.solr.SolrProductSearch" invoke="removeFromSolr" 
-        transaction-timeout="72000">
+        transaction-timeout="72000" priority="90">
         <description>Immediately removes product from solr index by product instance or by productId, manual helper - NOT intended for use with ECAs/SECAs anymore (use registerUpdateToSolr/updateToSolr)</description>
         <implements service="updateToSolr"/>
         <override name="action" default-value="remove"/>

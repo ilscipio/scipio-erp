@@ -10,21 +10,14 @@
  * Its methods may populate the caller's binding.
  */
 
-import java.math.RoundingMode;
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
 
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityUtilProperties;
+import groovy.transform.Field
+import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilDateTime
+import org.ofbiz.entity.util.EntityUtilProperties
+import org.ofbiz.order.order.OrderReadHelper
 
-import org.ofbiz.order.order.OrderReadHelper;
-import org.ofbiz.common.uom.UomWorker;
-import org.ofbiz.common.uom.SimpleUomRateConverter;
-import org.ofbiz.service.engine.GroovyBaseScript
-
-import groovy.transform.Field;
+import java.math.RoundingMode
 
 @Field BigDecimal ZERO = BigDecimal.ZERO;
 @Field int scale = OrderReadHelper.scale;

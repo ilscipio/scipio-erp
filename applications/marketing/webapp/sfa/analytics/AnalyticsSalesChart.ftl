@@ -8,10 +8,9 @@
 <#if sales?has_content> 
     <#if chartType == "line" || chartType == "bar">        
         <@chart type=chartType title=chartTitle library=library xlabel=(xlabel!"") ylabel=(ylabel!"") label1=(label1!"") label2=(label2!"")>
-            <#list mapKeys(sales) as key>
-                <#assign currData = sales[key] />
-                <#if currData?has_content>                          
-                   <@chartdata value=((currData.total)!0) value2=((currData.count)!0) title=key/>
+            <#list sales as key, currData>
+                <#if currData?has_content>
+                   <@chartdata value=((currData.total)!0) value2=((currData.count)!0) title=currData.pos!/>
                 </#if>
             </#list>
         </@chart>

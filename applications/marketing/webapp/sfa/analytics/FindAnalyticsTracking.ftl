@@ -25,7 +25,7 @@
             <option value="">--</option>
             <#list marketingCampaignList as marketingCampaign>
                 <option value="${marketingCampaign.marketingCampaignId}"<#if parameters.marketingCampaignId?has_content && parameters.marketingCampaignId == marketingCampaign.marketingCampaignId> selected="selected"</#if>>
-                    ${marketingCampaign.campaignName}
+                    ${marketingCampaign.campaignName!marketingCampaign.marketingCampaignId}
                 </option>
             </#list>
             <@script>

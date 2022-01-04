@@ -1,15 +1,11 @@
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.GroovyUtil
+import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityJoinOperator
 import org.ofbiz.entity.condition.EntityOperator
-import org.ofbiz.entity.util.EntityUtilProperties;
 
-import org.ofbiz.order.order.OrderReadHelper;
-import org.ofbiz.common.uom.UomWorker;
-import org.ofbiz.common.uom.SimpleUomRateConverter;
+import java.text.SimpleDateFormat
 
 // NOTE: See SalesChart.groovy for more complete comments
 
@@ -42,7 +38,7 @@ Map processResults() {
     asutil.readChartTimeParams();
     asutil.readDateIntervalsFormatter();
         
-    Map resultMap = new LinkedHashMap<String, Object>();
+    Map resultMap = new TreeMap<String, Object>();
     
     // Do main queries
     // FIXME: QUERY AND RESULT PROCESSING NON-FUNCTIONAL

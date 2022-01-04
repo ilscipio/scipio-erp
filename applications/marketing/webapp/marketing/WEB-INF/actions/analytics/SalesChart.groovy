@@ -119,7 +119,7 @@ Map processResult() {
             }
             
             while ((header = orderListIterator.next())) {
-                String date = dateFormatter.format(orderDate);
+                String date = dateFormatter.format(header.orderDate);
                 if (resultMap.containsKey(date)) {
                     Map newMap = resultMap.get(date);
                     BigDecimal total = newMap.get("total");

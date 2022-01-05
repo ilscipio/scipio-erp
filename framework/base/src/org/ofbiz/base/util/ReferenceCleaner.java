@@ -23,6 +23,10 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 
+/**
+ * Phantom/Soft/Weak reference cleaner and queue.
+ * <p>SCIPIO: 2.1.0: Fixed early variable replacement (no volatile needed).</p>
+ */
 public final class ReferenceCleaner {
     //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -48,8 +52,16 @@ public final class ReferenceCleaner {
                 }
                 if (interrupted()) {
                     stopRunning();
-                    cleanerThread = new CleanerThread();
-                    cleanerThread.start();
+                    // SCIPIO: 2.1.0: Fixed early variable replacement
+                    //cleanerThread = new CleanerThread();
+                    //cleanerThread.start();
+                    CleanerThread cleanerThread = new CleanerThread();
+                    try {
+                        cleanerThread.start();
+                    } catch(RuntimeException e) {
+                        throw e;
+                    }
+                    ReferenceCleaner.cleanerThread = cleanerThread;
                 }
             }
         }

@@ -5450,23 +5450,40 @@ TODO: Implement as transform
     </@utilCache>
 
   * Parameters *
-    cacheName          = ((String)) Name of the cache to be used. Example "custom.ftl.filename"
-    key                = ((String)) cache key value
+    cacheName          = ((string)) Name of the cache to be used. Example "custom.ftl.filename"
+    key                = ((string)) cache key value
     sizeLimit          = ((int), default: 0) Max depth, to prevent endless recursions
     maxInMemory        = ((int), default: 0) Max depth, to prevent endless recursions
     expireTime         = ((int), default: 1000) Max depth, to prevent endless recursions
     useSoftReference   = ((boolean), default: true) cache key soft reference
+    keyFormat          = ((string)) Delimited-ID string representing the format of the key.
+                         Each ::-separated ID can then be referred to in index keyFormats.
+                         Example:
+                             "delegator::productId::color"
+                         would be used when passing the following as key parameter:
+                             delegator.delegatorName+"::"+product.productId+"::"+"blue"
+                         NOTE: keyFormat may also be defined in cache.properties which is sometimes preferable.
+    index              = ((map)) Map of index definitions with index names as keys and property maps as values;
+                         Instead of property maps, a single index keyFormat may also be defined as quickhand.
+                         NOTE: index may also be defined in cache.properties which is sometimes preferable.
+                         Properties:
+                         * enabled: (boolean) true/false, implicit true default when a keyFormat is defined
+                         * keyFormat: a subset of the main keyFormat. Example: "delegator::productId"
+                         Indexes are used for fast removals using UtilCache.removeByIndexKey().
+                         Example:
+                              index={"productId":"delegator::productId", "color":{"enabled":true, "keyFormat":"delegator::color"}}
+                         NOTE: It may be acceptable to omit delegator for simple installations.
 -->
-<#macro utilCache cacheName key sizeLimit=0 maxInMemory=0 expireTime=1000 useSoftReference=true>
+<#macro utilCache cacheName key sizeLimit=0 maxInMemory=0 expireTime=1000 useSoftReference=true keyFormat="" index={}>
   <#local useCache = (getPropertyValue("cache","template.ftl.inlinecaching"))!"Y"/>
-  <#local utilCache = Static["org.ofbiz.base.util.cache.UtilCache"].getOrCreateUtilCache(cacheName, sizeLimit, maxInMemory, expireTime, useSoftReference)/>
   <#if "Y" == useCache>
-    <#local cachedCnt = utilCache.get(key)!false>
+    <#local currCache = Static["org.ofbiz.base.util.cache.UtilCache"].getOrCreateUtilCache(cacheName, sizeLimit, maxInMemory, expireTime, useSoftReference, keyFormat, index)/>
+    <#local cachedCnt = currCache.get(key)!false>
     <#if !cachedCnt?is_boolean>
       <#t>${raw(cachedCnt)}<#t>
     <#else>
       <#local nested><#nested></#local>
-      <#local temp = utilCache.put(key, nested)!/>
+      <#local temp = currCache.put(key, nested)!/>
       <#t>${raw(nested)}<#t>
     </#if>
   <#else>

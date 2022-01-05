@@ -34,9 +34,6 @@ public abstract class CacheSoftReference<V> extends ReferenceCleaner.Soft<V> imp
 
     @Override
     public void clear() {
-        if (Debug.verboseOn()) {
-            Debug.logVerbose(new Exception("UtilCache.CacheSoftRef.clear()"), "Clearing UtilCache SoftReference - " + get(), module);
-        }
         super.clear();
     }
 }

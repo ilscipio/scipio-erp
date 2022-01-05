@@ -2518,4 +2518,112 @@ public final class UtilMisc {
     public static <V> Set<V> excludedSet(Collection<? extends V> in, V... excludes) {
         return excludedSet(in, Arrays.asList(excludes));
     }
+
+    /**
+     * Returns the size of the passed collection or map, or IllegalArgumentException.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static int size(Object coll) throws IllegalArgumentException {
+        if (coll instanceof Collection) {
+            return UtilGenerics.<Collection<?>>cast(coll).size();
+        } else if (coll instanceof Map) {
+            return UtilGenerics.<Map<?, Map>>cast(coll).size();
+        } else if (coll == null) {
+            throw new IllegalArgumentException("Missing container for size");
+        } else {
+            throw new IllegalArgumentException("Unknown container type for size: " + coll.getClass().getName());
+        }
+    }
+
+    /**
+     * Returns the size of the passed collection or map, or null instead of exception.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static Integer sizeOrNull(Object coll) {
+        try {
+            return size(coll);
+        } catch(IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Collection returns as-is; map returns key set; otherwise IllegalArgumentException.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static <C extends Collection<?>> C keys(Object coll) throws IllegalArgumentException {
+        if (coll instanceof Collection) {
+            return UtilGenerics.cast(coll);
+        } else if (coll instanceof Map) {
+            return UtilGenerics.cast(UtilGenerics.<Map<?, ?>>cast(coll).keySet());
+        } else if (coll == null) {
+            throw new IllegalArgumentException("Missing container for size");
+        } else {
+            throw new IllegalArgumentException("Unknown container type for size: " + coll.getClass().getName());
+        }
+    }
+
+    /**
+     * Collection returns as-is; map returns key set; otherwise null.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static <C extends Collection<?>> C keysOrNull(Object coll) {
+        try {
+            return keys(coll);
+        } catch(IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Collection returns as-is; map returns key set; otherwise immutable empty.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static <C extends Collection<?>> C keysOrEmpty(Object coll) {
+        try {
+            return keys(coll);
+        } catch(IllegalArgumentException e) {
+            return UtilGenerics.cast(Collections.emptySet());
+        }
+    }
+
+    /**
+     * Collection returns as-is; map returns values; otherwise IllegalArgumentException.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static <C extends Collection<?>> C values(Object coll) throws IllegalArgumentException {
+        if (coll instanceof Collection) {
+            return UtilGenerics.cast(coll);
+        } else if (coll instanceof Map) {
+            return UtilGenerics.cast(UtilGenerics.<Map<?, ?>>cast(coll).values());
+        } else if (coll == null) {
+            throw new IllegalArgumentException("Missing container for size");
+        } else {
+            throw new IllegalArgumentException("Unknown container type for size: " + coll.getClass().getName());
+        }
+    }
+
+    /**
+     * Collection returns as-is; map returns values; otherwise null.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static <C extends Collection<?>> C valuesOrNull(Object coll) {
+        try {
+            return values(coll);
+        } catch(IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Collection returns as-is; map returns values; otherwise immutable empty.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static <C extends Collection<?>> C valuesOrEmpty(Object coll) {
+        try {
+            return values(coll);
+        } catch(IllegalArgumentException e) {
+            return UtilGenerics.cast(Collections.emptySet());
+        }
+    }
 }

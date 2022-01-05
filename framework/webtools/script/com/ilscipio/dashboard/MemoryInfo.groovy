@@ -31,7 +31,9 @@ names.each { cacheName ->
     cache.maxInMemory = UtilFormatOut.formatQuantity(utilCache.getMaxInMemory());
     cache.expireTime = UtilFormatOut.formatQuantity(utilCache.getExpireTime());
     cache.useSoftReference = utilCache.getUseSoftReference().toString();
+    cache.sizeLimit = utilCache.getSizeLimit(); // SCIPIO: 2.1.0: Added
     cache.cacheMemory = utilCache.getSizeInBytes();
+
     totalCacheMemory += cache.cacheMemory;
     cacheList.add(cache);
 }

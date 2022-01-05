@@ -1180,6 +1180,17 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         return splitKey(new ArrayList<>(), key);
     }
 
+    public static Object getCacheElement(String cacheName, String key) {
+        try{
+            UtilCache<?, ?> cacheTable = utilCacheTable.get(cacheName);
+            if(UtilValidate.isNotEmpty(cacheTable)){
+                return cacheTable.get(key);
+            }
+        }catch(Exception e){
+        }
+        return null;
+    }
+
     public static void clearCachesThatStartWith(String cacheNamePrefix) {
         for (Map.Entry<String, UtilCache<?, ?>> entry : utilCacheTable.entrySet()) {
             String name = entry.getKey();

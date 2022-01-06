@@ -610,7 +610,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
          */
         public Builder<K, V> fromProperties() {
             Collection<String> propNames = this.propNames();
-            return fromProperties((propNames != null) ? propNames : List.of(baseNameOrDefault()));
+            return fromProperties((propNames != null) ? propNames : UtilMisc.toList(baseNameOrDefault()));
         }
 
         /**

@@ -179,7 +179,7 @@ public class SolrDocBuilder {
     }
 
     protected BigDecimal scaleCurrency(BigDecimal amount) {
-        return amount.setScale(2, RoundingMode.HALF_UP);
+        return (amount != null) ? amount.setScale(2, RoundingMode.HALF_UP) : null;
     }
 
     protected void addLocalizedContentStringMapToDoc(Map<String, Object> doc, String keyPrefix, String defaultKey, Map<String, String> contentMap,
@@ -928,30 +928,46 @@ public class SolrDocBuilder {
 
         public void populateDocPriceStandard(Map<String, Object> doc) throws GeneralException {
             Map<String, Object> priceMap = getStdPriceMap();
-            if (priceMap.get("listPrice") != null) {
-                String listPrice = scaleCurrency((BigDecimal) priceMap.get("listPrice")).toString();
-                doc.put("listPrice", listPrice);
+
+            BigDecimal defaultPrice = scaleCurrency((BigDecimal) priceMap.get("defaultPrice"));
+            if (defaultPrice != null) {
+                doc.put("defaultPrice_c", defaultPrice + "," + getCurrencyUomId());
+                doc.put("defaultPrice", defaultPrice.toString()); // Legacy field
             }
-            if (priceMap.get("defaultPrice") != null) {
-                String defaultPrice = scaleCurrency((BigDecimal) priceMap.get("defaultPrice")).toString();
-                if (defaultPrice != null) {
-                    doc.put("defaultPrice", defaultPrice);
-                }
+
+            BigDecimal listPrice = scaleCurrency((BigDecimal) priceMap.get("listPrice"));
+            if (listPrice != null) {
+                doc.put("listPrice_c", listPrice + "," + getCurrencyUomId());
+                doc.put("listPrice", listPrice.toString()); // Legacy field
+            }
+
+            BigDecimal promoPrice = scaleCurrency((BigDecimal) priceMap.get("promoPrice"));
+            if (promoPrice != null) {
+                doc.put("promoPrice_c", promoPrice + "," + getCurrencyUomId());
+            }
+
+            BigDecimal competitivePrice = scaleCurrency((BigDecimal) priceMap.get("promoPrice"));
+            if (competitivePrice != null) {
+                doc.put("competitivePrice_c", competitivePrice + "," + getCurrencyUomId());
             }
         }
 
         public void populateDocPriceConfigurable(Map<String, Object> doc) throws GeneralException {
             ProductConfigWrapper pcw = getCfgPriceWrapper();
-            BigDecimal listPrice = pcw.getTotalListPrice();
+
+            BigDecimal defaultPrice = scaleCurrency(pcw.getTotalPrice());
+            if (defaultPrice != null) {
+                doc.put("defaultPrice_c", defaultPrice + "," + getCurrencyUomId());
+                doc.put("defaultPrice", defaultPrice.toString()); // Legacy field
+            }
+
+            BigDecimal listPrice = scaleCurrency(pcw.getTotalListPrice());
             // 2017-08-22: listPrice is NEVER null here - getTotalListPrice returns 0 if there was no list price - and
             // this creates 0$ list prices we can't validate in queries; this logic requires an extra check + ofbiz patch
             //if (listPrice != null) {
             if (listPrice != null && ((listPrice.compareTo(BigDecimal.ZERO) != 0) || pcw.hasOriginalListPrice())) {
-                doc.put("listPrice", scaleCurrency(listPrice).toString());
-            }
-            BigDecimal defaultPrice = pcw.getTotalPrice();
-            if (defaultPrice != null) {
-                doc.put("defaultPrice", scaleCurrency(defaultPrice).toString());
+                doc.put("listPrice_c", listPrice + "," + getCurrencyUomId());
+                doc.put("listPrice", listPrice.toString()); // Legacy field
             }
         }
 

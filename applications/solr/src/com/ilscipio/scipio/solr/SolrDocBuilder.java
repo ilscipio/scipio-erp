@@ -950,6 +950,16 @@ public class SolrDocBuilder {
             if (competitivePrice != null) {
                 doc.put("competitivePrice_c", competitivePrice + "," + getCurrencyUomId());
             }
+
+            BigDecimal basePrice = scaleCurrency((BigDecimal) priceMap.get("basePrice"));
+            if (promoPrice != null) {
+                doc.put("basePrice_c", basePrice + "," + getCurrencyUomId());
+            }
+
+            BigDecimal price = scaleCurrency((BigDecimal) priceMap.get("price"));
+            if (price != null) {
+                doc.put("price_c", price + "," + getCurrencyUomId());
+            }
         }
 
         public void populateDocPriceConfigurable(Map<String, Object> doc) throws GeneralException {

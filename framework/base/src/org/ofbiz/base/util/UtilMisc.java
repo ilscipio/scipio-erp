@@ -310,9 +310,15 @@ public final class UtilMisc {
         if (c instanceof Set<?>) {
             theSet = (Set<T>) c;
         } else {
+            // SCIPIO: 2.1.0: Fixed erroneous modification of input collection
             theSet = new LinkedHashSet<>();
-            c.remove(null);
-            theSet.addAll(c);
+            //c.remove(null);
+            //theSet.addAll(c);
+            for(T val : c) {
+                if (val != null) {
+                    theSet.add(val);
+                }
+            }
         }
         return theSet;
     }
@@ -349,34 +355,23 @@ public final class UtilMisc {
         if (data == null) {
             return null;
         }
-        Set<T> theSet = new LinkedHashSet<>();
-        for (T elem : data) {
-            theSet.add(elem);
-        }
-        return theSet;
+        return new LinkedHashSet<>(Arrays.asList(data)); // SCIPIO: 2.1.0: Optimized
     }
 
     public static <T> Set<T> toSet(Collection<T> collection) {
         if (collection == null) {
             return null;
-        }
-        if (collection instanceof Set<?>) {
+        } else  if (collection instanceof Set<?>) {
             return (Set<T>) collection;
         }
-        Set<T> theSet = new LinkedHashSet<>();
-        theSet.addAll(collection);
-        return theSet;
+        return new LinkedHashSet<>(collection); // SCIPIO: 2.1.0: Optimized
     }
 
     public static <T> Set<T> toSetArray(T[] data) {
         if (data == null) {
             return null;
         }
-        Set<T> set = new LinkedHashSet<>();
-        for (T value: data) {
-            set.add(value);
-        }
-        return set;
+        return new LinkedHashSet<>(Arrays.asList(data)); // SCIPIO: 2.1.0: Optimized
     }
 
     /**

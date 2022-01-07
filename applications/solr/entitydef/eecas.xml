@@ -30,17 +30,6 @@ xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entity-eca.xsd">
         <action service="scheduleProductIndexing" mode="sync" value-attr="instance"/>
     </eca>
     <eca entity="ProductPrice" operation="create-store-remove" event="return">
-        <condition operator="equals" field-name="productPriceTypeId" value="LIST_PRICE"/>
-        <set field-name="updateVariants" value="true"/>
-        <action service="scheduleProductIndexing" mode="sync" value-attr="instance"/>
-    </eca>
-    <eca entity="ProductPrice" operation="create-store-remove" event="return">
-        <condition operator="equals" field-name="productPriceTypeId" value="DEFAULT_PRICE"/>
-        <set field-name="updateVariants" value="true"/>
-        <action service="scheduleProductIndexing" mode="sync" value-attr="instance"/>
-    </eca>
-    <eca entity="ProductPrice" operation="create-store-remove" event="return">
-        <condition operator="equals" field-name="productPriceTypeId" value="DEFAULT_PRICE"/>
         <set field-name="updateVariants" value="true"/>
         <action service="scheduleProductIndexing" mode="sync" value-attr="instance"/>
     </eca>

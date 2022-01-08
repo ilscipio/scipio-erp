@@ -21318,6 +21318,10 @@
         <value xml:lang="zh">相关内容信息列表</value>
         <value xml:lang="zh-TW">相關內容資訊清單</value>
     </property>
+    <property key="ProductListed">
+        <value xml:lang="de">Aufgeführt</value>
+        <value xml:lang="en">Listed</value>
+    </property>
     <property key="ProductListFacilityLocation">
         <value xml:lang="de">Liste Einrichtungsorte</value>
         <value xml:lang="en">List Warehouse Location</value>
@@ -28958,6 +28962,10 @@
     <property key="ProductRunSubscriptionExpiredServiceCalledSuccessfully">
         <value xml:lang="de">runSubscriptionExpired Service erfolgreich für subscriptionId ${subscriptionId} ausgeführt</value>
         <value xml:lang="en">runSubscriptionExpired service called successfully with subscriptionId ${subscriptionId}</value>
+    </property>
+    <property key="ProductSearchable">
+        <value xml:lang="de">Durchsuchbar</value>
+        <value xml:lang="en">Searchable</value>
     </property>
     <property key="ProductSRCH">
         <value xml:lang="de">Suche</value>

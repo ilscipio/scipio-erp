@@ -131,6 +131,8 @@ code package.
             <@field type="checkbox" name="returnable" label=uiLabelMap.ProductReturnable currentValue=(productParams.returnable!product.returnable!'N') value="Y" altValue="N" />
             <@field type="checkbox" name="includeInPromotions" label=uiLabelMap.ProductIncludePromotions currentValue=(productParams.includeInPromotions!product.includeInPromotions!'N') value="Y" altValue="N" />
             <@field type="checkbox" name="taxable" label=uiLabelMap.ProductTaxable currentValue=(productParams.taxable!product.taxable!'N') value="Y" altValue="N" />
+            <@field type="checkbox" name="listed" label=uiLabelMap.ProductListed currentValue=(productParams.listed!product.listed!'Y') value="Y" altValue="N" />
+            <@field type="checkbox" name="searchable" label=uiLabelMap.ProductSearchable currentValue=(productParams.searchable!product.searchable!'Y') value="Y" altValue="N" />
         </@cell>
     </@row>
     <@row>

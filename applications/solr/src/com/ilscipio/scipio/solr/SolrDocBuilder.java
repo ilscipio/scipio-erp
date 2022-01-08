@@ -909,6 +909,9 @@ public class SolrDocBuilder {
             if (isRequireAmount()) {
                 doc.put("requireAmount_b", true);
             }
+            GenericValue product = getProduct();
+            doc.put("listed_b", !Boolean.FALSE.equals(product.getBoolean("listed")));
+            doc.put("searchable_b", !Boolean.FALSE.equals(product.getBoolean("searchable")));
         }
 
         public void populateDocTypeFeatures(Map<String, Object> doc) throws GeneralException {

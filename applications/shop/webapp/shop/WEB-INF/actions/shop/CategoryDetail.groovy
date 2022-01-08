@@ -168,12 +168,14 @@ try {
         }
     }
 
-    if(lookupCategory){
+    if (lookupCategory) {
 
         viewProductCategoryId = CatalogWorker.getCatalogViewAllowCategoryId(delegator, currentCatalogId);
         if (viewProductCategoryId) {
             catArgs.queryFilters.add("cat:"+SolrExprUtil.escapeTermFull("0/"+viewProductCategoryId));
         }
+
+        catArgs.queryFilters.add("-listed_b:false"); // SCIPIO: 2.1.0: Added
 
         // get the product category & members
         result = dispatcher.runSync("solrProductsSearch",

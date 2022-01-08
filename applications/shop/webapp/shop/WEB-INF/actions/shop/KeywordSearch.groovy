@@ -496,6 +496,8 @@ if (!errorOccurred && ("Y".equals(kwsArgs.noConditionFind) || kwsArgs.searchStri
             kwsArgs.searchFilters.add("+cat:"+SolrExprUtil.escapeTermFull("0/"+viewProductCategoryId));
         }
 
+        kwsArgs.searchFilters.add("-searchable_b:false"); // SCIPIO: 2.1.0: Added
+
         // TODO: REVIEW: added this initially, but upon further review the +catalog: filter above should be sufficient,
         // AS LONG AS catalog is not accepted from request parameters (incl. security)
 //        if (kwsArgs.searchProductStoreId != "NONE") {

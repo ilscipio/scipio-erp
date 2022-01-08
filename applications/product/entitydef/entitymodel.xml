@@ -2971,6 +2971,8 @@ code package.
       <field name="defaultShipmentBoxTypeId" type="id"></field>
       <field name="lotIdFilledIn" type="long-varchar"><description>Indicate if the lotId must be informed</description></field>
       <field name="orderDecimalQuantity" type="indicator"><description>use to indicate if decimal quantity can be ordered for this product. Default value is Y</description></field>
+      <field name="listed" type="indicator"><description>Whether to include product in public category listings, otherwise considered URL-only, default Y (SCIPIO)</description></field>
+      <field name="searchable" type="indicator"><description>Whether to include product in public searches, otherwise considered URL-only, default Y (SCIPIO)</description></field>
       <prim-key field="productId"/>
       <relation type="one" fk-name="PROD_TYPE" rel-entity-name="ProductType">
         <key-map field-name="productTypeId"/>

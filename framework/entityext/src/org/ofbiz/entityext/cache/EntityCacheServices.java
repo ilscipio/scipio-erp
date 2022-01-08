@@ -47,6 +47,7 @@ public class EntityCacheServices implements DistributedCacheClear {
 
     private static final Map<String, List<String>> CACHING_EXCLUDE_NAMES = Collections.unmodifiableMap(UtilMisc.toMap(
             "system-essential", UtilMisc.unmodifiableArrayList(
+                    "entity.EcaReaders",
                     "service.ModelServiceMapByModel", "service.ServiceConfig", "service.ServiceECAs",
                     "service.ServiceGroups", "service.ModelServiceMapByDispatcher")
     ));

@@ -12,7 +12,7 @@
             </#list> 
         </#if>
 
-        <#if lookupGroup?has_content && lookupParty.logoImageUrl?has_content>
+        <#if lookupGroup?has_content && lookupGroup.logoImageUrl?has_content>
                 <@tr>
                   <@td class="${styles.grid_large!}2">${uiLabelMap.CommonOrganizationLogo}</@td>
                   <@td colspan="3"><@img src=(lookupParty.logoImageUrl!) height="150px" width="100px" type="contain"/></@td>

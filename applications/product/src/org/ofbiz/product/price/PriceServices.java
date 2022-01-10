@@ -585,6 +585,13 @@ public class PriceServices {
             }
         }
 
+        // SCIPIO: 2.1.0: Always set price field
+        if (result.get("price") == null) {
+            BigDecimal finalDefaultPrice = (BigDecimal) result.get("defaultPrice");
+            if (finalDefaultPrice != null) {
+                result.put("price", finalDefaultPrice);
+            }
+        }
         return result;
     }
 

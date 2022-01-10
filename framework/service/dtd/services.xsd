@@ -179,6 +179,21 @@ under the License.
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
+        <xs:attribute name="log-trace-exclude-dispatcher-regex" type="xs:string">
+            <xs:annotation>
+                <xs:documentation>
+                    If set as a regular expression, the trace log message in particular
+                    "Sync service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds"
+                    is filtered out based on the localName which is the dispatcher name (JMSDispatcher, entity-default, default, etc.).
+                    This uses Matcher.matches() meaning ^ and $ are not necessary.
+                    ex:
+                        log-trace-exclude-dispatcher-regex="JMSDispatcher"
+                        log-trace-exclude-dispatcher-regex="entity-.*"
+                        log-trace-exclude-dispatcher-regex=".*"
+                    SCIPIO: 2.1.0: Added attribute.
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
         <xs:attribute name="priority"><!-- default="50" -->
             <xs:annotation>
                 <xs:documentation>

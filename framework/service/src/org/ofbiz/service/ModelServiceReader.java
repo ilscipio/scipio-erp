@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -207,6 +208,11 @@ public class ModelServiceReader implements Serializable {
             ecaLogLevel = "true".equalsIgnoreCase(serviceElement.getAttribute("debug")) ? LogLevel.DEBUG : LogLevel.NORMAL;
         }
         service.ecaLogLevel = ecaLogLevel;
+
+        String logTraceExcludeDispatcherRegex = serviceElement.getAttribute("log-trace-exclude-dispatcher-regex");
+        if (!logTraceExcludeDispatcherRegex.isEmpty()) {
+            service.logTraceExcludeDispatcherRegex = Pattern.compile(logTraceExcludeDispatcherRegex);
+        }
 
         // these default to true; if anything but true, make false
         service.auth = "true".equalsIgnoreCase(serviceElement.getAttribute("auth"));

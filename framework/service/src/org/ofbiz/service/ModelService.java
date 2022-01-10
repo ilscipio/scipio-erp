@@ -24,6 +24,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.wsdl.Binding;
@@ -262,13 +263,22 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public Metrics metrics = null;
 
     /**
-     * SCIPIO: Defines custom service properties, which can be interpreted by the system or custom
+     * Defines custom service properties, which can be interpreted by the system or custom
      * code as needed.
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
-    protected Map<String, Object> properties = Collections.emptyMap(); 
-    
-    String relativeDefinitionLocation; // SCIPIO
+    protected Map<String, Object> properties = Collections.emptyMap();
 
+    /**
+     * Saved relative definition location, as opposed to absolute.
+     * <p>SCIPIO: 2.x.x: Added.</p>
+     */
+    String relativeDefinitionLocation;
+
+    /**
+     * Logical log level for services.
+     * <p>SCIPIO: 2.x.x: Added.</p>
+     */
     public enum LogLevel { // SCIPIO
         DEBUG,
         NORMAL,
@@ -290,30 +300,41 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
     
     /**
-     * SCIPIO: If true, avoids optional logging.
+     * If true, avoids optional logging.
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
     LogLevel logLevel = LogLevel.NORMAL;
 
     /**
-     * SCIPIO: Log level for when this service is called from ECAs.
+     * Log level for when this service is called from ECAs.
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
     LogLevel ecaLogLevel = LogLevel.NORMAL;
-    
+
+    /**
+     * Filters out some trace logging based on dispatcher name.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    Pattern logTraceExcludeDispatcherRegex;
+
     private transient List<ModelParam> typeConvertParamList; // SCIPIO
 
     /**
-     * SCIPIO: The last service this one overrides (which may override one before it).
+     * The last service this one overrides (which may override one before it).
      * This is now used for both debugging and to implement self interfaces.
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
     ModelService overriddenService; // SCIPIO: This is always null unless
 
     /**
-     * SCIPIO: Service priority for async and job services.
+     * Service priority for async and job services.
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
     Long priority;
 
     /**
-     * SCIPIO: Default job pool when service invoked as persistent job, when not overridden by caller.
+     * Default job pool when service invoked as persistent job, when not overridden by caller.
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
     String jobPoolPersist;
 
@@ -329,7 +350,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      */
     Object javaServiceReflectInfo;
 
-    public static class Access implements Serializable { // SCIPIO
+    /**
+     * Access modifier for publicly-reachable interfaces.
+     * <p>SCIPIO: 2.x.x: Added.</p>
+     */
+    public static class Access implements Serializable {
         public static final Access PUBLIC = new Access("public");
         public static final Access INTERNAL = new Access("internal");
 
@@ -409,6 +434,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         this.relativeDefinitionLocation = model.relativeDefinitionLocation;
         this.logLevel = model.logLevel;
         this.ecaLogLevel = model.ecaLogLevel;
+        this.logTraceExcludeDispatcherRegex = model.logTraceExcludeDispatcherRegex;
         this.typeConvertParamList = model.typeConvertParamList;
         this.priority = model.priority;
         this.jobPoolPersist = model.jobPoolPersist;
@@ -2507,10 +2533,26 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     /**
-     * SCIPIO: Returns configured ECA logging level (default.
+     * SCIPIO: Returns configured ECA logging level.
      */
     public LogLevel getEcaLogLevel() {
         return ecaLogLevel;
+    }
+
+    /**
+     * Filters out some trace logging based on dispatcher name.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public Pattern getLogTraceExcludeDispatcherRegex() {
+        return logTraceExcludeDispatcherRegex;
+    }
+
+    /**
+     * Filters out some trace logging based on dispatcher name.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public final boolean matchesLogTraceExcludeDispatcherRegex(String text) {
+        return logTraceExcludeDispatcherRegex != null && logTraceExcludeDispatcherRegex.matcher(text).matches();
     }
 
     /**

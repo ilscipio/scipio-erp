@@ -635,7 +635,7 @@ public class ServiceDispatcher {
         long showSlowServiceThreshold = UtilProperties.getPropertyAsLong("service", "showSlowServiceThreshold", 1000);
 
         if (Debug.timingOn() && timeToRun > showServiceDurationThreshold) {
-            if (!modelService.isQuiet()) { // SCIPIO: quiet service check
+            if (!modelService.isQuiet() && !modelService.matchesLogTraceExcludeDispatcherRegex(localName)) { // SCIPIO: quiet service check
                 Debug.logTiming("Sync service [" + localName + "/" + modelService.name + "] finished in [" + timeToRun + "] milliseconds", module);
             }
         } else if (Debug.infoOn() && timeToRun > showSlowServiceThreshold) {

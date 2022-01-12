@@ -824,19 +824,57 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
         throw new IllegalArgumentException("getDuration could not map the object '" + obj.toString() + "' to TimeDuration type, incompatible object type: " + obj.getClass().getName());
     }
 
+    /**
+     * Returns the named field as string, or null.
+     */
     public String getString(String name) {
         Object object = get(name);
         return object == null ? null : object.toString();
     }
 
-    public String getString(String name, Locale locale) { // SCIPIO: 2019-03-07: Added overload
+    /**
+     * Returns the named field as string in the given locale, or null.
+     * <p>SCIPIO: 2019-03-07: Added overload.</p>
+     */
+    public String getString(String name, Locale locale) {
         Object object = get(name, locale);
         return object == null ? null : object.toString();
     }
 
-    public String getString(String name, String resource, Locale locale) { // SCIPIO: 2019-03-07: Added overload
+    /**
+     * Returns the named field as string in the given locale, or null.
+     * <p>SCIPIO: 2019-03-07: Added overload.</p>
+     */
+    public String getString(String name, String resource, Locale locale) {
         Object object = get(name, resource, locale);
         return object == null ? null : object.toString();
+    }
+
+    /**
+     * Returns the named field as string, or empty string if unset or null.
+     * <p>SCIPIO: 2.1.0: Added helper.</p>
+     */
+    public String getStringOrEmpty(String name) {
+        Object object = get(name);
+        return object == null ? "" : object.toString();
+    }
+
+    /**
+     * Returns the named field as string in the given locale, or empty string if unset or null.
+     * <p>SCIPIO: 2.1.0: Added helper.</p>
+     */
+    public String getStringOrEmpty(String name, Locale locale) {
+        Object object = get(name, locale);
+        return object == null ? "" : object.toString();
+    }
+
+    /**
+     * Returns the named field as string in the given locale, or empty string if unset or null.
+     * <p>SCIPIO: 2.1.0: Added helper.</p>
+     */
+    public String getStringOrEmpty(String name, String resource, Locale locale) {
+        Object object = get(name, resource, locale);
+        return object == null ? "" : object.toString();
     }
 
     public java.sql.Timestamp getTimestamp(String name) {

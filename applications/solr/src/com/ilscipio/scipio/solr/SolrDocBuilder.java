@@ -1411,7 +1411,7 @@ public class SolrDocBuilder {
             Map<String, Object> stdPriceMap = this.stdPriceMap;
             if (stdPriceMap == null && !isConfigurableProduct()) {
                 stdPriceMap = getProductData().getProductStandardPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
-                        getProductStore(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
+                        getProductStore(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache(), getStdPriceMapOvrdFields());
                 if (!ServiceUtil.isSuccess(stdPriceMap)) {
                     Debug.logError("getProductStandardPrices: failed to get product prices for product '"
                             + getProduct().get("productId") + "': " + ServiceUtil.getErrorMessage(stdPriceMap), module);
@@ -1419,6 +1419,10 @@ public class SolrDocBuilder {
                 this.stdPriceMap = stdPriceMap;
             }
             return stdPriceMap;
+        }
+
+        public Map<String, Object> getStdPriceMapOvrdFields() throws GeneralException {
+            return Collections.emptyMap();
         }
 
         public ProductConfigWrapper getCfgPriceWrapper() throws GeneralException {

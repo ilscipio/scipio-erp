@@ -311,6 +311,17 @@ public class ShoppingCartServices {
                 if ("FIN_ACCOUNT".equals(paymentId)) {
                     cpi.finAccountId = opp.getString("finAccountId");
                 }
+                // SCIPIO: 2.1.0: We must recover manualRefNum & securityCode while loading cart from order
+                if (UtilValidate.isNotEmpty(opp.getString("manualRefNum"))) {
+                    String[] refNum = new String[2];
+                    refNum[0] = opp.getString("manualRefNum");
+                    refNum[1] = opp.getString("manualAuthCode");
+                    cpi.refNum = refNum;
+                }
+                if (UtilValidate.isNotEmpty(opp.getString("securityCode"))) {
+                    cpi.securityCode = opp.getString("securityCode");
+                }
+
                 // set the billing account and amount
                 cart.setBillingAccount(orderHeader.getString("billingAccountId"), orh.getBillingAccountMaxAmount());
             }

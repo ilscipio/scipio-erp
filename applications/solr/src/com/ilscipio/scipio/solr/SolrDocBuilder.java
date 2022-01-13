@@ -1422,7 +1422,9 @@ public class SolrDocBuilder {
         }
 
         public Map<String, Object> getStdPriceMapOvrdFields() throws GeneralException {
-            return Collections.emptyMap();
+            // TODO: REVIEW: Promo prices generally require store and catalog, so for now we simply pass the determined
+            //  defaults for the product, even though these are not always appropriate - they are currently mainly used for sorting
+            return UtilMisc.toMap("productStoreId", getProductStoreId(), "prodCatalogId", getCatalogId());
         }
 
         public ProductConfigWrapper getCfgPriceWrapper() throws GeneralException {

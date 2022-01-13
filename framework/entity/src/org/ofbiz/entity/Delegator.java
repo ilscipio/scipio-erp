@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.entity.cache.Cache;
@@ -59,7 +62,7 @@ public interface Delegator {
      * Returns the named delegator from central factory.
      * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
      */
-    static Delegator getDelegator(String delegatorName) {
+    static Delegator delegator(String delegatorName) {
         return DelegatorFactory.getDelegator(delegatorName);
     }
 
@@ -67,9 +70,76 @@ public interface Delegator {
      * Returns the default delegator from central factory.
      * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
      */
-    static Delegator getDefaultDelegator() {
+    static Delegator defaultDelegator() {
         return DelegatorFactory.getDefaultDelegator();
     }
+
+    /**
+     * Returns the delegator from map context, or the default delegator.
+     * <p>NOTE: This explicitly does not check the "request" key for HttpServletRequest because in every case
+     * "request" is set, "delegator" should always be set by the system, otherwise it is considered a (system) error.
+     * This is an abstracted accessor method.</p>
+     * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
+     */
+    static Delegator delegator(Map<String, ?> context) {
+        Delegator delegator;
+        if (context != null) {
+            delegator = (Delegator) context.get("delegator");
+            if (delegator != null) {
+                return delegator;
+            }
+        }
+        return getDefaultDelegator();
+    }
+
+    /**
+     * Returns the most specific delegator from request attributes, session attributes, servlet context attributes
+     * or the default delegator.
+     * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
+     */
+    static Delegator delegator(HttpServletRequest request) {
+        Delegator delegator;
+        if (request != null) {
+            delegator = (Delegator) request.getAttribute("delegator");
+            if (delegator != null) {
+                return delegator;
+            }
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                delegator = (Delegator) session.getAttribute("delegator");
+                if (delegator != null) {
+                    return delegator;
+                }
+            }
+            ServletContext servletContext = request.getServletContext();
+            delegator = (Delegator) servletContext.getAttribute("delegator");
+            if (delegator != null) {
+                return delegator;
+            }
+        }
+        return getDefaultDelegator();
+    }
+
+    /**
+     * Returns the named delegator from central factory.
+     * @deprecated Use {@link #delegator(String)}
+     * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
+     */
+    @Deprecated
+    static Delegator getDelegator(String delegatorName) {
+        return delegator(delegatorName);
+    }
+
+    /**
+     * Returns the default delegator from central factory.
+     * @deprecated Use {@link #defaultDelegator()}
+     * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
+     */
+    @Deprecated
+    static Delegator getDefaultDelegator() {
+        return defaultDelegator();
+    }
+
 
     void clearAllCacheLinesByDummyPK(Collection<GenericPK> dummyPKs);
 

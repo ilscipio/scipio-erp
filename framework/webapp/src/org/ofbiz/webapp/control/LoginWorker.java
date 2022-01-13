@@ -53,6 +53,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.KeyStoreUtil;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.StringUtil.StringWrapper;
+import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
@@ -98,6 +99,12 @@ public class LoginWorker {
 
     /** This Map is keyed by the randomly generated externalLoginKey and the value is a UserLogin GenericValue object */
     public static final Map<String, GenericValue> externalLoginKeys = new ConcurrentHashMap<String, GenericValue>();
+
+    /**
+     * If true, autoLogin userLoginId cookie value supports non-URL encoded legacy mode (slower).
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    private static final boolean autoLoginCookieAllowPlainValue = UtilProperties.getPropertyAsBoolean("security", "security.autoLogin.cookie.allowPlainValue", true);
 
     public static StringWrapper makeLoginUrl(PageContext pageContext) {
         return makeLoginUrl(pageContext, "checkLogin");
@@ -830,25 +837,27 @@ public class LoginWorker {
             String cookieName = getAutoLoginCookieName(request);
             // SCIPIO: 2.1.0: newer versions of Tomcat follow RFC6265 so no spaces and other chars are allowed.
             // For now just trim userLoginId to avoid common mistakes entering user names.
-            String cookieValue = userLogin.getString("userLoginId").trim();
-            try {
-                Cookie autoLoginCookie = new Cookie(cookieName, cookieValue);
-                // SCIPIO
-                //autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
-                autoLoginCookie.setMaxAge(getAutoLoginCookieMaxAge(request));
-                autoLoginCookie.setDomain(domain);
-                autoLoginCookie.setPath("/");
-                autoLoginCookie.setSecure(true);
-                autoLoginCookie.setHttpOnly(true);
-                response.addCookie(autoLoginCookie);
-            } catch (Exception e) {
-                Debug.logError("Failed to create cookie " + cookieName + " with value " + cookieValue, module);
-                Debug.logError(e, module);
+            String cookieValue = userLogin.getStringOrEmpty("userLoginId").trim();
+            if (!cookieValue.isEmpty()) {
+                try {
+                    // SCIPIO: 2.1.0: Value must be URL-encoded to support UTF-8
+                    Cookie autoLoginCookie = new Cookie(cookieName, UtilCodec.getUrlEncoder().encode(cookieValue));
+                    // SCIPIO
+                    //autoLoginCookie.setMaxAge(60 * 60 * 24 * 365);
+                    autoLoginCookie.setMaxAge(getAutoLoginCookieMaxAge(request));
+                    autoLoginCookie.setDomain(domain);
+                    autoLoginCookie.setPath("/");
+                    autoLoginCookie.setSecure(true);
+                    autoLoginCookie.setHttpOnly(true);
+                    response.addCookie(autoLoginCookie);
+                } catch (Exception e) {
+                    Debug.logError("Failed to create cookie " + cookieName + " with value " + cookieValue, module);
+                    Debug.logError(e, module);
+                }
+                return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
             }
-            return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
-        } else {
-            return "success";
         }
+        return "success";
     }
 
     protected static String getAutoLoginCookieName(HttpServletRequest request) {
@@ -897,12 +906,37 @@ public class LoginWorker {
         String autoUserLoginId = null;
         Cookie[] cookies = request.getCookies();
         if (Debug.verboseOn()) Debug.logVerbose("Cookies:" + Arrays.toString(cookies), module); // SCIPIO: Fixed array print
+        String autoLoginCookieName = getAutoLoginCookieName(request);
         if (cookies != null) {
             for (Cookie cookie: cookies) {
-                if (cookie.getName().equals(getAutoLoginCookieName(request))) {
+                if (cookie.getName().equals(autoLoginCookieName)) {
                     autoUserLoginId = cookie.getValue();
                     break;
                 }
+            }
+        }
+        // SCIPIO: 2.1.0: Value must be URL-encoded to support UTF-8
+        if (UtilValidate.isNotEmpty(autoUserLoginId)) {
+            Delegator delegator = Delegator.delegator(request);
+            if (delegator != null) {
+                String decodedId = null;
+                try {
+                    decodedId = UtilCodec.getUrlDecoder().decode(autoUserLoginId);
+                } catch(Exception e) {
+                }
+                if (autoLoginCookieAllowPlainValue) {
+                    // For compatibility with old cookies, support a slower compatibility mode
+                    if (UtilValidate.isNotEmpty(decodedId) &&
+                            delegator.from("UserLogin").where("userLoginId", decodedId).queryCountSafe() > 0) {
+                        return decodedId;
+                    } else if (delegator.from("UserLogin").where("userLoginId", autoUserLoginId).queryCountSafe() > 0) {
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("getAutoUserLoginId: using legacy non-URL-encoded value for cookie [" + autoLoginCookieName + "]", module);
+                        }
+                        return autoUserLoginId;
+                    }
+                }
+                return decodedId;
             }
         }
         return autoUserLoginId;
@@ -964,7 +998,8 @@ public class LoginWorker {
             autoLoginUserId = getAutoUserLoginId(request);
         }
         if (autoLoginUserId != null) {
-            Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), autoLoginUserId);
+            // SCIPIO: 2.1.0: Value must be URL-encoded to support UTF-8
+            Cookie autoLoginCookie = new Cookie(getAutoLoginCookieName(request), UtilCodec.getUrlEncoder().encode(autoLoginUserId));
             autoLoginCookie.setMaxAge(0);
             autoLoginCookie.setPath("/");
             response.addCookie(autoLoginCookie);

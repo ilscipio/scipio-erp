@@ -14,6 +14,7 @@
 import groovy.transform.Field
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilDateTime
+import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.entity.util.EntityUtilProperties
 import org.ofbiz.order.order.OrderReadHelper
 
@@ -22,6 +23,7 @@ import java.math.RoundingMode
 @Field BigDecimal ZERO = BigDecimal.ZERO;
 @Field int scale = OrderReadHelper.scale;
 @Field RoundingMode rounding = OrderReadHelper.rounding;
+@Field List<String> allowedOrderStatus = UtilMisc.toList("ORDER_APPROVED", "ORDER_SENT", "ORDER_COMPLETED")
 
 //public AnalyticsScriptUtil(Binding binding) {
 //    this.setBinding(binding);
@@ -173,6 +175,20 @@ def readDateIntervalsFormatter() {
     dateFormatter = dateIntervals.getDateFormatter();
 }
 
+def readOrderStatusParams() {
+    statusIds = [parameters.orderStatus]
+    orderStatus = null
+    if (statusIds) {
+        orderStatus = org.ofbiz.entity.util.EntityUtil.getFirst(from("StatusItem").where("statusId", statusIds[0], "statusTypeId", "ORDER_STATUS").cache(true).queryList());
+        if (!orderStatus) {
+            statusIds = null;
+        }
+    }
+    if (!statusIds) {
+        statusIds = allowedOrderStatus
+    }
+}
+
 def checkCreateZeroEntries(resultMap, initialValues) {
     
     def dateIntv = dateIntervals;
@@ -201,4 +217,3 @@ def checkCreateZeroEntries(resultMap, initialValues) {
         resultMap.put(date, initialValues + ["pos": date]);
     }   
 }
-

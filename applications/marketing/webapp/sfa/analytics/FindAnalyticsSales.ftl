@@ -26,6 +26,12 @@
                 <option value="${salesChannel.enumId}"<#if parameters.salesChannel?has_content && parameters.salesChannel == salesChannel.enumId> selected="selected"</#if>>${salesChannel.description}</option>
             </#list>
         </@field>
+        <@field type="select" name="orderStatus" label=uiLabelMap.FormFieldTitle_orderStatusId tooltip=(rawLabel('SfaUsingAllOrderStatusAllowed'))>
+            <option value="">${uiLabelMap.CommonAny}</option>
+            <#list orderStatusList as orderStatus>
+                <option value="${orderStatus.statusId}"<#if parameters.orderStatus?has_content && parameters.orderStatus == orderStatus.statusId> selected="selected"</#if>>${orderStatus.description}</option>
+            </#list>
+        </@field>
         
         <@field type="select" label=uiLabelMap.CommonCurrency name="currencyUomId" tooltip="${rawLabel('SfaOnlyConvertibleCurrenciesListed')} ${rawLabel('SfaCurrencyConvertedUsingLastKnownRates')}">
             <option value=""<#if !parameters.currencyUomId?has_content> selected="selected"</#if>>${uiLabelMap.CommonDefault}</option>

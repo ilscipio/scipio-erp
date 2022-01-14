@@ -19,6 +19,8 @@ code package.
                 //context.currencies = delegator.findByAnd("Uom", ["uomTypeId": "CURRENCY_MEASURE"], ["uomId"], true);
                 context.currencies = org.ofbiz.common.uom.UomWorker.getConvertibleUoms(delegator, dispatcher, 
                     Boolean.TRUE, ["uomTypeId": "CURRENCY_MEASURE"], ["uomId"], true, null, true);
+
+                context.allowedOrderStatus = org.ofbiz.base.util.UtilMisc.toList("ORDER_APPROVED", "ORDER_SENT", "ORDER_COMPLETED")
             ]]></script>
         </actions>
     </screen>
@@ -36,6 +38,10 @@ code package.
                 
                 <entity-condition entity-name="Enumeration" list="salesChannelList">
                     <condition-expr field-name="enumTypeId" operator="equals" value="ORDER_SALES_CHANNEL"/>
+                </entity-condition>
+
+                <entity-condition entity-name="StatusItem" list="orderStatusList">
+                    <condition-expr field-name="statusId" operator="in" from-field="allowedOrderStatus"/>
                 </entity-condition>
 
                 <!-- NOTE: we MUST run this early for any parameter processing -->

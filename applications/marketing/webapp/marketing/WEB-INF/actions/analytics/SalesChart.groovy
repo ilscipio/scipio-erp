@@ -1,12 +1,9 @@
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.GroovyUtil
-import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.common.uom.SimpleUomRateConverter
 import org.ofbiz.entity.condition.EntityCondition
 import org.ofbiz.entity.condition.EntityOperator
-
-import java.sql.Timestamp
 
 // New util instance that sets variables in our binding
 asutil = GroovyUtil.getScriptFromLocation("component://marketing/webapp/marketing/WEB-INF/actions/analytics/AnalyticsScriptUtil.groovy", binding);
@@ -26,9 +23,10 @@ Map processResult() {
     asutil.readCurrencyUomParams();
     asutil.readChartTimeParams();
     asutil.readDateIntervalsFormatter();
+    asutil.readOrderStatusParams()
     
-    Map resultMap = new TreeMap<String, Object>(); // TreeMap doesn't properly order because the keys are strings...
-//    Map resultMap = new LinkedHashMap<String, Object>(); // preserve the insertion order
+    //Map resultMap = new TreeMap<String, Object>(); // TreeMap doesn't properly order because the keys are strings...
+    Map resultMap = new LinkedHashMap<String, Object>(); // preserve the insertion order
     
     // Perform main DB query
     // OLD: we'll do the query manually because of the performance impacts, and use EntityListIterator
@@ -56,6 +54,7 @@ Map processResult() {
     if (productStoreId) {
         conditions.add(EntityCondition.makeCondition("productStoreId", productStoreId));
     }
+    conditions.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, statusIds))
     
     def orderListIterator;
     // OPTIMIZATION: if we're creating zero-entries, we don't need to sort the query (which may be huge)
@@ -120,7 +119,7 @@ Map processResult() {
             
             while ((header = orderListIterator.next())) {
                 String date = dateFormatter.format(header.orderDate);
-                if (resultMap.containsKey(date)) {
+                if (resultMap.get(date) != null) {
                     Map newMap = resultMap.get(date);
                     BigDecimal total = newMap.get("total");
                     if (header.grandTotal != null) {

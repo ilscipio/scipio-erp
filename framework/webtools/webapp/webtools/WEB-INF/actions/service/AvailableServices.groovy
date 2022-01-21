@@ -17,6 +17,9 @@
  * under the License.
  */
 
+
+import org.ofbiz.service.eca.ServiceEcaCondition
+
 import java.util.*;
 import javax.wsdl.WSDLException;
 import org.ofbiz.base.util.Debug;
@@ -29,6 +32,7 @@ import org.ofbiz.service.ServiceContainer;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import java.lang.reflect.Field
 
 List getEcaListForService(String selectedService) {
     ecaMap = org.ofbiz.service.eca.ServiceEcaUtil.getServiceEventMap(selectedService);
@@ -224,100 +228,23 @@ List getEcaListForService(String selectedService) {
                 curRuleMap.conditions = runOnFailureVal as String;
                 condList = new ArrayList(conditionsVal.size());
                 conditionsVal.each { condVal ->
-                    condValClass = condVal.getClass();
-                    condMap = [:];
-
-                    //compareType
-                    compareType = condValClass.getDeclaredField("compareType");
-                    compareType.setAccessible(true);
-                    compareTypeVal = compareType.get(condVal);
-                    if (compareTypeVal) {
-                        condMap.compareType = compareTypeVal as String;
+                    // SCIPIO: 2.1.0: Handling grouped conditions properly
+                    finalCondMap = [:];
+                    if (condVal instanceof ServiceEcaCondition.GroupServiceEcaCondition) {
+                        Class<ServiceEcaCondition.GroupServiceEcaCondition> groupCondValClass = condVal.getClass().getSuperclass();
+                        groupConditions = groupCondValClass.getDeclaredField("conditions")
+                        groupConditions.setAccessible(true)
+                        groupConditionsVal = groupConditions.get(condVal)
+                        groupCondList = new ArrayList(groupConditionsVal.size());
+                        groupConditionsVal.each {groupCondVal ->
+                            groupCondList.add(buildConditionMap(groupCondVal))
+                        }
+                        finalCondMap.conditionGroups = [(condVal.getOperator()) : groupCondList]
+                        groupConditions.setAccessible(false)
+                    } else {
+                        finalCondMap = buildConditionMap(condVal)
                     }
-                    compareType.setAccessible(false);
-
-                    //conditionService
-                    conditionService = condValClass.getDeclaredField("conditionService");
-                    conditionService.setAccessible(true);
-                    conditionServiceVal = conditionService.get(condVal);
-                    if (conditionServiceVal) {
-                        condMap.conditionService = conditionServiceVal as String;
-                    }
-                    conditionService.setAccessible(false);
-
-                    //format
-                    format = condValClass.getDeclaredField("format");
-                    format.setAccessible(true);
-                    formatVal = format.get(condVal);
-                    if (formatVal) {
-                        condMap.format = formatVal as String;
-                    }
-                    format.setAccessible(false);
-
-                    //isConstant
-                    isConstant = condValClass.getDeclaredField("isConstant");
-                    isConstant.setAccessible(true);
-                    isConstantVal = isConstant.get(condVal);
-                    if (isConstantVal) {
-                        condMap.isConstant = isConstantVal as String;
-                    }
-                    isConstant.setAccessible(false);
-
-                    //isService
-                    isService = condValClass.getDeclaredField("isService");
-                    isService.setAccessible(true);
-                    isServiceVal = isService.get(condVal);
-                    if (isServiceVal) {
-                        condMap.isService = isServiceVal as String;
-                    }
-                    isService.setAccessible(false);
-
-                    //lhsMapName
-                    lhsMapName = condValClass.getDeclaredField("lhsMapName");
-                    lhsMapName.setAccessible(true);
-                    lhsMapNameVal = lhsMapName.get(condVal);
-                    if (lhsMapNameVal) {
-                        condMap.lhsMapName = lhsMapNameVal as String;
-                    }
-                    lhsMapName.setAccessible(false);
-
-                    //lhsValueName
-                    lhsValueName = condValClass.getDeclaredField("lhsValueName");
-                    lhsValueName.setAccessible(true);
-                    lhsValueNameVal = lhsValueName.get(condVal);
-                    if (lhsValueNameVal) {
-                        condMap.lhsValueName = lhsValueNameVal as String;
-                    }
-                    lhsValueName.setAccessible(false);
-
-                    //operator
-                    operator = condValClass.getDeclaredField("operator");
-                    operator.setAccessible(true);
-                    operatorVal = operator.get(condVal);
-                    if (operatorVal) {
-                        condMap.operator = operatorVal as String;
-                    }
-                    operator.setAccessible(false);
-
-                    //rhsMapName
-                    rhsMapName = condValClass.getDeclaredField("rhsMapName");
-                    rhsMapName.setAccessible(true);
-                    rhsMapNameVal = rhsMapName.get(condVal);
-                    if (rhsMapNameVal) {
-                        condMap.rhsMapName = rhsMapNameVal as String;
-                    }
-                    rhsMapName.setAccessible(false);
-
-                    //rhsValueName
-                    rhsValueName = condValClass.getDeclaredField("rhsValueName");
-                    rhsValueName.setAccessible(true);
-                    rhsValueNameVal = rhsValueName.get(condVal);
-                    if (rhsValueNameVal) {
-                        condMap.rhsValueName = rhsValueNameVal as String;
-                    }
-                    rhsValueName.setAccessible(false);
-
-                    condList.add(condMap);
+                    condList.add(finalCondMap);
                 }
                 curRuleMap.conditions = condList;
             }
@@ -589,4 +516,100 @@ if (!selectedService) {
     context.servicesList = servicesList;
     context.serviceNamesAlphaList = serviceNamesAlphaList;
     context.servicesFoundCount = servicesFoundCount;
+}
+
+// SCIPIO: 2.1.0: Extracted from original loop in order to be reused while building condition maps for single and grouped (and, or, xor, not) conditions
+Map buildConditionMap(condVal) {
+    condMap = [:];
+    condValClass = condVal.getClass();
+    //compareType
+    compareType = condValClass.getDeclaredField("compareType");
+    compareType.setAccessible(true);
+    compareTypeVal = compareType.get(condVal);
+    if (compareTypeVal) {
+        condMap.compareType = compareTypeVal as String;
+    }
+    compareType.setAccessible(false);
+
+    //conditionService
+    conditionService = condValClass.getDeclaredField("conditionService");
+    conditionService.setAccessible(true);
+    conditionServiceVal = conditionService.get(condVal);
+    if (conditionServiceVal) {
+        condMap.conditionService = conditionServiceVal as String;
+    }
+    conditionService.setAccessible(false);
+
+    //format
+    format = condValClass.getDeclaredField("format");
+    format.setAccessible(true);
+    formatVal = format.get(condVal);
+    if (formatVal) {
+        condMap.format = formatVal as String;
+    }
+    format.setAccessible(false);
+
+    //isConstant
+    isConstant = condValClass.getDeclaredField("isConstant");
+    isConstant.setAccessible(true);
+    isConstantVal = isConstant.get(condVal);
+    if (isConstantVal) {
+        condMap.isConstant = isConstantVal as String;
+    }
+    isConstant.setAccessible(false);
+
+    //isService
+    isService = condValClass.getDeclaredField("isService");
+    isService.setAccessible(true);
+    isServiceVal = isService.get(condVal);
+    if (isServiceVal) {
+        condMap.isService = isServiceVal as String;
+    }
+    isService.setAccessible(false);
+
+    //lhsMapName
+    lhsMapName = condValClass.getDeclaredField("lhsMapName");
+    lhsMapName.setAccessible(true);
+    lhsMapNameVal = lhsMapName.get(condVal);
+    if (lhsMapNameVal) {
+        condMap.lhsMapName = lhsMapNameVal as String;
+    }
+    lhsMapName.setAccessible(false);
+
+    //lhsValueName
+    lhsValueName = condValClass.getDeclaredField("lhsValueName");
+    lhsValueName.setAccessible(true);
+    lhsValueNameVal = lhsValueName.get(condVal);
+    if (lhsValueNameVal) {
+        condMap.lhsValueName = lhsValueNameVal as String;
+    }
+    lhsValueName.setAccessible(false);
+
+    //operator
+    operator = condValClass.getDeclaredField("operator");
+    operator.setAccessible(true);
+    operatorVal = operator.get(condVal);
+    if (operatorVal) {
+        condMap.operator = operatorVal as String;
+    }
+    operator.setAccessible(false);
+
+    //rhsMapName
+    rhsMapName = condValClass.getDeclaredField("rhsMapName");
+    rhsMapName.setAccessible(true);
+    rhsMapNameVal = rhsMapName.get(condVal);
+    if (rhsMapNameVal) {
+        condMap.rhsMapName = rhsMapNameVal as String;
+    }
+    rhsMapName.setAccessible(false);
+
+    //rhsValueName
+    rhsValueName = condValClass.getDeclaredField("rhsValueName");
+    rhsValueName.setAccessible(true);
+    rhsValueNameVal = rhsValueName.get(condVal);
+    if (rhsValueNameVal) {
+        condMap.rhsValueName = rhsValueNameVal as String;
+    }
+    rhsValueName.setAccessible(false);
+    return condMap
 }

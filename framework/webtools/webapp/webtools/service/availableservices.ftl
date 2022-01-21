@@ -213,37 +213,55 @@ code package.
                 </@td>
               </#if>
               <#if ecaMap.conditions?has_content>
+                <#macro conditionFields condition>
+                  <@table type="fields">
+                    <@tr>
+                      <@td>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType!uiLabelMap.CommonNA}</@td>
+                      <@td>
+                        <b>${uiLabelMap.WebtoolsConditionService}</b>
+                        <#if condition.conditionService?has_content>
+                          <a href="<@pageUrl>${url}?sel_service_name=${condition.conditionService}</@pageUrl>">${condition.conditionService!uiLabelMap.CommonNA}</a>
+                        <#else>
+                          ${condition.conditionService!uiLabelMap.CommonNA}
+                        </#if>
+                      </@td>
+                      <@td>${uiLabelMap.WebtoolsFormat}</b> ${condition.format!uiLabelMap.CommonNA}</@td>
+                    </@tr>
+                    <@tr>
+                      <@td>${uiLabelMap.WebtoolsIsService}</b> ${condition.isService!uiLabelMap.CommonNA}</@td>
+                      <@td>${uiLabelMap.WebtoolsIsConstant}</b> ${condition.isConstant!uiLabelMap.CommonNA}</@td>
+                      <@td>${uiLabelMap.WebtoolsOperator}</b> ${condition.operator!uiLabelMap.CommonNA}</@td>
+                    </@tr>
+                    <@tr>
+                      <@td>${uiLabelMap.WebtoolsLHSMapName}</b> ${condition.lhsMapName!uiLabelMap.CommonNA}</@td>
+                      <@td>${uiLabelMap.WebtoolsLHSValueName}</b> ${condition.lhsValueName!uiLabelMap.CommonNA}</@td>
+                      <@td>&nbsp;</@td>
+                    </@tr>
+                    <@tr>
+                      <@td>${uiLabelMap.WebtoolsRHSMapName}</b> ${condition.rhsMapName!uiLabelMap.CommonNA}</@td>
+                      <@td>${uiLabelMap.WebtoolsRHSValueName}</b> ${condition.rhsValueName!uiLabelMap.CommonNA}</@td>
+                      <@td>&nbsp;</@td>
+                    </@tr>
+                  </@table><br />
+                </#macro>
                 <@td>
                   <#list ecaMap.conditions as condition>
-                    <@table type="fields">
-                      <@tr>
-                        <@td>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType!uiLabelMap.CommonNA}</@td>
-                        <@td>
-                          <b>${uiLabelMap.WebtoolsConditionService}</b>
-                          <#if condition.conditionService?has_content>
-                            <a href="<@pageUrl>${url}?sel_service_name=${condition.conditionService}</@pageUrl>">${condition.conditionService!uiLabelMap.CommonNA}</a>
-                          <#else>
-                            ${condition.conditionService!uiLabelMap.CommonNA}
-                          </#if>
-                        </@td>
-                        <@td>${uiLabelMap.WebtoolsFormat}</b> ${condition.format!uiLabelMap.CommonNA}</@td>
-                      </@tr>
-                      <@tr>
-                        <@td>${uiLabelMap.WebtoolsIsService}</b> ${condition.isService!uiLabelMap.CommonNA}</@td>
-                        <@td>${uiLabelMap.WebtoolsIsConstant}</b> ${condition.isConstant!uiLabelMap.CommonNA}</@td>
-                        <@td>${uiLabelMap.WebtoolsOperator}</b> ${condition.operator!uiLabelMap.CommonNA}</@td>
-                      </@tr>
-                      <@tr>
-                        <@td>${uiLabelMap.WebtoolsLHSMapName}</b> ${condition.lhsMapName!uiLabelMap.CommonNA}</@td>
-                        <@td>${uiLabelMap.WebtoolsLHSValueName}</b> ${condition.lhsValueName!uiLabelMap.CommonNA}</@td>
-                        <@td>&nbsp;</@td>
-                      </@tr>
-                      <@tr>
-                        <@td>${uiLabelMap.WebtoolsRHSMapName}</b> ${condition.rhsMapName!uiLabelMap.CommonNA}</@td>
-                        <@td>${uiLabelMap.WebtoolsRHSValueName}</b> ${condition.rhsValueName!uiLabelMap.CommonNA}</@td>
-                        <@td>&nbsp;</@td>
-                      </@tr>
-                    </@table><br />
+                    <#if !condition?keys?seq_contains("conditionGroups")>
+                      <@conditionFields condition/>
+                    <#else>
+                      <#list condition.conditionGroups.keySet() as groupConditionOperator>
+                        <@table type="fields">
+                          <@tr>
+                            <@td>${uiLabelMap.WebtoolsConditionGroupOperator}</b> ${groupConditionOperator!uiLabelMap.CommonNA}</@td>
+                            <@td>
+                                <#list condition.conditionGroups[groupConditionOperator] as conditionGroup>
+                                  <@conditionFields conditionGroup />
+                                </#list>
+                            </@td>
+                          </@tr>
+                        </@table>
+                      </#list>
+                    </#if>
                   </#list>
                 </@td>
               </#if>

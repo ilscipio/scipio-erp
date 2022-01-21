@@ -1370,6 +1370,13 @@
         <value xml:lang="zh">条件</value>
         <value xml:lang="zh-TW">條件</value>
     </property>
+    <property key="WebtoolsConditionGroupOperator">
+        <value xml:lang="de">Bedingungsgruppenoperator</value>
+        <value xml:lang="en">Condition Group Operator</value>
+        <value xml:lang="fr">Opérateur de groupe de conditions</value>
+        <value xml:lang="it">Operatore del gruppo di condizioni</value>
+        <value xml:lang="es">Operador de grupo de condiciones</value>
+    </property>
     <property key="WebtoolsConfiguration">
         <value xml:lang="de">Konfiguration</value>
         <value xml:lang="en">Configuration</value>

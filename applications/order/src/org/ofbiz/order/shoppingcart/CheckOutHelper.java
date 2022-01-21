@@ -1032,7 +1032,6 @@ public class CheckOutHelper {
         EntityCondition stripeExprs = EntityCondition.makeCondition(
                 EntityCondition.makeCondition("manualRefNum", EntityOperator.NOT_EQUAL, null),
                 EntityCondition.makeCondition("manualAuthCode", EntityOperator.EQUALS, null),
-                EntityCondition.makeCondition("track2", EntityOperator.NOT_EQUAL, null),
                 EntityCondition.makeCondition("paymentMethodTypeId", EntityOperator.EQUALS, "EXT_STRIPE")
         );
         List<GenericValue> manualRefPaymentPrefs = EntityUtil.filterByAnd(allPaymentPreferences,

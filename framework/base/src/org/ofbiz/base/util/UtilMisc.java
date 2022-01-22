@@ -54,7 +54,17 @@ import org.apache.commons.collections4.iterators.EnumerationIterator;
 import org.ofbiz.base.util.collections.MapComparator;
 
 /**
- * UtilMisc - Misc Utility Functions
+ * General and most commonly used language and utility functions for common types such as collections, maps, booleans,
+ * locales, generics and casts ({@link #cast(Object)}).
+ * <p>SCIPIO: NOTE: This is a misnomer for a general language and utility function namespace class and would have been
+ * more accurate as UtilLang. Although split classes for utilities (UtilMap, UtilList, UtilBoolean, etc.) are sometimes
+ * clearer, this is a longstanding legacy class conveniently shortly named that is already automatically and manually
+ * imported throughout the codebase; not all methods are helpful or appropriate for all contexts, and many come from
+ * different development histories, so individual descriptions should be consulted. Currently, some generic language
+ * and type methods are also found in {@link UtilNumber}, {@link UtilValidate} and others - some may be moved or
+ * duplicated into UtilMisc in the future as facades; meanwhile alternative enhanced type-specific classes already exist
+ * (such as ScipioMap and others) and may be used for more advanced purposes and additional helpers.</p>
+ * <p>SCIPIO: 2.1.0: Now contains {@link #cast(Object)} as more succinct and UtilGenerics is headed toward deprecation.</p>
  */
 public final class UtilMisc {
 
@@ -65,6 +75,15 @@ public final class UtilMisc {
     private static final UtilMisc INSTANCE = new UtilMisc(); // SCIPIO: This is for FreeMarkerWorker (only!)
 
     private UtilMisc () {}
+
+    /**
+     * Casts object to given type.
+     * <p>SCIPIO: 2.1.0: Replaces {@link UtilGenerics#cast(Object)} as more succinct and UtilGenerics is headed toward deprecation.</p>
+     */
+    @SuppressWarnings("unchecked")
+    public static <V> V cast(Object object) {
+        return (V) object;
+    }
 
     public static final <T extends Throwable> T initCause(T throwable, Throwable cause) {
         throwable.initCause(cause);

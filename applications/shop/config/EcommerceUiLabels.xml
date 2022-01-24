@@ -548,7 +548,7 @@
         <value xml:lang="de">Der Warenkorb enthält</value>
         <value xml:lang="en">Cart has</value>
         <value xml:lang="en-GB">Basket has</value>
-        <value xml:lang="es">Carro tiene</value>
+        <value xml:lang="es">La cesta tiene</value>
         <value xml:lang="fr">Le panier contient</value>
         <value xml:lang="hi-IN">टोकरी में है</value>
         <value xml:lang="it">Il carrello contiene</value>
@@ -4360,7 +4360,7 @@
         <value xml:lang="de">Ihr Warenkorb ist leer</value>
         <value xml:lang="en">Your shopping cart is empty</value>
         <value xml:lang="en-GB">Your shopping basket is empty</value>
-        <value xml:lang="es">Su Carro de la Compra está vacío</value>
+        <value xml:lang="es">Su cesta de la compra está vacía</value>
         <value xml:lang="fr">Votre panier est vide</value>
         <value xml:lang="hi-IN">आपकी ख़रीदारी टोकरी ख़ाली है</value>
         <value xml:lang="it">Il tuo carrello è vuoto</value>
@@ -5146,7 +5146,7 @@
         <value xml:lang="de">Warenkorb</value>
         <value xml:lang="en">Shopping Cart</value>
         <value xml:lang="en-GB">Shopping basket</value>
-        <value xml:lang="es">Carro de la Compra</value>
+        <value xml:lang="es">Cesta de la compra</value>
         <value xml:lang="fr">Panier</value>
         <value xml:lang="hi-IN">खरीदारी टोकरी</value>
         <value xml:lang="it">Carrello</value>

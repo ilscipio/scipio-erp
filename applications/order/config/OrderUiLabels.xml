@@ -4524,7 +4524,7 @@
         <value xml:lang="de">FEHLER: Der Warenkorb ist leer, bitte beginnen Sie erneut.</value>
         <value xml:lang="en">ERROR: Shopping cart empty, please start over</value>
         <value xml:lang="en-GB">ERROR: Shopping basket empty, please start over</value>
-        <value xml:lang="es">ERROR: Carro de Compra vacío, comience por favor encima</value>
+        <value xml:lang="es">ERROR: Cesta de la compra vacía, por favor vuelva a intentarlo</value>
         <value xml:lang="fr">ERREUR : Le panier d'achat est vide,</value>
         <value xml:lang="hi-IN">गडबड: ख़रीदारी टोकरी ख़ाली है, दुबारा शुरू किजीये</value>
         <value xml:lang="it">ERRORE: Il carrello è vuoto</value>
@@ -14115,7 +14115,7 @@
         <value xml:lang="de">Warenkorb</value>
         <value xml:lang="en">Shopping Cart</value>
         <value xml:lang="en-GB">Shopping basket</value>
-        <value xml:lang="es">Carro de Compra</value>
+        <value xml:lang="es">Cesta de la compra</value>
         <value xml:lang="fr">Panier</value>
         <value xml:lang="hi-IN">ख़रीदारी टोकरी</value>
         <value xml:lang="it">Carrello</value>
@@ -15280,7 +15280,7 @@
         <value xml:lang="de">Ansicht Warenkorb</value>
         <value xml:lang="en">View Cart</value>
         <value xml:lang="en-GB">View basket</value>
-        <value xml:lang="es">Ver Carro</value>
+        <value xml:lang="es">Ver cesta</value>
         <value xml:lang="fr">Voir le panier</value>
         <value xml:lang="hi-IN">टोकरी देखें</value>
         <value xml:lang="it">Vis. carrello</value>

@@ -10481,6 +10481,7 @@
     <property key="OrderPromoAppliedSuccessfully">
         <value xml:lang="de">Promotions - Code[${productPromoCodeId}] erfolgreich angewendet</value>
         <value xml:lang="en">Promotion Code[${productPromoCodeId}] has been applied successfully</value>
+        <value xml:lang="es">El código de promoción [${productPromoCodeId}] se ha aplicado correctamente</value>
         <value xml:lang="nl">Promo ${productPromoCodeId] succesvol toegepast</value>
     </property>
     <property key="OrderPromotion">

@@ -6423,6 +6423,7 @@
         <value xml:lang="ar">تم ادخال رمز الترويج [${productPromoCodeId}] مسبقا.</value>
         <value xml:lang="de">Der Aktionscode [${productPromoCodeId}] wurde schon verwendet.</value>
         <value xml:lang="en">The promotion code [${productPromoCodeId}] has already been entered.</value>
+        <value xml:lang="es">El código de promoción [${productPromoCodeId}] ya ha sido utilizado.</value>
         <value xml:lang="fr">Le code de promotion [${productPromoCodeId}] a déjà été utilisé.</value>
         <value xml:lang="ja">プロモーションコード [${productPromoCodeId}] はすでに登録されています。</value>
         <value xml:lang="pt-BR">O código da promoção [${productPromoCodeId}] já foi utilizado.</value>
@@ -6433,6 +6434,7 @@
         <value xml:lang="ar">خطأ في استطلاع رمز الترويج [${productPromoCodeId}]: {errorMsg}</value>
         <value xml:lang="de">Fehler beim Prüfen des Aktionscode [${productPromoCodeId}]: {errorMsg}</value>
         <value xml:lang="en">Error looking up promotion code [${productPromoCodeId}]: {errorMsg}</value>
+        <value xml:lang="es">Se ha producido un error al buscar el código de promoción[${productPromoCodeId}]: {errorMsg}</value>
         <value xml:lang="fr">Erreur lors de la recherche du code de promotion [${productPromoCodeId}]: {errorMsg}</value>
         <value xml:lang="ja">プロモーションコード [${productPromoCodeId}] の検索時にエラーが発生しました: {errorMsg}</value>
         <value xml:lang="pt-BR">Erro ao procurar pelo código da promoção [${productPromoCodeId}]: {errorMsg}</value>
@@ -6443,6 +6445,7 @@
         <value xml:lang="ar">انتهت صلاحية رمز الترويج [${productPromoCodeId}] في: ${thruDate}</value>
         <value xml:lang="de">Der Aktionscode [${productPromoCodeId}] ist am ${thruDate} abgelaufen.</value>
         <value xml:lang="en">The promotion code [${productPromoCodeId}] has expired at: ${thruDate}</value>
+        <value xml:lang="es">El código de promoción [${productPromoCodeId}] expiró el ${thruDate}</value>
         <value xml:lang="fr">Le code de promotion [${productPromoCodeId}] s'est achevé le ${thruDate}</value>
         <value xml:lang="ja">プロモーションコード [${productPromoCodeId}] は ${thruDate} で終了しています。</value>
         <value xml:lang="pt-BR">O código da promoção [${productPromoCodeId}] expirou em ${thruDate}</value>
@@ -6453,6 +6456,7 @@
         <value xml:lang="ar">رمز الترويج هذا (${productPromoCodeId}) وصل إلى حد الإستخدام الأقصى ولا يمكن استخدامه أكثر.</value>
         <value xml:lang="de">Dieser Aktionscode [${productPromoCodeId}] hat sein Nutzungslimit erreicht und kann nicht länger verwendet werden.</value>
         <value xml:lang="en">This promotion code (${productPromoCodeId}) has reached it's maximum use limit for you and can no longer be used.</value>
+        <value xml:lang="es">El código promocional (${productPromoCodeId}) ha alcanzado el límite máximo de usos y ya no puede ser usado.</value>
         <value xml:lang="fr">Ce code de promotion (${productPromoCodeId}) a atteint sa limite d'usage pour vous et ne plus être utilisé.</value>
         <value xml:lang="ja">このプロモーションコード (${productPromoCodeId}) は使用回数の限度に達しています。もう使用することができません。</value>
         <value xml:lang="pt-BR">Esse código de promoção (${productPromoCodeId}) atingiu seu número máximo de utilização por você, portanto não pode mais ser utilizado.</value>
@@ -6462,6 +6466,7 @@
         <value xml:lang="ar">يتطلب منك رمز الترويج [${productPromoCodeId}] أن تكون متصل به بحساب أو عنوان بريد إلكتروني وأنت غير متصل به.</value>
         <value xml:lang="de">Dieser Aktionscode [${productPromoCodeId}] muss mit Ihrem Konto oder der Email-Adresse verknüpft sein.</value>
         <value xml:lang="en">The promotion code [${productPromoCodeId}] requires you to be associated with it by account or email address and you are not associated with it.</value>
+        <value xml:lang="es">El código promocional [${productPromoCodeId}] está asociado a tu cuenta o dirección de correo y tú no lo estás.</value>
         <value xml:lang="fr">Le code de promotion [${productPromoCodeId}] nécessite que vous y soyez associé par un compte ou une adresse courriel ce qui n'est pas le cas</value>
         <value xml:lang="ja">このプロモーションコード [${productPromoCodeId}] はあなたのアカウントまたはEメールアドレスと関連付けられていないため使用できません。</value>
         <value xml:lang="pt-BR">O código de promoção [${productPromoCodeId}] necessita que você esteja associado a ele por sua conta ou endereço de email e você não está.</value>
@@ -6472,6 +6477,7 @@
         <value xml:lang="ar">رمز الترويج [${productPromoCodeId}] غير صالح.</value>
         <value xml:lang="de">Der eingegebene Aktionscode [${productPromoCodeId}] ist ungültig.</value>
         <value xml:lang="en">The promotion code [${productPromoCodeId}] is not valid.</value>
+        <value xml:lang="es">El código de promoción [${productPromoCodeId}] no es válido.</value>
         <value xml:lang="fr">Le code de promotion [${productPromoCodeId}] n'existe pas.</value>
         <value xml:lang="ja">このプロモーションコード [${productPromoCodeId}] は有効ではありません。</value>
         <value xml:lang="pt-BR">O código de promoção [${productPromoCodeId}] não existe.</value>
@@ -6482,6 +6488,7 @@
         <value xml:lang="ar">سيتم تفعيل رمز الترويج [${productPromoCodeId}] في: {fromDate}</value>
         <value xml:lang="de">Dieser Aktionscode [${productPromoCodeId}] wird am {fromDate} aktiviert.</value>
         <value xml:lang="en">The promotion code [${productPromoCodeId}] will be activated  at: {fromDate}</value>
+        <value xml:lang="en">El código de promoción [${productPromoCodeId}] se activará el {fromDate}</value>
         <value xml:lang="fr">Le code de promotion [${productPromoCodeId}] sera activé le ${fromDate}</value>
         <value xml:lang="ja">このプロモーションコード [${productPromoCodeId}] は {fromDate} から有効になります。</value>
         <value xml:lang="pt-BR">O código de promoção [${productPromoCodeId}] será ativado em ${fromDate}</value>

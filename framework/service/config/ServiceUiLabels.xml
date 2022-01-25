@@ -22,17 +22,21 @@
     <property key="EntityCreatedSuccessfully">
         <value xml:lang="de">${label} erfolgreich angelegt</value>
         <value xml:lang="en">${label} created successfully</value>
+        <value xml:lang="es">${label} creado satisfactoriamente</value>
     </property>
     <property key="EntityUpdatedSuccessfully">
         <value xml:lang="de">${label} erfolgreich aktualisiert</value>
         <value xml:lang="en">${label} updated successfully</value>
+        <value xml:lang="es">${label} actualizado satisfactoriamente</value>
     </property>
     <property key="EntityDeletedSuccessfully">
         <value xml:lang="de">${label} erfolgreich gelöscht</value>
         <value xml:lang="en">${label} deleted successfully</value>
+        <value xml:lang="es">${label} eliminado satisfactoriamente</value>
     </property>
     <property key="EntityExpiredSuccessfully">
         <value xml:lang="de">${label} erfolgreich invalidiert</value>
         <value xml:lang="en">${label} expired successfully</value>
+        <value xml:lang="es">${label} expirado satisfactoriamente</value>
     </property>
 </resource>

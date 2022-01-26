@@ -536,6 +536,16 @@
                                     <@field type="option" value="N" selected=(indexable?is_boolean && !indexable)>N</@field>
                                  </@field>
 
+                                <@field label=uiLabelMap.CommonSearchIndexable type="select" name="searchIndexable" value=(meta.searchIndexable!"") required=false tooltip=uiLabelMap.CmsMappingSearchIndexableDesc>
+                                    <#assign searchIndexable = meta.searchIndexable!"">
+                                    <#assign searchIndexableDefault = (webSiteConfig.getMappingsSearchIndexableDefault())!false>
+                                    <#-- NOTE: this indicator is ternary, when empty it defaults to cmsDefaultIsIndexable in web.xml.
+                                        it must not be forced to Y or N (e.g., do NOT make this a checkbox). -->
+                                    <@field type="option" value="" selected=(!searchIndexable?is_boolean)>(${searchIndexableDefault?string("Y", "N")})</@field>
+                                    <@field type="option" value="Y" selected=(searchIndexable?is_boolean && searchIndexable)>Y</@field>
+                                    <@field type="option" value="N" selected=(searchIndexable?is_boolean && !searchIndexable)>N</@field>
+                                </@field>
+
                                  <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(meta.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
 
                                  <@menu type="button">

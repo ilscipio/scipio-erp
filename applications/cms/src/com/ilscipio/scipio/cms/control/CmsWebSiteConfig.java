@@ -86,6 +86,7 @@ public abstract class CmsWebSiteConfig implements Serializable {
     private final boolean controlRootAlias;
 
     private final boolean mappingsIndexableDefault;
+    private final boolean mappingsSearchIndexableDefault;
 
     private final boolean useLinkExtLoginKey;
 
@@ -118,6 +119,7 @@ public abstract class CmsWebSiteConfig implements Serializable {
         this.defaultForwardFromContextRoot = true;
 
         this.mappingsIndexableDefault = true;
+        this.mappingsSearchIndexableDefault = false;
 
         this.useDefaultCmsPage = false;
         this.defaultCmsPageId = null;
@@ -180,6 +182,7 @@ public abstract class CmsWebSiteConfig implements Serializable {
         this.controlRootAlias = config.getBoolean("controlRootAlias", defaultConfig.isControlRootAlias());
 
         this.mappingsIndexableDefault = config.getBoolean("mappingsIndexableDefault", defaultConfig.getMappingsIndexableDefault());
+        this.mappingsSearchIndexableDefault = config.getBoolean("mappingsSearchIndexableDefault", defaultConfig.getMappingsSearchIndexableDefault());
 
         this.useLinkExtLoginKey = config.getBoolean("useLinkExtLoginKey", defaultConfig.isUseLinkExtLoginKey());
     }
@@ -495,6 +498,10 @@ public abstract class CmsWebSiteConfig implements Serializable {
 
     public boolean getMappingsIndexableDefault() {
         return mappingsIndexableDefault;
+    }
+
+    public boolean getMappingsSearchIndexableDefault() {
+        return mappingsSearchIndexableDefault;
     }
 
     public boolean isUseLinkExtLoginKey() {

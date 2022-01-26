@@ -223,6 +223,9 @@
         <attribute name="primaryPathIndexable" mode="IN" type="String" optional="true">
             <description>The sitemap-indexable override indicator flag, for the page's primary process mapping</description>
         </attribute>
+        <attribute name="searchIndexable" mode="IN" type="String" optional="true">
+            <description>The search-indexable override indicator flag, can be used by various internal search engines</description>
+        </attribute>
         <attribute name="pageTemplateId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
          <attribute name="txTimeout" type="String" mode="IN" optional="true"/>

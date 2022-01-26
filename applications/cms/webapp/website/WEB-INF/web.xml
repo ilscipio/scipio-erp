@@ -189,6 +189,12 @@
         <param-name>cmsMappingsIndexableDefault</param-name>
         <param-value>true</param-value>
     </context-param>
+    <context-param>
+        <description>If true, process mappings (pages) by default may be indexed by search engines.
+            If false, only indexed if CmsProcessMapping.searchIndexable explicit set to Y.</description>
+        <param-name>cmsMappingsSearchIndexableDefault</param-name>
+        <param-value>false</param-value>
+    </context-param>
 
     <!-- simple filter to redirect top address to /control/main -->
     <filter>

@@ -234,6 +234,13 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
             }
             setFields.put("indexable", indexable);
         }
+        if (fields.containsKey("searchIndexable") || useDefaults) {
+            Object searchIndexable = fields.get("searchIndexable");
+            if (UtilValidate.isEmpty(searchIndexable)) {
+                searchIndexable = null;
+            }
+            setFields.put("searchIndexable", searchIndexable);
+        }
         return setFields;
     }
 
@@ -813,6 +820,19 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
 
     public void setIndexable(Boolean indexable) {
         entity.set("indexable", indexable);
+    }
+
+    public Boolean getSearchIndexable() {
+        return entity.getBoolean("searchIndexable");
+    }
+
+    public boolean isSearchIndexableLogical(boolean mappingsSearchIndexableDefault) {
+        Boolean searchIndexable = getSearchIndexable();
+        return (searchIndexable != null) ? searchIndexable : mappingsSearchIndexableDefault;
+    }
+
+    public void setSearchIndexable(Boolean searchIndexable) {
+        entity.set("searchIndexable", searchIndexable);
     }
 
 

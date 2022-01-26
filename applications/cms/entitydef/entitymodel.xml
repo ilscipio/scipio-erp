@@ -589,6 +589,9 @@
       <field name="indexable" type="indicator"><description>If Y (or not set and website default is Y),
           the sourcePath will be indexed in sitemap generation. N prevents.</description></field>
 
+      <field name="searchIndexable" type="indicator"><description>If Y (or not set and website default is N),
+            the sourcePath will be indexed in internal search engines (solr/algolia etc). N prevents.</description></field>
+
       <prim-key field="processMappingId" />
       
       <relation type="one" fk-name="CMSPRMAP_PAGEID" rel-entity-name="CmsPage">

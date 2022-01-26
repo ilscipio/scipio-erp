@@ -31,8 +31,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
 
-import javax.rmi.CORBA.Util;
-
 /**
  * PackingServices.
  * <p>

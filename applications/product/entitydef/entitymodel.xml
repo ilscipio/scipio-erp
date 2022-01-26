@@ -4254,7 +4254,7 @@ code package.
         <field name="sendAbandonedCartReminder" type="indicator"><description>SCIPIO: Default N. If Y, abandoned ShoppingCart reminder email will be sent to customers.</description></field>
         <field name="maxAbandonedCartReminderRetry" type="numeric"><description>SCIPIO: Default 1. Number of retry times email reminder will be sent</description></field>
         <field name="abandonedCartReminderDayOffset" type="numeric"><description>SCIPIO: Default 1. Number of days after abandoned cart is created email reminder will start</description></field>
-        <!-- SCIPIO: added 2.0.0: New indicator field that controls whether an email must be sent when a shipment status changes to SHIPMENT_DELIVERED
+        <!-- SCIPIO: added 2.1.0: New indicator field that controls whether an email must be sent when a shipment status changes to SHIPMENT_DELIVERED
             Falls back to shipment.email.notification.delivered in shipment.properties if null
         -->
         <field name="notificationEmailShipmentDelivered" type="indicator"><description>SCIPIO: Default N. If Y, an email will be sent when a shipment status changes to SHIPMENT_DELIVERED.</description></field>

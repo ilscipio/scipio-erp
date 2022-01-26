@@ -25,6 +25,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.Writer;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,10 @@ import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
+import javax.wsdl.factory.WSDLFactory;
+import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -49,6 +53,7 @@ import org.apache.axiom.soap.SOAPModelBuilder;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.service.DispatchContext;
@@ -89,19 +94,57 @@ public class SOAPEventHandler implements EventHandler {
             wsdlReq = request.getParameter("WSDL");
         }
         if (wsdlReq != null) {
-            String serviceName = RequestHandler.getOverrideViewUri(request.getPathInfo());
-            DispatchContext dctx = dispatcher.getDispatchContext();
-            String locationUri = this.getLocationURI(request);
-
-            if (serviceName != null) {
-                Document wsdl = null;
+            Document wsdl = null;
+            // First of all, look if the wsdl can be foundin the classpath
+            URL wsdlUrl = SOAPEventHandler.class.getClassLoader().getResource(wsdlReq);
+            if (UtilValidate.isNotEmpty(wsdlReq)) {
                 try {
-                    wsdl = dctx.getWSDL(serviceName, locationUri);
-                } catch (GenericServiceException e) {
-                    serviceName = null;
+                    WSDLFactory factory = WSDLFactory.newInstance();
+                    WSDLReader wsdlReader = factory.newWSDLReader();
+                    Definition def = wsdlReader.readWSDL(wsdlUrl.toString());
+                    wsdl = factory.newWSDLWriter().getDocument(def);
                 } catch (WSDLException e) {
-                    sendError(response, "Unable to obtain WSDL", serviceName);
-                    throw new EventHandlerException("Unable to obtain WSDL", e);
+
+                }
+            } else {
+                // If not look for the service name in the request path info and
+                // get it from there
+                String serviceName = RequestHandler.getOverrideViewUri(request.getPathInfo());
+                DispatchContext dctx = dispatcher.getDispatchContext();
+                String locationUri = this.getLocationURI(request);
+
+                if (serviceName != null) {
+                    try {
+                        wsdl = dctx.getWSDL(serviceName, locationUri);
+                    } catch (GenericServiceException e) {
+                        serviceName = null;
+                    } catch (WSDLException e) {
+                        sendError(response, "Unable to obtain WSDL", serviceName);
+                        throw new EventHandlerException("Unable to obtain WSDL", e);
+                    }
+                } else {
+                    try {
+                        Writer writer = response.getWriter();
+                        StringBuilder sb = new StringBuilder();
+                        sb.append("<html><head><title>OFBiz SOAP/1.1 Services</title></head>");
+                        sb.append("<body>No such service.").append("<p>Services:<ul>");
+
+                        for (String scvName : dctx.getAllServiceNames()) {
+                            ModelService model = dctx.getModelService(scvName);
+                            if (model.export) {
+                                sb.append("<li><a href=\"").append(locationUri).append("/").append(model.name).append("?wsdl\">");
+                                sb.append(model.name).append("</a></li>");
+                            }
+                        }
+                        sb.append("</ul></p></body></html>");
+
+                        writer.write(sb.toString());
+                        writer.flush();
+                        return null;
+                    } catch (Exception e) {
+                        sendError(response, "Unable to obtain WSDL", null);
+                        throw new EventHandlerException("Unable to obtain WSDL");
+                    }
                 }
 
                 if (wsdl != null) {
@@ -116,31 +159,6 @@ public class SOAPEventHandler implements EventHandler {
                     return null;
                 } else {
                     sendError(response, "Unable to obtain WSDL", serviceName);
-                    throw new EventHandlerException("Unable to obtain WSDL");
-                }
-            }
-
-            if (serviceName == null) {
-                try {
-                    Writer writer = response.getWriter();
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("<html><head><title>OFBiz SOAP/1.1 Services</title></head>");
-                    sb.append("<body>No such service.").append("<p>Services:<ul>");
-
-                    for (String scvName: dctx.getAllServiceNames()) {
-                        ModelService model = dctx.getModelService(scvName);
-                        if (model.export) {
-                            sb.append("<li><a href=\"").append(locationUri).append("/").append(model.name).append("?wsdl\">");
-                            sb.append(model.name).append("</a></li>");
-                        }
-                    }
-                    sb.append("</ul></p></body></html>");
-
-                    writer.write(sb.toString());
-                    writer.flush();
-                    return null;
-                } catch (Exception e) {
-                    sendError(response, "Unable to obtain WSDL", null);
                     throw new EventHandlerException("Unable to obtain WSDL");
                 }
             }

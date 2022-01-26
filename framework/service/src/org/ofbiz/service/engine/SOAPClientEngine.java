@@ -83,12 +83,12 @@ public final class SOAPClientEngine extends GenericAsyncEngine implements SOAPSe
     @Override
     public Map<String, Object> runSync(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
         Map<String, Object> result = null;
-        Class soapServiceInvokerClass = (Class) context.get("soapServiceInvokerClass");
+        Class<?> soapServiceInvokerClass = (Class<?>) context.get("soapServiceInvokerClass");
         if (UtilValidate.isNotEmpty(soapServiceInvokerClass)) {
             try {
-                SOAPServiceInvoker soapServiceInvoker = (SOAPServiceInvoker) soapServiceInvokerClass.newInstance();
+                SOAPServiceInvoker soapServiceInvoker = (SOAPServiceInvoker) soapServiceInvokerClass.getConstructor().newInstance();
                 result = soapServiceInvoker.serviceInvoker(modelService, context);
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e ) {
                 Debug.logError(e.getMessage(), module);
             }
         } else {

@@ -877,7 +877,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
             this.ref = new CacheSoftReference<V>(value) {
                 @Override
                 public void remove() {
-                    Debug.logInfo("Cache [" + UtilCache.this.name + "]: Removing soft ref [" + key + "]", module);
+                    //Debug.logInfo("Cache [" + UtilCache.this.name + "]: Removing soft ref [" + key + "]", module);
                     SoftLine.this.remove();
                 }
             };

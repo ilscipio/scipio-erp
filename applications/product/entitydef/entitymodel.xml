@@ -179,6 +179,7 @@ code package.
       <field name="linkTwoImageUrl" type="url"></field>
       <field name="detailScreen" type="long-varchar"></field>
       <field name="showInSelect" type="indicator"></field>
+      <field name="mediaImageId" type="id"><description>Content.contentId value of a CMS media image, for manual use (SCIPIO)</description></field>
       <prim-key field="productCategoryId"/>
       <relation type="one" fk-name="PROD_CTGRY_TYPE" rel-entity-name="ProductCategoryType">
         <key-map field-name="productCategoryTypeId"/>

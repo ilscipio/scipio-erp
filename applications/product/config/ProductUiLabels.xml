@@ -21912,6 +21912,10 @@
         <value xml:lang="nl">Sectie 4: Maten</value>
         <value xml:lang="zh">度量</value>
     </property>
+    <property key="ProductMediaImageId">
+        <value xml:lang="de">Medienbild-ID</value>
+        <value xml:lang="en">Media Image ID</value>
+    </property>
     <property key="ProductMediumImage">
         <value xml:lang="de">Mittleres Bild</value>
         <value xml:lang="en">Medium Image</value>

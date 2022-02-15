@@ -67,8 +67,9 @@ public abstract class CmsMediaServices {
         // String dataResourceType = (String) (context.get("dataResourceType")
         // != null ? context.get("dataResourceType") : null);
 
-        Integer viewIndex = (Integer) context.get("viewIndex") != null ? (Integer) context.get("viewIndex") : 0;
-        Integer viewSize = (Integer) context.get("viewSize") != null ? (Integer) context.get("viewSize") : 50;
+        Integer viewIndex = (Integer) context.get("viewIndex");
+        Integer viewSize = (Integer) context.get("viewSize");
+
         String dataResourceTypeId = (String) context.get("dataResourceTypeId");
         Map<String, Object> inputFields = UtilGenerics.checkMap(context.get("inputFields"));
 
@@ -106,24 +107,24 @@ public abstract class CmsMediaServices {
                 cond = scpMediaCond;
             }
 
-            Map<String, Object> findContext = new HashMap<>();
-            findContext.put("userLogin", context.get("userLogin"));
-
-            int start = viewIndex.intValue() * viewSize.intValue();
+            EntityQuery query = EntityQuery.use(delegator).from("DataResourceMediaFileView").orderBy("contentName ASC").where(cond);
             List<GenericValue> list = null;
             Integer listSize = 0;
-            EntityQuery query = EntityQuery.use(delegator).from("DataResourceMediaFileView");
-            if (cond != null) {
-                query.where(cond);
-            }
-            EntityListIterator listIt = query.orderBy("contentName ASC").cursorScrollInsensitive().queryIterator();
-            try {
-                listSize = listIt.getResultsSizeAfterPartialList();
-                list = listIt.getPartialList(start + 1, viewSize);
 
-                listSize = listIt.getResultsSizeAfterPartialList();
-            } finally {
-                if (listIt != null) listIt.close();
+            if (viewIndex != null && viewSize != null) {
+                int start = viewIndex * viewSize;
+                EntityListIterator listIt = query.cursorScrollInsensitive().queryIterator();
+                try {
+                    listSize = listIt.getResultsSizeAfterPartialList();
+                    list = listIt.getPartialList(start + 1, viewSize);
+
+                    listSize = listIt.getResultsSizeAfterPartialList();
+                } finally {
+                    if (listIt != null) listIt.close();
+                }
+            } else {
+                list = query.queryList();
+                listSize = list.size();
             }
 
             result.put("mediaFiles", list);

@@ -20,6 +20,7 @@
 import org.ofbiz.base.util.*
 import org.ofbiz.base.util.string.*
 import org.ofbiz.entity.util.EntityUtilProperties
+import org.ofbiz.service.ServiceUtil
 
 if (productCategory) {
     context.productCategoryType = productCategory.getRelatedOne("ProductCategoryType", false);
@@ -50,3 +51,6 @@ filenameExpander = FlexibleStringExpander.getInstance(imageFilenameFormat, false
 context.imageNameCategory = imageUrlPrefix + "/" + filenameExpander.expandString([location : "categories", type : "category", id : productCategoryId]);
 context.imageNameLinkOne  = imageUrlPrefix + "/" + filenameExpander.expandString([location : "categories", type : "linkOne", id : productCategoryId]);
 context.imageNameLinkTwo  = imageUrlPrefix + "/" + filenameExpander.expandString([location : "categories", type : "linkTwo", id : productCategoryId]);
+
+mediaResult = dispatcher.runSync("cmsGetMediaFiles", ["userLogin": context.userLogin, "locale": context.locale]);
+context.mediaFiles = mediaResult.mediaFiles;

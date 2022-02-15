@@ -893,7 +893,7 @@
         <attribute name="viewSize" type="Integer" mode="INOUT" optional="true"/>
         <attribute name="viewIndex" type="Integer" mode="INOUT" optional="true"/>
         <attribute name="listSize" type="Integer" mode="INOUT" optional="true"/>
-        <attribute name="mediaFiles" type="List" mode="OUT" optional="false"/>
+        <attribute name="mediaFiles" type="Object" mode="OUT" optional="false"/>
     </service>
     
     <service name="cmsCreateCustomImageSizePreset" engine="java"

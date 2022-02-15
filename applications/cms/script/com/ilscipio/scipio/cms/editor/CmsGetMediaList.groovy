@@ -29,7 +29,7 @@ if (simpleSearchText) {
 }
 
 mediaResult = dispatcher.runSync("cmsGetMediaFiles", ["userLogin": context.userLogin, "locale": context.locale, 
-    "viewSize":viewSize, "viewIndex":viewIndex, "inputFields":inputFields]);
+    "viewSize":viewSize?:50, "viewIndex":viewIndex?:0, "inputFields":inputFields]);
 if (ServiceUtil.isSuccess(mediaResult)) {
     mediaFiles = mediaResult.mediaFiles;
     

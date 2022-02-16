@@ -10,9 +10,11 @@
          for(var i = 0; i < codemirrorRefresh.length; i++){
             codemirrorRefresh[i].CodeMirror.refresh();
         }
+        console.log('openSection_' + v);
     }
 
     window.addEventListener("load", function(){
+        console.log('load');
         openSection(document.getElementById('scriptWebsiteId').value);
         var prtextEls = document.getElementsByClassName("wb_prtext");
         for(var i = 0; i < prtextEls.length; i++){
@@ -50,11 +52,12 @@
     </@section>
     <#list websites as website>
         <div id="edit_${website.webSiteId}" class="wb_entry" <#if !parameters.webSiteId?has_content || parameters.webSiteId != website.webSiteId>style="display:none"</#if>>
-            <@form method="post" action=makePageUrl("updateRobots")+"?websiteId="+website.webSiteId>
+            <@form method="post" action=makePageUrl("updateRobots")><#-- TODO: REVIEW: error (case + will create duplicate parameter): +"?websiteId="+website.webSiteId -->
                 <@section title=website.siteName!website.webSiteId!"">
                     <input type="hidden" name="webSiteId" value="${website.webSiteId}" >
                     <@field type="textarea" class="wb_prtext" name="robots"
-                    value=(parameters.description!) label="URLs" required=false>${website.robots!""}</@field>
+                    label="URLs" required=false>${website.robots!""}</@field><#-- REMOVED: value=(parameters.description!) -->
+                    <!-- test: ${website.robots!""} -->
                     <@field type="submit" text=uiLabelMap.CommonSave class="+${styles.link_run_sys!} ${styles.action_add!}"/>
                 </@section>
             </@form>

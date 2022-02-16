@@ -570,7 +570,7 @@
                     import org.ofbiz.entity.condition.*;
                     import com.ilscipio.scipio.cms.webapp.CmsWebappUtil;
 
-                    List<GenericValue> websites = EntityQuery.use(delegator).select("webSiteId").from("WebSite").where(EntityCondition.makeCondition("productStoreId", EntityJoinOperator.NOT_EQUAL, null)).orderBy("siteName").queryList()
+                    List<GenericValue> websites = delegator.from("WebSite").where(EntityCondition.makeCondition("productStoreId", EntityJoinOperator.NOT_EQUAL, null)).orderBy("siteName").queryList()
                     import org.ofbiz.entity.GenericValue;
 
                     ctx = globalContext;
@@ -629,7 +629,7 @@
 
                     ctx.indentWithTabs = UtilProperties.getPropertyAsBoolean("cms", "cms.editor.indentWithTabs", false);
 
-                    List<GenericValue> websites = EntityQuery.use(delegator).select("webSiteId").from("WebSite").where(EntityCondition.makeCondition("productStoreId", EntityJoinOperator.NOT_EQUAL, null)).orderBy("siteName").queryList()
+                    List<GenericValue> websites = delegator.from("WebSite").where(EntityCondition.makeCondition("productStoreId", EntityJoinOperator.NOT_EQUAL, null)).orderBy("siteName").queryList()
                     //List<GenericValue> websites = CmsWebappUtil.getWebSiteList(delegator);
 
                     ctx = globalContext;

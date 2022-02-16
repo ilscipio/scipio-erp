@@ -10,11 +10,9 @@
          for(var i = 0; i < codemirrorRefresh.length; i++){
             codemirrorRefresh[i].CodeMirror.refresh();
         }
-        console.log('openSection_' + v);
     }
 
     window.addEventListener("load", function(){
-        console.log('load');
         openSection(document.getElementById('scriptWebsiteId').value);
         var prtextEls = document.getElementsByClassName("wb_prtext");
         for(var i = 0; i < prtextEls.length; i++){

@@ -156,6 +156,11 @@ code package.
         <response name="error" type="view" value="EditCategory"/>
     </request-map>
 
+    <request-map uri="LookupMediaImage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupMediaImage"/>
+    </request-map>
+
     <!-- ================ Category Rollup Requests ================= -->
     <request-map uri="EditCategoryRollup">
         <security https="true" auth="true"/>
@@ -3366,6 +3371,7 @@ code package.
     <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
     <view-map name="LookupPreferredContactMech" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupPreferredContactMech"/>
     <view-map name="LookupContactList" type="screen" page="component://marketing/widget/ContactListScreens.xml#LookupContactList"/>
+    <view-map name="LookupMediaImage" type="screen" page="component://cms/widget/LookupScreens.xml#LookupMediaImage"/>
 
     <!-- Image Management request mappings -->
     <!-- SCIPIO - Remove; will be replaced with content app features -->

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file is subject to the terms and conditions defined in the
+files 'LICENSE' and 'NOTICE', which are part of this source
+code package.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
+    <form name="lookupMediaImage" target="LookupMediaImage" title="" type="single" header-row-style="header-row">
+        <field name="contentId" title="${uiLabelMap.FormFieldTitle_contentId}"><text-find/></field>
+        <field name="contentName" title="${uiLabelMap.FormFieldTitle_contentName}"><text-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupMediaImage" list-name="listIt" title="" type="list" paginate-target="LookupMediaImage" odd-row-style="alternate-row" view-size="20">
+        <actions>
+            <set field="parameters.contentTypeId" value="SCP_MEDIA"/>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="Content"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="contentId" title="${uiLabelMap.FormFieldTitle_contentId}" widget-style="${styles.link_nav_info_id}">
+            <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
+        </field>
+        <field name="contentName" title="${uiLabelMap.FormFieldTitle_contentName}"><display/></field>
+    </form>
+</forms>

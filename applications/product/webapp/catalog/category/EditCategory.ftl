@@ -107,24 +107,8 @@ code package.
 
         <@row>
             <@cell columns=12>
-                <@field type="select" name="mediaImageId" label=uiLabelMap.ProductMediaImageId>
-                  <#assign mediaFileOpts>
-                    <#assign mediaFileFound = false/>
-                    <#list (mediaFiles![]) as mediaFile>
-                      <#if !mediaFileFound>
-                        <#assign mediaFileFound = (raw(mediaFile.contentId) == raw((productCategory.mediaImageId)!))/>
-                      </#if>
-                      <option value="${mediaFile.contentId}"<#rt/>
-                        <#if raw(mediaFile.contentId) == raw((productCategory.mediaImageId)!)> selected="selected"</#if>><#rt/>
-                        ${mediaFile.contentName} [${mediaFile.contentId}]</option>
-                    </#list>
-                  </#assign>
-                  <#if !mediaFileFound && (productCategory.mediaImageId)?has_content>
-                    <option value="${productCategory.mediaImageId}" selected="selected">${productCategory.mediaImageId}</option>
-                  </#if>
-                    <option value=""></option>
-                    ${mediaFileOpts}
-                </@field>
+                <@field type="lookup" name="mediaImageId" id="mediaImageId" label=uiLabelMap.ProductMediaImageId formName="productCategoryForm"
+                    fieldFormName="LookupMediaImage" value=(productCategory.mediaImageId!)/>
             </@cell>
         </@row>
 

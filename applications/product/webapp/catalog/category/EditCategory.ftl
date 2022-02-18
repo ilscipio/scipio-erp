@@ -108,7 +108,7 @@ code package.
         <@row>
             <@cell columns=12>
                 <@field type="lookup" name="mediaImageId" id="mediaImageId" label=uiLabelMap.ProductMediaImageId formName="productCategoryForm"
-                    fieldFormName="LookupMediaImage" value=(productCategory.mediaImageId!)/>
+                    fieldFormName="LookupMediaImage" value=((productCategory.mediaImageId)!)/>
             </@cell>
         </@row>
 

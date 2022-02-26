@@ -1953,13 +1953,17 @@ function ScipioUploadProgress(options) {
                             prog.processError(uploadInfo, data._ERROR_MESSAGE_);
                         } else {
                             var readPercent = data.readPercent;
-                            prog.setProgressValue(readPercent);
-                            if (readPercent > 99) {
-                                // stop the fjTimer
-                                timerId.stop();
-                                prog.setProgressText(prog.uiLabelMap.CommonSave + "...");
-                                // call the upload complete method to do final stuff
-                                prog.checkIframeStatus(uploadInfo);
+                            if (typeof readPercent !== 'undefined') {
+                                prog.setProgressValue(readPercent);
+                                if (readPercent > 99) {
+                                    // stop the fjTimer
+                                    timerId.stop();
+                                    prog.setProgressText(prog.uiLabelMap.CommonSave + "...");
+                                    // call the upload complete method to do final stuff
+                                    prog.checkIframeStatus(uploadInfo);
+                                }
+                            } else {
+                                console.log("warn: no readPercent received from server for file upload progress status");
                             }
                         }
                     },

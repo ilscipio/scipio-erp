@@ -69,7 +69,7 @@ code package.
                                   <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
                               </#if>
                           </#if>
-                        <input type="hidden" name="JavaScriptEnabled" value="N"/>
+                        <#--<input type="hidden" name="JavaScriptEnabled" value="N"/>-->
                         <input type="submit" style="display: none;"/>
                     </form>
                          <@row>

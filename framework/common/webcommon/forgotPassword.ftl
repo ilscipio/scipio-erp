@@ -30,7 +30,7 @@ code package.
                             <a href="<@pageUrl>authview</@pageUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
                             <@field type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" text=uiLabelMap.CommonGetPasswordHint widgetOnly=true/>
                             <@field type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" text=uiLabelMap.CommonEmailPassword widgetOnly=true/>
-                            <input type="hidden" name="JavaScriptEnabled" value="N"/>
+                            <#--<input type="hidden" name="JavaScriptEnabled" value="N"/>-->
                         </@cell>
                     </@row>
                 </form>

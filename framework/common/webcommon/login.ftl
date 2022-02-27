@@ -56,7 +56,7 @@ code package.
                 <small><a href="<@pageUrl>forgotPassword</@pageUrl>">${uiLabelMap.CommonForgotYourPassword}</a></small>
              </@cell>
             <@cell class="+${styles.text_right!}" columns=5>
-                <input type="hidden" name="JavaScriptEnabled" value="N"/>
+                <#--<input type="hidden" name="JavaScriptEnabled" value="N"/>-->
                 <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>
             </@cell>
         </@row>
@@ -68,7 +68,7 @@ code package.
 </@row>
 
 <@script>
-  document.loginform.JavaScriptEnabled.value = "Y";
+  <#--document.loginform.JavaScriptEnabled.value = "Y";-->
   <#if focusName>
     document.loginform.USERNAME.focus();
   <#else>

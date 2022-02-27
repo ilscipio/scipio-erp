@@ -2006,10 +2006,12 @@ public final class UtilHttp {
      * @return whether javascript is enabled
      */
     public static boolean isJavaScriptEnabled(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        Boolean javaScriptEnabled = (Boolean) session.getAttribute("javaScriptEnabled");
-        if (javaScriptEnabled != null) {
-            return javaScriptEnabled;
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Boolean javaScriptEnabled = (Boolean) session.getAttribute("javaScriptEnabled");
+            if (javaScriptEnabled != null) {
+                return javaScriptEnabled;
+            }
         }
         // SCIPIO: 2018-06-07: javascript should be assumed enabled by default in Scipio, unless detected as off
         //return false;

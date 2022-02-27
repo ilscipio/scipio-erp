@@ -741,7 +741,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
 <#assign field_lookup_widget_defaultArgs = {
   "name":"", "formName":"", "fieldFormName":"", "class":"", "style":"", "alert":"", "value":"", "size":"", "maxlength":"", "id":"", 
   "events":{}, "readonly":false, "autocomplete":"", "descriptionFieldName":"", "targetParameterIter":"", "imgSrc":"", "ajaxUrl":"", 
-  "ajaxEnabled":false, "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true",
+  "ajaxEnabled":"", "presentation":"layer", "width":"", "height":"", "position":"", "fadeBackground":"true",
   "clearText":"", "showDescription":"", "initiallyCollapsed":"", "lastViewName":"main", "title":"", "fieldTitleBlank":false, 
   "inlineLabel":false, "inlinePostfix":false, "tooltip":"", "required":false, "attribs":{}, "passArgs":{}
 }>
@@ -753,7 +753,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
     <#if ajaxEnabled?has_content>
       <#local ajaxEnabled = ajaxEnabled?boolean>
     <#else>
-      <#local ajaxEnabled = javaScriptEnabled!false>
+      <#local ajaxEnabled = javaScriptEnabled!true>
     </#if>
   </#if>
   <@field_lookup_markup_widget name=name formName=formName fieldFormName=fieldFormName class=class style=style alert=alert value=value size=size 

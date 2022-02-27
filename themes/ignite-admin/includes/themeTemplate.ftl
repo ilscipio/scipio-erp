@@ -101,14 +101,13 @@ NOTES:
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_lookup_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <#--
   <#if !ajaxEnabled?is_boolean>
     <#if ajaxEnabled?has_content>
       <#local ajaxEnabled = ajaxEnabled?boolean>
     <#else>
-      <#local ajaxEnabled = javaScriptEnabled!false>
+      <#local ajaxEnabled = javaScriptEnabled!true>
     </#if>
-  </#if>-->
+  </#if>
   <@scipioStdTmplLib.field_lookup_markup_widget name=name formName=formName fieldFormName=fieldFormName class=class style=style alert=alert value=value size=size 
     maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName 
     targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width 

@@ -692,7 +692,11 @@ public class LoginWorker {
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error getting user preference", module);
         }
-        session.setAttribute("javaScriptEnabled", "Y".equals(javaScriptEnabled));
+        // SCIPIO: 2.1.0: Default should be Y
+        // FIXME: the second line should be used here, unfortunately pre-existing defaults were wrong, so for now
+        //  we'll simply omit setting it - TODO: UNCOMMENT SECOND LINE IN FUTURE
+        //session.setAttribute("javaScriptEnabled", "Y".equals(javaScriptEnabled));
+        //session.setAttribute("javaScriptEnabled", !"N".equals(javaScriptEnabled));
 
         ModelEntity modelUserLogin = userLogin.getModelEntity();
         if (modelUserLogin.isField("partyId")) {

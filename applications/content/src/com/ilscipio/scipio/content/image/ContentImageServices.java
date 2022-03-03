@@ -18,6 +18,7 @@
  *******************************************************************************/
 package com.ilscipio.scipio.content.image;
 
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -254,6 +255,8 @@ public abstract class ContentImageServices {
             if ("success".equals(resultBufImgMap.get("responseMessage"))) {
                 BufferedImage bufImg = (BufferedImage) resultBufImgMap.get("bufferedImage");
 
+                int colorSpaceType = bufImg.getColorModel().getColorSpace().getType();
+
                 // get Dimensions
                 double imgHeight = bufImg.getHeight();
                 double imgWidth = bufImg.getWidth();
@@ -406,8 +409,17 @@ public abstract class ContentImageServices {
                             if (!ServiceUtil.isSuccess(resultScaleImgMap)) {
                                 String errMsg = "Error scaling image for file [" + bufImgPath + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
                                         + ": " + ServiceUtil.getErrorMessage(resultScaleImgMap);
-                                Debug.logError(logPrefix + errMsg, module);
-                                scaleErrorCount++;
+                                if (colorSpaceType == ColorSpace.TYPE_GRAY || colorSpaceType == ColorSpace.TYPE_CMYK) {
+                                    errMsg += "; aborting resizing due to possibly unsupported image colorspace [" +
+                                            (colorSpaceType == ColorSpace.TYPE_GRAY ? "TYPE_GRAY" : "TYPE_CMYK") + "]";
+                                    // SCIPIO: 2.1.0: These image types typically fail scaling
+                                    Debug.logError(logPrefix + errMsg, module);
+                                    scaleErrorCount++;
+                                    return UtilMisc.put(ServiceUtil.returnError(errMsg), "statusCode", "unsupported-colorspace");
+                                } else {
+                                    Debug.logError(logPrefix + errMsg, module);
+                                    scaleErrorCount++;
+                                }
                                 continue;
                             }
                         } catch(Exception e) {
@@ -489,9 +501,18 @@ public abstract class ContentImageServices {
                             } catch (Exception e) {
                                 String errMsg = "Error writing image for file [" + bufImgPath + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
                                         + ": " + e.toString();
-                                Debug.logError(logPrefix + errMsg, module);
-                                writeErrorCount++;
-                                continue;
+                                if (colorSpaceType == ColorSpace.TYPE_GRAY || colorSpaceType == ColorSpace.TYPE_CMYK) {
+                                    errMsg += "; aborting write due to possibly unsupported image colorspace [" +
+                                            (colorSpaceType == ColorSpace.TYPE_GRAY ? "TYPE_GRAY" : "TYPE_CMYK") + "]";
+                                    // SCIPIO: 2.1.0: These image types typically fail writing
+                                    Debug.logError(logPrefix + errMsg, module);
+                                    writeErrorCount++;
+                                    return UtilMisc.put(ServiceUtil.returnError(errMsg), "statusCode", "unsupported-colorspace");
+                                } else {
+                                    Debug.logError(logPrefix + errMsg, module);
+                                    writeErrorCount++;
+                                    continue;
+                                }
                             }
                         }
 
@@ -772,6 +793,8 @@ public abstract class ContentImageServices {
                 stream.close();
             }
 
+            int colorSpaceType = bufImg.getColorModel().getColorSpace().getType();
+
             // get Dimensions
             double imgHeight = bufImg.getHeight();
             double imgWidth = bufImg.getWidth();
@@ -998,7 +1021,8 @@ public abstract class ContentImageServices {
                         } else {
                             Map<String, Object> scaleDims = ImageTransform.getScaleImageDimensions(imgHeight, imgWidth, targetHeight.doubleValue(), targetWidth.doubleValue(), locale);
                             if (!ServiceUtil.isSuccess(scaleDims) || scaleDims.get("width") == null || scaleDims.get("height") == null) {
-                                String errMsg = "Error getting scaled image dimensions for contentId [" + imageOrigContentId + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                                String errMsg = "Error getting scaled image dimensions for contentId [" + imageOrigContentId + "] sizeType [" + sizeType +
+                                        "] from [" + (int) imgWidth + "x" + (int) imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
                                         + ": " + ServiceUtil.getErrorMessage(scaleDims);
                                 Debug.logError(logPrefix + errMsg, module);
                                 scaleErrorCount++;
@@ -1023,14 +1047,25 @@ public abstract class ContentImageServices {
                     try {
                         resultScaleImgMap = ImageTransform.scaleImage(bufImg, imgHeight, imgWidth, targetHeight.doubleValue(), targetWidth.doubleValue(), locale, scalingOptions);
                         if (!ServiceUtil.isSuccess(resultScaleImgMap)) {
-                            String errMsg = "Error scaling image for contentId [" + imageOrigContentId + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                            String errMsg = "Error scaling image for contentId [" + imageOrigContentId + "] sizeType [" + sizeType +
+                                    "] from [" + (int) imgWidth + "x" + (int) imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
                                     + ": " + ServiceUtil.getErrorMessage(resultScaleImgMap);
-                            Debug.logError(logPrefix + errMsg, module);
-                            scaleErrorCount++;
+                            if (colorSpaceType == ColorSpace.TYPE_GRAY || colorSpaceType == ColorSpace.TYPE_CMYK) {
+                                errMsg += "; aborting resizing due to possibly unsupported image colorspace [" +
+                                        (colorSpaceType == ColorSpace.TYPE_GRAY ? "TYPE_GRAY" : "TYPE_CMYK") + "]";
+                                // SCIPIO: 2.1.0: These image types typically fail scaling
+                                Debug.logError(logPrefix + errMsg, module);
+                                scaleErrorCount++;
+                                return UtilMisc.put(ServiceUtil.returnError(errMsg), "statusCode", "unsupported-colorspace");
+                            } else {
+                                Debug.logError(logPrefix + errMsg, module);
+                                scaleErrorCount++;
+                            }
                             continue;
                         }
                     } catch(Exception e) {
-                        String errMsg = "Error scaling image for contentId [" + imageOrigContentId + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                        String errMsg = "Error scaling image for contentId [" + imageOrigContentId + "] sizeType [" + sizeType +
+                                "] from [" + (int) imgWidth + "x" + (int) imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
                                 + ": " + e.toString();
                         Debug.logError(logPrefix + errMsg, module);
                         scaleErrorCount++;
@@ -1052,11 +1087,21 @@ public abstract class ContentImageServices {
                                     (imageProfile != null) ? imageProfile.getName() : null, imageWriteOptions, delegator); // SCIPIO: ImageIO->ImageStorers
                             byteout = byteos.toByteArray();
                         } catch (Exception e) {
-                            String errMsg = "Error writing image for contentId [" + imageOrigContentId + "] sizeType [" + sizeType + "] from [" + imgWidth + "x" + imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
+                            String errMsg = "Error writing image for contentId [" + imageOrigContentId + "] sizeType [" + sizeType +
+                                    "] from [" + (int) imgWidth + "x" + (int) imgHeight + "] to [" + targetWidth + "x" + targetHeight + "]"
                                     + ": " + e.toString();
-                            Debug.logError(logPrefix + errMsg, module);
-                            writeErrorCount++;
-                            continue;
+                            if (colorSpaceType == ColorSpace.TYPE_GRAY || colorSpaceType == ColorSpace.TYPE_CMYK) {
+                                errMsg += "; aborting write due to possibly unsupported image colorspace [" +
+                                        (colorSpaceType == ColorSpace.TYPE_GRAY ? "TYPE_GRAY" : "TYPE_CMYK") + "]";
+                                // SCIPIO: 2.1.0: These image types typically fail writing
+                                Debug.logError(logPrefix + errMsg, module);
+                                writeErrorCount++;
+                                return UtilMisc.put(ServiceUtil.returnError(errMsg), "statusCode", "unsupported-colorspace");
+                            } else {
+                                Debug.logError(logPrefix + errMsg, module);
+                                writeErrorCount++;
+                                continue;
+                            }
                         } finally {
                             byteos.close();
                         }

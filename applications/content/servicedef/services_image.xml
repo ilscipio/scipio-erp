@@ -105,6 +105,9 @@
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/><!-- FIXME: currently always zero for this service -->
+        <attribute name="statusCode" mode="OUT" type="String" optional="true">
+            <description>Known values: unsupported-colorspace</description>
+        </attribute>
     </service>
     
     <service name="contentImageDbScaleInAllSizeCore" engine="java"
@@ -209,6 +212,9 @@
         <attribute name="successCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="failCount" mode="OUT" type="Integer" optional="true"/>
         <attribute name="skipCount" mode="OUT" type="Integer" optional="true"/>
+        <attribute name="statusCode" mode="OUT" type="String" optional="true">
+            <description>Known values: unsupported-colorspace</description>
+        </attribute>
     </service>
 
     <!-- NOTE: For product images, use productImageAutoRescale -->

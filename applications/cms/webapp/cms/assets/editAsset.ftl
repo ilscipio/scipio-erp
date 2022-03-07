@@ -9,10 +9,19 @@
 <#-- EDIT TEMPLATE -->
 <#if assetTemplateModel?has_content>
     <#assign assetType = raw(assetTemplateModel.assetType!"TEMPLATE")>
+    <#-- SCIPIO: 2.1.0: Decoupled assetType from editorType so that content assets can use template editor by default or optionally -->
+    <#assign editorType = parameters.editorType!>
     <#if "CONTENT" == assetType>
         <#assign editAssetUri = "editContentAsset">
         <#assign listAssetsUri = "contentAssets">
+        <#if !editorType?has_content>
+            <#-- SCIPIO: 2.1.0: Now using template editor by default for content assets -->
+            <#assign editorType = "TEMPLATE">
+        </#if>
     <#else>
+        <#if !editorType?has_content>
+            <#assign editorType = "TEMPLATE">
+        </#if>
         <#assign editAssetUri = "editAsset">
         <#assign listAssetsUri = "assets">
     </#if>
@@ -22,11 +31,11 @@
     <@script>
         <@commonCmsScripts />
 
-        <#if "CONTENT" == assetType>
+        <#if "CONTENT" == editorType>
             <@cmsContentEditorScript/>
         <#else>
             $(document).ready(function() {
-              <#if "TEMPLATE" == assetType>
+              <#if "TEMPLATE" == editorType>
                 CodeMirror.fromTextArea($('textarea#templateBody')[0], {
                     lineNumbers: true,
                     matchBrackets: true,
@@ -141,12 +150,12 @@
                       <@field type="hidden" name="envAssetType" value=(envAssetType!)/>
 
                       <#-- General Content -->
-                    <@section title=(assetType == "TEMPLATE")?then(uiLabelMap.CmsTemplate, uiLabelMap.CmsContent) class="+editorContent">
+                    <@section title=(editorType == "TEMPLATE")?then(uiLabelMap.CmsTemplate, uiLabelMap.CmsContent) class="+editorContent">
                       <@fields type="default-compact">
                         <#assign expandLangVisible = true>
                         <#assign labelDetail = "">
                         <#assign tooltip = "">
-                        <#if assetType == "CONTENT">
+                        <#if editorType == "CONTENT">
                           <#assign expandLang = Static["com.ilscipio.scipio.cms.template.AttributeExpander$ExpandLang"].fromStringSafe("FTL")!>
                           <#if expandLang?has_content>
                               <#assign supportedLangStr = "${raw(uiLabelMap.CmsSupportedLang)}: ${raw(expandLang.getDescriptionWithExample(locale)!)}"/>
@@ -159,7 +168,7 @@
                               </#if>
                           </#if>
                         </#if>
-                        <@field label=(assetType == "TEMPLATE")?then(uiLabelMap.CmsTemplateBody, getLabel('OrderSendConfirmationEmailBody', 'OrderUiLabels')) type="textarea"
+                        <@field label=(editorType == "TEMPLATE")?then(uiLabelMap.CmsTemplateBody, getLabel('OrderSendConfirmationEmailBody', 'OrderUiLabels')) type="textarea"
                             class="+editor" containerClass="+editor-field" name="templateBody" id="templateBody" value=(templateBody!"") rows=30 labelDetail=labelDetail tooltip=tooltip/>
                       </@fields>
                         <#-- Codemirrors default font-size is tiny for the hints, so resetting here -->

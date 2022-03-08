@@ -71,7 +71,6 @@ SCIPIO_ADDON_MAP[matomo]="matomo addons/matomo ee matomo /"
 SCIPIO_ADDON_MAP[wordpress]="wordpress addons/wordpress ee wordpress /"
 SCIPIO_ADDON_MAP[amazon-selling-partners]="amazon-selling-partners addons/amazon-selling-partners ee amazon-selling-partners /"
 SCIPIO_ADDON_MAP[algolia]="algolia addons/algolia ee algolia /"
-SCIPIO_ADDON_MAP[web-pos]="web-pos addons/web-pos ee web-pos /"
 
 # OVERRIDES
 # If you need to override any of the above definitions (for whatever reason, normally not),

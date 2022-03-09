@@ -193,9 +193,9 @@ code package.
             <set field="appbarTemplateLocation" from-field="appbarTemplateLocation" default-value="${layoutSettings.VT_NAV_TMPLT_LOC[0]}" />
             <set field="appbarOpenTemplateLocation" from-field="appbarOpenTemplateLocation" default-value="${layoutSettings.VT_NAV_OPEN_TMPLT[0]}" />
             <set field="appbarCloseTemplateLocation" from-field="appbarCloseTemplateLocation" default-value="${layoutSettings.VT_NAV_CLOSE_TMPLT[0]}" />
-            <set field="messagesTemplateLocation" from-field="messagesTemplateLocation" default-value="${layoutSettings.VT_MSG_TMPLT_LOC[0]}" />
-            <set field="loginTemplateLocation" from-field="loginTemplateLocation" default-value="${layoutSettings.VT_LOGIN_TMPLT_LOC[0]}" />
-            <set field="errorTemplateLocation" from-field="errorTemplateLocation" default-value="${layoutSettings.VT_ERROR_TMPLT_LOC[0]}" />
+            <set field="messagesTemplateLocation" from-field="messagesTemplateLocation" default-value="${layoutSettings.VT_MSG_TMPLT_LOC[0]}" global="true"/>
+            <set field="loginTemplateLocation" from-field="loginTemplateLocation" default-value="${layoutSettings.VT_LOGIN_TMPLT_LOC[0]}" global="true"/>
+            <set field="errorTemplateLocation" from-field="errorTemplateLocation" default-value="${layoutSettings.VT_ERROR_TMPLT_LOC[0]}" global="true"/>
             <!-- SCIPIO: This is counter-productive; we use app-bar-display
             <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!- - disable ofbiz setup by default - ->
             -->
@@ -241,12 +241,15 @@ code package.
 
                 if (!context.messagesTemplateLocation) {
                     context.messagesTemplateLocation = "component://common/webcommon/includes/messages.ftl"
+                    globalContext.messagesTemplateLocation = context.messagesTemplateLocation
                 }
                 if (!context.loginTemplateLocation) {
                     context.loginTemplateLocation = "component://common/webcommon/login.ftl"
+                    globalContext.loginTemplateLocation = context.loginTemplateLocation
                 }
                 if (!context.errorTemplateLocation) {
                     context.errorTemplateLocation = "component://common/webcommon/error.ftl"
+                    globalContext.errorTemplateLocation = context.errorTemplateLocation
                 }
             ]]></script>
 

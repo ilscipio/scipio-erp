@@ -124,9 +124,8 @@ public class ProductContentWrapper extends CommonContentWrapper {
         if (product == null) {
             return null;
         }
-        if (delegator == null) { // SCIPIO: This should be set and cases should be investigated
-            Debug.logWarning("Delegator is null when getting product content; using default delegator", module);
-            delegator = Delegator.defaultDelegator();
+        if (delegator == null) {
+            delegator = product.getDelegator();
         }
 
         UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);

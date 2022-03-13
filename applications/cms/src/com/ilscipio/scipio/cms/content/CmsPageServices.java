@@ -51,8 +51,6 @@ public abstract class CmsPageServices {
 
         HttpServletRequest request = (HttpServletRequest) context.get("request");
         HttpServletResponse response = (HttpServletResponse) context.get("response");
-        // NOTE: request.getServletContext() new in servlet API 3.0
-        ServletContext servletContext = request != null ? request.getServletContext() : null;
 
         boolean verifyWebSite = Boolean.TRUE.equals(context.get("verifyWebSite"));
         boolean useStaticWebSite = Boolean.TRUE.equals(context.get("useStaticWebSite"));
@@ -137,12 +135,12 @@ public abstract class CmsPageServices {
 
             CmsPageContent pageVars = new CmsPageContent(page);
 
-            if (request.getAttribute("delegator") == null) {
+            if (request != null && request.getAttribute("delegator") == null) {
                 Debug.logError("CMS: Delegator not found in request during getPage setup", module);
             }
 
             page.getTemplate().getRenderer().populateBasicContextVariables(pageVars,
-                    new CmsPageContext(request, response, servletContext, webSiteId, false, RendererType.CMS_EDITOR));
+                    CmsPageContext.fromRequest(request, response, webSiteId, false, RendererType.CMS_EDITOR));
             result.put("variables", getPageVariablesDescriptor(pageVars));
 
             result.put("versionId", version.getId());

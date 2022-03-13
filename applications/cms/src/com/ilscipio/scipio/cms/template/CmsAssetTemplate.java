@@ -485,7 +485,7 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
         public Object processAndRender(RenderArgs renderArgs) throws CmsException {
             if (renderArgs.isNewCmsCtx()) {
                 if (renderArgs.getPageContext() == null) {
-                    renderArgs.setPageContext(CmsPageContext.makeFromGenericRequestContext(renderArgs.getContext()));
+                    renderArgs.setPageContext(CmsPageContext.makeFromGenericContext(renderArgs.getContext()));
                     if (renderArgs.getContent() == null) {
                         renderArgs.setContent(new CmsPageContent((CmsPage) null));
                     }

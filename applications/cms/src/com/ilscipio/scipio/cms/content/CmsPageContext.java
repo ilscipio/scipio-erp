@@ -7,6 +7,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
@@ -44,8 +45,7 @@ import com.ilscipio.scipio.cms.template.RendererType;
  * NOTE: Not thread-safe (OK for this class).
  */
 public class CmsPageContext {
-
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     private final HttpServletRequest request;
     private final boolean preview;
@@ -53,13 +53,15 @@ public class CmsPageContext {
     private final ServletContext servletContext;
     private final String webSiteId;
     private final RendererType rendererType;
+    private final Delegator delegator;
+    private final LocalDispatcher dispatcher;
 
-    private GenericValue userLogin = null;
-    private GenericValue party = null;
-    private GenericValue person = null;
-    private Delegator delegator = null;
+    private CmsControlState controlState;
+    private GenericValue userLogin;
+    private GenericValue party;
+    private GenericValue person;
 
-    public CmsPageContext(HttpServletRequest request,
+    public CmsPageContext(Delegator delegator, LocalDispatcher dispatcher, HttpServletRequest request,
             HttpServletResponse response, ServletContext servletContext,
             String webSiteId, boolean preview, RendererType rendererType) {
         this.request = request;
@@ -68,6 +70,16 @@ public class CmsPageContext {
         this.webSiteId = webSiteId;
         this.preview = preview;
         this.rendererType = rendererType;
+        this.delegator = delegator;
+        this.dispatcher = dispatcher;
+    }
+
+    public static CmsPageContext fromRequest(HttpServletRequest request,
+                                             HttpServletResponse response,
+                                             String webSiteId, boolean preview, RendererType rendererType) {
+        return new CmsPageContext((Delegator) request.getAttribute("delegator"),
+                (LocalDispatcher) request.getAttribute("dispatcher"),
+                request, response, request.getServletContext(), webSiteId, preview, rendererType);
     }
 
     /**
@@ -82,9 +94,19 @@ public class CmsPageContext {
         // hide CMS renderer coding errors... nothing can do about this (?) because anything stored in context can be corrupted
         CmsPageContext pageContext = CmsRenderUtil.getPageContext(context);
         if (pageContext == null) {
-            pageContext = CmsPageContext.makeFromGenericRequestContext(context);
+            pageContext = CmsPageContext.makeFromGenericContext(context);
         }
         return pageContext;
+    }
+
+    private static CmsPageContext makeFromContext(Map<String, ?> context, RendererType rendererType) {
+        HttpServletRequest request = (HttpServletRequest) context.get("request");
+        HttpServletResponse response = (HttpServletResponse) context.get("response");
+        ServletContext servletContext = (request != null) ? request.getServletContext() : null;
+        boolean preview = Boolean.TRUE.equals(context.get("cmsIsPreview"));
+        String webSiteId = (request != null) ? WebSiteWorker.getWebSiteId(request) : WebSiteWorker.getWebSiteIdFromContext(context);
+        return new CmsPageContext(getDelegator(context, request), getDispatcher(context, request),
+                request, response, servletContext, webSiteId, preview, rendererType);
     }
 
     /**
@@ -94,8 +116,8 @@ public class CmsPageContext {
      * NOTE: the CMS renderer context is compatible with this also, but this shouldn't be called for it.
      * WARN: usually you should use {@link #getOrMakeFromContext} instead.
      */
-    public static CmsPageContext makeFromGenericRequestContext(Map<String, ?> context) {
-        return makeFromRequestContext(context, RendererType.GENERIC);
+    public static CmsPageContext makeFromGenericContext(Map<String, ?> context) {
+        return makeFromContext(context, RendererType.GENERIC);
     }
 
     /**
@@ -103,8 +125,8 @@ public class CmsPageContext {
      * here for completeness.
      * WARN: usually you should use {@link #getOrMakeFromContext} instead.
      */
-    public static CmsPageContext makeFromCmsRequestContext(Map<String, ?> context) {
-        return makeFromRequestContext(context, RendererType.CMS);
+    public static CmsPageContext makeFromCmsContext(Map<String, ?> context) {
+        return makeFromContext(context, RendererType.CMS);
     }
 
     /**
@@ -112,24 +134,39 @@ public class CmsPageContext {
      * here for completeness.
      * WARN: usually you should use {@link #getOrMakeFromContext} instead.
      */
-    public static CmsPageContext makeFromCmsEditorRequestContext(Map<String, ?> context) {
-        return makeFromRequestContext(context, RendererType.CMS_EDITOR);
+    public static CmsPageContext makeFromCmsEditorContext(Map<String, ?> context) {
+        return makeFromContext(context, RendererType.CMS_EDITOR);
     }
 
-    private static CmsPageContext makeFromRequestContext(Map<String, ?> context, RendererType rendererType) {
-        HttpServletRequest request = (HttpServletRequest) context.get("request");
-        HttpServletResponse response = (HttpServletResponse) context.get("response");
-        ServletContext servletContext = request.getServletContext();
-        boolean preview = Boolean.TRUE.equals(context.get("cmsIsPreview"));
-        String webSiteId = WebSiteWorker.getWebSiteId(request);
-        return new CmsPageContext(request, response, servletContext, webSiteId, preview, rendererType);
+    private static Delegator getDelegator(Map<String, ?> context, HttpServletRequest request) {
+        Delegator delegator = (Delegator) context.get("delegator");
+        if (delegator == null) {
+            delegator = (request != null) ? (Delegator) request.getAttribute("delegator") : null;
+            if (delegator == null) {
+                Debug.logWarning("null delegator in page context", module);
+                delegator = Delegator.defaultDelegator();
+            }
+        }
+        return delegator;
+    }
+
+    private static LocalDispatcher getDispatcher(Map<String, ?> context, HttpServletRequest request) {
+        LocalDispatcher dispatcher = (LocalDispatcher) context.get("dispatcher");
+        if (dispatcher == null) {
+            dispatcher = (request != null) ? (LocalDispatcher) request.getAttribute("dispatcher") : null;
+            if (dispatcher == null) {
+                Debug.logWarning("null dispatcher in page context", module);
+            }
+        }
+        return dispatcher;
     }
 
     public Delegator getDelegator() {
-        if (delegator == null) {
-            delegator = (Delegator) request.getAttribute("delegator");
-        }
         return delegator;
+    }
+
+    public LocalDispatcher getDispatcher() {
+        return dispatcher;
     }
 
     /**
@@ -296,6 +333,15 @@ public class CmsPageContext {
     }
 
     public CmsControlState getControlState() {
-        return CmsControlState.fromRequest(request);
+        CmsControlState controlState = this.controlState;
+        if (controlState == null) {
+            if (request != null) {
+                controlState = CmsControlState.fromRequest(request);
+            } else {
+                controlState = CmsControlState.make();
+            }
+            this.controlState = controlState;
+        }
+        return controlState;
     }
 }

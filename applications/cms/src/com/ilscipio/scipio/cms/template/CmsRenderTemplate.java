@@ -590,10 +590,10 @@ public interface CmsRenderTemplate extends Serializable {
          */
         protected void populateSystemRenderContext(RenderArgs renderArgs) {
             if (renderArgs.isSystemCtxCmsOnly()) {
-                populateContextForRequestCmsOnly(renderArgs.getContext(), null,
+                populateContextForRenderCmsOnly(renderArgs.getContext(), null,
                         renderArgs.getContent(), renderArgs.getPageContext(), getRenderPageTemplate(renderArgs));
             } else {
-                populateContextForRequest(renderArgs.getContext(), null,
+                populateContextForRender(renderArgs.getContext(), null,
                         renderArgs.getContent(), renderArgs.getPageContext(), getRenderPageTemplate(renderArgs));
             }
             if (!renderArgs.isSystemCtxCmsOnly()) {
@@ -662,14 +662,14 @@ public interface CmsRenderTemplate extends Serializable {
          * Try to keep as close as possible in every way to that method (down to code style),
          * to minimize chances of missing anything.
          */
-        public static void populateContextForRequest(MapStack<String> context, ScreenRenderer screens, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {
+        public static void populateContextForRender(MapStack<String> context, ScreenRenderer screens, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {
             // top request-/page-level cms-specific variables
             populateTopCmsContextVariables(context, pageContent, pageContext, pageTemplate);
             ScreenRenderer.populateContextForRequest(context, false, screens,
                     pageContext.getRequest(), pageContext.getResponse(), pageContext.getServletContext());
         }
 
-        public static void populateContextForRequestCmsOnly(MapStack<String> context, ScreenRenderer screens, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {
+        public static void populateContextForRenderCmsOnly(MapStack<String> context, ScreenRenderer screens, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {
             populateTopCmsContextVariables(context, pageContent, pageContext, pageTemplate);
         }
 
@@ -739,38 +739,6 @@ public interface CmsRenderTemplate extends Serializable {
             } catch(Exception e) {
                 Debug.logError(e, "Cms: Error loading CommonUiLabels: " + e.getMessage(), module);
             }
-        }
-
-        /**
-         * @deprecated too simplistic - no expansion timing control.
-         */
-        @Deprecated
-        protected void populateInitialPageContent(RenderArgs renderArgs, Set<String> contextSkipNames) {
-            CmsPageContent content = renderArgs.getContent().normalizeForAttributes(template.getExpansionSortedAttributeTemplates(), renderArgs.getPageContext());
-            content.transferToContext(renderArgs.getContext(), contextSkipNames);
-            setUpdatePageContentInstance(renderArgs, content);
-        }
-
-        /**
-         * @deprecated too simplistic - no expansion timing control.
-         */
-        @Deprecated
-        protected void setUpdatePageContentInstance(RenderArgs renderArgs, CmsPageContent content) {
-            renderArgs.setContent(content); // theoreticially needed, but in practice usually will end up being same instance...
-            renderArgs.getContext().put("cmsContent", content);
-        }
-
-        /**
-         * @deprecated too simplistic - no expansion timing control.
-         */
-        @Deprecated
-        protected void populateExpandedPageContent(RenderArgs renderArgs, Set<String> contextSkipNames) {
-            // NOTE: 2017: the source injection context is simply the rendering context. it already contains everything needed, can avoid more copies.
-            // NOTE: injectVariableContent currently injects/replaces content in-place (into first map)
-            CmsPageContent content = renderArgs.getContent().parseExpandAttributes(template.getExpansionSortedAttributeTemplates(), renderArgs.getContext(), renderArgs.getPageContext());
-            // Save all updated (injected) content back into context (making sure not to override important names)
-            content.transferToContext(renderArgs.getContext(), contextSkipNames);
-            setUpdatePageContentInstance(renderArgs, content);
         }
 
         /**

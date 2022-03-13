@@ -37,7 +37,7 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
     @Override
     public void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response, ServletContext servletCtx,
             CmsPage cmsPage, CmsView view, String webSiteId, CmsCallType renderMode, Writer writer) throws Exception {
-        CmsPageContext cmsPageContext = new CmsPageContext(request, response, servletCtx,
+        CmsPageContext cmsPageContext = CmsPageContext.fromRequest(request, response,
                 webSiteId, renderMode == CmsCallType.OFBIZ_PREVIEW, RendererType.CMS);
         invokeCmsRendering(request, response, servletCtx, cmsPage, cmsPageContext, writer);
     }

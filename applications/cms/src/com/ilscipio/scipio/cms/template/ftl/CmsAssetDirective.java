@@ -159,10 +159,10 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
         boolean newCmsCtx = false;
         if (pageContext == null) {
             newCmsCtx = true;
-            pageContext = CmsPageContext.makeFromGenericRequestContext(context);
-            if (pageContent == null) {
-                pageContent = new CmsPageContent((CmsPage) null);
-            }
+            pageContext = CmsPageContext.makeFromGenericContext(context);
+        }
+        if (pageContent == null) {
+            pageContent = new CmsPageContent((CmsPage) null);
         }
 
         Map<String, TemplateModel> params = UtilGenerics.checkMap(paramsUntyped);
@@ -266,7 +266,8 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
                 // render asset
                 if (mode == Mode.STANDALONE) {
                     // TODO: per-asset share-scope setting (protectScope here)
-                    assetTemplate.getRenderer().processAndRender(new AtRenderArgs(out, context, assetContent, pageContext, ctxVars, ovrdCtxVars, true, newCmsCtx));
+                    assetTemplate.getRenderer().processAndRender(new AtRenderArgs(out, context, assetContent, pageContext,
+                            ctxVars, ovrdCtxVars, true, newCmsCtx));
                 } else if (mode == Mode.INCLUDE) {
                     assetTemplate.getRenderer().includeTemplate(env);
                 } else if (mode == Mode.IMPORT) {

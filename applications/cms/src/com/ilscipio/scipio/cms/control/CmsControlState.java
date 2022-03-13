@@ -37,7 +37,7 @@ public class CmsControlState implements Serializable, RedirectAttrPolicy.NotSave
     private Boolean requestChained;
 
     private String processMappingId;
-    private transient CmsProcessMapping processMapping; // will be null if deserialized
+    private transient CmsProcessMapping processMapping;
 
     private String requestServletPath;
     private String requestPath;
@@ -83,6 +83,10 @@ public class CmsControlState implements Serializable, RedirectAttrPolicy.NotSave
         this.origRequestQueryString = other.origRequestQueryString;
 
         this.controlUris = controlUris;
+    }
+
+    public static CmsControlState make() {
+        return new CmsControlState();
     }
 
     /**

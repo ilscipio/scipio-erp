@@ -94,7 +94,7 @@ public class WebSiteWorker {
      * <p>
      * Added 2018-08-02.
      */
-    public static String getWebSiteIdFromContext(Map<String, Object> context, RenderEnvType renderEnvType) {
+    public static String getWebSiteIdFromContext(Map<String, ?> context, RenderEnvType renderEnvType) {
         if (renderEnvType.isStatic()) { // NOTE: for now we assume email and non-email static should all be similar...
             String webSiteId = (String) context.get("webSiteId");
             if (UtilValidate.isNotEmpty(webSiteId)) {
@@ -119,14 +119,14 @@ public class WebSiteWorker {
      * <p>
      * Added 2018-08-17.
      */
-    public static String getWebSiteIdFromContext(Map<String, Object> context) {
+    public static String getWebSiteIdFromContext(Map<String, ?> context) {
         return getWebSiteIdFromContext(context, RenderEnvType.fromContext(context));
     }
 
     /**
      * SCIPIO: Gets WebSite from context.
      */
-    public static GenericValue getWebSiteFromContext(Map<String, Object> context, RenderEnvType renderEnvType) {
+    public static GenericValue getWebSiteFromContext(Map<String, ?> context, RenderEnvType renderEnvType) {
         String webSiteId = getWebSiteIdFromContext(context);
         if (webSiteId == null) {
             return null;
@@ -138,7 +138,7 @@ public class WebSiteWorker {
     /**
      * SCIPIO: Gets WebSite from context.
      */
-    public static GenericValue getWebSiteFromContext(Map<String, Object> context) {
+    public static GenericValue getWebSiteFromContext(Map<String, ?> context) {
         return getWebSiteFromContext(context, RenderEnvType.fromContext(context));
     }
 }

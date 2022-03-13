@@ -71,7 +71,7 @@ public enum RenderEnvType {
     /**
      * Tries to determine the render context from the context map using heuristic.
      */
-    public static RenderEnvType fromContext(Map<String, Object> context) {
+    public static RenderEnvType fromContext(Map<String, ?> context) {
         return fromRequestOrContext((HttpServletRequest) context.get("request"), context);
     }
 
@@ -86,8 +86,10 @@ public enum RenderEnvType {
      * used instead, if the request is only meant for logging purposes while the intent
      * is to render using the contents of the context.
      */
-    public static RenderEnvType fromRequestOrContext(HttpServletRequest request, Map<String, Object> context) {
-        if (request != null) return WEBAPP;
+    public static RenderEnvType fromRequestOrContext(HttpServletRequest request, Map<String, ?> context) {
+        if (request != null) {
+            return WEBAPP;
+        }
         return (context.get("baseUrl") != null) ? RenderEnvType.EMAIL : RenderEnvType.STATIC;
     }
 
@@ -96,7 +98,9 @@ public enum RenderEnvType {
     }
 
     public static RenderEnvType fromRequestOrFtlEnv(HttpServletRequest request, Environment env) throws TemplateModelException {
-        if (request != null) return WEBAPP;
+        if (request != null) {
+            return WEBAPP;
+        }
         return (env.getVariable("baseUrl") != null) ? RenderEnvType.EMAIL : RenderEnvType.STATIC;
     }
 }

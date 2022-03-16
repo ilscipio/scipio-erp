@@ -47,11 +47,26 @@ public class CmsAccessHandler implements HttpSessionListener {
     public CmsAccessHandler() {
     }
 
+    public static String getAccessTokenString(HttpServletRequest request, CmsPage cmsPage) {
+        return getAccessTokenString(request, cmsPage, null);
+    }
+
     public static String getAccessTokenString(HttpServletRequest request, CmsPage cmsPage, String cmsPagePath) {
         if (cmsPage == null || cmsPage.getId() == null) {
             return null;
         }
-        GenericValue tokenRecord = getOrCreateUserAccessToken(UtilHttp.getSessionUserLogin(request), cmsPage.getId(), null, true);
+        return getAccessTokenString(request, cmsPage.getId(), null);
+    }
+
+    public static String getAccessTokenString(HttpServletRequest request, String cmsPageId) {
+        return getAccessTokenString(request, cmsPageId, null);
+    }
+
+    public static String getAccessTokenString(HttpServletRequest request, String cmsPageId, String cmsPagePath) {
+        if (UtilValidate.isEmpty(cmsPageId)) {
+            return null;
+        }
+        GenericValue tokenRecord = getOrCreateUserAccessToken(UtilHttp.getSessionUserLogin(request), cmsPageId, null, true);
         return (tokenRecord != null) ? tokenRecord.getString("token") : null;
     }
 

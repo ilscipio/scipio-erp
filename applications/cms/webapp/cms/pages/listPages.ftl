@@ -23,9 +23,9 @@
                 <@tr class="header-row">
                     <@th width="100px">${uiLabelMap.CommonPage}</@th>
                     <@th width="100px">${uiLabelMap.CmsWebSite}</@th>
-                    <@th width="200px">${uiLabelMap.CommonPath}</@th>
                     <@th>${uiLabelMap.CommonName}</@th>
                     <@th width="100px">${uiLabelMap.CmsTemplate}</@th>
+                    <@th width="200px">${uiLabelMap.CommonPath}</@th>
                     <@th>${uiLabelMap.CommonDescription}</@th>
                 </@tr>
             </@thead>
@@ -47,24 +47,40 @@
                             ${item.defaultWebSiteId} (${defaultLabelVal})
                         </#if>
                     </@td>
-                    <@td>
-                      <#-- 2019-01-23: The ?webSiteId= causes conflicts and nothing but problems
-                      <#if item.path?has_content>
-                        <#assign editPageLink = "editPage?path=${escapeVal(item.path, 'url')}&webSiteId=${item.webSiteId!item.defaultWebSiteId!}">
-                        <a href="<@pageUrl uri=editPageLink escapeAs='html'/>">${escapeFullUrl(item.path, 'html')}</a>
-                      <#else>
-                        <#assign editPageLink = "editPage?pageId=${item.id}&webSiteId=${item.webSiteId!item.defaultWebSiteId!}">
-                      </#if>-->
-                      <#assign editPageUri = "editPage?pageId=${escapeVal(item.id, 'url')}"><#-- &webSiteId=${escapeVal(item.webSiteId!item.defaultWebSiteId!, 'url')} -->
-                      <#if item.path?has_content>
-                        <#-- Too confusing, already one below that matches template lists, this was holdover from when editPage was by path instead of page ID
-                        <a href="<@pageUrl uri=editPageUri escapeAs='html'/>">${escapeFullUrl(item.path, 'html')}</a>-->
-                          ${escapeFullUrl(item.path, 'html')}
-                      </#if>
-                    </@td>
                     <#-- FIXME: the name should always get the pageId link, but right now the javascript has issues -->
+                    <#assign editPageUri = "editPage?pageId=${escapeVal(item.id, 'url')}"><#-- &webSiteId=${escapeVal(item.webSiteId!item.defaultWebSiteId!, 'url')} -->
                     <@td><a href="<@pageUrl uri=editPageUri escapeAs='html'/>">${item.name!}</a></@td>
                     <@td><#if item.cmsPage.pageTemplateId??><a href="<@pageUrl uri='editTemplate?pageTemplateId='+raw(item.cmsPage.pageTemplateId) escapeAs='html'/>">${(item.cmsPage.template.name)!(item.cmsPage.pageTemplateId)}</a></#if></@td>
+                    <@td>
+                        <#if item.path?has_content>
+                            <#assign previewUrl = ""/>
+                            <#assign liveUrl = ""/>
+                            <#if item.webSiteId?has_content>
+                                <#assign webSiteConfig = Static["com.ilscipio.scipio.cms.control.CmsWebSiteInfo"].getWebSiteConfigOrDefault(item.webSiteId)!false/>
+                                <#if !webSiteConfig?is_boolean>
+                                    <#assign cmsPage = Static["com.ilscipio.scipio.cms.content.CmsPage"].getWorker().findById(delegator, item.id, false)!false>
+                                    <#if !cmsPage?is_boolean>
+                                        <#assign pagePrimaryPathExpanded = cmsPage.getPrimaryPathExpanded(item.webSiteId)!/>
+                                        <#assign activeVersionId = cmsPage.activeVersionId!""/>
+                                        <#if pagePrimaryPathExpanded?has_content && activeVersionId?has_content>
+                                            <#assign accessToken = Static["com.ilscipio.scipio.cms.control.CmsAccessHandler"].getAccessTokenString(request, item.id)!>
+                                            <#assign useSecurePreviewLink = true/>
+                                            <#assign useSecureLiveLink = (webSiteConfig.useLinkExtLoginKey || webSiteConfig.requireLiveAccessToken)?then(true, "")/>
+                                            <#assign previewUrl = makeServerUrl({"controller":false, "secure":useSecurePreviewLink, "webSiteId":item.webSiteId, "extLoginKey": webSiteConfig.useLinkExtLoginKey,
+                                                "uri":(raw(pagePrimaryPathExpanded!)+"?"+raw(webSiteConfig.previewModeParamName)+"="+raw(accessToken!)+"&cmsPageVersionId="+raw(activeVersionId))})/>
+                                            <#assign liveUrl = makeServerUrl({"controller":false, "secure":useSecureLiveLink, "webSiteId":item.webSiteId, "extLoginKey": webSiteConfig.useLinkExtLoginKey,
+                                                "uri":(raw(pagePrimaryPathExpanded!)+(webSiteConfig.requireLiveAccessToken?then("?"+raw(webSiteConfig.accessTokenParamName)+"="+raw(accessToken!),"")))})/>
+                                        </#if>
+                                    </#if>
+                                </#if>
+                            </#if>
+                            <#if liveUrl?has_content>
+                                <a href="${escapeVal(liveUrl, 'html')}">${escapeFullUrl(item.path, 'html')}</a> (<a href="${escapeVal(previewUrl, 'html')}">${uiLabelMap.CmsPreview?lower_case}</a>)
+                            <#else>
+                                <span>${escapeFullUrl(item.path, 'html')}</span>
+                            </#if>
+                        </#if>
+                    </@td>
                     <@td>${makeShortCmsDesc(item.description!)}</@td>
                 </@tr>
             </#list>

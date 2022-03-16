@@ -488,6 +488,8 @@ public class EmailServices {
 
         Locale locale = (Locale) serviceContext.get("locale");
         Map<String, Object> bodyParameters = UtilGenerics.checkMap(serviceContext.remove("bodyParameters"));
+        //populate with service context
+        bodyParameters.put("serviceCtx",serviceContext.remove("bodyParameters"));
         if (bodyParameters == null) {
             bodyParameters = MapStack.create();
         }

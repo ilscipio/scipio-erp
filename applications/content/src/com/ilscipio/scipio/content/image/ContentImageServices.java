@@ -415,7 +415,7 @@ public abstract class ContentImageServices {
                                     // SCIPIO: 2.1.0: These image types typically fail scaling
                                     Debug.logError(logPrefix + errMsg, module);
                                     scaleErrorCount++;
-                                    return UtilMisc.put(ServiceUtil.returnError(errMsg), "statusCode", "unsupported-colorspace");
+                                    return UtilMisc.put(ServiceUtil.returnError(errMsg), "reason", "unsupported-colorspace");
                                 } else {
                                     Debug.logError(logPrefix + errMsg, module);
                                     scaleErrorCount++;
@@ -507,7 +507,7 @@ public abstract class ContentImageServices {
                                     // SCIPIO: 2.1.0: These image types typically fail writing
                                     Debug.logError(logPrefix + errMsg, module);
                                     writeErrorCount++;
-                                    return UtilMisc.put(ServiceUtil.returnError(errMsg), "statusCode", "unsupported-colorspace");
+                                    return UtilMisc.put(ServiceUtil.returnError(errMsg), "reason", "unsupported-colorspace");
                                 } else {
                                     Debug.logError(logPrefix + errMsg, module);
                                     writeErrorCount++;
@@ -1056,7 +1056,7 @@ public abstract class ContentImageServices {
                                 // SCIPIO: 2.1.0: These image types typically fail scaling
                                 Debug.logError(logPrefix + errMsg, module);
                                 scaleErrorCount++;
-                                return UtilMisc.put(ServiceUtil.returnError(errMsg), "statusCode", "unsupported-colorspace");
+                                return UtilMisc.put(ServiceUtil.returnError(errMsg), "reason", "unsupported-colorspace");
                             } else {
                                 Debug.logError(logPrefix + errMsg, module);
                                 scaleErrorCount++;
@@ -1096,7 +1096,7 @@ public abstract class ContentImageServices {
                                 // SCIPIO: 2.1.0: These image types typically fail writing
                                 Debug.logError(logPrefix + errMsg, module);
                                 writeErrorCount++;
-                                return UtilMisc.put(ServiceUtil.returnError(errMsg), "statusCode", "unsupported-colorspace");
+                                return UtilMisc.put(ServiceUtil.returnError(errMsg), "reason", "unsupported-colorspace");
                             } else {
                                 Debug.logError(logPrefix + errMsg, module);
                                 writeErrorCount++;
@@ -1437,12 +1437,19 @@ public abstract class ContentImageServices {
             }
             if (nonFatal) {
                 if (!ServiceUtil.isSuccess(resizeResult)) {
-                    return UtilMisc.put(ServiceUtil.returnFailure("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult)),
-                            "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount, "variantSkipCount", variantSkipCount);
+                    String errMsg = "Could not auto-resize variant images for content [" + contentId + "]: " + ServiceUtil.getErrorMessage(resizeResult);
+                    return UtilMisc.put(ServiceUtil.returnFailure(errMsg),
+                            "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount, "variantSkipCount", variantSkipCount,
+                            "reason", resizeResult.get("reason"));
                 }
             } else {
                 if (!ServiceUtil.isSuccess(resizeResult)) {
-                    throw new GeneralException("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
+                    //throw new GeneralException("Error creating resized images: " + ServiceUtil.getErrorMessage(resizeResult));
+                    String errMsg = "Could not auto-resize variant images for content [" + contentId + "]: " + ServiceUtil.getErrorMessage(resizeResult);
+                    Debug.logError("contentImageAutoRescale: " + errMsg, module);
+                    return UtilMisc.put(ServiceUtil.returnError(errMsg),
+                            "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount, "variantSkipCount", variantSkipCount,
+                            "reason", resizeResult.get("reason"));
                 }
             }
         } catch (Exception e) {

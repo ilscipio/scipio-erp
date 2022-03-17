@@ -831,7 +831,9 @@ public abstract class CmsMediaServices {
                     } else if (ServiceUtil.isSuccess(resizeResult)) {
                         successCount++;
                     } else {
-                        if (sepTrans) { // TODO: REVIEW: && ServiceUtil.isFailure(resizeResult)
+                        if ("unsupported-colorspace".equals(resizeResult.get("reason"))) {
+                            return ServiceUtil.returnError("Error creating resized images [" + resizeResult.get("reason") + "]: " + ServiceUtil.getErrorMessage(resizeResult));
+                        } else if (sepTrans) { // TODO: REVIEW: && ServiceUtil.isFailure(resizeResult)
                             Debug.logError(logPrefix + "Error creating resized images for image content [" + contentId + "]: " + ServiceUtil.getErrorMessage(resizeResult), module);
                             if (ServiceUtil.isFailure(resizeResult)) {
                                 failCount++;

@@ -506,13 +506,20 @@
     <request-map uri="createMedia">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsUploadMediaFile"/>
-        <response name="success" type="view" value="editMedia"/>
-        <response name="error" type="view" value="editMedia"/>
+        <response name="success" type="request" value="createMediaUpdateProgress"/>
+        <response name="error" type="request" value="createMediaUpdateProgress"/>
     </request-map>
 
     <request-map uri="createMediaImageCustomSizes">
         <security https="true" auth="true"/>
         <event type="service" invoke="cmsUploadMediaFileImageCustomVariantSizes"/>
+        <response name="success" type="request" value="createMediaUpdateProgress"/>
+        <response name="error" type="request" value="createMediaUpdateProgress"/>
+    </request-map>
+
+    <request-map uri="createMediaUpdateProgress">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.webapp.event.FileUploadProgressListener" invoke="updateEventMessages"/>
         <response name="success" type="view" value="editMedia"/>
         <response name="error" type="view" value="editMedia"/>
     </request-map>

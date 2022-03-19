@@ -37,7 +37,7 @@ code package.
   
 <div id="content-messages"${msgPresAttrStr}><#-- SCIPIO: need container always, to locate this via js -->
   <#-- display the error messages -->
-  <div id="main-${styles.alert_wrap!}"${msgPresAttrStr}>
+  <div id="main-${styles.alert_wrap!}" class="main-content-messages" ${msgPresAttrStr}>
   <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
       <#if (errorMessage?has_content || errorMessageList?has_content)>
         <@alert type="alert">

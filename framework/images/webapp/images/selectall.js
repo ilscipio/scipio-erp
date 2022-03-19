@@ -1581,6 +1581,7 @@ function ScipioUploadProgress(options) {
     this.msgContainerId = options.msgContainerId; // optional, only required if no parent specified; for error messages
     this.msgContainerParentSel = options.msgContainerParentSel; // optional, default the form's parent element; designates an element as parent for a message container; if msgContainerId elem already exists on page, won't use
     this.msgContainerInsertMode = options.msgContainerInsertMode; // optional, default "prepend"; for parent; either "prepend" or "append" (to parent)
+    this.msgContainerErrorPatSel = options.msgContainerErrorPatSel; // optional, default '#content-messages-error-template'
 
     this.iframeParentSel = options.iframeParentSel; // optional, default is html body, if specified should exist in doc; will contain hidden iframe(s) to internally hold file upload html page result
     this.expectedResultContainerSel = options.expectedResultContainerSel; // required; id of an elem to test existence in upload page result; was originally same as resultContentContainerSel
@@ -1621,6 +1622,9 @@ function ScipioUploadProgress(options) {
     }
     if (!this.msgContainerInsertMode) {
         this.msgContainerInsertMode = "prepend";
+    }
+    if (!this.msgContainerErrorPatSel) {
+        this.msgContainerErrorPatSel = '#content-messages-error-template';
     }
 
     this.iframeBaseId = "scipio_progupl_target_upload_" + this.instNum;
@@ -1727,11 +1731,25 @@ function ScipioUploadProgress(options) {
         if (typeof errorWrapper !== 'boolean') {
             errorWrapper = true;
         }
-        if (this.msgContainerId) {
+        if (this.msgContainerParentSel) {
             if (errorWrapper) {
-                jQuery("#"+this.msgContainerId).html('<div data-alert class="' + scipioStyles.alert_wrap + ' ' + scipioStyles.alert_prefix_type + 'alert">' + errdata + "</div>");
+                //jQuery("#"+this.msgContainerId).html('<div data-alert class="' + scipioStyles.alert_wrap + ' ' + scipioStyles.alert_prefix_type + 'alert">' + errdata + '</div>');
+                //var errorHtml = '<ol><li>' + errdata + '</li></ol>';
+                var errorHtml = errdata;
+                var errorCntr = jQuery(this.msgContainerErrorPatSel);
+                if (errorCntr.length) {
+                    errorCntr = jQuery('<div></div>').html(errorCntr.html()); // clone the alert
+                    jQuery('.content-message-content', errorCntr).html(errorHtml);
+                } else {
+                    errorCntr = jQuery('<div data-alert class="' + scipioStyles.alert_wrap + ' ' + scipioStyles.alert_prefix_type + 'alert">' + errdata + '</div>').html(errorHtml);
+                }
+                if (this.msgContainerInsertMode === "prepend") {
+                    jQuery(this.msgContainerParentSel).prepend(errorCntr.contents());
+                } else {
+                    jQuery(this.msgContainerParentSel).append(errorCntr.contents());
+                }
             } else {
-                jQuery("#"+this.msgContainerId).html(errdata);
+                jQuery(this.msgContainerParentSel).html(errdata);
             }
         }
         this.setProgressState(scipioStyles.color_alert);
@@ -1955,7 +1973,8 @@ function ScipioUploadProgress(options) {
                             var readPercent = data.readPercent;
                             if (typeof readPercent !== 'undefined') {
                                 prog.setProgressValue(readPercent);
-                                if (readPercent > 99) {
+                                // 2022-03: Wait for iframe to be loaded so the listener waits for errors
+                                if (readPercent > 99 && uploadInfo.iframeLoaded) {
                                     // stop the fjTimer
                                     timerId.stop();
                                     prog.setProgressText(prog.uiLabelMap.CommonSave + "...");

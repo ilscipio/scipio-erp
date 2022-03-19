@@ -182,11 +182,24 @@ code package.
             <script lang="groovy"><![CDATA[
                 contentLength = parameters.get("contentLength")
                 bytesRead = parameters.get("bytesRead")
-                int readPercent = (bytesRead* 100)/contentLength
+                int readPercent = (bytesRead*100)/contentLength
                 parameters.put("readPercent", readPercent)
             ]]></script>
             <field-to-result field="parameters.readPercent" result-name="readPercent"/>
             <field-to-result field="parameters.hasStarted" result-name="hasStarted"/>
+            <!-- SCIPIO: 2.1.0: Integrate error messages -->
+            <script lang="groovy"><![CDATA[
+                context.eventErrorMessage = uploadProgressListener.getEventMessages()._ERROR_MESSAGE_;
+                context.eventErrorMessageList = uploadProgressListener.getEventMessages()._ERROR_MESSAGE_LIST_;
+            ]]></script>
+            <if-not-empty field="eventErrorMessageList">
+                <add-error><fail-message message="${eventErrorMessageList[0]}"/></add-error>
+                <check-errors/>
+            </if-not-empty>
+            <if-not-empty field="eventErrorMessage">
+                <add-error><fail-message message="${eventErrorMessage}"/></add-error>
+                <check-errors/>
+            </if-not-empty>
         </if-not-empty>
     </simple-method>
 

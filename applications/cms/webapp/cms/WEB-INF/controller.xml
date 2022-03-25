@@ -519,7 +519,8 @@
 
     <request-map uri="createMediaUpdateProgress">
         <security direct-request="false"/>
-        <event type="java" path="org.ofbiz.webapp.event.FileUploadProgressListener" invoke="updateEventMessages"/>
+        <!-- TODO: REVIEW: Not currently necessary anymore, and it ideally would be handled automatically -->
+        <!--<event type="java" path="org.ofbiz.webapp.event.FileUploadProgressListener" invoke="updateEventMessages"/>-->
         <response name="success" type="view" value="editMedia"/>
         <response name="error" type="view" value="editMedia"/>
     </request-map>

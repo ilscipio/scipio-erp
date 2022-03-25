@@ -344,17 +344,14 @@
                 "progBarId" : "media_progress_bar",
                 "progTextBoxId" : "mediaProgressMsgBox",
                 
-                "msgContainerParentSel" : "#mediaWrapper",
-                "msgContainerInsertMode" : "prepend",
+                "msgContainerParentSel" : "#main-${styles.alert_wrap!}",
+                "msgContainerInsertMode" : "append",
                 
                 "iframeParentSel" : "#iframePlaceHolder",
                 "expectedResultContainerSel" : "#updateMedia",
                 
-                "successResultContainerSel" : "#main-${styles.alert_wrap!} .alert-box.info",
-                "successResultAddWrapper" : true,
-                
-                "errorResultContainerSel" : "#main-${styles.alert_wrap!} .alert-box.alert",
-                "errorResultAddWrapper" : true,                        
+                "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
+                "errorResultAddWrapper" : false,
                  
                 "resultContentReplace" : true,
                 "contentContainerSel" : "#createMedia",

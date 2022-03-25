@@ -1749,7 +1749,11 @@ function ScipioUploadProgress(options) {
                     jQuery(this.msgContainerParentSel).append(errorCntr.contents());
                 }
             } else {
-                jQuery(this.msgContainerParentSel).html(errdata);
+                if (this.msgContainerInsertMode === "prepend") {
+                    jQuery(this.msgContainerParentSel).prepend(errdata);
+                } else {
+                    jQuery(this.msgContainerParentSel).append(errdata);
+                }
             }
         }
         this.setProgressState(scipioStyles.color_alert);

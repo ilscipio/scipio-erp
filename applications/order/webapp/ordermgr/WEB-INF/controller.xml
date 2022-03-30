@@ -1798,8 +1798,8 @@ code package.
     <request-map uri="AddOrderItemShipGroupAssoc">
         <security auth="true" https="true"/>
         <event type="service" invoke="addOrderItemShipGroupAssoc"/>
-        <response name="success" type="view" value="orderview"/>
-        <response name="error" type="view" value="orderview"/>
+        <response name="success" type="view-last" value="orderview"/>
+        <response name="error" type="view-last" value="orderview"/>
     </request-map>
     <request-map uri="UpdateOrderItemShipGroupAssoc">
         <security auth="true" https="true"/>

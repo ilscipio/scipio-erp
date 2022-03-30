@@ -128,19 +128,19 @@
             <input type="hidden" name="fromDate" value="${fromDate!}"/>
           </form></@menuitem>
         </#if>
-        <#if setOrderCompleteOption>
-            <#assign orderCompleteAction = makePageUrl("orderCompleteShip")>
-            <#if allShipGroupsNoShipping?has_content && allShipGroupsNoShipping>
-                <#assign orderCompleteAction = makePageUrl("quickShipOrder")>
-            </#if>
-            <@menuitem type="link" href="javascript:document.OrderCompleteOrder.submit()" text=uiLabelMap.OrderCompleteOrder class="+${styles.action_run_sys!} ${styles.action_complete!} ${styles.action_importance_high!}">
-                <form name="OrderCompleteOrder" method="post" action="${orderCompleteAction}">
-                    <input type="hidden" name="statusId" value="ORDER_COMPLETED"/>
-                    <input type="hidden" name="setItemStatus" value="Y"/>
-                    <input type="hidden" name="orderId" value="${orderId!}"/>
-                </form>
-            </@menuitem>
-        </#if>
+<#--        <#if setOrderCompleteOption>-->
+<#--            <#assign orderCompleteAction = makePageUrl("orderCompleteShip")>-->
+<#--            <#if allShipGroupsNoShipping?has_content && allShipGroupsNoShipping>-->
+<#--                <#assign orderCompleteAction = makePageUrl("quickShipOrder")>-->
+<#--            </#if>-->
+<#--            <@menuitem type="link" href="javascript:document.OrderCompleteOrder.submit()" text=uiLabelMap.OrderCompleteOrder class="+${styles.action_run_sys!} ${styles.action_complete!} ${styles.action_importance_high!}">-->
+<#--                <form name="OrderCompleteOrder" method="post" action="${orderCompleteAction}">-->
+<#--                    <input type="hidden" name="statusId" value="ORDER_COMPLETED"/>-->
+<#--                    <input type="hidden" name="setItemStatus" value="Y"/>-->
+<#--                    <input type="hidden" name="orderId" value="${orderId!}"/>-->
+<#--                </form>-->
+<#--            </@menuitem>-->
+<#--        </#if>-->
         <#-- Migrated to OrderShippingSubTabBar
         <#if currentStatus.statusId == "ORDER_APPROVED" && orderHeader.orderTypeId == "SALES_ORDER">
           <@menuitem type="link" href="javascript:document.PrintOrderPickSheet.submit()" text=uiLabelMap.FormFieldTitle_printPickSheet class="+${styles.action_run_sys!} ${styles.action_export!}"><form name="PrintOrderPickSheet" method="post" action="<@pageUrl>orderPickSheet.pdf</@pageUrl>" target="_BLANK">
@@ -168,43 +168,53 @@
 
         <#-- Shipping -->
         <#-- Migreated to Shipment Information-->
-          <#if security.hasEntityPermission("FACILITY","_CREATE", request)>
-                <#-- SCIPIO: 2.1.0: Added ORDER_SENT in the condition so order items can't be edited if already sent -->
-                <#if ((!singleOrderItem?has_content || (singleOrderItem?has_content && !singleOrderItem)) &&
-                    (!allOrderItemsShipped?has_content) || (allOrderItemsShipped?has_content && !allOrderItemsShipped)) &&
-                    (currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT")>
-                  <@menuitem type="generic">
-                     <form action="<@pageUrl>createOrderItemShipGroup</@pageUrl>" method="post">
-                        <input type="hidden" name="orderId" value="${orderId}"/>
-                        <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderCreateShipGroup}"/>
-                     </form>
-                  </@menuitem>
-                </#if>
+        <#if security.hasEntityPermission("FACILITY","_CREATE", request)>
+            <#-- SCIPIO: 2.1.0: Added ORDER_SENT in the condition so order items can't be edited if already sent -->
+            <#if (!singleOrderItem && !maxShipGroups && maySplit &&
+                (currentStatus.statusId != "ORDER_COMPLETED" && currentStatus.statusId != "ORDER_CANCELLED" && currentStatus.statusId != "ORDER_SENT"))>
+              <@menuitem type="generic">
+                 <form action="<@pageUrl>createOrderItemShipGroup</@pageUrl>" method="post">
+                    <input type="hidden" name="orderId" value="${orderId}"/>
+                    <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderCreateShipGroup}"/>
+                 </form>
+              </@menuitem>
+            </#if>
 
-                <#if orderHeader.orderTypeId == "SALES_ORDER">
-                    <#if orderHeader.statusId == "ORDER_APPROVED" && !setOrderCompleteOption>
-                        <#assign shipOrderAction = makePageUrl("quickShipOrder")>
-                        <#assign shipOrderLabel = uiLabelMap.OrderQuickShipEntireOrder>
-                        <#if allShipments?has_content && !(allOrderItemsShipped?has_content && allOrderItemsShipped)>
-                            <#assign shipOrderAction = makePageUrl("orderSendShip")>
-                            <#assign shipOrderLabel = uiLabelMap.OrderSendOrder>
-                        </#if>
-                        <@menuitem type="generic">
-                            <form action="${shipOrderAction}" method="post">
-                                <input type="hidden" name="orderId" value="${orderId}"/>
-                                <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${shipOrderLabel}"/>
-                            </form>
-                        </@menuitem>
-                    <#elseif (orderHeader.statusId == "ORDER_SENT" || setOrderCompleteOption) && !allShipGroupsNoShipping>
-                        <@menuitem type="generic">
-                            <form action="<@pageUrl>completeSalesOrder</@pageUrl>" method="post">
-                                <input type="hidden" name="orderId" value="${orderId}"/>
-                                <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderCompleteOrder}"/>
-                            </form>
-                        </@menuitem>
+            <#if orderHeader.orderTypeId == "SALES_ORDER">
+                <#if orderHeader.statusId == "ORDER_APPROVED" && !setOrderCompleteOption>
+                    <#assign shipOrderAction = makePageUrl("quickShipOrder")>
+                    <#assign shipOrderLabel = uiLabelMap.OrderQuickShipEntireOrder>
+                    <#if allShipments?has_content && !(allOrderItemsShipped?has_content && allOrderItemsShipped)>
+                        <#assign shipOrderAction = makePageUrl("orderSendShip")>
+                        <#assign shipOrderLabel = uiLabelMap.OrderSendOrder>
                     </#if>
+                    <@menuitem type="generic">
+                        <form action="${shipOrderAction}" method="post">
+                            <input type="hidden" name="orderId" value="${orderId}"/>
+                            <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${shipOrderLabel}"/>
+                        </form>
+                    </@menuitem>
+                <#elseif (orderHeader.statusId == "ORDER_SENT" || setOrderCompleteOption)>
+                    <#assign orderCompleteAction = makePageUrl("orderCompleteShip")>
+                    <#if allShipGroupsNoShipping>
+                        <#assign orderCompleteAction = makePageUrl("quickShipOrder")>
+                    </#if>
+                    <@menuitem type="link" href="javascript:document.OrderCompleteOrder.submit()" text=uiLabelMap.OrderCompleteOrder class="+${styles.action_run_sys!} ${styles.action_complete!} ${styles.action_importance_high!}">
+                        <form name="OrderCompleteOrder" method="post" action="${orderCompleteAction}">
+                            <input type="hidden" name="statusId" value="ORDER_COMPLETED"/>
+                            <input type="hidden" name="setItemStatus" value="Y"/>
+                            <input type="hidden" name="orderId" value="${orderId!}"/>
+                        </form>
+                    </@menuitem>
+<#--                        <@menuitem type="generic">-->
+<#--                            <form action="<@pageUrl>completeSalesOrder</@pageUrl>" method="post">-->
+<#--                                <input type="hidden" name="orderId" value="${orderId}"/>-->
+<#--                                <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderCompleteOrder}"/>-->
+<#--                            </form>-->
+<#--                        </@menuitem>-->
                 </#if>
-          </#if>
+            </#if>
+        </#if>
         <#-- Return / Refund -->
         <#if security.hasEntityPermission("ORDERMGR","_RETURN", request)>
             <#-- Apart from the returnableItems check, this is really just a duplicate of OrderQuickRefundEntireOrder

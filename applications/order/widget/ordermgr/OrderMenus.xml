@@ -310,6 +310,8 @@ code package.
                     <if-false field="singleOrderItem" />
                     <if-false field="allShipGroupsNoShipping" />
                     <if-false field="orderContainsOnlyDigitalProducts" />
+                    <if-true field="maySplit" />
+                    <if-false field="maxShipGroups" />
                 </and>
             </condition>
             <link target="createOrderItemShipGroup">

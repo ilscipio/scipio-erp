@@ -133,11 +133,16 @@ if (orderHeader) {
     grandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
     context.grandTotal = grandTotal;
 
-    orderItemList = orderReadHelper.getOrderItems();
     // Retrieve all non-promo items that aren't cancelled
-    context.orderItemList = orderReadHelper.getOrderItems().findAll { item ->
-          (item.isPromo == null || item.isPromo == 'N') || !item.statusId.equals('ITEM_CANCELLED')
+    totalOrderedQuantity = 0
+    orderItemList = orderReadHelper.getOrderItems().findAll { item ->
+        isNotPromoOrCancelled = ((item.isPromo == null || item.isPromo == 'N') || !item.statusId.equals('ITEM_CANCELLED'))
+        if (isNotPromoOrCancelled) {
+            totalOrderedQuantity += item.quantity
+        }
+        (isNotPromoOrCancelled)
     }
+    context.orderItemList = orderItemList
 
     shippingAddress = orderReadHelper.getShippingAddress();
     context.shippingAddress = shippingAddress;
@@ -200,6 +205,7 @@ if (orderHeader) {
     orderItemsShipped = 0;
     singleOrderItem = true;
     allShipGroupsNoShipping = true;
+    maySplit = false
     shipGroups.each { shipGroup ->
         if (allShipGroupsNoShipping && shipGroup.shipmentMethodTypeId != "NO_SHIPPING") {
             allShipGroupsNoShipping = false;
@@ -216,18 +222,23 @@ if (orderHeader) {
                 orderItemsShipped += shipmentItem.quantity;
             }
         }
+        maySplit = (UtilValidate.isNotEmpty(shipGroup.maySplit) && shipGroup.maySplit == "Y") ? true : false
     }
-    if (context.orderItemList.size() > 1) {
+    if (totalOrderedQuantity > 1) {
         singleOrderItem = false;
     }
-    context.put("allOrderItemsShipped", (orderItemList.size() <= orderItemsShipped));
-    context.put("singleOrderItem", singleOrderItem);
-    context.put("allShipGroupsNoShipping", allShipGroupsNoShipping);
-    Debug.logInfo("allOrderItemsShipped size: " + orderItemsShipped + " orderItemList size: " + context.orderItemList.size(), module);
+
+    context.put("maySplit", maySplit)
+    context.put("maxShipGroups", (shipGroups.size() >= totalOrderedQuantity))
+    context.put("allOrderItemsShipped", (totalOrderedQuantity <= orderItemsShipped))
+    context.put("singleOrderItem", singleOrderItem)
+    context.put("allShipGroupsNoShipping", allShipGroupsNoShipping)
+    Debug.logInfo("orderItemsShipped quantity: " + orderItemsShipped + " orderItemList total quantity: " + totalOrderedQuantity, module)
     Debug.logInfo("allOrderItemsShipped: " + context.allOrderItemsShipped, module);
     Debug.logInfo("singleOrderItem: " + singleOrderItem, module);
     Debug.logInfo("allShipGroupsNoShipping: " + allShipGroupsNoShipping, module);
-    Debug.logInfo("orderStatus: " + orderHeader.statusId, module);
+    Debug.logInfo("totalOrderedQuantity: " + totalOrderedQuantity, module);
+    Debug.logInfo("maxShipGroups: " + context.maxShipGroups + " --- maySplit: " + maySplit, module);
 
     orderContainsOnlyDigitalProducts = false;
     orderItemDatas = [];

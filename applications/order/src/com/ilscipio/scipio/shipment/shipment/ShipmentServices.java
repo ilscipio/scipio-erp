@@ -90,11 +90,21 @@ public class ShipmentServices {
 
                 if (ServiceUtil.isSuccess(changeOrderStatusResult)) {
                     for (GenericValue shipment : shipments) {
-                        Map<String, Object> updateShipmentCtx = UtilMisc.toMap("shipmentId", shipment.getString("shipmentId"),
-                                "primaryOrderId", orderId, "statusId", "SHIPMENT_SHIPPED", "userLogin", userLogin, "timeZone", timeZone);
-                        Map<String, Object> updateShipmentResponse = dispatcher.runSync("updateShipment", updateShipmentCtx);
+                        Map<String, Object> updateShipmentResponse = ServiceUtil.returnSuccess();
+                        // We need to change to SHIPMENT_PACKED first so we can change to SHIPMENT_SHIPPED eventually (there might be a more appropriate approach to this though)
+                        if (!shipment.getString("statusId").equals("SHIPMENT_PACKED")) {
+                            Map<String, Object> updateShipmentCtx = UtilMisc.toMap("shipmentId", shipment.getString("shipmentId"),
+                                    "primaryOrderId", orderId, "statusId", "SHIPMENT_PACKED", "userLogin", userLogin, "timeZone", timeZone);
+                            updateShipmentResponse = dispatcher.runSync("updateShipment", updateShipmentCtx);
+                        }
+                        if (ServiceUtil.isSuccess(updateShipmentResponse)) {
+                            Map<String, Object> updateShipmentCtx = UtilMisc.toMap("shipmentId", shipment.getString("shipmentId"),
+                                    "primaryOrderId", orderId, "statusId", "SHIPMENT_SHIPPED", "userLogin", userLogin, "timeZone", timeZone);
+                            updateShipmentResponse = dispatcher.runSync("updateShipment", updateShipmentCtx);
+                        }
                         if (!ServiceUtil.isSuccess(updateShipmentResponse)) {
-                            // TODO: Handle this situation
+                            Debug.logError("Unable to send order: " + ServiceUtil.getErrorMessage(updateShipmentResponse), module);
+                            result = ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateShipmentResponse));
                         }
                     }
                 }

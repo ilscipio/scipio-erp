@@ -518,6 +518,7 @@ code package.
         <attribute name="verifyPickSession" type="org.ofbiz.shipment.verify.VerifyPickSession" mode="IN" optional="false"/>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="true"/>
     </service>
@@ -628,6 +629,7 @@ code package.
         <attribute name="orderId" type="String" mode="IN" optional="true"/>
         <attribute name="shipGroupSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="quantity" type="BigDecimal" mode="IN" optional="true"/>
+        <attribute name="weight" type="BigDecimal" mode="IN" optional="true"/>
         <attribute name="packageSeq" type="Integer" mode="IN" optional="false"/>
         <attribute name="pickerPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="handlingInstructions" type="String" mode="IN" optional="true"/>

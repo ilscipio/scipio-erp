@@ -58,6 +58,8 @@ public class VerifyPickSession implements Serializable {
     protected String picklistBinId = null;
     protected String facilityId = null;
     protected List<VerifyPickSessionRow> pickRows = null;
+    protected String orderId;
+    protected String shipGroupSeqId;
 
     private transient Delegator _delegator = null;
     private transient LocalDispatcher _dispatcher = null;
@@ -65,13 +67,15 @@ public class VerifyPickSession implements Serializable {
     public VerifyPickSession() {
     }
 
-    public VerifyPickSession(LocalDispatcher dispatcher, GenericValue userLogin) {
+    public VerifyPickSession(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, String shipGroupSeqId) {
         this._dispatcher = dispatcher;
         this.dispatcherName = dispatcher.getName();
         this._delegator = _dispatcher.getDelegator();
         this.delegatorName = _delegator.getDelegatorName();
         this.userLogin = userLogin;
         this.pickRows = new LinkedList<VerifyPickSessionRow>();
+        this.orderId = orderId;
+        this.shipGroupSeqId = shipGroupSeqId;
     }
 
     public LocalDispatcher getDispatcher() {
@@ -88,10 +92,10 @@ public class VerifyPickSession implements Serializable {
         return _delegator;
     }
 
-    public synchronized void createRow(String orderId, String orderItemSeqId, String shipGroupSeqId, String productId, String originGeoId, BigDecimal quantity, Locale locale) throws GeneralException {
+    public synchronized void createRow(String orderItemSeqId, String productId, String originGeoId, BigDecimal quantity, Locale locale) throws GeneralException {
 
         if (orderItemSeqId == null && productId != null) {
-            orderItemSeqId = this.findOrderItemSeqId(productId, orderId, shipGroupSeqId, quantity, locale);
+            orderItemSeqId = this.findOrderItemSeqId(productId, quantity, locale);
         }
 
         // get the reservations for the item
@@ -157,7 +161,7 @@ public class VerifyPickSession implements Serializable {
         }
     }
 
-    protected String findOrderItemSeqId(String productId, String orderId, String shipGroupSeqId, BigDecimal quantity, Locale locale) throws GeneralException {
+    protected synchronized String findOrderItemSeqId(String productId, BigDecimal quantity, Locale locale) throws GeneralException {
 
         Map<String, Object> orderItemLookupMap = new HashMap<String, Object>();
         orderItemLookupMap.put("orderId", orderId);
@@ -236,6 +240,14 @@ public class VerifyPickSession implements Serializable {
         }
     }
 
+    public synchronized String getOrderId() {
+        return this.orderId;
+    }
+
+    public synchronized String getShipGroupSeqId() {
+        return this.shipGroupSeqId;
+    }
+
     public synchronized GenericValue getUserLogin() {
         return this.userLogin;
     }
@@ -270,10 +282,11 @@ public class VerifyPickSession implements Serializable {
         return pickVerifyRows;
     }
 
-    public synchronized BigDecimal getReadyToVerifyQuantity(String orderId, String orderSeqId) throws GeneralException {
+    public synchronized BigDecimal getReadyToVerifyQuantity(String orderSeqId) throws GeneralException {
         BigDecimal readyToVerifyQty = BigDecimal.ZERO;
         for (VerifyPickSessionRow line: this.getPickRows()) {
-            if ((orderId.equals(line.getOrderId())) && (orderSeqId.equals(line.getOrderItemSeqId()))) {
+            if ((orderId.equals(line.getOrderId())) && (orderSeqId.equals(line.getOrderItemSeqId()))
+                    && (UtilValidate.isEmpty(shipGroupSeqId) || (UtilValidate.isNotEmpty(shipGroupSeqId) && line.getShipGroupSeqId().equals(shipGroupSeqId)))) {
                 readyToVerifyQty = readyToVerifyQty.add(line.getReadyToVerifyQty());
             }
         }
@@ -306,10 +319,10 @@ public class VerifyPickSession implements Serializable {
         this.pickRows.clear();
     }
 
-    public synchronized String complete(String orderId, Locale locale) throws GeneralException {
-        this.checkVerifiedQty(orderId, locale);
+    public synchronized String complete(Locale locale) throws GeneralException {
+        this.checkVerifiedQty(locale);
         // check reserved quantity, it should be equal to verified quantity
-        this.checkReservedQty(orderId, locale);
+        this.checkReservedQty(locale);
         String shipmentId = this.createShipment((this.getPickRows(orderId)).get(0));
 
         this.issueItemsToShipment(shipmentId, locale);
@@ -328,11 +341,11 @@ public class VerifyPickSession implements Serializable {
         return shipmentId;
     }
 
-    protected void checkReservedQty(String orderId, Locale locale) throws GeneralException {
+    protected synchronized void checkReservedQty(Locale locale) throws GeneralException {
         List<String> errorList = new LinkedList<String>();
         for (VerifyPickSessionRow pickRow : this.getPickRows(orderId)) {
-            BigDecimal reservedQty =  this.getReservedQty(pickRow.getOrderId(), pickRow.getOrderItemSeqId(), pickRow.getShipGroupSeqId());
-            BigDecimal verifiedQty = this.getReadyToVerifyQuantity(pickRow.getOrderId(), pickRow.getOrderItemSeqId());
+            BigDecimal reservedQty =  this.getReservedQty(pickRow.getOrderItemSeqId());
+            BigDecimal verifiedQty = this.getReadyToVerifyQuantity(pickRow.getOrderItemSeqId());
             if (verifiedQty.compareTo(reservedQty) != 0) {
                 errorList.add(UtilProperties.getMessage("ProductErrorUiLabels", "ProductErrorVerifiedQtyDoesNotMatchTheReservedQtyForItem", UtilMisc.toMap("productId", pickRow.getProductId(), "verifiedQty", pickRow.getReadyToVerifyQty(), "reservedQty", reservedQty), locale));
             }
@@ -343,7 +356,7 @@ public class VerifyPickSession implements Serializable {
         }
     }
 
-    public synchronized BigDecimal getReservedQty(String orderId, String orderItemSeqId, String shipGroupSeqId) {
+    public synchronized BigDecimal getReservedQty(String orderItemSeqId) {
         BigDecimal reservedQty = BigDecimal.ZERO;
         try {
             GenericValue reservation = EntityUtil.getFirst(this.getDelegator().findByAnd("OrderItemAndShipGrpInvResAndItemSum", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "shipGroupSeqId", shipGroupSeqId), null, false));
@@ -354,14 +367,24 @@ public class VerifyPickSession implements Serializable {
         return reservedQty;
     }
 
-    protected void checkVerifiedQty(String orderId, Locale locale) throws GeneralException {
+    protected void checkVerifiedQty(Locale locale) throws GeneralException {
 
         BigDecimal verifiedQty = BigDecimal.ZERO;
         BigDecimal orderedQty = BigDecimal.ZERO;
 
-        List<GenericValue> orderItems = this.getDelegator().findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_APPROVED"), null, false);
-        for (GenericValue orderItem : orderItems) {
-            orderedQty = orderedQty.add(orderItem.getBigDecimal("quantity"));
+        // SCIPIO: 2.1.0: This can't be checked against OrderItem. It has to be checked against OrderItemShipGroupAssoc because what we want to verify is the quantity
+        // that belongs to a given OrderItemShipGroup, not the whole thing, unless we don't get a shipGroupSeqId.
+        // In that case we verify pick for the all OrderItemShipGroups
+        Map<String, Object> conds = UtilMisc.toMap("orderId", orderId);
+        if (UtilValidate.isNotEmpty(shipGroupSeqId)) {
+            conds.put("shipGroupSeqId", shipGroupSeqId);
+        }
+        List<GenericValue> orderItemShipGroupAssocs =  EntityQuery.use(this.getDelegator()).from("OrderItemShipGroupAssoc").where(conds).queryList();
+        for (GenericValue orderItemShipGroupAssoc : orderItemShipGroupAssocs) {
+            GenericValue orderItem = orderItemShipGroupAssoc.getRelatedOne("OrderItem");
+            if (orderItem.getString("statusId").equals("ITEM_APPROVED")) {
+                orderedQty = orderedQty.add(orderItemShipGroupAssoc.getBigDecimal("quantity"));
+            }
         }
 
         for (VerifyPickSessionRow pickRow : this.getPickRows(orderId)) {

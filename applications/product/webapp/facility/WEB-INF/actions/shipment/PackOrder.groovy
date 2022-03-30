@@ -37,13 +37,13 @@ if (facilityId) {
 }
 
 // order based packing
-orderId = parameters.orderId;
-shipGroupSeqId = parameters.shipGroupSeqId;
-shipmentId = parameters.shipmentId;
+orderId = parameters.orderId
+shipGroupSeqId = parameters.shipGroupSeqId
+shipmentId = parameters.shipmentId
+shipment = null
 if (!shipmentId) {
     shipmentId = request.getAttribute("shipmentId");
 }
-context.shipmentId = shipmentId;
 
 // If a shipment exists, provide the IDs of any related invoices
 invoiceIds = null;
@@ -57,6 +57,13 @@ if (shipmentId) {
             context.invoiceIds = invoiceIds;
         }
     }
+}
+if (!shipment) {
+    shipment = from("Shipment").where("primaryOrderId", orderId, "statusId", "SHIPMENT_PICKED").queryFirst()
+}
+if (shipment) {
+    context.shipment = shipment
+    context.shipmentId = shipment.shipmentId;
 }
 
 // validate order information
@@ -72,11 +79,15 @@ if (orderId && !shipGroupSeqId && orderId.indexOf("/") > -1) {
 // setup the packing session
 packSession = session.getAttribute("packingSession");
 clear = parameters.clear;
-if (!packSession) {
-    packSession = new org.ofbiz.shipment.packing.PackingSession(dispatcher, userLogin);
-    session.setAttribute("packingSession", packSession);
-    Debug.logInfo("Created NEW packing session", module); // SCIPIO: fixed logging
+if (clear) {
+    session.removeAttribute("packingSession");
 } else {
+    if (!packSession || (packSession &&
+            (!packSession.getPrimaryOrderId().equals(orderId) || !packSession.getPrimaryShipGroupSeqId().equals(shipGroupSeqId)))) {
+        packSession = new org.ofbiz.shipment.packing.PackingSession(dispatcher, userLogin);
+        session.setAttribute("packingSession", packSession);
+    }
+
     if (packSession.getStatus() == 0) {
         OrderReadHelper orh = new OrderReadHelper(delegator, orderId);
         shipGrp = orh.getOrderItemShipGroup(shipGroupSeqId);
@@ -87,110 +98,111 @@ if (!packSession) {
         packSession.clear();
         shipGroupSeqId = null;
         orderId = null;
-    } else if (clear) {
-        packSession.clear();
     }
-}
-packSession.clearItemInfos();
+    packSession.clearItemInfos();
+//    else if (clear) {
+//        packSession.clear();
+//    }
 
-// picklist based packing information
-picklistBinId = parameters.picklistBinId;
-// see if the bin ID is already set
-if (!picklistBinId) {
-    picklistBinId = packSession.getPicklistBinId();
-}
-if (picklistBinId) {
-    bin = from("PicklistBin").where("picklistBinId", picklistBinId).queryOne();
-    if (bin) {
-        orderId = bin.primaryOrderId;
-        shipGroupSeqId = bin.primaryShipGroupSeqId;
-        packSession.addItemInfo(bin.getRelated("PicklistItem", [itemStatusId : 'PICKITEM_PENDING'], null, false));
-        //context.put("picklistItemInfos", bin.getRelated("PicklistItem", UtilMisc.toMap("itemStatusId", "PICKITEM_PENDING"), null, false));
+
+    // picklist based packing information
+    picklistBinId = parameters.picklistBinId;
+    // see if the bin ID is already set
+    if (!picklistBinId) {
+        picklistBinId = packSession.getPicklistBinId();
     }
-} else {
-    picklistBinId = null;
-}
-
-// make sure we always re-set the infos
-packSession.setPrimaryShipGroupSeqId(shipGroupSeqId);
-packSession.setPrimaryOrderId(orderId);
-packSession.setPicklistBinId(picklistBinId);
-packSession.setFacilityId(facilityId);
-
-// SCIPIO: 2.1.0: Why??? commenting out
-//if (invoiceIds) {
-//    orderId = null;
-//}
-shipment = from("Shipment").where("primaryOrderId", orderId, "statusId", "SHIPMENT_PICKED").queryFirst();
-context.shipment = shipment;
-
-context.packingSession = packSession;
-context.orderId = orderId;
-context.shipGroupSeqId = shipGroupSeqId;
-context.picklistBinId = picklistBinId;
-
-// grab the order information
-if (orderId) {
-    orderHeader = from("OrderHeader").where("orderId", orderId).queryOne();
-    if (orderHeader) {
-        OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        context.orderId = orderId;
-        context.orderHeader = orderHeader;
-        context.orderReadHelper = orh;
-        orderItemShipGroup = orh.getOrderItemShipGroup(shipGroupSeqId);
-        context.orderItemShipGroup = orderItemShipGroup;
-        if (orderItemShipGroup) {
-            carrierPartyId = orderItemShipGroup.carrierPartyId;
-            carrierShipmentBoxTypes = from("CarrierShipmentBoxType").where("partyId", carrierPartyId).queryList();
-            if (carrierShipmentBoxTypes) {
-                context.carrierShipmentBoxTypes = carrierShipmentBoxTypes;
-            }
-        }
-
-        if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
-             if (shipGroupSeqId) {
-                productStoreId = orh.getProductStoreId();
-                // SCIPIO 2.1.0: Doesn't make much sense to throw an error if shipment is not null. A verified picked shipment should be eligible for packing. No shippableItems can be retrieved from OrderItemAndShipGrpInvResAndItemSum
-                // if no shipment present or ItemIssuance if a shipment (with picked status) is present.
-                if (!picklistBinId) {
-                    if (!shipment) {
-                        shippableItems = from("OrderItemAndShipGrpInvResAndItemSum").where("orderId", orderId, "shipGroupSeqId", shipGroupSeqId).queryList();
-                    } else {
-                        //request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("OrderErrorUiLabels", "OrderErrorOrderHasBeenAlreadyVerified", [orderId : orderId], locale));
-                        shippableItems = from("ItemIssuance").where("orderId", orderId, "shipGroupSeqId", shipGroupSeqId).queryList();
-                    }
-                    packSession.addItemInfo(shippableItems);
-                    //context.put("itemInfos", shippableItemInfo);
-                }
-                context.productStoreId = productStoreId;
-                // Generate the shipment cost estimate for the ship group
-                shippableItemInfo = orh.getOrderItemAndShipGroupAssoc(shipGroupSeqId);
-                shippableTotal = new Double(orh.getShippableTotal(shipGroupSeqId).doubleValue());
-                shippableWeight = new Double(orh.getShippableWeight(shipGroupSeqId).doubleValue());
-                shippableQuantity = new Double(orh.getShippableQuantity(shipGroupSeqId).doubleValue());
-                if (orderItemShipGroup && orderItemShipGroup.contactMechId && orderItemShipGroup.shipmentMethodTypeId && orderItemShipGroup.carrierPartyId && orderItemShipGroup.carrierRoleTypeId) {
-                    shipmentCostEstimate = packSession.getShipmentCostEstimate(orderItemShipGroup, productStoreId, shippableItemInfo, shippableTotal, shippableWeight, shippableQuantity);
-                    context.shipmentCostEstimateForShipGroup = shipmentCostEstimate;
-                }
-            } else {
-                request.setAttribute("errorMessageList", ['No ship group sequence ID. Cannot process.']);
-            }
-        } else {
-            request.setAttribute("errorMessageList", ["Order #" + orderId + " is not approved for packing."]);
+    if (picklistBinId) {
+        bin = from("PicklistBin").where("picklistBinId", picklistBinId).queryOne();
+        if (bin) {
+            orderId = bin.primaryOrderId;
+            shipGroupSeqId = bin.primaryShipGroupSeqId;
+            packSession.addItemInfo(bin.getRelated("PicklistItem", [itemStatusId: 'PICKITEM_PENDING'], null, false));
+            //context.put("picklistItemInfos", bin.getRelated("PicklistItem", UtilMisc.toMap("itemStatusId", "PICKITEM_PENDING"), null, false));
         }
     } else {
-        request.setAttribute("errorMessageList", ["Order #" + orderId + " cannot be found."]);
+        picklistBinId = null;
     }
-}
 
-// Try to get the defaultWeightUomId first from the facility, then from the shipment properties, and finally defaulting to kilos
-defaultWeightUomId = null;
-if (facility) {
-    defaultWeightUomId = facility.defaultWeightUomId;
+    // make sure we always re-set the infos
+    packSession.setPrimaryShipGroupSeqId(shipGroupSeqId);
+    packSession.setPrimaryOrderId(orderId);
+    packSession.setPicklistBinId(picklistBinId);
+    packSession.setFacilityId(facilityId);
+
+    // SCIPIO: 2.1.0: Why??? commenting out
+    //if (invoiceIds) {
+    //    orderId = null;
+    //}
+
+    context.packingSession = packSession;
+    context.orderId = orderId;
+    context.shipGroupSeqId = shipGroupSeqId;
+    context.picklistBinId = picklistBinId;
+
+    // grab the order information
+    if (orderId) {
+        orderHeader = from("OrderHeader").where("orderId", orderId).queryOne();
+        if (orderHeader) {
+            OrderReadHelper orh = new OrderReadHelper(orderHeader);
+            context.orderId = orderId;
+            context.orderHeader = orderHeader;
+            context.orderReadHelper = orh;
+            orderItemShipGroup = orh.getOrderItemShipGroup(shipGroupSeqId);
+            context.orderItemShipGroup = orderItemShipGroup;
+            if (orderItemShipGroup) {
+                carrierPartyId = orderItemShipGroup.carrierPartyId;
+                carrierShipmentBoxTypes = from("CarrierShipmentBoxType").where("partyId", carrierPartyId).queryList();
+                if (carrierShipmentBoxTypes) {
+                    context.carrierShipmentBoxTypes = carrierShipmentBoxTypes;
+                }
+            }
+
+            if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
+                if (shipGroupSeqId) {
+                    productStoreId = orh.getProductStoreId();
+                    // SCIPIO 2.1.0: Doesn't make much sense to throw an error if shipment is not null. A verified picked shipment should be eligible for packing. No shippableItems can be retrieved from OrderItemAndShipGrpInvResAndItemSum
+                    // if no shipment present or ItemIssuance if a shipment (with picked status) is present.
+                    if (!picklistBinId) {
+                        if (!shipment) {
+                            shippableItems = from("OrderItemAndShipGrpInvResAndItemSum").where("orderId", orderId, "shipGroupSeqId", shipGroupSeqId).queryList();
+                        } else {
+                            //request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("OrderErrorUiLabels", "OrderErrorOrderHasBeenAlreadyVerified", [orderId : orderId], locale));
+                            shippableItems = from("ItemIssuance").where("orderId", orderId, "shipGroupSeqId", shipGroupSeqId).queryList();
+                        }
+                        packSession.addItemInfo(shippableItems);
+                        //context.put("itemInfos", shippableItemInfo);
+                    }
+                    context.productStoreId = productStoreId;
+                    // Generate the shipment cost estimate for the ship group
+                    shippableItemInfo = orh.getOrderItemAndShipGroupAssoc(shipGroupSeqId);
+                    shippableTotal = new Double(orh.getShippableTotal(shipGroupSeqId).doubleValue());
+                    shippableWeight = new Double(orh.getShippableWeight(shipGroupSeqId).doubleValue());
+                    shippableQuantity = new Double(orh.getShippableQuantity(shipGroupSeqId).doubleValue());
+                    if (orderItemShipGroup && orderItemShipGroup.contactMechId && orderItemShipGroup.shipmentMethodTypeId && orderItemShipGroup.carrierPartyId && orderItemShipGroup.carrierRoleTypeId) {
+                        shipmentCostEstimate = packSession.getShipmentCostEstimate(orderItemShipGroup, productStoreId, shippableItemInfo, shippableTotal, shippableWeight, shippableQuantity);
+                        context.shipmentCostEstimateForShipGroup = shipmentCostEstimate;
+                    }
+                } else {
+                    request.setAttribute("errorMessageList", ['No ship group sequence ID. Cannot process.']);
+                }
+            } else {
+                request.setAttribute("errorMessageList", ["Order #" + orderId + " is not approved for packing."]);
+            }
+        } else {
+            request.setAttribute("errorMessageList", ["Order #" + orderId + " cannot be found."]);
+        }
+    }
+
+    // Try to get the defaultWeightUomId first from the facility, then from the shipment properties, and finally defaulting to kilos
+    defaultWeightUomId = null;
+    if (facility) {
+        defaultWeightUomId = facility.defaultWeightUomId;
+    }
+    if (!defaultWeightUomId) {
+        defaultWeightUomId = EntityUtilProperties.getPropertyValue("shipment", "shipment.default.weight.uom", "WT_kg", delegator);
+    }
+    context.defaultWeightUomId = defaultWeightUomId;
+
 }
-if (!defaultWeightUomId) {
-    defaultWeightUomId = EntityUtilProperties.getPropertyValue("shipment", "shipment.default.weight.uom", "WT_kg", delegator);
-}
-context.defaultWeightUomId = defaultWeightUomId;
 
 //packSession.complete(false);

@@ -17,50 +17,21 @@
  * under the License.
  */
 
-import org.ofbiz.base.util.Debug
-import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.UtilProperties
-import org.ofbiz.entity.condition.EntityCondition
-import org.ofbiz.entity.condition.EntityOperator
 import org.ofbiz.entity.util.EntityUtil
 import org.ofbiz.order.order.OrderReadHelper
 import org.ofbiz.shipment.verify.VerifyPickSession
-
 
 facilityId = parameters.facilityId;
 if (facilityId) {
     facility = from("Facility").where("facilityId", facilityId).queryOne();
     context.facility = facility;
 }
+
+verifyPickSession = session.getAttribute("verifyPickSession")
 if (parameters.resetSearch) {
     session.removeAttribute("verifyPickSession");
 } else {
-    verifyPickSession = session.getAttribute("verifyPickSession");
-    if (!verifyPickSession) {
-        verifyPickSession = new VerifyPickSession(dispatcher, userLogin);
-        session.setAttribute("verifyPickSession", verifyPickSession);
-    }
-
-    shipmentId = parameters.shipmentId;
-    if (!shipmentId) {
-        shipmentId = request.getAttribute("shipmentId");
-    }
-    context.shipmentId = shipmentId;
-
-    if (shipmentId) {
-        context.orderId = null;
-        shipment = from("Shipment").where("shipmentId", shipmentId).queryOne();
-        if (shipment) {
-            shipmentItemBillingList = shipment.getRelated("ShipmentItemBilling", null, null, false);
-            invoiceIds = EntityUtil.getFieldListFromEntityList(shipmentItemBillingList, "invoiceId", true);
-            if (invoiceIds) {
-                context.invoiceIds = invoiceIds;
-//                parameters.orderId = null;
-            }
-        }
-    }
-
-    verifyPickSession.setFacilityId(facilityId);
     orderId = parameters.orderId;
     shipGroupSeqId = parameters.shipGroupSeqId;
 
@@ -71,6 +42,21 @@ if (parameters.resetSearch) {
     } else if (orderId && !shipGroupSeqId) {
         shipGroupSeqId = "00001";
     }
+
+    if (!verifyPickSession || (verifyPickSession &&
+            (!verifyPickSession.getOrderId().equals(orderId) || !verifyPickSession.getShipGroupSeqId().equals(shipGroupSeqId)))) {
+        verifyPickSession = new VerifyPickSession(dispatcher, userLogin, orderId, shipGroupSeqId);
+        session.setAttribute("verifyPickSession", verifyPickSession);
+    }
+
+    shipmentId = parameters.shipmentId;
+    if (!shipmentId) {
+        shipmentId = request.getAttribute("shipmentId");
+    }
+    context.shipmentId = shipmentId;
+
+
+    verifyPickSession.setFacilityId(facilityId);
 
     picklistBinId = parameters.picklistBinId;
     if (picklistBinId) {
@@ -105,14 +91,42 @@ if (parameters.resetSearch) {
             context.orderHeader = orderHeader;
             context.orderReadHelper = orh;
 
-            shipments = from("Shipment").where("primaryOrderId", orderId, "statusId", "SHIPMENT_PICKED").queryList();
-            context.shipments = shipments;
+            shipmentsCond = ["primaryOrderId" : orderId, "statusId" : "SHIPMENT_PICKED"]
+            if (shipGroupSeqId) {
+                shipmentsCond.put("primaryShipGroupSeqId", shipGroupSeqId)
+            }
+            shipments = from("Shipment").where(shipmentsCond).queryList()
+            context.shipments = shipments
+
+            invoiceIdsPerShipment = [:]
+            if (shipments) {
+//                context.orderId = null;
+                shipments.each {shipment ->
+                    shipmentItemBillingList = shipment.getRelated("ShipmentItemBilling", null, null, false);
+                    invoiceIds = EntityUtil.getFieldListFromEntityList(shipmentItemBillingList, "invoiceId", true);
+                    if (invoiceIds) {
+                        invoiceIdsPerShipment.put(shipment.shipmentId, invoiceIds)
+                    }
+                }
+            }
+            context.invoiceIdsPerShipment = invoiceIdsPerShipment
+
 
             orderItemShipGroup = orh.getOrderItemShipGroup(shipGroupSeqId);
             context.orderItemShipGroup = orderItemShipGroup;
-            List exprs = UtilMisc.toList(EntityCondition.makeCondition("statusId", EntityOperator.EQUALS, "ITEM_APPROVED"));
-            orderItems = orh.getOrderItemsByCondition(exprs);
-            context.orderItems = orderItems;
+
+            orderItemShipGroupAssocs = orderItemShipGroup.getRelated("OrderItemShipGroupAssoc")
+            orderItems = []
+            for (orderItemShipGroupAssoc in orderItemShipGroupAssocs) {
+//                Debug.log("orderItemShipGroupAssoc ===> " + orderItemShipGroupAssoc)
+                orderItem = orderItemShipGroupAssoc.getRelatedOne("OrderItem")
+                if (orderItem.statusId.equals("ITEM_APPROVED")) {
+                    orderItems.add(orderItem)
+                }
+            }
+            context.orderItems = orderItems
+            context.orderItemShipGroupAssocs = orderItemShipGroupAssocs
+
             if (!shipmentId) {
                 if ("ORDER_APPROVED".equals(orderHeader.statusId)) {
                     context.isOrderStatusApproved = true;

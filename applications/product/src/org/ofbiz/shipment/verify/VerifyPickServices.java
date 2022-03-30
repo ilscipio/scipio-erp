@@ -39,14 +39,13 @@ public class VerifyPickServices {
     public static Map<String, Object> verifySingleItem(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
         VerifyPickSession pickSession = (VerifyPickSession) context.get("verifyPickSession");
-        String orderId = (String) context.get("orderId");
-        String shipGroupSeqId = (String) context.get("shipGroupSeqId");
         String productId = (String) context.get("productId");
         String originGeoId = (String) context.get("originGeoId");
         BigDecimal quantity = (BigDecimal) context.get("quantity");
+        String orderItemSeqId = (String) context.get("orderItemSeqId");
         if (quantity != null) {
             try {
-                pickSession.createRow(orderId, null, shipGroupSeqId, productId, originGeoId, quantity, locale);
+                pickSession.createRow( orderItemSeqId, productId, originGeoId, quantity, locale);
             } catch (GeneralException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }
@@ -57,8 +56,6 @@ public class VerifyPickServices {
     public static Map<String, Object> verifyBulkItem(DispatchContext dctx, Map<String, ? extends Object> context) {
         Locale locale = (Locale) context.get("locale");
         VerifyPickSession pickSession = (VerifyPickSession) context.get("verifyPickSession");
-        String orderId = (String) context.get("orderId");
-        String shipGroupSeqId = (String) context.get("shipGroupSeqId");
         // SCIPIO: TODO: REVIEW: clearly something missing here
 //        String selectedMap = null;
 //        if (UtilValidate.isNotEmpty(context.get("selectedMap"))) {
@@ -90,7 +87,7 @@ public class VerifyPickServices {
                     BigDecimal quantity = new BigDecimal(quantityStr);
                     if (quantity.compareTo(BigDecimal.ZERO) > 0) {
                         try {
-                            pickSession.createRow(orderId, orderItemSeqId, shipGroupSeqId, productId, originGeoId, quantity, locale);
+                            pickSession.createRow(orderItemSeqId, productId, originGeoId, quantity, locale);
                         } catch (Exception ex) {
                             return ServiceUtil.returnError(ex.getMessage());
                         }
@@ -106,14 +103,20 @@ public class VerifyPickServices {
         String shipmentId = null;
         VerifyPickSession pickSession = (VerifyPickSession) context.get("verifyPickSession");
         String orderId = (String) context.get("orderId");
+        String shipGroupSeqId = (String) context.get("shipGroupSeqId");
         try {
             synchronized (pickSession) { // SCIPIO
-            shipmentId = pickSession.complete(orderId, locale);
-            Map<String, Object> shipment = new HashMap<String, Object>();
-            shipment.put("shipmentId", shipmentId);
-            shipment.put("orderId", orderId);
-            pickSession.clearAllRows();
-            return shipment;
+                if (!orderId.equals(pickSession.getOrderId())
+                        && (UtilValidate.isNotEmpty(shipGroupSeqId) && shipGroupSeqId.equals(pickSession.getShipGroupSeqId()))) {
+                    throw new GeneralException("orderId [" + orderId + "] passed is not equals to orderId stored in session [" + pickSession.getOrderId() + "] " +
+                            "OR shipGroupSeqId [" + shipGroupSeqId + "] passed is not equals to shipGroupSeqId stored in session [" + pickSession.getShipGroupSeqId() + "]");
+                }
+                shipmentId = pickSession.complete(locale);
+                Map<String, Object> shipment = new HashMap<String, Object>();
+                shipment.put("shipmentId", shipmentId);
+                shipment.put("orderId", orderId);
+                pickSession.clearAllRows();
+                return shipment;
             }
         } catch (GeneralException ex) {
             return ServiceUtil.returnError(ex.getMessage(), ex.getMessageList());

@@ -39,25 +39,28 @@ code package.
                     <@tr type="util"><@td colspan="4"><hr/></@td></@tr>
                   </#if>
                   <#if (quantityOrdered > 0) >
-                      <@tr>
+                      <#assign orderItemShipGroupEditAllowed = maySplit && !maxShipGroups && (!orderItem.statusId?exists || orderItem.statusId == "ITEM_CREATED" || orderItem.statusId == "ITEM_APPROVED") &&
+                            (orderHeader.statusId != "ORDER_SENT" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED" && orderHeader.statusId != "ORDER_CANCELLED")>                      <@tr>
                           <@td><a name="orderItem${index}">${orderItem.orderItemSeqId}</a></@td>
                           <@td><#if product.internalName?has_content>${product.internalName!}<br/></#if>[<a href="<@serverUrl>/catalog/control/ViewProduct?productId=${orderItem.productId!}</@serverUrl>" class="link">${orderItem.productId!}</a>]</@td>
                           <@td>${quantityOrdered}</@td>
                           <@td>${quantityNotAvailable}</@td>
                           <@td colspan="2">
-            <#--                  <#if !orderItem.statusId?exists || orderItem.statusId == "ITEM_CREATED" || orderItem.statusId == "ITEM_APPROVED">-->
-                              <div id="display${index}">
-                                  <a name="display${index}" href="javascript:showEdit('edit', '${index}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
-                              </div>
-                              <div id="edit${index}" style="display: none">
-                                  <a href="javascript:document.UpdateOrderItemShipGroupAssoc${index}.submit()" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.CommonValidate}</a>
-                                  <a href="javascript:showEdit('display', '${index}'); restoreEditField('${index}');" class="${styles.link_run_local_cancel!}">${uiLabelMap.CommonCancel}</a>
-                              </div>
-            <#--                  </#if>-->
+                              <#if (!orderItem.statusId?exists || orderItem.statusId == "ITEM_CREATED" || orderItem.statusId == "ITEM_APPROVED")
+                                && orderItemShipGroupEditAllowed>
+                                  <div id="display${index}">
+                                      <a name="display${index}" href="javascript:showEdit('edit', '${index}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
+                                  </div>
+                                  <div id="edit${index}" style="display: none">
+                                      <a href="javascript:document.UpdateOrderItemShipGroupAssoc${index}.submit()" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.CommonValidate}</a>
+                                      <a href="javascript:showEdit('display', '${index}'); restoreEditField('${index}');" class="${styles.link_run_local_cancel!}">${uiLabelMap.CommonCancel}</a>
+                                  </div>
+                              </#if>
                           </@td>
                       </@tr>
                       <@tr>
                         <@td colspan="5">
+
                           <form method="post" action="<@pageUrl>UpdateOrderItemShipGroupAssoc?view=OISGA</@pageUrl>" name="UpdateOrderItemShipGroupAssoc${index}"/>
                             <input type="hidden" name="orderId" value="${orderId}"/>
                             <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
@@ -93,7 +96,7 @@ code package.
                                   </@td>
                                   <@td width="20%" class="${styles.text_right!}">
                                       <div id="displayQuantity${index}${rowCount}">${OISGAssContent.quantity!}</div>
-                                      <#if (orderShipments.size()?default(0)) == 0>
+                                      <#if (orderShipments.size()?default(0)) == 0 && orderItemShipGroupEditAllowed>
                                         <div id="editQuantity${index}${rowCount}" style="display: none;"><input id="edit${index}_o_${rowCount}" name="quantity_o_${rowCount}" size="5" value="${OISGAssContent.quantity!}" title="${OISGAssContent.quantity!}" /></div>
                                       <#else>
                                         <div id="editQuantity${index}${rowCount}" style="display: none;">${OISGAssContent.quantity!}</div>
@@ -109,7 +112,7 @@ code package.
                         </@td>
                     </@tr>
 
-                    <#if !orderItem.statusId?exists || orderItem.statusId == "ITEM_CREATED" || orderItem.statusId == "ITEM_APPROVED" && (orderHeader.statusId != "ORDER_SENT" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED" && orderHeader.statusId != "ORDER_CANCELLED")>
+                    <#if orderItemShipGroupEditAllowed>
                       <@tr>
                           <@td colspan="3">&nbsp;</@td>
                           <@td colspan="2">
@@ -436,7 +439,6 @@ code package.
                                 </@td>
                               </@tr>
                             </#if>
-                            <#--
                             <#if shipGroup.maySplit?has_content && noShipment?default("false") != "true">
                               <@tr>
                                 <@td scope="row" class="${styles.grid_large!}3">
@@ -445,7 +447,7 @@ code package.
                                 <@td valign="top" colspan="3">
                                     <#if shipGroup.maySplit?upper_case == "N">
                                         <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request)>
-                                          <#if orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
+                                          <#if orderHeader.statusId != "ORDER_SENT" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_CANCELLED">
                                             <form name="allowordersplit_${shipGroup.shipGroupSeqId}" method="post" action="<@pageUrl>allowordersplit</@pageUrl>">
                                               <input type="hidden" name="orderId" value="${orderId}"/>
                                               <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
@@ -459,7 +461,6 @@ code package.
                                   </@td>
                               </@tr>
                             </#if>
-                            -->
 
                             <@tr>
                               <@td scope="row" class="${styles.grid_large!}3">

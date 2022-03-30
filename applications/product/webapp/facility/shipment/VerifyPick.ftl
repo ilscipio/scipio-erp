@@ -20,7 +20,8 @@ code package.
 
     <#macro menuContent menuArgs={}>
         <@menu args=menuArgs>
-            <#if (picklistBinId?has_content || orderId?has_content) && !shipmentId?has_content>
+            <#if (picklistBinId?has_content || orderId?has_content)>
+                <#if !shipments?has_content>
                 <@menuitem type="generic">
                     <@modal id="addProductToPick" label="Verify product" linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_add!}">
                         <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPick')}"/>
@@ -37,15 +38,18 @@ code package.
                     </@modal>
                 </@menuitem>
                 <@menuitem type="generic">
-                    <a href="javascript:document.multiPickForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductVerifyAllItems}</a>
+                    <a href="javascript:document.multiPickForm.action='${makePageUrl('processBulkVerifyPick')}';document.multiPickForm.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductVerifyAllItems}</a>
                 </@menuitem>
+                <#else>
+                    <a href="${makePageUrl('PackOrder?facilityId=' + (facility.facilityId!) + '&orderId=' + (orderId!) + '&shipGroupSeqId=' + (shipGroupSeqId!'00001'))}" class="+${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductPacking}</a>
+                </#if>
             <#else>
             </#if>
         </@menu>
     </#macro>
 
     <@section menuContent=globalMenuContent>
-        <#-- SCIPIO: 2.0.0: Rendering lookup form when nothing is present -->
+        <#-- SCIPIO: 2.1.0: Rendering lookup form when nothing is present -->
         <#if !picklistBinId?has_content && !orderId?has_content>
             <@section>
                 <form name="selectOrderForm" method="post" action="<@pageUrl>VerifyPick</@pageUrl>">
@@ -64,87 +68,88 @@ code package.
         </#if>
 
         <#if orderHeader?? && orderHeader?has_content && orderItemShipGroup?has_content>
-                <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderId}</@serverUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
-                <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent!>
-                    <#if (orderItemShipGroup.contactMechId)?has_content>
-                        <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
-                    </#if>
-                    <#assign carrier = orderItemShipGroup.carrierPartyId!(uiLabelMap.CommonNA)>
-                    <@row>
-                        <@cell columns=4>
-                            <#if postalAddress?exists >
-                                <@heading><strong>${uiLabelMap.ProductShipToAddress}</strong></@heading>
-                                ${uiLabelMap.CommonTo}: ${postalAddress.toName!""}<br />
-                                <#if postalAddress.attnName?has_content>
-                                    ${uiLabelMap.CommonAttn}: ${postalAddress.attnName}<br />
-                                </#if>
-                                ${postalAddress.address1}<br/>
-                                <#if postalAddress.address2?has_content>
-                                    ${postalAddress.address2}<br/>
-                                </#if>
-                                ${postalAddress.city!}, ${postalAddress.stateProvinceGeoId!} ${postalAddress.postalCode!}<br />
-                                ${postalAddress.countryGeoId!}<br/>
-                            </#if>
-                        </@cell>
-                        <@cell columns=4>
-                            <@heading><strong>${uiLabelMap.ProductCarrierShipmentMethod}</strong></@heading>
-                            <#if carrier == "USPS">
-                                <#assign color = "red">
-                            <#elseif carrier == "UPS">
-                                <#assign color = "green">
-                            <#else>
-                                <#assign color = "black">
-                            </#if>
-                            <#if carrier != "_NA_">
-                                <font color="${color}">${carrier}</font>&nbsp;
-                            </#if>
-                            <#assign description = (delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":orderItemShipGroup.shipmentMethodTypeId}, false)).description>
-                            ${description!"??"}<br/>
-                            ${uiLabelMap.ProductEstimatedShipCostForShipGroup}<br />
-                            <#if shipmentCostEstimateForShipGroup?exists>
-                                <@ofbizCurrency amount=shipmentCostEstimateForShipGroup isoCode=(orderReadHelper.getCurrency()!)/><br />
-                            </#if>
-                        </@cell>
-                        <@cell columns=4>
-                            <@heading><strong>${uiLabelMap.OrderInstructions}</strong></@heading>
-                            ${orderItemShipGroup.shippingInstructions?default("(${uiLabelMap.CommonNone})")}
-                        </@cell>
-                    </@row>
-                </@section>
-        </#if>
-        <#if shipments?has_content>
-            <#assign sectionTitle>${rawLabel('ProductPicked')} ${rawLabel('FacilityShipments')}</#assign>
-            <@section title=sectionTitle>
+            <#assign sectionTitle>${getLabel('ProductOrderId')} <a href="<@serverUrl>/ordermgr/control/orderview?orderId=${orderId}</@serverUrl>">${orderId}</a> / ${getLabel('ProductOrderShipGroupId')} #${shipGroupSeqId}</#assign>
+            <@section title=wrapAsRaw(sectionTitle, 'htmlmarkup') menuContent=menuContent!>
+                <#if (orderItemShipGroup.contactMechId)?has_content>
+                    <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
+                </#if>
+                <#assign carrier = orderItemShipGroup.carrierPartyId!(uiLabelMap.CommonNA)>
                 <@row>
-                    <@cell>
-                        <#list shipments as shipment>
-                            ${uiLabelMap.ProductShipmentId} <a href="<@pageUrl>EditShipment?shipmentId=${shipment.shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
-                        </#list>
+                    <@cell columns=4>
+                        <#if postalAddress?exists >
+                            <@heading><strong>${uiLabelMap.ProductShipToAddress}</strong></@heading>
+                            ${uiLabelMap.CommonTo}: ${postalAddress.toName!""}<br />
+                            <#if postalAddress.attnName?has_content>
+                                ${uiLabelMap.CommonAttn}: ${postalAddress.attnName}<br />
+                            </#if>
+                            ${postalAddress.address1}<br/>
+                            <#if postalAddress.address2?has_content>
+                                ${postalAddress.address2}<br/>
+                            </#if>
+                            ${postalAddress.city!}, ${postalAddress.stateProvinceGeoId!} ${postalAddress.postalCode!}<br />
+                            ${postalAddress.countryGeoId!}<br/>
+                        </#if>
+                    </@cell>
+                    <@cell columns=4>
+                        <@heading><strong>${uiLabelMap.ProductCarrierShipmentMethod}</strong></@heading>
+                        <#if carrier == "USPS">
+                            <#assign color = "red">
+                        <#elseif carrier == "UPS">
+                            <#assign color = "green">
+                        <#else>
+                            <#assign color = "black">
+                        </#if>
+                        <#if carrier != "_NA_">
+                            <font color="${color}">${carrier}</font>&nbsp;
+                        </#if>
+                        <#assign description = (delegator.findOne("ShipmentMethodType", {"shipmentMethodTypeId":orderItemShipGroup.shipmentMethodTypeId}, false)).description>
+                        ${description!"??"}<br/>
+                        ${uiLabelMap.ProductEstimatedShipCostForShipGroup}<br />
+                        <#if shipmentCostEstimateForShipGroup?exists>
+                            <@ofbizCurrency amount=shipmentCostEstimateForShipGroup isoCode=(orderReadHelper.getCurrency()!)/><br />
+                        </#if>
+                    </@cell>
+                    <@cell columns=4>
+                        <@heading><strong>${uiLabelMap.OrderInstructions}</strong></@heading>
+                        ${orderItemShipGroup.shippingInstructions?default("(${uiLabelMap.CommonNone})")}
                     </@cell>
                 </@row>
-                <#if invoiceIds?? && invoiceIds?has_content>
+            </@section>
+        </#if>
+        <#if shipments?has_content>
+            <@section title=wrapAsRaw(rawLabel('ProductPicked') + " " + rawLabel('FacilityShipments'), 'htmlmarkup')>
+                <#list shipments as shipment>
                     <@row>
-                        <@cell>
-                            ${uiLabelMap.AccountingInvoices}:
-                            <@menu type="button">
-                                <#list invoiceIds as invoiceId>
-                                  <@menuitem type="generic">
-                                        ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
-                                        (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
-                                  </@menuitem>
-                                </#list>
-                            </@menu>
+                        <@cell columns=4>
+                            <@heading><strong>${uiLabelMap.ProductShipmentId}</strong></@heading>
+                            <a href="<@pageUrl>EditShipment?shipmentId=${shipment.shipmentId}</@pageUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>
+                        </@cell>
+                        <@cell columns=4 last=true>
+                            <#if invoiceIdsPerShipment?has_content>
+                                <@heading><strong>${uiLabelMap.AccountingInvoices}</strong></@heading>
+                                <@menu type="button">
+                                    <#list invoiceIdsPerShipment[shipment.shipmentId] as invoiceId>
+                                        <@menuitem type="generic">
+                                            ${uiLabelMap.CommonNbr}<a href="<@serverUrl>/accounting/control/invoiceOverview?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_view!}">${invoiceId}</a>
+                                                    (<a href="<@serverUrl>/accounting/control/invoice.pdf?invoiceId=${invoiceId}${raw(externalKeyParam)}</@serverUrl>" target="_blank" class="${styles.menu_button_item_link!} ${styles.action_run_sys!} ${styles.action_export!}">PDF</a>)
+                                            </@menuitem>
+                                    </#list>
+                                </@menu>
+                            </#if>
                         </@cell>
                     </@row>
-                </#if>
+                </#list>
             </@section>
         </#if>
 
         <#if showInput != "N">
-            <#if orderItems?has_content>
+            <#if orderItemShipGroupAssocs?has_content>
                 <#assign sectionTitle="${rawLabel('ProductProduct')} ${rawLabel('ProductToPick')}"/>
                 <@section title=sectionTitle>
-                    <form name="multiPickForm" method="post" action="<@pageUrl>processBulkVerifyPick</@pageUrl>">
+                    <form name="multiPickForm" method="post" action="<@pageUrl>processVerifyPick</@pageUrl>">
+                        <input type="hidden" name="productId" value=""/>
+                        <input type="hidden" name="quantity" value=""/>
+                        <input type="hidden" name="orderItemSeqId" value=""/>
                         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
                         <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
                         <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -166,99 +171,103 @@ code package.
                                 <#assign rowKey = 0>
                                 <#assign counter = 1>
                                 <#-- <#assign isShowVerifyItemButton = "false"> -->
-                                <#list orderItems as orderItem>
-                                    <#assign orderItemSeqId = orderItem.orderItemSeqId!>
-                                    <#assign readyToVerify = verifyPickSession.getReadyToVerifyQuantity(orderId,orderItemSeqId)>
-                                    <#assign orderItemQuantity = orderItem.getBigDecimal("quantity")>
-                                    <#assign verifiedQuantity = 0.000000>
+                                <#list orderItemShipGroupAssocs as orderItemShipGroupAssoc>
+                                    <#assign orderItem = orderItemShipGroupAssoc.getRelatedOne("OrderItem")>
+                                    <#if orderItem.statusId == "ITEM_APPROVED">
+                                        <#assign orderItemSeqId = orderItemShipGroupAssoc.orderItemSeqId!>
+                                        <#assign readyToVerify = verifyPickSession.getReadyToVerifyQuantity(orderItemSeqId)>
+                                        <#assign orderItemQuantity = orderItemShipGroupAssoc.getBigDecimal("quantity")>
+                                        <#assign verifiedQuantity = 0.000000>
 
-                                    <#if (shipments?has_content)>
-                                        <#list shipments as shipment>
-                                            <#assign itemIssuances = delegator.findByAnd("ItemIssuance", {"shipmentId":shipment.getString("shipmentId"), "orderItemSeqId":orderItemSeqId}, null, false)/>
-                                            <#if itemIssuances?has_content>
-                                                <#list itemIssuances as itemIssuance>
-                                                    <#assign verifiedQuantity = verifiedQuantity + itemIssuance.getBigDecimal("quantity")>
-                                                </#list>
-                                            </#if>
-                                        </#list>
-                                    </#if>
-                                    <#if verifiedQuantity == orderItemQuantity>
-                                        <#assign counter = counter +1>
-                                    </#if>
-                                    <#assign orderItemQuantity = orderItemQuantity.subtract(verifiedQuantity)>
-                                    <#assign product = orderItem.getRelatedOne("Product", false)!/>
-                                    <@tr>
-                                        <#-- <#if (orderItemQuantity.compareTo(readyToVerify) > 0)>
-                                            <#assign isShowVerifyItemButton = "true">
-                                        <#else>
-                                        </#if> -->
-                                        <@td>${orderItemSeqId!}</@td>
-                                        <@td>${product.productId!(uiLabelMap.CommonNA)}</@td>
-                                        <@td>
-                                            <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>
-                                        </@td>
-                                        <@td>
-                                            <@field type="select" name="geo_o_${orderItem_index}">
-                                                <#if product.originGeoId?has_content>
-                                                    <#assign originGeoId = product.originGeoId>
-                                                    <#assign geo = delegator.findOne("Geo", {"geoId":originGeoId}, true)>
-                                                    <option value="${originGeoId}">${geo.geoName!}</option>
-                                                    <option value="${originGeoId}">---</option>
+                                        <#if (shipments?has_content)>
+                                            <#list shipments as shipment>
+                                                <#assign itemIssuances = delegator.findByAnd("ItemIssuance", {"shipmentId":shipment.getString("shipmentId"), "orderItemSeqId":orderItemSeqId}, null, false)/>
+                                                <#if itemIssuances?has_content>
+                                                    <#list itemIssuances as itemIssuance>
+                                                        <#assign verifiedQuantity = verifiedQuantity + itemIssuance.getBigDecimal("quantity")>
+                                                    </#list>
                                                 </#if>
-                                                <option value=""></option>
-                                                <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!product.originGeoId??}/>
-                                            </@field>
-                                        </@td>
-                                        <@td>${orderItemQuantity!}</@td>
-                                        <@td>${readyToVerify!}</@td>
-                                        <@td>
-                                            <#if (orderItemQuantity.compareTo(readyToVerify) > 0)>
-                                                <#assign qtyToVerify = orderItemQuantity.subtract(readyToVerify) >
-                                                <input type="text" size="7" name="qty_o_${orderItem_index}" value="${qtyToVerify!}"/>
+                                            </#list>
+                                        </#if>
+                                        <#if verifiedQuantity == orderItemQuantity>
+                                            <#assign counter = counter +1>
+                                        </#if>
+                                        <#assign orderItemQuantity = orderItemQuantity.subtract(verifiedQuantity)>
+                                        <#assign product = orderItem.getRelatedOne("Product", false)!/>
+                                        <@tr>
+                                            <#-- <#if (orderItemQuantity.compareTo(readyToVerify) > 0)>
+                                                <#assign isShowVerifyItemButton = "true">
                                             <#else>
-                                                0
-                                            </#if>
-                                        </@td>
-                                        <@td>
-                                            <#if (orderItemQuantity.compareTo(readyToVerify) > 0)>
-                                                <a href="javascript:$('input[name=productId]').val('${orderItem.productId}');$('input[name=quantity]').val($('input[name=qty_o_${orderItem_index}]').val());document.singlePickForm.submit();"
-                                                    class="+${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}</a>
-                                            </#if>
-                                        </@td>
-                                        <input type="hidden" name="prd_o_${orderItem_index}" value="${(orderItem.productId)!}"/>
-                                        <input type="hidden" name="ite_o_${orderItem_index}" value="${(orderItem.orderItemSeqId)!}"/>
-                                    </@tr>
-                                    <#assign workOrderItemFulfillments = orderItem.getRelated("WorkOrderItemFulfillment", null, null, false)/>
-                                    <#if workOrderItemFulfillments?has_content>
-                                        <#assign workOrderItemFulfillment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(workOrderItemFulfillments)/>
-                                        <#if workOrderItemFulfillment?has_content>
-                                            <#assign workEffort = workOrderItemFulfillment.getRelatedOne("WorkEffort", false)/>
-                                            <#if workEffort?has_content>
-                                                <#assign workEffortTask = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("WorkEffort", {"workEffortParentId":workEffort.workEffortId}, null, false))/>
-                                                <#if workEffortTask?has_content>
-                                                    <#assign workEffortInventoryAssigns = workEffortTask.getRelated("WorkEffortInventoryAssign", null, null, false)/>
-                                                    <#if workEffortInventoryAssigns?has_content>
-                                                        <@tr>
-                                                            <@td colspan="8">
-                                                                ${uiLabelMap.OrderMarketingPackageComposedBy}
-                                                            </@td>
-                                                        </@tr>
-                                                        <#list workEffortInventoryAssigns as workEffortInventoryAssign>
-                                                            <#assign inventoryItem = workEffortInventoryAssign.getRelatedOne("InventoryItem", false)/>
-                                                            <#assign product = inventoryItem.getRelatedOne("Product", false)/>
+                                            </#if> -->
+                                            <@td>${orderItemSeqId!}</@td>
+                                            <@td>${product.productId!(uiLabelMap.CommonNA)}</@td>
+                                            <@td>
+                                                <a href="<@serverUrl>/catalog/control/ViewProduct?productId=${product.productId!}${raw(externalKeyParam)}</@serverUrl>" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>
+                                            </@td>
+                                            <@td>
+                                                <@field type="select" name="geo_o_${orderItemShipGroupAssoc_index}">
+                                                    <#if product.originGeoId?has_content>
+                                                        <#assign originGeoId = product.originGeoId>
+                                                        <#assign geo = delegator.findOne("Geo", {"geoId":originGeoId}, true)>
+                                                        <option value="${originGeoId}">${geo.geoName!}</option>
+                                                        <option value="${originGeoId}">---</option>
+                                                    </#if>
+                                                    <option value=""></option>
+                                                    <@render resource="component://common/widget/CommonScreens.xml#countries" ctxVars={"countriesPreselect":!product.originGeoId??}/>
+                                                </@field>
+                                            </@td>
+                                            <@td>${orderItemQuantity!}</@td>
+                                            <@td>${readyToVerify!}</@td>
+                                            <@td>
+                                                <#assign qtyToVerify = 0>
+                                                <#if (orderItemQuantity.compareTo(readyToVerify) > 0)>
+                                                    <#assign qtyToVerify = orderItemQuantity.subtract(readyToVerify) >
+                                                    <input type="text" size="7" name="qty_o_${orderItemShipGroupAssoc_index}" value="${qtyToVerify!}"/>
+                                                <#else>
+                                                    ${qtyToVerify}
+                                                </#if>
+                                            </@td>
+                                            <@td>
+                                                <#if (orderItemQuantity.compareTo(readyToVerify) > 0)>
+                                                    <a href="javascript:$('input[name=productId]').val('${orderItem.productId}');$('input[name=quantity]').val('${qtyToVerify}');$('input[name=orderItemSeqId]').val('${orderItem.orderItemSeqId}');document.multiPickForm.submit();"
+                                                        class="+${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}</a>
+                                                </#if>
+                                            </@td>
+                                            <input type="hidden" name="prd_o_${orderItemShipGroupAssoc_index}" value="${(orderItem.productId)!}"/>
+                                            <input type="hidden" name="ite_o_${orderItemShipGroupAssoc_index}" value="${(orderItem.orderItemSeqId)!}"/>
+                                        </@tr>
+                                        <#assign workOrderItemFulfillments = orderItem.getRelated("WorkOrderItemFulfillment", null, null, false)/>
+                                        <#if workOrderItemFulfillments?has_content>
+                                            <#assign workOrderItemFulfillment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(workOrderItemFulfillments)/>
+                                            <#if workOrderItemFulfillment?has_content>
+                                                <#assign workEffort = workOrderItemFulfillment.getRelatedOne("WorkEffort", false)/>
+                                                <#if workEffort?has_content>
+                                                    <#assign workEffortTask = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(delegator.findByAnd("WorkEffort", {"workEffortParentId":workEffort.workEffortId}, null, false))/>
+                                                    <#if workEffortTask?has_content>
+                                                        <#assign workEffortInventoryAssigns = workEffortTask.getRelated("WorkEffortInventoryAssign", null, null, false)/>
+                                                        <#if workEffortInventoryAssigns?has_content>
                                                             <@tr>
-                                                                <@td colspan="2"></@td>
-                                                                <@td>${product.productId!(uiLabelMap.CommonNA)}</@td>
-                                                                <@td>${product.internalName!}</@td>
-                                                                <@td></@td>
-                                                                <@td>${workEffortInventoryAssign.quantity!}</@td>
+                                                                <@td colspan="8">
+                                                                    ${uiLabelMap.OrderMarketingPackageComposedBy}
+                                                                </@td>
                                                             </@tr>
-                                                        </#list>
+                                                            <#list workEffortInventoryAssigns as workEffortInventoryAssign>
+                                                                <#assign inventoryItem = workEffortInventoryAssign.getRelatedOne("InventoryItem", false)/>
+                                                                <#assign product = inventoryItem.getRelatedOne("Product", false)/>
+                                                                <@tr>
+                                                                    <@td colspan="2"></@td>
+                                                                    <@td>${product.productId!(uiLabelMap.CommonNA)}</@td>
+                                                                    <@td>${product.internalName!}</@td>
+                                                                    <@td></@td>
+                                                                    <@td>${workEffortInventoryAssign.quantity!}</@td>
+                                                                </@tr>
+                                                            </#list>
+                                                        </#if>
                                                     </#if>
                                                 </#if>
                                             </#if>
+                                            <#assign rowKey = rowKey + 1>
                                         </#if>
-                                        <#assign rowKey = rowKey + 1>
                                     </#if>
                                 </#list>
                             </@tbody>

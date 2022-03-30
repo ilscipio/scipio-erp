@@ -177,6 +177,10 @@ code package.
       <view-link entity-alias="PLB" rel-entity-alias="PLI">
         <key-map field-name="picklistBinId"/>
       </view-link>
+      <relation type="one" rel-entity-name="OrderItem">
+          <key-map field-name="orderId"/>
+          <key-map field-name="orderItemSeqId"/>
+      </relation>
     </view-entity>
     <entity entity-name="PicklistBin"
             package-name="org.ofbiz.shipment.picklist"

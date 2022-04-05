@@ -242,12 +242,21 @@ code package.
                 <get-related value-field="orderItem" relation-name="OrderItemShipGrpInvRes" list="otherOiirs"/>
                 <if-empty field="otherOiirs">
                     <get-related-one value-field="orderItemShipGrpInvRes" relation-name="OrderItemShipGroup" to-value-field="oisg" />
+                    <!-- SCIPIO: 2.1.0: Checks if ITEM_SENT and its corresponding StatusValidChange exist so it can be set, otherwise proceed in legacy mode (ITEM_COMPLETED) -->
+                    <entity-one entity-name="StatusItem" value-field="statusItemSent" cache="true">
+                        <field-map field-name="statusId" value="ITEM_SENT" />
+                    </entity-one>
+                    <get-related-one relation-name="ToStatusValidChange" value-field="statusItemSent" to-value-field="statusValidChangeItemSent" cache="true" />
                     <if>
                         <condition>
                             <or>
                                 <if-compare field="orderHeader.salesChannelEnumId" value="POS_SALES_CHANNEL" operator="equals"/>
                                 <if-compare field="product.productTypeId" value="DIGITAL_GOOD" operator="equals"/>
                                 <if-compare field="oisg.shipmentMethodTypeId" value="NO_SHIPPING" operator="equals"/>
+                                <and>
+                                    <if-empty field="statusItemSent" />
+                                    <if-empty field="statusValidChangeItemSent" />
+                                </and>
                             </or>
                         </condition>
                         <then>

@@ -21,30 +21,28 @@
  * This script is also referenced by the [Scipio: shop]'s screens and
  * should not contain order component's specific code.
  */
-
+package com.ilscipio.scipio.ce;
+import org.ofbiz.base.util.*
 import org.ofbiz.base.util.cache.UtilCache
-
-import java.text.NumberFormat;
-
-import org.ofbiz.base.util.*;
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.condition.*;
-import org.ofbiz.entity.util.*;
-import org.ofbiz.service.*;
-import org.ofbiz.webapp.taglib.ContentUrlTag;
-import org.ofbiz.product.product.ProductContentWrapper;
-import org.ofbiz.product.product.ProductSearch;
-import org.ofbiz.product.product.ProductSearchSession;
-import org.ofbiz.product.product.ProductWorker;
-import org.ofbiz.product.catalog.*;
-import org.ofbiz.product.store.*;
-import org.ofbiz.webapp.stats.VisitHandler;
+import org.ofbiz.entity.condition.EntityCondition
+import org.ofbiz.entity.condition.EntityOperator
+import org.ofbiz.entity.util.EntityTypeUtil
+import org.ofbiz.entity.util.EntityUtil
+import org.ofbiz.entity.util.EntityUtilProperties
+import org.ofbiz.order.shoppingcart.ShoppingCart
+import org.ofbiz.order.shoppingcart.ShoppingCartEvents
+import org.ofbiz.product.catalog.CatalogWorker
+import org.ofbiz.product.product.ProductContentWrapper
+import org.ofbiz.product.product.ProductWorker
+import org.ofbiz.product.store.ProductStoreWorker
+import org.ofbiz.service.ServiceUtil
+import org.ofbiz.webapp.taglib.ContentUrlTag
 import org.ofbiz.webapp.website.WebSiteWorker
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 
 final module = "ProductDetail.groovy"
-
+long lastTime = System.currentTimeMillis();
 UtilCache<String, Map> productCache = UtilCache.getOrCreateUtilCache("product.productdetail.rendered", 0,0,
         UtilProperties.getPropertyAsLong("cache", "product.productdetail.rendered.expireTime",86400000),
         UtilProperties.getPropertyAsBoolean("cache", "product.productdetail.rendered.softReference",true));
@@ -185,6 +183,25 @@ if (useCache) {
         context.upSellProducts = cachedValue.upSellProducts;
         context.obsolenscenseProducts = cachedValue.obsolenscenseProducts;
         context.accessoryProducts = cachedValue.accessoryProducts;
+
+        context.virtualVariant = cachedValue.virtualVariant;
+        context.variantTree = cachedValue.variantTree;
+        context.variantTreeSize = cachedValue.variantTreeSize;
+        context.unavailableVariants = cachedValue.unavailableVariants;
+        context.featureLists = cachedValue.featureLists;
+        context.variantPriceList = cachedValue.variantPriceList;
+        context.virtualVariants = cachedValue.virtualVariants;
+        context.virtualVariantPriceList = cachedValue.virtualVariantPriceList;
+        context.variantProductInfoMap = cachedValue.variantProductInfoMap;
+        context.unavailableVariantIds = cachedValue.unavailableVariantIds;
+        context.variantSample = cachedValue.variantSample;
+        context.variantSampleKeys = cachedValue.variantSampleKeys;
+        context.variantSampleSize = cachedValue.variantSampleSize;
+        context.featureSet = cachedValue.featureSet;
+        context.featureTypes = cachedValue.featureTypes;
+        context.featureOrder = cachedValue.featureOrder;
+        context.featureOrderFirst = cachedValue.featureOrderFirst;
+        context.minimumQuantity = cachedValue.minimumQuantity;
     }
 }
 
@@ -193,6 +210,28 @@ if (product) {
     // make the productContentWrapper
     productContentWrapper = new ProductContentWrapper(product, request);
     context.productContentWrapper = productContentWrapper;
+
+    if (cart.isSalesOrder()) {
+        // sales order: run the "calculateProductPrice" service
+        priceContext = [product : product, prodCatalogId : catalogId,
+                        currencyUomId : cart.getCurrency(), autoUserLogin : autoUserLogin];
+        priceContext.webSiteId = webSiteId;
+        priceContext.productStoreId = productStoreId;
+        priceContext.checkIncludeVat = "Y";
+        priceContext.agreementId = cart.getAgreementId();
+        priceContext.getMinimumVariantPrice = true;
+        priceContext.partyId = cart.getPartyId();  // IMPORTANT: must put this in, or price will be calculated for the CSR instead of the customer
+        priceMap = runService('calculateProductPrice', priceContext);
+        priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous
+        context.priceMap = priceMap;
+    } else {
+        // purchase order: run the "calculatePurchasePrice" service
+        priceContext = [product : product, currencyUomId : cart.getCurrency(),
+                        partyId : cart.getPartyId(), userLogin : userLogin];
+        priceMap = runService('calculatePurchasePrice', priceContext);
+        priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous
+        context.priceMap = priceMap;
+    }
 }
 
 if(!cachedValue){
@@ -422,63 +461,6 @@ if(!cachedValue){
     accessoryProducts = runService('getAssociatedProducts', [productId : productId, type : "PRODUCT_ACCESSORY", checkViewAllow : true, prodCatalogId : currentCatalogId]);
     context.accessoryProducts = accessoryProducts.assocProducts;
 
-    // cache
-    prodMap = [:];
-    prodMap.product_id = context.product_id;
-    prodMap.mainDetailImageUrl = context.mainDetailImageUrl;
-    prodMap.categoryId = context.categoryId;
-    prodMap.category = context.category;
-    prodMap.previousProductId = context.previousProductId;
-    prodMap.nextProductId = context.nextProductId;
-    prodMap.productStoreId = context.productStoreId;
-    prodMap.productStore = context.productStore;
-    prodMap.productReviews = context.productReviews;
-    prodMap.averageRating = context.averageRating;
-    prodMap.numRatings = context.numRatings;
-    prodMap.daysToShip = context.daysToShip;
-    prodMap.daysToShip = context.daysToShip;
-    prodMap.disFeatureList = context.disFeatureList;
-    prodMap.sizeProductFeatureAndAppls = context.sizeProductFeatureAndAppls;
-    prodMap.selFeatureTypes = context.selFeatureTypes;
-    prodMap.selFeatureOrder = context.selFeatureOrder;
-    prodMap.selFeatureOrderFirst = context.selFeatureOrderFirst;
-    prodMap.mainProducts = context.mainProducts;
-    prodMap.downloadProductContentAndInfoList = context.downloadProductContentAndInfoList;
-    prodMap.productImageList = context.productImageList;
-    prodMap.startDate = context.startDate;
-    prodMap.productTags = context.productTags;
-    prodMap.alsoBoughtProducts = context.alsoBoughtProducts;
-    prodMap.obsoleteProducts = context.obsoleteProducts;
-    prodMap.crossSellProducts = context.crossSellProducts;
-    prodMap.upSellProducts = context.upSellProducts;
-    prodMap.obsolenscenseProducts = context.obsolenscenseProducts;
-    prodMap.accessoryProducts = context.accessoryProducts;
-    productCache.put(cacheKey,prodMap);
-}
-
-// non-cacheable code
-if(product){
-    if (cart.isSalesOrder()) {
-        // sales order: run the "calculateProductPrice" service
-        priceContext = [product : product, prodCatalogId : catalogId,
-                        currencyUomId : cart.getCurrency(), autoUserLogin : autoUserLogin];
-        priceContext.webSiteId = webSiteId;
-        priceContext.productStoreId = productStoreId;
-        priceContext.checkIncludeVat = "Y";
-        priceContext.agreementId = cart.getAgreementId();
-        priceContext.getMinimumVariantPrice = true;
-        priceContext.partyId = cart.getPartyId();  // IMPORTANT: must put this in, or price will be calculated for the CSR instead of the customer
-        priceMap = runService('calculateProductPrice', priceContext);
-        priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous
-        context.priceMap = priceMap;
-    } else {
-        // purchase order: run the "calculatePurchasePrice" service
-        priceContext = [product : product, currencyUomId : cart.getCurrency(),
-                        partyId : cart.getPartyId(), userLogin : userLogin];
-        priceMap = runService('calculatePurchasePrice', priceContext);
-        priceMap.currencyUomId = cart.getCurrency(); // SCIPIO: 2018-07-18: put the currency in this map so it is unambiguous
-        context.priceMap = priceMap;
-    }
 
     // Special Variant Code
     if ("Y".equals(product.isVirtual)) {
@@ -730,31 +712,97 @@ if(product){
         }
     }
 
-    availableInventory = 0.0;
+    // cache
+    prodMap = [:];
+    prodMap.product_id = context.product_id;
+    prodMap.mainDetailImageUrl = context.mainDetailImageUrl;
+    prodMap.categoryId = context.categoryId;
+    prodMap.category = context.category;
+    prodMap.previousProductId = context.previousProductId;
+    prodMap.nextProductId = context.nextProductId;
+    prodMap.productStoreId = context.productStoreId;
+    prodMap.productStore = context.productStore;
+    prodMap.productReviews = context.productReviews;
+    prodMap.averageRating = context.averageRating;
+    prodMap.numRatings = context.numRatings;
+    prodMap.daysToShip = context.daysToShip;
+    prodMap.daysToShip = context.daysToShip;
+    prodMap.disFeatureList = context.disFeatureList;
+    prodMap.sizeProductFeatureAndAppls = context.sizeProductFeatureAndAppls;
+    prodMap.selFeatureTypes = context.selFeatureTypes;
+    prodMap.selFeatureOrder = context.selFeatureOrder;
+    prodMap.selFeatureOrderFirst = context.selFeatureOrderFirst;
+    prodMap.mainProducts = context.mainProducts;
+    prodMap.downloadProductContentAndInfoList = context.downloadProductContentAndInfoList;
+    prodMap.productImageList = context.productImageList;
+    prodMap.startDate = context.startDate;
+    prodMap.productTags = context.productTags;
+    prodMap.alsoBoughtProducts = context.alsoBoughtProducts;
+    prodMap.obsoleteProducts = context.obsoleteProducts;
+    prodMap.crossSellProducts = context.crossSellProducts;
+    prodMap.upSellProducts = context.upSellProducts;
+    prodMap.obsolenscenseProducts = context.obsolenscenseProducts;
+    prodMap.accessoryProducts = context.accessoryProducts;
 
-    // if the product is a MARKETING_PKG_AUTO/PICK, then also get the quantity which can be produced from components
-    if (isMarketingPackage) {
-        resultOutput = runService('getMktgPackagesAvailable', [productId : productId, useInventoryCache:true]); // SCIPIO: cache
-        availableInventory = resultOutput.availableToPromiseTotal;
-    } else {
-        //get last inventory count from product facility for the product
-        facilities = from("ProductFacility").where("productId", product.productId).queryList();
-        if(facilities) {
-            facilities.each { facility ->
-                lastInventoryCount = facility.lastInventoryCount;
-                if (lastInventoryCount != null) {
-                    availableInventory += lastInventoryCount;
+    prodMap.virtualVariant = context.virtualVariant;
+    prodMap.variantTree = context.variantTree;
+    prodMap.variantTreeSize = context.variantTreeSize;
+    prodMap.unavailableVariants = context.unavailableVariants;
+    prodMap.featureLists = context.featureLists;
+    prodMap.variantPriceList = context.variantPriceList;
+    prodMap.virtualVariants = context.virtualVariants;
+    prodMap.virtualVariantPriceList = context.virtualVariantPriceList;
+    prodMap.variantProductInfoMap = context.variantProductInfoMap;
+    prodMap.unavailableVariantIds = context.unavailableVariantIds;
+    prodMap.variantSample = context.variantSample;
+    prodMap.variantSampleKeys = context.variantSampleKeys;
+    prodMap.variantSampleSize = context.variantSampleSize;
+    prodMap.featureSet = context.featureSet;
+    prodMap.featureTypes = context.featureTypes;
+    prodMap.featureOrder = context.featureOrder;
+    prodMap.featureOrderFirst = context.featureOrderFirst;
+    prodMap.minimumQuantity = context.minimumQuantity;
+    productCache.put(cacheKey,prodMap);
+}
+
+// non-cacheable code
+if(System.currentTimeMillis() - lastTime > 30){
+    Debug.logWarning("Took "+(System.currentTimeMillis() - lastTime)+"ms ","OriginalProductDetail.groovy");
+}
+lastTime = System.currentTimeMillis();
+if(product){
+
+
+    if(!context.isStockOverride){ //allows the cpu heavy stock calculation to be overridden when used from another script
+        availableInventory = 0.0;
+
+        // if the product is a MARKETING_PKG_AUTO/PICK, then also get the quantity which can be produced from components
+        if (isMarketingPackage) {
+            resultOutput = runService('getMktgPackagesAvailable', [productId : productId, useInventoryCache:true]); // SCIPIO: cache
+            availableInventory = resultOutput.availableToPromiseTotal;
+        } else {
+            //get last inventory count from product facility for the product
+            facilities = from("ProductFacility").where("productId", product.productId).queryList();
+            if(facilities) {
+                facilities.each { facility ->
+                    lastInventoryCount = facility.lastInventoryCount;
+                    if (lastInventoryCount != null) {
+                        availableInventory += lastInventoryCount;
+                    }
                 }
             }
         }
+        context.availableInventory = availableInventory;
     }
-    context.availableInventory = availableInventory;
+
 }
+if(System.currentTimeMillis() - lastTime > 30){
+    Debug.logWarning("Took "+(System.currentTimeMillis() - lastTime)+"ms to calculate the available stock","OriginalProductDetail.groovy");
+}
+
 
 // SCIPIO: Decide the next possible reserv start date (next day)
 nextDayTimestamp = UtilDateTime.getDayStart(nowTimestamp, 1, timeZone, locale);
 context.nextDayTimestamp = nextDayTimestamp;
 earliestReservStartDate = nextDayTimestamp;
 context.earliestReservStartDate = earliestReservStartDate;
-
-

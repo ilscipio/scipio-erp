@@ -38,8 +38,6 @@ import org.ofbiz.product.store.ProductStoreWorker
 import org.ofbiz.service.ServiceUtil
 import org.ofbiz.webapp.taglib.ContentUrlTag
 import org.ofbiz.webapp.website.WebSiteWorker
-import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
-import org.ofbiz.order.shoppingcart.ShoppingCart;
 
 final module = "ProductDetail.groovy"
 long lastTime = System.currentTimeMillis();

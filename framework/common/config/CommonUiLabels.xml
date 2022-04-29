@@ -9268,15 +9268,28 @@
     <property key="CommonPerHour">
         <value xml:lang="de">pro Stunde</value>
         <value xml:lang="en">per hour</value>
+        <value xml:lang="en">por hora</value>
     </property>
     <property key="CommonPerDay">
         <value xml:lang="de">pro Tag</value>
         <value xml:lang="en">per day</value>
-    </property>    
+        <value xml:lang="es">por día</value>
+    </property>
+    <property key="CommonPerWeek">
+        <value xml:lang="de">pro Woche</value>
+        <value xml:lang="en">per week</value>
+        <value xml:lang="es">por semana</value>
+    </property>
     <property key="CommonPerMonth">
         <value xml:lang="de">pro Monat</value>
         <value xml:lang="en">per month</value>
-    </property>  
+        <value xml:lang="es">por mes</value>
+    </property>
+    <property key="CommonPerYear">
+        <value xml:lang="de">pro Jahr</value>
+        <value xml:lang="en">per year</value>
+        <value xml:lang="es">por año</value>
+    </property>
     <property key="CommonPersons">
         <value xml:lang="de">Personen</value>
         <value xml:lang="en">Persons</value>

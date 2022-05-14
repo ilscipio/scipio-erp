@@ -622,7 +622,7 @@ public final class ProductWorker {
             Delegator delegator = product.getDelegator();
             List<GenericValue> featuresSorted = EntityQuery.use(delegator)
                     .from("ProductFeatureAndAppl")
-                    .where("productId", product.getString("productId"), "productFeatureApplTypeId", "SELECTABLE_FEATURE")
+                    .where("productId", product.getString("productId"))
                     .orderBy("productFeatureTypeId", "sequenceNum")
                     .cache(true)
                     .queryList();
@@ -640,6 +640,8 @@ public final class ProductWorker {
                     GenericValue productFeatureType = EntityQuery.use(delegator).from("ProductFeatureType").where("productFeatureTypeId", productFeatureAppl.getString("productFeatureTypeId")).queryOne();
                     featureType.put("description",productFeatureType.get("description", locale));
                     featureType.put("productFeatureTypeId", productFeatureAppl.get("productFeatureTypeId", locale));
+                    // SCIPIO 2.1.0: Add productFeatureApplTypeId
+                    featureType.put("productFeatureApplTypeId", productFeatureAppl.getString("productFeatureApplTypeId"));
                     featureType.put("features", new ArrayList<Map<String, String>>());
                     featureTypeFeatures.add(featureType);
                 }
@@ -653,6 +655,7 @@ public final class ProductWorker {
                 } else {
                     featureData.put("description", productFeatureAppl.getString("productFeatureId"));
                 }
+
                 List<GenericValue> productFeaturePrices = EntityQuery.use(delegator).from("ProductFeaturePrice")
                         .where("productFeatureId", productFeatureAppl.getString("productFeatureId"), "productPriceTypeId", "DEFAULT_PRICE")
                         .filterByDate()

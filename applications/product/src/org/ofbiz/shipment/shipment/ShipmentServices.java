@@ -44,6 +44,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.party.party.PartyWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
@@ -1161,6 +1162,13 @@ public class ShipmentServices {
             }
 
             Locale locale = PartyWorker.findPartyLastLocale(partyId, delegator);
+            if (locale == null && productStore != null) {
+                String localeString = productStore.getString("defaultLocaleString");
+                if (UtilValidate.isNotEmpty(localeString)) {
+                    locale = UtilMisc.parseLocale(localeString);
+                }
+            }
+
             if (locale == null) {
                 locale = Locale.getDefault();
             }

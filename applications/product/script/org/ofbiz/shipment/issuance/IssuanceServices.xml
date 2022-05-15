@@ -243,10 +243,10 @@ code package.
                 <if-empty field="otherOiirs">
                     <get-related-one value-field="orderItemShipGrpInvRes" relation-name="OrderItemShipGroup" to-value-field="oisg" />
                     <!-- SCIPIO: 2.1.0: Checks if ITEM_SENT and its corresponding StatusValidChange exist so it can be set, otherwise proceed in legacy mode (ITEM_COMPLETED) -->
-                    <entity-one entity-name="StatusItem" value-field="statusItemSent" cache="true">
+                    <entity-one entity-name="StatusItem" value-field="statusItemSent">
                         <field-map field-name="statusId" value="ITEM_SENT" />
                     </entity-one>
-                    <get-related-one relation-name="ToStatusValidChange" value-field="statusItemSent" to-value-field="statusValidChangeItemSent" cache="true" />
+                    <get-related relation-name="ToStatusValidChange" value-field="statusItemSent" to-value-field="statusValidChangeItemSent" />
                     <if>
                         <condition>
                             <or>

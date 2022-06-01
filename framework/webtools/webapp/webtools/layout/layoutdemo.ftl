@@ -658,6 +658,17 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 </#if>
 
 <@section title="Fields">
+
+  <#if debugMode>
+    <@section title="Test input submit (to LayoutDemo)">
+      <@form name="form-test-submit-1" action=makePageUrl("LayoutDemo") method="get">
+        <@field type="hidden" name="debugMode" value="true"/>
+        <@field type="input" name="input1" label="Input 1"/>
+        <@field type="submit" submitType="submit" text="Submit"/>
+      </@form>
+    </@section>
+  </#if>
+
   <#-- TODO: submitarea -> submit (but not to remove submitarea; still important) -->
   <@section title="Default form fields (with label area) (@fields type=\"default\")">
     <@form name="form1">

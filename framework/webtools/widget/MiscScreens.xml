@@ -45,6 +45,7 @@ code package.
                             + "******************************************************\n"
                             + "Note: This screen intentionally causes some log warnings and errors for testing purposes.\n"
                             + "See component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemo and related resources for details.\n"
+                            + "URL: " + request.getRequestURL() + (request.getQueryString() ? "?" + request.getQueryString() : "") + "\n"
                             , "LayoutDemoActions.groovy");
                         
                         Debug.logInfo("Testing GeneralException messages...", "LayoutDemoActions.groovy");

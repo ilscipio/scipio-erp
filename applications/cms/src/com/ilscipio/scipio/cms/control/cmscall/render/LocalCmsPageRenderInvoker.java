@@ -118,7 +118,7 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
             }
         }
 
-        if (CmsUtil.verboseOn()) {
+        if (CmsUtil.verboseOn() && (writer instanceof StringWriter)) {
             StringWriter sw = (StringWriter) writer;
             String outStr = sw.toString();
             if (outStr.trim().isEmpty()) {

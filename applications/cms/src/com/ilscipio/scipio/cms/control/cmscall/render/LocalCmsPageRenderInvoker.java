@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilRender.RenderExceptionMode;
 
@@ -20,6 +21,10 @@ import com.ilscipio.scipio.cms.control.CmsView;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
 import com.ilscipio.scipio.cms.template.CmsRenderUtil;
 import com.ilscipio.scipio.cms.template.RendererType;
+import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.RequestHandlerException;
+import org.ofbiz.webapp.view.ViewHandler;
+import org.ofbiz.webapp.view.ViewHandlerException;
 
 public class LocalCmsPageRenderInvoker extends RenderInvoker {
 
@@ -39,11 +44,19 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
             CmsPage cmsPage, CmsView view, String webSiteId, CmsCallType renderMode, Writer writer) throws Exception {
         CmsPageContext cmsPageContext = CmsPageContext.fromRequest(request, response,
                 webSiteId, renderMode == CmsCallType.OFBIZ_PREVIEW, RendererType.CMS);
-        invokeCmsRendering(request, response, servletCtx, cmsPage, cmsPageContext, writer);
+        invokeCmsRendering(request, response, servletCtx, cmsPage, cmsPageContext, writer, null);
     }
 
-    public void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response, ServletContext servletCtx,
-            CmsPage cmsPage, CmsPageContext cmsPageContext, Writer writer) throws Exception {
+    @Override
+    public void invokeCmsRendering(ViewHandler.ViewRenderContext vrctx, CmsPage cmsPage, CmsView view, String webSiteId,
+                                   CmsCallType renderMode) throws Exception {
+        CmsPageContext cmsPageContext = CmsPageContext.fromRequest(vrctx.request(), vrctx.response(),
+                webSiteId, renderMode == CmsCallType.OFBIZ_PREVIEW, RendererType.CMS);
+        invokeCmsRendering(vrctx.request(), vrctx.response(), servletCtx, cmsPage, cmsPageContext, vrctx.writer(), vrctx);
+    }
+
+    private void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response, ServletContext servletCtx,
+            CmsPage cmsPage, CmsPageContext cmsPageContext, Writer writer, ViewHandler.ViewRenderContext vrctx) throws Exception {
         if (cmsPage == null) {
             throw new CmsException("No CMS page available for CMS rendering");
         }
@@ -79,8 +92,31 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
             request.setAttribute("_SCP_LINK_ERROR_LEVEL_", Debug.WARNING);
         }
 
+        request.setAttribute("cmsPage", cmsPage);
+        request.setAttribute("cmsPageContext", cmsPageContext);
+
+        // SCIPIO: 2.1.0: pre-screen-render event
+        if (vrctx != null && vrctx.controllerConfig() != null) {
+            try {
+                RequestHandler.runEvents(vrctx, "pre-screen-render", vrctx.controllerConfig().getPreScreenRenderEventList(), false);
+            } catch (GeneralException e) {
+                Debug.logError(e, "Exception thrown reading/running pre-screen-render events: ", module);
+                throw new ViewHandlerException(e);
+            }
+        }
+
         cmsPage.getRenderer().processAndRender(writer, cmsPageContext, cmsPageVersionId);
         writer.flush();
+
+        // SCIPIO: 2.1.0: post-screen-render event
+        if (vrctx != null && vrctx.controllerConfig() != null) {
+            try {
+                RequestHandler.runEvents(vrctx, "post-screen-render", vrctx.controllerConfig().getPostScreenRenderEventList(), false);
+            } catch (GeneralException e) {
+                Debug.logError(e, "Exception thrown reading/running post-screen-render events: ", module);
+                throw new ViewHandlerException(e);
+            }
+        }
 
         if (CmsUtil.verboseOn()) {
             StringWriter sw = (StringWriter) writer;

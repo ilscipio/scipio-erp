@@ -390,8 +390,6 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         HttpServletResponse response = vrctx.response();
         Writer writer = vrctx.writer();
 
-        runPreScreenRenderEvents(vrctx); // SCIPIO: 2.1.0: Added
-
         // We must make sure that if for whatever reason a transaction is in place, maybe
         // some runaway transaction, we kill it now, because the CMS rendering happens in a
         // different thread and this could end in a total lockup if read/writing the same entity
@@ -414,7 +412,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         try {
 
             // Main render invocation
-            renderInvoker.invokeCmsRendering(request, response, servletContext, cmsPage, cmsView, webSiteId, renderMode, writer);
+            renderInvoker.invokeCmsRendering(vrctx, cmsPage, cmsView, webSiteId, renderMode);
 
         // NOTE: 2016: this is never thrown from local cms renders, but leaving here for future use
 //        } catch (CmsCallHttpException e) {
@@ -444,7 +442,6 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
             return false; // Nothing can be sent after this
         }
 
-        runPostScreenRenderEvents(vrctx); // SCIPIO: 2.1.0: Added
         return true;
     }
 
@@ -503,7 +500,6 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
      * Also, this is what Ofbiz's ControlServlet does with runaway transactions.
      */
     protected void endTransactionAlways(HttpServletRequest request, HttpServletResponse response) {
-
         if (CmsUtil.verboseOn()) {
             Debug.logInfo("Cms: Stopping any open Ofbiz transactions" + CmsControlUtil.getReqLogIdDelimStr(request), module);
         }

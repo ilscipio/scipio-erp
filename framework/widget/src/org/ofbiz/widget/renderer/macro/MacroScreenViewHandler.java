@@ -135,7 +135,15 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
 
     // SCIPIO: 2017-05-01: factored out Writer for reuse
     public void render(ViewRenderContext vrctx) throws ViewHandlerException {
-        runPreScreenRenderEvents(vrctx); // SCIPIO: 2.1.0: Added
+        // SCIPIO: 2.1.0: pre-screen-render event
+        if (vrctx.controllerConfig() != null) {
+            try {
+                RequestHandler.runEvents(vrctx, "pre-screen-render", vrctx.controllerConfig().getPreScreenRenderEventList(), false);
+            } catch (GeneralException e) {
+                Debug.logError(e, "Exception thrown reading/running pre-screen-render events: ", module);
+                throw new ViewHandlerException(e);
+            }
+        }
 
         String name = vrctx.name();
         String page = vrctx.page();
@@ -203,7 +211,15 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             throw new ViewHandlerException("Lower level error rendering page: " + e.toString(), e);
         }
 
-        runPostScreenRenderEvents(vrctx); // SCIPIO: 2.1.0: Added
+        // SCIPIO: 2.1.0: post-screen-render event
+        if (vrctx.controllerConfig() != null) {
+            try {
+                RequestHandler.runEvents(vrctx, "post-screen-render", vrctx.controllerConfig().getPostScreenRenderEventList(), false);
+            } catch (GeneralException e) {
+                Debug.logError(e, "Exception thrown reading/running post-screen-render events: ", module);
+                throw new ViewHandlerException(e);
+            }
+        }
     }
 
     public static void runPreScreenRenderEvents(ViewRenderContext vrctx) throws ViewHandlerException {
@@ -216,7 +232,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             return;
         }
 
-        // SCIPIO: 2.1.0: pre-view-render event
+        // SCIPIO: 2.1.0: pre-screen-render event
         try {
             for (ConfigXMLReader.Event event: controllerConfig.getPreScreenRenderEventList().values()) {
                 try {
@@ -244,7 +260,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             return;
         }
 
-        // SCIPIO: 2.1.0: pre-view-render event
+        // SCIPIO: 2.1.0: post-screen-render event
         try {
             for (ConfigXMLReader.Event event: controllerConfig.getPostScreenRenderEventList().values()) {
                 try {
@@ -261,4 +277,10 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             throw new ViewHandlerException(e);
         }
     }
+
+
+
+
+
+
 }

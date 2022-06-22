@@ -45,6 +45,7 @@ import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.SSLUtil;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
@@ -1546,6 +1547,16 @@ public class RequestHandler {
 
         if (Debug.verboseOn()) Debug.logVerbose("[Mapped To]: " + nextPage + showSessionId(req), module);
 
+        // setup content type
+        String contentType = "text/html";
+        String viewContentType = viewMap.contentType;
+        if (UtilValidate.isNotEmpty(viewContentType)) {
+            contentType = viewContentType;
+        }
+
+        ViewHandler.ViewRenderContext vrctx = new ViewHandler.ViewRenderContext(view, nextPage, viewMap.info,
+                contentType, charset, req, resp, null, controllerConfig, requestMap, viewMap, this);
+
         ViewHandler vh;
         try {
             vh = viewFactory.getViewHandler(viewMap.type);
@@ -1557,18 +1568,9 @@ public class RequestHandler {
 
         // SCIPIO: 2.1.0: pre-view-render event
         try {
-            for (ConfigXMLReader.Event event: controllerConfig.getPreViewRenderEventList().values()) {
-                try {
-                    String returnString = this.runEvent(req, resp, event, requestMap, "pre-view-render");
-                    if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
-                        throw new EventHandlerException("Pre-View-Render event did not return 'success'.");
-                    }
-                } catch (EventHandlerException e) {
-                    Debug.logError(e, module);
-                }
-            }
-        } catch (WebAppConfigurationException e) {
-            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+            runEvents(vrctx, "pre-view-render", controllerConfig.getPreViewRenderEventList(), false);
+        } catch (GeneralException e) {
+            Debug.logError(e, "Exception thrown reading/running pre-view-render events: ", module);
             throw new RequestHandlerException(e);
         }
 
@@ -1599,13 +1601,6 @@ public class RequestHandler {
             } catch (IllegalStateException e) {
                 Debug.logInfo(e, "Could not set character encoding to " + charset + ", something has probably already committed the stream", module);
             }
-        }
-
-        // setup content type
-        String contentType = "text/html";
-        String viewContentType = viewMap.contentType;
-        if (UtilValidate.isNotEmpty(viewContentType)) {
-            contentType = viewContentType;
         }
 
         if (!viewAsJson) {
@@ -1672,8 +1667,6 @@ public class RequestHandler {
 
         // Security headers ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-        ViewHandler.ViewRenderContext vrctx = new ViewHandler.ViewRenderContext(view, nextPage, viewMap.info,
-                contentType, charset, req, resp, null, controllerConfig, requestMap, viewMap, this);
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewMap.type + "]", module);
             //ViewHandler vh = viewFactory.getViewHandler(viewMap.type); // SCIPIO: 2.1.0: Earlier lookup for pre-view-render event information purposes
@@ -1726,20 +1719,11 @@ public class RequestHandler {
                 System.currentTimeMillis() - viewStartTime, userLogin);
         }
 
-        // SCIPIO: 2.1.0: pre-view-render event
+        // SCIPIO: 2.1.0: post-view-render event
         try {
-            for (ConfigXMLReader.Event event: controllerConfig.getPostViewRenderEventList().values()) {
-                try {
-                    String returnString = this.runEvent(req, resp, event, requestMap, "post-view-render");
-                    if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
-                        throw new EventHandlerException("Post-View-Render event did not return 'success'.");
-                    }
-                } catch (EventHandlerException e) {
-                    Debug.logError(e, module);
-                }
-            }
-        } catch (WebAppConfigurationException e) {
-            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+            runEvents(vrctx, "post-view-render", controllerConfig.getPostViewRenderEventList(), false);
+        } catch (GeneralException e) {
+            Debug.logError(e, "Exception thrown reading/running post-view-render events: ", module);
             throw new RequestHandlerException(e);
         }
     }
@@ -3365,5 +3349,32 @@ public class RequestHandler {
             }
         }
         return null;
+    }
+
+    /**
+     * Runs controller events such as pre-view-render, post-view-render, pre-screen-render, post-screen-render, etc.
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static void runEvents(ViewHandler.ViewRenderContext vrctx, String trigger, Map<String, ConfigXMLReader.Event> events,
+                                 boolean fatalOnError) throws GeneralException {
+        HttpServletRequest request = vrctx.request();
+        HttpServletResponse response = vrctx.response();
+        //ConfigXMLReader.ControllerConfig controllerConfig = vrctx.controllerConfig();
+        ConfigXMLReader.RequestMap requestMap = vrctx.requestMap();
+        RequestHandler requestHandler = vrctx.requestHandler();
+        if (requestHandler == null) {
+            return;
+        }
+        for (ConfigXMLReader.Event event : events.values()) {
+            try {
+                String returnString = requestHandler.runEvent(request, response, event, requestMap, trigger);
+                if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
+                    throw new EventHandlerException("Event [" + trigger + "] did not return 'success'.");
+                }
+            } catch (EventHandlerException e) {
+
+                Debug.logError(e, module);
+            }
+        }
     }
 }

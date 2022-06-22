@@ -11,6 +11,7 @@ import com.ilscipio.scipio.cms.control.CmsView;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallException;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
 import com.ilscipio.scipio.cms.control.cmscall.CmsInvoker;
+import org.ofbiz.webapp.view.ViewHandler;
 
 public abstract class RenderInvoker extends CmsInvoker {
 
@@ -30,6 +31,12 @@ public abstract class RenderInvoker extends CmsInvoker {
 //            ServletContext servletCtx, CmsPageInfo page, CmsView view, String webSiteId) throws CmsCallException, Exception;
 
     public abstract void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response,
-            ServletContext servletCtx, CmsPage cmsPage, CmsView view, String webSiteId, CmsCallType renderMode, Writer writer) throws CmsCallException, Exception;
+                                            ServletContext servletCtx, CmsPage cmsPage, CmsView view, String webSiteId,
+                                            CmsCallType renderMode, Writer writer) throws CmsCallException, Exception;
+
+    public void invokeCmsRendering(ViewHandler.ViewRenderContext vrctx, CmsPage cmsPage, CmsView view, String webSiteId,
+                                   CmsCallType renderMode) throws CmsCallException, Exception {
+        invokeCmsRendering(vrctx.request(), vrctx.response(), vrctx.request().getServletContext(), cmsPage, view, webSiteId, renderMode, vrctx.writer());
+    }
 
 }

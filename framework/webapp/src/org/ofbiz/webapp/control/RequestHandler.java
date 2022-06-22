@@ -87,7 +87,6 @@ import org.ofbiz.webapp.stats.ServerHitBin;
 import org.ofbiz.webapp.view.ViewFactory;
 import org.ofbiz.webapp.view.ViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
-import org.ofbiz.webapp.view.ViewHandlerExt;
 import org.ofbiz.webapp.website.WebSiteProperties;
 import org.ofbiz.webapp.website.WebSiteWorker;
 
@@ -1008,12 +1007,12 @@ public class RequestHandler {
                     Debug.logError("Scipio: view name is empty (request map URI: " + requestMap.uri + ")", module);
                     throw new RequestHandlerException("Scipio: view name is empty (request map URI: " + requestMap.uri + ")");
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
+                renderView(viewName, requestMap.securityExternalView, request, response, saveName, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState, requestMap);
             } else if (RequestResponse.Type.VIEW_LAST == nextRequestResponse.getTypeEnum()) { //} else if ("view-last".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
                 String viewName = restoreViewParamsAndGetViewName(request, overrideViewUri, eventReturn,
                         nextRequestResponseValue, nextRequestResponse, requestMap, controllerConfig); // SCIPIO: 2.1.0: Refactored
-                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState, requestMap);
             } else if (RequestResponse.Type.VIEW_LAST_NOPARAM == nextRequestResponse.getTypeEnum()) { //} else if ("view-last-noparam".equals(nextRequestResponse.type)) {
                  if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
@@ -1033,7 +1032,7 @@ public class RequestHandler {
                  if (viewName == null || viewName.isEmpty()) { // SCIPIO: 2018-10-26: Default/fallback view
                      viewName = getDefaultViewLastView(viewName, nextRequestResponse, requestMap, controllerConfig, request);
                  }
-                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
+                 renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState, requestMap);
             } else if (RequestResponse.Type.VIEW_HOME == nextRequestResponse.getTypeEnum()) { //} else if ("view-home".equals(nextRequestResponse.type)) {
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a view." + showSessionId(request), module);
 
@@ -1054,7 +1053,7 @@ public class RequestHandler {
                         request.setAttribute(urlParamEntry.getKey(), urlParamEntry.getValue());
                     }
                 }
-                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState);
+                renderView(viewName, requestMap.securityExternalView, request, response, null, controllerConfig, viewAsJsonConfig, viewAsJson, allowViewSave, requestState, requestMap);
             } else if (RequestResponse.Type.NONE == nextRequestResponse.getTypeEnum()) { //} else if ("none".equals(nextRequestResponse.type)) {
                 // no view to render (meaning the return was processed by the event)
                 if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event." + showSessionId(request), module);
@@ -1191,7 +1190,7 @@ public class RequestHandler {
         if (Debug.verboseOn() || (Debug.infoOn() && "request".equals(trigger))) Debug.logInfo("Ran Event [" + event.type + ":" + event.path + "#" + event.invoke + "] from [" + trigger + "], result is [" + eventReturn + "]", module);
         return eventReturn;
     }
-    
+
     private String runEventImpl(HttpServletRequest request, HttpServletResponse response, List<ConfigXMLReader.ValueExpr> synchronizeExprList, int synchronizeObjIndex, // SCIPIO
             ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {
         if (synchronizeExprList == null || synchronizeObjIndex >= synchronizeExprList.size()) {
@@ -1230,7 +1229,8 @@ public class RequestHandler {
                     return runEventImpl(request, response, synchronizeExprList, synchronizeObjIndex + 1, event, requestMap, trigger);
                 }
             } else {
-                Debug.logWarning("[uri=" + requestMap.getUri() + "] Event could not synchronize on object (null): " + synchronizeExprList.get(synchronizeObjIndex).getOrigValue(), module);
+                Debug.logWarning("[uri=" + (requestMap != null ? requestMap.getUri() : "undefined") +
+                        "] Event could not synchronize on object (null): " + synchronizeExprList.get(synchronizeObjIndex).getOrigValue(), module);
                 return runEventImpl(request, response, synchronizeExprList, synchronizeObjIndex + 1, event, requestMap, trigger);
             }
         }
@@ -1432,7 +1432,9 @@ public class RequestHandler {
         }
     }
 
-    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName, ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson, boolean allowViewSave, RequestState requestState) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
+    private void renderView(String view, boolean allowExtView, HttpServletRequest req, HttpServletResponse resp, String saveName,
+                            ControllerConfig controllerConfig, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, boolean viewAsJson,
+                            boolean allowViewSave, RequestState requestState, ConfigXMLReader.RequestMap requestMap) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
         // SCIPIO: sanity check
         if (view == null || view.isEmpty()) {
             Debug.logError("Scipio: View name is empty", module);
@@ -1544,6 +1546,32 @@ public class RequestHandler {
 
         if (Debug.verboseOn()) Debug.logVerbose("[Mapped To]: " + nextPage + showSessionId(req), module);
 
+        ViewHandler vh;
+        try {
+            vh = viewFactory.getViewHandler(viewMap.type);
+        } catch (ViewHandlerException e) {
+            Throwable throwable = e.getNested() != null ? e.getNested() : e;
+
+            throw new RequestHandlerException(e.getNonNestedMessage(), throwable);
+        }
+
+        // SCIPIO: 2.1.0: pre-view-render event
+        try {
+            for (ConfigXMLReader.Event event: controllerConfig.getPreViewRenderEventList().values()) {
+                try {
+                    String returnString = this.runEvent(req, resp, event, requestMap, "pre-view-render");
+                    if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
+                        throw new EventHandlerException("Pre-View-Render event did not return 'success'.");
+                    }
+                } catch (EventHandlerException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        } catch (WebAppConfigurationException e) {
+            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+            throw new RequestHandlerException(e);
+        }
+
         long viewStartTime = System.currentTimeMillis();
 
         // setup character encoding and content type
@@ -1644,13 +1672,20 @@ public class RequestHandler {
 
         // Security headers ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+        ViewHandler.ViewRenderContext vrctx = new ViewHandler.ViewRenderContext(view, nextPage, viewMap.info,
+                contentType, charset, req, resp, null, controllerConfig, requestMap, viewMap, this);
         try {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewMap.type + "]", module);
-            ViewHandler vh = viewFactory.getViewHandler(viewMap.type);
+            //ViewHandler vh = viewFactory.getViewHandler(viewMap.type); // SCIPIO: 2.1.0: Earlier lookup for pre-view-render event information purposes
             if (viewAsJson) {
-                invokeViewHandlerAsJson(vh, viewAsJsonConfig, view, nextPage, viewMap.info, contentType, charset, req, resp);
+                invokeViewHandlerAsJson(vh, viewAsJsonConfig, vrctx);
             } else {
-                vh.render(view, nextPage, viewMap.info, contentType, charset, req, resp);
+                try {
+                    vrctx.writer(resp.getWriter());
+                } catch(IOException e) {
+                    throw new ViewHandlerException("Error in the response writer/output stream: " + e, e);
+                }
+                vh.render(vrctx);
             }
         } catch (ViewHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
@@ -1690,25 +1725,38 @@ public class RequestHandler {
             ServerHitBin.countView(cname + "." + vname, req, viewStartTime,
                 System.currentTimeMillis() - viewStartTime, userLogin);
         }
+
+        // SCIPIO: 2.1.0: pre-view-render event
+        try {
+            for (ConfigXMLReader.Event event: controllerConfig.getPostViewRenderEventList().values()) {
+                try {
+                    String returnString = this.runEvent(req, resp, event, requestMap, "post-view-render");
+                    if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
+                        throw new EventHandlerException("Post-View-Render event did not return 'success'.");
+                    }
+                } catch (EventHandlerException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        } catch (WebAppConfigurationException e) {
+            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+            throw new RequestHandlerException(e);
+        }
     }
 
     /**
      * SCIPIO: factored out viewAsJson view handler render wrapper code.
      */
-    public static void invokeViewHandlerAsJson(ViewHandler vh, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, String view, String nextPage, String info, String contentType, String charset, HttpServletRequest req, HttpServletResponse resp) throws ViewHandlerException {
-        if (vh instanceof ViewHandlerExt) {
-            ViewHandlerExt vhe = (ViewHandlerExt) vh;
-            // SPECIAL: we must save _ERROR_MESSAGE_ and the like because the screen handler destroys them!
-            Map<String, Object> msgAttrMap = ViewAsJsonUtil.getMessageAttributes(req);
-            Writer sw = ViewAsJsonUtil.prepareWriterAndMode(req, viewAsJsonConfig);
-            try {
-                vhe.render(view, nextPage, info, contentType, charset, req, resp, sw);
-            } finally {
-                ViewAsJsonUtil.setRenderOutParamFromWriter(req, sw);
-                ViewAsJsonUtil.setMessageAttributes(req, msgAttrMap);
-            }
-        } else {
-            throw new ViewHandlerException("View handler does not support extended interface (ViewHandlerExt)");
+    public static void invokeViewHandlerAsJson(ViewHandler vh, ConfigXMLReader.ViewAsJsonConfig viewAsJsonConfig, ViewHandler.ViewRenderContext vrctx) throws ViewHandlerException {
+        // SPECIAL: we must save _ERROR_MESSAGE_ and the like because the screen handler destroys them!
+        Map<String, Object> msgAttrMap = ViewAsJsonUtil.getMessageAttributes(vrctx.request());
+        Writer sw = ViewAsJsonUtil.prepareWriterAndMode(vrctx.request(), viewAsJsonConfig);
+        try {
+            vrctx.writer(sw);
+            vh.render(vrctx);
+        } finally {
+            ViewAsJsonUtil.setRenderOutParamFromWriter(vrctx.request(), sw);
+            ViewAsJsonUtil.setMessageAttributes(vrctx.request(), msgAttrMap);
         }
     }
 

@@ -31,6 +31,10 @@ under the License.
                 <xs:element minOccurs="0" ref="firstvisit"/>
                 <xs:element minOccurs="0" ref="preprocessor"/>
                 <xs:element minOccurs="0" ref="postprocessor"/>
+                <xs:element minOccurs="0" ref="pre-view-render"/>
+                <xs:element minOccurs="0" ref="post-view-render"/>
+                <xs:element minOccurs="0" ref="pre-screen-render"/>
+                <xs:element minOccurs="0" ref="post-screen-render"/>
                 <xs:element minOccurs="0" ref="after-login"/>
                 <xs:element minOccurs="0" ref="before-logout"/>
                 <xs:element minOccurs="0" ref="after-logout"/><!-- SCIPIO -->
@@ -222,6 +226,55 @@ under the License.
             <xs:documentation>
                 Event runs after each request.
                 Any error will be ignored and will not affect the requests processing flow.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="event"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="pre-view-render">
+        <xs:annotation>
+            <xs:documentation>
+                Event before each view render before view handler selection and before initial response commit.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="event"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="post-view-render">
+        <xs:annotation>
+            <xs:documentation>
+                Event after each view render after view handler returns.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="event"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="pre-screen-render">
+        <xs:annotation>
+            <xs:documentation>
+                Event before each screen render (macro screen and CMS renderers ONLY), before screen markup it output
+                but after response is committed.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" ref="event"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="post-screen-render">
+        <xs:annotation>
+            <xs:documentation>
+                Event runs after each completed screen render, before view handler returns.
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>

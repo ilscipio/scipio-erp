@@ -381,6 +381,10 @@ public class ConfigXMLReader {
         protected final Map<String, Event> firstVisitEventList; // = new LinkedHashMap<String, Event>();
         protected final Map<String, Event> preprocessorEventList; // = new LinkedHashMap<String, Event>();
         protected final Map<String, Event> postprocessorEventList; // = new LinkedHashMap<String, Event>();
+        protected final Map<String, Event> preViewRenderEventList; // = new LinkedHashMap<String, Event>();
+        protected final Map<String, Event> postViewRenderEventList; // = new LinkedHashMap<String, Event>();
+        protected final Map<String, Event> preScreenRenderEventList; // = new LinkedHashMap<String, Event>();
+        protected final Map<String, Event> postScreenRenderEventList; // = new LinkedHashMap<String, Event>();
         protected final Map<String, Event> afterLoginEventList; // = new LinkedHashMap<String, Event>();
         protected final Map<String, Event> beforeLogoutEventList; // = new LinkedHashMap<String, Event>();
         protected final Map<String, Event> afterLogoutEventList; // = new LinkedHashMap<String, Event>(); // SCIPIO: added 2018-12-03
@@ -420,6 +424,10 @@ public class ConfigXMLReader {
             protected Map<String, Event> firstVisitEventList = new LinkedHashMap<String, Event>();
             protected Map<String, Event> preprocessorEventList = new LinkedHashMap<String, Event>();
             protected Map<String, Event> postprocessorEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, Event> preViewRenderEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, Event> postViewRenderEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, Event> preScreenRenderEventList = new LinkedHashMap<String, Event>();
+            protected Map<String, Event> postScreenRenderEventList = new LinkedHashMap<String, Event>();
             protected Map<String, Event> afterLoginEventList = new LinkedHashMap<String, Event>();
             protected Map<String, Event> beforeLogoutEventList = new LinkedHashMap<String, Event>();
             protected Map<String, Event> afterLogoutEventList = new LinkedHashMap<String, Event>();
@@ -473,6 +481,10 @@ public class ConfigXMLReader {
             this.firstVisitEventList = builder.firstVisitEventList;
             this.preprocessorEventList = builder.preprocessorEventList;
             this.postprocessorEventList = builder.postprocessorEventList;
+            this.preViewRenderEventList = builder.preViewRenderEventList;
+            this.postViewRenderEventList = builder.postViewRenderEventList;
+            this.preScreenRenderEventList = builder.preScreenRenderEventList;
+            this.postScreenRenderEventList = builder.postScreenRenderEventList;
             this.afterLoginEventList = builder.afterLoginEventList;
             this.beforeLogoutEventList = builder.beforeLogoutEventList;
             this.afterLogoutEventList = builder.afterLogoutEventList;
@@ -513,6 +525,10 @@ public class ConfigXMLReader {
                 this.firstVisitEventList = getOrderedOptMap(srcConfig.getFirstVisitEventList());
                 this.preprocessorEventList = getOrderedOptMap(srcConfig.getPreprocessorEventList());
                 this.postprocessorEventList = getOrderedOptMap(srcConfig.getPostprocessorEventList());
+                this.preViewRenderEventList = getOrderedOptMap(srcConfig.getPreViewRenderEventList());
+                this.postViewRenderEventList = getOrderedOptMap(srcConfig.getPostViewRenderEventList());
+                this.preScreenRenderEventList = getOrderedOptMap(srcConfig.getPreScreenRenderEventList());
+                this.postScreenRenderEventList = getOrderedOptMap(srcConfig.getPostScreenRenderEventList());
                 this.afterLoginEventList = getOrderedOptMap(srcConfig.getAfterLoginEventList());
                 this.beforeLogoutEventList = getOrderedOptMap(srcConfig.getBeforeLogoutEventList());
                 this.afterLogoutEventList = getOrderedOptMap(srcConfig.getAfterLogoutEventList());
@@ -540,6 +556,10 @@ public class ConfigXMLReader {
                 this.firstVisitEventList = srcConfig.firstVisitEventList;
                 this.preprocessorEventList = srcConfig.preprocessorEventList;
                 this.postprocessorEventList = srcConfig.postprocessorEventList;
+                this.preViewRenderEventList = srcConfig.preViewRenderEventList;
+                this.postViewRenderEventList = srcConfig.postViewRenderEventList;
+                this.preScreenRenderEventList = srcConfig.preScreenRenderEventList;
+                this.postScreenRenderEventList = srcConfig.postScreenRenderEventList;
                 this.afterLoginEventList = srcConfig.afterLoginEventList;
                 this.beforeLogoutEventList = srcConfig.beforeLogoutEventList;
                 this.afterLogoutEventList = srcConfig.afterLogoutEventList;
@@ -911,6 +931,110 @@ public class ConfigXMLReader {
                         result.push(controllerConfig.getPreprocessorEventList());
                     } else {
                         result.push(controllerConfig.preprocessorEventList);
+                    }
+                }
+            }
+            return result;
+        }
+
+        public Map<String, Event> getPreViewRenderEventList() throws WebAppConfigurationException {
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
+            for (Include include : includesPreLocal) {
+                for(ControllerConfig controllerConfig : getControllerConfigs(include)) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPreViewRenderEventList());
+                    } else {
+                        result.push(controllerConfig.preViewRenderEventList);
+                    }
+                }
+            }
+            result.push(preViewRenderEventList);
+            for (Include include : includesPostLocal) {
+                for(ControllerConfig controllerConfig : getControllerConfigs(include)) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPreViewRenderEventList());
+                    } else {
+                        result.push(controllerConfig.preViewRenderEventList);
+                    }
+                }
+            }
+            return result;
+        }
+
+        public Map<String, Event> getPostViewRenderEventList() throws WebAppConfigurationException {
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
+            for (Include include : includesPreLocal) {
+                for(ControllerConfig controllerConfig : getControllerConfigs(include)) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPostViewRenderEventList());
+                    } else {
+                        result.push(controllerConfig.postViewRenderEventList);
+                    }
+                }
+            }
+            result.push(postViewRenderEventList);
+            for (Include include : includesPostLocal) {
+                for(ControllerConfig controllerConfig : getControllerConfigs(include)) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPostViewRenderEventList());
+                    } else {
+                        result.push(controllerConfig.postViewRenderEventList);
+                    }
+                }
+            }
+            return result;
+        }
+
+        public Map<String, Event> getPreScreenRenderEventList() throws WebAppConfigurationException {
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
+            for (Include include : includesPreLocal) {
+                for(ControllerConfig controllerConfig : getControllerConfigs(include)) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPreScreenRenderEventList());
+                    } else {
+                        result.push(controllerConfig.preScreenRenderEventList);
+                    }
+                }
+            }
+            result.push(preScreenRenderEventList);
+            for (Include include : includesPostLocal) {
+                for(ControllerConfig controllerConfig : getControllerConfigs(include)) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPreScreenRenderEventList());
+                    } else {
+                        result.push(controllerConfig.preScreenRenderEventList);
+                    }
+                }
+            }
+            return result;
+        }
+
+        public Map<String, Event> getPostScreenRenderEventList() throws WebAppConfigurationException {
+            MapContext<String, Event> result = getMapContextForEventList(); // SCIPIO: factory method
+            for (Include include : includesPreLocal) {
+                for(ControllerConfig controllerConfig : getControllerConfigs(include)) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPostScreenRenderEventList());
+                    } else {
+                        result.push(controllerConfig.postScreenRenderEventList);
+                    }
+                }
+            }
+            result.push(postScreenRenderEventList);
+            for (Include include : includesPostLocal) {
+                for(ControllerConfig controllerConfig : getControllerConfigs(include)) {
+                    // SCIPIO: support non-recursive
+                    if (include.recursive) {
+                        result.push(controllerConfig.getPostScreenRenderEventList());
+                    } else {
+                        result.push(controllerConfig.postScreenRenderEventList);
                     }
                 }
             }
@@ -1412,6 +1536,50 @@ public class ConfigXMLReader {
                     this.postprocessorEventList.put(eventName, new Event(eventElement));
                 }
             }
+            // pre-view-render events
+            Element preViewRenderElement = UtilXml.firstChildElement(rootElement, "pre-view-render");
+            if (preViewRenderElement != null) {
+                for (Element eventElement : UtilXml.childElementList(preViewRenderElement, "event")) {
+                    String eventName = eventElement.getAttribute("name");
+                    if (eventName.isEmpty()) {
+                        eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
+                    }
+                    this.preViewRenderEventList.put(eventName, new Event(eventElement));
+                }
+            }
+            // post-view-render events
+            Element postViewRenderElement = UtilXml.firstChildElement(rootElement, "post-view-render");
+            if (postViewRenderElement != null) {
+                for (Element eventElement : UtilXml.childElementList(postViewRenderElement, "event")) {
+                    String eventName = eventElement.getAttribute("name");
+                    if (eventName.isEmpty()) {
+                        eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
+                    }
+                    this.postViewRenderEventList.put(eventName, new Event(eventElement));
+                }
+            }
+            // pre-screen-render events
+            Element preScreenRenderElement = UtilXml.firstChildElement(rootElement, "pre-screen-render");
+            if (preScreenRenderElement != null) {
+                for (Element eventElement : UtilXml.childElementList(preScreenRenderElement, "event")) {
+                    String eventName = eventElement.getAttribute("name");
+                    if (eventName.isEmpty()) {
+                        eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
+                    }
+                    this.preScreenRenderEventList.put(eventName, new Event(eventElement));
+                }
+            }
+            // post-screen-render events
+            Element postScreenRenderElement = UtilXml.firstChildElement(rootElement, "post-screen-render");
+            if (postScreenRenderElement != null) {
+                for (Element eventElement : UtilXml.childElementList(postScreenRenderElement, "event")) {
+                    String eventName = eventElement.getAttribute("name");
+                    if (eventName.isEmpty()) {
+                        eventName = eventElement.getAttribute("type") + "::" + eventElement.getAttribute("path") + "::" + eventElement.getAttribute("invoke");
+                    }
+                    this.postScreenRenderEventList.put(eventName, new Event(eventElement));
+                }
+            }
             // after-login events
             Element afterLoginElement = UtilXml.firstChildElement(rootElement, "after-login");
             if (afterLoginElement != null) {
@@ -1789,6 +1957,26 @@ public class ConfigXMLReader {
         @Override
         public Map<String, Event> getPreprocessorEventList() throws WebAppConfigurationException {
             return preprocessorEventList;
+        }
+
+        @Override
+        public Map<String, Event> getPreViewRenderEventList() throws WebAppConfigurationException {
+            return preViewRenderEventList;
+        }
+
+        @Override
+        public Map<String, Event> getPostViewRenderEventList() throws WebAppConfigurationException {
+            return postViewRenderEventList;
+        }
+
+        @Override
+        public Map<String, Event> getPreScreenRenderEventList() throws WebAppConfigurationException {
+            return preScreenRenderEventList;
+        }
+
+        @Override
+        public Map<String, Event> getPostScreenRenderEventList() throws WebAppConfigurationException {
+            return postScreenRenderEventList;
         }
 
         @Override

@@ -20,8 +20,8 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.webapp.control.RequestUtil;
+import org.ofbiz.webapp.view.ViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
-import org.ofbiz.webapp.view.ViewHandlerExt;
 import org.ofbiz.webapp.website.WebSiteWorker;
 import org.ofbiz.widget.renderer.macro.MacroScreenViewHandler;
 import org.xml.sax.SAXException;
@@ -50,7 +50,7 @@ import freemarker.template.TemplateException;
  * implement the basic interface and delegate to an instance of MacroScreenViewHandler instead, which
  * can then be configurable.
  */
-public class CmsScreenViewHandler extends MacroScreenViewHandler implements ViewHandlerExt {
+public class CmsScreenViewHandler extends MacroScreenViewHandler implements ViewHandler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -78,8 +78,15 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
     }
 
     @Override
-    public void render(String name, String page, String info, String contentType, String encoding,
-            HttpServletRequest request, HttpServletResponse response, Writer writer) throws ViewHandlerException {
+    public void render(ViewRenderContext vrctx) throws ViewHandlerException {
+        String name = vrctx.name();
+        String page = vrctx.page();
+        String info = vrctx.info();
+        String contentType = vrctx.contentType();
+        String encoding = vrctx.encoding();
+        HttpServletRequest request = vrctx.request();
+        HttpServletResponse response = vrctx.response();
+        Writer writer = vrctx.writer();
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         String path = request.getPathInfo(); // DEV NOTE: do not rely on this
@@ -287,7 +294,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
             Debug.logInfo("Cms: " + (renderMode == CmsCallType.OFBIZ_PREVIEW ? "PREVIEW: " : "") + "CMS page mapping found; processing view through CMS: request: " + path + "; view name: " + name +
                     "; CMS page mapping: " + cmsPage.getLogIdRepr() + CmsControlUtil.getReqLogIdDelimStr(request), module);
             renderDefault = false;
-            boolean continueOk = renderCmsPage(request, response, path, cmsPage, cmsView, webSiteId, renderMode, writer);
+            boolean continueOk = renderCmsPage(vrctx, path, cmsPage, cmsView, webSiteId, renderMode);
             if (!continueOk) {
                 return;
             }
@@ -312,31 +319,63 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
 
                 Debug.logInfo("Cms: " + (renderMode == CmsCallType.OFBIZ_PREVIEW ? "PREVIEW: " : "") + "No existing or active CMS page mapping found for view '" + name + "'; rendering default CMS page (" + defaultCmsPage.getLogIdReprTargetPage() + ")"
                         + CmsControlUtil.getReqLogIdDelimStr(request), module);
-                boolean continueOk = renderCmsPage(request, response, path, cmsPage, cmsView, webSiteId, renderMode, writer);
+                boolean continueOk = renderCmsPage(vrctx, path, cmsPage, cmsView, webSiteId, renderMode);
                 if (!continueOk) {
                     return;
                 }
             } else {
                 Debug.logInfo("Cms: No existing/active CMS page mapping found for view '" + name + "'; continuing with screen '" + page + "'"
                         + CmsControlUtil.getReqLogIdDelimStr(request), module);
-                renderScreen(name, page, info, contentType, encoding, request, response, writer);
+                renderScreen(vrctx);
             }
         }
     }
 
-    private void renderScreen(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response, Writer writer) throws ViewHandlerException {
+    @Override
+    public void render(String name, String page, String info, String contentType, String encoding,
+                       HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
+        Writer writer;
+        try {
+            writer = CmsControlUtil.getResponseWriter(request, response);
+        } catch (IOException e) {
+            Debug.logError(e, "Cms: Error getting response writer: " + e.getMessage() + CmsControlUtil.getReqLogIdDelimStr(request), module);
+            handleException(request, response, e, null);
+            return;
+        }
+        try {
+            super.render(name, page, info, contentType, encoding, request, response, writer);
+        } catch (ViewHandlerException e) {
+            Debug.logError(e, "Cms: View rendering error: " + e.getMessage() + CmsControlUtil.getReqLogIdDelimStr(request), module);
+            handleException(request, response, e, null);
+            return;
+        }
+    }
+
+    @Override
+    public void render(String name, String page, String info, String contentType, String encoding,
+                       HttpServletRequest request, HttpServletResponse response, Writer writer) throws ViewHandlerException {
+        try {
+            super.render(name, page, info, contentType, encoding, request, response, writer);
+        } catch (ViewHandlerException e) {
+            Debug.logError(e, "Cms: View rendering error: " + e.getMessage() + CmsControlUtil.getReqLogIdDelimStr(request), module);
+            handleException(request, response, e, null);
+            return;
+        }
+    }
+
+    protected void renderScreen(ViewRenderContext vrctx) throws ViewHandlerException {
         if (CmsUtil.verboseOn()) {
-            Debug.logInfo("Cms: Starting legacy screen widget render process" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+            Debug.logInfo("Cms: Starting legacy screen widget render process" + CmsControlUtil.getReqLogIdDelimStr(vrctx.request()), module);
         }
 
         if (webSiteConfig.isSetResponseBrowserNoCacheScreen()) {
             if (CmsUtil.verboseOn()) {
-                Debug.logInfo("Cms: Setting browser no-proxy no-cache response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
+                Debug.logInfo("Cms: Setting browser no-proxy no-cache response" + CmsControlUtil.getReqLogIdDelimStr(vrctx.request()), module);
             }
-            CmsControlUtil.checkSetNoCacheResponse(request, response);
+            CmsControlUtil.checkSetNoCacheResponse(vrctx.request(), vrctx.response());
         }
 
-        super.render(name, page, info, contentType, encoding, request, response, writer);
+        super.render(vrctx);
     }
 
     /**
@@ -346,7 +385,12 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
      *
      * @return false if must prevent any further web response
      */
-    private boolean renderCmsPage(HttpServletRequest request, HttpServletResponse response, String path, CmsPage cmsPage, CmsView cmsView, String webSiteId, CmsCallType renderMode, Writer writer) throws ViewHandlerException {
+    protected boolean renderCmsPage(ViewRenderContext vrctx, String path, CmsPage cmsPage, CmsView cmsView, String webSiteId, CmsCallType renderMode) throws ViewHandlerException {
+        HttpServletRequest request = vrctx.request();
+        HttpServletResponse response = vrctx.response();
+        Writer writer = vrctx.writer();
+
+        runPreScreenRenderEvents(vrctx); // SCIPIO: 2.1.0: Added
 
         // We must make sure that if for whatever reason a transaction is in place, maybe
         // some runaway transaction, we kill it now, because the CMS rendering happens in a
@@ -399,24 +443,12 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
             handleException(request, response, e, renderMode);
             return false; // Nothing can be sent after this
         }
+
+        runPostScreenRenderEvents(vrctx); // SCIPIO: 2.1.0: Added
         return true;
     }
 
-    @Override
-    public void render(String name, String page, String info, String contentType, String encoding,
-            HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
-        Writer writer;
-        try {
-            writer = CmsControlUtil.getResponseWriter(request, response);
-        } catch (IOException e) {
-            Debug.logError(e, "Cms: Error getting response writer: " + e.getMessage() + CmsControlUtil.getReqLogIdDelimStr(request), module);
-            handleException(request, response, e, null);
-            return;
-        }
-        this.render(name, page, info, contentType, encoding, request, response, writer);
-    }
-
-    static void handleException(HttpServletRequest request, HttpServletResponse response, Exception ex, CmsCallType renderMode) throws ViewHandlerException {
+    protected void handleException(HttpServletRequest request, HttpServletResponse response, Exception ex, CmsCallType renderMode) throws ViewHandlerException {
         // 2017-03-24: only report detailed error if preview/debug mode
         if (renderMode == CmsCallType.OFBIZ_PREVIEW) {
             rethrowViewHandlerExceptionDetailed(request, ex);
@@ -436,7 +468,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         }
     }
 
-    static void rethrowViewHandlerExceptionDetailed(HttpServletRequest request, Exception ex) throws ViewHandlerException {
+    protected void rethrowViewHandlerExceptionDetailed(HttpServletRequest request, Exception ex) throws ViewHandlerException {
         // EMULATION of MacroScreenViewHandler behavior - these throws would in stock be handled by ControlServlet and printed
         try {
             throw ex;
@@ -457,7 +489,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
     }
 
     // generic exception to avoid divulging information in live render, for security; does NOT propagate the original error (already logged)
-    static void rethrowViewHandlerExceptionGeneric(HttpServletRequest request, Exception ex) throws ViewHandlerException {
+    protected void rethrowViewHandlerExceptionGeneric(HttpServletRequest request, Exception ex) throws ViewHandlerException {
         final String msg = RequestUtil.getGenericErrorMessage(request);
         throw new ViewHandlerException(msg, new Exception(msg));
     }
@@ -470,7 +502,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
      * there was a code or system error, has to be fixed and the data could be bad, so don't save it.
      * Also, this is what Ofbiz's ControlServlet does with runaway transactions.
      */
-    private static void endTransactionAlways(HttpServletRequest request, HttpServletResponse response) {
+    protected void endTransactionAlways(HttpServletRequest request, HttpServletResponse response) {
 
         if (CmsUtil.verboseOn()) {
             Debug.logInfo("Cms: Stopping any open Ofbiz transactions" + CmsControlUtil.getReqLogIdDelimStr(request), module);
@@ -512,5 +544,4 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
 //            }
         }
     }
-
 }

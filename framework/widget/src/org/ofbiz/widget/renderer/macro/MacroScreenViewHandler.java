@@ -37,9 +37,14 @@ import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.webapp.control.ConfigXMLReader;
+import org.ofbiz.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.RequestHandlerException;
+import org.ofbiz.webapp.control.WebAppConfigurationException;
+import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.webapp.view.AbstractViewHandler;
+import org.ofbiz.webapp.view.ViewHandler;
 import org.ofbiz.webapp.view.ViewHandlerException;
-import org.ofbiz.webapp.view.ViewHandlerExt;
 import org.ofbiz.widget.renderer.FormStringRenderer;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.ofbiz.widget.renderer.ScreenRenderer;
@@ -52,7 +57,7 @@ import org.xml.sax.SAXException;
 import freemarker.template.TemplateException;
 import freemarker.template.utility.StandardCompress;
 
-public class MacroScreenViewHandler extends AbstractViewHandler implements ViewHandlerExt {
+public class MacroScreenViewHandler extends AbstractViewHandler implements ViewHandler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -129,7 +134,18 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
     }
 
     // SCIPIO: 2017-05-01: factored out Writer for reuse
-    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response, Writer writer) throws ViewHandlerException {
+    public void render(ViewRenderContext vrctx) throws ViewHandlerException {
+        runPreScreenRenderEvents(vrctx); // SCIPIO: 2.1.0: Added
+
+        String name = vrctx.name();
+        String page = vrctx.page();
+        String info = vrctx.info();
+        String contentType = vrctx.contentType();
+        String encoding = vrctx.encoding();
+        HttpServletRequest request = vrctx.request();
+        HttpServletResponse response = vrctx.response();
+        Writer writer = vrctx.writer();
+
         try {
             Delegator delegator = (Delegator) request.getAttribute("delegator");
             // compress output if configured to do so
@@ -186,16 +202,63 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
         } catch (GeneralException e) {
             throw new ViewHandlerException("Lower level error rendering page: " + e.toString(), e);
         }
+
+        runPostScreenRenderEvents(vrctx); // SCIPIO: 2.1.0: Added
     }
 
-    // SCIPIO: added 2017-05-01
-    @Override
-    public void render(String name, String page, String info, String contentType, String encoding,
-            HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
+    public static void runPreScreenRenderEvents(ViewRenderContext vrctx) throws ViewHandlerException {
+        HttpServletRequest request = vrctx.request();
+        HttpServletResponse response = vrctx.response();
+        ConfigXMLReader.ControllerConfig controllerConfig = vrctx.controllerConfig();
+        ConfigXMLReader.RequestMap requestMap = vrctx.requestMap();
+        RequestHandler requestHandler = vrctx.requestHandler();
+        if (requestHandler == null) {
+            return;
+        }
+
+        // SCIPIO: 2.1.0: pre-view-render event
         try {
-            this.render(name, page, info, contentType, encoding, request, response, response.getWriter());
-        } catch (IOException e) {
-            throw new ViewHandlerException("Error in the response writer/output stream: " + e.toString(), e);
+            for (ConfigXMLReader.Event event: controllerConfig.getPreScreenRenderEventList().values()) {
+                try {
+                    String returnString = requestHandler.runEvent(request, response, event, requestMap, "pre-screen-render");
+                    if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
+                        throw new EventHandlerException("Pre-Screen-Render event did not return 'success'.");
+                    }
+                } catch (EventHandlerException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        } catch (WebAppConfigurationException e) {
+            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+            throw new ViewHandlerException(e);
+        }
+    }
+
+    public static void runPostScreenRenderEvents(ViewRenderContext vrctx) throws ViewHandlerException {
+        HttpServletRequest request = vrctx.request();
+        HttpServletResponse response = vrctx.response();
+        ConfigXMLReader.ControllerConfig controllerConfig = vrctx.controllerConfig();
+        ConfigXMLReader.RequestMap requestMap = vrctx.requestMap();
+        RequestHandler requestHandler = vrctx.requestHandler();
+        if (requestHandler == null) {
+            return;
+        }
+
+        // SCIPIO: 2.1.0: pre-view-render event
+        try {
+            for (ConfigXMLReader.Event event: controllerConfig.getPostScreenRenderEventList().values()) {
+                try {
+                    String returnString = requestHandler.runEvent(request, response, event, requestMap, "post-screen-render");
+                    if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
+                        throw new EventHandlerException("Post-Screen-Render event did not return 'success'.");
+                    }
+                } catch (EventHandlerException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        } catch (WebAppConfigurationException e) {
+            Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
+            throw new ViewHandlerException(e);
         }
     }
 }

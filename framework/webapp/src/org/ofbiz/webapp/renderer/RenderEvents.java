@@ -1,5 +1,6 @@
 package org.ofbiz.webapp.renderer;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -134,7 +135,14 @@ public abstract class RenderEvents {
             try {
                 if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewMap.type + "]", module);
                 ViewHandler vh = viewFactory.getViewHandler(viewMap.type);
-                RequestHandler.invokeViewHandlerAsJson(vh, viewAsJsonConfig, view, nextPage, viewMap.info, contentType, charset, req, resp);
+                ViewHandler.ViewRenderContext vrctx = new ViewHandler.ViewRenderContext(view, nextPage, viewMap.info,
+                        contentType, charset, req, resp, null, config, null, viewMap, rh);
+                try {
+                    vrctx.writer(resp.getWriter());
+                } catch(IOException e) {
+                    throw new ViewHandlerException("Error in the response writer/output stream: " + e, e);
+                }
+                RequestHandler.invokeViewHandlerAsJson(vh, viewAsJsonConfig, vrctx);
             } catch (ViewHandlerException e) {
                 Throwable throwable = e.getNested() != null ? e.getNested() : e;
 

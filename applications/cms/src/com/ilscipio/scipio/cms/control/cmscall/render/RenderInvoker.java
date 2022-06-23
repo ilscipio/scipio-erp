@@ -36,7 +36,7 @@ public abstract class RenderInvoker extends CmsInvoker {
 
     public void invokeCmsRendering(ViewHandler.ViewRenderContext vrctx, CmsPage cmsPage, CmsView view, String webSiteId,
                                    CmsCallType renderMode) throws CmsCallException, Exception {
-        invokeCmsRendering(vrctx.request(), vrctx.response(), vrctx.request().getServletContext(), cmsPage, view, webSiteId, renderMode, vrctx.writer());
+        invokeCmsRendering(vrctx.request(), vrctx.response(), vrctx.request().getServletContext(), cmsPage, view, webSiteId, renderMode, vrctx.renderWriter());
     }
 
 }

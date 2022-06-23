@@ -86,7 +86,7 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         String encoding = vrctx.encoding();
         HttpServletRequest request = vrctx.request();
         HttpServletResponse response = vrctx.response();
-        Writer writer = vrctx.writer();
+        Writer writer = vrctx.renderWriter();
         Delegator delegator = (Delegator) request.getAttribute("delegator");
 
         String path = request.getPathInfo(); // DEV NOTE: do not rely on this
@@ -388,7 +388,6 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
     protected boolean renderCmsPage(ViewRenderContext vrctx, String path, CmsPage cmsPage, CmsView cmsView, String webSiteId, CmsCallType renderMode) throws ViewHandlerException {
         HttpServletRequest request = vrctx.request();
         HttpServletResponse response = vrctx.response();
-        Writer writer = vrctx.writer();
 
         // We must make sure that if for whatever reason a transaction is in place, maybe
         // some runaway transaction, we kill it now, because the CMS rendering happens in a

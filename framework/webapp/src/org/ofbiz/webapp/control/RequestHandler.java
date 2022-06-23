@@ -1547,6 +1547,23 @@ public class RequestHandler {
 
         if (Debug.verboseOn()) Debug.logVerbose("[Mapped To]: " + nextPage + showSessionId(req), module);
 
+        // setup character encoding and content type
+        String charset;
+        if (viewAsJson) {
+            // SCIPIO: NOTE: we hardcode UTF-8 because JSON requests will be like this
+            charset = "UTF-8";
+        } else {
+            charset = UtilFormatOut.checkEmpty(this.charset, req.getCharacterEncoding(), "UTF-8");
+        }
+
+        if (!viewAsJson) {
+            String viewCharset = viewMap.encoding;
+            //NOTE: if the viewCharset is "none" then no charset will be used
+            if (UtilValidate.isNotEmpty(viewCharset)) {
+                charset = viewCharset;
+            }
+        }
+
         // setup content type
         String contentType = "text/html";
         String viewContentType = viewMap.contentType;
@@ -1575,23 +1592,6 @@ public class RequestHandler {
         }
 
         long viewStartTime = System.currentTimeMillis();
-
-        // setup character encoding and content type
-        String charset;
-        if (viewAsJson) {
-            // SCIPIO: NOTE: we hardcode UTF-8 because JSON requests will be like this
-            charset = "UTF-8";
-        } else {
-            charset = UtilFormatOut.checkEmpty(this.charset, req.getCharacterEncoding(), "UTF-8");
-        }
-
-        if (!viewAsJson) {
-            String viewCharset = viewMap.encoding;
-            //NOTE: if the viewCharset is "none" then no charset will be used
-            if (UtilValidate.isNotEmpty(viewCharset)) {
-                charset = viewCharset;
-            }
-        }
 
         if (!"none".equals(charset)) {
             try {
@@ -1673,11 +1673,6 @@ public class RequestHandler {
             if (viewAsJson) {
                 invokeViewHandlerAsJson(vh, viewAsJsonConfig, vrctx);
             } else {
-                try {
-                    vrctx.writer(resp.getWriter());
-                } catch(IOException e) {
-                    throw new ViewHandlerException("Error in the response writer/output stream: " + e, e);
-                }
                 vh.render(vrctx);
             }
         } catch (ViewHandlerException e) {

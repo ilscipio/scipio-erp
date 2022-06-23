@@ -52,7 +52,7 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
                                    CmsCallType renderMode) throws Exception {
         CmsPageContext cmsPageContext = CmsPageContext.fromRequest(vrctx.request(), vrctx.response(),
                 webSiteId, renderMode == CmsCallType.OFBIZ_PREVIEW, RendererType.CMS);
-        invokeCmsRendering(vrctx.request(), vrctx.response(), servletCtx, cmsPage, cmsPageContext, vrctx.writer(), vrctx);
+        invokeCmsRendering(vrctx.request(), vrctx.response(), servletCtx, cmsPage, cmsPageContext, vrctx.renderWriter(), vrctx);
     }
 
     private void invokeCmsRendering(HttpServletRequest request, HttpServletResponse response, ServletContext servletCtx,

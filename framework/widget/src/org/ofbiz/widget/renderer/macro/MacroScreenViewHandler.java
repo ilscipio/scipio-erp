@@ -152,7 +152,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
         String encoding = vrctx.encoding();
         HttpServletRequest request = vrctx.request();
         HttpServletResponse response = vrctx.response();
-        Writer writer = vrctx.writer();
+        Writer writer = vrctx.renderWriter();
 
         try {
             Delegator delegator = (Delegator) request.getAttribute("delegator");

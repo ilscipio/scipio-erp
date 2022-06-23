@@ -21,6 +21,7 @@ package org.ofbiz.webapp.view;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.RequestHandler;
 
+import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -76,12 +77,7 @@ public interface ViewHandler {
      * @throws ViewHandlerException
      */
     public default void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
-        try {
-            render(new ViewRenderContext(name, page, info, contentType, encoding, request, response, response.getWriter(),
-                    null, null, null, null));
-        } catch (IOException e) {
-            throw new ViewHandlerException("Error in the response writer/output stream: " + e, e);
-        }
+        render(new ViewRenderContext(name, page, info, contentType, encoding, request, response, null, null, null, null, null));
     }
 
     /**
@@ -98,8 +94,7 @@ public interface ViewHandler {
      * @throws ViewHandlerException
      */
     public default void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response, Writer writer) throws ViewHandlerException {
-        render(new ViewRenderContext(name, page, info, contentType, encoding, request, response, writer,
-                null, null, null, null));
+        render(new ViewRenderContext(name, page, info, contentType, encoding, request, response, writer, null, null, null, null));
     }
 
     class ViewRenderContext {
@@ -204,6 +199,20 @@ public interface ViewHandler {
         public ViewRenderContext writer(Writer writer) {
             this.writer = writer;
             return this;
+        }
+
+        @Nonnull
+        public Writer renderWriter() throws ViewHandlerException {
+            Writer writer = this.writer;
+            if (writer == null) {
+                try {
+                    writer = response().getWriter();
+                } catch (IOException e) {
+                    throw new ViewHandlerException("Error getting the response writer/output stream: " + e, e);
+                }
+                this.writer = writer;
+            }
+            return writer;
         }
 
         public ConfigXMLReader.ControllerConfig controllerConfig() {

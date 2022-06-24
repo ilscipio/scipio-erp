@@ -207,6 +207,7 @@ public class ScipioHttpClient implements Closeable {
     public static class Config implements Serializable {
         public static final String DEFAULT_JKS_STORE_FILENAME = "component://base/config/ofbizssl.jks";
         public static final String DEFAULT_JKS_STORE_PASSWORD = "changeit";
+        public static final String DEFAULT_USER_AGENT = "Scipio ERP/2.0";
 
         private final Factory factory;
         private final Boolean pooling;
@@ -221,6 +222,7 @@ public class ScipioHttpClient implements Closeable {
         private final Boolean trustAllCerts;
         private final String jksStoreFileName;
         private final String jksStorePassword;
+        private final String userAgent;
 
         protected Config(Map<String, ?> properties, Factory factory) {
             this.factory = factory;
@@ -238,6 +240,7 @@ public class ScipioHttpClient implements Closeable {
             this.jksStoreFileName = UtilValidate.isNotEmpty(jksStoreFileName) ? jksStoreFileName : DEFAULT_JKS_STORE_FILENAME;
             String jksStorePassword = (String) properties.get("jksStorePassword");
             this.jksStorePassword = UtilValidate.isNotEmpty(jksStorePassword) ? jksStorePassword : DEFAULT_JKS_STORE_PASSWORD;
+            this.userAgent = properties.get("userAgent") != null ? (String) properties.get("userAgent") : DEFAULT_USER_AGENT;
         }
 
         public static Config fromContext(Map<String, ?> properties) {
@@ -369,7 +372,10 @@ public class ScipioHttpClient implements Closeable {
             } else {
                 builder.setSSLSocketFactory(getSSLConnectionSocketFactory());
             }
-            return builder;
+            if(getUserAgent()!=null){
+                builder.setUserAgent(userAgent);
+            }
+            return builder.build();
         }
 
         /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for PoolingNHttpClientConnectionManager mainly. */
@@ -440,7 +446,14 @@ public class ScipioHttpClient implements Closeable {
                     builder.addInterceptorLast(interceptor);
                 }
             }
-            return builder;
+            if(getUserAgent()!=null){
+                builder.setUserAgent(userAgent);
+            }
+            CloseableHttpAsyncClient httpAsyncClient = builder.build();
+            if (!httpAsyncClient.isRunning()) {
+                httpAsyncClient.start();
+            }
+            return httpAsyncClient;
         }
 
         public Factory getFactory() {
@@ -506,6 +519,10 @@ public class ScipioHttpClient implements Closeable {
 
         public String getJksStorePassword() {
             return jksStorePassword;
+        }
+
+        public String getUserAgent() {
+            return userAgent;
         }
     }
 

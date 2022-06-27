@@ -372,10 +372,10 @@ public class ScipioHttpClient implements Closeable {
             } else {
                 builder.setSSLSocketFactory(getSSLConnectionSocketFactory());
             }
-            if(getUserAgent()!=null){
+            if (getUserAgent() != null) {
                 builder.setUserAgent(userAgent);
             }
-            return builder.build();
+            return builder;
         }
 
         /** SCIPIO: 2020-01-14: NEW ASYNC SUPPORT: Build method for PoolingNHttpClientConnectionManager mainly. */
@@ -446,14 +446,10 @@ public class ScipioHttpClient implements Closeable {
                     builder.addInterceptorLast(interceptor);
                 }
             }
-            if(getUserAgent()!=null){
+            if (getUserAgent() != null) {
                 builder.setUserAgent(userAgent);
             }
-            CloseableHttpAsyncClient httpAsyncClient = builder.build();
-            if (!httpAsyncClient.isRunning()) {
-                httpAsyncClient.start();
-            }
-            return httpAsyncClient;
+            return builder;
         }
 
         public Factory getFactory() {

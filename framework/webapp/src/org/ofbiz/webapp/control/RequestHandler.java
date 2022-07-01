@@ -103,6 +103,8 @@ public class RequestHandler {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final boolean showSessionIdInLog = UtilProperties.propertyValueEqualsIgnoreCase("requestHandler", "show-sessionId-in-log", "Y"); // SCIPIO: made static var & remove delegator
+    private static final Integer sessionUnserializableLogLevel = Debug.getLevel(UtilProperties.getPropertyValue("requestHandler",
+            "session.unserializable.logLevel", "off"), null); // SCIPIO: 2.1.0: Added
 
     /**
      * SCIPIO: If true, force a slash after the context root when building links, meaning even
@@ -1490,6 +1492,10 @@ public class RequestHandler {
             SaveAttrPolicyInvoker<?> attrPolicyInvoker = ViewLastAttrPolicy.SavePolicy.getInvoker(req);
             attrPolicyInvoker.filterMapAttr(paramMap); // SCIPIO: New RequestAttrPolicy callbacks
             UtilMisc.makeMapSerializable(paramMap);
+            // SCIPIO: 2.1.0: StackTraceElement/Serializable check for debugging
+            if (sessionUnserializableLogLevel != null) {
+                UtilHttp.checkSerializable(paramMap, "_LAST_VIEW_PARAMS_", sessionUnserializableLogLevel);
+            }
 
             HttpSession session = req.getSession();
             if (paramMap.containsKey("_LAST_VIEW_NAME_")) { // Used by lookups to keep the real view (request)
@@ -1497,6 +1503,7 @@ public class RequestHandler {
             } else {
                 session.setAttribute("_LAST_VIEW_NAME_", view);
             }
+
             session.setAttribute("_LAST_VIEW_PARAMS_", paramMap);
 
             if ("SAVED".equals(saveName)) {

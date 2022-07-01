@@ -2632,4 +2632,51 @@ public final class UtilHttp {
         }
         return values;
     }
+
+    /**
+     * Checks if map, list or other contains only serializable objects (best-effort).
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     */
+    public static void checkSerializable(Object value, String keyDesc, int logLevel) {
+        if (value instanceof Map) {
+            if (keyDesc == null) {
+                keyDesc = "(map)";
+            }
+            for(Map.Entry<?, ?> entry : (UtilGenerics.<Map<?, ?>>cast(value)).entrySet()) {
+                if (entry.getValue() == null) {
+                    continue;
+                }
+                String nextKeyDesc = keyDesc + ".";
+                if (entry.getKey() instanceof String || entry.getKey() instanceof CharSequence || entry.getKey() instanceof Number) {
+                    nextKeyDesc += entry.getKey().toString();
+                } else {
+                    nextKeyDesc += "(unknown)";
+                }
+                checkSerializable(entry.getValue(), nextKeyDesc, logLevel);
+            }
+        } else if (value instanceof Collection) {
+            if (keyDesc == null) {
+                keyDesc = "(collection)";
+            }
+            int index = 0;
+            for(Object entry : (UtilGenerics.<Collection<?>>cast(value))) {
+                if (entry == null) {
+                    continue;
+                }
+                String nextKeyDesc = keyDesc + "." + index;
+                checkSerializable(entry, nextKeyDesc, logLevel);
+                index++;
+            }
+        } else if (value instanceof java.lang.StackTraceElement) {
+            if (keyDesc == null) {
+                keyDesc = "(stacktrace)";
+            }
+            Debug.log(logLevel, "checkSerializable: [" + keyDesc + "] value is non-serializable [java.lang.StackTraceElement]", module);
+        } else if (value != null && !(value instanceof java.io.Serializable)) {
+            if (keyDesc == null) {
+                keyDesc = "(unknown)";
+            }
+            Debug.log(logLevel, "checkSerializable: [" + keyDesc + "] value is non-serializable [" + value.getClass().getName() + "]", module);
+        }
+    }
 }

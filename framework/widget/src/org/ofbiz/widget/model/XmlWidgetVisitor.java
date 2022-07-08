@@ -420,7 +420,10 @@ public class XmlWidgetVisitor extends XmlAbstractWidgetVisitor implements ModelW
         visitAttribute("use-transaction", modelScreen.getUseTransaction());
         visitAttribute("use-cache", modelScreen.getUseCache());
         writer.append(">");
-        modelScreen.getSection().accept(this);
+        ModelScreenWidget.Section section = modelScreen.getSection();
+        if (section != null) { // SCIPIO: 2.1.0: Only happens during debugging/or before construction ends
+            section.accept(this);
+        }
         writer.append("</screen>");
     }
 

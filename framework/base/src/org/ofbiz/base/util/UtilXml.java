@@ -1059,6 +1059,7 @@ public final class UtilXml {
          * @param systemId - System ID of DTD
          * @return InputSource of DTD
          */
+        @Override
         public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
             hasDTD = false;
             String dtd = UtilProperties.getSplitPropertyValue(UtilURL.fromResource("localdtds.properties"), publicId);

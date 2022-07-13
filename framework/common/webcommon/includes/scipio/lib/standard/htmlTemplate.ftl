@@ -268,6 +268,14 @@
 <#if isWordpressComponentPresent>
     <@(.get_optional_template("component://wordpress/webapp/wordpress/wordpress-common.ftl").include!templateMissingFallback("htmlWordpress.html")) />
 </#if>
+<#assign isMPOSComponentPresent = Static["org.ofbiz.base.component.ComponentConfig"].isComponentPresent("mpos")!false>
+<#-- DEV NOTE: isPOSScreen is meant to be set in a custom GetWebSiteStoreVisualThemeId.groovy, which can be fetched as a request attribute (MPOS_POS_SCREEN).
+    Make sure your web.xml defines all the valid POSPaths init-param in the MPOSFilter
+-->
+<#assign getMPOSTemplate = isPOSScreen!false>
+<#if isMPOSComponentPresent && getMPOSTemplate>
+    <@(.get_optional_template("component://mpos/webapp/mpos/includes/scipio/lib/standard/htmlMPOS.ftl").include!templateMissingFallback("htmlMPOS.html")) />
+</#if>
 
 <#-- After everything included, create a copy of the namespace so that macros can access 
      their global variables without possibility of override (sometimes needed)

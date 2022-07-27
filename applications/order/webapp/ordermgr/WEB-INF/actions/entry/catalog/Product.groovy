@@ -31,10 +31,9 @@ import org.ofbiz.entity.util.EntityUtil;
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 catalogName = CatalogWorker.getCatalogName(request);
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
-requestParams = UtilHttp.getParameterMap(request);
 
 detailScreen = "productdetail";
-productId = requestParams.product_id ?: request.getAttribute("product_id");
+productId = parameters.product_id; // SCIPIO: 2.1.0: Use parameters map
 
 pageTitle = null;
 metaDescription = null;

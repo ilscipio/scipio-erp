@@ -50,11 +50,7 @@ productId = null;
 product = context.product;
 priceMap = [:];
 
-if(product){
-    productId = product.productId;
-}else{
-    productId = requestParams.product_id ?: request.getAttribute("product_id");
-}
+productId = (product?.productId) ?: parameters.product_id; // SCIPIO: 2.1.0: Use parameters map
 context.product_id = productId;
 
 // set currency format

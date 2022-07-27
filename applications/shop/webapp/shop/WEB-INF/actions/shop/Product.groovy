@@ -28,9 +28,7 @@ if (updateRequestVars == null) {
 }
 context.remove("updateRequestVars");
 
-requestParams = UtilHttp.getParameterMap(request);
-
-productId = requestParams.product_id ?: request.getAttribute("product_id");
+productId = parameters.product_id; // SCIPIO: 2.1.0: Use parameters map
 productCategoryId = request.getAttribute("productCategoryId");
 
 if (productId) {

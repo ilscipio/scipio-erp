@@ -11,7 +11,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.4.1",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.25",
+    "moment-timezone": "^0.5.35",
     "pace": "0.0.4",
     "pc-bootstrap4-datetimepicker": "^4.17.50",
     "perfect-scrollbar": "^1.4.0",

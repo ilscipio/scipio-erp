@@ -48,7 +48,7 @@ public final class UtilDateTime {
      * @deprecated SCIPIO: 2018-08: this will become private/removed, do not use from outside
      */
     @Deprecated
-    public static final String[] days = {// to be translated over CommonDayName, see example in accounting
+    public static final String[] days = { // to be translated over CommonDayName, see example in accounting
         "Monday", "Tuesday", "Wednesday",
         "Thursday", "Friday", "Saturday", "Sunday"
     };

@@ -194,6 +194,11 @@ code package.
         <key-map field-name="productCategoryId" rel-field-name="primaryParentCategoryId"/>
       </relation>
     </entity>
+
+    <extend-entity entity-name="ProductCategory"><!-- SCIPIO -->
+        <field name="imageProfile" type="id"><description>Name of a media profile for the main product category image, either ImageSizePreset.presetId or media profile name from mediaprofiles.properties, defaults to IMAGE_PRODUCT-ORIGINAL_IMAGE_URL (SCIPIO)</description></field>
+    </extend-entity>
+
     <view-entity entity-name="ProductCategoryAndMember"
             package-name="org.ofbiz.product.category"
             title="ProductCategory And ProductCategoryMember View">

@@ -14843,13 +14843,13 @@
         <value xml:lang="en">Child Category List</value>
     </property>
     <property key="ProductCategoryContent">
-        <value xml:lang="de">Inhalt</value>
-        <value xml:lang="en">Content</value>
-        <value xml:lang="es">Contenido</value>
-        <value xml:lang="fr">Contenu</value>
-        <value xml:lang="it">Contenuto</value>
+        <value xml:lang="de">Kategorie Inhalt</value>
+        <value xml:lang="en">Category Content</value>
+        <value xml:lang="es">Contenido de caetgoría</value>
+        <value xml:lang="fr">Contenu de catégorie</value>
+        <value xml:lang="it">Contenuto Categoria</value>
         <value xml:lang="ja">コンテンツ</value>
-        <value xml:lang="nl">Content</value>
+        <value xml:lang="nl">Content categorie</value>
         <value xml:lang="ro">Continut</value>
         <value xml:lang="ru">Контент</value>
         <value xml:lang="th">หัวข้อ</value>

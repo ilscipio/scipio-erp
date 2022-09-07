@@ -52,9 +52,6 @@ code package.
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategory.ftl"/></html>
                         </platform-specific>
-                        <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/category/UploadCategoryImage.ftl"/></html>
-                        </platform-specific>
                         <section>
                         <condition>
                             <and>
@@ -202,7 +199,11 @@ code package.
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategorySEO.groovy"/>
             </actions>
             <widgets>
-                <screenlet>
+                <screenlet title="${uiLabelMap.PageTitleEditCategoryContent}">
+                    <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
+                    <include-screen name="ScipioCategoryContentList"/>
+                </screenlet>
+                <screenlet title="${uiLabelMap.ProductCategoryCreateNewCategoryContent}">
                     <!-- SCIPIO: Category content forms widgets have been replaced by a single ftl -->
                     <!-- <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/> -->
                     <!-- <include-screen name="ScipioEditCategoryContent"/> -->
@@ -228,11 +229,16 @@ code package.
                         </screenlet>-->
                     </widgets>
                 </section>
-                
-                <screenlet title="${uiLabelMap.ProductCategoryContentList}">
-                    <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                    <include-screen name="ScipioCategoryContentList"/>
+
+                <screenlet title="${uiLabelMap.CategoryOverrideSimpleFields}">
+                    <platform-specific>
+                        <html><html-template location="component://product/webapp/catalog/category/EditCategoryContent.ftl"/></html>
+                    </platform-specific>
                 </screenlet>
+
+                <platform-specific>
+                    <html><html-template location="component://product/webapp/catalog/category/UploadCategoryImage.ftl"/></html>
+                </platform-specific>
                 
                 <screenlet title="${uiLabelMap.CommonUpdateLocalizedFields}"><!-- SCIPIO: added 2017-12 -->
                     <include-screen name="EditCategoryStcLocFields"/>

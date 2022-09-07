@@ -1,5 +1,6 @@
 <#-- TODO: License -->
 
+<#include "component://product/webapp/catalog/common/common.ftl">
 <#if productCategoryId?has_content>
     <@section title=uiLabelMap.ProductCategoryUploadImage id="productCategoryAttachContent">
         <form method="post" enctype="multipart/form-data" action="<@pageUrl>UploadCategoryImage</@pageUrl>" name="imageUploadForm" id="imageUploadForm">
@@ -55,4 +56,33 @@
             </@field>
         </form>
     </@section>
+
+    <@section title=uiLabelMap.ProductCategoryUploadImage>
+        <@script>
+            function setUploadUrl(newUrl) {
+                var toExec = 'document.imageUploadForm.action="' + newUrl + '";';
+                eval(toExec);
+            };
+        </@script>
+
+        <form method="post" enctype="multipart/form-data" action="<@pageUrl>UploadCategoryImage?productId=${productId}&amp;upload_file_type=original</@pageUrl>" name="imageUploadForm">
+            <@fields type="default-nolabelarea">
+                <#-- SCIPIO: mediaProfile
+            <p><em>${uiLabelMap.ProductOriginalImageMessage} : &dollar;{ofbiz.home}/applications/product/config/ImageProperties.xml</em></p>-->
+                <@fields type="default">
+                    <@cataloglib.imageProfileSelect fieldName="imageProfile" profileName=(parameters.mediaProfile!product.imageProfile!"") defaultProfileName="mediaProfile.IMAGE_CATEGORY"/>
+                </@fields>
+                <@field type="file" size="50" name="fname"/>
+                <@field type="generic">
+                    <@field type="radio" name="upload_file_type_bogus" value="small" onClick="setUploadUrl('${escapeVal(makePageUrl('UploadProductImage?productId=${productId}&upload_file_type=small'), 'js')}');" label=uiLabelMap.CommonSmall/>
+                    <@field type="radio" name="upload_file_type_bogus" value="medium" onClick="setUploadUrl('${escapeVal(makePageUrl('UploadProductImage?productId=${productId}&upload_file_type=medium'), 'js')}');" label=uiLabelMap.CommonMedium/>
+                    <@field type="radio" name="upload_file_type_bogus" value="large" onClick="setUploadUrl('${escapeVal(makePageUrl('UploadProductImage?productId=${productId}&upload_file_type=large'), 'js')}');" label=uiLabelMap.CommonLarge/>
+                    <@field type="radio" name="upload_file_type_bogus" value="detail" onClick="setUploadUrl('${escapeVal(makePageUrl('UploadProductImage?productId=${productId}&upload_file_type=detail'), 'js')}');" label=uiLabelMap.CommonDetail/>
+                    <@field type="radio" name="upload_file_type_bogus" value="original" checked=true onClick="setUploadUrl('${escapeVal(makePageUrl('UploadProductImage?productId=${productId}&upload_file_type=original'), 'js')}');" label=uiLabelMap.ProductOriginal/>
+                </@field>
+                <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_import!}" text=uiLabelMap.ProductUploadImage/>
+            </@fields>
+        </form>
+    </@section>
+
 </#if>

@@ -177,6 +177,13 @@ code package.
       <field name="categoryImageUrl" type="url"></field>
       <field name="linkOneImageUrl" type="url"></field>
       <field name="linkTwoImageUrl" type="url"></field>
+
+      <field name="smallImageUrl" type="url"></field>
+      <field name="mediumImageUrl" type="url"></field>
+      <field name="largeImageUrl" type="url"></field>
+      <field name="detailImageUrl" type="url"></field>
+      <field name="originalImageUrl" type="url"></field>
+
       <field name="detailScreen" type="long-varchar"></field>
       <field name="showInSelect" type="indicator"></field>
       <field name="mediaImageId" type="id"><description>Content.contentId value of a CMS media image, for manual use (SCIPIO)</description></field>
@@ -198,6 +205,37 @@ code package.
     <extend-entity entity-name="ProductCategory"><!-- SCIPIO -->
         <field name="imageProfile" type="id"><description>Name of a media profile for the main product category image, either ImageSizePreset.presetId or media profile name from mediaprofiles.properties, defaults to IMAGE_PRODUCT-ORIGINAL_IMAGE_URL (SCIPIO)</description></field>
     </extend-entity>
+    <!-- SCIPIO: Category inline image equivalents of DataResource fields scpWidth, scpHeight, srcPresetJson, ... -->
+    <entity entity-name="CategoryMediaDetails"
+            package-name="org.ofbiz.product.product"
+            title="Inline Category Media Details">
+        <field name="productCategoryId" type="id-ne"></field>
+        <field name="smallImageWidth" type="numeric"></field>
+        <field name="smallImageHeight" type="numeric"></field>
+        <field name="smallImageMimeTypeId" type="id-vlong"></field>
+        <field name="smallImagePresetJson" type="very-long"></field>
+        <field name="mediumImageWidth" type="numeric"></field>
+        <field name="mediumImageHeight" type="numeric"></field>
+        <field name="mediumImageMimeTypeId" type="id-vlong"></field>
+        <field name="mediumImagePresetJson" type="very-long"></field>
+        <field name="largeImageWidth" type="numeric"></field>
+        <field name="largeImageHeight" type="numeric"></field>
+        <field name="largeImageMimeTypeId" type="id-vlong"></field>
+        <field name="largeImagePresetJson" type="very-long"></field>
+        <field name="detailImageWidth" type="numeric"></field>
+        <field name="detailImageHeight" type="numeric"></field>
+        <field name="detailImageMimeTypeId" type="id-vlong"></field>
+        <field name="detailImagePresetJson" type="very-long"></field>
+        <field name="originalImageWidth" type="numeric"></field>
+        <field name="originalImageHeight" type="numeric"></field>
+        <field name="originalImageMimeTypeId" type="id-vlong"></field>
+        <field name="originalImagePresetJson" type="very-long"></field>
+        <field name="originalImageFileName" type="value"></field><!-- TODO: not currently populated by inconsistent upload functions -->
+        <prim-key field="productCategoryId"/>
+        <relation type="one" fk-name="CATEGMEDDET_CATID" rel-entity-name="ProductCategory">
+            <key-map field-name="productCategoryId"/>
+        </relation>
+    </entity>
 
     <view-entity entity-name="ProductCategoryAndMember"
             package-name="org.ofbiz.product.category"
@@ -381,6 +419,11 @@ code package.
       <field name="parentTypeId" type="id"></field>
       <field name="hasTable" type="indicator"></field>
       <field name="description" type="description"></field>
+      <field name="viewType" type="name"><description>For images: main, additional or a custom type (SCIPIO)</description></field>
+      <field name="viewNumber" type="value"><description>For images: 0 for main, 1-4 or greater for additional images (SCIPIO)</description></field>
+      <field name="viewSize" type="name"><description>For images: original, detail, large, 320x240, etc., also known as sizeType (SCIPIO)</description></field>
+      <field name="viewVariantId" type="name"><description>For images: flexible expression pattern for generating variant productCategoryContentTypeId of an original image URL (SCIPIO)</description></field>
+      <field name="viewVariantDesc" type="name"><description>For images: flexible expression pattern for generating variant description of an original image URL (SCIPIO)</description></field>
       <prim-key field="prodCatContentTypeId"/>
       <relation type="one" fk-name="PRDCATCNT_TYP_PAR" title="Parent" rel-entity-name="ProductCategoryContentType">
         <key-map field-name="parentTypeId" rel-field-name="prodCatContentTypeId"/>

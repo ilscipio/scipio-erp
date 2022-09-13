@@ -526,4 +526,62 @@ code package.
         <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
+
+
+    <form name="EditCategoryContentImage" type="upload" target="addAdditionalImageContentForProduct" title="">
+        <auto-fields-entity entity-name="ProductCategoryContent" map-name="productCategoryContentData" />
+        <field name="prodCatContentTypeId">
+            <display-entity entity-name="ProductCategoryContentType" also-hidden="true" />
+        </field>
+        <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFrom}" required-field="true">
+            <date-time />
+        </field>
+        <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFrom}">
+            <display />
+        </field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2" />
+        <field use-when="contentId == null" name="contentId">
+            <ignored />
+        </field>
+        <field use-when="contentId != null" name="contentId" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}"
+               map-name="productCategoryContentData">
+            <display />
+        </field>
+        <field name="useTime">
+            <hidden />
+        </field>
+        <field name="useTimeUomId">
+            <hidden />
+        </field>
+        <field name="useRoleTypeId">
+            <hidden />
+        </field>
+        <field name="useCountLimit">
+            <hidden />
+        </field>
+        <field name="useDaysLimit">
+            <hidden />
+        </field>
+        <field name="purchaseThruDate">
+            <hidden />
+        </field>
+        <field name="purchaseFromDate">
+            <hidden />
+        </field>
+        <field name="uploadedFile" title="${uiLabelMap.ProductFile}">
+            <file />
+        </field>
+        <field name="productCategoryId">
+            <hidden />
+        </field>
+        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}">
+            <submit button-type="button" />
+        </field>
+        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
+            <submit button-type="button" />
+        </field>
+    </form>
+
+
+
 </forms>

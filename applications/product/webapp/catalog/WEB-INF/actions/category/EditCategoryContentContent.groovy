@@ -17,9 +17,9 @@
  * under the License.
  */
 
-import org.ofbiz.base.util.*
-import org.ofbiz.entity.*
-import org.ofbiz.entity.util.*
+import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilDateTime
+import org.ofbiz.base.util.UtilProperties
 
 final String module = "EditCategoryContentContent.groovy";
 uiLabelMap = UtilProperties.getResourceBundleMap("ProductUiLabels", locale);
@@ -50,6 +50,9 @@ if (!request.getAttribute("contentId") && (parameters.contentId && parameters.pr
                 }else{
                     context.dataResourceTypeId = "VIDEO_OBJECT";
                 }
+            } else if (prodCatContentTypeId && prodCatContentTypeId.indexOf("_IMAGE") > -1) {
+                context.contentFormName = "EditCategoryContentImage"
+                context.dataResourceTypeId = "IMAGE_OBJECT"
             }
             
             if ("RELATED_URL".equals(prodCatContentTypeId) || "VIDEO".equals(prodCatContentTypeId) || "CATEGORY_IMAGE".equals(prodCatContentTypeId)) {

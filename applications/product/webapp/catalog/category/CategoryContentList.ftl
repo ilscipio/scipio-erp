@@ -15,9 +15,7 @@
                     <@th>${uiLabelMap.ProductContent}</@th>
                     <@th>${uiLabelMap.ProductType}</@th>
                     <@th>${uiLabelMap.CommonFrom}</@th>
-                  <#-- SCIPIO: TODO: REVIEW
                     <@th>${uiLabelMap.CommonEdit}</@th>
-                   -->
                     <@th>${uiLabelMap.CommonDelete}</@th>
                 </@tr>
             </@thead>
@@ -27,21 +25,33 @@
                     <#assign productCategoryContentType = (productCategoryContent.getRelatedOne("ProductCategoryContentType", true))!>
                     <@tr>
                         <@td>
-                            <form id="EditCategoryContentAssoc_${productCategoryContent_index}" name="EditCategoryContentAssoc_${productCategoryContent_index}" method="get" action="<@pageUrl>EditCategoryContent</@pageUrl>">
+                            <form id="EditCategoryContentAssoc_${productCategoryContent_index}" name="EditCategoryContentAssoc_${productCategoryContent_index}" method="get" action="<@pageUrl>EditCategoryContentContent</@pageUrl>">
                                 <input name="productCategoryId" type="hidden" value="${parameters.productCategoryId}"/>
                                 <input name="contentId" type="hidden" value="${productCategoryContent.contentId}"/>
                                 <input name="prodCatContentTypeId" type="hidden" value="${productCategoryContent.prodCatContentTypeId}"/>
                                 <input name="fromDate" type="hidden" value="${productCategoryContent.fromDate}"/>                                    
-                                <@field type="submit" submitType="link" href="javascript:document.EditCategoryContentAssoc_${productCategoryContent_index}.submit();" text=productCategoryContent.contentId class="${styles.link_nav_info} ${styles.action_update}"/>
+                                <a href="javascript:document.EditCategoryContentAssoc_${productCategoryContent_index}.submit();" class="${styles.link_nav_info}">
+                                    [${productCategoryContent.contentId}]
+                                </a>
                             </form>
+
+
+<#--                            <field name="editProductContentInfo" title="${uiLabelMap.ProductContent}" widget-style="${styles.link_nav_info_desc}">-->
+<#--                                <hyperlink target="EditProductContentContent" description="${description} [${contentId}]" also-hidden="false">-->
+<#--                                    <parameter param-name="productId" />-->
+<#--                                    <parameter param-name="contentId" />-->
+<#--                                    <parameter param-name="productContentTypeId" />-->
+<#--                                    <parameter param-name="fromDate" />-->
+<#--                                </hyperlink>-->
+<#--                            </field>-->
+
                         </@td>
                         <@td>${productCategoryContentType.description}</@td>
                         <@td>${productCategoryContent.fromDate?string("yyyy-MM-dd")}</@td>
-                      <#-- SCIPIO: TODO: REVIEW
                         <@td>
                             <a href="<@serverUrl extLoginKey=true>/content/control/EditContent?contentId=${productCategoryContent.contentId}</@serverUrl>" class="${styles.link_nav} ${styles.action_update}">${uiLabelMap.CommonEdit}</a>
                         </@td>
-                      -->
+
                         <@td>
                             <a href="javascript:document.removeContentFromCategory_${productCategoryContent_index}.submit();" class="${styles.link_run_sys} ${styles.action_remove}">${uiLabelMap.CommonDelete}</a>
                         </@td>

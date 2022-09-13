@@ -137,6 +137,12 @@ code package.
                 <set field="categoryContentOrderList[]" value="prodCatContentTypeId"/>
                 <get-related value-field="productCategory" relation-name="ProductCategoryContent" list="productCategoryContentList" order-by-list="categoryContentOrderList"/>
                 <entity-condition entity-name="ProductCategoryType" list="productCategoryTypes"/>
+
+                <entity-condition entity-name="ProductCategoryContentType" list="productCategoryContentTypeList">
+                    <order-by field-name="description"/>
+                </entity-condition>
+
+                <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryContent.groovy"/>
                 
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
                 
@@ -148,34 +154,39 @@ code package.
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <!--<screenlet>-->
-                        <!-- <include-form name="PrepareAddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                        <include-screen name="EditCategoryContentContent"/>
-                        <!--</screenlet>-->
-                        <!--  <screenlet title="${uiLabelMap.ProductAddContentCategory}">
+                        <screenlet title="${uiLabelMap.PageTitleEditCategoryContent}">
+                            <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/category/CategoryContentList.ftl"/></html></platform-specific>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.ProductCategoryCreateNewCategoryContent}">
+                            <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CategoryForms.xml#UpdateCategoryContentAssoc -->
+                            <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.ProductAddContentProductCategory}">
                             <include-form name="AddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
-                        </screenlet> -->
-
-                        <!-- SCIPIO: To be removed -->
-                        <!-- <platform-specific>
-                            <html><html-template location="component://product/webapp/catalog/category/EditCategoryContent.ftl"/></html>
-                        </platform-specific> -->
+                        </screenlet>
+                        <screenlet>
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/category/EditCategoryContent.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/category/UploadCategoryImage.ftl"/></html>
+                        </platform-specific>
+                        <screenlet title="${uiLabelMap.CommonUpdateLocalizedFields}"><!-- SCIPIO: added 2017-12 -->
+                            <include-screen name="EditCategoryStcLocFields"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.ProductCategoryAddAdditionalImages}">
+                            <platform-specific>
+                                <html><html-template location="component://product/webapp/catalog/category/AddAdditionalImages.ftl"/></html>
+                            </platform-specific>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
-    
-    <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CategoryForms.xml#UpdateCategoryContentAssoc -->
-    <screen name="ScipioCategoryContentList">
-        <section>
-            <widgets>
-                <screenlet>
-                    <platform-specific><html><html-template location="component://product/webapp/catalog/category/CategoryContentList.ftl"/></html></platform-specific>
-                </screenlet>
-            </widgets>
-        </section>
-    </screen>
+
     <screen name="EditCategoryContentContent">
         <section>
             <actions>
@@ -191,58 +202,34 @@ code package.
                 <set field="activeSubMenuItem" value="EditCategoryContent"/>
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
-                <entity-condition entity-name="ProductCategoryContentType" list="productCategoryContentTypeList">
-                     <order-by field-name="description"/>
-                 </entity-condition>
-                
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryContentContent.groovy"/>
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategorySEO.groovy"/>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.PageTitleEditCategoryContent}">
-                    <!-- <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                    <include-screen name="ScipioCategoryContentList"/>
-                </screenlet>
-                <screenlet title="${uiLabelMap.ProductCategoryCreateNewCategoryContent}">
-                    <!-- SCIPIO: Category content forms widgets have been replaced by a single ftl -->
-                    <!-- <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/> -->
-                    <!-- <include-screen name="ScipioEditCategoryContent"/> -->
-                    <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
-                </screenlet>
-   
-                <!-- SCIPIO: TODO: REVIEW: 2017-10-26: temporarily reinstated this form because it is not covered in the FTL and 
-                    essential to localize until better forms, and because it is still in EditProductContentContent so this was inconsistent without -->
-                <section>
-                    <condition><not><if-empty field="content.contentId"/></not></condition>
-                    <widgets>
-                        <include-screen name="EditAltLocaleSimpleTextContent"/>
-                        <!-- 
-                        <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
-                            <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
-                        /screenlet>
-                        -->
-                        
-                        <!-- SCIPIO: TODO: REVIEW: somebody removed this list, but we do not have a full replacement for this form at this time, 
-                            only the new alt-locale content below, which only covers a portion of the possible assoc...
-                        <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos} (${uiLabelMap.CommonAll})">
-                            <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>-->
-                    </widgets>
-                </section>
+                <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <!-- SCIPIO: TODO: temporarily reinstated this form because it is not covered in the FTL and
+                            essential to localize until better forms, and because it is still in EditProductContentContent so this was inconsistent without -->
+                        <section>
+                            <condition><not><if-empty field="content.contentId"/></not></condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.PageTitleEditCategoryContent}">
+                                    <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/>
+                                </screenlet>
 
-                <screenlet title="${uiLabelMap.CategoryOverrideSimpleFields}">
-                    <platform-specific>
-                        <html><html-template location="component://product/webapp/catalog/category/EditCategoryContent.ftl"/></html>
-                    </platform-specific>
-                </screenlet>
-
-                <platform-specific>
-                    <html><html-template location="component://product/webapp/catalog/category/UploadCategoryImage.ftl"/></html>
-                </platform-specific>
-                
-                <screenlet title="${uiLabelMap.CommonUpdateLocalizedFields}"><!-- SCIPIO: added 2017-12 -->
-                    <include-screen name="EditCategoryStcLocFields"/>
-                </screenlet>
+                                <include-screen name="EditAltLocaleSimpleTextContent"/>
+                                <!--
+                                <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">
+                                    <include-form name="CreateSimpleTextContentForAlternateLocale" location="component://product/widget/catalog/CategoryForms.xml"/>
+                                /screenlet>
+                                -->
+                                <screenlet title="${uiLabelMap.ProductListAssociatedContentInfos} (${uiLabelMap.CommonAll})">
+                                    <include-form name="ListAssociatedContentInfos" location="component://product/widget/catalog/ProductForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

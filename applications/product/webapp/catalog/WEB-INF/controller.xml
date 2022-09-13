@@ -128,9 +128,8 @@ code package.
     </request-map>
     <request-map uri="UploadCategoryImage">
         <security https="true" auth="true"/>
-        <event type="service" invoke="uploadProductCategoryImage"/>
-        <response name="success" type="view" value="EditCategory"/>
-        <response name="error" type="view" value="EditCategory"/>
+        <!-- SCIPIO: View is responsible now to upload the image, same as Product image -->
+        <response name="success" type="view" value="EditCategoryContent"/>
     </request-map>
     <request-map uri="EditCategoryAjax">
         <security https="true" auth="true"/>
@@ -548,19 +547,25 @@ code package.
     </request-map>
 
      <!-- ================ Category Content Assoc Requests ================= -->
-     <request-map uri="addExistingContentInCategory">
+    <request-map uri="addExistingContentInCategory">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryContent"/>
     </request-map>
-   <!-- SCIPIO: Remove -->
-   <!--  <request-map uri="EditCategoryContentContent">
+
+    <request-map uri="EditCategoryContentContent">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryContentContent"/>
     </request-map>
-    <request-map uri="prepareAddContentToCategory">
+<!--    <request-map uri="prepareAddContentToCategory">-->
+<!--        <security https="true" auth="true"/>-->
+<!--        <response name="success" type="view" value="EditCategoryContentContent"/>-->
+<!--    </request-map>-->
+    <request-map uri="addAdditionalImagesForCategory">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditCategoryContentContent"/>
-    </request-map> -->
+        <event type="service" invoke="uploadCategoryAdditionalViewImages"/>
+        <response name="success" type="view" value="EditCategoryContent"/>
+        <response name="error" type="view" value="EditCategoryContent"/>
+    </request-map>
     <request-map uri="addContentToCategory">
         <security https="true" auth="true"/>
         <event type="service" path="" invoke="createCategoryContent"/>

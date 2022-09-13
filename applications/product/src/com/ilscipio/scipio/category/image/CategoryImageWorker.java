@@ -16,11 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package org.ofbiz.product.category.image;
+package com.ilscipio.scipio.category.image;
 
 import com.ilscipio.scipio.content.image.ContentImageWorker;
-import com.ilscipio.scipio.product.image.ProductImageLocationInfo;
-import com.ilscipio.scipio.product.image.ProductImageViewType;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
@@ -56,7 +54,7 @@ import java.util.Map;
  */
 public abstract class CategoryImageWorker {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    public static final String CATEGORY_IMAGEPROP_FILEPATH = "/applications/category/config/ImageProperties.xml";
+    public static final String CATEGORY_IMAGEPROP_FILEPATH = "/applications/product/config/ImageProperties.xml";
     private static final UtilCache<String, Boolean> categoryImageEnsureCache = UtilCache.createUtilCache("category.image.ensure", true);
     private static final boolean categoryImageEnsureEnabled = UtilProperties.getPropertyAsBoolean("cache", "category.image.ensure.enable", false);
 
@@ -86,38 +84,38 @@ public abstract class CategoryImageWorker {
         }
     }
 
-    public static void ensureCategoryImage(DispatchContext dctx, Locale locale, GenericValue productCategory, String productContentTypeId, String imageUrl, boolean async, boolean useUtilCache) {
+    public static void ensureCategoryImage(DispatchContext dctx, Locale locale, GenericValue productCategory, String prodCatContentTypeId, String imageUrl, boolean async, boolean useUtilCache) {
         if (!categoryImageEnsureEnabled) {
             return;
         }
         String cacheKey = null;
         if (useUtilCache) {
-            cacheKey = productCategory.get("productId") + "::" + productContentTypeId;
+            cacheKey = productCategory.get("productId") + "::" + prodCatContentTypeId;
             if (Boolean.TRUE.equals(categoryImageEnsureCache.get(cacheKey))) {
                 return;
             }
         }
         try {
-            ProductImageViewType imageViewType = ProductImageViewType.from(dctx.getDelegator(), productContentTypeId, true, true)
+            CategoryImageViewType imageViewType = CategoryImageViewType.from(dctx.getDelegator(), prodCatContentTypeId, true, true)
                     .getOriginal(true);
-            ProductImageLocationInfo pili = ProductImageLocationInfo.from(dctx, locale,
+            CategoryImageLocationInfo cili = CategoryImageLocationInfo.from(dctx, locale,
                     productCategory, imageViewType, imageUrl, null, true, false, useUtilCache, null);
-            List<String> sizeTypeList = (pili != null) ? pili.getMissingVariantNames() : null;
+            List<String> sizeTypeList = (cili != null) ? cili.getMissingVariantNames() : null;
             if (UtilValidate.isEmpty(sizeTypeList)) {
                 if (useUtilCache) {
                     categoryImageEnsureCache.put(cacheKey, Boolean.TRUE);
                 }
                 return;
             }
-            Map<String, Object> ctx = UtilMisc.toMap("productCategoryId", productCategory.get("productCategoryId"), "productContentTypeId", productContentTypeId,
+            Map<String, Object> ctx = UtilMisc.toMap("productCategoryId", productCategory.get("productCategoryId"), "prodCatContentTypeId", prodCatContentTypeId,
                     "sizeTypeList", sizeTypeList, "recreateExisting", true, "clearCaches", true); // NOTE: the getMissingVariantNames check above (for performance) already implements the recreateExisting logic
             if (async) {
-                dctx.getDispatcher().runAsync("productImageAutoRescale", ctx, false);
+                dctx.getDispatcher().runAsync("categoryImageAutoRescale", ctx, false);
             } else {
-                Map<String, Object> servResult = dctx.getDispatcher().runSync("productImageAutoRescale", ctx);
+                Map<String, Object> servResult = dctx.getDispatcher().runSync("categoryImageAutoRescale", ctx);
                 if (ServiceUtil.isError(servResult)) {
-                    Debug.logError("Could not trigger image variant resizing for product [" + productCategory.get("productCategoryId") + "] productContentTypeId ["
-                            + productContentTypeId + "] imageLink [" + imageUrl + "]: " + ServiceUtil.getErrorMessage(servResult), module);
+                    Debug.logError("Could not trigger image variant resizing for product [" + productCategory.get("productCategoryId") + "] prodCatContentTypeId ["
+                            + prodCatContentTypeId + "] imageLink [" + imageUrl + "]: " + ServiceUtil.getErrorMessage(servResult), module);
                     return;
                 }
             }
@@ -125,74 +123,74 @@ public abstract class CategoryImageWorker {
                 categoryImageEnsureCache.put(cacheKey, Boolean.TRUE);
             }
         } catch(Exception e) {
-            Debug.logError("Could not trigger image variant resizing for product [" + productCategory.get("productCategoryId") + "] productContentTypeId ["
-                    + productContentTypeId + "] imageLink [" + imageUrl + "]: " + e.toString(), module);
+            Debug.logError("Could not trigger image variant resizing for product [" + productCategory.get("productCategoryId") + "] prodCatContentTypeId ["
+                    + prodCatContentTypeId + "] imageLink [" + imageUrl + "]: " + e.toString(), module);
         }
     }
 
-    public static List<GenericValue> getVariantProductContentDataResourceRecords(Delegator delegator, String productId,
-                                                                                 ProductImageViewType originalImageViewType, Timestamp moment,
-                                                                                 boolean includeOriginal, boolean useCache) throws GeneralException, IllegalArgumentException {
+    public static List<GenericValue> getVariantProductCategoryContentDataResourceRecords(Delegator delegator, String productCategoryId,
+                                                                                         CategoryImageViewType originalImageViewType, Timestamp moment,
+                                                                                         boolean includeOriginal, boolean useCache) throws GeneralException, IllegalArgumentException {
         if (!originalImageViewType.isOriginal()) {
             throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        List<String> pctIdList = originalImageViewType.getProductContentTypeIds(includeOriginal, useCache);
+        List<String> pctIdList = originalImageViewType.getProductCategoryContentTypeIds(includeOriginal, useCache);
         if (pctIdList.isEmpty()) {
             return Collections.emptyList();
         }
-        return delegator.from("ProductContentAndDataResource")
-                .where(EntityCondition.makeCondition("productId", productId),
-                        EntityCondition.makeCondition("productContentTypeId", EntityOperator.IN, pctIdList))
+        return delegator.from("ProductCategoryContentAndInfo")
+                .where(EntityCondition.makeCondition("productCategoryId", productCategoryId),
+                        EntityCondition.makeCondition("prodCatContentTypeId", EntityOperator.IN, pctIdList))
                 .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
     }
 
-    public static Map<ProductImageViewType, GenericValue> getVariantProductContentDataResourceRecordsByViewType(Delegator delegator, String productId,
-                                                                                                                ProductImageViewType originalImageViewType, Timestamp moment,
+    public static Map<CategoryImageViewType, GenericValue> getVariantProductCategoryContentDataResourceRecordsByViewType(Delegator delegator, String productCategoryId,
+                                                                                                                CategoryImageViewType originalImageViewType, Timestamp moment,
                                                                                                                 boolean includeOriginal, boolean useCache) throws GeneralException, IllegalArgumentException {
         if (!originalImageViewType.isOriginal()) {
             throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        Map<String, GenericValue> pctIdMap = originalImageViewType.getProductContentTypesById(includeOriginal, useCache);
+        Map<String, GenericValue> pctIdMap = originalImageViewType.getProductCategoryContentTypesById(includeOriginal, useCache);
         if (pctIdMap.isEmpty()) {
             return Collections.emptyMap();
         }
-        List<GenericValue> pcdrList = delegator.from("ProductContentAndDataResource")
-                .where(EntityCondition.makeCondition("productId", productId),
-                        EntityCondition.makeCondition("productContentTypeId", EntityOperator.IN, pctIdMap.keySet()))
+        List<GenericValue> pccdrList = delegator.from("ProductCategoryContentAndInfo")
+                .where(EntityCondition.makeCondition("productCategoryId", productCategoryId),
+                        EntityCondition.makeCondition("prodCatContentTypeId", EntityOperator.IN, pctIdMap.keySet()))
                 .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
-        if (pcdrList.isEmpty()) {
+        if (pccdrList.isEmpty()) {
             return Collections.emptyMap();
         }
-        Map<ProductImageViewType, GenericValue> viewTypeMap = new LinkedHashMap<>();
-        for(GenericValue pcdr : pcdrList) {
-            String productContentTypeId = pcdr.getString("productContentTypeId");
-            viewTypeMap.put(ProductImageViewType.from(pctIdMap.get(productContentTypeId), useCache), pcdr);
+        Map<CategoryImageViewType, GenericValue> viewTypeMap = new LinkedHashMap<>();
+        for(GenericValue pccdr : pccdrList) {
+            String prodCatContentTypeId = pccdr.getString("prodCatContentTypeId");
+            viewTypeMap.put(CategoryImageViewType.from(pctIdMap.get(prodCatContentTypeId), useCache), pccdr);
         }
         return viewTypeMap;
     }
 
-    public static Map<String, GenericValue> getVariantProductContentDataResourceRecordsByViewSize(Delegator delegator, String productId,
-                                                                                                  ProductImageViewType originalImageViewType, Timestamp moment,
+    public static Map<String, GenericValue> getVariantProductContentDataResourceRecordsByViewSize(Delegator delegator, String productCategoryId,
+                                                                                                  CategoryImageViewType originalImageViewType, Timestamp moment,
                                                                                                   boolean includeOriginal, boolean useCache) throws GeneralException, IllegalArgumentException {
         if (!originalImageViewType.isOriginal()) {
             throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        Map<String, GenericValue> pctIdMap = originalImageViewType.getProductContentTypesById(includeOriginal, useCache);
-        if (pctIdMap.isEmpty()) {
+        Map<String, GenericValue> pcctIdMap = originalImageViewType.getProductCategoryContentTypesById(includeOriginal, useCache);
+        if (pcctIdMap.isEmpty()) {
             return Collections.emptyMap();
         }
-        List<GenericValue> pcdrList = delegator.from("ProductContentAndDataResource")
-                .where(EntityCondition.makeCondition("productId", productId),
-                        EntityCondition.makeCondition("productContentTypeId", EntityOperator.IN, pctIdMap.keySet()))
+        List<GenericValue> pccdrList = delegator.from("ProductCategoryContentAndInfo")
+                .where(EntityCondition.makeCondition("productCategoryId", productCategoryId),
+                        EntityCondition.makeCondition("prodCatContentTypeId", EntityOperator.IN, pcctIdMap.keySet()))
                 .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
-        if (pcdrList.isEmpty()) {
+        if (pccdrList.isEmpty()) {
             return Collections.emptyMap();
         }
         Map<String, GenericValue> viewTypeMap = new LinkedHashMap<>();
-        for(GenericValue pcdr : pcdrList) {
-            String productContentTypeId = pcdr.getString("productContentTypeId");
-            ProductImageViewType imageViewType = ProductImageViewType.from(pctIdMap.get(productContentTypeId), useCache);
-            viewTypeMap.put(imageViewType.getViewSize(), pcdr);
+        for(GenericValue pccdr : pccdrList) {
+            String prodCatContentTypeId = pccdr.getString("prodCatContentTypeId");
+            CategoryImageViewType imageViewType = CategoryImageViewType.from(pcctIdMap.get(prodCatContentTypeId), useCache);
+            viewTypeMap.put(imageViewType.getViewSize(), pccdr);
         }
         return viewTypeMap;
     }
@@ -234,7 +232,7 @@ public abstract class CategoryImageWorker {
      * Gets image profile from mediaprofiles.properties.
      * NOTE: productContentTypeId should be ORIGINAL_IMAGE_URL or ADDITIONAL_IMAGE_x, not the size variants' IDs (LARGE_IMAGE_URL, ...)
      */
-    public static ImageProfile getCategoryImageProfileOrDefault(Delegator delegator, String productContentTypeId, GenericValue productCategory, GenericValue content, boolean useEntityCache, boolean useProfileCache) {
+    public static ImageProfile getCategoryImageProfileOrDefault(Delegator delegator, String prodCatContentTypeId, GenericValue productCategory, GenericValue content, boolean useEntityCache, boolean useProfileCache) {
         String profileName;
         ImageProfile profile;
         if (content != null) {
@@ -246,8 +244,8 @@ public abstract class CategoryImageWorker {
                 } else {
                     // Explicitly named missing profile is always an error
                     Debug.logError("Could not find image profile [" + profileName + "] in mediaprofiles.properties from " +
-                            "Content.mediaProfile for content [" + content.get("contentId") + "] productContentTypeId [" + productContentTypeId +
-                            "] product [" + productCategory.get("productId") + "]", module);
+                            "Content.mediaProfile for content [" + content.get("contentId") + "] prodCatContentTypeId [" + prodCatContentTypeId +
+                            "] category [" + productCategory.get("productCategoryId") + "]", module);
                     return null;
                 }
             }
@@ -260,19 +258,19 @@ public abstract class CategoryImageWorker {
                 } else {
                     // Explicitly named missing profile is always an error
                     Debug.logError("Could not find image profile [" + profileName + "] in mediaprofiles.properties from " +
-                            "Product.imageProfile for product [" + productCategory.get("productId") + "] productContentTypeId [" + productContentTypeId + "]", module);
+                            "Product.imageProfile for product [" + productCategory.get("productId") + "] productContentTypeId [" + prodCatContentTypeId + "]", module);
                     return null;
                 }
             }
         }
-        profileName = getDefaultCategoryImageProfileName(delegator, productContentTypeId);
+        profileName = getDefaultCategoryImageProfileName(delegator, prodCatContentTypeId);
         profile = ImageProfile.getImageProfile(delegator, profileName, useProfileCache);
         if (profile != null) {
             return profile;
         } else {
             // Clients may add extra productContentTypeId and they should add mediaprofiles.properties definitions
             Debug.logWarning("Could not find default image profile [" + profileName + "] in mediaprofiles.properties from " +
-                    "productContentTypeId [" + productContentTypeId + "]; using IMAGE_CATEGORY", module);
+                    "prodCatContentTypeId [" + prodCatContentTypeId + "]; using IMAGE_CATEGORY", module);
         }
         profile = ImageProfile.getImageProfile(delegator, "IMAGE_CATEGORY", useProfileCache);
         if (profile != null) {

@@ -92,7 +92,7 @@
   <#return uiLabelMap[(typeInfoMap.label)!("FormFieldTitle_"+fieldName)]>
 </#function>
 
-<#macro imageProfileSelect profileName="" fieldName="imageProfile" defaultProfileName="">
+<#macro imageProfileSelect profileName="" fieldName="imageProfile" defaultProfileName="" parentProfile="">
   <#local profiles = Static["org.ofbiz.common.image.ImageProfile"].getImageProfileMap(delegator)!>
   <@field type="select" name=fieldName label=getLabel('CommonImageProfile', 'CommonUiLabels') tooltip=getLabel('CommonImageProfileDesc', 'CommonUiLabels')>
       <#local profile = profiles[raw(defaultProfileName)]!false>
@@ -100,9 +100,13 @@
       <option value=""<#if !profileName?has_content> selected="selected"</#if>>${getLabel('CommonDefault', 'CommonUiLabels')}<#if !profile?is_boolean> - ${defaultProfileName}<#rt/>
         <#lt/><#if variantLoc?has_content> (${variantLoc})<#elseif profile.stored> (CMS)</#if></#if></option>
       <#list toSimpleMap(profiles) as name, profile>
-        <#local variantLoc = profile.resolvedVariantConfigLocation!>
-        <option value="${name}"<#if raw(profileName) == raw(name)> selected="selected"</#if>>${name}<#if profile.description?has_content> - ${profile.description}</#if><#rt/>
-          <#lt/><#if variantLoc?has_content> (${variantLoc})<#elseif profile.stored> (CMS)</#if></option>
+        <#-- SCIPIO: If parentProfile present, only rendering the matching ones -->
+        <#if !parentProfile?has_content || (parentProfile?has_content && (profile.parentProfile?has_content &&
+            parentProfile == profile.parentProfile) || (parentProfile == name))>
+            <#local variantLoc = profile.resolvedVariantConfigLocation!>
+            <option value="${name}"<#if raw(profileName) == raw(name)> selected="selected"</#if>>${name}<#if profile.description?has_content> - ${profile.description}</#if><#rt/>
+              <#lt/><#if variantLoc?has_content> (${variantLoc})<#elseif profile.stored> (CMS)</#if></option>
+        </#if>
       </#list>
   </@field>
 </#macro>

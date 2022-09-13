@@ -18,15 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.product.category;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -43,6 +34,14 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.LocalDispatcher;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Category Content Worker: gets category content to display
@@ -164,37 +163,10 @@ public class CategoryContentWrapper extends CommonContentWrapper {
             throw new GeneralRuntimeException("Unable to find a delegator to use!");
         }
 
-        // SCIPIO: 2017-11-25: REMOVED multi-ProductCategoryContent loop:
-        // none of the other content wrappers loop over multiple
-        // ProductCategoryContent records. either all content wrappers must assume there
-        // is only one active or they should all loop...
-        // IN ADDITION, below there was a fallback on UtilProperties.getFallbackLocale() which
-        // is inconsistent with all other content wrappers and out of sync with our useFallbackLocale flag
-        // added in ContentWorker... so this would not behave like ProductContentWrapper or any of the others.
-        // TODO: this still needs further review, for all wrappers
-//        List<GenericValue> categoryContentList = EntityQuery.use(delegator).from("ProductCategoryContent").where("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId).orderBy("-fromDate").cache(cache).queryList();
-//        categoryContentList = EntityUtil.filterByDate(categoryContentList);
-//
-//        GenericValue categoryContent = null;
-//        String sessionLocale = (locale != null ? locale.toString() : null);
-//        String fallbackLocale = UtilProperties.getFallbackLocale().toString();
-//        if ( sessionLocale == null ) sessionLocale = fallbackLocale;
-//        // look up all content found for locale
-//        for( GenericValue currentContent: categoryContentList ) {
-//            GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", currentContent.getString("contentId")).cache(cache).queryOne();
-//            if ( sessionLocale.equals(content.getString("localeString")) ) {
-//              // valid locale found
-//              categoryContent = currentContent;
-//              break;
-//            } else if ( fallbackLocale.equals(content.getString("localeString")) ) {
-//              // fall back to default locale
-//              categoryContent = currentContent;
-//            }
-//        }
         GenericValue categoryContent = EntityQuery.use(delegator).from("ProductCategoryContent").where("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId)
                 .orderBy("-fromDate").cache(cache).filterByDate().queryFirst();
         if (categoryContent != null) {
-            // when rendering the category content, always include the Product Category and ProductCategoryContent records that this comes from
+            // when rendering the category content, always include the ProductCategory and ProductCategoryContent records that this comes from
             Map<String, Object> inContext = new HashMap<>();
             inContext.put("productCategory", productCategory);
             inContext.put("categoryContent", categoryContent);
@@ -242,5 +214,9 @@ public class CategoryContentWrapper extends CommonContentWrapper {
             }
         }
         return null;
+    }
+
+    public static void clearCachesByPrefix(Delegator delegator, String prefix) { // SCIPIO
+        categoryContentCache.removeByFilter((k, v) -> k.startsWith(prefix));
     }
 }

@@ -476,4 +476,19 @@
         </attribute>
     </service>
 
+    <service name="categoryImageVariantsDistributedClearCaches" engine="jms" location="serviceMessenger" invoke="categoryImageVariantsClearCaches"
+             auth="true" use-transaction="false" log-eca="quiet" log="quiet" hideResultInLog="true">
+        <description>Clear CategoryImageVariants caches (SCIPIO)</description>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="prodCatContentTypeId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="categoryImageVariantsClearCaches" engine="java" export="true"
+             location="com.ilscipio.scipio.category.image.CategoryImageVariants" invoke="clearCaches" auth="true" use-transaction="false">
+        <description>Clear CategoryImageVariants caches (SCIPIO)</description>
+        <!--<permission-service service-name="cmsGenericPermission" main-action="UPDATE"/>-->
+        <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="prodCatContentTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="distribute" type="Boolean" mode="IN" optional="true" default-value="false"/>
+    </service>
+
 </services>

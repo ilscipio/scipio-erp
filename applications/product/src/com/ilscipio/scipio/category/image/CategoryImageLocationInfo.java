@@ -2,7 +2,6 @@ package com.ilscipio.scipio.category.image;
 
 import com.ilscipio.scipio.ce.util.PathUtil;
 import com.ilscipio.scipio.content.image.ContentImageServices;
-import com.ilscipio.scipio.product.image.ProductImageWorker;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -18,7 +17,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityUtilProperties;
-import org.ofbiz.product.product.ProductContentWrapper;
+import org.ofbiz.product.category.CategoryContentWrapper;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContainer;
@@ -121,7 +120,7 @@ public class CategoryImageLocationInfo implements Serializable {
             Class<?> cls = Class.forName(clsName);
             return (Factory) cls.getConstructor().newInstance();
         } catch (Exception e) {
-            Debug.logError(e, "Invalid catalog#product.image.location.info.factory", module);
+            Debug.logError(e, "Invalid catalog#category.image.location.info.factory", module);
             return new Factory();
         }
     }
@@ -171,7 +170,7 @@ public class CategoryImageLocationInfo implements Serializable {
             }
             imageUrl = imageUrlInfo.getImageUrl();
 
-            ImageProfile imageProfile = CategoryImageWorker.getCategoryImageProfileOrDefault(delegator, origCategoryContentTypeId, productCategory, imageUrlInfo.getContent(), useEntityCache, useProfileCache);
+            ImageProfile imageProfile = com.ilscipio.scipio.category.image.CategoryImageWorker.getCategoryImageProfileOrDefault(delegator, origCategoryContentTypeId, productCategory, imageUrlInfo.getContent(), useEntityCache, useProfileCache);
             if (imageProfile == null) {
                 Debug.logError("Could not find media profile for category [" + productCategoryId + "] prodCatContentTypeId [" + prodCatContentTypeId + "]", module);
                 return null;
@@ -533,28 +532,28 @@ public class CategoryImageLocationInfo implements Serializable {
 
     public static class ImageContentInfo {
         protected String imageUrl;
-        protected GenericValue productContent;
+        protected GenericValue productCategoryContent;
         protected GenericValue content;
 
-        protected ImageContentInfo(String imageUrl, GenericValue productContent, GenericValue content) {
+        protected ImageContentInfo(String imageUrl, GenericValue productCategoryContent, GenericValue content) {
             this.imageUrl = imageUrl;
-            this.productContent = productContent;
+            this.productCategoryContent = productCategoryContent;
             this.content = content;
         }
 
-        public static ImageContentInfo from(DispatchContext dctx, Locale locale, GenericValue product, String productContentTypeId, String imageUrl, Boolean useParentImageUrl, boolean useEntityCache) throws GeneralException {
-            String productId = product.getString("productId");
+        public static ImageContentInfo from(DispatchContext dctx, Locale locale, GenericValue productCategory, String prodCatContentTypeId, String imageUrl, Boolean useParentImageUrl, boolean useEntityCache) throws GeneralException {
+            String productCategoryId = productCategory.getString("productCategoryId");
             GenericValue content = null;
-            GenericValue productContent = dctx.getDelegator().from("ProductContent").where("productId", productId,
-                    "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().cache(useEntityCache).queryFirst();
+            GenericValue productCategoryContent = dctx.getDelegator().from("ProductCategoryContent").where("productCategoryId", productCategoryId,
+                    "productContentTypeId", prodCatContentTypeId).orderBy("-fromDate").filterByDate().cache(useEntityCache).queryFirst();
             String inlineImageUrl = null;
-            if (productContent != null) {
-                content = productContent.getRelatedOne("Content", useEntityCache);
+            if (productCategoryContent != null) {
+                content = productCategoryContent.getRelatedOne("Content", useEntityCache);
             } else {
-                String productFieldName = ModelUtil.dbNameToVarName(productContentTypeId);
-                ModelEntity productModel = dctx.getDelegator().getModelEntity("Product");
-                if (productModel.isField(productFieldName)) {
-                    inlineImageUrl = product.getString(productFieldName);
+                String productCategoryFieldName = ModelUtil.dbNameToVarName(prodCatContentTypeId);
+                ModelEntity productCategoryModel = dctx.getDelegator().getModelEntity("ProductCategory");
+                if (productCategoryModel.isField(productCategoryFieldName)) {
+                    inlineImageUrl = productCategory.getString(productCategoryFieldName);
                 } else {
                     // May happen normally due to ADDITIONAL_IMAGE_x
                     //Debug.logError(logPrefix+"Invalid productContentTypeId [" + productContentTypeId
@@ -566,11 +565,11 @@ public class CategoryImageLocationInfo implements Serializable {
             if (imageUrl == null) {
                 if (Boolean.TRUE.equals(useParentImageUrl)) {
                     // NOTE: this consults the parent product which we don't want, but in known cases should return right value
-                    imageUrl = ProductContentWrapper.getProductContentAsText(product, productContentTypeId,
+                    imageUrl = CategoryContentWrapper.getProductCategoryContentAsText(productCategory, prodCatContentTypeId,
                             locale, dctx.getDispatcher(), useEntityCache, "raw");
                 } else {
                     if (content != null) {
-                        imageUrl = ProductImageWorker.getDataResourceImageUrl(
+                        imageUrl = CategoryImageWorker.getDataResourceImageUrl(
                                 dctx.getDelegator().from("DataResource").where("dataResourceId", content.get("dataResourceId")).queryOne(), useEntityCache);
                     } else if (inlineImageUrl != null) {
                         imageUrl = inlineImageUrl;
@@ -580,15 +579,15 @@ public class CategoryImageLocationInfo implements Serializable {
             if (UtilValidate.isEmpty(imageUrl)) {
                 imageUrl = null;
             }
-            return new ImageContentInfo(imageUrl, productContent, content);
+            return new ImageContentInfo(imageUrl, productCategoryContent, content);
         }
 
         public String getImageUrl() {
             return imageUrl;
         }
 
-        public GenericValue getProductContent() {
-            return productContent;
+        public GenericValue getProductCategoryContent() {
+            return productCategoryContent;
         }
 
         public GenericValue getContent() {

@@ -150,13 +150,13 @@ public abstract class CategoryImageWorker {
         if (!originalImageViewType.isOriginal()) {
             throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        Map<String, GenericValue> pctIdMap = originalImageViewType.getProductCategoryContentTypesById(includeOriginal, useCache);
-        if (pctIdMap.isEmpty()) {
+        Map<String, GenericValue> pcctIdMap = originalImageViewType.getProductCategoryContentTypesById(includeOriginal, useCache);
+        if (pcctIdMap.isEmpty()) {
             return Collections.emptyMap();
         }
         List<GenericValue> pccdrList = delegator.from("ProductCategoryContentAndInfo")
                 .where(EntityCondition.makeCondition("productCategoryId", productCategoryId),
-                        EntityCondition.makeCondition("prodCatContentTypeId", EntityOperator.IN, pctIdMap.keySet()))
+                        EntityCondition.makeCondition("prodCatContentTypeId", EntityOperator.IN, pcctIdMap.keySet()))
                 .orderBy("-fromDate").filterByDate(moment).cache(useCache).queryList();
         if (pccdrList.isEmpty()) {
             return Collections.emptyMap();
@@ -164,12 +164,12 @@ public abstract class CategoryImageWorker {
         Map<CategoryImageViewType, GenericValue> viewTypeMap = new LinkedHashMap<>();
         for(GenericValue pccdr : pccdrList) {
             String prodCatContentTypeId = pccdr.getString("prodCatContentTypeId");
-            viewTypeMap.put(CategoryImageViewType.from(pctIdMap.get(prodCatContentTypeId), useCache), pccdr);
+            viewTypeMap.put(CategoryImageViewType.from(pcctIdMap.get(prodCatContentTypeId), useCache), pccdr);
         }
         return viewTypeMap;
     }
 
-    public static Map<String, GenericValue> getVariantProductContentDataResourceRecordsByViewSize(Delegator delegator, String productCategoryId,
+    public static Map<String, GenericValue> getVariantProductCategoryContentDataResourceRecordsByViewSize(Delegator delegator, String productCategoryId,
                                                                                                   CategoryImageViewType originalImageViewType, Timestamp moment,
                                                                                                   boolean includeOriginal, boolean useCache) throws GeneralException, IllegalArgumentException {
         if (!originalImageViewType.isOriginal()) {
@@ -230,7 +230,7 @@ public abstract class CategoryImageWorker {
 
     /**
      * Gets image profile from mediaprofiles.properties.
-     * NOTE: productContentTypeId should be ORIGINAL_IMAGE_URL or ADDITIONAL_IMAGE_x, not the size variants' IDs (LARGE_IMAGE_URL, ...)
+     * NOTE: prodCatContentTypeId should be ORIGINAL_IMAGE_URL or ADDITIONAL_IMAGE_x, not the size variants' IDs (LARGE_IMAGE_URL, ...)
      */
     public static ImageProfile getCategoryImageProfileOrDefault(Delegator delegator, String prodCatContentTypeId, GenericValue productCategory, GenericValue content, boolean useEntityCache, boolean useProfileCache) {
         String profileName;

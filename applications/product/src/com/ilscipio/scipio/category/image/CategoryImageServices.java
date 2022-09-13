@@ -1,7 +1,6 @@
 package com.ilscipio.scipio.category.image;
 
 import com.ilscipio.scipio.content.image.ContentImageServices;
-import com.ilscipio.scipio.product.image.ProductImageWorker;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -42,14 +41,13 @@ import java.util.Objects;
  */
 public class CategoryImageServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-//    private static final ProcessSignals productImageAutoRescaleAllSignals = ProcessSignals.make("productImageAutoRescaleAll", true);
 
     /**
      * SCIPIO: Updated scaling implementation based on ScaleImage.scaleImageInAllSize, but allowing greater parameterization.
-     * Fully implements the productImageFileScaleInAllSize service, see its interface for parameters.
+     * Fully implements the categoryImageFileScaleInAllSize service, see its interface for parameters.
      * <p>
      * TODO?: reconcile with ScaleImage.scaleImageInAllSize eventually... for now, leaving separate to avoid
-     * breaking product screens.
+     * breaking category screens.
      */
     public static Map<String, Object> categoryImageFileScaleInAllSize(ServiceContext ctx) throws ServiceValidationException {
         Delegator delegator = ctx.delegator();
@@ -114,7 +112,7 @@ public class CategoryImageServices {
                 imagePathArgs.putAll(imagePathArgsRcvd); // explicit args crush ours
             }
             contentCtx.put("imagePathArgs", imagePathArgs);
-            contentCtx.put("defaultImageProfile", ProductImageWorker.getDefaultProductImageProfile(delegator, categoryContentTypeId, false, false));
+            contentCtx.put("defaultImageProfile", CategoryImageWorker.getDefaultCategoryImageProfile(delegator, categoryContentTypeId, false, false));
 
             // TODO/FIXME: currently provides no deletion of the old images...
 
@@ -201,7 +199,7 @@ public class CategoryImageServices {
 //                }
             }
             if (!categoryImageAutoRescaleRegisterResult(ctx, productCategory, res, stats, nonFatal)) {
-                Map<String, Object> result = ServiceUtil.returnError(((int) stats.get("errorCount")) + " errors auto-rescaling images for product [" + productCategoryId + "]" + " (stats: " + stats + ")");
+                Map<String, Object> result = ServiceUtil.returnError(((int) stats.get("errorCount")) + " errors auto-rescaling images for category [" + productCategoryId + "]" + " (stats: " + stats + ")");
                 result.putAll(stats);
                 return result;
             }
@@ -209,12 +207,25 @@ public class CategoryImageServices {
         for (String contentId : contentIdList) {
             Map<String, Object> res = categoryImageRescaleImage(ctx, productCategory, null, contentId, nonFatal, null, copyOrig);
             if (!categoryImageAutoRescaleRegisterResult(ctx, productCategory, res, stats, nonFatal)) {
-                Map<String, Object> result = ServiceUtil.returnError(((int) stats.get("errorCount")) + " errors auto-rescaling images for product [" + productCategoryId + "]" + " (stats: " + stats + ")");
+                Map<String, Object> result = ServiceUtil.returnError(((int) stats.get("errorCount")) + " errors auto-rescaling images for category [" + productCategoryId + "]" + " (stats: " + stats + ")");
                 result.putAll(stats);
                 return result;
             }
         }
 
+        if (Boolean.TRUE.equals(ctx.attr("clearCaches"))) {
+            try {
+                Map<String, Object> clearCachesCtx = ctx.makeValidInContext("categoryImageVariantsClearCaches", ctx.context());
+                clearCachesCtx.put("productCategoryId", productCategoryId);
+                clearCachesCtx.put("distribute", true);
+                Map<String, Object> clearCachesResult = ctx.dispatcher().runSync("categoryImageVariantsClearCaches", clearCachesCtx);
+                if (!ServiceUtil.isSuccess(clearCachesResult)) {
+                    Debug.logWarning("categoryImageRescaleImage: category [" + productCategoryId + "]: error clearing caches: " + ServiceUtil.getErrorMessage(clearCachesResult), module);
+                }
+            } catch (GenericServiceException e) {
+                Debug.logWarning(e, "categoryImageRescaleImage: category [" + productCategoryId + "]: error clearing caches: " + e.toString(), module);
+            }
+        }
 
         Map<String, Object> result;
         int successCount = ((int) stats.get("successCount"));
@@ -367,7 +378,7 @@ public class CategoryImageServices {
             if (productCategoryContent != null) {
                 try {
                     GenericValue dataResource = (content != null) ? content.getRelatedOne("DataResource") : null;
-                    origImageUrl = CategoryImageWorker.getDataResourceImageUrl(dataResource, false);
+                    origImageUrl = com.ilscipio.scipio.category.image.CategoryImageWorker.getDataResourceImageUrl(dataResource, false);
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError(e.toString());
@@ -384,7 +395,7 @@ public class CategoryImageServices {
             }
         }
 
-        ImageProfile imageProfile = CategoryImageWorker.getCategoryImageProfileOrDefault(ctx.delegator(),
+        ImageProfile imageProfile = com.ilscipio.scipio.category.image.CategoryImageWorker.getCategoryImageProfileOrDefault(ctx.delegator(),
                 origImageViewType.getCategoryContentTypeId(), productCategory, content, false, false);
         if (imageProfile == null) {
             String errorMsg = "category [" + productCategoryId + "] prodCatContentTypeId [" + prodCatContentTypeId +

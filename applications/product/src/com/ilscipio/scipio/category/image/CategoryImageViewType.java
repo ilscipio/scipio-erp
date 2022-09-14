@@ -182,18 +182,18 @@ public class CategoryImageViewType implements Serializable {
 
         if (isOriginal()) {
             if (includeOriginal) {
-                orCondList.add(EntityCondition.makeCondition("productContentTypeId", getCategoryContentTypeId()));
+                orCondList.add(EntityCondition.makeCondition("prodCatContentTypeId", getCategoryContentTypeId()));
             }
             orCondList.add(EntityCondition.makeCondition("parentTypeId", getCategoryContentTypeId()));
         } else if (getParentTypeId() != null && !"IMAGE_URL_FULL".equals(getParentTypeId())) {
             if (includeOriginal) {
-                orCondList.add(EntityCondition.makeCondition("productContentTypeId", getParentTypeId()));
+                orCondList.add(EntityCondition.makeCondition("prodCatContentTypeId", getParentTypeId()));
             }
             orCondList.add(EntityCondition.makeCondition("parentTypeId", getParentTypeId()));
         }
 
-        List<GenericValue> pctList = getDelegator().from("ProductContentType").where(orCondList, EntityOperator.OR).queryList();
-        return pctList != null ? pctList : Collections.emptyList();
+        List<GenericValue> pcctList = getDelegator().from("ProductCategoryContentType").where(orCondList, EntityOperator.OR).queryList();
+        return pcctList != null ? pcctList : Collections.emptyList();
     }
 
     public Map<String, GenericValue> getProductCategoryContentTypesById(boolean includeOriginal, boolean useCache) throws GeneralException {
@@ -203,26 +203,26 @@ public class CategoryImageViewType implements Serializable {
         }
         Map<String, GenericValue> idMap = new LinkedHashMap<>();
         for(GenericValue pct : pctList) {
-            idMap.put(pct.getString("productContentTypeId"), pct);
+            idMap.put(pct.getString("prodCatContentTypeId"), pct);
         }
         return idMap;
     }
 
     public Map<CategoryImageViewType, GenericValue> getProductCategoryContentTypesByViewType(boolean includeOriginal, boolean useCache) throws GeneralException {
-        List<GenericValue> pctList = getProductCategoryContentTypes(includeOriginal, useCache);
-        if (pctList.isEmpty()) {
+        List<GenericValue> pcctList = getProductCategoryContentTypes(includeOriginal, useCache);
+        if (pcctList.isEmpty()) {
             return Collections.emptyMap();
         }
         Map<CategoryImageViewType, GenericValue> idMap = new LinkedHashMap<>();
-        for(GenericValue pct : pctList) {
-            idMap.put(CategoryImageViewType.from(pct, useCache), pct);
+        for(GenericValue pcct : pcctList) {
+            idMap.put(CategoryImageViewType.from(pcct, useCache), pcct);
         }
         return idMap;
     }
 
     public List<String> getProductCategoryContentTypeIds(boolean includeOriginal, boolean useCache) throws GeneralException {
-        List<GenericValue> pctList = getProductCategoryContentTypes(includeOriginal, useCache);
-        return pctList.isEmpty() ? Collections.emptyList() : pctList.stream().map(c -> c.getString("productContentTypeId")).collect(Collectors.toList());
+        List<GenericValue> pcctList = getProductCategoryContentTypes(includeOriginal, useCache);
+        return pcctList.isEmpty() ? Collections.emptyList() : pcctList.stream().map(c -> c.getString("prodCatContentTypeId")).collect(Collectors.toList());
     }
 
     public Map<String, GenericValue> getProductCategoryContentTypesByViewSize(boolean includeOriginal, boolean useCache) throws GeneralException {
@@ -255,7 +255,7 @@ public class CategoryImageViewType implements Serializable {
                         EntityCondition.makeCondition("productCategoryContentTypeId", EntityOperator.LIKE, "ADDITIONAL_IMAGE_%"))).cache(useCache).queryList();
         if (pctList != null) {
             for(GenericValue pct : pctList) {
-                String pctId = pct.getString("productContentTypeId");
+                String pctId = pct.getString("prodCatContentTypeId");
                 if (!"ORIGINAL_IMAGE_URL".equals(pctId)) {
                     pctMap.put(pctId, pct);
                 }
@@ -316,7 +316,7 @@ public class CategoryImageViewType implements Serializable {
         }
     }
 
-    /** Implements compatibility mode for extracting viewSize from productContentTypeId. */
+    /** Implements compatibility mode for extracting viewSize from prodCatContentTypeId. */
     protected static String extractProductContentTypeIdViewSize(Delegator delegator, String prodCatContentTypeId) throws IllegalArgumentException {
         if (prodCatContentTypeId.equals("ORIGINAL_IMAGE_URL") || prodCatContentTypeId.startsWith("ADDITIONAL_IMAGE_")) {
             return "original";
@@ -325,13 +325,13 @@ public class CategoryImageViewType implements Serializable {
         } else if (prodCatContentTypeId.startsWith("XTRA_IMG_")) {
             return prodCatContentTypeId.substring(prodCatContentTypeId.indexOf('_', "XTRA_IMG_".length()) + 1).toLowerCase();
         } else {
-            throw new IllegalArgumentException("Unrecognized image productContentTypeId for compatibility mode auto-determination: " + prodCatContentTypeId);
+            throw new IllegalArgumentException("Unrecognized image prodCatContentTypeId for compatibility mode auto-determination: " + prodCatContentTypeId);
         }
     }
 
     protected static GenericValue makeProductCategoryContentTypeFromFields(Delegator delegator, GenericValue origProductCategoryContentType, String viewType,
                                                                            String viewNumber, String viewSize) throws GenericEntityException {
-        Map<String, Object> exprCtx = UtilMisc.toMap("delegator", delegator, "origPctId", origProductCategoryContentType.get("productContentTypeId"),
+        Map<String, Object> exprCtx = UtilMisc.toMap("delegator", delegator, "origPctId", origProductCategoryContentType.get("prodCatContentTypeId"),
                 "viewType", viewType, "viewNumber", viewNumber, "viewSize", viewSize,
                 "VIEWTYPE", viewType.toUpperCase(), "VIEWNUMBER", viewNumber.toUpperCase(), "VIEWSIZE", viewSize.toUpperCase());
         String productCategoryContentTypeId = FlexibleStringExpander.expandString(origProductCategoryContentType.getString("viewVariantId"), exprCtx);
@@ -346,37 +346,25 @@ public class CategoryImageViewType implements Serializable {
                 "viewSize", viewSize);
     }
 
-    protected static String determineParentTypeId(Delegator delegator, String productContentTypeId, String viewType,
+    protected static String determineParentTypeId(Delegator delegator, String prodCatContentTypeId, String viewType,
                                                   String viewNumber, String viewSize, boolean useCache) throws GenericEntityException {
         if ("original".equals(viewSize)) {
             return "IMAGE_URL_FULL";
         }
-        List<GenericValue> pctList = delegator.from("ProductContentType").where("parentTypeId", "IMAGE_URL_FULL",
+        List<GenericValue> pcctList = delegator.from("ProductCategoryContentType").where("parentTypeId", "IMAGE_URL_FULL",
                 "viewType", viewType, "viewNumber", viewNumber, "viewSize", "original").cache(useCache).queryList();
 
-        if (UtilValidate.isNotEmpty(pctList)) {
-            if (pctList.size() > 1) {
+        if (UtilValidate.isNotEmpty(pcctList)) {
+            if (pcctList.size() > 1) {
                 Debug.logWarning("Multiple ProductContentTypes found for parentTypeId [IMAGE_URL_FULL] viewType [" + viewType +
                         "] viewNumber [" + viewNumber + "] viewSize [original]; using first", module);
             }
-            return pctList.get(0).getString("productContentTypeId");
+            return pcctList.get(0).getString("prodCatContentTypeId");
         } else {
-            Debug.logError("Could not determine ProductContentType parentTypeId for record update for productContentTypeId [" + productContentTypeId +
-                    "] viewType [" + viewType + "] viewNumber [" + viewNumber + "] viewSize [" + viewSize + "]; check data and productImageMigrateImageUrlProductContentTypeData service", module);
+            Debug.logError("Could not determine ProductCategoryContentType parentTypeId for record update for prodCatContentTypeId [" + prodCatContentTypeId +
+                    "] viewType [" + viewType + "] viewNumber [" + viewNumber + "] viewSize [" + viewSize + "]; check data and categoryImageMigrateImageUrlProductContentTypeData service", module);
             return null;
         }
-
-        /* backward-compatibility
-        if ("main".equals(viewType)) {
-            return "ORIGINAL_IMAGE_URL";
-        } else if ("additional".equals(viewType)) {
-            return "ADDITIONAL_IMAGE_" + viewNumber;
-        } else {
-            Debug.logError("Could not determine ProductContentType parentTypeId for record update for productContentTypeId [" + productContentTypeId +
-                    "] viewType [" + viewType + "] viewNumber [" + viewNumber + "] viewSize [" + viewSize + "]; data may need manual review", module);
-            return null;
-        }
-         */
     }
 
 }

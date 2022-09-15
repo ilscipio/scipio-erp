@@ -212,7 +212,7 @@ public class CategoryImageVariants extends ImageVariants {
     }
 
     public String getProdCatContentTypeId() {
-        return getOrigImageViewType().getCategoryContentTypeId();
+        return getOrigImageViewType().getContentTypeId();
     }
 
     public CategoryImageViewType getOrigImageViewType() {
@@ -386,7 +386,7 @@ public class CategoryImageVariants extends ImageVariants {
             if (variantRecord != null) {
                 variant = makeContentVariant(config, variantImageViewType, variantRecord);
             } else {
-                String fieldName = getProductCategoryCandidateFieldName(variantImageViewType.getCategoryContentTypeId());
+                String fieldName = getProductCategoryCandidateFieldName(variantImageViewType.getContentTypeId());
                 if (isProductCategoryField(fieldName)) {
                     variant = makeInlineVariant(config, variantImageViewType, fieldName);
                 } else {
@@ -417,7 +417,7 @@ public class CategoryImageVariants extends ImageVariants {
 
         @Override
         public String getAssocId() {
-            return getVariantImageViewType().getCategoryContentTypeId();
+            return getVariantImageViewType().getContentTypeId();
         }
 
         @Override
@@ -717,7 +717,7 @@ public class CategoryImageVariants extends ImageVariants {
 
         @Override
         public String getAssocId() {
-            return getVariantImageViewType().getCategoryContentTypeId();
+            return getVariantImageViewType().getContentTypeId();
         }
 
         @Override

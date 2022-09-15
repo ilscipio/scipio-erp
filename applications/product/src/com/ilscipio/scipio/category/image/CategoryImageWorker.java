@@ -134,7 +134,7 @@ public abstract class CategoryImageWorker {
         if (!originalImageViewType.isOriginal()) {
             throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        List<String> pctIdList = originalImageViewType.getProductCategoryContentTypeIds(includeOriginal, useCache);
+        List<String> pctIdList = originalImageViewType.getContentTypeIds(includeOriginal, useCache);
         if (pctIdList.isEmpty()) {
             return Collections.emptyList();
         }
@@ -150,7 +150,7 @@ public abstract class CategoryImageWorker {
         if (!originalImageViewType.isOriginal()) {
             throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        Map<String, GenericValue> pcctIdMap = originalImageViewType.getProductCategoryContentTypesById(includeOriginal, useCache);
+        Map<String, GenericValue> pcctIdMap = originalImageViewType.getContentTypesById(includeOriginal, useCache);
         if (pcctIdMap.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -175,7 +175,7 @@ public abstract class CategoryImageWorker {
         if (!originalImageViewType.isOriginal()) {
             throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        Map<String, GenericValue> pcctIdMap = originalImageViewType.getProductCategoryContentTypesById(includeOriginal, useCache);
+        Map<String, GenericValue> pcctIdMap = originalImageViewType.getContentTypesById(includeOriginal, useCache);
         if (pcctIdMap.isEmpty()) {
             return Collections.emptyMap();
         }

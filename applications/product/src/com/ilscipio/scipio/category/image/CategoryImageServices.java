@@ -71,7 +71,7 @@ public class CategoryImageServices {
                 return ServiceUtil.returnError(e.toString());
             }
         }
-        String categoryContentTypeId = imageViewType.getCategoryContentTypeId();
+        String categoryContentTypeId = imageViewType.getContentTypeId();
 
         Map<String, Object> contentCtx;
         try {
@@ -187,16 +187,15 @@ public class CategoryImageServices {
             String origImageUrl = imageOrigUrlMap.get(productContentTypeId);
             Map<String, Object> res = categoryImageRescaleImage(ctx, productCategory, productContentTypeId, null, nonFatal, origImageUrl, copyOrig);
             if ("no-image-url".equals(res.get("reason")) && "CATEGORY_IMAGE_URL".equals(productContentTypeId)) {
-                // FIXME: Adapt this to ProductCategory
-//                Map<String, Object> res2 = categoryImageRescaleImage(ctx, productCategory, "DETAIL_IMAGE_URL", null, nonFatal, origImageUrl, copyOrig);
-//                if (!"no-image-url".equals(res2.get("reason"))) {
-//                    res = res2;
-//                } else {
-//                    Map<String, Object> res3 = categoryImageRescaleImage(ctx, productCategory, "LARGE_IMAGE_URL", null, nonFatal, origImageUrl, copyOrig);
-//                    if (!"no-image-url".equals(res3.get("reason"))) {
-//                        res = res3;
-//                    }
-//                }
+                Map<String, Object> res2 = categoryImageRescaleImage(ctx, productCategory, "DETAIL_IMAGE_URL", null, nonFatal, origImageUrl, copyOrig);
+                if (!"no-image-url".equals(res2.get("reason"))) {
+                    res = res2;
+                } else {
+                    Map<String, Object> res3 = categoryImageRescaleImage(ctx, productCategory, "LARGE_IMAGE_URL", null, nonFatal, origImageUrl, copyOrig);
+                    if (!"no-image-url".equals(res3.get("reason"))) {
+                        res = res3;
+                    }
+                }
             }
             if (!categoryImageAutoRescaleRegisterResult(ctx, productCategory, res, stats, nonFatal)) {
                 Map<String, Object> result = ServiceUtil.returnError(((int) stats.get("errorCount")) + " errors auto-rescaling images for category [" + productCategoryId + "]" + " (stats: " + stats + ")");
@@ -396,7 +395,7 @@ public class CategoryImageServices {
         }
 
         ImageProfile imageProfile = com.ilscipio.scipio.category.image.CategoryImageWorker.getCategoryImageProfileOrDefault(ctx.delegator(),
-                origImageViewType.getCategoryContentTypeId(), productCategory, content, false, false);
+                origImageViewType.getContentTypeId(), productCategory, content, false, false);
         if (imageProfile == null) {
             String errorMsg = "category [" + productCategoryId + "] prodCatContentTypeId [" + prodCatContentTypeId +
                     "] origImageUrl [" + origImageUrl + "]: could not find media profile";
@@ -475,7 +474,7 @@ public class CategoryImageServices {
                     if (imageUrl != null && (imageUrl.startsWith(".") || imageUrl.contains("/."))) { // SPECIAL: detect bug (missing filename)
                         throw new IllegalStateException("internal or data error: invalid url [" + imageUrl + "] for sizeType [" + sizeType + "], not updating");
                     }
-                    Map<String, Object> res = updateCategoryContentImageUrl(ctx, productCategory, scaledImageViewType.getCategoryContentTypeId(), imageUrl,
+                    Map<String, Object> res = updateCategoryContentImageUrl(ctx, productCategory, scaledImageViewType.getContentTypeId(), imageUrl,
                             origImageUrl, prodCatContentTypeId, fromDate, ctx.attr("createSizeTypeContent"), sizeTypeInfo);
                     if (ServiceUtil.isError(res)) {
                         return UtilMisc.put(new HashMap<>(res));

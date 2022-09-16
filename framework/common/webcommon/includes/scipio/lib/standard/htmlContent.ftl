@@ -1875,6 +1875,7 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                 <#local sizes=""/>
                 <#local contentId=src?keep_after("contentId=")/>
                 <#local productId=src?keep_after("productId=")/>
+                <#local productCategoryId=src?keep_after("productCategoryId=")/>
                 <#local imgSize=src?keep_after("imgSize=")/>
                 <#if contentId?contains("&")>
                     <#local contentId=contentId?keep_before("&")/>
@@ -1897,13 +1898,16 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                             </#if>
                         </#if>
                     </#if>
-                    <#if !responsiveMap?has_content && (contentId?has_content || productId?has_content)>
+                    <#if !responsiveMap?has_content && (contentId?has_content || productId?has_content || productCategoryId?has_content)>
                         <#local sizeMap = false/>
                         <#local imageVariants = false/>
                         <#if contentId?has_content>
+                            <#-- FIXME: This must consider any type of content (ie: product/category) -->
                             <#local imageVariants = getImageVariants({"contentId":contentId, "useCache":true})!false>
                         <#elseif productId?has_content>
-                            <#local imageVariants = getImageVariants({"productId":productId, "useCache":true})!false>
+                            <#local imageVariants = getProductImageVariants({"productId":productId, "useCache":true})!false>
+                        <#elseif productCategoryId?has_content>
+                            <#local imageVariants = getCategoryImageVariants({"productCategoryId":productCategoryId, "useCache":true})!false>
                         </#if>
                         <#if !imageVariants?is_boolean>
                             <#local responsiveMap = imageVariants.getResponsiveVariantMap("image/webp", sizeDef, context, {})!{}>

@@ -162,7 +162,7 @@ code package.
                             <!-- SCIPIO: FORM WIDGET REPLACEMENT: component://product/widget/catalog/CategoryForms.xml#UpdateCategoryContentAssoc -->
                             <platform-specific><html><html-template location="component://product/webapp/catalog/category/AddCategoryContent.ftl"/></html></platform-specific>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.ProductAddContentProductCategory}">
+                        <screenlet title="${uiLabelMap.ProductAddContentCategory}">
                             <include-form name="AddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
                         </screenlet>
                         <screenlet>
@@ -176,7 +176,7 @@ code package.
                         <screenlet title="${uiLabelMap.CommonUpdateLocalizedFields}"><!-- SCIPIO: added 2017-12 -->
                             <include-screen name="EditCategoryStcLocFields"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.ProductCategoryAddAdditionalImages}">
+                        <screenlet title="${uiLabelMap.ProductAddAdditionalImages}">
                             <platform-specific>
                                 <html><html-template location="component://product/webapp/catalog/category/AddAdditionalImages.ftl"/></html>
                             </platform-specific>

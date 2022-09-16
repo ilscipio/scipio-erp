@@ -14861,6 +14861,13 @@
         <value xml:lang="de">Kategorie Inhalt Liste</value>
         <value xml:lang="en">Category Content List</value>
     </property>
+    <property key="ProductCategoryCreateNewCategoryContent">
+        <value xml:lang="de">Neuen Kategorieinhalte erstellen</value>
+        <value xml:lang="en">Create New Category Content</value>
+        <value xml:lang="es">Crear nuevo Contenido de Categoría</value>
+        <value xml:lang="fr">Ajout d'un élément de contenu de catégorie</value>
+        <value xml:lang="it">Creare Nuovo Contenuto Categoria</value>
+    </property>
     <property key="ProductCategoryDescription">
         <value xml:lang="de">Kategoriebeschreibung</value>
         <value xml:lang="en">Category Description</value>

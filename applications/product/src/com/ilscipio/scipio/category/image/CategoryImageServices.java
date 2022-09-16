@@ -45,9 +45,7 @@ public class CategoryImageServices {
     /**
      * SCIPIO: Updated scaling implementation based on ScaleImage.scaleImageInAllSize, but allowing greater parameterization.
      * Fully implements the categoryImageFileScaleInAllSize service, see its interface for parameters.
-     * <p>
-     * TODO?: reconcile with ScaleImage.scaleImageInAllSize eventually... for now, leaving separate to avoid
-     * breaking category screens.
+     *
      */
     public static Map<String, Object> categoryImageFileScaleInAllSize(ServiceContext ctx) throws ServiceValidationException {
         Delegator delegator = ctx.delegator();
@@ -135,7 +133,7 @@ public class CategoryImageServices {
         if (productCategory != null) {
             productCategoryId = productCategory.getString("productCategoryId");
         } else {
-            productCategoryId = ctx.attr("productId");
+            productCategoryId = ctx.attr("productCategoryId");
             productCategory = ctx.delegator().from("ProductCategory").where("productCategoryId", productCategoryId).queryOneSafe();
             if (productCategory == null) {
                 return ServiceUtil.returnError("Could not find category [" + productCategoryId + "]");
@@ -183,10 +181,10 @@ public class CategoryImageServices {
 
         Map<String, Object> stats = UtilMisc.put(new LinkedHashMap<>(), "successCount", 0, "failCount", 0, "errorCount", 0, "skipCount", 0,
                 "variantSuccessCount", 0, "variantFailCount", 0);
-        for (String productContentTypeId : categoryContentTypeIdList) {
-            String origImageUrl = imageOrigUrlMap.get(productContentTypeId);
-            Map<String, Object> res = categoryImageRescaleImage(ctx, productCategory, productContentTypeId, null, nonFatal, origImageUrl, copyOrig);
-            if ("no-image-url".equals(res.get("reason")) && "CATEGORY_IMAGE_URL".equals(productContentTypeId)) {
+        for (String prodCatContentTypeId : categoryContentTypeIdList) {
+            String origImageUrl = imageOrigUrlMap.get(prodCatContentTypeId);
+            Map<String, Object> res = categoryImageRescaleImage(ctx, productCategory, prodCatContentTypeId, null, nonFatal, origImageUrl, copyOrig);
+            if ("no-image-url".equals(res.get("reason")) && "CATEGORY_IMAGE_URL".equals(prodCatContentTypeId)) {
                 Map<String, Object> res2 = categoryImageRescaleImage(ctx, productCategory, "DETAIL_IMAGE_URL", null, nonFatal, origImageUrl, copyOrig);
                 if (!"no-image-url".equals(res2.get("reason"))) {
                     res = res2;
@@ -289,7 +287,7 @@ public class CategoryImageServices {
         CategoryImageViewType origImageViewType;
         try {
             imageViewType = CategoryImageViewType.from(ctx.delegator(), prodCatContentTypeId, true, true);
-            // NOTE: because productContentTypeId may be special exception values DETAIL_IMAGE_URL/LARGE_IMAGE_URL (instead of CATEGORY_IMAGE_URL),
+            // NOTE: because prodCatContentTypeId may be special exception values DETAIL_IMAGE_URL/LARGE_IMAGE_URL (instead of CATEGORY_IMAGE_URL),
             // some code needs the following instead
             origImageViewType = imageViewType.getOriginal(true);
         } catch (Exception e) {
@@ -336,7 +334,7 @@ public class CategoryImageServices {
                         return ServiceUtil.returnError("category [" + productCategoryId +
                                 "] prodCatContentTypeId [" + prodCatContentTypeId + "]: could not find ProductCategoryContent for contentId [" + contentId + "]");
                     }
-                    prodCatContentTypeId = productCategoryContent.getString("productContentTypeId");
+                    prodCatContentTypeId = productCategoryContent.getString("prodCatContentTypeId");
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
@@ -426,7 +424,7 @@ public class CategoryImageServices {
             }
         }
 
-        Debug.logInfo("categoryImageRescaleImage: category [" + productCategoryId + "] productContentTypeId [" + prodCatContentTypeId
+        Debug.logInfo("categoryImageRescaleImage: category [" + productCategoryId + "] prodCatContentTypeId [" + prodCatContentTypeId
                 + "] origImageUrl [" + origImageUrl + "]: begin scaling image variants", module);
 
         Map<String, Object> resizeCtx = UtilMisc.toMap("productCategoryId", productCategoryId, "imageOrigUrl", origImageUrl, "imageViewType", origImageViewType,
@@ -511,14 +509,14 @@ public class CategoryImageServices {
             if (productCategoryContent != null) {
                 GenericValue content = productCategoryContent.getRelatedOne("Content");
                 if (content == null) {
-                    String errMsg = "product [" + productCategory.get("productId") + "] productContentTypeId [" +
+                    String errMsg = "category [" + productCategory.get("productCategoryId") + "] prodCatContentTypeId [" +
                             prodCatContentTypeId + "] origImageUrl [" + origImageUrl + "] imageUrl [" + imageUrl + "]: could not find Content record for contentId [" + productCategoryContent.get("contentId") + "]";
                     Debug.logError("updateCategoryContentImageUrl: " + errMsg, module);
                     return ServiceUtil.returnError(errMsg);
                 }
                 GenericValue dataResource = content.getRelatedOne("DataResource");
                 if (dataResource == null) {
-                    String errMsg = "product [" + productCategory.get("productId") + "] productContentTypeId [" +
+                    String errMsg = "category [" + productCategory.get("productCategoryId") + "] prodCatContentTypeId [" +
                             prodCatContentTypeId + "] origImageUrl [" + origImageUrl + "] imageUrl [" + imageUrl + "]: could not find image DataResource record";
                     Debug.logError("updateCategoryContentImageUrl: " + errMsg, module);
                     return ServiceUtil.returnError(errMsg);
@@ -560,7 +558,7 @@ public class CategoryImageServices {
                     if ("SHORT_TEXT".equals(dataResource.get("dataResourceTypeId"))) {
                         String prevImageUrl = dataResource.getString("objectInfo");
                         if (!imageUrl.equals(prevImageUrl)) {
-                            Debug.logInfo("updateCategoryContentImageUrl: category [" + productCategory.get("productId") + "] productContentTypeId [" + prodCatContentTypeId +
+                            Debug.logInfo("updateCategoryContentImageUrl: category [" + productCategory.get("productCategoryId") + "] prodCatContentTypeId [" + prodCatContentTypeId +
                                     "] origImageUrl [" + origImageUrl + "] imageUrl [" + imageUrl + "]: updating DataResource imageUrl from [" + prevImageUrl + "] to [" + imageUrl + "]", module);
                             dataResource.set("objectInfo", imageUrl);
                             dataResource.store();
@@ -573,7 +571,7 @@ public class CategoryImageServices {
                         }
                         GenericValue elecText = ctx.delegator().from("ElectronicText").where("dataResourceId", content.get("dataResourceId")).queryOne();
                         if (elecText == null) {
-                            String msg = "product [" + productCategory.get("productId") + "] productContentTypeId [" + prodCatContentTypeId +
+                            String msg = "category [" + productCategory.get("productCategoryId") + "] prodCatContentTypeId [" + prodCatContentTypeId +
                                     "] origImageUrl [" + origImageUrl + "] imageUrl [" + imageUrl + "]: could not find image ElectronicText: unexpected ProductContent format";
                             Debug.logWarning("updateCategoryContentImageUrl: " + msg, module);
                             return ServiceUtil.returnFailure(msg);

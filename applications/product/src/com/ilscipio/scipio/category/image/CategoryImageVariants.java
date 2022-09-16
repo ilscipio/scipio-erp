@@ -116,7 +116,7 @@ public class CategoryImageVariants extends ImageVariants {
             CACHE.put(cacheKey, civ != null ? civ : NULL);
         }
         //if (civ == null) {
-        //    Debug.logWarning("Could not load product category image records for category [" + productCategoryId + "] prodCatContentTypeId [" + prodCatContentTypeId + "]", module);
+        //    Debug.logWarning("Could not load category category image records for category [" + productCategoryId + "] prodCatContentTypeId [" + prodCatContentTypeId + "]", module);
         //}
         return civ;
     }
@@ -320,8 +320,8 @@ public class CategoryImageVariants extends ImageVariants {
         return getDelegator().getModelEntity("ProductCategory").isField(fieldName);
     }
 
-    protected String getProductCategoryCandidateFieldName(String productContentTypeId) {
-        return ModelUtil.dbNameToVarName(productContentTypeId);
+    protected String getProductCategoryCandidateFieldName(String prodCatContentTypeId) {
+        return ModelUtil.dbNameToVarName(prodCatContentTypeId);
     }
 
     @Override
@@ -457,7 +457,7 @@ public class CategoryImageVariants extends ImageVariants {
                 if (staticImageUrl == null) {
                     if (Debug.verboseOn()) {
                         Debug.logInfo("Could not determine an image url for category [" + getProductCategoryId()
-                                + "] productContentTypeId [" + CategoryImageVariants.this.getProdCatContentTypeId()
+                                + "] prodCatContentTypeId [" + CategoryImageVariants.this.getProdCatContentTypeId()
                                 + "] variant [" + getName() + "]", module);
                     }
                     staticImageUrl = "";
@@ -767,7 +767,7 @@ public class CategoryImageVariants extends ImageVariants {
                                                        Map<String, Object> context, Map<String, Object> urlArgs) {
         // TODO: REVIEW: from ContentImageVariants#getResponsiveVariantMap
         /* Example:
-        <#local sizeMap = getImageVariants("category", productId)!false/><#-- now accepts empty contentId, will return null/false -->
+        <#local sizeMap = getImageVariants("category", productCategoryId)!false/><#-- now accepts empty contentId, will return null/false -->
         <#if !sizeMap?is_boolean>
           <#local responsiveMap = sizeMap.getResponsiveVariantMap("image/webp", sizeDefs, context, {})/>
         </#if>

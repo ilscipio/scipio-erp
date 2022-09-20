@@ -887,7 +887,7 @@ public class CategoryImageServices {
                     return ServiceUtil.returnError("Missing CATEGORY_IMAGE_URL");
                 }
                 if (isCategoryContentTypeImageUrlRecordComplete(origPct)) {
-                    Debug.logInfo("categoryImageMigrateImageUrlProductContentTypeData: CATEGORY_IMAGE_URL populated, not running", module);
+                    Debug.logInfo("categoryImageMigrateImageUrlCategoryContentTypeData: CATEGORY_IMAGE_URL populated, not running", module);
                     return ServiceUtil.returnSuccess("CATEGORY_IMAGE_URL populated, not running");
                 }
             }

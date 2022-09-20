@@ -465,6 +465,23 @@
         <description>Aborts categoryImageAutoRescaleAll if possible</description>
     </service>
 
+    <service name="categoryImageMigrateImageUrlCategoryContentTypeData" engine="java"
+             location="com.ilscipio.scipio.category.image.CategoryImageServices" invoke="categoryImageMigrateImageUrlCategoryContentTypeData" auth="true">
+        <description>Migrates CATEGORY_IMAGE_URL ProdCatContentType data for 2022-09 enhancements (SCIPIO)</description>
+        <required-permissions join-type="OR">
+            <check-permission permission="CATALOG_ADMIN"/>
+        </required-permissions>
+        <attribute name="force" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If false, only runs if the ORIGINAL_IMAGE_URL record looks incomplete</description>
+        </attribute>
+        <attribute name="forceAll" type="Boolean" mode="IN" optional="true" default-value="false">
+            <description>If true, recreates all - implies force</description>
+        </attribute>
+        <attribute name="preview" type="Boolean" mode="IN" optional="true" default-value="true">
+            <description>If true, aborts transaction at end</description>
+        </attribute>
+    </service>
+
     <service name="categoryImageOpRequest" engine="java"
              location="com.ilscipio.scipio.category.image.CategoryImageServices" invoke="categoryImageOpRequest" auth="false" transaction-timeout="144000">
         <description>Run a CategoryImageOpRequest from ECA (SCIPIO)</description>

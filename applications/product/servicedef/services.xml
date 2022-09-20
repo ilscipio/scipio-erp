@@ -776,13 +776,13 @@ code package.
         <attribute name="currencyUomId" type="String" mode="IN" optional="true"/>
     </service>
 
-    <!-- SCIPIO -->
-    <service name="uploadProductCategoryImage" engine="groovy"
-                location="component://product/script/com/ilscipio/category/ProductCategoryContentServices.groovy" default-entity-name="ProductCategory" invoke="uploadProductCategoryImage" auth="true">
-        <implements service="uploadFileInterface"/>                
-        <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
-        <attribute name="upload_file_type" mode="IN" type="String" optional="false" />
-    </service>
+    <!-- SCIPIO: Commented out since image scale for category images feature has been implemented -->
+<!--    <service name="uploadProductCategoryImage" engine="groovy"-->
+<!--                location="component://product/script/com/ilscipio/category/ProductCategoryContentServices.groovy" default-entity-name="ProductCategory" invoke="uploadProductCategoryImage" auth="true">-->
+<!--        <implements service="uploadFileInterface"/>                -->
+<!--        <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>-->
+<!--        <attribute name="upload_file_type" mode="IN" type="String" optional="false" />-->
+<!--    </service>-->
 
     <service name="addPartyToCategory" engine="simple"
                 location="component://product/script/org/ofbiz/product/category/CategoryServices.xml" invoke="addPartyToCategory" auth="true">
@@ -972,6 +972,31 @@ code package.
             location="component://product/script/org/ofbiz/product/category/CategoryContentServices.xml" invoke="removeCategoryContent" auth="true">
         <description>Remove Content From Category</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- SCIPIO: new service to upload category additional images, based on uploadProductAdditionalViewImages -->
+    <service name="uploadCategoryAdditionalViewImages" engine="simple"
+             location="component://product/script/org/ofbiz/product/category/CategoryContentServices.xml" invoke="uploadCategoryAdditionalViewImages" auth="true">
+        <description>Upload Additional View Images For ProductCategory</description>
+        <permission-service service-name="genericContentPermission" main-action="UPDATE"/>
+        <attribute name="productCategoryId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="additionalImageOne" type="java.nio.ByteBuffer" mode="IN" optional="true"/>
+        <attribute name="_additionalImageOne_fileName" type="String" mode="IN" optional="true"/>
+        <attribute name="_additionalImageOne_contentType" type="String" mode="IN" optional="true"/>
+        <attribute name="additionalImageTwo" type="java.nio.ByteBuffer" mode="IN" optional="true"/>
+        <attribute name="_additionalImageTwo_fileName" type="String" mode="IN" optional="true"/>
+        <attribute name="_additionalImageTwo_contentType" type="String" mode="IN" optional="true"/>
+        <attribute name="additionalImageThree" type="java.nio.ByteBuffer" mode="IN" optional="true"/>
+        <attribute name="_additionalImageThree_fileName" type="String" mode="IN" optional="true"/>
+        <attribute name="_additionalImageThree_contentType" type="String" mode="IN" optional="true"/>
+        <attribute name="additionalImageFour" type="java.nio.ByteBuffer" mode="IN" optional="true"/>
+        <attribute name="_additionalImageFour_fileName" type="String" mode="IN" optional="true"/>
+        <attribute name="_additionalImageFour_contentType" type="String" mode="IN" optional="true"/>
+        <!-- SCIPIO -->
+        <attribute name="additionalImageOne_imageProfile" type="String" mode="IN" optional="true"/>
+        <attribute name="additionalImageTwo_imageProfile" type="String" mode="IN" optional="true"/>
+        <attribute name="additionalImageThree_imageProfile" type="String" mode="IN" optional="true"/>
+        <attribute name="additionalImageFour_imageProfile" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="createSimpleTextContentForCategory" default-entity-name="ProductCategoryContent" engine="simple"

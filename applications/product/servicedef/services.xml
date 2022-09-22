@@ -974,6 +974,18 @@ code package.
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
 
+    <!-- SCIPIO: new service to add category additional images, based on addAdditionalViewForProduct -->
+    <service name="addAdditionalViewForCategory" default-entity-name="ProductCategoryContent" engine="java"
+             location="org.ofbiz.product.product.ProductServices" invoke="addAdditionalViewForCategory" auth="true">
+        <implements service="uploadFileInterface"/>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <attribute mode="IN" name="contentId" optional="true" type="String"/>
+        <attribute mode="IN" name="imageProfile" optional="true" type="String"/><!-- SCIPIO -->
+        <override name="prodCatContentTypeId" optional="false"/>
+        <override name="productCategoryId" optional="false"/>
+    </service>
+
     <!-- SCIPIO: new service to upload category additional images, based on uploadProductAdditionalViewImages -->
     <service name="uploadCategoryAdditionalViewImages" engine="simple"
              location="component://product/script/org/ofbiz/product/category/CategoryContentServices.xml" invoke="uploadCategoryAdditionalViewImages" auth="true">

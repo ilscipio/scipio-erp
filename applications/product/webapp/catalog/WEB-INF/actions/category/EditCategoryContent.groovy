@@ -16,8 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.HttpRequestFileUpload
 import org.ofbiz.base.util.UtilDateTime
@@ -32,6 +30,20 @@ import javax.transaction.Transaction
 module = "EditCategoryContent.groovy"
 
 context.nowTimestampString = UtilDateTime.nowTimestamp().toString();
+
+// pagination for the category content list
+viewIndex = Integer.valueOf(parameters.VIEW_INDEX  ?: 0);
+viewSize = Integer.valueOf(parameters.VIEW_SIZE ?: EntityUtilProperties.getPropertyValue("widget", "widget.form.defaultViewSize", "20", delegator));
+
+productCategoryContentList = from("ProductCategoryContent").where("productCategoryId", productCategory.productCategoryId)
+    .cursorScrollInsensitive().orderBy("prodCatContentTypeId").queryPagedList(viewIndex, viewSize)
+
+context.viewIndex = productCategoryContentList.getViewIndex()
+context.viewSize = productCategoryContentList.getViewSize()
+context.listSize = productCategoryContentList.getListSize()
+context.lowIndex = productCategoryContentList.getStartIndex()
+context.highIndex = productCategoryContentList.getEndIndex()
+context.productCategoryContentList = productCategoryContentList.getData()
 
 // make the image file formats
 context.tenantId = delegator.getDelegatorTenantId();
@@ -176,17 +188,6 @@ if (fileType) {
 
                     // call scaleImageInAllSize
                     if ("original".equals(fileType)) {
-                        /* SCIPIO: Use auto service - NOTE: the auto service creates more ProductContent/Content/DataResource records (this is good)
-                        context.delegator = delegator;
-                        result = ScaleImage.scaleImageInAllSize(context, filenameToUse, "main", "0", "IMAGE_PRODUCT", null);
-
-                        if (result.containsKey("responseMessage") && "success".equals(result.get("responseMessage"))) {
-                            imgMap = result.get("imageUrlMap");
-                            imgMap.each() { key, value ->
-                                product.set(key + "ImageUrl", value);
-                            }
-                        }
-                         */
                         productCategory.store();
                         try {
                             def servCtx = dispatcher.runSync("categoryImageAutoRescale", [userLogin:context.userLogin,

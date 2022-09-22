@@ -556,10 +556,10 @@ code package.
         <security https="true" auth="true"/>
         <response name="success" type="view" value="EditCategoryContentContent"/>
     </request-map>
-<!--    <request-map uri="prepareAddContentToCategory">-->
-<!--        <security https="true" auth="true"/>-->
-<!--        <response name="success" type="view" value="EditCategoryContentContent"/>-->
-<!--    </request-map>-->
+    <request-map uri="prepareAddContentToCategory">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCategoryContentContent"/>
+    </request-map>
     <request-map uri="addAdditionalImagesForCategory">
         <security https="true" auth="true"/>
         <event type="service" invoke="uploadCategoryAdditionalViewImages"/>

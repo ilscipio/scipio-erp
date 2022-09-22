@@ -20,9 +20,9 @@ code package.
   <@cell>
 <#-- FIXME?: should specify a form/fields type here that implies manual row/cell markup 
      instead of norows=true nocells=true-->
-<form id="addAdditionalImagesForm" method="post" action="<@pageUrl>addAdditionalImagesForProduct</@pageUrl>" enctype="multipart/form-data">
+<form id="addAdditionalImagesForm" method="post" action="<@pageUrl>addAdditionalImagesForCategory</@pageUrl>" enctype="multipart/form-data">
   <@fields type="default-manual">
-  <input id="additionalImageproductCategoryId" type="hidden" name="productCategoryId" value="${productCategoryId!}" />
+  <input id="additionalImageProductCategoryId" type="hidden" name="productCategoryId" value="${productCategoryId!}" />
     <#macro imageField name imageHtml id="">
       <#if imageHtml?trim?has_content>
       <@row>
@@ -42,7 +42,7 @@ code package.
         <#if productCategoryAdditionalImage1?has_content><a href="javascript:void(0);" swapDetail="<@contentUrl>${productCategoryAdditionalImage1}</@contentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@contentUrl>${productCategoryAdditionalImage1}</@contentUrl>" class="cssImgSmall" alt="" /></a></#if>
       </#assign>
       <@fields type="default">
-        <@cataloglib.imageProfileSelect fieldName="additionalImageOne_imageProfile" profileName=(parameters.additionalImageOne_imageProfile!(productContentAI1.mediaProfile)!"") defaultProfileName="IMAGE_PRODUCT-ADDITIONAL_IMAGE_1" parentProfile="IMAGE_CATEGORY"/>
+        <@cataloglib.imageProfileSelect fieldName="additionalImageOne_imageProfile" profileName=(parameters.additionalImageOne_imageProfile!(productContentAI1.mediaProfile)!"") defaultProfileName="IMAGE_CATEGORY-ADDITIONAL_IMAGE_1" parentProfile="IMAGE_CATEGORY"/>
       </@fields>
       <@imageField id="additionalImageOne" name="additionalImageOne" imageHtml=imageHtml />
       
@@ -50,7 +50,7 @@ code package.
         <#if productCategoryAdditionalImage2?has_content><a href="javascript:void(0);" swapDetail="<@contentUrl>${productCategoryAdditionalImage2}</@contentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@contentUrl>${productCategoryAdditionalImage2}</@contentUrl>" class="cssImgSmall" alt="" /></a></#if>
       </#assign>
       <@fields type="default">
-        <@cataloglib.imageProfileSelect fieldName="additionalImageTwo_imageProfile" profileName=(parameters.additionalImageTwo_imageProfile!(productContentAI2.mediaProfile)!"") defaultProfileName="IMAGE_PRODUCT-ADDITIONAL_IMAGE_2" parentProfile="IMAGE_CATEGORY"/>
+        <@cataloglib.imageProfileSelect fieldName="additionalImageTwo_imageProfile" profileName=(parameters.additionalImageTwo_imageProfile!(productContentAI2.mediaProfile)!"") defaultProfileName="IMAGE_CATEGORY-ADDITIONAL_IMAGE_2" parentProfile="IMAGE_CATEGORY"/>
       </@fields>
       <@imageField name="additionalImageTwo" imageHtml=imageHtml />
   
@@ -58,7 +58,7 @@ code package.
         <#if productCategoryAdditionalImage3?has_content><a href="javascript:void(0);" swapDetail="<@contentUrl>${productCategoryAdditionalImage3}</@contentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@contentUrl>${productCategoryAdditionalImage3}</@contentUrl>" class="cssImgSmall" alt="" /></a></#if>
       </#assign>
       <@fields type="default">
-        <@cataloglib.imageProfileSelect fieldName="additionalImageThree_imageProfile" profileName=(parameters.additionalImageThree_imageProfile!(productContentAI3.mediaProfile)!"") defaultProfileName="IMAGE_PRODUCT-ADDITIONAL_IMAGE_3" parentProfile="IMAGE_CATEGORY"/>
+        <@cataloglib.imageProfileSelect fieldName="additionalImageThree_imageProfile" profileName=(parameters.additionalImageThree_imageProfile!(productContentAI3.mediaProfile)!"") defaultProfileName="IMAGE_CATEGORY-ADDITIONAL_IMAGE_3" parentProfile="IMAGE_CATEGORY"/>
       </@fields>
       <@imageField name="additionalImageThree" imageHtml=imageHtml />
       
@@ -66,7 +66,7 @@ code package.
         <#if productCategoryAdditionalImage4?has_content><a href="javascript:void(0);" swapDetail="<@contentUrl>${productCategoryAdditionalImage4}</@contentUrl>" class="${styles.link_type_image!} ${styles.action_run_local!} ${styles.action_view!}"><img src="<@contentUrl>${productCategoryAdditionalImage4}</@contentUrl>" class="cssImgSmall" alt="" /></a></#if>
       </#assign>
       <@fields type="default">
-        <@cataloglib.imageProfileSelect fieldName="additionalImageFour_imageProfile" profileName=(parameters.additionalImageFour_imageProfile!(productContentAI4.mediaProfile)!"") defaultProfileName="IMAGE_PRODUCT-ADDITIONAL_IMAGE_4" parentProfile="IMAGE_CATEGORY"/>
+        <@cataloglib.imageProfileSelect fieldName="additionalImageFour_imageProfile" profileName=(parameters.additionalImageFour_imageProfile!(productContentAI4.mediaProfile)!"") defaultProfileName="IMAGE_CATEGORY-ADDITIONAL_IMAGE_4" parentProfile="IMAGE_CATEGORY"/>
       </@fields>
       <@imageField name="additionalImageFour" imageHtml=imageHtml />
       

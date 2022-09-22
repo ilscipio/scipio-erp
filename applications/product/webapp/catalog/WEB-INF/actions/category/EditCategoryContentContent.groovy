@@ -42,7 +42,7 @@ if (!request.getAttribute("contentId") && (parameters.contentId && parameters.pr
             } else if ("RELATED_URL".equals(prodCatContentTypeId)) {
                 context.contentFormName = "EditCategoryContentRelatedUrl";
                 context.contentFormAction = "updateRelatedUrlContentForCategory";           
-            } else if ("VIDEO".equals(prodCatContentTypeId) || "CATEGORY_IMAGE".equals(prodCatContentTypeId)) {
+            } else if ("VIDEO".equals(prodCatContentTypeId) || prodCatContentTypeId.contains("IMAGE")) {
                 context.contentFormName = "EditCategoryContentDownload";
                 context.contentFormAction = "updateDownloadContentForCategory";
                 if("CATEGORY_IMAGE".equals(prodCatContentTypeId)){
@@ -55,7 +55,7 @@ if (!request.getAttribute("contentId") && (parameters.contentId && parameters.pr
                 context.dataResourceTypeId = "IMAGE_OBJECT"
             }
             
-            if ("RELATED_URL".equals(prodCatContentTypeId) || "VIDEO".equals(prodCatContentTypeId) || "CATEGORY_IMAGE".equals(prodCatContentTypeId)) {
+            if ("RELATED_URL".equals(prodCatContentTypeId) || "VIDEO".equals(prodCatContentTypeId) || prodCatContentTypeId.contains("IMAGE")) {
                 contentList = from("ContentDataResourceView").where("contentId", parameters.contentId).queryList();
                 if (contentList) {
                     context.contentDataResourceView = contentList.get(0);
@@ -82,7 +82,7 @@ if (!request.getAttribute("contentId") && (parameters.contentId && parameters.pr
     } else if ("RELATED_URL".equals(prodCatContentTypeId)) {
         context.contentFormName = "EditCategoryContentRelatedUrl";
         context.contentFormAction = "createRelatedUrlContentForCategory";
-    } else if ("VIDEO".equals(prodCatContentTypeId) || "CATEGORY_IMAGE".equals(prodCatContentTypeId)) {
+    } else if ("VIDEO".equals(prodCatContentTypeId) || prodCatContentTypeId.contains("IMAGE")) {
         context.contentFormName = "EditCategoryContentDownload";
         context.contentFormAction = "createDownloadContentForCategory";
     }

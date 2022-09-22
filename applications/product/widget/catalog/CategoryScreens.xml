@@ -134,16 +134,13 @@ code package.
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
                 <get-related-one value-field="productCategory" relation-name="ProductCategoryType" to-value-field="productCategoryType"/>
-                <set field="categoryContentOrderList[]" value="prodCatContentTypeId"/>
-                <get-related value-field="productCategory" relation-name="ProductCategoryContent" list="productCategoryContentList" order-by-list="categoryContentOrderList"/>
                 <entity-condition entity-name="ProductCategoryType" list="productCategoryTypes"/>
-
                 <entity-condition entity-name="ProductCategoryContentType" list="productCategoryContentTypeList">
                     <order-by field-name="description"/>
                 </entity-condition>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryContent.groovy"/>
-                
+
                 <set field="labelTitleProperty" value="ProductCategoryContent"/>
                 
                 <set field="TabBarName" value="CategoryContentSubTabBar" />
@@ -210,13 +207,12 @@ code package.
                     <decorator-section name="body">
                         <!-- SCIPIO: TODO: temporarily reinstated this form because it is not covered in the FTL and
                             essential to localize until better forms, and because it is still in EditProductContentContent so this was inconsistent without -->
+                        <screenlet title="${uiLabelMap.PageTitleEditCategoryContent}">
+                            <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/>
+                        </screenlet>
                         <section>
                             <condition><not><if-empty field="content.contentId"/></not></condition>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditCategoryContent}">
-                                    <include-form name="${contentFormName}" location="component://product/widget/catalog/CategoryForms.xml"/>
-                                </screenlet>
-
                                 <include-screen name="EditAltLocaleSimpleTextContent"/>
                                 <!--
                                 <screenlet title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}">

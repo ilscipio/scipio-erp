@@ -74,7 +74,7 @@
     </#if>
 
     <#if !prodCatContentTypeId?has_content>
-        <form id="PrepareAddCategoryContentAssoc" name="PrepareAddCategoryContentAssoc" method="post" action="<@pageUrl>EditCategoryContent</@pageUrl>">
+        <form id="PrepareAddCategoryContentAssoc" name="PrepareAddCategoryContentAssoc" method="post" action="<@pageUrl>prepareAddContentToCategory</@pageUrl>">
             <@field type="hidden" name="productCategoryId" value=(productCategoryId!) />
             <@field type="select" label=uiLabelMap.ProductSelectProductCategoryContentTypeId name="prodCatContentTypeId" size="1" required=true>
                 <option value="">--</option>

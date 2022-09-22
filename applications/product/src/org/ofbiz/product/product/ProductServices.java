@@ -18,27 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.product.product;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.math.BigDecimal;
-import java.nio.ByteBuffer;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.PropertyMessageExUtil;
@@ -60,12 +39,32 @@ import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.category.CategoryServices;
 import org.ofbiz.product.category.CategoryWorker;
-import org.ofbiz.product.image.ScaleImage;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.math.BigDecimal;
+import java.nio.ByteBuffer;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Product Services
@@ -1009,112 +1008,205 @@ public class ProductServices {
         Locale locale = (Locale) context.get("locale");
 
         if (UtilValidate.isNotEmpty(context.get("_uploadedFile_fileName"))) {
-            Map<String, Object> imageContext = new HashMap<>();
-            imageContext.putAll(context);
-            imageContext.put("delegator", delegator);
-            imageContext.put("tenantId",delegator.getDelegatorTenantId());
-            String imageFilenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.additionalviewsize.format", delegator);
+            Map<String, String> entityInfo = UtilMisc.newMap();
+            entityInfo.put("entityContentName", "ProductContent");
+            entityInfo.put("entityContentIdFieldName", "productId");
+            entityInfo.put("entityContentTypeIdFieldName", "productContentTypeId");
+            entityInfo.put("createContentServiceName", "createProductContent");
+            entityInfo.put("updateContentServiceName", "updateProductContent");
+            Map<String, Object> uploadImageResult = uploadImage(context, dispatcher, delegator, productId, productContentTypeId,
+                    "products", imageData, locale, entityInfo);
 
-            String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.server.path", delegator), imageContext);
-            String imageUrlPrefix = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.url.prefix", delegator), imageContext);
-            imageServerPath = imageServerPath.endsWith("/") ? imageServerPath.substring(0, imageServerPath.length()-1) : imageServerPath;
-            imageUrlPrefix = imageUrlPrefix.endsWith("/") ? imageUrlPrefix.substring(0, imageUrlPrefix.length()-1) : imageUrlPrefix;
-            FlexibleStringExpander filenameExpander = FlexibleStringExpander.getInstance(imageFilenameFormat);
-            String viewNumber = String.valueOf(productContentTypeId.charAt(productContentTypeId.length() - 1));
-            String viewType = "additional" + viewNumber;
-            String id = productId;
-            if (imageFilenameFormat.endsWith("${id}")) {
-                id = productId + "_View_" + viewNumber;
-                viewType = "additional";
-            }
-            String fileLocation = filenameExpander.expandString(UtilMisc.toMap("location", "products", "id", id, "viewtype", viewType, "sizetype", "original"));
-            String filePathPrefix = "";
-            String filenameToUse = fileLocation;
-            if (fileLocation.lastIndexOf('/') != -1) {
-                filePathPrefix = fileLocation.substring(0, fileLocation.lastIndexOf('/') + 1); // adding 1 to include the trailing slash
-                filenameToUse = fileLocation.substring(fileLocation.lastIndexOf('/') + 1);
+            if( ServiceUtil.isError(uploadImageResult)) {
+                return uploadImageResult;
             }
 
-            List<GenericValue> fileExtension;
             try {
-                fileExtension = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", (String) context.get("_uploadedFile_contentType")).queryList();
-            } catch (GenericEntityException e) {
+                Map<String, Object> rescaleResult = dispatcher.runSync("productImageAutoRescale", UtilMisc.toMap(
+                        "userLogin", context.get("userLogin"), "locale", context.get("locale"), "timeZone", context.get("timeZone"),
+                        "productId", productId, "productContentTypeId", productContentTypeId, "createSizeTypeContent", true,
+                        "recreateExisting", true, "clearCaches", true
+                ));
+                if (ServiceUtil.isError(rescaleResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(rescaleResult));
+                } else if (ServiceUtil.isFailure(rescaleResult)) {
+                    return ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(rescaleResult));
+                }
+            } catch (GenericServiceException e) {
                 Debug.logError(e, module);
-                return ServiceUtil.returnError(e.getMessage());
+                return ServiceUtil.returnError(e.toString());
             }
 
-            GenericValue extension = EntityUtil.getFirst(fileExtension);
-            if (extension != null) {
-                filenameToUse += "." + extension.getString("fileExtensionId");
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
+
+    public static Map<String, Object> addAdditionalViewForCategory(DispatchContext dctx,
+                                                                  Map<String, ? extends Object> context) {
+
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Delegator delegator = dctx.getDelegator();
+        String productCategoryId = (String) context.get("productCategoryId");
+        String prodCatContentTypeId = (String) context.get("prodCatContentTypeId");
+        ByteBuffer imageData = (ByteBuffer) context.get("uploadedFile");
+        Locale locale = (Locale) context.get("locale");
+
+        if (UtilValidate.isNotEmpty(context.get("_uploadedFile_fileName"))) {
+            Map<String, String> entityInfo = UtilMisc.newMap();
+            entityInfo.put("entityContentName", "ProductCategoryContent");
+            entityInfo.put("entityContentIdFieldName", "productCategoryId");
+            entityInfo.put("entityContentTypeIdFieldName", "prodCatContentTypeId");
+            entityInfo.put("createContentServiceName", "createCategoryContent");
+            entityInfo.put("updateContentServiceName", "updateCategoryContent");
+            Map<String, Object> uploadImageResult = uploadImage(context, dispatcher, delegator, productCategoryId, prodCatContentTypeId,
+                    "categories", imageData, locale, entityInfo);
+
+            if( ServiceUtil.isError(uploadImageResult)) {
+                return uploadImageResult;
             }
 
-            /* Write the new image file */
-            String targetDirectory = imageServerPath + "/" + filePathPrefix;
             try {
-                File targetDir = new File(targetDirectory);
-                // Create the new directory
-                if (!targetDir.exists()) {
-                    boolean created = targetDir.mkdirs();
-                    if (!created) {
-                        String errMsg = UtilProperties.getMessage(resource, "ScaleImage.unable_to_create_target_directory", locale) + " - " + targetDirectory;
-                        Debug.logFatal(errMsg, module);
-                        return ServiceUtil.returnError(errMsg);
-                    }
+                Map<String, Object> rescaleResult = dispatcher.runSync("categoryImageAutoRescale", UtilMisc.toMap(
+                        "userLogin", context.get("userLogin"), "locale", context.get("locale"), "timeZone", context.get("timeZone"),
+                        "productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId, "createSizeTypeContent", true,
+                        "recreateExisting", true, "clearCaches", true
+                ));
+                if (ServiceUtil.isError(rescaleResult)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(rescaleResult));
+                } else if (ServiceUtil.isFailure(rescaleResult)) {
+                    return ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(rescaleResult));
+                }
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.toString());
+            }
+
+        }
+        return ServiceUtil.returnSuccess();
+    }
+
+    /**
+     * SCIPIO: Extracted upload image logic so it can be reused by productContent & productCategoryContent upload feature.
+     *
+     * @param context
+     * @param dispatcher
+     * @param delegator
+     * @param id
+     * @param contentTypeId
+     * @param location
+     * @param imageData
+     * @param locale
+     * @param entityInfo a Map containing all info of the main content entity and its fields and the services to be used
+     * @return
+     */
+    private static Map<String, Object> uploadImage(Map<String, ?> context, LocalDispatcher dispatcher, Delegator delegator, String id,
+                                                   String contentTypeId, String location, ByteBuffer imageData, Locale locale, Map<String, String> entityInfo) {
+        Map<String, Object> imageContext = new HashMap<>();
+        imageContext.putAll(context);
+        imageContext.put("delegator", delegator);
+        imageContext.put("tenantId", delegator.getDelegatorTenantId());
+        String imageFilenameFormat = EntityUtilProperties.getPropertyValue("catalog", "image.filename.additionalviewsize.format", delegator);
+
+        String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.server.path", delegator), imageContext);
+        String imageUrlPrefix = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.url.prefix", delegator), imageContext);
+        imageServerPath = imageServerPath.endsWith("/") ? imageServerPath.substring(0, imageServerPath.length()-1) : imageServerPath;
+        imageUrlPrefix = imageUrlPrefix.endsWith("/") ? imageUrlPrefix.substring(0, imageUrlPrefix.length()-1) : imageUrlPrefix;
+        FlexibleStringExpander filenameExpander = FlexibleStringExpander.getInstance(imageFilenameFormat);
+        String viewNumber = String.valueOf(contentTypeId.charAt(contentTypeId.length() - 1));
+        String viewType = "additional" + viewNumber;
+        if (imageFilenameFormat.endsWith("${id}")) {
+            id = id + "_View_" + viewNumber;
+            viewType = "additional";
+        }
+        String fileLocation = filenameExpander.expandString(UtilMisc.toMap("location", location, "id", id, "viewtype", viewType, "sizetype", "original"));
+        String filePathPrefix = "";
+        String filenameToUse = fileLocation;
+        if (fileLocation.lastIndexOf('/') != -1) {
+            filePathPrefix = fileLocation.substring(0, fileLocation.lastIndexOf('/') + 1); // adding 1 to include the trailing slash
+            filenameToUse = fileLocation.substring(fileLocation.lastIndexOf('/') + 1);
+        }
+
+        List<GenericValue> fileExtension;
+        try {
+            fileExtension = EntityQuery.use(delegator).from("FileExtension").where("mimeTypeId", (String) context.get("_uploadedFile_contentType")).queryList();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        GenericValue extension = EntityUtil.getFirst(fileExtension);
+        if (extension != null) {
+            filenameToUse += "." + extension.getString("fileExtensionId");
+        }
+
+        /* Write the new image file */
+        String targetDirectory = imageServerPath + "/" + filePathPrefix;
+        try {
+            File targetDir = new File(targetDirectory);
+            // Create the new directory
+            if (!targetDir.exists()) {
+                boolean created = targetDir.mkdirs();
+                if (!created) {
+                    String errMsg = UtilProperties.getMessage(resource, "ScaleImage.unable_to_create_target_directory", locale) + " - " + targetDirectory;
+                    Debug.logFatal(errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
                 // Delete existing image files
-                // Images are ordered by productId (${location}/${id}/${viewtype}/${sizetype})
-                } else if (!filenameToUse.contains(productId)) {
-                    try {
-                        File[] files = targetDir.listFiles();
-                        for (File file : files) {
-                            if (file.isFile()) {
-                                if (!file.delete()) {
-                                    Debug.logError("File : " + file.getName() + ", couldn't be deleted", module);
-                                }
-                            }
-
-                        }
-                    } catch (SecurityException e) {
-                        Debug.logError(e,module);
-                    }
-                // Images aren't ordered by productId (${location}/${viewtype}/${sizetype}/${id})
-                } else {
-                    try {
-                        File[] files = targetDir.listFiles();
-                        for (File file : files) {
-                            if (file.isFile() && file.getName().startsWith(productId + "_View_" + viewNumber)) {
-                                if (!file.delete()) {
-                                    Debug.logError("File : " + file.getName() + ", couldn't be deleted", module);
-                                }
-                            }
-                        }
-                    } catch (SecurityException e) {
-                        Debug.logError(e,module);
-                    }
-                }
-            } catch (NullPointerException e) {
-                Debug.logError(e,module);
-            }
-            // Write
-            try {
-            File file = new File(imageServerPath + "/" + fileLocation + "." +  extension.getString("fileExtensionId"));
+                // Images are ordered by id (${location}/${id}/${viewtype}/${sizetype})
+            } else if (!filenameToUse.contains(id)) {
                 try {
-                    RandomAccessFile out = new RandomAccessFile(file, "rw");
-                    out.write(imageData.array());
-                    out.close();
-                } catch (FileNotFoundException e) {
-                    Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                            "ProductImageViewUnableWriteFile", UtilMisc.toMap("fileName", file.getAbsolutePath()), locale));
-                } catch (IOException e) {
-                    Debug.logError(e, module);
-                    return ServiceUtil.returnError(UtilProperties.getMessage(resource,
-                            "ProductImageViewUnableWriteBinaryData", UtilMisc.toMap("fileName", file.getAbsolutePath()), locale));
-                }
-            } catch (NullPointerException e) {
-                Debug.logError(e,module);
-            }
+                    File[] files = targetDir.listFiles();
+                    for (File file : files) {
+                        if (file.isFile()) {
+                            if (!file.delete()) {
+                                Debug.logError("File : " + file.getName() + ", couldn't be deleted", module);
+                            }
+                        }
 
-            // SCIPIO: use productAutoImageRescale
+                    }
+                } catch (SecurityException e) {
+                    Debug.logError(e,module);
+                }
+                // Images aren't ordered by id (${location}/${viewtype}/${sizetype}/${id})
+            } else {
+                try {
+                    File[] files = targetDir.listFiles();
+                    for (File file : files) {
+                        if (file.isFile() && file.getName().startsWith(id + "_View_" + viewNumber)) {
+                            if (!file.delete()) {
+                                Debug.logError("File : " + file.getName() + ", couldn't be deleted", module);
+                            }
+                        }
+                    }
+                } catch (SecurityException e) {
+                    Debug.logError(e,module);
+                }
+            }
+        } catch (NullPointerException e) {
+            Debug.logError(e,module);
+        }
+        // Write
+        try {
+            File file = new File(imageServerPath + "/" + fileLocation + "." +  extension.getString("fileExtensionId"));
+            try {
+                RandomAccessFile out = new RandomAccessFile(file, "rw");
+                out.write(imageData.array());
+                out.close();
+            } catch (FileNotFoundException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "ProductImageViewUnableWriteFile", UtilMisc.toMap("fileName", file.getAbsolutePath()), locale));
+            } catch (IOException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource,
+                        "ProductImageViewUnableWriteBinaryData", UtilMisc.toMap("fileName", file.getAbsolutePath()), locale));
+            }
+        } catch (NullPointerException e) {
+            Debug.logError(e,module);
+        }
+
+        // SCIPIO: use productAutoImageRescale
 //            /* scale Image in different sizes */
 //            Map<String, Object> resultResize = new HashMap<>();
 //            try {
@@ -1163,38 +1255,20 @@ public class ProductServices {
 //                }
 //            }
 
-            String imageUrl = imageUrlPrefix + "/" + fileLocation + "." +  extension.getString("fileExtensionId");
-            /* store the imageUrl version of the image, for backwards compatibility with code that does not use scaled versions */
-            Map<String, Object> result = addImageResource(dispatcher, delegator, context, imageUrl, productContentTypeId);
-
-            if( ServiceUtil.isError(result)) {
-                return result;
-            }
-
-            try {
-                Map<String, Object> rescaleResult = dispatcher.runSync("productImageAutoRescale", UtilMisc.toMap(
-                        "userLogin", context.get("userLogin"), "locale", context.get("locale"), "timeZone", context.get("timeZone"),
-                        "productId", productId, "productContentTypeId", productContentTypeId, "createSizeTypeContent", true,
-                        "recreateExisting", true, "clearCaches", true
-                ));
-                if (ServiceUtil.isError(rescaleResult)) {
-                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(rescaleResult));
-                } else if (ServiceUtil.isFailure(rescaleResult)) {
-                    return ServiceUtil.returnFailure(ServiceUtil.getErrorMessage(rescaleResult));
-                }
-            } catch (GenericServiceException e) {
-                Debug.logError(e, module);
-                return ServiceUtil.returnError(e.toString());
-            }
-
-        }
-        return ServiceUtil.returnSuccess();
+        String imageUrl = imageUrlPrefix + "/" + fileLocation + "." +  extension.getString("fileExtensionId");
+        /* store the imageUrl version of the image, for backwards compatibility with code that does not use scaled versions */
+        return addImageResource(dispatcher, delegator, context, imageUrl, id, contentTypeId, entityInfo);
     }
 
-    private static Map<String,Object> addImageResource( LocalDispatcher dispatcher, Delegator delegator, Map<String, ? extends Object> context,
-            String imageUrl, String productContentTypeId ) {
+    private static Map<String,Object> addImageResource(LocalDispatcher dispatcher, Delegator delegator, Map<String, ? extends Object> context,
+            String imageUrl, String id, String contentTypeId, Map<String, String> entityInfo) {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String productId = (String) context.get("productId");
+
+        String entityContentName = entityInfo.get("entityContentName");
+        String entityContentIdFieldName = entityInfo.get("entityContentIdFieldName");
+        String entityContentTypeIdFieldName = entityInfo.get("entityContentTypeIdFieldName");
+        String createContentServiceName = entityInfo.get("createContentServiceName");
+        String updateContentServiceName = entityInfo.get("updateContentServiceName");
 
         if (UtilValidate.isNotEmpty(imageUrl)) {
             String contentId = (String) context.get("contentId");
@@ -1204,12 +1278,12 @@ public class ProductServices {
             dataResourceCtx.put("dataResourceName", context.get("_uploadedFile_fileName"));
             dataResourceCtx.put("userLogin", userLogin);
 
-            Map<String, Object> productContentCtx = new HashMap<>();
-            productContentCtx.put("productId", productId);
-            productContentCtx.put("productContentTypeId", productContentTypeId);
-            productContentCtx.put("fromDate", context.get("fromDate"));
-            productContentCtx.put("thruDate", context.get("thruDate"));
-            productContentCtx.put("userLogin", userLogin);
+            Map<String, Object> entityContentCtx = new HashMap<>();
+            entityContentCtx.put(entityContentIdFieldName, id);
+            entityContentCtx.put(entityContentTypeIdFieldName, contentTypeId);
+            entityContentCtx.put("fromDate", context.get("fromDate"));
+            entityContentCtx.put("thruDate", context.get("thruDate"));
+            entityContentCtx.put("userLogin", userLogin);
 
             // SCIPIO: stock bug: if there's no contentId passed, check it otherwise we create new records all the time
             if (UtilValidate.isEmpty(contentId)) {
@@ -1217,15 +1291,15 @@ public class ProductServices {
                     GenericValue productContent;
                     Object fromDate = context.get("fromDate");
                     if (fromDate != null) {
-                        productContent = delegator.from("ProductContent").where("productId", productId,
-                                "productContentTypeId", productContentTypeId, "fromDate", fromDate).queryFirst();
+                        productContent = delegator.from(entityContentName).where(entityContentIdFieldName, id,
+                                entityContentTypeIdFieldName, contentTypeId, "fromDate", fromDate).queryFirst();
                     } else {
-                        productContent = delegator.from("ProductContent").where("productId", productId,
-                                "productContentTypeId", productContentTypeId).orderBy("-fromDate").filterByDate().queryFirst();
+                        productContent = delegator.from(entityContentName).where(entityContentIdFieldName, id,
+                                entityContentTypeIdFieldName, contentTypeId).orderBy("-fromDate").filterByDate().queryFirst();
                     }
                     if (productContent != null) {
                         contentId = productContent.getString("contentId");
-                        productContentCtx.put("fromDate", productContent.get("fromDate"));
+                        entityContentCtx.put("fromDate", productContent.get("fromDate"));
                     }
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
@@ -1254,7 +1328,7 @@ public class ProductServices {
                     if (dataResource != null) {
                         dataResourceCtx.put("dataResourceId", dataResource.getString("dataResourceId"));
                         try {
-                            Map<String, Object> serviceResult = dispatcher.runSync("updateDataResource", dataResourceCtx);
+                            Map<String, Object> serviceResult = dispatcher.runSync("updateDataResourceAndText", dataResourceCtx);
                             if (ServiceUtil.isError(serviceResult)) {
                                 return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                             }
@@ -1310,9 +1384,9 @@ public class ProductServices {
                         }
                     }
 
-                    productContentCtx.put("contentId", contentId);
+                    entityContentCtx.put("contentId", contentId);
                     try {
-                        Map<String, Object> serviceResult = dispatcher.runSync("updateProductContent", productContentCtx);
+                        Map<String, Object> serviceResult = dispatcher.runSync(updateContentServiceName, entityContentCtx);
                         if (ServiceUtil.isError(serviceResult)) {
                             return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                         }
@@ -1353,9 +1427,11 @@ public class ProductServices {
                     return ServiceUtil.returnError(e.getMessage());
                 }
 
-                productContentCtx.put("contentId", contentResult.get("contentId"));
+                contentCtx.put("contentId", contentResult.get("contentId"));
+                contentCtx.put(entityContentIdFieldName, id);
+                contentCtx.put(entityContentTypeIdFieldName, contentTypeId);
                 try {
-                    Map<String, Object> serviceResult = dispatcher.runSync("createProductContent", productContentCtx);
+                    Map<String, Object> serviceResult = dispatcher.runSync(createContentServiceName, contentCtx);
                     if (ServiceUtil.isError(serviceResult)) {
                         return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
                     }

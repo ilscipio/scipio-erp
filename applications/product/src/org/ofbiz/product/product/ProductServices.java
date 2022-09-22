@@ -1115,11 +1115,12 @@ public class ProductServices {
         FlexibleStringExpander filenameExpander = FlexibleStringExpander.getInstance(imageFilenameFormat);
         String viewNumber = String.valueOf(contentTypeId.charAt(contentTypeId.length() - 1));
         String viewType = "additional" + viewNumber;
+        String fileNameId = id;
         if (imageFilenameFormat.endsWith("${id}")) {
-            id = id + "_View_" + viewNumber;
+            fileNameId = id + "_View_" + viewNumber;
             viewType = "additional";
         }
-        String fileLocation = filenameExpander.expandString(UtilMisc.toMap("location", location, "id", id, "viewtype", viewType, "sizetype", "original"));
+        String fileLocation = filenameExpander.expandString(UtilMisc.toMap("location", location, "id", fileNameId, "viewtype", viewType, "sizetype", "original"));
         String filePathPrefix = "";
         String filenameToUse = fileLocation;
         if (fileLocation.lastIndexOf('/') != -1) {

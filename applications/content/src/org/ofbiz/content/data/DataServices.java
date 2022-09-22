@@ -18,20 +18,6 @@
  *******************************************************************************/
 package org.ofbiz.content.data;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.RandomAccessFile;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.nio.ByteBuffer;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -48,6 +34,20 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.RandomAccessFile;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.ByteBuffer;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * DataServices Class
@@ -279,8 +279,18 @@ public class DataServices {
             return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
         }
         String dataResourceTypeId = (String) context.get("dataResourceTypeId");
+        String textData = null;
+        if (thisResult.containsKey("dataResource")) {
+            GenericValue dataResource = (GenericValue) thisResult.get("dataResource");
+            dataResourceTypeId = dataResource.getString("dataResourceTypeId");
+            textData = dataResource.getString("objectInfo");
+        }
         if (dataResourceTypeId != null && "ELECTRONIC_TEXT".equals(dataResourceTypeId)) {
-            thisResult = updateElectronicText(dctx, context);
+            Map<String, Object> updateElectronicTextCtx = UtilMisc.newMap(context);
+            if (UtilValidate.isEmpty(context.get("textData")) && UtilValidate.isNotEmpty(textData)) {
+                updateElectronicTextCtx.put("textData", textData);
+            }
+            thisResult = updateElectronicText(dctx, updateElectronicTextCtx);
             if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
                 return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
             }

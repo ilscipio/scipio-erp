@@ -42,7 +42,7 @@ import java.util.TreeMap;
  * TODO?: try to reconcile everything in the future, too difficult for now.
  * Added 2017-07-05.
  */
-public abstract class ProductImageServices {
+public class ProductImageServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final ProcessSignals productImageAutoRescaleAllSignals = ProcessSignals.make("productImageAutoRescaleAll", true);
 
@@ -79,7 +79,7 @@ public abstract class ProductImageServices {
                 return ServiceUtil.returnError(e.toString());
             }
         }
-        String productContentTypeId = imageViewType.getProductContentTypeId();
+        String productContentTypeId = imageViewType.getContentTypeId();
 
         Map<String, Object> contentCtx;
         try {
@@ -103,7 +103,7 @@ public abstract class ProductImageServices {
             locInfo = ProductImageLocationInfo.from(ctx.dctx(), productId, imageViewType, (ImageProfile) null, imagePath, null,
                     false, false, null);
 
-            if (isStrArgEmpty(contentCtx, "imageServerPath")) {
+             if (isStrArgEmpty(contentCtx, "imageServerPath")) {
                 contentCtx.put("imageServerPath", locInfo.getImageServerPathExpr());
             }
             if (isStrArgEmpty(contentCtx, "imageUrlPrefix")) {
@@ -417,7 +417,7 @@ public abstract class ProductImageServices {
          */
 
         ImageProfile imageProfile = ProductImageWorker.getProductImageProfileOrDefault(ctx.delegator(),
-                origImageViewType.getProductContentTypeId(), product, content, false, false);
+                origImageViewType.getContentTypeId(), product, content, false, false);
         if (imageProfile == null) {
             String errorMsg = "product [" + productId + "] productContentTypeId [" + productContentTypeId +
                     "] origImageUrl [" + origImageUrl + "]: could not find media profile";
@@ -496,7 +496,7 @@ public abstract class ProductImageServices {
                     if (imageUrl != null && (imageUrl.startsWith(".") || imageUrl.contains("/."))) { // SPECIAL: detect bug (missing filename)
                         throw new IllegalStateException("internal or data error: invalid url [" + imageUrl + "] for sizeType [" + sizeType + "], not updating");
                     }
-                    Map<String, Object> res = updateProductContentImageUrl(ctx, product, scaledImageViewType.getProductContentTypeId(), imageUrl,
+                    Map<String, Object> res = updateProductContentImageUrl(ctx, product, scaledImageViewType.getContentTypeId(), imageUrl,
                             origImageUrl, productContentTypeId, fromDate, ctx.attr("createSizeTypeContent"), sizeTypeInfo);
                     if (ServiceUtil.isError(res)) {
                         return UtilMisc.put(new HashMap<>(res), "variantSuccessCount", variantSuccessCount, "variantFailCount", variantFailCount);

@@ -1,5 +1,7 @@
 package com.ilscipio.scipio.product.image;
 
+import com.ilscipio.scipio.category.image.CategoryImageViewType;
+import com.ilscipio.scipio.content.image.ContentImageViewType;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
@@ -12,13 +14,10 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Essentially a wrapper for the new ProductContentType fields (SCIPIO).
@@ -28,18 +27,21 @@ import java.util.stream.Collectors;
  * Compatibility code is for stock code only and should not be needed otherwise. The service productImageMigrateImageUrlProductContentTypeData
  * migrates old stock data (not custom client definitions).</p>
  */
-public class ProductImageViewType implements Serializable {
+public class ProductImageViewType extends ContentImageViewType implements Serializable {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     protected final GenericValue productContentType;
     protected final String productContentTypeId;
 
     protected ProductImageViewType(GenericValue productContentType) throws IllegalArgumentException {
+        super(productContentType, "ProductContentType", "productContentTypeId");
         this.productContentType = productContentType;
         this.productContentTypeId = productContentType.getString("productContentTypeId");
     }
 
-    /** Factory method from viewType/viewNumber/viewSize with auto ProductContentType lookup. */
+    /**
+     * Factory method from viewType/viewNumber/viewSize with auto ProductContentType lookup.
+     */
     public static ProductImageViewType from(Delegator delegator, String viewType, String viewNumber, String viewSize,
                                             boolean autoUpdateData, boolean emulateMissing, boolean useCache) throws GeneralException, IllegalArgumentException {
         if (UtilValidate.isEmpty(viewType)) {
@@ -82,7 +84,9 @@ public class ProductImageViewType implements Serializable {
         return from(delegator, viewType, viewNumber, viewSize, autoUpdateData, false, useCache);
     }
 
-    /** Factory method from ProductContentType, with backward-compatibility autoUpdateData. */
+    /**
+     * Factory method from ProductContentType, with backward-compatibility autoUpdateData.
+     */
     public static ProductImageViewType from(Delegator delegator, String productContentTypeId, boolean autoUpdateData, boolean useCache) throws GeneralException, IllegalArgumentException {
         GenericValue productContentType = delegator.from("ProductContentType").where("productContentTypeId", productContentTypeId).cache(useCache).queryOne();
         if (productContentType == null) {
@@ -91,79 +95,11 @@ public class ProductImageViewType implements Serializable {
         return from(productContentType, useCache);
     }
 
-    /** Factory method from ProductContentType. */
+    /**
+     * Factory method from ProductContentType.
+     */
     public static ProductImageViewType from(GenericValue productContentType, boolean useCache) throws GenericEntityException, IllegalArgumentException {
         return new ProductImageViewType(productContentType);
-    }
-
-    protected Delegator getDelegator() {
-        return productContentType.getDelegator();
-    }
-
-    public GenericValue getProductContentType() {
-        return productContentType;
-    }
-
-    public String getProductContentTypeId() {
-        return productContentTypeId;
-    }
-
-    /** Returns the parent type ID, supposed to be IMAGE_URL_FULL, ORIGINAL_IMAGE_URL, ADDITIONAL_IMAGE_x or a custom "original" viewSize type. */
-    public String getParentTypeId() {
-        return productContentType.getString("parentTypeId");
-    }
-
-    /** Returns viewType (main, additional, ...). */
-    public String getViewType() {
-        return productContentType.getString("viewType");
-    }
-
-    /** Returns viewNumber (0 for original/main, 1-4 or higher for additional images). */
-    public String getViewNumber() {
-        return productContentType.getString("viewNumber");
-    }
-
-    public int getViewNumberInt() {
-        return Integer.parseInt(getViewNumber());
-    }
-
-    /** Returns viewSize (original, large, 320x240, ...), also knows as sizeType. */
-    public String getViewSize() {
-        return productContentType.getString("viewSize");
-    }
-
-    public boolean isMain() {
-        return "main".equals(getViewType());
-    }
-
-    public boolean isAdditional() {
-        return "additional".equals(getViewType());
-    }
-
-    public boolean isZero() {
-        return "0".equals(getViewNumber());
-    }
-
-    public boolean isOriginal() {
-        return "original".equals(getViewSize());
-    }
-
-    @Override
-    public String toString() {
-        return "{productContentTypeId='" + productContentTypeId + "'}'";
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ProductImageViewType that = (ProductImageViewType) o;
-        return getProductContentTypeId().equals(that.getProductContentTypeId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getProductContentTypeId());
     }
 
     public ProductImageViewType getOriginal(boolean useCache) throws GeneralException {
@@ -174,74 +110,17 @@ public class ProductImageViewType implements Serializable {
         return ProductImageViewType.from(pct, true);
     }
 
-    public String getOriginalProductContentTypeId(boolean useCache) throws GeneralException {
-        if (isOriginal()) {
-            return getProductContentTypeId();
-        } else {
-            return getParentTypeId();
-        }
-    }
-
-    public List<GenericValue> getProductContentTypes(boolean includeOriginal, boolean useCache) throws GeneralException {
-        List<EntityCondition> orCondList = new ArrayList<>();
-
-        if (isOriginal()) {
-            if (includeOriginal) {
-                orCondList.add(EntityCondition.makeCondition("productContentTypeId", getProductContentTypeId()));
-            }
-            orCondList.add(EntityCondition.makeCondition("parentTypeId", getProductContentTypeId()));
-        } else if (getParentTypeId() != null && !"IMAGE_URL_FULL".equals(getParentTypeId())) {
-            if (includeOriginal) {
-                orCondList.add(EntityCondition.makeCondition("productContentTypeId", getParentTypeId()));
-            }
-            orCondList.add(EntityCondition.makeCondition("parentTypeId", getParentTypeId()));
-        }
-
-        List<GenericValue> pctList = getDelegator().from("ProductContentType").where(orCondList, EntityOperator.OR).queryList();
-        return pctList != null ? pctList : Collections.emptyList();
-    }
-
-    public Map<String, GenericValue> getProductContentTypesById(boolean includeOriginal, boolean useCache) throws GeneralException {
-        List<GenericValue> pctList = getProductContentTypes(includeOriginal, useCache);
-        if (pctList.isEmpty()) {
+    @Override
+    public Map<ContentImageViewType, GenericValue> getContentTypesByViewType(boolean includeOriginal, boolean useCache) throws GeneralException {
+        List<GenericValue> ctList = getContentTypes(includeOriginal, useCache);
+        if (ctList.isEmpty()) {
             return Collections.emptyMap();
         }
-        Map<String, GenericValue> idMap = new LinkedHashMap<>();
-        for(GenericValue pct : pctList) {
-            idMap.put(pct.getString("productContentTypeId"), pct);
+        Map<ContentImageViewType, GenericValue> idMap = new LinkedHashMap<>();
+        for (GenericValue ct : ctList) {
+            idMap.put(CategoryImageViewType.from(ct, useCache), ct);
         }
         return idMap;
-    }
-
-    public Map<ProductImageViewType, GenericValue> getProductContentTypesByViewType(boolean includeOriginal, boolean useCache) throws GeneralException {
-        List<GenericValue> pctList = getProductContentTypes(includeOriginal, useCache);
-        if (pctList.isEmpty()) {
-            return Collections.emptyMap();
-        }
-        Map<ProductImageViewType, GenericValue> idMap = new LinkedHashMap<>();
-        for(GenericValue pct : pctList) {
-            idMap.put(ProductImageViewType.from(pct, useCache), pct);
-        }
-        return idMap;
-    }
-
-    public List<String> getProductContentTypeIds(boolean includeOriginal, boolean useCache) throws GeneralException {
-        List<GenericValue> pctList = getProductContentTypes(includeOriginal, useCache);
-        return pctList.isEmpty() ? Collections.emptyList() : pctList.stream().map(c -> c.getString("productContentTypeId")).collect(Collectors.toList());
-    }
-
-    public Map<String, GenericValue> getProductContentTypesByViewSize(boolean includeOriginal, boolean useCache) throws GeneralException {
-        Map<String, GenericValue> pctMap;
-        List<GenericValue> pctList = getProductContentTypes(includeOriginal, useCache);
-        if (UtilValidate.isNotEmpty(pctList)) {
-            pctMap = new LinkedHashMap<>();
-            for(GenericValue pct : pctList) {
-                pctMap.put(pct.getString("viewSize"), pct);
-            }
-        } else {
-            pctMap = Collections.emptyMap();
-        }
-        return pctMap;
     }
 
     public static Map<String, GenericValue> getOriginalViewSizeProductContentTypes(Delegator delegator, boolean useCache) throws GenericEntityException, IllegalArgumentException {
@@ -259,7 +138,7 @@ public class ProductImageViewType implements Serializable {
                         EntityOperator.OR,
                         EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, "ADDITIONAL_IMAGE_%"))).cache(useCache).queryList();
         if (pctList != null) {
-            for(GenericValue pct : pctList) {
+            for (GenericValue pct : pctList) {
                 String pctId = pct.getString("productContentTypeId");
                 if (!"ORIGINAL_IMAGE_URL".equals(pctId)) {
                     pctMap.put(pctId, pct);
@@ -270,7 +149,9 @@ public class ProductImageViewType implements Serializable {
         return pctMap;
     }
 
-    /** Implements compatibility mode for determining productContentTypeId from viewType/viewNumber/viewSize. */
+    /**
+     * Implements compatibility mode for determining productContentTypeId from viewType/viewNumber/viewSize.
+     */
     protected static String extractProductContentTypeId(Delegator delegator, String viewType, String viewNumber, String viewSize) {
         if ("main".equals(viewType)) {
             if ("original".equals(viewSize)) {
@@ -293,7 +174,9 @@ public class ProductImageViewType implements Serializable {
         }
     }
 
-    /** Implements compatibility mode for extracting viewType from productContentTypeId. */
+    /**
+     * Implements compatibility mode for extracting viewType from productContentTypeId.
+     */
     protected static String extractProductContentTypeIdViewType(Delegator delegator, String productContentTypeId) throws IllegalArgumentException {
         if (productContentTypeId.endsWith("_IMAGE_URL")) {
             return "main";
@@ -304,7 +187,9 @@ public class ProductImageViewType implements Serializable {
         }
     }
 
-    /** Implements compatibility mode for extracting viewNumber from productContentTypeId. */
+    /**
+     * Implements compatibility mode for extracting viewNumber from productContentTypeId.
+     */
     protected static String extractProductContentTypeIdViewNumber(Delegator delegator, String productContentTypeId) throws IllegalArgumentException {
         if (productContentTypeId.endsWith("_IMAGE_URL")) {
             return "0";
@@ -321,7 +206,9 @@ public class ProductImageViewType implements Serializable {
         }
     }
 
-    /** Implements compatibility mode for extracting viewSize from productContentTypeId. */
+    /**
+     * Implements compatibility mode for extracting viewSize from productContentTypeId.
+     */
     protected static String extractProductContentTypeIdViewSize(Delegator delegator, String productContentTypeId) throws IllegalArgumentException {
         if (productContentTypeId.equals("ORIGINAL_IMAGE_URL") || productContentTypeId.startsWith("ADDITIONAL_IMAGE_")) {
             return "original";

@@ -221,7 +221,7 @@ public class ProductImageVariants extends ImageVariants {
     }
 
     public String getProductContentTypeId() {
-        return getOrigImageViewType().getProductContentTypeId();
+        return getOrigImageViewType().getContentTypeId();
     }
 
     public ProductImageViewType getOrigImageViewType() {
@@ -395,7 +395,7 @@ public class ProductImageVariants extends ImageVariants {
             if (variantRecord != null) {
                 variant = makeContentVariant(config, variantImageViewType, variantRecord);
             } else {
-                String fieldName = getProductCandidateFieldName(variantImageViewType.getProductContentTypeId());
+                String fieldName = getProductCandidateFieldName(variantImageViewType.getContentTypeId());
                 if (isProductField(fieldName)) {
                     variant = makeInlineVariant(config, variantImageViewType, fieldName);
                 } else {
@@ -426,7 +426,7 @@ public class ProductImageVariants extends ImageVariants {
 
         @Override
         public String getAssocId() {
-            return getVariantImageViewType().getProductContentTypeId();
+            return getVariantImageViewType().getContentTypeId();
         }
 
         @Override
@@ -726,7 +726,7 @@ public class ProductImageVariants extends ImageVariants {
 
         @Override
         public String getAssocId() {
-            return getVariantImageViewType().getProductContentTypeId();
+            return getVariantImageViewType().getContentTypeId();
         }
 
         @Override

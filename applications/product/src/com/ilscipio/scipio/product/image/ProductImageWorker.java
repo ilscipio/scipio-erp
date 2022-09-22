@@ -18,15 +18,7 @@
  *******************************************************************************/
 package com.ilscipio.scipio.product.image;
 
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
+import com.ilscipio.scipio.content.image.ContentImageWorker;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
@@ -35,7 +27,6 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.common.image.ImageProfile;
 import org.ofbiz.common.image.ImageVariantConfig;
-import com.ilscipio.scipio.content.image.ContentImageWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -45,6 +36,14 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
+
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * SCIPIO: Image utilities for product (specifically) image handling.
@@ -135,7 +134,7 @@ public abstract class ProductImageWorker {
         if (!originalImageViewType.isOriginal()) {
             throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        List<String> pctIdList = originalImageViewType.getProductContentTypeIds(includeOriginal, useCache);
+        List<String> pctIdList = originalImageViewType.getContentTypeIds(includeOriginal, useCache);
         if (pctIdList.isEmpty()) {
             return Collections.emptyList();
         }
@@ -151,7 +150,7 @@ public abstract class ProductImageWorker {
         if (!originalImageViewType.isOriginal()) {
             throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        Map<String, GenericValue> pctIdMap = originalImageViewType.getProductContentTypesById(includeOriginal, useCache);
+        Map<String, GenericValue> pctIdMap = originalImageViewType.getContentTypesById(includeOriginal, useCache);
         if (pctIdMap.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -176,7 +175,7 @@ public abstract class ProductImageWorker {
         if (!originalImageViewType.isOriginal()) {
             throw new IllegalArgumentException("originalImageViewType not an original viewType: " + originalImageViewType);
         }
-        Map<String, GenericValue> pctIdMap = originalImageViewType.getProductContentTypesById(includeOriginal, useCache);
+        Map<String, GenericValue> pctIdMap = originalImageViewType.getContentTypesById(includeOriginal, useCache);
         if (pctIdMap.isEmpty()) {
             return Collections.emptyMap();
         }

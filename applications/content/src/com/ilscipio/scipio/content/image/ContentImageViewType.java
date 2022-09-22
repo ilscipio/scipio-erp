@@ -150,7 +150,7 @@ public abstract class ContentImageViewType implements Serializable {
         }
         Map<String, GenericValue> idMap = new LinkedHashMap<>();
         for (GenericValue pct : ctList) {
-            idMap.put(pct.getString(contentTypeEntityName), pct);
+            idMap.put(pct.getString(contentTypeIdFieldName), pct);
         }
         return idMap;
     }

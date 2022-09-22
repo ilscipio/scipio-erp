@@ -2,6 +2,7 @@ package com.ilscipio.scipio.content.image;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.image.ImageProfile;
@@ -14,7 +15,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public abstract class ContentImageLocationInfoFactory<T extends ContentImageLocationInfo, V extends ContentImageViewType> {
-    private static ContentImageLocationInfoFactory FACTORY;
+    private static Map<String, ContentImageLocationInfoFactory> FACTORY_MAP = UtilMisc.newMap();
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     public abstract T make(DispatchContext dctx, String id, V imageViewType,
@@ -47,20 +48,20 @@ public abstract class ContentImageLocationInfoFactory<T extends ContentImageLoca
                   Boolean useParentImageUrl, boolean useEntityCache, boolean useProfileCache, Map<String, Object> extraParams) throws GeneralException;
 
     public static ContentImageLocationInfoFactory getInstance(String propertyFactoryName) {
-        if (FACTORY == null) {
+        if (!FACTORY_MAP.containsKey(propertyFactoryName)) {
             String clsName = UtilProperties.getPropertyValue("catalog", propertyFactoryName);
             if (UtilValidate.isEmpty(clsName)) {
-                FACTORY = null;
+                FACTORY_MAP.put(propertyFactoryName, null);
             }
             try {
                 Class<?> cls = Class.forName(clsName);
-                FACTORY = (ContentImageLocationInfoFactory) cls.getConstructor().newInstance();
+                FACTORY_MAP.put(propertyFactoryName, (ContentImageLocationInfoFactory) cls.getConstructor().newInstance());
             } catch (Exception e) {
                 Debug.logError(e, "Invalid catalog#" + propertyFactoryName, module);
-                FACTORY = null;
+                FACTORY_MAP.put(propertyFactoryName, null);
             }
         }
-        return FACTORY;
+        return FACTORY_MAP.get(propertyFactoryName);
     }
 }
 

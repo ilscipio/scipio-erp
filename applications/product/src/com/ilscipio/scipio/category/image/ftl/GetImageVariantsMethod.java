@@ -87,7 +87,7 @@ public class GetImageVariantsMethod implements TemplateMethodModelEx {
             //type = TransformUtil.getStringArg(mapArgs, "type");
             contentId = TransformUtil.getStringArg(mapArgs, "contentId");
             productCategoryId = TransformUtil.getStringArg(mapArgs, "productCategoryId");
-            productCatContentTypeId = TransformUtil.getStringArg(mapArgs, "productCatContentTypeId");
+            productCatContentTypeId = TransformUtil.getStringArg(mapArgs, "prodCatContentTypeId");
             useCache = TransformUtil.getBooleanArg(mapArgs, "useCache", true);
         } else {
             throw new TemplateModelException("First arg not instance of string or hash");

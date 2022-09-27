@@ -41,7 +41,7 @@ public class CategoryImageVariants extends ImageVariants {
     private static final UtilCache<String, CategoryImageVariants> CACHE = UtilCache.createUtilCache("category.image.variants", true);
     private static final boolean VARIANT_SOURCE_CHECK = UtilProperties.getPropertyAsBoolean("cache", "category.image.variants.sourceCheck", true);
     private static final List<String> VARIANT_PRIO_LIST = UtilMisc.unmodifiableArrayList("original", "detail", "large", "medium", "small");
-    private static final List<String> PCCTID_PRIO_LIST = UtilMisc.unmodifiableArrayList("ORIGINAL_IMAGE_URL", "DETAIL_IMAGE_URL", "LARGE_IMAGE_URL", "MEDIUM_IMAGE_URL", "SMALL_IMAGE_URL");
+    private static final List<String> PCCTID_PRIO_LIST = UtilMisc.unmodifiableArrayList("ORIGINAL_IMAGE_URL", "DETAIL_IMAGE_URL", "LARGE_IMAGE_URL", "MEDIUM_IMAGE_URL", "SMALL_IMAGE_URL", "CATEGORY_IMAGE_URL");
 
     protected final GenericValue productCategory;
     protected final GenericValue productCategoryMediaDetails;

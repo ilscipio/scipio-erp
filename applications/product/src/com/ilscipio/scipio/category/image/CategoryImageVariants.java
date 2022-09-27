@@ -18,7 +18,6 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.product.category.CategoryContentWrapper;
-import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
@@ -479,7 +478,7 @@ public class CategoryImageVariants extends ImageVariants {
             return CategoryImageVariants.this.getRecordImageUrl(getRecord());
         }
 
-        /** Gets the Product xxxImageUrl field: originalImageUrl, detailImageUrl, largeImageUrl, mediumImageUrl, smallImageUrl, ... */
+        /** Gets the ProductCategory xxxImageUrl field: originalImageUrl, detailImageUrl, largeImageUrl, mediumImageUrl, smallImageUrl, ... */
         public String getFieldImageUrl() {
             // Based on ProductContentWrapper
             String fieldName = getProductCategoryUrlFieldName();
@@ -489,14 +488,6 @@ public class CategoryImageVariants extends ImageVariants {
             String candidateValue = getProductCategory().getString(fieldName);
             if (UtilValidate.isNotEmpty(candidateValue)) {
                 return candidateValue;
-            } else if (isUseParents() && "Y".equals(getProductCategory().getString("isVariant"))) {
-                GenericValue parent = ProductWorker.getParentProduct(getProductCategoryId(), getDelegator(), isUseEntityCache());
-                if (parent != null) {
-                    candidateValue = parent.getString(fieldName);
-                    if (UtilValidate.isNotEmpty(candidateValue)) {
-                        return candidateValue;
-                    }
-                }
             }
             return null;
         }

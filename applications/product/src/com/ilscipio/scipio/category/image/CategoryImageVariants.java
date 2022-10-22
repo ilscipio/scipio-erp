@@ -146,8 +146,9 @@ public class CategoryImageVariants extends ImageVariants {
             String originalImageUrl = imageVariants.getOriginal().getStaticImageUrl();
             if (UtilValidate.isNotEmpty(originalImageUrl)) {
                 CategoryImageWorker.ensureCategoryImage(dispatcher.getDispatchContext(), locale, productCategory, prodCatContentTypeId, originalImageUrl, true, true);
+            } else {
+                return null;
             }
-
             return imageVariants;
         } catch (Exception e) {
             Debug.logError(e, module);

@@ -156,6 +156,8 @@ public class ProductImageVariants extends ImageVariants {
             if (UtilValidate.isNotEmpty(originalImageUrl)) {
                 // See also ProductContentWrapper.getImageUrl
                 ProductImageWorker.ensureProductImage(dispatcher.getDispatchContext(), locale, product, productContentTypeId, originalImageUrl, true, true);
+            } else {
+                return null;
             }
 
             return imageVariants;

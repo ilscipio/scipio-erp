@@ -158,7 +158,9 @@ public class UomWorker {
                 svcOutMap = dispatcher.runSync("convertUom", svcInMap);
             }
         } catch (GenericServiceException ex) {
-            Debug.logError(ex, module);
+            if (!safe) {
+                Debug.logError(ex, module);
+            }
             return null;
         }
 

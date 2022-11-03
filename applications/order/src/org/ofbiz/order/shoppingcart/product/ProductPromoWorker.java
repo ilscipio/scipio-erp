@@ -18,34 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.order.shoppingcart.product;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilNumber;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilValidate;
+import com.ibm.icu.util.Calendar;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -60,6 +34,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductSearch;
+import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -68,7 +43,15 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
 
-import com.ibm.icu.util.Calendar;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 /**
  * ProductPromoWorker - Worker class for catalog/product promotion related functionality
@@ -660,7 +643,6 @@ public final class ProductPromoWorker {
                     return UtilProperties.getMessage(resource_error, "productpromoworker.promotion_code_will_be_activated_at", UtilMisc.toMap("productPromoCodeId", productPromoCodeId, "fromDate", fromDate), locale);
                 }
             }
-
             if ("Y".equals(productPromoCode.getString("requireEmailOrParty"))) {
                 boolean hasEmailOrParty = false;
 
@@ -668,7 +650,7 @@ public final class ProductPromoWorker {
                 if (UtilValidate.isNotEmpty(partyId)) {
                     if (EntityQuery.use(delegator).from("ProductPromoCodeParty").where("productPromoCodeId", productPromoCodeId, "partyId", partyId).queryOne() != null) {
                         // found party associated with the code, looks good...
-                        return null;
+                        hasEmailOrParty = true;
                     }
 
                     // check email address in ProductPromoCodeEmail
@@ -681,7 +663,7 @@ public final class ProductPromoWorker {
                     long validEmailCount = EntityQuery.use(delegator).from("ProductPromoCodeEmailParty").where(validEmailCondList).queryCount();
                     if (validEmailCount > 0) {
                         // there was an email in the list, looks good...
-                        return null;
+                        hasEmailOrParty = true;
                     }
                 }
 
@@ -1830,17 +1812,25 @@ public final class ProductPromoWorker {
             BigDecimal percentage = (productPromoAction.get("amount") == null ? BigDecimal.ZERO : (productPromoAction.getBigDecimal("amount").movePointLeft(2))).negate();
             BigDecimal amount = cart.getSubTotalForPromotions().multiply(percentage);
 
-            if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            if (amount.compareTo(BigDecimal.ZERO) != 0) {
+                BigDecimal lineAmountTotal = BigDecimal.ZERO;
                 Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
                     BigDecimal discountAmountTotal = BigDecimal.ZERO;
-                    BigDecimal lineAmountTotal = BigDecimal.ZERO;
 
-                    Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
                     List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
 
-                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? cart.getItemsTotalQuantity(lineOrderedByBasePriceList) : productPromoAction.getBigDecimal("quantity");
+                    Set<String> promoRuleActionProductIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
+                    BigDecimal totalAvailableQuantity = lineOrderedByBasePriceList.stream()
+                            .filter(sci -> (!promoRuleActionProductIds.isEmpty()) ? promoRuleActionProductIds.contains(sci.getProductId()) : Boolean.TRUE)
+                            .map(s->s.getQuantity())
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? totalAvailableQuantity : productPromoAction.getBigDecimal("quantity");
                     Iterator<ShoppingCartItem> lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
+
+                    // SCIPIO: Always loop all cart product ids to determine total discount amount,
+                    // then we check afterwards if there are action promo conds and distribute discount accordingly
+                    Set<String> productIds = lineOrderedByBasePriceList.stream().map(ShoppingCartItem::getProductId).collect(Collectors.toSet());
                     while (lineOrderedByBasePriceIter.hasNext()) {
                         ShoppingCartItem cartItem = lineOrderedByBasePriceIter.next();
                         // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
@@ -1848,8 +1838,10 @@ public final class ProductPromoWorker {
                         GenericValue product = cartItem.getProduct();
                         boolean passedItemConds = checkConditionsForItem(productPromoAction, cart, cartItem, delegator, dispatcher, nowTimestamp);
                         if (passedItemConds && !cartItem.getIsPromo() &&
-                                (productIds.isEmpty() || productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
-                                (product == null || !"N".equals(product.getString("includeInPromotions")))) {
+                                (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
+                                (product == null || !"N".equals(product.getString("includeInPromotions"))) &&
+                                (UtilValidate.isEmpty(promoRuleActionProductIds) ||
+                                    (UtilValidate.isNotEmpty(promoRuleActionProductIds) && promoRuleActionProductIds.contains(cartItem.getProductId())))) {
                             // reduce quantity still needed to qualify for promo (quantityNeeded)
                             BigDecimal quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
                             if (quantityUsed.compareTo(BigDecimal.ZERO) > 0) {
@@ -1864,19 +1856,26 @@ public final class ProductPromoWorker {
                             }
                         }
                     }
+                    if (discountAmountTotal.compareTo(BigDecimal.ZERO) == -1) {
+                        List<ShoppingCartItem> cartItemsUsed = getCartItemsUsed(cart, productPromoAction);
+                        if (UtilValidate.isNotEmpty(promoRuleActionProductIds)) {
+                            // SCIPIO: found product action promo products so let's use these only to distribute the discount,
+                            // if these products are present in the cart. Otherwise, don't apply the discount to any product
+                            cartItemsUsed = cartItemsUsed.stream().filter(c -> promoRuleActionProductIds.contains(c.getProductId()))
+                                    .collect(Collectors.toList());
+                        }
 
-                    distributeDiscountAmount(discountAmountTotal, lineAmountTotal, getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
-                    actionResultInfo.totalDiscountAmount = discountAmountTotal;
-                    actionResultInfo.quantityLeftInAction = quantityDesired;
+                        distributeDiscountAmount(discountAmountTotal, lineAmountTotal, cartItemsUsed, productPromoAction, delegator);
+                        actionResultInfo.totalDiscountAmount = discountAmountTotal;
+                        actionResultInfo.quantityLeftInAction = quantityDesired;
+                        actionResultInfo.ranAction = true;
+                    } else {
+                        actionResultInfo.ranAction = false;
+                    }
                 } else {
                     doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
                     actionResultInfo.totalDiscountAmount = amount;
-                }
-                // SCIPIO: 2.1.0: This must be a negative value, otherwise there's no discount thus ranAction=false
-                if (actionResultInfo.totalDiscountAmount.compareTo(BigDecimal.ZERO) < 0) {
                     actionResultInfo.ranAction = true;
-                } else {
-                    actionResultInfo.ranAction = false;
                 }
             }
         } else if ("PROMO_ORDER_AMOUNT".equals(productPromoActionEnumId)) {
@@ -1886,29 +1885,24 @@ public final class ProductPromoWorker {
             if (amount.negate().compareTo(subTotal) > 0) {
                 amount = subTotal.negate();
             }
-
-            if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            if (amount.compareTo(BigDecimal.ZERO) != 0) {
                 BigDecimal lineAmountTotal = BigDecimal.ZERO;
                 Boolean distributeAmount = (productPromoAction.get("distributeAmount") == null ? Boolean.TRUE : (productPromoAction.getBoolean("distributeAmount")));
                 if (distributeAmount) {
                     BigDecimal discountAmountTotal = BigDecimal.ZERO;
-                    Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
-
                     List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
+
+                    Set<String> promoRuleActionProductIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
                     BigDecimal totalAvailableQuantity = lineOrderedByBasePriceList.stream()
+                            .filter(sci -> (!promoRuleActionProductIds.isEmpty()) ? promoRuleActionProductIds.contains(sci.getProductId()) : Boolean.TRUE)
                             .map(s->s.getQuantity())
                             .reduce(BigDecimal.ZERO, BigDecimal::add);
                     BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? totalAvailableQuantity : productPromoAction.getBigDecimal("quantity");
                     Iterator<ShoppingCartItem> lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
-                    List<GenericValue> productPromoCategoriesAll = EntityQuery.use(delegator).from("ProductPromoCategory").where("productPromoId", productPromoAction.get("productPromoId")).cache(true).queryList();
-                    List<GenericValue> productPromoProductsAll = EntityQuery.use(delegator).from("ProductPromoProduct").where("productPromoId", productPromoAction.get("productPromoId")).cache(true).queryList();
 
-                    boolean hasNoActionCondition = (productPromoProductsAll.size()==0 && productPromoProductsAll.size()==0);
-                    if(hasNoActionCondition){
-                        //there are no additional conditions, so we just go ahead with the original list of productIds
-                        productIds = lineOrderedByBasePriceList.stream().map(ShoppingCartItem::getProductId).collect(Collectors.toSet());
-                    }
-
+                    // SCIPIO: Always loop all cart product ids to determine total discount amount,
+                    // then we check afterwards if there are action promo conds and distribute discount accordingly
+                    Set<String> productIds = lineOrderedByBasePriceList.stream().map(ShoppingCartItem::getProductId).collect(Collectors.toSet());
                     while (quantityDesired.compareTo(BigDecimal.ZERO) > 0 && lineOrderedByBasePriceIter.hasNext()) {
                         ShoppingCartItem cartItem = lineOrderedByBasePriceIter.next();
                         // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
@@ -1916,38 +1910,46 @@ public final class ProductPromoWorker {
                         GenericValue product = cartItem.getProduct();
                         boolean passedItemConds = checkConditionsForItem(productPromoAction, cart, cartItem, delegator, dispatcher, nowTimestamp);
                         if (passedItemConds && !cartItem.getIsPromo() &&
-                                (productIds.isEmpty() || productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
-                                (product == null || !"N".equals(product.getString("includeInPromotions")))) {
+                                (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
+                                (product == null || !"N".equals(product.getString("includeInPromotions"))) &&
+                                (UtilValidate.isEmpty(promoRuleActionProductIds) ||
+                                        (UtilValidate.isNotEmpty(promoRuleActionProductIds) && promoRuleActionProductIds.contains(cartItem.getProductId())))) {
                             // reduce quantity still needed to qualify for promo (quantityNeeded)
                             BigDecimal quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction, false);
                             quantityDesired = quantityDesired.subtract(quantityUsed);
 
                             // create an adjustment and add it to the cartItem that implements the promotion action
-                            BigDecimal discount = amount.divide(totalAvailableQuantity,3,BigDecimal.ROUND_HALF_UP);
+                            BigDecimal discount = amount.divide(totalAvailableQuantity,3, RoundingMode.HALF_UP);
                             // don't allow the discount to be greater than the price
-                            if (discount.compareTo(cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment())) > 0) {
-                                discount = cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment());
+                            if (discount.negate().compareTo(cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment())) > 0) {
+                                discount = cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment()).negate();
                             }
-                            BigDecimal discountAmount = quantityUsed.multiply(discount);
-                            discountAmountTotal = discountAmountTotal.add(discountAmount);
-
                             BigDecimal lineAmount = cartItem.getQuantity().multiply(cartItem.getBasePrice()).multiply(cartItem.getRentalAdjustment());
                             lineAmountTotal = lineAmountTotal.add(lineAmount);
+
+                            BigDecimal discountAmount = quantityUsed.multiply(discount);
+                            discountAmountTotal = discountAmountTotal.add(discountAmount);
                         }
                     }
-
-                    distributeDiscountAmount(discountAmountTotal, lineAmountTotal, getCartItemsUsed(cart, productPromoAction), productPromoAction, delegator);
-                    actionResultInfo.totalDiscountAmount = discountAmountTotal;
-                    actionResultInfo.quantityLeftInAction = quantityDesired;
+                    if (discountAmountTotal.compareTo(BigDecimal.ZERO) == -1) {
+                        List<ShoppingCartItem> cartItemsUsed = getCartItemsUsed(cart, productPromoAction);
+                        if (UtilValidate.isNotEmpty(promoRuleActionProductIds)) {
+                            // SCIPIO: found product action promo products so let's use these only to distribute the discount,
+                            // if these products are present in the cart. Otherwise, don't apply the discount to any product
+                            cartItemsUsed = cartItemsUsed.stream().filter(c -> promoRuleActionProductIds.contains(c.getProductId()))
+                                    .collect(Collectors.toList());
+                        }
+                        distributeDiscountAmount(discountAmountTotal, lineAmountTotal, cartItemsUsed, productPromoAction, delegator);
+                        actionResultInfo.totalDiscountAmount = discountAmountTotal;
+                        actionResultInfo.quantityLeftInAction = quantityDesired;
+                        actionResultInfo.ranAction = true;
+                    } else {
+                        actionResultInfo.ranAction = false;
+                    }
                 } else {
                     doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
                     actionResultInfo.totalDiscountAmount = amount;
-                }
-                // SCIPIO: 2.1.0: This must be a negative value, otherwise there's no discount thus ranAction=false
-                if (actionResultInfo.totalDiscountAmount.compareTo(BigDecimal.ZERO) < 0) {
                     actionResultInfo.ranAction = true;
-                } else {
-                    actionResultInfo.ranAction = false;
                 }
             }
         } else if ("PROMO_PROD_SPPRC".equals(productPromoActionEnumId)) {
@@ -2082,7 +2084,7 @@ public final class ProductPromoWorker {
             if (cartItemsUsedIter.hasNext()) {
                 BigDecimal quantityUsed = cartItem.getPromoQuantityCandidateUseActionAndAllConds(productPromoAction);
                 BigDecimal ratioOfTotal = quantityUsed.multiply(cartItem.getBasePrice()).divide(totalAmount, RoundingMode.HALF_EVEN);
-                ratioOfTotal = ratioOfTotal.setScale(3,BigDecimal.ROUND_HALF_UP);
+                ratioOfTotal = ratioOfTotal.setScale(3, RoundingMode.HALF_UP);
                 BigDecimal weightedAmount = ratioOfTotal.multiply(discountAmountTotal);
                 // round the weightedAmount to 3 decimal places, we don't want an exact number cents/whatever because this will be added up as part of a subtotal which will be rounded to 2 decimal places
                 weightedAmount = weightedAmount.setScale(3, RoundingMode.HALF_UP);
@@ -2384,27 +2386,66 @@ public final class ProductPromoWorker {
             List<GenericValue> productCategoryMembers = EntityQuery.use(delegator).from("ProductCategoryMember").where("productCategoryId", productCategoryId).cache(true).filterByDate(nowTimestamp).queryList();
             for (GenericValue productCategoryMember : productCategoryMembers) {
                 String productId = productCategoryMember.getString("productId");
+                // SCIPIO: We need to get product variant ids as well when product is virtual
+                List<String> productVariantIds = getProductVariantIds(productCategoryMember.getDelegator(), productId, nowTimestamp);
                 if (include) {
                     productIdSet.add(productId);
+                    if (!productVariantIds.isEmpty()) {
+                        productIdSet.addAll(productVariantIds);
+                    }
                 } else {
                     productIdSet.remove(productId);
+                    if (!productVariantIds.isEmpty()) {
+                        productIdSet.removeAll(productVariantIds);
+                    }
                 }
             }
         }
     }
 
     protected static void handleProductPromoProducts(Set<String> productIds, List<GenericValue> productPromoProducts, String productPromoApplEnumId) throws GenericEntityException {
+        handleProductPromoProducts(productIds, productPromoProducts, productPromoApplEnumId, null);
+    }
+
+    protected static void handleProductPromoProducts(Set<String> productIds, List<GenericValue> productPromoProducts, String productPromoApplEnumId, Timestamp nowTimestamp) throws GenericEntityException {
+
         boolean include = !"PPPA_EXCLUDE".equals(productPromoApplEnumId);
         for (GenericValue productPromoProduct : productPromoProducts) {
             if (productPromoApplEnumId.equals(productPromoProduct.getString("productPromoApplEnumId"))) {
                 String productId = productPromoProduct.getString("productId");
+                // SCIPIO: We need to get product variant ids as well when product is virtual
+                List<String> productVariantIds = getProductVariantIds(productPromoProduct.getDelegator(), productId, nowTimestamp);
                 if (include) {
                     productIds.add(productId);
+                    if (!productVariantIds.isEmpty()) {
+                        productIds.addAll(productVariantIds);
+                    }
                 } else {
                     productIds.remove(productId);
+                    if (!productVariantIds.isEmpty()) {
+                        productIds.removeAll(productVariantIds);
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * If virtual, get variant product ids
+     * @param delegator
+     * @param productId
+     * @return
+     */
+    protected static List<String> getProductVariantIds(Delegator delegator, String productId, Timestamp nowTimestamp) {
+        List<String> productVariantIds = UtilMisc.newList();
+        if (ProductWorker.isVirtual(delegator, productId)) {
+            try {
+                productVariantIds = ProductWorker.getVariantProductIds(delegator, null, productId, null, nowTimestamp, true);
+            } catch (GeneralException e) {
+                Debug.logError(e.getMessage(), module);
+            }
+        }
+        return productVariantIds;
     }
 
     @SuppressWarnings("serial")

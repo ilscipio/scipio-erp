@@ -790,7 +790,7 @@ origArgs={} passArgs={} catchArgs...>
                             chartData.pieFillColor4,
                             chartData.pieFillColor5,
                             chartData.pieFillColor6
-                        ]
+                        ],
                       </#if>
                       data: []
                     }           

@@ -1144,8 +1144,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
 
             if (fields.containsKey("searchIndexable")) {
                 processFields.put("searchIndexable", fields.get("searchIndexable"));
-            } else {
-                processFields.put("searchIndexable", false);
             }
 
             if (fields.containsKey("webSiteId")) {

@@ -129,15 +129,15 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
 
     protected void execute(Environment env, @SuppressWarnings("rawtypes") Map args, TemplateModel[] loopVars, TemplateDirectiveBody body,
             Writer out, TemplateModel uriModel, TemplateModel webSiteIdModel, DefaultParams defaultParams) throws TemplateException, IOException {
-        final String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // new
+        String escapeAs = TransformUtil.getStringArg(args, "escapeAs"); // new
         Boolean rawParams = TransformUtil.getBooleanArg(args, "rawParams"); // new
         if (rawParams == null) {
             rawParams = (defaultParams.rawParams != null) ? defaultParams.rawParams :
-                UtilValidate.isNotEmpty(escapeAs) ? true : false; // if we're post-escaping, we can assume we should get rawParams
+                UtilValidate.isNotEmpty(escapeAs); // if we're post-escaping, we can assume we should get rawParams
         }
         Boolean strict = TransformUtil.getBooleanArg(args, "strict"); // new
         if (strict == null) {
-            strict = (defaultParams.strict != null) ? defaultParams.strict : UtilValidate.isNotEmpty(escapeAs) ? true : false; // if we're post-escaping, we can assume we want strict handling
+            strict = (defaultParams.strict != null) ? defaultParams.strict : UtilValidate.isNotEmpty(escapeAs); // if we're post-escaping, we can assume we want strict handling
         }
 
         // We now support a "uri" arg as alternative to #nested

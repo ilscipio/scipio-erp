@@ -90,7 +90,9 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
         Boolean controller;
         Boolean absPath;
         Boolean extLoginKey;
-        private String paramDelim;
+        String paramDelim;
+        Boolean emptyIfMissing;
+
 
         public DefaultParams(DefaultParams other) {
             this.rawParams = other.rawParams;
@@ -100,6 +102,7 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
             this.absPath = other.absPath;
             this.extLoginKey = other.extLoginKey;
             this.paramDelim = other.paramDelim;
+            this.emptyIfMissing = other.emptyIfMissing;
         }
         public DefaultParams() { }
 
@@ -117,6 +120,8 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
         public DefaultParams setExtLoginKey(Boolean extLoginKey) { this.extLoginKey = extLoginKey; return this; }
         public String getParamDelim() { return paramDelim; }
         public DefaultParams setParamDelim(String paramDelim) { this.paramDelim = paramDelim; return this; }
+        public Boolean getEmptyIfMissing() { return emptyIfMissing; }
+        public DefaultParams setEmptyIfMissing(Boolean emptyIfMissing) { this.emptyIfMissing = emptyIfMissing; return this; }
     }
 
     public abstract DefaultParams getDefaultParams();
@@ -145,20 +150,21 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
                 : TransformUtil.getStringArg(args, "uri", rawParams);
 
         // more new parameters
-        final String type = TransformUtil.getStringArg(args, "type", rawParams);
-        final Boolean absPath = TransformUtil.getBooleanArg(args, "absPath", defaultParams.absPath);
-        final Boolean interWebapp = TransformUtil.getBooleanArg(args, "interWebapp", defaultParams.interWebapp); // Alias for type="inter-webapp"
-        final Boolean controller = TransformUtil.getBooleanArg(args, "controller", defaultParams.controller);
-        final boolean extLoginKey = TransformUtil.getBooleanArg(args, "extLoginKey",
+        String type = TransformUtil.getStringArg(args, "type", rawParams);
+        Boolean absPath = TransformUtil.getBooleanArg(args, "absPath", defaultParams.absPath);
+        Boolean interWebapp = TransformUtil.getBooleanArg(args, "interWebapp", defaultParams.interWebapp); // Alias for type="inter-webapp"
+        Boolean controller = TransformUtil.getBooleanArg(args, "controller", defaultParams.controller);
+        boolean extLoginKey = TransformUtil.getBooleanArg(args, "extLoginKey",
                 defaultParams.extLoginKey != null ? defaultParams.extLoginKey : false);
         // NOTE: the default for paramDelim is highly heuristic... for now just follow rawParams (even though it's not its exact meaning)
-        final String paramDelimDefault = rawParams ? "&" : "&amp;";
-        final String paramDelim = TransformUtil.getStringArg(args, "paramDelim", paramDelimDefault, true, true);
+        String paramDelimDefault = rawParams ? "&" : "&amp;";
+        String paramDelim = TransformUtil.getStringArg(args, "paramDelim", paramDelimDefault, true, true);
         String paramStr = TransformUtil.getParamString(args, "params", paramDelim, rawParams);
+        Boolean emptyIfMissing = TransformUtil.getBooleanArg(args, "emptyIfMissing", defaultParams.emptyIfMissing);
 
         try {
             if (body != null) {
-                final StringWriter buf = new StringWriter();
+                StringWriter buf = new StringWriter();
                 body.render(buf);
                 uri = buf.toString();
             } else if (uri == null) {
@@ -179,10 +185,10 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
             FullWebappInfo.Cache webappInfoCache = ContextFtlUtil.getWebappInfoCacheAndCurrent(env, request, renderEnvType);
             Delegator delegator = ContextFtlUtil.getDelegator(request, env);
 
-            final Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
-            final Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // modified to remove default; leave centralized
-            final Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // modified to remove default; leave centralized
-            final String webSiteId = (webSiteIdModel != null) ? TransformUtil.getStringArg(webSiteIdModel, rawParams) :
+            Boolean fullPath = UrlTransformUtil.determineFullPath(TransformUtil.getBooleanArg(args, "fullPath"), renderEnvType, env);
+            Boolean secure = TransformUtil.getBooleanArg(args, "secure"); // modified to remove default; leave centralized
+            Boolean encode = TransformUtil.getBooleanArg(args, "encode"); // modified to remove default; leave centralized
+            String webSiteId = (webSiteIdModel != null) ? TransformUtil.getStringArg(webSiteIdModel, rawParams) :
                     TransformUtil.getStringArg(args, "webSiteId", rawParams);
 
             Boolean interWebappEff = interWebapp;
@@ -206,21 +212,23 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
                 //RequestHandler rh = (RequestHandler) request.getServletContext().getAttribute("_REQUEST_HANDLER_"); // reworked
                 //out.write(rh.makeLink(request, response, requestUrl, fullPath, secure, encode));
                 String link = RequestHandler.makeLinkAuto(request, response, requestUrl, absPath, interWebappEff, webSiteId, controller, fullPath, secure, encode);
-                if (link != null) {
+                if (link != null && !link.isEmpty()) {
                     link = checkForceHost(link, args, secure,false);
                     output(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env), out);
-                } else {
-                    // If link is null, it means there was an error building link; write nothing, so that
-                    // it's possible for templates to catch this case if they need to.
-                    //output(requestUrl, env);
+                } else if (!Boolean.TRUE.equals(emptyIfMissing)) {
+                    // SCIPIO 3.0.0: Output link name as fallback by default; previously left empty for templates to catch but this is rarely needed anyway
+                    output(UrlTransformUtil.escapeGeneratedUrl(requestUrl, escapeAs, strict, env), out);
                 }
             } else if (webSiteId != null || webappInfoCache.getCurrentWebappWebSiteId() != null) {
                 Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(args, "locale", env);
                 String link = RequestHandler.makeLinkAuto(ContextFtlUtil.getContext(env), delegator, locale, webSiteId, requestUrl, absPath,
                         interWebappEff, controller, fullPath, secure, encode);
-                if (link != null) {
+                if (link != null && !link.isEmpty()) {
                     link = checkForceHost(link, args, secure, false);
                     output(UrlTransformUtil.escapeGeneratedUrl(link, escapeAs, strict, env), out);
+                } else if (!Boolean.TRUE.equals(emptyIfMissing)) {
+                    // SCIPIO 3.0.0: Output link name as fallback by default; previously left empty for templates to catch but this is rarely needed anyway
+                    output(UrlTransformUtil.escapeGeneratedUrl(requestUrl, escapeAs, strict, env), out);
                 }
             } else {
                 // DEPRECATED - TODO: REMOVE
@@ -242,7 +250,6 @@ public abstract class WebappUrlDirective implements TemplateDirectiveModel {
                     output(prefixString + bufString, out);
                     Debug.logWarning("Using DEPRECATED fallback URL building mode because context is incomplete (url: "
                             + prefixString + bufString + ")", getModule());
-                    return;
                 } else {
                     Debug.logWarning("Using DEPRECATED fallback URL building mode because context is incomplete (url: "
                             + requestUrl + ")", getModule());

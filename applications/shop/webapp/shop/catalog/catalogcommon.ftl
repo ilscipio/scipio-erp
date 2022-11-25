@@ -40,7 +40,7 @@
     <#if productLargeImageUrl?has_content>
         <#assign largeImage = makeContentCtxPrefixUrl(productLargeImageUrl)/>
     <#else>
-        <#assign largeImage = "https://placehold.it/800x300">
+        <#assign largeImage = "https://via.placeholder.com/800x300">
     </#if>
     <@img src=largeImage width="100%" height="300px" type="contain" class="product-image"/>
     

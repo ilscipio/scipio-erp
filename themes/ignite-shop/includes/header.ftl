@@ -301,7 +301,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
                             <a href="#">
                                 <div class="media">
                                     <span class="pull-left">
-                                        <img class="media-object" src="http://placehold.it/50x50" alt=""/>
+                                        <img class="media-object" src="http://via.placeholder.com/50x50" alt=""/>
                                     </span>
                                     <div class="media-body">
                                         <h5 class="media-heading"><strong>John Smith</strong>

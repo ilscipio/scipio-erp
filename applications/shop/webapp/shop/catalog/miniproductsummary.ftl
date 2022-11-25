@@ -17,12 +17,12 @@ code package.
     <#if smallImageUrl?has_content>
         <#assign imgSrc = makeContentUrl(smallImageUrl) />
     <#else>
-        <#assign imgSrc = "https://placehold.it/300x100"/>
+        <#assign imgSrc = "https://via.placeholder.com/300x100"/>
     </#if>
     <#assign imgLink><@catalogAltUrl rawParams=true productCategoryId=requestParameters.category_id!"" productId=miniProduct.productId/></#assign>
 
     <#assign productImage>
-        <#-- has no effect: (imgSrc!"https://placehold.it/300x100") -->
+        <#-- has no effect: (imgSrc!"https://via.placeholder.com/300x100") -->
         <@img src=imgSrc type="contain" link=imgLink!"" width="100%" height="100px"/>
     </#assign>
     <@pul>

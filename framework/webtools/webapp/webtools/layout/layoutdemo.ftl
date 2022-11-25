@@ -76,11 +76,11 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   <@section title="Custom per-tile styles (overriding default styles)" relHeadingLevel=+1>
     <@grid type="tiles">  <#-- tilesType="default" -->
         <@tile size="large" color=3 icon="${styles.icon!} ${styles.icon_prefix!}star">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
-        <@tile size="normal" color=7 title="Test" image="https://placehold.it/150x150"></@tile>
+        <@tile size="normal" color=7 title="Test" image="https://via.placeholder.com/150x150"></@tile>
         <@tile size="small" color=6 title="" icon="${styles.icon!} ${styles.icon_prefix!}flag"></@tile>
-        <@tile size="small" color=3 title="Test" image="https://placehold.it/70x70"></@tile>
-        <@tile size="wide" color=0 title="dasdsadsas dasdas" image="https://placehold.it/310x150"></@tile>
-        <@tile size="large" color=6 title="Test" image="https://placehold.it/310x310"></@tile>
+        <@tile size="small" color=3 title="Test" image="https://via.placeholder.com/70x70"></@tile>
+        <@tile size="wide" color=0 title="dasdsadsas dasdas" image="https://via.placeholder.com/310x150"></@tile>
+        <@tile size="large" color=6 title="Test" image="https://via.placeholder.com/310x310"></@tile>
         <@tile size="wide" color=2 title="Test 3" icon="${styles.icon!} ${styles.icon_prefix!}heart">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>    
         <@tile size="normal" color=2 icon="${styles.icon!} ${styles.icon_prefix!}layout ${styles.icon_prefix!}th-large">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
         <@tile size="normal" color=5 title="2" icon="${styles.icon!} ${styles.icon_prefix!}music"></@tile>
@@ -88,7 +88,7 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
         <@tile size="small" color=6 title="Test"></@tile>
         <@tile size="small" color=4 title="Test"></@tile>
         <@tile size="small" color=5 title="Test"></@tile>
-        <@tile size="normal" color=0 image="https://placehold.it/150x150"></@tile>
+        <@tile size="normal" color=0 image="https://via.placeholder.com/150x150"></@tile>
         <@tile size="normal" color=1 title="2" icon="${styles.icon!} ${styles.icon_prefix!}like ${styles.icon_prefix!}thumbs-up"></@tile>
     </@grid>
   </@section>
@@ -109,9 +109,9 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 
 <@section title="Image container">
     <@row>
-        <@cell columns=4><@img src="https://placehold.it/240x800" id="test" type="cover" link="#" height="100px" width="100%" />Cover</@cell>
-        <@cell columns=4><@img src="https://placehold.it/240x800" type="contain" link="#" height="100px" width="100%" />Contain</@cell>
-        <@cell columns=4><@img src="https://placehold.it/240x800" type="none" link="#" height="100px" width="100%" />Automatically adjusted</@cell>
+        <@cell columns=4><@img src="https://via.placeholder.com/240x800" id="test" type="cover" link="#" height="100px" width="100%" />Cover</@cell>
+        <@cell columns=4><@img src="https://via.placeholder.com/240x800" type="contain" link="#" height="100px" width="100%" />Contain</@cell>
+        <@cell columns=4><@img src="https://via.placeholder.com/240x800" type="none" link="#" height="100px" width="100%" />Automatically adjusted</@cell>
     </@row>    
 </@section>
 
@@ -122,15 +122,15 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
       "max-width: 480px" : "100vw", "max-width: 320px" : "100vw", "max-width: 280px" : "100vw", "max-width: 200px" : "100vw", "max-width: 150px" : "100vw"
 }>
 <#assign srcsetMap = { 
-      "https://placehold.it/1024x200" : "1024", "https://placehold.it/900x800" : "900", "https://placehold.it/860x200" : "860", "https://placehold.it/800x200" : "800",
-      "https://placehold.it/768x200" : "768", "https://placehold.it/640x800" : "640", "https://placehold.it/560x200" : "560", "https://placehold.it/480x200" : "480",
-      "https://placehold.it/320x200" : "320", "https://placehold.it/280x800" : "280", "https://placehold.it/200x200" : "200", "https://placehold.it/150x200" : "150"
+      "https://via.placeholder.com/1024x200" : "1024", "https://via.placeholder.com/900x800" : "900", "https://via.placeholder.com/860x200" : "860", "https://via.placeholder.com/800x200" : "800",
+      "https://via.placeholder.com/768x200" : "768", "https://via.placeholder.com/640x800" : "640", "https://via.placeholder.com/560x200" : "560", "https://via.placeholder.com/480x200" : "480",
+      "https://via.placeholder.com/320x200" : "320", "https://via.placeholder.com/280x800" : "280", "https://via.placeholder.com/200x200" : "200", "https://via.placeholder.com/150x200" : "150"
 }>
 <#assign responsiveMap = {"srcset" : srcsetMap, "sizes" : sizesMap}>
 
 <@section title="Responsive Images">
     <@row class="+${styles.grid_display!}">
-        <@cell columns=12><@img src="https://placehold.it/240x800" type="none" link="#" responsiveMap=responsiveMap /></@cell>
+        <@cell columns=12><@img src="https://via.placeholder.com/240x800" type="none" link="#" responsiveMap=responsiveMap /></@cell>
     </@row>
 </@section>
 
@@ -302,8 +302,8 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
     <@row>
         <@cell columns=6>
             <@slider id="" class="" controls=true indicator=true>
-                <@slide link="#" image="https://placehold.it/800x300">What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.</@slide>
-                <@slide title="This is a title" link="#" image="https://placehold.it/800x300"></@slide>
+                <@slide link="#" image="https://via.placeholder.com/800x300">What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.</@slide>
+                <@slide title="This is a title" link="#" image="https://via.placeholder.com/800x300"></@slide>
             </@slider>
         </@cell>
         <@cell columns=6></@cell>

@@ -48,7 +48,7 @@ code package.
     <#if smallImageUrl?has_content>
         <#assign imgSrc = makeContentCtxPrefixUrl(smallImageUrl)>
     <#else>
-        <#assign imgSrc = "https://placehold.it/300x100"/>    
+        <#assign imgSrc = "https://via.placeholder.com/300x100"/>
     </#if>
     <#assign imgLink><@catalogAltUrl rawParams=true productCategoryId=categoryId productId=productId/></#assign>
     <#assign productImage><@img src=imgSrc type="contain" link=imgLink width="100%" height="100px"/></#assign>

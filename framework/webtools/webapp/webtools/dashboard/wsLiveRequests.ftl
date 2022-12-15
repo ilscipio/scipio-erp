@@ -65,7 +65,7 @@
       });
 </@script>
 
-<#if title?has_content><@heading relLevel=1>${title}</@heading></#if>
+<@section title=title!"">
 <#--<#if currData?has_content>-->
     <#if chartType == "line" || chartType == "bar">
         <@chart id="requestchart" type=chartType xlabel=(xlabel!"") ylabel=(ylabel!"") label1=(label1!"") label2=(label2!"")>
@@ -89,6 +89,7 @@
 <#--<#else>
     <@commonMsg type="result-norecord"/>
 </#if>-->
+</@section>
 
 <@field type="text" name="maxRequestsEntries" value=maxRequestsEntries label=uiLabelMap.CommonMaxEntries
 events={"change":"setMaxRequestsEntries($(this).val());", "keyup":"setMaxRequestsEntries($(this).val());"}/>

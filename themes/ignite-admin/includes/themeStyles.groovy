@@ -1090,7 +1090,7 @@ context.styles = [
         "ofbizsetup" : "fa-check-square",
         "cms" : "fa-file-text",
         "CRM" : "fa-bullhorn",
-        "humanres" : "fa-vcard",
+        "humanres" : "fa-user-times",
         "manufacturing" : "fa-industry",
         "facility" : "fa-cube",
         "marketing" : "fa-comments",

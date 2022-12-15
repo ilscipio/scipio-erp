@@ -1241,6 +1241,11 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
     javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayoutTitle="" menuLayoutGeneral="" menuRole="" requireMenu=false forceEmptyMenu=false 
     containerAttribs={} containerExcludeAttribs=[] contentAttribs={} contentExcludeAttribs=[]
     origArgs={} passArgs={} catchArgs...>
+  <#local htmlwrap = styles["section_htmlwrap"]!"div">
+  <#local renderRow = styles["section_render_row"]!true>
+  <#local renderCell = styles["section_render_cell"]!true>
+  <#local renderContentContainerClassFlags = styles["section_render_content_container_classflags"]!true>
+  <#local renderContentWrap = styles["section_render_content_wrap"]!true>
   <#if open>
     <#local containerClass = addClassArg(containerClass, "section-screenlet")>
     <#local containerClass = addClassArg(containerClass, styles.grid_section!"")>
@@ -1249,45 +1254,43 @@ FIXME: The title and menu rendering are captured, should not be capturing like t
       <#local containerClass = addClassArg(containerClass, "toggleField")>
     </#if>
     <#-- NOTE: The ID should always be on the outermost container for @section -->
-
-    <#if styles.render_section_html!true>
-    <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if><#rt>
-        <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"<#elseif containerStyle?has_content> style="${escapeVal(containerStyle, 'html')}"</#if><#rt>
-        <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
-      <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.
-      <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${escapeVal(title, 'htmlmarkup')}</p></#if>
-      -->
-        <@row open=true close=false />
-    <#else>
-        <@row open=true close=false id=containerId!"" class=containerClass! style=escapeVal(style!containerStyle!"", 'html') attribs=containerAttribs!/>
+      <#if styles.render_section_html!true>
+        <${htmlwrap}<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if><#rt>
+            <#lt><#if style?has_content> style="${escapeVal(style, 'html')}"<#elseif containerStyle?has_content> style="${escapeVal(containerStyle, 'html')}"</#if><#rt>
+            <#lt><#if containerAttribs?has_content><@commonElemAttribStr attribs=containerAttribs exclude=containerExcludeAttribs/></#if>>
+            <#-- TODO?: Is this still needed? Nothing uses collapsed and title is already used below.
+            <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${escapeVal(title, 'htmlmarkup')}</p></#if>
+            -->
+            <#if renderRow><@row open=true close=false /></#if>
+      <#else>
+          <#if renderRow><@row open=true close=false id=containerId!"" class=containerClass! style=escapeVal(style!containerStyle!"", 'html') attribs=containerAttribs!/></#if>
+      </#if>
+          <#local class = addClassArg(class, "section-screenlet-container")>
+          <#local class = addClassArg(class, contentFlagClasses)>
+          <#local class = addClassArgDefault(class, (styles.grid_large!"") + "12")>
+          <#-- NOTE: this is same as calling class=("=" + compileClassArg(class)) to override non-essential @cell class defaults -->
+          <#if renderCell><@cell open=true close=false class=compileClassArg(class) /></#if>
+            <@contentArgRender content=menuTitleContent args=menuTitleContentArgs />
+            <#if styles.render_section_html!true>
+              <#-- FIXME: This should not be prerendered like this, should be delegated, due to container heuristic issues and other -->
+              <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
+              <#local contentClass = addClassArg(contentClass, styles["section_" + styleName + "_contentcontainerclass"]!styles["section_default_contentcontainerclass"]!"section-screenlet-content")>
+              <#if renderContentContainerClassFlags><#local contentClass = addClassArg(contentClass, contentFlagClasses)></#if>
+              <#if renderContentWrap><div<#if contentId?has_content> id="${escapeVal(contentId, 'html')}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${escapeVal(contentStyle, 'html')}"</#if><#rt>
+              <#lt><#if contentAttribs?has_content><@commonElemAttribStr attribs=contentAttribs exclude=contentExcludeAttribs/></#if>></#if>
+            </#if>
     </#if>
-        <#local class = addClassArg(class, "section-screenlet-container")>
-        <#local class = addClassArg(class, contentFlagClasses)>
-        <#local class = addClassArgDefault(class, (styles.grid_large!"") + "12")>
-        <#-- NOTE: this is same as calling class=("=" + compileClassArg(class)) to override non-essential @cell class defaults -->
-        <@cell open=true close=false class=compileClassArg(class) />
-          <@contentArgRender content=menuTitleContent args=menuTitleContentArgs />
-          <#if styles.render_section_html!true>
-            <#-- FIXME: This should not be prerendered like this, should be delegated, due to container heuristic issues and other -->
-            <#-- NOTE: may need to keep this div free of foundation grid classes (for margins collapse?) -->
-            <#local contentClass = addClassArg(contentClass, "section-screenlet-content")>
-            <#local contentClass = addClassArg(contentClass, contentFlagClasses)>
-            <div<#if contentId?has_content> id="${escapeVal(contentId, 'html')}"</#if><@compiledClassAttribStr class=contentClass /><#if contentStyle?has_content> style="${escapeVal(contentStyle, 'html')}"</#if><#rt>
-            <#lt><#if contentAttribs?has_content><@commonElemAttribStr attribs=contentAttribs exclude=contentExcludeAttribs/></#if>>
-          </#if>
-  </#if>
-            <#nested>
-  <#if close>
-          <#if styles.render_section_html!true>
-          </div>
-          </#if>
-
-          <#if menuLayoutGeneral == "bottom" || menuLayoutGeneral == "top-bottom">
-            <@contentArgRender content=menuContent args=menuContentArgs />
-          </#if>
-        <@cell close=true open=false />
-      <@row close=true open=false />
-    <#if styles.render_section_html!true></div></#if>
+    <#nested>
+    <#if close>
+      <#if styles.render_section_html!true>
+      <#if renderContentWrap></div></#if>
+    </#if>
+    <#if menuLayoutGeneral == "bottom" || menuLayoutGeneral == "top-bottom">
+      <@contentArgRender content=menuContent args=menuContentArgs />
+    </#if>
+    <#if renderCell><@cell close=true open=false /></#if>
+    <#if renderRow><@row close=true open=false /></#if>
+    <#if styles.render_section_html!true></${htmlwrap}></#if>
   </#if>
 </#macro>
 

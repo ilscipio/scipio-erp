@@ -475,7 +475,7 @@ code package.
                                                     <if-empty field="userLogin" />
                                                 </condition>
                                                 <actions>
-                                                    <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
+                                                    <set field="columnMainStyle" value="${styles.grid_columns_main_style}"/>
                                                     <set field="noTitle" value="true"/>
                                                 </actions>
                                                 <widgets>
@@ -507,7 +507,7 @@ code package.
                                                     <if-empty field="userLogin" />
                                                 </condition>
                                                 <actions>
-                                                    <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
+                                                    <set field="columnMainStyle" value="${styles.grid_columns_main_style}"/>
                                                     <set field="noTitle" value="true"/>
                                                 </actions>
                                                 <widgets>
@@ -677,7 +677,7 @@ code package.
                         <!-- Render body -->
                         <section name="Global-Content-Main">
                             <actions>
-                                <set field="columnMainStyle" value="${styles.grid_large}12 ${styles.grid_cell}"/>
+                                <set field="columnMainStyle" value="${styles.grid_columns_main_style}"/>
                                 <set field="noTitle" value="true"/>
                             </actions>
                             <widgets>

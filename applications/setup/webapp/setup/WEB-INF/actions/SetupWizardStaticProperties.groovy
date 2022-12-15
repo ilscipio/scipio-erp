@@ -24,7 +24,7 @@ context.setupStepTitlePropMap = [
 ];
 
 context.setupStepIconMap = [
-    "organization": "fa-vcard", 
+    "organization": "fa-user-times",
     "store": "fa-shopping-cart", 
     "user": "fa-users", 
     "accounting": "fa-balance-scale", 

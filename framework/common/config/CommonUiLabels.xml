@@ -9268,7 +9268,7 @@
     <property key="CommonPerHour">
         <value xml:lang="de">pro Stunde</value>
         <value xml:lang="en">per hour</value>
-        <value xml:lang="en">por hora</value>
+        <value xml:lang="es">por hora</value>
     </property>
     <property key="CommonPerDay">
         <value xml:lang="de">pro Tag</value>

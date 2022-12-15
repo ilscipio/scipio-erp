@@ -356,6 +356,11 @@ context.styles = [
     
   /* Sections */
     /* type-based styles */
+    "section_htmlwrap" : "div",
+    "section_render_row" : true,
+    "section_render_cell" : true,
+    "section_render_content_wrap" : true,
+    "section_render_content_container_classflags" : true,
     "section_generic_menulayouttitle" : "post-title",
     "section_generic_menulayoutgeneral" : "top",
     "section_generic_inline_title_menutitlecontainerclass" : "clearfix",
@@ -367,6 +372,7 @@ context.styles = [
     "section_default_inline_title_menutitlecontainerclass" : "clearfix",
     "section_default_inline_title_titlecontainerclass" : "left",
     "section_default_inline_title_menucontainerclass" : "right",
+    "section_default_contentcontainerclass" : "section-screenlet-content",
     
   /* Data and Tables
     NOTES:
@@ -791,6 +797,7 @@ context.styles = [
     "grid_columns_10" : "large-10 medium-9 columns",
     "grid_columns_11" : "large-11 medium-10 columns",
     "grid_columns_12" : "large-12 columns",
+    "grid_columns_main_style" : "large-12 columns", //grid_large + 12 +  grid_cell
     "grid_centered" : "centered",
     "grid_small_centered" : "small-centered",
     "grid_medium_centered" : "medium-centered",
@@ -1250,7 +1257,7 @@ context.styles = [
         "ofbizsetup" : "fa-check-square",
         "cms" : "fa-file-text",
         "CRM" : "fa-bullhorn",
-        "humanres" : "fa-vcard",
+        "humanres" : "fa-user-times",
         "manufacturing" : "fa-industry",
         "facility" : "fa-cube",
         "marketing" : "fa-comments",
@@ -1260,7 +1267,8 @@ context.styles = [
         "setup" : "fa-cog",
         "shop" : "fa-shopping-cart",
         "solr" : "fa-search",
-        "workeffort" : "fa-sliders"
+        "workeffort" : "fa-sliders",
+        "setup" : "fa-cog"
         ],
 
   /* Always declare last */

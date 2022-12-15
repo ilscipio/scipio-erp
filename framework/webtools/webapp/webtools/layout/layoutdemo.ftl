@@ -299,15 +299,10 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
 
 <@section>
     <@heading attribs=makeMagTargetAttribMap("slider") id="slider">Slider</@heading>
-    <@row>
-        <@cell columns=6>
-            <@slider id="" class="" controls=true indicator=true>
-                <@slide link="#" image="https://via.placeholder.com/800x300">What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.</@slide>
-                <@slide title="This is a title" link="#" image="https://via.placeholder.com/800x300"></@slide>
-            </@slider>
-        </@cell>
-        <@cell columns=6></@cell>
-    </@row>
+    <@slider id="" class="" controls=true indicator=true>
+        <@slide link="#" image="https://via.placeholder.com/800x300">What is the strength of the ship's deflector shields at maximum output? The wormhole's size and short period would make this a local phenomenon.</@slide>
+        <@slide title="This is a title" link="#" image="https://via.placeholder.com/800x300"></@slide>
+    </@slider>
 </@section>
 
 <@section>

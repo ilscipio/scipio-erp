@@ -1,0 +1,257 @@
+/*
+Sidebar
+*/
+
+aside, .aside {
+
+  position: relative;
+
+  ul.menu-list {
+    display: flex;
+    flex-direction: column;
+    padding-left: 70px;
+    margin: 0;
+    color: $sidebar-text;
+
+    li:not(.nav-title) {
+      border-right: 4px inset $sidebar-menu-background-hover;
+
+      li {
+        border-right:none;
+      }
+    }
+
+    .menu-list {
+      padding-left: 10px;
+      //background: $grey-dark;
+      border: none;
+    }
+
+    .nav-title {
+      position: absolute;
+      left: 0px;
+      top: 0;
+      height: 70px;
+      width: 70px;
+
+      a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 2rem;
+        color: $sidebar-menu-tab;
+        background-color: $sidebar-menu-background;
+        width: 100%;
+        height: 100%;
+        padding: 0px;
+
+        &:hover {
+          color: $sidebar-menu-tab-hover;
+          background-color: $sidebar-menu-background-hover;
+        }
+      }
+    }
+
+    &:nth-child(2){
+      > .nav-title{
+        top: 70px;
+      }
+    }
+
+    &:nth-child(3){
+      > .nav-title{
+        top: 140px;
+      }
+    }
+
+    &#menu_1_action {
+      &.is-open,&.is-hovered {
+        .nav-title {
+          a {
+            background-color: $sidebar-action-tab-background-hover;
+            color: $sidebar-action-tab-hover;
+          }
+        }
+      }
+
+      .nav-title {
+        a {
+          background-color: $sidebar-action-tab-background;
+          color: $sidebar-action-tab;
+
+          &:focus,
+          &:focus-within,
+          &:hover,
+          &.is-active {
+            background-color: $sidebar-action-tab-background-hover;
+            color: $sidebar-action-tab-hover;
+          }
+        }
+      }
+
+      li:not(.nav-title) {
+        border-right: 4px inset $sidebar-action-tab-background-hover;
+      }
+    }
+
+    &#menu_logo {
+      .nav-title {
+        a {
+          background-color: $sidebar-logo-tab-background;
+          color: $sidebar-logo-tab;
+
+          &:focus,
+          &:focus-within,
+          &:hover,
+          &.is-active {
+            background-color: $sidebar-logo-tab-background-hover;
+            color: $sidebar-logo-tab-hover;
+
+
+          }
+        }
+      }
+    }
+
+    > li:not(.nav-title) {
+      display: none;
+      z-index:10;
+    }
+
+    &.is-open, &.is-hovered {
+      .nav-title {
+        a {
+          background-color: $sidebar-menu-background-hover;
+          color: $sidebar-menu-tab-hover;
+        }
+      }
+
+      > li {
+        transition: 3s linear all;
+        display: list-item;
+      }
+
+      li {
+        background-color: $sidebar-li-background;
+      }
+    }
+
+    li {
+      color: $sidebar-li;
+      background-color: $sidebar-li-background;
+
+      ul {
+        border: none;
+      }
+
+      a {
+        border-radius: 0;
+        color: $sidebar-link;
+        padding: 1em .75em;
+
+        &:focus,
+        &:focus-within,
+        &:hover,
+        &.is-active {
+          color: $sidebar-link-hover;
+          background-color: $sidebar-link-background-hover;
+        }
+      }
+
+      &.button {
+        a {
+          &:focus,
+          &:focus-within,
+          &:hover,
+          &.is-active {
+            background-color: transparent;
+          }
+        }
+
+      }
+
+      &.is-active {
+        > a {
+          color: $sidebar-li-active;
+          background-color: $sidebar-li-active-background;
+          position: relative;
+          display: block;
+
+          &:has(+ul)::before {
+            position: absolute;
+            right: 10px;
+            content: "\f106";
+            font-family: "FontAwesome";
+          }
+        }
+
+        ul {
+          &:focus,
+          &:focus-within,
+          &:hover,
+          .is-active {
+            display: block;
+          }
+        }
+      }
+
+      &:has(ul) {
+        > a {
+          position: relative;
+        }
+
+        > a::before {
+          content: "\f107";
+          font-family: "FontAwesome";
+          position: absolute;
+          right: 10px;
+        }
+      }
+
+      &:not(.is-active) {
+        ul {
+          display: none;
+          overflow: hidden;
+          opacity: 0;
+          height: 0;
+          transition: height 400ms 400ms, opacity 600ms 200ms;
+        }
+      }
+    }
+  }
+
+  /*rules for hovered state*/
+  &.is-hovered {
+
+    > ul.menu-list {
+      overflow: inherit;
+      width: 400px;
+
+      &:not(.is-hovered) {
+        > li:not(.nav-title) {
+          display: none;
+        }
+      }
+
+      &.is-hovered{
+        > li {
+          display: list-item;
+          opacity: 1 !important;
+        }
+
+        ul.is-open{
+          li{
+            opacity: 1 !important;
+          }
+        }
+      }
+    }
+  }
+
+}
+
+.side-nav{
+  li:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+}

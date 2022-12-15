@@ -1,0 +1,32 @@
+.page-noauth{
+  background: linear-gradient(0deg, bulmaRgba($primary,0.2), bulmaRgba($primary,0.2)), url('/bulmatheme/images/login_bg_1.jpg');
+  background-color:$black;
+  background-size: cover;
+  overflow: hidden;
+  height:100vh;
+
+  #main-content{
+    padding:0px;
+  }
+
+  .app-header{
+    display:none;
+  }
+
+  #login {
+    box-shadow: 0px 3px 3px 0px $navbar-apps-box-shadow-color;
+    .is-horizontal {
+      width:100%;
+
+    }
+
+  }
+}
+
+@include mobile {
+  .page-noauth {
+    #login {
+      margin-top: 40px;
+    }
+  }
+}

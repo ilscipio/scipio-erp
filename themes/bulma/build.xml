@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="SCIPIO ERP - BulmaTheme Component" default="build" basedir=".">
+
+    <!-- SCIPIO: NOTE: Default target ("build", above) currently controls compilation behavior (may improve in future);
+        for source compilation you must create a "src" folder and change above to default="jar" -->
+
+    <import file="../../commontheme.xml"/>
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <property environment="env"/>
+    <property name="desc" value="BulmaTheme Theme"/>
+    <property name="name" value="bulma-theme"/>
+
+
+    <filelist dir="." id="component.build.dependencies">
+        <file name="../base" />
+    </filelist>
+
+    <target name="build" depends="check-lib-update">
+        <!-- echo message="[build] ========== Building BulmaTheme Theme ==========" />
+        <echo message="[build] ========== Done Building BulmaTheme Theme ==========" /-->
+    </target>
+</project>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <VisualTheme visualThemeId="BULMATHEME" visualThemeSetId="BACKOFFICE" description="BulmaTheme Theme"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="BulmaThemeData.xml" sequenceId="01"/>
+    
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_NAME" resourceValue="BULMATHEME" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/bulmatheme/screenshot.jpg" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://bulma-theme/includes/header.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://bulma-theme/includes/messages.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://bulma-theme/includes/footer.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://bulma-theme/includes/appbar.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://bulma-theme/includes/appbarOpen.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://bulma-theme/includes/appbarClose.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://bulma-theme/includes/themeStyles.groovy" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://bulma-theme/includes/themeTemplate.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/bulmatheme/images/favicon.ico" sequenceId="01"/>
+
+    <!-- SCIPIO: The following includes can be used to override specific default pages
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_ERROR_TMPLT_LOC" resourceValue="component://bulma-theme/includes/error.ftl" sequenceId="01"/> // Custom Error Page
+     -->
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://bulma-theme/includes/login.ftl" sequenceId="01"/> // Custom Login Page
+
+
+    <!-- GENERAL -->
+    <!-- Styles -->
+    <!-- Scripts -->
+    <!-- Backoffice still relies on jquery -->
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/ignite-admin-theme/dist/libs/jquery/jquery.min.js" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" sequenceId="02"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" sequenceId="03"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/bulmatheme/dist/js/main.min.js" sequenceId="04"/>
+
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/ignite-admin-theme/dist/libs/sass-to-js/js/sass-to-js.min.js" sequenceId="06"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/js/freetile.min.js" sequenceId="07"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/ignite-admin-theme/dist/libs/datatables/media/js/jquery.dataTables.min.js" sequenceId="10"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/ignite-admin-theme/dist/libs/moment/min/moment-with-locales.min.js" sequenceId="21"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/ignite-admin-theme/dist/libs/pc-bootstrap4-datetimepicker/build/js/bootstrap-datetimepicker.min.js" sequenceId="22"/>
+
+
+    <!-- THEME SPECIFIC --> <!-- ToDo: Migrate to own subfolders -->
+    <!-- Styles -->
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/bulmatheme/dist/css/main.min.css" sequenceId="01"/>
+    <!--
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/bulmatheme/stylesheets/style.css" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/font-awesome/css/font-awesome.min.css" sequenceId="02"/>
+    -->
+
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/ignite-admin-theme/dist/css/font-awesome.min.css" sequenceId="02"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/ignite-admin-theme/dist/css/jquery.dataTables.min.css" sequenceId="05"/>
+
+
+    <!-- Right-to-Left support -->
+    <!--<VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_RTL_STYLESHEET" resourceValue="/bulmatheme/rtl/rtl.css" sequenceId="1"/>-->
+
+
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/bulmatheme/images/scipio-logo.svg" sequenceId="01"/>
+
+    <!-- SCIPIO: The following includes can be used to override specific default pages-->
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_ERROR_TMPLT_LOC" resourceValue="component://bulma-theme/includes/error.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://bulma-theme/includes/login.ftl" sequenceId="01"/>
+
+    <!-- Scripts -->
+    <!--<VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/bulmatheme/js/app.js" sequenceId="1"/>-->
+</entity-engine-xml>

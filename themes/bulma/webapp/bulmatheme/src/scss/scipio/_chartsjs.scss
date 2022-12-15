@@ -1,0 +1,62 @@
+/*Chart.js*/
+
+$chartMap: (
+        primaryFillColor: rgba($primary,.7),
+        primaryStrokeColor: rgba($primary,.9),
+        primaryPointStrokeColor: rgba($primary,.7),
+        secondaryFillColor: rgba($grey-light,.7),
+        secondaryStrokeColor: rgba($grey-light,.9),
+        secondaryPointStrokeColor: rgba($grey-light,.7),
+        pieFillColor1: rgba($primary,1),
+        pieFillColor2: rgba($grey-light,1),
+        pieFillColor3: rgba($danger,1),
+        pieFillColor4: rgba($success,1),
+        pieFillColor5: rgba($warning,1),
+        pieFillColor6: rgba($info,1),
+        pieHighlightColor1: rgba($primary,.6),
+        pieHighlightColor2: rgba($grey-light,.6),
+        pieHighlightColor3: rgba($danger,.6),
+        pieHighlightColor4: rgba($success,.6),
+        pieHighlightColor5: rgba($warning,.6),
+        pieHighlightColor6: rgba($info,.6),
+        pointColor: $white,
+        pointHighlightFill: $grey-lighter,
+        pointHighlightStroke: $grey-dark,
+        pointDot : true,
+        scaleType: "linear",
+        scaleDisplay : true,
+        scaleGridLineColor: "rgba(0,0,0,.1)",
+        scaleLabelFontFamily: $family-sans-serif,
+        scaleLabelFontColor: $body-color,
+        scaleLabelDisplay: false,
+        angleShowLineOut : true,
+        scaleBeginAtZero : true,
+        showTooltips: true,
+        color: #F7464A,
+        highlight : #FF5A5E,
+        dataLabels: false
+);
+
+.chart-wrapper {
+  display: inline-block;
+  position: relative;
+  width: 100% ;
+  max-width: 800px;
+  height: 400px;
+}
+
+.chart-data{
+  /*width: 100% !important;
+  max-width: 800px;
+  height: auto !important;*/
+  display:none;
+
+  &:before{
+    content: sassToJs($chartMap);
+    display: none;
+  }
+}
+
+canvas {
+  margin: 0.5em 0;
+}

@@ -1,0 +1,282 @@
+@import "node_modules/sass-to-js/sass/sass-to-js";
+@import "scipio/chartsjs";
+@import "scipio/tiles";
+@import "scipio/header";
+@import "scipio/layout";
+@import "scipio/sidebar";
+@import "scipio/login";
+@import "scipio/jqueryui";
+/********
+Variables
+*********/
+
+/*
+is-rounded
+*/
+
+.button {
+  &.is-rounded {
+    border-radius: $radius-rounded
+  }
+}
+
+.field{
+  &.has-addons {
+    .control {
+      &:first-child {
+        .is-rounded {
+          border-bottom-left-radius: $radius-rounded;
+          border-top-left-radius: $radius-rounded;
+        }
+      }
+      &:last-child {
+        .is-rounded {
+          border-bottom-right-radius: $radius-rounded;
+          border-top-right-radius: $radius-rounded;
+        }
+      }
+    }
+  }
+}
+
+.block-grid{
+  display: flex;
+  flex-flow: row wrap;
+  list-style: none;
+
+  li {
+    list-style-type: none;
+    margin: 0 1% 20px;
+    width: 30%;
+    display:inline-block;
+  }
+}
+
+@include mobile  {
+  .block-grid {
+    li {
+      display: inline-block; // Don't let them vertically span multiple columns
+      width: 100% !important; // Don't let their width change
+    }
+  }
+}
+
+.is-fullheight-100v{
+  height: 100vh;
+}
+
+/*Content*/
+
+#main-content {
+  padding: 30px 10px;
+
+  section{
+
+    @extend .box;
+    background-color:$white;
+    margin-bottom: 1.5rem;
+
+    &:has(section){
+      border: inherit;
+      box-shadow: inherit;
+      color: inherit;
+      display: inherit;
+      padding: 0rem;
+      background-color: inherit;
+    }
+  }
+
+  .column {
+    &.is-1,&.is-2,&.is-3,&.is-4,&.is-5{
+
+      section{border:1px solid;}
+      &:nth-child(1) section{
+        border-color: $section-card-column1-border;
+
+      }
+
+      &:nth-child(2) section{
+        border-color: $section-card-column2-border;
+      }
+
+      &:nth-child(3) section{
+        border-color: $section-card-column3-border;
+
+      }
+
+      &:nth-child(4) section{
+        border-color: $section-card-column4-border;
+
+      }
+
+      &:nth-child(5) section{
+        border-color: $section-card-column5-border;
+      }
+
+      :has(section){
+        border:none;
+      }
+    }
+  }
+
+}
+
+.label-detail{
+  font-size: $size-small;
+  padding:0.25rem;
+  background-color: $grey-lighter;
+  color: $primary;
+}
+
+.field-label {
+  font-size: $size-small;
+  .label {
+    font-size: $size-small;
+  }
+}
+
+.is-horizontal{
+  .field-label {
+    align-self: center;
+  }
+}
+
+
+.field {
+    .field-label {
+      display:flex;
+      align-items: center;
+      padding-right: 2.5em;
+      padding-left:1em;
+
+      &:last-child{
+        background-color:$input-background-color;
+        height:100%;
+        margin-right:0px;
+        border: 1px solid transparent;
+        border-color: $input-border-color;
+        border-radius: $input-radius;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+
+        label {
+          display: flex;
+          align-items: center;
+        }
+    }
+  }
+}
+
+input[type="checkbox"],input[type=radio] {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.65rem;
+}
+
+input[type="checkbox"] {
+  accent-color: $input-checkbox;
+}
+
+input[type=radio] {
+  accent-color: $input-radio;
+}
+
+select {
+  width: 100%;
+}
+
+.select:not(.is-multiple):not(.is-loading)::after {
+  border-color: #4c7b9f;
+  right: 1.125em;
+  z-index: 4;
+}
+
+
+
+/*Footer*/
+footer {
+  font-size:0.7rem;
+  a {
+    color: $grey-light;
+
+    &:focus,
+    &:focus-within,
+    &:hover,
+    .is-active {
+      color: $red;
+    }
+  }
+}
+
+/*
+table
+*/
+
+td {
+  word-break: break-word;
+
+  .button {
+    @extend .button.is-small;
+
+  }
+}
+
+/*Code*/
+// CODE
+pre {
+  /* original is white background with no border */
+  background-color: #fff;
+  white-space: pre-wrap; /* CSS3 */
+  white-space: -moz-pre-wrap; /* Mozilla, post millennium */
+  white-space: -pre-wrap; /* Opera 4-6 */
+  white-space: -o-pre-wrap; /* Opera 7 */
+  word-wrap: break-word;
+  padding: 4px;
+  color: #333;
+  font-size: 11px;
+  line-height: 16px;
+  margin-bottom: 20px;
+  background-color: #f8f8f8;
+  border-color: #dfdfdf;
+  border-style: solid;
+  border-width: 1px;
+}
+
+pre, code {
+}
+
+code {
+  margin:0px;
+  padding:0px;
+  border:none;
+  background:none;
+  .INFO {color:$info;}
+  .DEBUG {}
+  .WARN {color:$warning;}
+  .ERROR {color:$danger;}
+  .FATAL {color:$danger;font-weight:bold;}
+  .TRACE {color:$grey-light;}
+}
+
+pre.scrollable {
+  max-height:500px;
+  overflow-x:scroll;
+}
+
+
+/*Tab*/
+.content-tab{
+  .tab-content {
+    padding: 1rem;
+    display: none;
+
+    &.is-active {
+      display: block;
+    }
+  }
+}
+
+/*Tooltip*/
+[data-tooltip]:not(.is-disabled)::before, [data-tooltip]:not(.is-loading)::before, [data-tooltip]:not([disabled])::before{
+  content: attr(title);
+}

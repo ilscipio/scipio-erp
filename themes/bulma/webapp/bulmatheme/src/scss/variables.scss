@@ -1,0 +1,333 @@
+@import "node_modules/bulma/sass/utilities/functions";
+/* Colors */
+$black:        hsl(0, 0%, 4%);
+$black-bis:    hsl(0, 0%, 7%);
+$black-ter:    hsl(0, 0%, 14%);
+
+$grey-darker:  hsl(0, 0%, 21%);
+$grey-dark:    hsl(0, 0%, 29%);
+$grey:         hsl(0, 0%, 48%);
+$grey-light:   hsl(0, 0%, 71%);
+$grey-lighter: hsl(0, 0%, 86%);
+$grey-lightest: hsl(0, 0%, 93%);
+
+$white-ter:    hsl(0, 0%, 96%);
+$white-bis:    hsl(0, 0%, 98%);
+$white:        hsl(0, 0%, 100%);
+
+$orange:       rgb(248, 214, 110);
+$yellow:       rgb(218, 218, 64);
+$green:        rgb(88, 198, 88);
+$turquoise:    rgb(66, 149, 149);
+$cyan:         rgb(83, 108, 166);
+$blue:         rgb(76, 123, 159);
+$purple:       rgb(139, 77, 164);
+$red:          #BD1F1E;
+
+/* Typography */
+
+$family-sans-serif: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+$family-monospace: monospace;
+$render-mode: optimizeLegibility;
+
+$size-1: 3rem;
+$size-2: 2.5rem;
+$size-3: 2rem;
+$size-4: 1.5rem;
+$size-5: 1.25rem;
+$size-6: 1rem;
+$size-7: 0.75rem;
+
+$weight-light: 300;
+$weight-normal: 400;
+$weight-medium: 500;
+$weight-semibold: 600;
+$weight-bold: 700;
+
+/* Spacing */
+
+$block-spacing: 1.5rem;
+
+/* Responsiveness */
+
+$gap: 32px;
+$tablet: 769px;
+$desktop: 960px + (2 * $gap);
+$widescreen: 1152px + (2 * $gap);
+$widescreen-enabled: true;
+$fullhd: 1344px + (2 * $gap);
+$fullhd-enabled: true;
+$breakpoints: ("mobile": ("until": $tablet), "tablet": ("from": $tablet), "tablet-only": ("from": $tablet, "until": $desktop), "touch": ("from": $desktop), "desktop": ("from": $desktop), "desktop-only": ("from": $desktop, "until": $widescreen), "until-widescreen": ("until": $widescreen), "widescreen": ("from": $widescreen), "widescreen-only": ("from": $widescreen, "until": $fullhd), "until-fullhd": ("until": $fullhd), "fullhd": ("from": $fullhd));
+
+/* Miscellaneous */
+
+$easing: ease-out;
+$radius-small: 2px;
+$radius: 4px;
+$radius-large: 6px;
+$radius-rounded: 9999px;
+$speed: 86ms;
+
+/* Flags */
+
+$variable-columns: true;
+$rtl: false;
+
+
+/**
+Derived
+**/
+$primary: #132C47;
+$secondary: $red;
+$secondary-invert: findColorInvert($secondary) !default;
+
+$info: $cyan;
+$success: $green;
+$warning: $yellow;
+$danger: $red;
+
+$light: $white-ter;
+$dark: $grey-darker;
+
+/* General colors (to be overridden by dark theme later) */
+$scheme-main: $white;
+$scheme-main-bis: $white-bis;
+$scheme-main-ter: $white-ter;
+$scheme-invert: $black;
+$scheme-invert-bis: $black-bis;
+$scheme-invert-ter: $black-ter;
+
+$background: $white-ter;
+
+$border: $grey-lighter;
+$border-hover: $grey-light;
+$border-light: $grey-lightest;
+$border-light-hover: $grey-light;
+
+/* Text colors */
+$text: $grey-dark;
+$text-light: $grey;
+$text-strong: $grey-darker;
+
+/* Code colors */
+$code: darken($red, 15%);
+$code-background: $background;
+
+$pre: $text;
+$pre-background: $background;
+
+/* Link colors */
+$link: $blue;
+$link-visited: $purple;
+
+$link-hover: $grey-darker;
+$link-hover-border: $grey-light;
+
+$link-focus: $grey-darker;
+$link-focus-border: $blue;
+
+$link-active: $grey-darker;
+$link-active-border: $grey-dark;
+
+/*Dark theme mode*/
+$scheme-main: #f0f0f0;
+//$scheme-main-bis: $black-bis;
+//$scheme-main-ter: $black-ter;
+//$scheme-invert: $white;
+//$scheme-invert-bis: $white-bis;
+//$scheme-invert-ter: $white-ter;
+//$background: $black-ter;
+//$border: $grey-darker;
+//$border-hover: $grey-dark;
+//$border-light: $grey-darker;
+//$border-light-hover: $grey-dark;
+//$text: $grey-light;
+//$text-invert: $grey-darker;
+//$text-light: $grey;
+//$text-strong: $white;
+//$link-hover: $white;
+//$link-hover-border: $grey-dark;
+//$link-focus: $white;
+//$link-focus-border: $blue;
+//$link-active: $white;
+//$link-active-border: $grey-light;
+
+/* Typography */
+$family-primary: $family-sans-serif;
+$family-secondary: $family-sans-serif;
+$family-code: $family-monospace;
+
+$size-small: $size-7;
+$size-normal: $size-6;
+$size-medium: $size-5;
+$size-large: $size-4;
+
+/* Effects */
+$shadow: 0 0.5em 1em -0.125em rgba($scheme-invert, 0.1), 0 0px 0 1px rgba($scheme-invert, 0.02);
+
+/* Lists and maps */
+$custom-colors: (
+        "secondary":($secondary, $secondary-invert),
+);
+$custom-shades: null;
+
+
+$footer-background-color: #171717;
+$footer-color: $grey-lighter;
+$footer-padding: 10px 0px;
+
+/**
+Generic
+**/
+
+$body-background-color: $scheme-main;
+$body-size: 16px;
+$body-min-width: 300px;
+$body-rendering: optimizeLegibility;
+$body-family: $family-primary;
+$body-overflow-x: hidden;
+$body-overflow-y: scroll;
+
+$body-color: $text;
+$body-font-size: 1em;
+$body-weight: $weight-normal;
+$body-line-height: 1.5;
+
+$navbar-background-color: $primary;
+$navbar-box-shadow-size: 0 2px 0 0 ;
+$navbar-box-shadow-color: $background ;
+$navbar-height: 3.25rem ;
+$navbar-padding-vertical: 1rem ;
+$navbar-padding-horizontal: 2rem ;
+$navbar-z: 30 ;
+$navbar-fixed-z: 30 ;
+$navbar-item-color: findColorInvert($navbar-background-color) ;
+$navbar-item-hover-color: $navbar-item-color ;
+$navbar-item-hover-background-color: $primary ;
+$navbar-item-active-color: $navbar-item-color;
+$navbar-item-active-background-color: $primary ;
+$navbar-item-img-max-height: 1.75rem ;
+$navbar-burger-color: $navbar-item-color ;
+$navbar-tab-hover-background-color: transparent ;
+$navbar-tab-hover-border-bottom-color: $primary ;
+$navbar-tab-active-color: $primary ;
+$navbar-tab-active-background-color: transparent ;
+$navbar-tab-active-border-bottom-color: $primary ;
+$navbar-tab-active-border-bottom-style: solid ;
+$navbar-tab-active-border-bottom-width: 3px ;
+$navbar-dropdown-background-color: $primary ;
+$navbar-dropdown-border-top: 2px solid $primary ;
+$navbar-dropdown-offset: -4px ;
+$navbar-dropdown-arrow: $navbar-item-color ;
+$navbar-dropdown-radius: $radius-large ;
+$navbar-dropdown-z: 20 ;
+$navbar-dropdown-boxed-radius: $radius-large ;
+$navbar-dropdown-boxed-shadow: 0 8px 8px $white, 0 0 0 1px $white;
+$navbar-dropdown-item-hover-color: $scheme-main ;
+$navbar-dropdown-item-hover-background-color: findDarkColor($navbar-dropdown-background-color) ;
+$navbar-dropdown-item-active-color: $blue ;
+$navbar-dropdown-item-active-background-color: $navbar-background-color ;
+$navbar-divider-background-color: findLightColor($navbar-dropdown-background-color) ;
+$navbar-divider-height: 2px ;
+$navbar-bottom-box-shadow-size: 0 -2px 0 0 ;
+$navbar-breakpoint: $desktop ;
+
+/* Sidebar */
+$sidebar-background: $grey-dark;
+$sidebar-li: $white;
+$sidebar-li-background: $grey-darker; //findDarkColor($blue)
+$sidebar-li-active-background: $grey-darker;
+$sidebar-li-active: bulmaLighten($red,10%);
+$sidebar-text: $white;
+$sidebar-link: $white;
+$sidebar-link-background: inherit;
+$sidebar-link-hover: $red;
+$sidebar-link-background-hover: $grey-darker;
+$sidebar-hover:inherit;
+$sidebar-focus:inherit;
+$sidebar-toggle-background: $footer-background-color;
+$sidebar-toggle: findColorInvert($sidebar-toggle-background);
+
+$sidebar-logo-tab-background:$black;
+$sidebar-logo-tab:findColorInvert($sidebar-logo-tab-background);
+$sidebar-logo-tab-background-hover: $primary;
+$sidebar-logo-tab-hover:findColorInvert($sidebar-logo-tab-background-hover);
+$sidebar-menu-background:$primary;
+$sidebar-menu-tab:findColorInvert(findDarkColor($primary));
+$sidebar-menu-background-hover: findDarkColor($blue);
+$sidebar-menu-tab-hover:findColorInvert($sidebar-menu-background-hover);
+$sidebar-action-tab-background:$red;
+$sidebar-action-tab:findColorInvert($sidebar-action-tab-background);
+$sidebar-action-tab-background-hover: findDarkColor($red);
+$sidebar-action-tab-hover:findColorInvert($sidebar-action-tab-background-hover);
+
+/*
+*
+*/
+$navbar-apps-overlay-background: bulmaRgba($primary,0.5);
+$navbar-apps-overlay-item-background: $primary;
+$navbar-apps-overlay-item: findColorInvert($blue);
+$navbar-apps-overlay-item-radius: 0.2rem;
+$navbar-apps-overlay-item-background-hover: $red;
+$navbar-apps-overlay-item-hover: findColorInvert($navbar-apps-overlay-item-background-hover);
+$navbar-apps-box-shadow-size: 0px 8px 4px 0px;
+$navbar-apps-box-shadow-color: $navbar-apps-overlay-background ;
+
+
+$code-family: $family-code;
+$code-padding: 0.25em 0.5em 0.25em;
+$code-weight: normal;
+$code-size: 0.875em;
+
+$small-font-size: 0.875em;
+
+$hr-background-color: $background;
+$hr-height: 2px;
+$hr-margin: 1.5rem 0;
+
+$table-background-color: bulmaRgba($white,10%);
+
+$strong-color: $text-strong;
+$strong-weight: $weight-bold;
+
+$pre-font-size: 0.875em;
+$pre-padding: 1.25rem 1.5rem;
+$pre-code-font-size: 1em;
+
+$input-color: $text-strong;
+$input-background-color: $white;
+$input-border-color: $border;
+//$input-height: $control-height;
+$input-shadow: inset 0 0.0625em 0.125em rgba($grey-lighter, 30%);
+$input-placeholder-color: bulmaRgba($input-color, 0.3);
+
+
+$input-checkbox: bulmaLighten($primary,10%);
+$input-radio: bulmaLighten($primary,10%);
+
+$input-hover-color: $text-strong;
+$input-hover-border-color: $border-hover;
+
+$input-focus-color: $text-strong;
+$input-focus-border-color: $link;
+$input-focus-box-shadow-size: 0 0 0 0.125em;
+$input-focus-box-shadow-color: bulmaRgba($link, 0.25);
+
+$input-disabled-color: $text-light;
+$input-disabled-background-color: $background;
+$input-disabled-border-color: $background;
+$input-disabled-placeholder-color: bulmaRgba($input-disabled-color, 0.3);
+
+$input-arrow: $link;
+$input-icon-color: $border;
+$input-icon-active-color: $text;
+$input-radius: $radius;
+
+$modal-card-head-background-color : $grey-lightest;
+
+$section-card-column1-border: bulmaLighten($info,0%);
+$section-card-column2-border: bulmaLighten($success,0%);
+$section-card-column3-border: bulmaLighten($purple,0%);
+$section-card-column4-border: bulmaLighten($primary,0%);
+$section-card-column5-border: bulmaLighten($turquoise,0%);
+$section-card-column6-border: bulmaLighten($warning,0%);

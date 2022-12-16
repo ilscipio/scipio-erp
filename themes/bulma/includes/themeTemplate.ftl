@@ -618,6 +618,7 @@ FORM MACROS
     <#switch type>
         <#case "generic">
         <#case "submit">
+        <#case "display">
         <#break>
         <#case "file">
         <#break>

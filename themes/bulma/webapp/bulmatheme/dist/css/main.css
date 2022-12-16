@@ -12349,8 +12349,10 @@ Variables
 /*
 is-rounded
 */
-.button.is-rounded, .ui-dialog-content button.is-rounded {
-  border-radius: 9999px; }
+.button, .ui-dialog-content button {
+  margin-bottom: .5em; }
+  .button.is-rounded, .ui-dialog-content button.is-rounded {
+    border-radius: 9999px; }
 
 .field.has-addons .control:first-child .is-rounded {
   border-bottom-left-radius: 9999px;

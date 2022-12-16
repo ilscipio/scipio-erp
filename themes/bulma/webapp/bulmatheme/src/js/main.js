@@ -1,4 +1,5 @@
 const $SIDEBAR_COOKIE = 'scpSidebar';
+var $SIDEBAR_CLOSED=false;
 
 document.addEventListener('DOMContentLoaded', () => {
     /**
@@ -77,9 +78,30 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('click', () => {
             el.classList.toggle('is-active');
             $target.classList.toggle('is-active')
-            let hasSidebar=$target.classList.contains('is-active');
-            setCookie($SIDEBAR_COOKIE,hasSidebar,90);
+            $SIDEBAR_CLOSED=$target.classList.contains('is-active');
+            setCookie($SIDEBAR_COOKIE,$SIDEBAR_CLOSED,90);
         });
+    });
+
+    window.addEventListener("resize", function() {
+        $sidebarToggle.forEach( el => {
+            const target = el.dataset.target;
+            const $target = document.getElementById(target);
+            $SIDEBAR_CLOSED=$target.classList.contains('is-active');
+
+            if (document.body.clientWidth > 1023)  {
+                if(!$SIDEBAR_CLOSED && $target.classList.contains('is-active')){
+                    $target.classList.add('is-active')
+                    el.classList.add('is-active');
+                }
+            } else {
+                if($SIDEBAR_CLOSED){
+                    $target.classList.remove('is-active')
+                    el.classList.remove('is-active');
+                }
+            }
+        })
+
     });
 
     //sidebar hover
@@ -155,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    initJSDefaults();
+
 });
 
 /**
@@ -178,24 +200,4 @@ function setCookie(name,value,days) {
         expires = "; expires=" + date.toUTCString();
     }
     document.cookie = name + "=" + (value || "")  + expires + "; path=/";
-}
-
-/* ---------- Collapsible fields ---------- */
-function collapseFieldset(){
-    var parent = $(".toggleField");
-    parent.each(function( index ) {
-        $(this).find("fieldset > div").wrapAll('<div class="is-collapsed" style="display:none;"/>');
-    });
-
-
-    $(".toggleField legend, .toggleField .legend").click(function(){
-        $(this).children("i").toggleClass(" fa-arrow-right").toggleClass(" fa-arrow-down");
-        $(this).nextAll("div.is-collapsed").slideToggle(300);
-    });
-}
-
-function initJSDefaults(){
-    collapseFieldset();
-    $('table.dataTable').dataTable();
-    return false;
 }

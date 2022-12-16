@@ -221,8 +221,13 @@ footer {
 table
 */
 
-td {
+td,table.dataTable.table td, table.dataTable.table th {
   word-break: break-word;
+  box-sizing: border-box;
+  clear: both;
+  font-size: 1rem;
+  position: relative;
+  text-align: inherit;
 
   .button {
     @extend .button.is-small;

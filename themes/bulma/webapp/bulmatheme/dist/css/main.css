@@ -1409,9 +1409,9 @@ a.box:active {
         background-color: #f9d8d7;
         border-color: transparent;
         color: #dc2423; }
-  .button.is-small, .ui-dialog-content button.is-small, td .button, td .ui-dialog-content button, .ui-dialog-content td button {
+  .button.is-small, .ui-dialog-content button.is-small, td .button, td .ui-dialog-content button, .ui-dialog-content td button, table.dataTable.table td .button, table.dataTable.table td .ui-dialog-content button, .ui-dialog-content table.dataTable.table td button, table.dataTable.table th .button, table.dataTable.table th .ui-dialog-content button, .ui-dialog-content table.dataTable.table th button {
     font-size: 0.75rem; }
-    .button.is-small:not(.is-rounded), .ui-dialog-content button.is-small:not(.is-rounded), td .button:not(.is-rounded), td .ui-dialog-content button:not(.is-rounded), .ui-dialog-content td button:not(.is-rounded) {
+    .button.is-small:not(.is-rounded), .ui-dialog-content button.is-small:not(.is-rounded), td .button:not(.is-rounded), td .ui-dialog-content button:not(.is-rounded), .ui-dialog-content td button:not(.is-rounded), table.dataTable.table td .button:not(.is-rounded), table.dataTable.table td .ui-dialog-content button:not(.is-rounded), .ui-dialog-content table.dataTable.table td button:not(.is-rounded), table.dataTable.table th .button:not(.is-rounded), table.dataTable.table th .ui-dialog-content button:not(.is-rounded), .ui-dialog-content table.dataTable.table th button:not(.is-rounded) {
       border-radius: 2px; }
   .button.is-normal, .ui-dialog-content button.is-normal {
     font-size: 1rem; }
@@ -1500,7 +1500,7 @@ a.box:active {
       margin-right: 0.25rem; }
 
 @media screen and (max-width: 768px) {
-  .button.is-responsive.is-small, .ui-dialog-content button.is-responsive.is-small, td .is-responsive.button, td .ui-dialog-content button.is-responsive, .ui-dialog-content td button.is-responsive {
+  .button.is-responsive.is-small, .ui-dialog-content button.is-responsive.is-small, td .is-responsive.button, td .ui-dialog-content button.is-responsive, .ui-dialog-content td button.is-responsive, table.dataTable.table td .is-responsive.button, table.dataTable.table td .ui-dialog-content button.is-responsive, .ui-dialog-content table.dataTable.table td button.is-responsive, table.dataTable.table th .is-responsive.button, table.dataTable.table th .ui-dialog-content button.is-responsive, .ui-dialog-content table.dataTable.table th button.is-responsive {
     font-size: 0.5625rem; }
   .button.is-responsive, .ui-dialog-content button.is-responsive,
   .button.is-responsive.is-normal,
@@ -1512,7 +1512,7 @@ a.box:active {
     font-size: 1rem; } }
 
 @media screen and (min-width: 769px) and (max-width: 1023px) {
-  .button.is-responsive.is-small, .ui-dialog-content button.is-responsive.is-small, td .is-responsive.button, td .ui-dialog-content button.is-responsive, .ui-dialog-content td button.is-responsive {
+  .button.is-responsive.is-small, .ui-dialog-content button.is-responsive.is-small, td .is-responsive.button, td .ui-dialog-content button.is-responsive, .ui-dialog-content td button.is-responsive, table.dataTable.table td .is-responsive.button, table.dataTable.table td .ui-dialog-content button.is-responsive, .ui-dialog-content table.dataTable.table td button.is-responsive, table.dataTable.table th .is-responsive.button, table.dataTable.table th .ui-dialog-content button.is-responsive, .ui-dialog-content table.dataTable.table th button.is-responsive {
     font-size: 0.65625rem; }
   .button.is-responsive, .ui-dialog-content button.is-responsive,
   .button.is-responsive.is-normal,
@@ -12472,8 +12472,13 @@ footer {
 /*
 table
 */
-td {
-  word-break: break-word; }
+td, table.dataTable.table td, table.dataTable.table th {
+  word-break: break-word;
+  box-sizing: border-box;
+  clear: both;
+  font-size: 1rem;
+  position: relative;
+  text-align: inherit; }
 
 /*Code*/
 pre {

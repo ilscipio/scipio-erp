@@ -250,27 +250,33 @@ td,table.dataTable.table td, table.dataTable.table th {
   }
 }
 
+table {
+  &.table,&.dataTable, &.table.dataTable{
+
+    th {
+      font-size:.8rem;
+      min-width:100px;
+
+      &.sorting{
+        padding:0.25rem;
+      }
+
+    }
+  }
+
+}
+
 @include mobile  {
   table {
     &.table,&.dataTable, &.table.dataTable{
 
-        th {
-          font-size:.8rem;
-          min-width:100px;
-
-          &.sorting{
-            padding:0.25rem;
-          }
+      td {
+        &:has(input,button){
+          min-width:200px;
 
         }
 
-        td {
-          &:has(input,button){
-            min-width:200px;
-
-          }
-
-        }
+      }
 
     }
 

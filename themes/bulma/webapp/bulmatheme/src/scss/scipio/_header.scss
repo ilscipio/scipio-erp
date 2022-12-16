@@ -10,7 +10,23 @@
   cursor:pointer;
 
   i {
-    transition: 0.3s ease-in transform;
+    transition: 0.3s ease-in all;
+  }
+
+  &:hover{
+
+    i {
+      margin-right:0.25em;
+    }
+  }
+
+  &.is-active{
+    &:hover{
+
+      i {
+        margin-right:-0.25em;
+      }
+    }
   }
 }
 

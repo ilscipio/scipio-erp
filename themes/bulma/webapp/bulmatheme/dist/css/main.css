@@ -11945,7 +11945,11 @@ canvas {
   justify-content: flex-end;
   cursor: pointer; }
   .sidebar-toggle i {
-    transition: 0.3s ease-in transform; }
+    transition: 0.3s ease-in all; }
+  .sidebar-toggle:hover i {
+    margin-right: 0.25em; }
+  .sidebar-toggle.is-active:hover i {
+    margin-right: -0.25em; }
 
 .navbar-burger {
   margin-right: auto; }

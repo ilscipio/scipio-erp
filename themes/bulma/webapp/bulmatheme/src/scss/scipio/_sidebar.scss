@@ -119,6 +119,9 @@ aside, .aside {
     }
 
     &.is-open, &.is-hovered {
+      height:100vh;
+
+
       .nav-title {
         a {
           background-color: $sidebar-menu-background-hover;

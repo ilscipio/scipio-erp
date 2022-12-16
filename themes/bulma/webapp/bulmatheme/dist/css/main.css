@@ -12186,14 +12186,16 @@ aside, .aside {
     aside ul.menu-list > li:not(.nav-title), .aside ul.menu-list > li:not(.nav-title) {
       display: none;
       z-index: 10; }
-    aside ul.menu-list.is-open .nav-title a, aside ul.menu-list.is-hovered .nav-title a, .aside ul.menu-list.is-open .nav-title a, .aside ul.menu-list.is-hovered .nav-title a {
-      background-color: #497598;
-      color: #fff; }
-    aside ul.menu-list.is-open > li, aside ul.menu-list.is-hovered > li, .aside ul.menu-list.is-open > li, .aside ul.menu-list.is-hovered > li {
-      transition: 3s linear all;
-      display: list-item; }
-    aside ul.menu-list.is-open li, aside ul.menu-list.is-hovered li, .aside ul.menu-list.is-open li, .aside ul.menu-list.is-hovered li {
-      background-color: #363636; }
+    aside ul.menu-list.is-open, aside ul.menu-list.is-hovered, .aside ul.menu-list.is-open, .aside ul.menu-list.is-hovered {
+      height: 100vh; }
+      aside ul.menu-list.is-open .nav-title a, aside ul.menu-list.is-hovered .nav-title a, .aside ul.menu-list.is-open .nav-title a, .aside ul.menu-list.is-hovered .nav-title a {
+        background-color: #497598;
+        color: #fff; }
+      aside ul.menu-list.is-open > li, aside ul.menu-list.is-hovered > li, .aside ul.menu-list.is-open > li, .aside ul.menu-list.is-hovered > li {
+        transition: 3s linear all;
+        display: list-item; }
+      aside ul.menu-list.is-open li, aside ul.menu-list.is-hovered li, .aside ul.menu-list.is-open li, .aside ul.menu-list.is-hovered li {
+        background-color: #363636; }
     aside ul.menu-list li, .aside ul.menu-list li {
       color: white;
       background-color: #363636; }

@@ -565,6 +565,48 @@ jsOptions="" origArgs={} passArgs={} catchArgs...>
     </#if>
 </#macro>
 
+<#macro pul_markup title="" origArgs={} passArgs={} catchArgs...>
+    <div class="${styles.pricing_wrap!}">
+        <#if title?has_content><@pli type="title">${escapeVal(title, 'htmlmarkup')}</@pli></#if>
+        <#nested>
+    </div>
+</#macro>
+
+<#-- @pli main markup - theme override -->
+<#macro pli_markup type="" class="" origArgs={} passArgs={} catchArgs...>
+    <#switch type>
+        <#case "price">
+        <#local class = addClassArg(class, "panel-block "+ styles.pricing_price!)>
+        <div <@compiledClassAttribStr class=class />>
+            <div class="control">
+                <#nested>
+            </div>
+        </div>
+        <#break>
+        <#case "description">
+        <#local class = addClassArg(class, "panel-block "+styles.pricing_description!)>
+        <div <@compiledClassAttribStr class=class />><div class="control">
+            <#nested>
+        </div></div>
+        <#break>
+        <#case "title">
+        <#local class = addClassArg(class, styles.pricing_title!)>
+        <div <@compiledClassAttribStr class=class />><#nested></div>
+        <#break>
+        <#case "button">
+        <#local class = addClassArg(class, "panel-block "+styles.pricing_cta!)>
+        <div <@compiledClassAttribStr class=class />>
+            <#nested>
+        </div>
+        <#break>
+        <#default>
+        <#local class = addClassArg(class, styles.pricing_bullet!)>
+        <div <@compiledClassAttribStr class=class />><div class="control">
+            <#nested>
+        </div></div>
+        <#break>
+    </#switch>
+</#macro>
 
 <#--
 FORM MACROS

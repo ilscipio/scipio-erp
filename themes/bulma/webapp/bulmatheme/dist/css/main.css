@@ -12105,7 +12105,8 @@ body.page-noauth .scp-container {
   position: relative; }
 
 .scp-content {
-  grid-area: content; }
+  grid-area: content;
+  max-width: 100vw; }
 
 /*
 Sidebar
@@ -12374,7 +12375,8 @@ is-rounded
 
 /*Content*/
 #main-content {
-  padding: 30px 10px; }
+  padding: 3rem 1rem;
+  max-width: 100vw; }
   #main-content section {
     background-color: white;
     margin-bottom: 1.5rem; }
@@ -12399,6 +12401,11 @@ is-rounded
     border-color: #429595; }
   #main-content .column.is-1 :has(section), #main-content .column.is-2 :has(section), #main-content .column.is-3 :has(section), #main-content .column.is-4 :has(section), #main-content .column.is-5 :has(section) {
     border: none; }
+
+@media screen and (max-width: 768px) {
+  #main-content {
+    padding: 2rem 0;
+    margin: 0px; } }
 
 .label-detail {
   font-size: 0.75rem;

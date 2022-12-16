@@ -1,4 +1,6 @@
 .page-noauth{
+  --sidebar-width: 0;
+  
   background: linear-gradient(0deg, bulmaRgba($primary,0.2), bulmaRgba($primary,0.2)), url('/bulmatheme/images/login_bg_1.jpg');
   background-color:$black;
   background-size: cover;

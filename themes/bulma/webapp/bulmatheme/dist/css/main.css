@@ -12250,6 +12250,7 @@ aside, .aside {
   margin-bottom: 1rem; }
 
 .page-noauth {
+  --sidebar-width: 0;
   background: linear-gradient(0deg, rgba(19, 44, 71, 0.2), rgba(19, 44, 71, 0.2)), url("/bulmatheme/images/login_bg_1.jpg");
   background-color: #0a0a0a;
   background-size: cover;

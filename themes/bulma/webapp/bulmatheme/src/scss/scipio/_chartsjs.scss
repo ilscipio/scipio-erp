@@ -38,11 +38,11 @@ $chartMap: (
 );
 
 .chart-wrapper {
-  display: inline-block;
+  display: flex;
+  justify-content: center;
   position: relative;
   width: 100% ;
-  max-width: 800px;
-  height: 400px;
+  height: 30vh;
 }
 
 .chart-data{

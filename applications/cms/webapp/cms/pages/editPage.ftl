@@ -69,7 +69,7 @@
               <#-- NOTE: BOOLEAN supports expansion languages - if they are enabled, cannot use the simple checkbox -->
               <#if !fieldObj.expandLang?has_content || fieldObj.expandLang == "NONE">
                 <#-- TODO?: review this, it's because default-compact looks ugly in this case... maybe default-compact needs a review... -->
-                <@fields type="default">
+                <@fields type="default-compact">
                   <#-- 2018-04-16: DO NOT USE CHECKBOX - it prevents templates from using default-value logic and operators - ternary needed
                   <@field label=fieldLabel labelDetail=labelDetail type="checkbox" name=name tooltip=tooltip required=required maxlength=maxLength id=id 
                       value="true" altValue="false" 
@@ -562,7 +562,7 @@
                               <#if template.attributes?has_content>
                                 <#-- Page Meta Information -->
                                 <@section title=uiLabelMap.CmsPageMeta class="+editorMeta">
-                                  <@fields type="default">
+                                  <@fields type="default-compact">
                                     <#-- 2017-02-10: now redundant due to being under settings as select
                                     <@field type="display" name="templateName" value=(template.name!) disabled=true label=uiLabelMap.CmsTemplate/>-->
                                     <#list template.attributes as attribute>

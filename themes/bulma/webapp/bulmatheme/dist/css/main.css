@@ -12018,7 +12018,8 @@ canvas {
   background: rgba(19, 44, 71, 0.5);
   transition: opacity 0.5s;
   opacity: 0;
-  visibility: hidden; }
+  visibility: hidden;
+  overflow-y: auto; }
   .navbar-apps-overlay .navbar-wrap {
     position: relative;
     top: 25%;

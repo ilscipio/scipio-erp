@@ -978,7 +978,7 @@ context.styles.putAll([
         "field_datefind_default" : "",
         "field_datefind_select_default" : "",
         "field_select_default" : "",
-        "field_lookup_default" : "",
+        "field_lookup_default" : "input",
         "field_file_default" : "file-input",
         "field_password_default" : "input",
         "field_reset_default" : "",

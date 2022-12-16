@@ -1,10 +1,15 @@
+:root{
+  --sidebar-width : #{$sidebar-width};
+}
+
 .scp-container {
   display: grid;
-  grid-template-columns: 400px 1fr;
+  grid-template-columns: var(--sidebar-width) 1fr;
   grid-template-rows: auto;
   gap: 0px 0px;
   grid-template-areas: "sidebar content";
   transition: 0.3s ease-in grid-template-columns;
+
 
   .menu-list{
     overflow:hidden;
@@ -16,8 +21,12 @@
 
   }
 
+  .scp-content {max-width: calc(100vw - var(--sidebar-width) - #{$main-container-padding});}
+
   &.is-active {
-    grid-template-columns: 70px 1fr;
+    --sidebar-width : #{$sidebar-width-closed};
+
+    grid-template-columns: var(--sidebar-width) 1fr;
 
     .menu-list{
       &:not(.is-hovered){
@@ -29,10 +38,13 @@
       }
     }
 
+    .scp-content {max-width: calc(100vw - var(--sidebar-width) - #{$main-container-padding});}
+
     .sidebar-toggle i{
       transform: rotate(180deg);
     }
   }
+
 }
 
 body{
@@ -68,6 +80,9 @@ body{
       }
 
     }
+
+
+    .scp-content {max-width: calc(100vw - #{$main-container-padding})}
   }
 }
 
@@ -78,5 +93,6 @@ body{
 }
 .scp-content {
   grid-area: content;
-  max-width:100vw;
+  transition: 0.3s ease-in all;
+  padding: $main-container-padding;
 }

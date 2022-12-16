@@ -233,6 +233,9 @@ $navbar-bottom-box-shadow-size: 0 -2px 0 0 ;
 $navbar-breakpoint: $desktop ;
 
 /* Sidebar */
+$sidebar-width: 400px;
+$sidebar-width-closed: 70px;
+$main-container-padding: .75rem;
 $sidebar-background: $grey-dark;
 $sidebar-li: $white;
 $sidebar-li-background: $grey-darker; //findDarkColor($blue)

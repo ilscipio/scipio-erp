@@ -36,4 +36,4 @@
             </footer>
         </div>
     </#if>
-    <div class="scp-content px-3">
+    <div class="scp-content">

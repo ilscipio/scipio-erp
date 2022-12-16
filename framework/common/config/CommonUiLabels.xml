@@ -4844,10 +4844,10 @@
     <property key="CommonForgotYourPassword">
         <value xml:lang="ar">نسيت كلمة السر</value>
         <value xml:lang="cs">Zapomenuté heslo</value>
-        <value xml:lang="de">Haben Sie Ihr Passwort vergessen?</value>
-        <value xml:lang="en">Forgot Your Password</value>
+        <value xml:lang="de">Passwort vergessen?</value>
+        <value xml:lang="en">Forgot Your Password?</value>
         <value xml:lang="es">¿Olvidó su contraseña</value>
-        <value xml:lang="fr">Vous avez oublié votre mot de passe </value>
+        <value xml:lang="fr">Mot de passe oublié?</value>
         <value xml:lang="hi-IN">अपना पासवर्ड भूल गये</value>
         <value xml:lang="it">Password dimenticata</value>
         <value xml:lang="ja">パスワードを忘れたときは</value>

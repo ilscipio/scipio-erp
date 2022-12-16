@@ -2549,9 +2549,10 @@
         <value xml:lang="zh-TW">資料實體</value>
     </property>
     <property key="WebtoolsForSomethingInteresting">
-        <value xml:lang="de">Um etwas Interessantes zu sehen sollten Sie sich anmelden; versuchen Sie: admin, Passwort: scipio</value>
-        <value xml:lang="en">For something interesting, make sure you are logged in; try username: admin, password: scipio</value>
-        <value xml:lang="fr">Pour quelque chose d'intéressant, assurez-vous que vous avez ouvert une session. Essayez avec l'identifiant de connexion: admin, et le mot de passe: scipio</value>
+        <value xml:lang="de">Psst: Nutzername admin, Passwort: scipio</value>
+        <value xml:lang="en">Psst: username: admin, password: scipio</value>
+        <value xml:lang="es">Psst: usuario: admin, contraseña: scipio</value>
+        <value xml:lang="fr">Psst: admin, et le mot de passe: scipio</value>
         <value xml:lang="it">Per accedere all'applicazione devi essere autenticato, prova con Nome utente:admin, Password:scipio</value>
         <value xml:lang="ja">興味を感じたことを確実なものにするため、Username;Admin;Password scipio でログインしてください</value>
         <value xml:lang="pt">Para algo interessante conecte-se, use usuÃ¡rio: admin, senha: scipio</value>

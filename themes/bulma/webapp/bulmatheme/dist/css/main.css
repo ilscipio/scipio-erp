@@ -12480,6 +12480,15 @@ td, table.dataTable.table td, table.dataTable.table th {
   position: relative;
   text-align: inherit; }
 
+@media screen and (max-width: 768px) {
+  table.table th, table.dataTable th, table.table.dataTable th {
+    font-size: .8rem;
+    min-width: 100px; }
+    table.table th.sorting, table.dataTable th.sorting, table.table.dataTable th.sorting {
+      padding: 0.25rem; }
+  table.table td:has(input, button), table.dataTable td:has(input, button), table.table.dataTable td:has(input, button) {
+    min-width: 200px; } }
+
 /*Code*/
 pre {
   /* original is white background with no border */

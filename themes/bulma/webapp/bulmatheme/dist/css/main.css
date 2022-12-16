@@ -12381,6 +12381,9 @@ is-rounded
   height: 100vh; }
 
 /*Content*/
+a .title {
+  color: inherit; }
+
 @media screen and (max-width: 768px) {
   .title.is-1 {
     font-size: 2.5rem; }
@@ -12449,7 +12452,8 @@ is-rounded
   display: flex;
   align-items: center;
   padding-right: 2.5em;
-  padding-left: 1em; }
+  padding-left: 1em;
+  text-align: left; }
   .field .field-label:last-child {
     background-color: white;
     height: 100%;

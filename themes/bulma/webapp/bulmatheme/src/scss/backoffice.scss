@@ -67,6 +67,9 @@ is-rounded
 }
 
 /*Content*/
+a .title {
+  color:inherit;
+}
 
 @include mobile  {
   .title{
@@ -173,6 +176,7 @@ is-rounded
       align-items: center;
       padding-right: 2.5em;
       padding-left:1em;
+      text-align:left;
 
       &:last-child{
         background-color:$input-background-color;

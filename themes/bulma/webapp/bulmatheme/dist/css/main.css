@@ -12366,13 +12366,17 @@ is-rounded
   .button.is-rounded, .ui-dialog-content button.is-rounded {
     border-radius: 9999px; }
 
-.field.has-addons .control:first-child .is-rounded {
-  border-bottom-left-radius: 9999px;
-  border-top-left-radius: 9999px; }
+.field.has-addons {
+  flex-wrap: wrap; }
+  .field.has-addons .control:first-child .is-rounded {
+    border-bottom-left-radius: 9999px;
+    border-top-left-radius: 9999px; }
+  .field.has-addons .control:last-child .is-rounded {
+    border-bottom-right-radius: 9999px;
+    border-top-right-radius: 9999px; }
 
-.field.has-addons .control:last-child .is-rounded {
-  border-bottom-right-radius: 9999px;
-  border-top-right-radius: 9999px; }
+.field-entry-type-lookup .field.has-addons {
+  flex-wrap: nowrap; }
 
 .block-grid {
   display: flex;
@@ -12409,9 +12413,6 @@ a .title {
     font-size: 1.25rem; }
   .title.is-6 {
     font-size: 1rem; } }
-
-.field.has-addons {
-  flex-wrap: wrap; }
 
 #main-content {
   padding: 3rem 1rem;

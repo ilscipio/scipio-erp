@@ -23,6 +23,8 @@ is-rounded
 
 .field{
   &.has-addons {
+    flex-wrap: wrap;
+
     .control {
       &:first-child {
         .is-rounded {
@@ -37,6 +39,12 @@ is-rounded
         }
       }
     }
+  }
+}
+
+.field-entry-type-lookup {
+  .field.has-addons{
+    flex-wrap: nowrap;
   }
 }
 
@@ -80,10 +88,6 @@ a .title {
     &.is-5{font-size: 1.25rem;}
     &.is-6{font-size: 1rem;}
   }
-}
-
-.field.has-addons{
-  flex-wrap: wrap;
 }
 
 #main-content {

@@ -12375,6 +12375,23 @@ is-rounded
   height: 100vh; }
 
 /*Content*/
+@media screen and (max-width: 768px) {
+  .title.is-1 {
+    font-size: 2.5rem; }
+  .title.is-2 {
+    font-size: 2rem; }
+  .title.is-3 {
+    font-size: 1.8rem; }
+  .title.is-4 {
+    font-size: 1.5rem; }
+  .title.is-5 {
+    font-size: 1.25rem; }
+  .title.is-6 {
+    font-size: 1rem; } }
+
+.field.has-addons {
+  flex-wrap: wrap; }
+
 #main-content {
   padding: 3rem 1rem;
   max-width: 100vw; }

@@ -263,32 +263,34 @@
               
                 <@cell columns=3>
                   <@form method="post" id="settingsForm" action=makePageUrl('updateAssetInfo')>
-                    <@field type="hidden" name="assetTemplateId" value=assetTemplateModel.id!""/>
-                    
-                    <#-- Template Information -->
-                    <@section title=uiLabelMap.CommonInformation class="+editorMeta">
-                        <@field type="display" value=(assetTemplateModel.id!) label=uiLabelMap.CommonId/>                        
-                        <@field type="input" name="templateName" value=(assetTemplateModel.name!) required=true label=uiLabelMap.CommonName/>
-                        <@field type="display" value=uiLabelMap["CmsAssetType_"+raw(assetTemplateModel.assetType!"TEMPLATE")] label=uiLabelMap.CommonType/>
-                        <@field type="select" name="contentTypeId" label=uiLabelMap.ContentType>
-                            <#assign contentTypeId = assetTemplateModel.contentTypeId!"">
-                            <option value=""<#if !contentTypeId?has_content> selected="selected"</#if>></option>
-                            <@contentTypeOptions parentTypeId="SCP_TEMPLATE_PART" contentTypeId=contentTypeId/>
-                        </@field>
-                        <@field type="textarea" name="description_visible" value=(assetTemplateModel.getDescription(locale)!) required=false label=uiLabelMap.CommonDescription/>
+                      <@fields type="default-compact">
+                        <@field type="hidden" name="assetTemplateId" value=assetTemplateModel.id!""/>
 
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
-                        <@webSiteSelectField name="webSiteId" value=(assetTemplateModel.webSiteId!) required=false
-                            tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
-                        
-                        <#-- This will extremely rarely be used for assets, but could have impact in the future...
-                        <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(assetTemplateModel.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
-                        -->
-                        
-                        <@menu type="button">
-                            <@menuitem type="link" href="javascript:updateAssetInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
-                        </@menu> 
-                    </@section>
+                        <#-- Template Information -->
+                        <@section title=uiLabelMap.CommonInformation class="+editorMeta">
+                            <@field type="display" value=(assetTemplateModel.id!) label=uiLabelMap.CommonId/>
+                            <@field type="input" name="templateName" value=(assetTemplateModel.name!) required=true label=uiLabelMap.CommonName/>
+                            <@field type="display" value=uiLabelMap["CmsAssetType_"+raw(assetTemplateModel.assetType!"TEMPLATE")] label=uiLabelMap.CommonType/>
+                            <@field type="select" name="contentTypeId" label=uiLabelMap.ContentType>
+                                <#assign contentTypeId = assetTemplateModel.contentTypeId!"">
+                                <option value=""<#if !contentTypeId?has_content> selected="selected"</#if>></option>
+                                <@contentTypeOptions parentTypeId="SCP_TEMPLATE_PART" contentTypeId=contentTypeId/>
+                            </@field>
+                            <@field type="textarea" name="description_visible" value=(assetTemplateModel.getDescription(locale)!) required=false label=uiLabelMap.CommonDescription/>
+
+                            <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
+                            <@webSiteSelectField name="webSiteId" value=(assetTemplateModel.webSiteId!) required=false
+                                tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
+
+                            <#-- This will extremely rarely be used for assets, but could have impact in the future...
+                            <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(assetTemplateModel.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
+                            -->
+
+                            <@menu type="button">
+                                <@menuitem type="link" href="javascript:updateAssetInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
+                            </@menu>
+                        </@section>
+                    </@fields>
                   </@form>
                 </@cell>  
               

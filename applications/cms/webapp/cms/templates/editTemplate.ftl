@@ -407,34 +407,36 @@
 
                 <@cell columns=3>
                   <@form method="post" id="settingsForm" action=makePageUrl('updateTemplateInfo')>
-                    <@field type="hidden" name="pageTemplateId" value=(pageTemplate.pageTemplateId!"")/>
+                      <@fields type="default-compact">
+                        <@field type="hidden" name="pageTemplateId" value=(pageTemplate.pageTemplateId!"")/>
 
-                    <#-- Template Information -->
-                    <@section title=uiLabelMap.CommonInformation class="+editorMeta">
-                        <@field type="display" value=(pageTemplate.pageTemplateId!) label=uiLabelMap.CommonId/>
-                        <@field type="input" name="templateName" value=(pageTemplate.templateName!) required=true label=uiLabelMap.CommonName />
+                        <#-- Template Information -->
+                        <@section title=uiLabelMap.CommonInformation class="+editorMeta">
+                            <@field type="display" value=(pageTemplate.pageTemplateId!) label=uiLabelMap.CommonId/>
+                            <@field type="input" name="templateName" value=(pageTemplate.templateName!) required=true label=uiLabelMap.CommonName />
 
-                        <@field type="textarea" name="description_visible" value=(pageTemplate.description!) required=false label=uiLabelMap.CommonDescription />
+                            <@field type="textarea" name="description_visible" value=(pageTemplate.description!) required=false label=uiLabelMap.CommonDescription />
 
-                        <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
-                        <@webSiteSelectField name="webSiteId" value=(pageTemplate.webSiteId!) required=false
-                            tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
+                            <#-- NOTE: 2016: this WebSite field has NO rendering impact anymore; for organization purposes only -->
+                            <@webSiteSelectField name="webSiteId" value=(pageTemplate.webSiteId!) required=false
+                                tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
 
-                        <#assign pageRevisions><@compress_single_line>
-                            <#if pageTemplate.pageTmpVersions?has_content && pageTemplate.pageTmpVersions.all?has_content>
-                                ${pageTemplate.pageTmpVersions.all?size}
-                            <#else>
-                                0
-                            </#if></@compress_single_line>
-                        </#assign>
-                        <@field label=uiLabelMap.CmsRevisions type="display" value=pageRevisions/>
+                            <#assign pageRevisions><@compress_single_line>
+                                <#if pageTemplate.pageTmpVersions?has_content && pageTemplate.pageTmpVersions.all?has_content>
+                                    ${pageTemplate.pageTmpVersions.all?size}
+                                <#else>
+                                    0
+                                </#if></@compress_single_line>
+                            </#assign>
+                            <@field label=uiLabelMap.CmsRevisions type="display" value=pageRevisions/>
 
-                        <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(pageTemplate.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
+                            <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(pageTemplate.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
 
-                        <@menu type="button">
-                            <@menuitem type="link" href="javascript:updateTemplateInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
-                        </@menu>
-                    </@section>
+                            <@menu type="button">
+                                <@menuitem type="link" href="javascript:updateTemplateInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
+                            </@menu>
+                        </@section>
+                    </@fields>
                   </@form>
                 </@cell>
 

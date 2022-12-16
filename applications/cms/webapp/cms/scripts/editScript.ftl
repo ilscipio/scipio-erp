@@ -234,26 +234,28 @@ NOTES: 2016-12:
               
                 <@cell columns=3>
                   <@form method="post" id="settingsForm" action=makePageUrl('updateScriptInfo')>
-                    <@field type="hidden" name="scriptTemplateId" value=scriptTemplateModel.id!""/>
-                    
-                    <#-- Template Information -->
-                    <@section title=uiLabelMap.CommonInformation class="+editorMeta">
-                        <@field type="display" value=(scriptTemplateModel.id!) label=uiLabelMap.CommonId/>                        
-                        <@field type="input" name="templateName" value=(scriptTemplateModel.name!) required=true label=uiLabelMap.CommonName/>
-                        <@field type="textarea" name="description_visible" value=(scriptTemplateModel.getDescription(locale)!) required=false label=uiLabelMap.CommonDescription/>
+                      <@fields type="default-compact">
+                        <@field type="hidden" name="scriptTemplateId" value=scriptTemplateModel.id!""/>
 
-                        <#-- this is display-only for now... location always auto-determines correctly currently... -->
-                        <@field type="display" label=uiLabelMap.CommonLanguageTitle><strong>${resolvedScriptLang}</strong></@field>
-                        <@field type="display" value=(scriptTemplateModel.standalone?string("Y", "N")) label=uiLabelMap.CmsStandalone tooltip=uiLabelMap.CmsStandaloneDescription/>
+                        <#-- Template Information -->
+                        <@section title=uiLabelMap.CommonInformation class="+editorMeta">
+                            <@field type="display" value=(scriptTemplateModel.id!) label=uiLabelMap.CommonId/>
+                            <@field type="input" name="templateName" value=(scriptTemplateModel.name!) required=true label=uiLabelMap.CommonName/>
+                            <@field type="textarea" name="description_visible" value=(scriptTemplateModel.getDescription(locale)!) required=false label=uiLabelMap.CommonDescription/>
 
-                        <#-- NOTE: 2019: this WebSite field has NO rendering impact; for organization purposes only -->
-                        <@webSiteSelectField name="webSiteId" value=(scriptTemplateModel.webSiteId!) required=false
-                            tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
+                            <#-- this is display-only for now... location always auto-determines correctly currently... -->
+                            <@field type="display" label=uiLabelMap.CommonLanguageTitle><strong>${resolvedScriptLang}</strong></@field>
+                            <@field type="display" value=(scriptTemplateModel.standalone?string("Y", "N")) label=uiLabelMap.CmsStandalone tooltip=uiLabelMap.CmsStandaloneDescription/>
 
-                        <@menu type="button">
-                            <@menuitem type="link" href="javascript:updateScriptInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
-                        </@menu> 
-                    </@section>
+                            <#-- NOTE: 2019: this WebSite field has NO rendering impact; for organization purposes only -->
+                            <@webSiteSelectField name="webSiteId" value=(scriptTemplateModel.webSiteId!) required=false
+                                tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')} - ${rawLabel('CmsSettingNotUsedInRenderingNote')}"/>
+
+                            <@menu type="button">
+                                <@menuitem type="link" href="javascript:updateScriptInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
+                            </@menu>
+                        </@section>
+                      </@fields>
                   </@form>
                 </@cell>  
               

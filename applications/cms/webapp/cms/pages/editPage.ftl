@@ -469,112 +469,114 @@
                 <@cell columns=3>
                     <#if template?has_content>
                       <@form method="post" id="settingsForm" action=makePageUrl('updatePageInfo')>
-                        <@field type="hidden" name="pageId" value=(pageId!)/>
-                        <@section title=uiLabelMap.CommonInformation>
-                            <#-- Page Settings -->
-                            <@section title=uiLabelMap.CommonSettings>
-                                 <@field label=uiLabelMap.CommonId type="display" value=meta.id!""/>
-                                 
-                                 <#-- NOTE: TODO?: the schema actually supports multiple primary mappings for multiple website support.
-                                    this control can't handle that case, e.g. we assume that meta.defaultWebSiteId==meta.webSiteId. -->
-                                 <@webSiteSelectField label="${rawLabel('CmsWebSite')} (${rawLabel('CmsPrimary')})" name="webSiteId" required=true value=((meta.webSiteId)!)
-                                    tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')}}"/>
-                          
-                               <#if meta.candidateWebSiteIds?has_content && ((meta.candidateWebSiteIds?size > 1) || (meta.candidateWebSiteIds?first != ((meta.webSiteId)!)))>
-                                 <@field label="${rawLabel('ContentWebSites')}" type="display" tooltip=uiLabelMap.CmsPageMultipleWebsitesInfo><@compress_single_line>
-                                    <#-- 2016: if page is associated to more websites, show them, even if UI may not yet allow creating these assocs at this time 
-                                        (help debug and correct bad data if nothing else) -->
-                                      <#list meta.candidateWebSiteIds as canWebSiteId>
-                                          ${canWebSiteId}<#if canWebSiteId_has_next>, </#if><#t>
-                                      </#list>
-                                 </@compress_single_line></@field>
-                               </#if>
-                               
-                                 <@field label=uiLabelMap.CommonPath type="input" name="primaryPath" value=(meta.primaryPath!"") required=true/>
-                                 <#-- TODO: unhardcode this -->
-                                 <#assign primaryTargetPath = raw(meta.primaryTargetPath!"")>
+                          <@fields type="default-compact">
+                              <@field type="hidden" name="pageId" value=(pageId!)/>
+                            <@section title=uiLabelMap.CommonInformation>
+                                <#-- Page Settings -->
+                                <@section title=uiLabelMap.CommonSettings>
+                                     <@field label=uiLabelMap.CommonId type="display" value=meta.id!""/>
 
-                                 <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions currentValue=primaryTargetPath label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
+                                     <#-- NOTE: TODO?: the schema actually supports multiple primary mappings for multiple website support.
+                                        this control can't handle that case, e.g. we assume that meta.defaultWebSiteId==meta.webSiteId. -->
+                                     <@webSiteSelectField label="${rawLabel('CmsWebSite')} (${rawLabel('CmsPrimary')})" name="webSiteId" required=true value=((meta.webSiteId)!)
+                                        tooltip="${rawLabel('CmsOnlyHookedWebSitesListed')}}"/>
 
-                                 <#if meta.pageTemplateId?has_content>
-                                   <#assign pgTmplLabel>${uiLabelMap.CmsTemplate} <#t>
-                                     <#-- DEV NOTE: I left out the target="_blank" because template changes require reloading this page afterward anyway, so fewer tab-related errors? --><#t/>
-                                     <a href="<@pageUrl uri='editTemplate?pageTemplateId='+raw(meta.pageTemplateId) escapeAs='html'/>"><#t><#-- target="_blank" -->
-                                     <i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></#assign>
-                                 <#else>
-                                   <#assign pgTmplLabel>${uiLabelMap.CmsTemplate}</#assign>
-                                 </#if>
-                                 <@field type="select" name="pageTemplateId" labelContent=pgTmplLabel required=true><#-- duplicate: id="pageTemplateId" -->
-                                   <#assign pageTmplFoundInSelect = false>
-                                   <#assign pageTmplSelOpts>
-                                     <#if availableTemplates?has_content>
-                                       <#list availableTemplates as tmpl>
-                                         <#assign pageTmplSelected = (raw(tmpl.pageTemplateId!"") == raw(meta.pageTemplateId!""))>
-                                         <#if pageTmplSelected>
-                                           <#assign pageTmplFoundInSelect = true>
-                                         </#if>
-                                         <option value="${tmpl.pageTemplateId!""}"<#if pageTmplSelected> selected="selected"</#if>>${tmpl.templateName!tmpl.pageTemplateId!""}</option>
-                                       </#list>
-                                     </#if>
-                                   </#assign>
-                                   <#if !pageTmplFoundInSelect>
-                                     <option value="${meta.pageTemplateId!""}" selected="selected">${(delegator.findOne("CmsPageTemplate", {"pageTemplateId": meta.pageTemplateId!""}, false).templateName)!meta.pageTemplateId!""}</option>
+                                   <#if meta.candidateWebSiteIds?has_content && ((meta.candidateWebSiteIds?size > 1) || (meta.candidateWebSiteIds?first != ((meta.webSiteId)!)))>
+                                     <@field label="${rawLabel('ContentWebSites')}" type="display" tooltip=uiLabelMap.CmsPageMultipleWebsitesInfo><@compress_single_line>
+                                        <#-- 2016: if page is associated to more websites, show them, even if UI may not yet allow creating these assocs at this time
+                                            (help debug and correct bad data if nothing else) -->
+                                          <#list meta.candidateWebSiteIds as canWebSiteId>
+                                              ${canWebSiteId}<#if canWebSiteId_has_next>, </#if><#t>
+                                          </#list>
+                                     </@compress_single_line></@field>
                                    </#if>
-                                   ${pageTmplSelOpts}
-                                 </@field>
 
-                                 <@field label=uiLabelMap.CommonName type="input" name="pageName" value=(meta.name!"") required=false/>
-                                 <@field label=uiLabelMap.CommonDescription type="textarea" name="description_visible" value=(meta.description!"") required=false/>
+                                     <@field label=uiLabelMap.CommonPath type="input" name="primaryPath" value=(meta.primaryPath!"") required=true/>
+                                     <#-- TODO: unhardcode this -->
+                                     <#assign primaryTargetPath = raw(meta.primaryTargetPath!"")>
 
-                                 <@field label=uiLabelMap.CommonIndexable type="select" name="primaryPathIndexable" value=(meta.primaryPathIndexable!"") required=false tooltip=uiLabelMap.CmsMappingIndexableDesc>
-                                    <#assign indexable = meta.primaryPathIndexable!"">
-                                    <#assign indexableDefault = (webSiteConfig.getMappingsIndexableDefault())!true>
-                                    <#-- NOTE: this indicator is ternary, when empty it defaults to cmsDefaultIsIndexable in web.xml.
-                                        it must not be forced to Y or N (e.g., do NOT make this a checkbox). -->
-                                    <@field type="option" value="" selected=(!indexable?is_boolean)>(${indexableDefault?string("Y", "N")})</@field>
-                                    <@field type="option" value="Y" selected=(indexable?is_boolean && indexable)>Y</@field>
-                                    <@field type="option" value="N" selected=(indexable?is_boolean && !indexable)>N</@field>
-                                 </@field>
+                                     <@field type="select" name="primaryTargetPath" id="primaryTargetPath" items=primaryTargetPathOptions currentValue=primaryTargetPath label="${rawLabel('CommonPath')} ${rawLabel('CommonSettings')}" required=false />
 
-                                <@field label=uiLabelMap.CommonSearchIndexable type="select" name="searchIndexable" value=(meta.searchIndexable!"") required=false tooltip=uiLabelMap.CmsMappingSearchIndexableDesc>
-                                    <#assign searchIndexable = meta.searchIndexable!"">
-                                    <#assign searchIndexableDefault = (webSiteConfig.getMappingsSearchIndexableDefault())!false>
-                                    <#-- NOTE: this indicator is ternary, when empty it defaults to cmsDefaultIsIndexable in web.xml.
-                                        it must not be forced to Y or N (e.g., do NOT make this a checkbox). -->
-                                    <@field type="option" value="" selected=(!searchIndexable?is_boolean)>(${searchIndexableDefault?string("Y", "N")})</@field>
-                                    <@field type="option" value="Y" selected=(searchIndexable?is_boolean && searchIndexable)>Y</@field>
-                                    <@field type="option" value="N" selected=(searchIndexable?is_boolean && !searchIndexable)>N</@field>
-                                </@field>
+                                     <#if meta.pageTemplateId?has_content>
+                                       <#assign pgTmplLabel>${uiLabelMap.CmsTemplate} <#t>
+                                         <#-- DEV NOTE: I left out the target="_blank" because template changes require reloading this page afterward anyway, so fewer tab-related errors? --><#t/>
+                                         <a href="<@pageUrl uri='editTemplate?pageTemplateId='+raw(meta.pageTemplateId) escapeAs='html'/>"><#t><#-- target="_blank" -->
+                                         <i class="${styles.text_color_info} ${styles.icon!} ${styles.icon_edit!}" style="font-size:16px;margin:4px;"></i></a></#assign>
+                                     <#else>
+                                       <#assign pgTmplLabel>${uiLabelMap.CmsTemplate}</#assign>
+                                     </#if>
+                                     <@field type="select" name="pageTemplateId" labelContent=pgTmplLabel required=true><#-- duplicate: id="pageTemplateId" -->
+                                       <#assign pageTmplFoundInSelect = false>
+                                       <#assign pageTmplSelOpts>
+                                         <#if availableTemplates?has_content>
+                                           <#list availableTemplates as tmpl>
+                                             <#assign pageTmplSelected = (raw(tmpl.pageTemplateId!"") == raw(meta.pageTemplateId!""))>
+                                             <#if pageTmplSelected>
+                                               <#assign pageTmplFoundInSelect = true>
+                                             </#if>
+                                             <option value="${tmpl.pageTemplateId!""}"<#if pageTmplSelected> selected="selected"</#if>>${tmpl.templateName!tmpl.pageTemplateId!""}</option>
+                                           </#list>
+                                         </#if>
+                                       </#assign>
+                                       <#if !pageTmplFoundInSelect>
+                                         <option value="${meta.pageTemplateId!""}" selected="selected">${(delegator.findOne("CmsPageTemplate", {"pageTemplateId": meta.pageTemplateId!""}, false).templateName)!meta.pageTemplateId!""}</option>
+                                       </#if>
+                                       ${pageTmplSelOpts}
+                                     </@field>
 
-                                 <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(meta.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
+                                     <@field label=uiLabelMap.CommonName type="input" name="pageName" value=(meta.name!"") required=false/>
+                                     <@field label=uiLabelMap.CommonDescription type="textarea" name="description_visible" value=(meta.description!"") required=false/>
 
-                                 <@menu type="button">
-                                    <@menuitem type="link" href="javascript:updatePageInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
-                                 </@menu> 
+                                     <@field label=uiLabelMap.CommonIndexable type="select" name="primaryPathIndexable" value=(meta.primaryPathIndexable!"") required=false tooltip=uiLabelMap.CmsMappingIndexableDesc>
+                                        <#assign indexable = meta.primaryPathIndexable!"">
+                                        <#assign indexableDefault = (webSiteConfig.getMappingsIndexableDefault())!true>
+                                        <#-- NOTE: this indicator is ternary, when empty it defaults to cmsDefaultIsIndexable in web.xml.
+                                            it must not be forced to Y or N (e.g., do NOT make this a checkbox). -->
+                                        <@field type="option" value="" selected=(!indexable?is_boolean)>(${indexableDefault?string("Y", "N")})</@field>
+                                        <@field type="option" value="Y" selected=(indexable?is_boolean && indexable)>Y</@field>
+                                        <@field type="option" value="N" selected=(indexable?is_boolean && !indexable)>N</@field>
+                                     </@field>
+
+                                    <@field label=uiLabelMap.CommonSearchIndexable type="select" name="searchIndexable" value=(meta.searchIndexable!"") required=false tooltip=uiLabelMap.CmsMappingSearchIndexableDesc>
+                                        <#assign searchIndexable = meta.searchIndexable!"">
+                                        <#assign searchIndexableDefault = (webSiteConfig.getMappingsSearchIndexableDefault())!false>
+                                        <#-- NOTE: this indicator is ternary, when empty it defaults to cmsDefaultIsIndexable in web.xml.
+                                            it must not be forced to Y or N (e.g., do NOT make this a checkbox). -->
+                                        <@field type="option" value="" selected=(!searchIndexable?is_boolean)>(${searchIndexableDefault?string("Y", "N")})</@field>
+                                        <@field type="option" value="Y" selected=(searchIndexable?is_boolean && searchIndexable)>Y</@field>
+                                        <@field type="option" value="N" selected=(searchIndexable?is_boolean && !searchIndexable)>N</@field>
+                                    </@field>
+
+                                     <@field label=uiLabelMap.FormFieldTitle_txTimeout type="input" name="txTimeout" value=(meta.txTimeout!"") required=false tooltip=uiLabelMap.CmsPageTxTimeoutInfo/>
+
+                                     <@menu type="button">
+                                        <@menuitem type="link" href="javascript:updatePageInfo(); void(0);" class="+${styles.action_run_sys!} ${styles.action_update!}" text="${rawLabel('CmsSaveSettings')}" />
+                                     </@menu>
+                                </@section>
+
+                                <@section title=uiLabelMap.CommonStatus>
+                                     <@field label=uiLabelMap.CommonStatus type="display" value=((meta.status!false)?string(uiLabelMap.CmsStatusPublished,uiLabelMap.CmsStatusUnpublished))/>
+                                     <@field label=uiLabelMap.CmsRevisions type="display" value=((pageVersions.listSize)!0)/>
+                                </@section>
+
+                              <#if template.attributes?has_content>
+                                <#-- Page Meta Information -->
+                                <@section title=uiLabelMap.CmsPageMeta class="+editorMeta">
+                                  <@fields type="default">
+                                    <#-- 2017-02-10: now redundant due to being under settings as select
+                                    <@field type="display" name="templateName" value=(template.name!) disabled=true label=uiLabelMap.CmsTemplate/>-->
+                                    <#list template.attributes as attribute>
+                                      <#-- 2017-03-17: DO NOT render the LONG_TEXT attributes here - there's no space! -->
+                                      <#if (attribute.type!) != "LONG_TEXT">
+                                        <#-- NOTE: because of the way the ofbiz renderer implements auto escaping, must use rawString when indexing here -->
+                                        <@pageAttrField fieldObj=attribute expandLangVisible=false value=(content[raw(attribute.name!)])!/>
+                                      </#if>
+                                    </#list>
+                                  </@fields>
+                                </@section>
+                              </#if>
                             </@section>
-                            
-                            <@section title=uiLabelMap.CommonStatus>
-                                 <@field label=uiLabelMap.CommonStatus type="display" value=((meta.status!false)?string(uiLabelMap.CmsStatusPublished,uiLabelMap.CmsStatusUnpublished))/>
-                                 <@field label=uiLabelMap.CmsRevisions type="display" value=((pageVersions.listSize)!0)/>
-                            </@section>
-                            
-                          <#if template.attributes?has_content>
-                            <#-- Page Meta Information -->
-                            <@section title=uiLabelMap.CmsPageMeta class="+editorMeta">   
-                              <@fields type="default"> 
-                                <#-- 2017-02-10: now redundant due to being under settings as select                
-                                <@field type="display" name="templateName" value=(template.name!) disabled=true label=uiLabelMap.CmsTemplate/>-->
-                                <#list template.attributes as attribute>
-                                  <#-- 2017-03-17: DO NOT render the LONG_TEXT attributes here - there's no space! -->
-                                  <#if (attribute.type!) != "LONG_TEXT">
-                                    <#-- NOTE: because of the way the ofbiz renderer implements auto escaping, must use rawString when indexing here -->
-                                    <@pageAttrField fieldObj=attribute expandLangVisible=false value=(content[raw(attribute.name!)])!/>
-                                  </#if>                          
-                                </#list>
-                              </@fields>
-                            </@section>
-                          </#if>
-                        </@section>
+                          </@fields>
                       </@form>
                       
                       <#if meta.id?has_content>

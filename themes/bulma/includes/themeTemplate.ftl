@@ -56,6 +56,7 @@ the macro interfaces used in the standard macros and these overrides.
 
 <#macro alert_markup type="info" class="" typeClass="" id="" style="" closable=true containerId=""
 containerClass="" containerStyle="" origArgs={} passArgs={} catchArgs...>
+    <#local containerClass = addClassArg(containerClass,'container') />
     <div<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${escapeVal(containerId, 'html')}"</#if><#if containerStyle?has_content> style="${escapeVal(containerStyle, 'html')}"</#if>>
         <div data-alert class="${styles.alert_wrap!} ${styles[raw(typeClass)]!}">
             <#if closable><button class="delete"></button></#if><#t/>

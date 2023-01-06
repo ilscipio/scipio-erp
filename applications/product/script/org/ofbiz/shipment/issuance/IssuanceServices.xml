@@ -246,7 +246,7 @@ code package.
                     <entity-one entity-name="StatusItem" value-field="statusItemSent">
                         <field-map field-name="statusId" value="ITEM_SENT" />
                     </entity-one>
-                    <get-related relation-name="ToStatusValidChange" value-field="statusItemSent" to-value-field="statusValidChangeItemSent" />
+                    <get-related relation-name="ToStatusValidChange" value-field="statusItemSent" list="statusValidChangeItemSent" />
                     <if>
                         <condition>
                             <or>

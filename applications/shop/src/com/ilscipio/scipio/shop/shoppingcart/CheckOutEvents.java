@@ -17,6 +17,7 @@ import org.ofbiz.service.ServiceUtil;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
@@ -66,7 +67,7 @@ public class CheckOutEvents extends org.ofbiz.order.shoppingcart.CheckOutEvents 
         TimeZone timeZone = UtilHttp.getTimeZone(request);
 
         BigDecimal specificCardAmount = BigDecimal.ZERO;
-        if (params.containsKey("cardAmount") && UtilValidate.isNotEmpty(params.get("cardAmount"))) {
+        if (params.containsKey("giftCardAmount") && UtilValidate.isNotEmpty(params.get("giftCardAmount"))) {
             try {
                 specificCardAmount = UtilNumber.toBigDecimal(params.get("cardAmount"));
                 if (specificCardAmount.signum() != 1) {
@@ -78,16 +79,17 @@ public class CheckOutEvents extends org.ofbiz.order.shoppingcart.CheckOutEvents 
         }
 
         String currency = (String) params.getOrDefault("currency", UtilProperties.getPropertyValue("general", "currency.uom.id.default"));
+        String cardNumber = (String) params.get("giftCardNumber");
+        String pinNumber = (String) params.get("giftCardPin");
         try {
-            Map<String, Object> checkGiftCertificateBalanceCtx = ServiceUtil.setServiceFields(dispatcher,
-                    "checkGiftCertificateBalance", params, userLogin, timeZone, locale);
+            Map<String, Object> checkGiftCertificateBalanceCtx = UtilMisc.toMap("cardNumber", cardNumber, "pinNumber", pinNumber,
+                    "currency", currency, "userLogin", userLogin);
             Map<String, Object> checkGiftCertificateBalanceResult = dispatcher.runSync("checkGiftCertificateBalance",
                     checkGiftCertificateBalanceCtx);
             if (ServiceUtil.isSuccess(checkGiftCertificateBalanceResult)) {
                 BigDecimal currentBalance = (BigDecimal) checkGiftCertificateBalanceResult.get("balance");
-                String currentBalanceFormatted = null;
-                if (UtilValidate.isNotEmpty(currentBalance) && UtilValidate.isNotEmpty(currency)) {
-                    currentBalanceFormatted = UtilFormatOut.formatCurrency(currentBalance, currency, locale);
+                if (UtilValidate.isEmpty(currentBalance)) {
+                    currentBalance = BigDecimal.ZERO;
                 }
 
                 try (CartUpdate cartUpdate = CartUpdate.updateSection(request)) {
@@ -107,15 +109,25 @@ public class CheckOutEvents extends org.ofbiz.order.shoppingcart.CheckOutEvents 
                     }
                     boolean balanceCoversTotal = (pendingCartAmount.compareTo(BigDecimal.ZERO) <= 0);
 
-                    request.setAttribute("currentBalance", currentBalance);
+                    BigDecimal balanceUsed = currentBalance.subtract(pendingBalance);
+
+                    String currentBalanceFormatted = UtilFormatOut.formatCurrency(currentBalance, currency, locale);
+                    String pendingBalanceFormatted = UtilFormatOut.formatCurrency(pendingBalance, currency, locale);
+                    String pendingCartAmountFormatted = UtilFormatOut.formatCurrency(pendingCartAmount, currency, locale);
+
                     request.setAttribute("currentBalanceMessage", UtilProperties.getMessage("AccountingUiLabels", "AccountingCurrentBalance",
-                            UtilMisc.toMap("balanceFormatted", currentBalanceFormatted), locale));
+                            UtilMisc.toMap("balance", currentBalanceFormatted), locale));
+                    request.setAttribute("pendingBalanceMessage", UtilProperties.getMessage("AccountingUiLabels", "AccountingPendingBalance",
+                            UtilMisc.toMap("pendingBalance", pendingBalanceFormatted), locale));
+                    request.setAttribute("cartAmountPendingMessage", UtilProperties.getMessage("AccountingUiLabels", "AccountingCartAmountPending",
+                            UtilMisc.toMap("pendingCartAmount", pendingCartAmountFormatted), locale));
+                    request.setAttribute("currentBalance", currentBalance);
                     request.setAttribute("balanceCoversTotal", balanceCoversTotal);
                     request.setAttribute("balancePendingAmount", pendingBalance);
-                    request.setAttribute("balancePendingAmountFormatted", UtilFormatOut.formatCurrency(pendingBalance, currency, locale));
+                    request.setAttribute("balancePendingAmountFormatted", pendingBalanceFormatted);
                     request.setAttribute("pendingCartAmount", pendingCartAmount);
-                    request.setAttribute("pendingCartAmountFormatted", UtilFormatOut.formatCurrency(pendingCartAmount, currency, locale));
-
+                    request.setAttribute("pendingCartAmountFormatted", pendingCartAmountFormatted);
+                    request.setAttribute("balanceUsed", balanceUsed);
                 }
             } else {
                 request.setAttribute("errorMessage", ServiceUtil.getErrorMessage(checkGiftCertificateBalanceResult));

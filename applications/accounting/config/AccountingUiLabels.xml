@@ -2992,6 +2992,13 @@
         <value xml:lang="zh">缺少卡类型</value>
         <value xml:lang="zh-TW">沒有信用卡類型</value>
     </property>
+    <property key="AccountingCartAmountPending">
+        <value xml:lang="de">Einkaufswagenbetrag ausstehend: ${pendingCartAmount}</value>
+        <value xml:lang="en">Cart amount pending: ${pendingCartAmount}</value>
+        <value xml:lang="es">Importe del carro pendiente : ${pendingCartAmount}</value>
+        <value xml:lang="fr">Montant du panier en attente : ${pendingCartAmount}</value>
+        <value xml:lang="it">Importo del carrello in sospeso: ${pendingCartAmount}</value>
+    </property>
     <property key="AccountingCashBalance">
         <value xml:lang="ar">الرصيد النقدي</value>
         <value xml:lang="de">Kassenbestand</value>
@@ -4379,21 +4386,21 @@
     </property>
     <property key="AccountingCurrentBalance">
         <value xml:lang="ar">رصيدك الحالي هو:</value>
-        <value xml:lang="de">Ihr aktueller Kontostand ist: ${balanceFormatted}</value>
-        <value xml:lang="en">Your current balance is: ${balanceFormatted}</value>
-        <value xml:lang="es">Su balance actual es: ${balanceFormatted}</value>
-        <value xml:lang="fr">Votre solde est : ${balanceFormatted}</value>
-        <value xml:lang="hi-IN">पूर्ण ख़ाता ${balanceFormatted}</value>
-        <value xml:lang="it">Il tuo bilancio attuale è: ${balanceFormatted}</value>
-        <value xml:lang="ja">現在の貸借: ${balanceFormatted}</value>
-        <value xml:lang="nl">Uw huidige saldo/waardel is: ${balanceFormatted}</value>
-        <value xml:lang="pt">Seu saldo atual é: ${balanceFormatted}</value>
-        <value xml:lang="ro">Bilantul tau actual este : ${balanceFormatted}</value>
-        <value xml:lang="ru">Ваш текущий баланс: ${balanceFormatted}</value>
-        <value xml:lang="th">ยอดเงินคงเหลือ ${balanceFormatted}</value>
-        <value xml:lang="vi">Tài khoản còn lại của bạn: ${balanceFormatted}</value>
-        <value xml:lang="zh">你的当前余额是： ${balanceFormatted}</value>
-        <value xml:lang="zh-TW">你目前餘額是: ${balanceFormatted}</value>
+        <value xml:lang="de">Ihr aktueller Kontostand ist: ${balance}</value>
+        <value xml:lang="en">Current balance: ${balance}</value>
+        <value xml:lang="es">Balance actual: ${balance}</value>
+        <value xml:lang="fr">Votre solde est : ${balance}</value>
+        <value xml:lang="hi-IN">पूर्ण ख़ाता ${balance}</value>
+        <value xml:lang="it">Il tuo bilancio attuale è: ${balance}</value>
+        <value xml:lang="ja">現在の貸借: ${balance}</value>
+        <value xml:lang="nl">Uw huidige saldo/waardel is: ${balance}</value>
+        <value xml:lang="pt">Seu saldo atual é: ${balance}</value>
+        <value xml:lang="ro">Bilantul tau actual este : ${balance}</value>
+        <value xml:lang="ru">Ваш текущий баланс: ${balance}</value>
+        <value xml:lang="th">ยอดเงินคงเหลือ ${balance}</value>
+        <value xml:lang="vi">Tài khoản còn lại của bạn: ${balance}</value>
+        <value xml:lang="zh">你的当前余额是： ${balance}</value>
+        <value xml:lang="zh-TW">你目前餘額是: ${balance}</value>
     </property>
     <property key="AccountingCurrentBalanceProblem">
         <value xml:lang="ar">تعذر الوصول الى رصيدك : تأكد من رقم الحساب والرقم السري وحاول مرة اخرى</value>
@@ -13368,6 +13375,13 @@
         <value xml:lang="vi">Thanh toán đã gửi</value>
         <value xml:lang="zh">已发送的支付</value>
         <value xml:lang="zh-TW">已發送的支付</value>
+    </property>
+    <property key="AccountingPendingBalance">
+        <value xml:lang="de">ausstehendes Gleichgewicht: ${pendingBalance}</value>
+        <value xml:lang="en">Pending balance: ${pendingBalance}</value>
+        <value xml:lang="es">Balance pendiente: ${pendingBalance}</value>
+        <value xml:lang="fr">Solde en attente : ${pendingBalance}</value>
+        <value xml:lang="it">Saldo in sospeso: ${pendingBalance}</value>
     </property>
     <property key="AccountingPcChargeCannotSupportReleasingPreAuth">
         <value xml:lang="de">PcCharge unterstützt keine Ausgabe von Vor-Autorisierungen.</value>

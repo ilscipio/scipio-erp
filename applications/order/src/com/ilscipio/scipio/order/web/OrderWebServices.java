@@ -169,7 +169,10 @@ public class OrderWebServices {
                             Map<String,Object> userLoginEmail = dispatcher.runSync("getPartyEmail",UtilMisc.toMap("partyId",party.getString("partyId"),"userLogin",userLogin));
                             if(UtilValidate.isNotEmpty(userLoginEmail)){
                                 String emailAddress = (String) userLoginEmail.get("emailAddress");
-                                Map<String, Object> gravatar = dispatcher.runSync("getGravatarImage",UtilMisc.toMap("emailAddress",emailAddress,"size",200,"userLogin",userLogin));
+                                Map<String, Object> gravatar = UtilMisc.newMap();
+                                if (UtilValidate.isNotEmpty(emailAddress)) {
+                                    gravatar = dispatcher.runSync("getGravatarImage", UtilMisc.toMap("emailAddress", emailAddress, "size", 200, "userLogin", userLogin));
+                                }
                                 if(UtilValidate.isNotEmpty(gravatar)){
                                     gravatarImageURL = (String) gravatar.get("gravatarImageUrl");
                                 }

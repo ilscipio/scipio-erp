@@ -196,6 +196,7 @@ if (useCache) {
         context.featureOrder = cachedValue.featureOrder;
         context.featureOrderFirst = cachedValue.featureOrderFirst;
         context.minimumQuantity = cachedValue.minimumQuantity;
+        context.productSurvey = cachedValue.productSurvey
     }
 }
 

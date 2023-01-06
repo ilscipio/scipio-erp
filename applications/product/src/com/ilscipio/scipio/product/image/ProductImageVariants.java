@@ -597,7 +597,7 @@ public class ProductImageVariants extends ImageVariants {
                         + ProductImageVariants.this.getProductContentTypeId() + "] variant [" + getName() + "]; no extension in path [" + path + "]", module);
                 return null;
             }
-            String ext = path.substring(lastDot + 1);
+            String ext = path.substring(lastDot + 1).toLowerCase(getLocale());
             GenericValue fileExt = getDelegator().from("FileExtension").where("fileExtensionId", ext).cache().queryOneSafe();
             if (fileExt == null) {
                 Debug.logWarning("Could not determine mimeTypeId for product [" + getProductId() + "] productContentTypeId ["

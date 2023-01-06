@@ -31,7 +31,9 @@ import java.util.Random;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilNumber;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -366,18 +368,22 @@ public class GiftCertificateServices {
         Delegator delegator = dctx.getDelegator();
         String cardNumber = (String) context.get("cardNumber");
         String pinNumber = (String) context.get("pinNumber");
+        String currency = (String) context.get("currency");
         Locale locale = (Locale) context.get("locale");
-
-        // validate the pin
-        if (!validatePin(delegator, cardNumber, pinNumber)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "AccountingGiftCerticateNumberPinNotValid", locale));
-        }
-
         GenericValue finAccount = null;
         try {
-            finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountId", cardNumber).queryOne();
+            finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountCode", cardNumber).queryFirst();
+            // validate the pin
+            if (UtilValidate.isNotEmpty(finAccount.get("finAccountPin"))) {
+                if (!validatePin(delegator, cardNumber, pinNumber)) {
+                    return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                            "AccountingGiftCerticateNumberPinNotValid", locale));
+                }
+            }
         } catch (GenericEntityException e) {
+            Debug.logError(e.getMessage(), module);
+        }
+        if (UtilValidate.isEmpty(finAccount)) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
                     "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", cardNumber), locale));
         }
@@ -385,9 +391,14 @@ public class GiftCertificateServices {
         // TODO: get the real currency from context
         // get the balance
         BigDecimal balance = finAccount.get("availableBalance") == null ? BigDecimal.ZERO : finAccount.getBigDecimal("availableBalance");
+        String balanceFormatted = null;
+        if (UtilValidate.isNotEmpty(balance) && UtilValidate.isNotEmpty(currency)) {
+            balanceFormatted = UtilFormatOut.formatCurrency(balance, currency, locale);
+        }
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("balance", balance);
+        result.put("balanceFormatted", balanceFormatted);
         Debug.logInfo("GC Balance Result - " + result, module);
         return result;
     }
@@ -937,6 +948,7 @@ public class GiftCertificateServices {
                 answerMap.put("productStoreId", productStoreId);
                 answerMap.put("orderId", orderId);
                 answerMap.put("currencyUomId", currency);
+                answerMap.put("product", product);
 
                 // set the bcc address(s)
                 String bcc = productStoreEmail.getString("bccAddress");

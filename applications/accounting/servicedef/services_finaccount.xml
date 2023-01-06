@@ -372,9 +372,10 @@ code package.
              location="org.ofbiz.accounting.payment.GiftCertificateServices" invoke="checkGiftCertificateBalance" auth="true">
         <description>Obtain the balanace of a Gift Certificate</description>
         <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
-        <attribute name="pinNumber" type="String" mode="IN" optional="false"/>
+        <attribute name="pinNumber" type="String" mode="IN" optional="true"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="balance" type="BigDecimal" mode="OUT" optional="false"/>
+        <attribute name="balanceFormatted" type="String" mode="OUT" optional="true"/>
     </service>
 
     <service name="createGcFulFillmentRecord" engine="java" require-new-transaction="true" use-transaction="true"

@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -124,6 +125,9 @@ public class OrderServices {
     public static final int orderDecimals = UtilNumber.getBigDecimalScale("order.decimals");
     public static final RoundingMode orderRounding = UtilNumber.getRoundingMode("order.rounding");
     public static final BigDecimal ZERO = BigDecimal.ZERO.setScale(taxDecimals, taxRounding);
+
+    public static final List<String> authExcludedPaymentMethodsDigital = UtilMisc.unmodifiableArrayListCopy(Arrays.asList(
+            UtilProperties.getPropertyValue("payment", "payment.general.auth.excluded.payment.methods.digital").split(",")));
 
     private static boolean hasPermission(String orderId, GenericValue userLogin, String action, Security security, Delegator delegator) {
         OrderReadHelper orh = new OrderReadHelper(delegator, orderId);
@@ -3402,22 +3406,20 @@ public class OrderServices {
             }
         }
 
-        // SCIPIO: Get all subscription items and the payment method. We don't
+        // SCIPIO: Get all digital items and the payment method. We don't
         // want to fulfill them yet so we will take them out from the invoice
-        // items list if the payment method type is EXT_PAYPAL
+        // items list if the payment method type is included in
+        // payment.properties#payment.general.auth.excluded.payment.methods.digital
         OrderReadHelper orh = OrderReadHelper.getHelper(orderHeader);
         List<GenericValue> paymentPreferences = orh.getPaymentPreferences();
-        boolean validPaymentMethodTypeForSubscriptions = false;
+        boolean validPaymentMethodTypeForDigital = false;
         for (GenericValue paymentPreference : paymentPreferences) {
-            if (paymentPreference.getString("paymentMethodTypeId").equals("EXT_PAYPAL"))
-                validPaymentMethodTypeForSubscriptions = true;
+            // FIXME: What happens if we got multiple paymentPreferences?
+            if (authExcludedPaymentMethodsDigital.contains(paymentPreference.getString("paymentMethodTypeId"))) {
+                validPaymentMethodTypeForDigital = true;
+            }
         }
-        Map<GenericValue, List<GenericValue>> itemSubscriptions = null;
-        try {
-            itemSubscriptions = orh.getItemSubscriptions();
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        }
+
         // now process the digital items
         if (digitalItems.size() > 0 || nonProductItems.size() > 0) {
             GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
@@ -3429,14 +3431,9 @@ public class OrderServices {
             // single list with all invoice items
             List<GenericValue> itemsToInvoice = new LinkedList<>();
             itemsToInvoice.addAll(nonProductItems);
-            itemsToInvoice.addAll(digitalItems);
-            // SCIPIO: itemSubscriptions
-            if (UtilValidate.isNotEmpty(itemSubscriptions) && validPaymentMethodTypeForSubscriptions) {
-                for (GenericValue itemSubscription : itemSubscriptions.keySet()) {
-                    if (itemsToInvoice.contains((itemSubscription))) {
-                        itemsToInvoice.remove(itemSubscription);
-                    }
-                }
+            // SCIPIO: Don't inlcude digital items if the payment method is excluded
+            if (!validPaymentMethodTypeForDigital) {
+                itemsToInvoice.addAll(digitalItems);
             }
 
             if (invoiceItems) {
@@ -3502,7 +3499,8 @@ public class OrderServices {
             }
 
             // fulfill the digital goods
-            Map<String, Object> fulfillContext = UtilMisc.<String, Object>toMap("orderId", orderId, "orderItems", digitalItems, "userLogin", userLogin);
+            // SCIPIO: passing order locale
+            Map<String, Object> fulfillContext = UtilMisc.<String, Object>toMap("orderId", orderId, "orderItems", digitalItems, "userLogin", userLogin, "locale", locale);
             Map<String, Object> fulfillResult = null;
             try {
                 // will be running in an isolated transaction to prevent rollbacks
@@ -3607,7 +3605,8 @@ public class OrderServices {
                             if (fulfillmentService == null) {
                                 Debug.logError("ProductContent of type FULFILLMENT_EXTERNAL had Content with empty serviceName, can not run fulfillment", module);
                             }
-                            Map<String, Object> serviceCtx = UtilMisc.<String, Object>toMap("userLogin", userLogin, "orderItem", orderItem);
+                            // SCIPIO: Added order locale
+                            Map<String, Object> serviceCtx = UtilMisc.<String, Object>toMap("userLogin", userLogin, "orderItem", orderItem, "locale", locale);
                             serviceCtx.putAll(productContentItem.getPrimaryKey());
                             try {
                                 Debug.logInfo("Running external fulfillment '" + fulfillmentService + "'", module);

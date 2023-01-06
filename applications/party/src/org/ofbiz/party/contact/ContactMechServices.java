@@ -1129,7 +1129,7 @@ public class ContactMechServices {
                     emailAddressVerification.set("verifyHash", verifyHash);
                     emailAddressVerification.set("expireDate", expireDate);
                     try {
-                        delegator.create(emailAddressVerification);
+                        delegator.createOrStore(emailAddressVerification);
                     } catch (GenericEntityException e) {
                         Debug.logError(e.getMessage(),module);
                         return ServiceUtil.returnError(e.getMessage());

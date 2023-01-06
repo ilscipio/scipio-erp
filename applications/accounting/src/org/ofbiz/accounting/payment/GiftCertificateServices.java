@@ -373,6 +373,12 @@ public class GiftCertificateServices {
         GenericValue finAccount = null;
         try {
             finAccount = EntityQuery.use(delegator).from("FinAccount").where("finAccountCode", cardNumber).queryFirst();
+
+            if (UtilValidate.isEmpty(finAccount)) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
+                        "AccountingInvalidGiftCardNumber", locale));
+            }
+
             // validate the pin
             if (UtilValidate.isNotEmpty(finAccount.get("finAccountPin"))) {
                 if (!validatePin(delegator, cardNumber, pinNumber)) {
@@ -383,23 +389,14 @@ public class GiftCertificateServices {
         } catch (GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
         }
-        if (UtilValidate.isEmpty(finAccount)) {
-            return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,
-                    "AccountingFinAccountNotFound", UtilMisc.toMap("finAccountId", cardNumber), locale));
-        }
+
 
         // TODO: get the real currency from context
         // get the balance
         BigDecimal balance = finAccount.get("availableBalance") == null ? BigDecimal.ZERO : finAccount.getBigDecimal("availableBalance");
-        String balanceFormatted = null;
-        if (UtilValidate.isNotEmpty(balance) && UtilValidate.isNotEmpty(currency)) {
-            balanceFormatted = UtilFormatOut.formatCurrency(balance, currency, locale);
-        }
 
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("balance", balance);
-        result.put("balanceFormatted", balanceFormatted);
-        Debug.logInfo("GC Balance Result - " + result, module);
         return result;
     }
 

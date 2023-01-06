@@ -353,6 +353,13 @@
         <value xml:lang="zh">找不到财务账目标识（finAccountId） ${finAccountId}</value>
         <value xml:lang="zh-TW">找不到財務帳目標識(finAccountId) ${finAccountId}</value>
     </property>
+    <property key="AccountingInvalidGiftCardNumber">
+        <value xml:lang="de">Ungültige Geschenkkartennummer</value>
+        <value xml:lang="en">Invalid gift card number</value>
+        <value xml:lang="es">Número de tarjeta de regalo inválido</value>
+        <value xml:lang="fr">Numéro de carte cadeau invalide</value>
+        <value xml:lang="it">Numero di carta regalo non valido</value>
+    </property>
     <property key="AccountingFinAccountPartiallyRefunded">
         <value xml:lang="de">Finanzkonto teilweise ausgeglichen; nicht genug Guthaben zum ausgleichen!</value>
         <value xml:lang="en">FinAccount partially refunded; not enough replenish deposits to refund!</value>

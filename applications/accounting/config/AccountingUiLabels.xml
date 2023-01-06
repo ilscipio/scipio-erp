@@ -1084,7 +1084,7 @@
         <value xml:lang="cs">Množství</value>
         <value xml:lang="de">Betrag</value>
         <value xml:lang="en">Amount</value>
-        <value xml:lang="es">Monto</value>
+        <value xml:lang="es">Importe</value>
         <value xml:lang="fr">Montant</value>
         <value xml:lang="hi-IN">कुल मुल्य</value>
         <value xml:lang="it">Importo</value>
@@ -4379,21 +4379,21 @@
     </property>
     <property key="AccountingCurrentBalance">
         <value xml:lang="ar">رصيدك الحالي هو:</value>
-        <value xml:lang="de">Ihr aktueller Kontostand ist:</value>
-        <value xml:lang="en">Your current balance is:</value>
-        <value xml:lang="es">Su balance actual es:</value>
-        <value xml:lang="fr">Votre solde est :</value>
-        <value xml:lang="hi-IN">पूर्ण ख़ाता</value>
-        <value xml:lang="it">Il tuo bilancio attuale è:</value>
-        <value xml:lang="ja">現在の貸借:</value>
-        <value xml:lang="nl">Uw huidige saldo/waardel is:</value>
-        <value xml:lang="pt">Seu saldo atual é:</value>
-        <value xml:lang="ro">Bilantul tau actual este :</value>
-        <value xml:lang="ru">Ваш текущий баланс:</value>
-        <value xml:lang="th">ยอดเงินคงเหลือ</value>
-        <value xml:lang="vi">Tài khoản còn lại của bạn:</value>
-        <value xml:lang="zh">你的当前余额是：</value>
-        <value xml:lang="zh-TW">你目前餘額是:</value>
+        <value xml:lang="de">Ihr aktueller Kontostand ist: ${balanceFormatted}</value>
+        <value xml:lang="en">Your current balance is: ${balanceFormatted}</value>
+        <value xml:lang="es">Su balance actual es: ${balanceFormatted}</value>
+        <value xml:lang="fr">Votre solde est : ${balanceFormatted}</value>
+        <value xml:lang="hi-IN">पूर्ण ख़ाता ${balanceFormatted}</value>
+        <value xml:lang="it">Il tuo bilancio attuale è: ${balanceFormatted}</value>
+        <value xml:lang="ja">現在の貸借: ${balanceFormatted}</value>
+        <value xml:lang="nl">Uw huidige saldo/waardel is: ${balanceFormatted}</value>
+        <value xml:lang="pt">Seu saldo atual é: ${balanceFormatted}</value>
+        <value xml:lang="ro">Bilantul tau actual este : ${balanceFormatted}</value>
+        <value xml:lang="ru">Ваш текущий баланс: ${balanceFormatted}</value>
+        <value xml:lang="th">ยอดเงินคงเหลือ ${balanceFormatted}</value>
+        <value xml:lang="vi">Tài khoản còn lại của bạn: ${balanceFormatted}</value>
+        <value xml:lang="zh">你的当前余额是： ${balanceFormatted}</value>
+        <value xml:lang="zh-TW">你目前餘額是: ${balanceFormatted}</value>
     </property>
     <property key="AccountingCurrentBalanceProblem">
         <value xml:lang="ar">تعذر الوصول الى رصيدك : تأكد من رقم الحساب والرقم السري وحاول مرة اخرى</value>

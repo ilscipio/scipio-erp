@@ -375,7 +375,6 @@ code package.
         <attribute name="pinNumber" type="String" mode="IN" optional="true"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="balance" type="BigDecimal" mode="OUT" optional="false"/>
-        <attribute name="balanceFormatted" type="String" mode="OUT" optional="true"/>
     </service>
 
     <service name="createGcFulFillmentRecord" engine="java" require-new-transaction="true" use-transaction="true"

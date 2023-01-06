@@ -2535,20 +2535,31 @@ TODO: This (and @field args) do not currently provide enough control over large 
     <#local widgetPostfixSmall = totalSmall>
   </#if>
   
-  <#if widgetPostfixCombined>
+  <#if !widgetPostfixCombined>
     <#-- widget area will be child of a separate container. 
         Currently total columns MUST be hardcoded as 12 here. -->
-    <#local widgetLarge = 12 - postfixLarge>
-    <#local widgetSmall = 12 - postfixSmall>
+    <#if labelArea && labelInRow>
+        <#local widgetLarge = 12 - postfixLarge - labelLarge>
+        <#local widgetSmall = 12 - postfixSmall - labelSmall>
+    <#else>
+        <#local widgetLarge = 12 - postfixLarge>
+        <#local widgetSmall = 12 - postfixSmall>
+    </#if>
   <#else>
     <#local widgetLarge = widgetPostfixLarge - postfixLarge>
     <#local widgetSmall = widgetPostfixSmall - postfixSmall>
   </#if>
+<#--  ${Debug.log("widgetPostfixCombined ==> " + widgetPostfixCombined?c!false)}-->
+
+<#--  ${Debug.log(("widgetLarge ==> " + widgetLarge!0) + " " + ("widgetSmall ==> " + widgetSmall!0))}-->
+<#--  ${Debug.log(("widgetPostfixLarge ==> " + widgetPostfixLarge!0) + " " + ("widgetPostfixSmall ==> " + widgetPostfixSmall!0))}-->
+<#--  ${Debug.log(("postfixLarge ==> " + postfixLarge!0) + " " + ("postfixSmall ==> " + postfixSmall!0))}-->
 
   <#local labelAreaClass><#if labelArea>${styles.grid_small!}${labelSmall}<#if isLargeParent> ${styles.grid_large!}${labelLarge}</#if></#if></#local>
   <#local widgetPostfixAreaClass>${styles.grid_small!}${widgetPostfixSmall}<#if isLargeParent> ${styles.grid_large!}${widgetPostfixLarge}</#if></#local>
   <#local widgetAreaClass>${styles.grid_small!}${widgetSmall}<#if isLargeParent> ${styles.grid_large!}${widgetLarge}</#if></#local>
   <#local postfixAreaClass><#if postfix>${styles.grid_small!}${postfixSmall}<#if isLargeParent> ${styles.grid_large!}${postfixLarge}</#if></#if></#local>
+<#--  ${Debug.log("widgetAreaClass ==> " + widgetAreaClass)}-->
   
   <#-- This is last if in separate row -->
   <#if labelArea && !labelInRow>

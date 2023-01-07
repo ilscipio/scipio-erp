@@ -1241,24 +1241,37 @@ public class ConfigXMLReader {
                 for(ControllerConfig controllerConfig : getControllerConfigs(include)) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
-                        result.push(controllerConfig.getViewMapMap());
+                        result.push(getMergedViewMaps(result, controllerConfig.getViewMapMap()));
                     } else {
-                        result.push(controllerConfig.viewMapMap);
+                        result.push(getMergedViewMaps(result, controllerConfig.viewMapMap));
                     }
                 }
             }
-            result.push(viewMapMap);
+            result.push(getMergedViewMaps(result, viewMapMap));
             for (Include include : includesPostLocal) {
                 for(ControllerConfig controllerConfig : getControllerConfigs(include)) {
                     // SCIPIO: support non-recursive
                     if (include.recursive) {
-                        result.push(controllerConfig.getViewMapMap());
+                        result.push(getMergedViewMaps(result, controllerConfig.getViewMapMap()));
                     } else {
-                        result.push(controllerConfig.viewMapMap);
+                        result.push(getMergedViewMaps(result, controllerConfig.viewMapMap));
                     }
                 }
             }
             return result;
+        }
+
+        protected Map<String, ViewMap> getMergedViewMaps(MapContext<String, ViewMap> result, Map<String, ViewMap> viewMaps) {
+            Map<String, ViewMap> newViewMaps = new LinkedHashMap<>();
+            for(Map.Entry<String, ViewMap> entry : viewMaps.entrySet()) {
+                ViewMap existingMap = result.get(entry.getKey());
+                if (existingMap != null) {
+                    newViewMaps.put(entry.getKey(), new ViewMap(existingMap, entry.getValue()));
+                } else {
+                    newViewMaps.put(entry.getKey(), entry.getValue());
+                }
+            }
+            return newViewMaps;
         }
 
         /**
@@ -3081,6 +3094,24 @@ public class ConfigXMLReader {
                     }
                 }
             }
+            this.properties = UtilValidate.isNotEmpty(properties) ? Collections.unmodifiableMap(properties) : Collections.emptyMap();
+        }
+
+        public ViewMap(ViewMap baseView, ViewMap overrideView) { // SCIPIO: merges properties
+            // TODO: REVIEW: for now only the properties are inherited, but it's possible want for other fields
+            this.name = overrideView.name;
+            this.type = overrideView.type;
+            this.info = overrideView.info;
+            this.contentType = overrideView.contentType;
+            this.noCache = overrideView.noCache;
+            this.encoding = overrideView.encoding;
+            this.xFrameOption = overrideView.xFrameOption;
+            this.strictTransportSecurity = overrideView.strictTransportSecurity;
+            this.description = overrideView.description;
+            this.access = overrideView.access;
+            this.page = overrideView.page;
+            Map<String, Object> properties = new LinkedHashMap<>(baseView.getProperties());
+            properties.putAll(overrideView.getProperties());
             this.properties = UtilValidate.isNotEmpty(properties) ? Collections.unmodifiableMap(properties) : Collections.emptyMap();
         }
 

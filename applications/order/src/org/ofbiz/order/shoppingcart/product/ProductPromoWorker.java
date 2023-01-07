@@ -1192,10 +1192,8 @@ public final class ProductPromoWorker {
                 BigDecimal amountAvailable = BigDecimal.ZERO;
                 String productPromoId = productPromoCond.getString("productPromoId");
 
-                List<GenericValue> productPromoCategoriesAll = EntityQuery.use(delegator).from("ProductPromoCategory").where("productPromoId", productPromoId).cache(true).queryList();
-                List<GenericValue> productPromoProductsAll = EntityQuery.use(delegator).from("ProductPromoProduct").where("productPromoId", productPromoId).cache(true).queryList();
-                if (!productPromoCategoriesAll.isEmpty() || !productPromoProductsAll.isEmpty()) {
-                    Set<String> productIds = ProductPromoWorker.getPromoRuleCondProductIds(productPromoCond, delegator, nowTimestamp);
+                Set<String> productIds = ProductPromoWorker.getPromoRuleCondProductIds(productPromoCond, delegator, nowTimestamp);
+                if (UtilValidate.isNotEmpty(productIds)) {
                     List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
                     for (ShoppingCartItem cartItem : lineOrderedByBasePriceList) {
                         // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
@@ -1211,7 +1209,7 @@ public final class ProductPromoWorker {
                         }
                     }
                     compareBase = Integer.valueOf(amountAvailable.compareTo(amountNeeded));
-                }else{
+                } else {
                     compareBase = Integer.valueOf(orderTotal.compareTo(amountNeeded));
                 }
                 if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderTotal=" + orderTotal, module);

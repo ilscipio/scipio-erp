@@ -1264,11 +1264,10 @@ context.styles = [
         "order" : "fa-recycle",
         "party" : "fa-users",
         "catalog" : "fa-sitemap",
-        "setup" : "fa-cog",
+        "setup" : "fa-magic",
         "shop" : "fa-shopping-cart",
         "solr" : "fa-search",
-        "workeffort" : "fa-sliders",
-        "setup" : "fa-cog"
+        "workeffort" : "fa-sliders"
         ],
 
   /* Always declare last */

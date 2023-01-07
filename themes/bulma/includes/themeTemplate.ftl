@@ -612,6 +612,34 @@ jsOptions="" origArgs={} passArgs={} catchArgs...>
 <#--
 FORM MACROS
 -->
+<#-- @fieldset main markup - theme override -->
+<#macro fieldset_markup open=true close=true class="" containerClass="" id="" containerId="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false origArgs={} passArgs={} catchArgs...>
+    <#if open>
+        <#local containerClass = addClassArg(containerClass, "fieldgroup")>
+        <#if collapsible || collapsed>
+            <#local containerClass = addClassArg(containerClass, "toggleField")>
+            <#if collapsed>
+                <#local containerClass = addClassArg(containerClass, styles.collapsed)>
+            </#if>
+        </#if>
+        <#local classes = compileClassArg(class)>
+        <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
+        <@row open=true close=false />
+        <@cell open=true close=false class=containerClasses id=containerId />
+        <fieldset<#if classes?has_content> class="${escapeVal(classes, 'html')}"</#if><#if id?has_content> id="${escapeVal(id, 'html')}"</#if>>
+        <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${escapeVal(title, 'htmlmarkup')}</legend></#if>
+        <div id="${escapeVal(collapsibleAreaId, 'html')}" class="fieldgroup-body"<#if collapsed> style="display: none;"</#if>>
+    </#if>
+
+        <#nested>
+        <#if close>
+            </div>
+            </fieldset>
+            <@cell close=true open=false />
+            <@row close=true open=false />
+        </#if>
+</#macro>
+
 <#macro field args={} inlineArgs...>
     <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.field_defaultArgs)>
     <#local dummy = localsPutAll(args)>

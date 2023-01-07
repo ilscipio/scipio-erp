@@ -12833,3 +12833,8 @@ pre.scrollable {
   .btn-group:last-child:not(:first-child) .btn:first-child {
     border-top-right-radius: 0;
     border-top-left-radius: 0; } }
+
+.card form .field-entry-postfix .btn, .card form .field-entry-postfix .btn-sm, .card form .field-entry-postfix .btn-group-sm > .btn, .card form .field-entry-postfix .btn-lg, .card form .field-entry-postfix .btn-group-lg > .btn {
+  margin-top: inherit;
+  line-height: 1.5;
+  padding: 0.375rem 0.75rem; }

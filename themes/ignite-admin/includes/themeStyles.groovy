@@ -1099,7 +1099,8 @@ context.styles = [
         "catalog" : "fa-sitemap",
         "shop" : "fa-shopping-cart",
         "solr" : "fa-search",
-        "workeffort" : "fa-sliders"
+        "workeffort" : "fa-sliders",
+        "setup" : "fa-magic"
         ],
 
   /* Always declare last */

@@ -12001,7 +12001,7 @@ canvas {
       top: .5rem; }
       .navbar-apps:hover .navbar-apps-bar:nth-of-type(2), .navbar-apps.is-active .navbar-apps-bar:nth-of-type(2) {
         rotate: 180deg;
-        transform-origin: 75% 105% 0; }
+        transform-origin: 75% 110% 0; }
       .navbar-apps:hover .navbar-apps-bar:nth-of-type(3), .navbar-apps.is-active .navbar-apps-bar:nth-of-type(3) {
         display: none; }
 
@@ -12367,6 +12367,14 @@ is-rounded
   margin-bottom: .5em; }
   .button.is-rounded, .ui-dialog-content button.is-rounded {
     border-radius: 9999px; }
+
+fieldset legend {
+  cursor: pointer;
+  transition: all 2s linear; }
+
+fieldset .fieldgroup-body {
+  background: #ededed;
+  padding: 1rem; }
 
 .field.has-addons {
   flex-wrap: wrap; }

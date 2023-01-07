@@ -6,10 +6,8 @@
  *
  */
 
-import java.lang.*;
-import java.util.*;
-import org.ofbiz.base.util.*;
 
+import org.ofbiz.base.util.GroovyUtil
 /*
 *************************************
 * MAIN STYLES *
@@ -1123,7 +1121,8 @@ context.styles.putAll([
                 "catalog" : "fa-sitemap",
                 "shop" : "fa-shopping-cart",
                 "solr" : "fa-search",
-                "workeffort" : "fa-sliders"
+                "workeffort" : "fa-sliders",
+                "setup" : "fa-magic"
         ],
 
         /* Always declare last */

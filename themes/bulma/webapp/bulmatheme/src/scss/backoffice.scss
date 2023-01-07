@@ -21,6 +21,18 @@ is-rounded
   }
 }
 
+fieldset{
+  legend {
+    cursor: pointer;
+    transition: all 2s linear;
+  }
+
+  .fieldgroup-body{
+    background: $grey-lightest;
+    padding:1rem;
+  }
+}
+
 .field{
   &.has-addons {
     flex-wrap: wrap;

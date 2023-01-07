@@ -72,3 +72,15 @@
 
 // Custom styles
 @import "custom";
+
+.card {
+  form {
+    .field-entry-postfix{
+      .btn, .btn-sm, .btn-lg{
+        margin-top: inherit;
+        line-height: 1.5;
+        padding: $btn-padding-y $btn-padding-x;
+      }
+    }
+  }
+}

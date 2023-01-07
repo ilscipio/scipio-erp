@@ -1185,8 +1185,36 @@ public final class ProductPromoWorker {
         } else if ("PPIP_ORDER_TOTAL".equals(inputParamEnumId)) {
             if (UtilValidate.isNotEmpty(condValue)) {
                 BigDecimal orderTotal = cart.getTotalForPromotions();
-                if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderTotal=" + orderTotal, module);
-                compareBase = Integer.valueOf(orderTotal.compareTo(new BigDecimal(condValue)));
+
+                //Modified to allow for combinations with productCategory conditions
+                BigDecimal amountNeeded = new BigDecimal(condValue);
+                BigDecimal amountAvailable = BigDecimal.ZERO;
+                String productPromoId = productPromoCond.getString("productPromoId");
+
+                List<GenericValue> productPromoCategoriesAll = EntityQuery.use(delegator).from("ProductPromoCategory").where("productPromoId", productPromoId).cache(true).queryList();
+                List<GenericValue> productPromoProductsAll = EntityQuery.use(delegator).from("ProductPromoProduct").where("productPromoId", productPromoId).cache(true).queryList();
+                if(productPromoCategoriesAll.size()>0 || productPromoProductsAll.size()>0){
+                    Set<String> productIds = ProductPromoWorker.getPromoRuleCondProductIds(productPromoCond, delegator, nowTimestamp);
+                    List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
+                    for (ShoppingCartItem cartItem : lineOrderedByBasePriceList) {
+                        // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                        GenericValue product = cartItem.getProduct();
+                        String parentProductId = cartItem.getParentProductId();
+                        boolean passedItemConds = checkConditionsForItem(productPromoCond, cart, cartItem, delegator, dispatcher, nowTimestamp);
+                        if (passedItemConds && !cartItem.getIsPromo() &&
+                                (productIds.contains(cartItem.getProductId()) || (parentProductId != null && productIds.contains(parentProductId))) &&
+                                (product == null || !"N".equals(product.getString("includeInPromotions")))) {
+
+                            // just count the entire sub-total of the item
+                            amountAvailable = amountAvailable.add(cartItem.getItemSubTotal());
+                        }
+                    }
+                    if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderTotal=" + orderTotal, module);
+                    compareBase = Integer.valueOf(amountAvailable.compareTo(amountNeeded));
+                }else{
+                    if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderTotal=" + orderTotal, module);
+                    compareBase = Integer.valueOf(orderTotal.compareTo(amountNeeded));
+                }
             }
         } else if ("PPIP_ORDER_SUBTOTAL".equals(inputParamEnumId)) {
             if (UtilValidate.isNotEmpty(condValue)) {

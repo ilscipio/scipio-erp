@@ -34,6 +34,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -1897,8 +1898,20 @@ public final class ProductPromoWorker {
                     Set<String> productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
 
                     List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
-                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? new BigDecimal(lineOrderedByBasePriceList.size()) : productPromoAction.getBigDecimal("quantity");
+                    BigDecimal totalAvailableQuantity = lineOrderedByBasePriceList.stream()
+                            .map(s->s.getQuantity())
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    BigDecimal quantityDesired = productPromoAction.get("quantity") == null ? totalAvailableQuantity : productPromoAction.getBigDecimal("quantity");
                     Iterator<ShoppingCartItem> lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
+                    List<GenericValue> productPromoCategoriesAll = EntityQuery.use(delegator).from("ProductPromoCategory").where("productPromoId", productPromoAction.get("productPromoId")).cache(true).queryList();
+                    List<GenericValue> productPromoProductsAll = EntityQuery.use(delegator).from("ProductPromoProduct").where("productPromoId", productPromoAction.get("productPromoId")).cache(true).queryList();
+
+                    boolean hasNoActionCondition = (productPromoProductsAll.size()==0 && productPromoProductsAll.size()==0);
+                    if(hasNoActionCondition){
+                        //there are no additional conditions, so we just go ahead with the original list of productIds
+                        productIds = lineOrderedByBasePriceList.stream().map(ShoppingCartItem::getProductId).collect(Collectors.toSet());
+                    }
+
                     while (quantityDesired.compareTo(BigDecimal.ZERO) > 0 && lineOrderedByBasePriceIter.hasNext()) {
                         ShoppingCartItem cartItem = lineOrderedByBasePriceIter.next();
                         // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
@@ -1913,7 +1926,7 @@ public final class ProductPromoWorker {
                             quantityDesired = quantityDesired.subtract(quantityUsed);
 
                             // create an adjustment and add it to the cartItem that implements the promotion action
-                            BigDecimal discount = amount.divide(new BigDecimal(lineOrderedByBasePriceList.size()),3,BigDecimal.ROUND_HALF_UP);
+                            BigDecimal discount = amount.divide(totalAvailableQuantity,3,BigDecimal.ROUND_HALF_UP);
                             // don't allow the discount to be greater than the price
                             if (discount.compareTo(cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment())) > 0) {
                                 discount = cartItem.getBasePrice().multiply(cartItem.getRentalAdjustment());

@@ -3052,6 +3052,7 @@ public class ConfigXMLReader {
         public final String description;
         public final boolean noCache; // = false;
         public final String access; // SCIPIO
+        public final Map<String, Object> properties; // SCIPIO
 
         public ViewMap(Element viewMapElement) {
             this.name = viewMapElement.getAttribute("name");
@@ -3069,6 +3070,18 @@ public class ConfigXMLReader {
                 page = this.name;
             }
             this.page = page;
+            List<? extends Element> propertyElemList = UtilXml.childElementList(viewMapElement, "property");
+            Map<String, Object> properties = new LinkedHashMap<>();
+            if (UtilValidate.isNotEmpty(propertyElemList)) {
+                for(Element propertyElem : propertyElemList) {
+                    String name = propertyElem.getAttribute("name");
+                    String value = propertyElem.getAttribute("value");
+                    if (!name.isEmpty()) {
+                        properties.put(name, value);
+                    }
+                }
+            }
+            this.properties = UtilValidate.isNotEmpty(properties) ? Collections.unmodifiableMap(properties) : Collections.emptyMap();
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)
@@ -3111,6 +3124,10 @@ public class ConfigXMLReader {
 
         public String getAccess() {
             return access;
+        }
+
+        public Map<String, Object> getProperties() {
+            return properties;
         }
     }
 

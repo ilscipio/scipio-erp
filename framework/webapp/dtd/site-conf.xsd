@@ -1460,6 +1460,19 @@ under the License.
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" ref="description"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="property">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Static properties associated to views (SCIPIO).
+                            Can be used similar to *.properties files internally.
+                            Property namespace is considered global, prefix necessary.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute type="xs:string" name="name" use="required"/>
+                        <xs:attribute type="xs:string" name="value" use="required"/>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.view-map"/>
         </xs:complexType>

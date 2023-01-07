@@ -235,6 +235,12 @@ public class OrderWebServices {
 
         String orderId = (String) context.get("orderId");
         String orderItemSeqId = (String) context.get("orderItemSeqId");
+
+        if (UtilValidate.isEmpty(orderId) || UtilValidate.isEmpty(orderItemSeqId)) {
+            Debug.logWarning("Invalid orderId and/or orderItemSeqId", module);
+            return result;
+        }
+
         String channel = (String) context.get("channel");
 
         try {
@@ -253,15 +259,18 @@ public class OrderWebServices {
                             Map<String,Object> userLoginEmail = dispatcher.runSync("getPartyEmail",UtilMisc.toMap("partyId",party.getString("partyId"),"userLogin",userLogin));
                             if(UtilValidate.isNotEmpty(userLoginEmail)){
                                 String emailAddress = (String) userLoginEmail.get("emailAddress");
-                                Map<String, Object> gravatar = dispatcher.runSync("getGravatarImage",UtilMisc.toMap("emailAddress",emailAddress,"size",200,"userLogin",userLogin));
-                                if(UtilValidate.isNotEmpty(gravatar)){
-                                    gravatarImageURL = (String) gravatar.get("gravatarImageUrl");
+                                Map<String, Object> gravatar = UtilMisc.newMap();
+                                if (UtilValidate.isNotEmpty(emailAddress)) {
+                                    gravatar = dispatcher.runSync("getGravatarImage", UtilMisc.toMap("emailAddress", emailAddress, "size", 200, "userLogin", userLogin));
+                                    if (UtilValidate.isNotEmpty(gravatar)) {
+                                        gravatarImageURL = (String) gravatar.get("gravatarImageUrl");
+                                    }
                                 }
                             }
                         }
 
                     }
-                }catch(Exception e){
+                } catch(Exception e) {
                     Debug.logWarning("Exception while fetching gravatar image",module);
                 }
 

@@ -336,8 +336,9 @@ code package.
     <service name="wsSendOrderItem" engine="java" require-new-transaction="true" max-retry="1"
              location="com.ilscipio.scipio.order.web.OrderWebServices" invoke="sendOrderItem">
         <description>Sends order item data to listening websockets on channel.</description>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>
-        <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
+        <!-- SCIPIO: changed orderId & orderItemSeqId to optional so we can return success and just log a warning inside the service rather throwing an error -->
+        <attribute name="orderId" type="String" mode="IN" optional="true"/>
+        <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="channel" type="String" mode="IN" optional="false"/>
     </service>
 

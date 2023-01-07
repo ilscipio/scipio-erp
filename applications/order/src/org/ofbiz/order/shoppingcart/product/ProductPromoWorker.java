@@ -1194,7 +1194,7 @@ public final class ProductPromoWorker {
 
                 List<GenericValue> productPromoCategoriesAll = EntityQuery.use(delegator).from("ProductPromoCategory").where("productPromoId", productPromoId).cache(true).queryList();
                 List<GenericValue> productPromoProductsAll = EntityQuery.use(delegator).from("ProductPromoProduct").where("productPromoId", productPromoId).cache(true).queryList();
-                if(productPromoCategoriesAll.size()>0 || productPromoProductsAll.size()>0){
+                if (!productPromoCategoriesAll.isEmpty() || !productPromoProductsAll.isEmpty()) {
                     Set<String> productIds = ProductPromoWorker.getPromoRuleCondProductIds(productPromoCond, delegator, nowTimestamp);
                     List<ShoppingCartItem> lineOrderedByBasePriceList = cart.getLineListOrderedByBasePrice(false);
                     for (ShoppingCartItem cartItem : lineOrderedByBasePriceList) {
@@ -1210,12 +1210,11 @@ public final class ProductPromoWorker {
                             amountAvailable = amountAvailable.add(cartItem.getItemSubTotal());
                         }
                     }
-                    if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderTotal=" + orderTotal, module);
                     compareBase = Integer.valueOf(amountAvailable.compareTo(amountNeeded));
                 }else{
-                    if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderTotal=" + orderTotal, module);
                     compareBase = Integer.valueOf(orderTotal.compareTo(amountNeeded));
                 }
+                if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderTotal=" + orderTotal, module);
             }
         } else if ("PPIP_ORDER_SUBTOTAL".equals(inputParamEnumId)) {
             if (UtilValidate.isNotEmpty(condValue)) {

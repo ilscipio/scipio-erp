@@ -76,4 +76,12 @@ code package.
 
     <test-suite loader="main" location="testdef/UserLoginTests.xml"/>
     <test-suite loader="main" location="testdef/PerformFindTests.xml"/>
+
+    <!-- SCIPIO: Common Webapp Resources -->
+    <webapp name="common"
+            title="Common"
+            server="default-server"
+            location="webapp/common"
+            mount-point="/common"
+            app-bar-display="false"/>
 </ofbiz-component>

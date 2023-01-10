@@ -131,13 +131,11 @@ public class OrderWebServices {
                 orderData.put("order",orderMap);
 
                 JSON obj = JSON.from(orderData);
-                SocketSessionManager.broadcastToChannel(obj.toString(),channel);
-
-        }catch(Exception e){
+                SocketSessionManager.getDefault().broadcastToChannel(obj.toString(), channel);
+        } catch(Exception e) {
             Debug.logError("Error while sending order data to websocket",module);
             return ServiceUtil.returnError("Error while sending order data to websocket");
         }
-
         return result;
     }
 
@@ -216,7 +214,7 @@ public class OrderWebServices {
 
 
             JSON obj = JSON.from(orderMap);
-            SocketSessionManager.broadcastToChannel(obj.toString(),channel);
+            SocketSessionManager.getDefault().broadcastToChannel(obj.toString(), channel);
 
         }catch(Exception e){
             Debug.logError("Error while sending order data to websocket",module);
@@ -287,7 +285,7 @@ public class OrderWebServices {
                         "gravatarImageURL",gravatarImageURL
                 );
                 JSON obj = JSON.from(itemMap);
-                SocketSessionManager.broadcastToChannel(obj.toString(),channel);
+                SocketSessionManager.getDefault().broadcastToChannel(obj.toString(), channel);
             }
         }catch(Exception e){
             Debug.logError("Error while sending order data to websocket",module);

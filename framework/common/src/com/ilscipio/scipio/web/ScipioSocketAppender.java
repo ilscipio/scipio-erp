@@ -73,11 +73,12 @@ public final class ScipioSocketAppender extends AbstractAppender {
             Map<String, Object> dataMap = new HashMap<>();
             dataMap.put("messageList", messageList);
             JSON dataMapJson = JSON.from(dataMap);
+            SocketSessionManager ssm = SocketSessionManager.getDefault();
             try {
-                SocketSessionManager.allowLogging.set(false); // SPECIAL: Don't let this log anything or else endless logging
-                SocketSessionManager.broadcastToChannel(dataMapJson.toString(), channel);
+                ssm.allowLogging.set(false); // SPECIAL: Don't let this log anything or else endless logging
+                ssm.broadcastToChannel(dataMapJson.toString(), channel);
             } finally {
-                SocketSessionManager.allowLogging.remove();
+                ssm.allowLogging.remove();
             }
         } catch (Exception ex) {
             if (!ignoreExceptions()) {

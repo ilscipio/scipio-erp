@@ -15,19 +15,27 @@ import org.ofbiz.base.util.UtilValidate;
 /**
  * Order WebSocket.
  */
-@ServerEndpoint(value = "/ws/{channel}/{type}", configurator = BrokerSessionConfigurator.class)
+@ServerEndpoint(value = "/ws/{channel}/{action}", configurator = BrokerSessionConfigurator.class)
 public class OrderWebSocket extends GenericWebSocket {
-
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    protected String getRequiredPermission() { return "ORDERMGR"; }
+    @Override
+    protected String getRequiredPermission(Session session) { return "ORDERMGR"; }
 
     @OnOpen
+    @Override
     public void onOpen(Session session, EndpointConfig config) {
         super.onOpen(session, config);
     }
 
+    @OnClose
+    @Override
+    public void onClose(Session session) {
+        super.onClose(session);
+    }
+
     @OnMessage
+    @Override
     public void onJsonMessage(String message, Session session) {
         super.onJsonMessage(message, session);
     }

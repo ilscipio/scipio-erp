@@ -345,7 +345,7 @@ public class CommonServices {
             String channel = (String) context.get("channel");
             Map data = (Map) context.get("data");
             String message = JSON.from(data).toString();
-            SocketSessionManager.broadcastToChannel(message,channel);
+            SocketSessionManager.getDefault().broadcastToChannel(message,channel);
             return ServiceUtil.returnSuccess("Message sent to websocket clients");
         } catch(Exception e) {
             final String errorMsg = "Exception sending message to websocket clients";
@@ -366,7 +366,7 @@ public class CommonServices {
             Object key;
             String channel = (String) context.get("channel");
             String message = (String) context.get("message");
-            SocketSessionManager.broadcastToChannel(message,channel);
+            SocketSessionManager.getDefault().broadcastToChannel(message,channel);
             return ServiceUtil.returnSuccess("Message sent to websocket clients");
         } catch(Exception e) {
             final String errorMsg = "Exception sending message to websocket clients";

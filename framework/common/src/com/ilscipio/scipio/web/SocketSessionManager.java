@@ -28,25 +28,33 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * TODO: REVIEW: There could be issues with Session identity (hashCode/equals) depending on the implementation, and it *might*
  *  be possible that have to use Session.getId as String keys instead of Session. But may be moot...
+ * <p>SCIPIO: 2.1.0: Converted static class to reusable/overridable instance.</p>
  */
 public class SocketSessionManager {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-
     private static final boolean DEBUG = UtilProperties.getPropertyAsBoolean("catalina", "webSocket.debug", false);
-
     /** For clients previously not registered to any specific channel; this distinguishes them. */
     public static final String DEFAULT_CHANNEL = "default";
+    private static final SocketSessionManager DEFAULT = new SocketSessionManager();
 
-    /** Channel info map
-     * NOTE: global client list has been removed because it forces global synchronization for no reason and complexity; DEFAULT_CHANNEL now exists instead. */
-    private static final Map<String, ChannelInfo> channelMap = new ConcurrentHashMap<>();
+    /**
+     * Channel info map, without synchronization.
+     * <p>TODO: REVIEW: Should this have had weak keys? Not possible yet here.
+     * Currently fully relies on @OnClose in GenericWebSocket to clear sessions.</p>
+     */
+    private final Map<String, ChannelInfo> channelMap = new ConcurrentHashMap<>();
 
-    static final ThreadLocal allowLogging = new ThreadLocal<>();
+    protected final ThreadLocal allowLogging = new ThreadLocal<>();
+
+    /** Returns the default SocketSessionManager, typically for backend use. */
+    public static SocketSessionManager getDefault() {
+        return DEFAULT;
+    }
 
     /**
      * Adds Websocket Session to Session Manager.
      * */
-    public static void addSession(String permission, String channel, Session session, EndpointConfig config) {
+    public void addSession(String permission, String channel, Session session, EndpointConfig config) {
         if (permission != null && !checkClientAuthorization(permission, session, config, "; denying client registration")) { // SCIPIO: 2018-10-03
             if (isDebug()) {
                 GenericValue userLogin = WebSocketUtil.getUserLogin(session, config);
@@ -67,13 +75,13 @@ public class SocketSessionManager {
     /**
      * Adds client session to channel - no security checks - only use if already verified!
      */
-    public static void addSessionInsecure(String channel, Session session) {
+    public void addSessionInsecure(String channel, Session session) {
         if (UtilValidate.isEmpty(channel)) {
             channel = DEFAULT_CHANNEL;
         }
         ChannelInfo channelInfo = channelMap.get(channel);
         if (channelInfo == null) {
-            channelInfo = new ChannelInfo(channel);
+            channelInfo = makeChannelInfo(channel, session, null);
             ChannelInfo previousChannelInfo = channelMap.putIfAbsent(channel, channelInfo);
             if (previousChannelInfo != null) {
                 channelInfo = previousChannelInfo;
@@ -85,7 +93,7 @@ public class SocketSessionManager {
     /**
      * Removes session from channel - no security checks - only use if already verified!
      */
-    public static void removeSession(String channel, Session session) {
+    public void removeSession(String channel, Session session) {
         if (UtilValidate.isEmpty(channel)) {
             channel = DEFAULT_CHANNEL;
         }
@@ -102,7 +110,7 @@ public class SocketSessionManager {
     /**
      * Removes session from all channels - no security checks - only use if already verified!
      */
-    public static void removeSession(Session session) {
+    public void removeSession(Session session) {
         for(Map.Entry<String, ChannelInfo> entry : channelMap.entrySet()) {
             if (isDebug() && entry.getValue().hasSession(session)) {
                 Debug.logInfo("Websocket: Removing client session from channel '" + entry.getKey() + "', sessiondId '" + session.getId() + "'", module);
@@ -114,7 +122,7 @@ public class SocketSessionManager {
     /**
      * Removes sessions from all channels - no security checks - only use if already verified!
      */
-    public static void removeSessions(Collection<Session> sessions) {
+    public void removeSessions(Collection<Session> sessions) {
         for(Map.Entry<String, ChannelInfo> entry : channelMap.entrySet()) {
             for(Session session : sessions) {
                 entry.getValue().removeSession(session);
@@ -174,7 +182,7 @@ public class SocketSessionManager {
 //        return null;
 //    }
 
-    public static Set<Session> getAllSessions() {
+    public Set<Session> getAllSessions() {
         Set<Session> sessions = new HashSet<>();
         for(Map.Entry<String, ChannelInfo> channelEntry : channelMap.entrySet()) {
             sessions.addAll(channelEntry.getValue().getSessions());
@@ -182,17 +190,55 @@ public class SocketSessionManager {
         return sessions;
     }
 
+    /** For use with broadcasting methods; default returned by {@link #getMessageSender()}. */
+    public interface MessageSender {
+        /**
+         * Sends message to destination.
+         */
+        void send(String message, Session session) throws IOException;
+    }
+
+    public static class BasicRemoteMessageSender implements MessageSender {
+        public static final BasicRemoteMessageSender INSTANCE = new BasicRemoteMessageSender();
+        @Override
+        public void send(String message, Session session) throws IOException {
+            session.getBasicRemote().sendText(message);
+        }
+    }
+
+    public static class AsyncRemoteMessageSender implements MessageSender {
+        public static final AsyncRemoteMessageSender INSTANCE = new AsyncRemoteMessageSender();
+        @Override
+        public void send(String message, Session session) throws IOException {
+            session.getAsyncRemote().sendText(message);
+        }
+    }
+
+    /** Returns the default MessageSender for broadcasting methods; by default BasicRemoteMessageSender. */
+    protected MessageSender getMessageSender() {
+        // TODO: REVIEW: According to docs this is blocking - wanted by default?
+        return BasicRemoteMessageSender.INSTANCE;
+        //return AsyncRemoteMessageSender.INSTANCE;
+    }
+
     /**
      * Broadcasts to all sessions.
      * */
-    public static void broadcastToAll(String message) {
+    public void broadcastToAll(String message) {
+        broadcastToAll(message, getMessageSender());
+    }
+
+    /**
+     * Broadcasts to all sessions.
+     * */
+    public void broadcastToAll(String message, MessageSender sender) {
         Set<Session> invalidSessions = null;
         int totalCount = 0;
         int successCount = 0;
         for(Session session : getAllSessions()) {
             try {
                 if (session.isOpen()) {
-                    session.getBasicRemote().sendText(message);
+                    sender.send(message, session);
                     successCount++;
                 } else {
                     if (invalidSessions == null) {
@@ -209,7 +255,7 @@ public class SocketSessionManager {
                     session.close();
                 } catch (IOException ioe) {
                     if (isLog()) {
-                        Debug.logError("Could not close websocket session: " + ioe.toString(), module);
+                        Debug.logError("Could not close websocket session: " + ioe, module);
                     }
                 }
             }
@@ -227,16 +273,24 @@ public class SocketSessionManager {
      * Broadcasts to a single client.
      * @return true only if message appears to have been sent
      */
-    public static boolean broadcastToClient(String message, String clientId) {
+    public boolean broadcastToClient(String message, String clientId) {
+        return broadcastToClient(message, clientId, getMessageSender());
+    }
+
+    /**
+     * Broadcasts to a single client.
+     * @return true only if message appears to have been sent
+     */
+    public boolean broadcastToClient(String message, String clientId, MessageSender sender) {
         Set<Session> invalidSessions = null;
         try {
             for (Map.Entry<String, ChannelInfo> channelEntry : channelMap.entrySet()) {
-                for (Map.Entry<Session, ChannelInfo.ClientInfo> clientEntry : channelEntry.getValue().getClientMap().entrySet()) {
+                for (Map.Entry<Session, ClientInfo> clientEntry : channelEntry.getValue().getClientMap().entrySet()) {
                     Session session = clientEntry.getKey();
                     if (clientId.equals(session.getId())) {
                         try {
                             if (session.isOpen()) {
-                                session.getBasicRemote().sendText(message);
+                                sender.send(message, session);
                                 if (isDebug()) {
                                     Debug.logInfo("Websocket: broadcasted message to client '" + clientId + "'", module);
                                 }
@@ -256,7 +310,7 @@ public class SocketSessionManager {
                                 session.close();
                             } catch (IOException ioe) {
                                 if (isLog()) {
-                                    Debug.logError("Could not close websocket session: " + ioe.toString(), module);
+                                    Debug.logError("Could not close websocket session: " + ioe, module);
                                 }
                             }
                         }
@@ -276,7 +330,15 @@ public class SocketSessionManager {
      * Broadcasts to sessions on topic.
      * NOTE: Logging must be disable-able is for ScipioSocketAppender otherwise this creates endless logging loops.
      */
-    public static void broadcastToChannel(String message, String channel) {
+    public void broadcastToChannel(String message, String channel) {
+        broadcastToChannel(message, channel, getMessageSender());
+    }
+
+    /**
+     * Broadcasts to sessions on topic.
+     * NOTE: Logging must be disable-able is for ScipioSocketAppender otherwise this creates endless logging loops.
+     */
+    public void broadcastToChannel(String message, String channel, MessageSender sender) {
         ChannelInfo channelInfo = channelMap.get(channel);
         if (channelInfo == null) {
             return;
@@ -284,11 +346,11 @@ public class SocketSessionManager {
         Set<Session> invalidSessions = null;
         int totalCount = 0;
         int successCount = 0;
-        for (Map.Entry<Session, ChannelInfo.ClientInfo> clientEntry : channelInfo.getClientMap().entrySet()) {
+        for (Map.Entry<Session, ClientInfo> clientEntry : channelInfo.getClientMap().entrySet()) {
             Session session = clientEntry.getKey();
             try {
                 if (session.isOpen()) {
-                    session.getBasicRemote().sendText(message);
+                    sender.send(message, session);
                     successCount++;
                 } else {
                     if (invalidSessions == null) {
@@ -305,7 +367,7 @@ public class SocketSessionManager {
                     session.close();
                 } catch (IOException ioe) {
                     if (isLog()) {
-                        Debug.logError("Could not close websocket session: " + ioe.toString(), module);
+                        Debug.logError("Could not close websocket session: " + ioe, module);
                     }
                 }
             }
@@ -319,7 +381,7 @@ public class SocketSessionManager {
         }
     }
 
-    private static boolean checkClientAuthorization(String permission, Session session, EndpointConfig config, String errorSuffix) {
+    protected boolean checkClientAuthorization(String permission, Session session, EndpointConfig config, String errorSuffix) {
         if (config == null) {
             if (isLog()) {
                 Debug.logError("null EndpointConfig for websockets session '"
@@ -355,11 +417,15 @@ public class SocketSessionManager {
         return true;
     }
 
-    public static class ChannelInfo {
+    protected ChannelInfo makeChannelInfo(String channelName, Session session, Object args) {
+        return new ChannelInfo(channelName, session, args);
+    }
+
+    public class ChannelInfo {
         private final String name;
         private final Map<Session, ClientInfo> clientMap = new ConcurrentHashMap<>(); // Better than synchronizing on Set
 
-        protected ChannelInfo(String name) {
+        protected ChannelInfo(String name, Session session, Object args) {
             this.name = name;
         }
 
@@ -384,20 +450,24 @@ public class SocketSessionManager {
         }
 
         protected void addSession(Session session) { // TODO: REVIEW: does not yet require synchronized, but may in future for ClientInfo
-            clientMap.putIfAbsent(session, ClientInfo.INSTANCE); // new ClientInfo
+            clientMap.putIfAbsent(session, getClientInfo(session)); // new ClientInfo
+        }
+
+        protected ClientInfo getClientInfo(Session session) {
+            return ClientInfo.INSTANCE;
         }
 
         protected void removeSession(Session session) { // TODO: REVIEW: does not yet require synchronized, but may in future for ClientInfo
             clientMap.remove(session);
         }
-
-        private static class ClientInfo {
-            // TODO?: Any required per-channel client info here (NOTE: synchronization or mutable pattern may be needed); for now we can share a single instance
-            private static final ClientInfo INSTANCE = new ClientInfo();
-        }
     }
 
-    public static boolean isLog() { return !Boolean.FALSE.equals(allowLogging.get()); }
+    public static class ClientInfo {
+        // TODO?: Any required per-channel client info here (NOTE: synchronization or mutable pattern may be needed); for now we can share a single instance
+        private static final ClientInfo INSTANCE = new ClientInfo();
+    }
 
-    public static boolean isDebug() { return isLog() && (DEBUG || Debug.verboseOn()); }
+    public boolean isLog() { return !Boolean.FALSE.equals(allowLogging.get()); }
+
+    public boolean isDebug() { return isLog() && (DEBUG || Debug.verboseOn()); }
 }

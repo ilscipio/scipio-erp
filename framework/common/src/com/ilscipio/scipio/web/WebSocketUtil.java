@@ -1,6 +1,8 @@
 package com.ilscipio.scipio.web;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericValue;
 
 import javax.servlet.http.HttpSession;
@@ -8,8 +10,13 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.Session;
 import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpointConfig;
+import java.util.List;
+import java.util.Map;
 
-public class WebSocketUtil {
+public abstract class WebSocketUtil {
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    protected WebSocketUtil() {}
 
     /** Returns HttpSession for the websocket Session and EndpointConfig. Always use this method, contents of getUserProperties subject to change. */
     public static HttpSession getHttpSession(Session session, EndpointConfig config) {
@@ -29,4 +36,12 @@ public class WebSocketUtil {
         config.getUserProperties().put(HttpSession.class.getName(), request.getHttpSession());
     }
 
+    public static String getParameter(Map<String, List<String>> params, String name) {
+        List<String> values = params.get(name);
+        return UtilValidate.isNotEmpty(values) ? values.get(0) : null;
+    }
+
+    public static String getParameter(Session session, String name) {
+        return getParameter(session.getRequestParameterMap(), name);
+    }
 }

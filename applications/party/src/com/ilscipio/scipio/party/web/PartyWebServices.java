@@ -220,7 +220,7 @@ public class PartyWebServices {
             // send data
             JSON jsonData = JSON.from(combinedRequests);
             String jsonDataString = jsonData.toString();
-            SocketSessionManager.broadcastToChannel(jsonDataString, channel);
+            SocketSessionManager.getDefault().broadcastToChannel(jsonDataString, channel);
 
         } catch (Exception e) {
             Debug.logError(e, "sendHitBinLiveData: Error while fetching or sending order data to websocket (note: if duplicate key constraint, you may need to delete old ServerHitBucketStats records)", module);

@@ -111,6 +111,8 @@ code package.
             <!-- SCIPIO: NEW: flexible locations for <script> location -->
             <set field="adminScriptsBaseDir" value="component://webtools/webapp/webtools/WEB-INF/actions" />
             <script location="${adminScriptsBaseDir}/misc/PrepareLayoutDemo.groovy"/>
+
+            <include-screen-actions name="hotwireActions"/>
         </actions>
     </screen>
 
@@ -1244,4 +1246,115 @@ code package.
             </finally-actions>
         </section>
     </screen>
+
+    <screen name="hotwireTest">
+        <section>
+            <actions>
+                <!-- NOTE: OFBTOOLS rights implied by webapp (frontend needs check) -->
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <@section title="Static Comments">
+                        <@render resource="component://webtools/widget/MiscScreens.xml#hotwireStaticComments"/>
+                    </@section>
+                    <@section title="Websocket Comments">
+                        <@render resource="component://webtools/widget/MiscScreens.xml#hotwireStreamCommentsSplash"/>
+                    </@section>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="hotwireActions">
+        <actions>
+            <set field="hotwire.enabled" from-field="hotwire.enabled" type="Boolean" default-value="true" global="true"/>
+        </actions>
+    </screen>
+
+    <screen name="hotwireStaticComments">
+        <section>
+            <actions>
+                <!-- NOTE: OFBTOOLS rights implied by webapp (frontend needs check) -->
+                <script lang="groovy"><![CDATA[
+                    context.hotwireComments = session.getAttribute('hotwireComments');
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <turbo-frame id="hotwire-static-comments">
+                        <div>
+                            <#if hotwireComments?has_content>
+                                <ol>
+                                    <#list hotwireComments as comment>
+                                        <li id="${'hotwire-comment-' + comment?index}">${comment}</li>
+                                    </#list>
+                                </ol>
+                            <#else>
+                                (no comments)
+                            </#if>
+                        </div>
+
+                        <form action="<@pageUrl uri='hotwireStaticCommentsAdd'/>" method="post">
+                            <input type="text" name="comment" id="hotwire-comment-input">
+                            <button type="submit">Send</button>
+                        </form>
+                    </turbo-frame>
+
+                    <form action="<@pageUrl uri='hotwireStaticCommentsRemove'/>" method="post" data-turbo-frame="hotwire-static-comments">
+                        <button type="submit">Remove</button>
+                    </form>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="hotwireStreamCommentsSplash">
+        <section>
+            <actions>
+                <!-- NOTE: OFBTOOLS rights implied by webapp (frontend needs check) -->
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <ul id="hotwire-stream-comments"><li>First comment</li></ul>
+                    <p>Last time: <span id="hotwire-stream-date">${nowTimestamp}</span></p>
+
+                    <turbo-stream-connection src="<@appUrl uri='/ws-turbo/comment-demo/subscribe'/>"></turbo-stream-connection>
+
+                    <p><em>Note: This form sends through websockets for demo purposes only, after which the comments
+                        above are updated through a separate websocket push.</em></p>
+
+                    <form action="<@pageUrl uri='hotwireStreamCommentsAdd'/>" method="post" data-turbo-frame="hotwire-stream-dummy-frame">
+                        <input type="text" name="comment">
+                        <button type="submit">Send</button>
+                    </form>
+
+                    <turbo-frame id="hotwire-stream-dummy-frame"></turbo-frame>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="hotwireStreamComments">
+        <section>
+            <actions>
+                <!-- NOTE: OFBTOOLS rights implied by webapp (frontend needs check) -->
+                <set field="comment" value="test"/>
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template><![CDATA[
+                    <turbo-stream action="append" target="hotwire-stream-comments">
+                        <template>
+                            <li>${nowTimestamp}: ${comment!}</li>
+                        </template>
+                    </turbo-stream>
+                    <turbo-stream action="replace" target="hotwire-stream-date">
+                        <template>
+                            <span id="hotwire-stream-date">${nowTimestamp}</span>
+                        </template>
+                    </turbo-stream>
+                ]]></html-template></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
 </screens>

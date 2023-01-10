@@ -1296,6 +1296,13 @@ ${markup} <em><b>[[</b> <code style="font-size:0.8em;">${markup?html}</code><b>]
   </#if>
 </@section>
 
+<#if webSocketEnabled>
+<a id="HotwireExample"></a>
+<@section title="Hotwire example">
+    <@render resource="component://webtools/widget/MiscScreens.xml#hotwireTest"/>
+</@section>
+</#if>
+
 <#if debugMode>
     <a name="TestAdminService"></a>
     <@section title="testAdminService: debug controller events">

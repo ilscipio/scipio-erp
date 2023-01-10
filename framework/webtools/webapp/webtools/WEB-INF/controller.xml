@@ -763,6 +763,58 @@ code package.
         <response name="success" type="view" value="WebtoolsLayoutDemo"/>
     </request-map>
 
+    <!-- hotwire demo -->
+    <request-map uri="hotwireStaticCommentsAdd">
+        <security https="true" auth="true"/>
+        <event type="groovy"><script><![CDATA[
+            def comment = request.getParameter("comment");
+            if (comment) {
+                // NOTE: Missing synchronization, messages could get lost here
+                def comments = session.getAttribute("hotwireComments");
+                comments = comments ? new ArrayList(comments) : new ArrayList();
+                comments.add(comment);
+                session.setAttribute("hotwireComments", comments);
+            }
+            return "success";
+        ]]></script></event>
+        <response name="success" type="view" value="hotwireStaticComments"/>
+    </request-map>
+
+    <request-map uri="hotwireStaticCommentsRemove">
+        <security https="true" auth="true"/>
+        <event type="groovy"><script><![CDATA[
+            // NOTE: Missing synchronization, messages could get lost here
+            def comments = session.getAttribute("hotwireComments");
+            if (comments) {
+                comments = new ArrayList(comments);
+                comments.remove(comments.size() - 1);
+                session.setAttribute("hotwireComments", comments);
+            }
+            return "success";
+        ]]></script></event>
+        <response name="success" type="view" value="hotwireStaticComments"/>
+    </request-map>
+
+    <request-map uri="hotwireStreamCommentsAdd">
+        <security https="true" auth="true"/>
+        <event type="groovy"><script><![CDATA[
+            import com.ilscipio.scipio.web.*;
+            import com.ilscipio.scipio.web.hotwire.*;
+            def comment = request.getParameter("comment");
+            if (comment) {
+                // TODO: delegate to standalone render
+                def message = '<turbo-stream action="append" target="hotwire-stream-comments">' +
+                       ' <template>' +
+                        '    <li>' + comment + '</li>' +
+                      '  </template> ' +
+                   ' </turbo-stream>';
+                TurboSocketSessionManager.getDefault().broadcastToChannel(message, "comment-demo");
+            }
+            return "success";
+        ]]></script></event>
+        <response name="success" type="none"/>
+    </request-map>
+
     <!-- SCIPIO: EntityUtilityServices -->
     <request-map uri="EntityUtilityServices">
         <security https="true" auth="true"/>
@@ -967,6 +1019,10 @@ code package.
     <view-map name="SolrStatus" type="screen" page="component://webtools/widget/SolrScreens.xml#SolrStatus"/>
     <view-map name="SolrServices" type="screen" page="component://webtools/widget/SolrScreens.xml#SolrServices"/>
     <view-map name="SolrDoc" type="screen" page="component://webtools/widget/SolrScreens.xml#SolrDoc"/>
+
+    <!-- SCIPIO: hotwire widgets -->
+    <view-map name="hotwireStaticComments" type="screen" page="component://webtools/widget/MiscScreens.xml#hotwireStaticComments"/>
+    <view-map name="hotwireEmptyView" type="screen" page="component://webtools/widget/MiscScreens.xml#hotwireEmptyView"/>
 
     <!-- end of view mappings -->
 </site-conf>

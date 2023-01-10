@@ -1,0 +1,39 @@
+{
+  "name": "ScipioERP-Common",
+  "version": "2.0.0",
+  "description": "",
+  "main": "index.html",
+  "dependencies": {
+    "@hotwired/turbo": "^7.2.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.4.5",
+    "babelify": "^10.0.0",
+    "browser-sync": "^2.26.5",
+    "browserify": "^16.2.3",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^8.0.0",
+    "gulp-bower-src": "^0.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-filter": "^4.0.0",
+    "gulp-npm-dist": "^1.0.3",
+    "gulp-rename": "^1.4.0",
+    "gulp-replace": "^0.5.4",
+    "gulp-sass": "^3.1.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "node-glob": "^1.2.0",
+    "run-sequence": "^1.2.2",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "vinyl-transform": "^1.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ilscipio GmbH",
+  "url": "https://www.scipioerp.com",
+  "copyright": "Copyright 2019 Ilscipio GmbH"
+}

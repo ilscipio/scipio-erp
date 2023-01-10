@@ -71,7 +71,19 @@ code package.
                                
             <!-- Application scripts (common to all apps; may be shared by themes) - needed for app function (ajax, basic function, etc.)
                  Can be forced to put some theme scripts here if apps depend heavily on them -->
-            
+
+            <!-- Hotwire (Turbo) support (SCIPIO: 3.0.0: Added) -->
+            <if>
+                <condition>
+                    <if-true field="hotwire.enabled"/>
+                </condition>
+                <then>
+                    <!-- NOTE: Turbo requires script in head html element, not footer -->
+                    <set field="layoutSettings.javaScripts[+0]" value="/common/js/hotwire-common.js" global="true"/>
+                    <set field="layoutSettings.javaScripts[+0]" value="/common/dist/libs/@hotwired/turbo/turbo.es2017-umd.js" global="true"/>
+                </then>
+            </if>
+
             <!-- Legacy jQuery; TODO: Remove once possible -->
             <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/validate/jquery.validate.min.js" global="true" />
             <set field="layoutSettings.javaScripts[+0]" value="/images/jquery/plugins/fjTimer/jquerytimer-min.js" global="true" />

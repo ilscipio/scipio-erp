@@ -276,7 +276,7 @@
 <#if isMPOSComponentPresent && getMPOSTemplate>
     <@(.get_optional_template("component://mpos/webapp/mpos/includes/scipio/lib/standard/htmlMPOS.ftl").include!templateMissingFallback("htmlMPOS.html")) />
 </#if>
-<#assign isOpenAIComponentPresent = Static["org.ofbiz.base.component.ComponentConfig"].isComponentPresent("wordpress")!false>
+<#assign isOpenAIComponentPresent = Static["org.ofbiz.base.component.ComponentConfig"].isComponentPresent("openai")!false>
 <#if isOpenAIComponentPresent>
     <@(.get_optional_template("component://openai/webapp/openai/openai-common.ftl").include!templateMissingFallback("htmlOpenAI.html")) />
 </#if>

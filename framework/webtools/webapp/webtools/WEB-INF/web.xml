@@ -99,7 +99,7 @@ code package.
         <init-param>
             <param-name>allowedPaths</param-name>
             <param-value>
-                /ping.txt:/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/applet:/includes/maincss.css:/docs:/images:/ws:/ws-turbo:/export
+                /ping.txt:/error:/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/applet:/includes/maincss.css:/docs:/images:/export
             </param-value>
         </init-param>
         <init-param>

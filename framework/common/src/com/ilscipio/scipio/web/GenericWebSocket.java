@@ -9,14 +9,20 @@ import java.util.Collection;
  * Generic WebSocket.
  * <p>Contains one or more {@link WebChannelHandler}, by default a single one named "default" (last) that handles all
  * channels. The default may be overridden and custom ones may be added which are checked first.</p>
- * <p>The default permission requirement is OFBTOOLS for backend use.</p>
+ * <p>The default permission requirement is <code>OFBTOOLS</code> for backend use and default security,
+ * so {@link #getPermissionVerifier} should be overridden for application-specific permissions.</p>
+ * <p>Annotations: This class does not include annotations such as <code>@OnOpen</code>, <code>@OnClose</code>
+ * and <code>@onJsonMessage</code>, which can be automatically inherited by extending {@link CommonWebSocket} instead.</p>
+ * <p>The endpoint annotation's mount-point is (as of 3.0.0) automatically detected and whitelisted by
+ * <code>ContextFilter</code> as part of <code>allowedPaths</code>, so editing web.xml should no longer be necessary.</p>
  * <p>FIXME: The <code>{action}</code> was previously named <code>{type}</code>; the old name is still supported for now for client code.</p>
  * <p>SCIPIO: 3.0.0: Now mostly delegates to WebChannelHandler, which helps gets around
  * construction and missing per-channel handling, overriding for client code and other issues.</p>
  */
 //@ServerEndpoint(value = "/ws/{channel}/{action}", configurator = BrokerSessionConfigurator.class)
-public class GenericWebSocket {
+public abstract class GenericWebSocket {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    public static final SocketPermissionVerifier ADMIN_PERM = new SocketPermissionVerifier.EntityViewOr("OFBTOOLS");
 
     protected volatile EndpointConfig config;
 
@@ -34,8 +40,8 @@ public class GenericWebSocket {
         return SocketSessionManager.getDefault();
     }
 
-    /** Defines base permission to allow client subscription and broadcasts, default OFBTOOLS for backend. */
-    protected String getRequiredPermission(Session session) { return "OFBTOOLS"; }
+    /** Defines base permission to allow client subscription and broadcasts, default OFBTOOLS for backend/security. */
+    protected SocketPermissionVerifier getPermissionVerifier(Session session) { return ADMIN_PERM; }
 
     /*
      * Parameter and arguments extraction and passing
@@ -48,7 +54,7 @@ public class GenericWebSocket {
     protected WebChannelHandler.Args setCommonEventArgs(WebChannelHandler.Args args, Session session, String eventName, String message) {
         args.setEndpointConfig(getConfig());
         args.setSocketSessionManager(getSocketSessionManager(session));
-        args.setRequiredPermission(getRequiredPermission(session));
+        args.setPermissionVerifier(getPermissionVerifier(session));
         args.setSession(session);
         args.setEventName(eventName);
         String channelName = WebSocketUtil.getParameter(session, "channel");
@@ -89,9 +95,9 @@ public class GenericWebSocket {
 
     /*
      * Events
+     * NOTE: Annotations are included in subclasses (abstract or concrete)
      */
 
-    @OnOpen
     public void onOpen(Session session, EndpointConfig config) {
         init(session, config);
         WebChannelHandler.Args args = getOpenEventArgs(session);
@@ -108,7 +114,6 @@ public class GenericWebSocket {
         }
     }
 
-    @OnClose
     public void onClose(Session session) {
         WebChannelHandler.Args args = getCloseEventArgs(session);
         Collection<WebChannelHandler> channelHandlers = getChannelHandlers(args);
@@ -128,7 +133,6 @@ public class GenericWebSocket {
      * Fetches information from client
      * <p>Requires json Object: {"action": "subscribe"|"message"|"unsubscribe", "data":{}} ("type" supported instead of "action")</p>
      */
-    @OnMessage
     public void onJsonMessage(String message, Session session) {
         try {
             WebChannelHandler.Args args = getMessageEventArgs(session, message);
@@ -149,4 +153,5 @@ public class GenericWebSocket {
             Debug.logError(Debug.verboseOn() ? e : null, "Error reading message for session [" + session.getId() + "]: " + e, module);
         }
     }
+
 }

@@ -54,8 +54,8 @@ public class SocketSessionManager {
     /**
      * Adds Websocket Session to Session Manager.
      * */
-    public void addSession(String permission, String channel, Session session, EndpointConfig config) {
-        if (permission != null && !checkClientAuthorization(permission, session, config, "; denying client registration")) { // SCIPIO: 2018-10-03
+    public void addSession(SocketPermissionVerifier permVerifier, String channel, Session session, EndpointConfig config) {
+        if (permVerifier != null && !checkClientAuthorization(permVerifier, session, config, "; denying client registration")) { // SCIPIO: 2018-10-03
             if (isDebug()) {
                 GenericValue userLogin = WebSocketUtil.getUserLogin(session, config);
                 Debug.logInfo("Websocket: Permission denied for client with userLoginId '" + (userLogin != null ? userLogin.get("userLoginId") : "(none)" )
@@ -381,7 +381,7 @@ public class SocketSessionManager {
         }
     }
 
-    protected boolean checkClientAuthorization(String permission, Session session, EndpointConfig config, String errorSuffix) {
+    protected boolean checkClientAuthorization(SocketPermissionVerifier permVerifier, Session session, EndpointConfig config, String errorSuffix) {
         if (config == null) {
             if (isLog()) {
                 Debug.logError("null EndpointConfig for websockets session '"
@@ -407,9 +407,10 @@ public class SocketSessionManager {
             return false;
         }
         GenericValue userLogin = UtilHttp.getUserLogin(httpSession);
-        if (!security.hasEntityPermission(permission, "_VIEW", userLogin)) {
+        if (!permVerifier.hasPermission(security, userLogin, httpSession, session)) {
             if (isLog()) {
-                Debug.logWarning("Client with userLoginId '" + (userLogin != null ? userLogin.get("userLoginId") : "(none)") + "' not authorized for " + permission + "_VIEW permission for websockets session '"
+                Debug.logWarning("Client with userLoginId '" + (userLogin != null ? userLogin.get("userLoginId") : "(none)")
+                        + "' not authorized by permission for websockets session '"
                         + session.getId() + "'" + errorSuffix, module);
             }
             return false;

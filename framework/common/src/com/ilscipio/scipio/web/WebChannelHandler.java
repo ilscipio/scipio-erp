@@ -81,7 +81,7 @@ public class WebChannelHandler {
         // TODO: REVIEW: I currently see no reason not to re-validate this, in case this could be
         //  manipulated - as long as the HttpSession is valid
         //getSocketSessionManager(args).addSessionInsecure(channelName, session);
-        getSocketSessionManager(args).addSession(getRequiredPermission(args), args.getChannelName(), args.getSession(),
+        getSocketSessionManager(args).addSession(getPermissionVerifier(args), args.getChannelName(), args.getSession(),
                 args.getEndpointConfig());
         return true;
     }
@@ -150,8 +150,8 @@ public class WebChannelHandler {
     }
 
     /** May be overridden to use a WebChannelHandler-specific value. */
-    protected String getRequiredPermission(Args args) {
-        return args.getRequiredPermission();
+    protected SocketPermissionVerifier getPermissionVerifier(Args args) {
+        return args.getPermissionVerifier();
     }
 
 
@@ -165,7 +165,7 @@ public class WebChannelHandler {
     public static class Args {
         protected EndpointConfig endpointConfig;
         protected SocketSessionManager socketSessionManager;
-        protected String requiredPermission;
+        protected SocketPermissionVerifier permissionVerifier;
         protected Session session;
         protected String eventName;
         protected String channelName;
@@ -178,7 +178,7 @@ public class WebChannelHandler {
         public Args(Args other) {
             this.endpointConfig = other.endpointConfig;
             this.socketSessionManager = other.socketSessionManager;
-            this.requiredPermission = other.requiredPermission;
+            this.permissionVerifier = other.permissionVerifier;
             this.eventName = other.eventName;
             this.session = other.session;
             this.channelName = other.channelName;
@@ -204,12 +204,12 @@ public class WebChannelHandler {
             return this;
         }
 
-        public String getRequiredPermission() {
-            return requiredPermission;
+        public SocketPermissionVerifier getPermissionVerifier() {
+            return permissionVerifier;
         }
 
-        public Args setRequiredPermission(String requiredPermission) {
-            this.requiredPermission = requiredPermission;
+        public Args setPermissionVerifier(SocketPermissionVerifier permissionVerifier) {
+            this.permissionVerifier = permissionVerifier;
             return this;
         }
 

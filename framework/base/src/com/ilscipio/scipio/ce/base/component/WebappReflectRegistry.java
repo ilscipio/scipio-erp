@@ -15,11 +15,19 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Per-webapp reflection and annotation scanner.
  * <p>Abstracts the jar file locations and bundles them using {@link ReflectQuery}.</p>
- * <p>SCIPIO: 2.1.0: Added for annotations support.</p>
+ * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
  */
 public class WebappReflectRegistry {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Map<String, WebappReflectInfo> REGISTRY = new ConcurrentHashMap<>();
+
+    public static WebappReflectInfo getWebappReflectInfo(ComponentConfig.WebappInfo webappInfo) {
+        return REGISTRY.get(toKey(webappInfo));
+    }
+
+    public static Collection<WebappReflectInfo> getWebappReflectInfos() {
+        return REGISTRY.values();
+    }
 
     public static WebappReflectInfo registerWebappReflectInfo(ComponentConfig.WebappInfo webappInfo,
                                                               Collection<URL> jarUrls, boolean useCache) {
@@ -41,14 +49,6 @@ public class WebappReflectRegistry {
     public static WebappReflectInfo registerWebappReflectInfo(ComponentConfig.WebappInfo webappInfo) {
         String cacheKey = toKey(webappInfo);
         return REGISTRY.get(cacheKey);
-    }
-
-    public static Collection<WebappReflectInfo> getWebappReflectInfos() {
-        return REGISTRY.values();
-    }
-
-    public static WebappReflectInfo getWebappReflectInfo(ComponentConfig.WebappInfo webappInfo) {
-        return REGISTRY.get(toKey(webappInfo));
     }
 
     protected static String toKey(ComponentConfig.WebappInfo webappInfo) {

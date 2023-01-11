@@ -32,13 +32,16 @@ import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceContext;
 import org.ofbiz.service.ServiceUtil;
 
-/** ExampleServices. NOTE: 2020-03: This example is now obsolete. See GenericWebSocket and SocketSessionManager instead. */
+/**
+ * ExampleServices.
+ */
 public class ExampleServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Map<String, Object> sendExamplePushNotifications(DispatchContext dctx, Map<String, ? extends Object> context) {
         String exampleId = (String) context.get("exampleId");
         String message = (String) context.get("message");
+        @SuppressWarnings("deprecation") // FIXME
         Set<Session> clients = ExampleWebSockets.getClients();
         try {
             synchronized (clients) {

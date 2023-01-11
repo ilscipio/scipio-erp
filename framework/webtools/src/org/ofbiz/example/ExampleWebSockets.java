@@ -37,10 +37,11 @@ import org.ofbiz.security.Security;
 import org.ofbiz.webapp.WebAppUtil;
 
 /**
- * ExampleWebSockets. NOTE: 2020-03: This example is now obsolete. See GenericWebSocket and SocketSessionManager instead.
- * <p>
- * SCIPIO: 2018-10-03: Modified for custom configuration to get access to HttpSession.
+ * ExampleWebSockets.
+ * @deprecated SCIPIO: 3.0.0: Use {@link com.ilscipio.scipio.web.GenericWebSocket} for new code rather than basing off
+ * this example.
  */
+@Deprecated
 @ServerEndpoint(value = "/ws/pushNotifications", configurator = ExampleSessionConfigurator.class)
 public class ExampleWebSockets {
 

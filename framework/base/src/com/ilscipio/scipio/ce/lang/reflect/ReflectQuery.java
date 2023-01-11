@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * Wrapper around org.reflections/org.reflections8 library for simplified use.
  * <p>DEV NOTE: This does not currently fully abstract Reflections; it's intended to add helper calls around expensive
  * cached operations, but some abstractions are available and more may be added.</p>
- * <p>SCIPIO: 2.1.0: Added for annotations support.</p>
+ * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
  */
 public class ReflectQuery {
 

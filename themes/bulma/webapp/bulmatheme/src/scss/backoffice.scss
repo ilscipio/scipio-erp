@@ -38,6 +38,35 @@ fieldset{
     flex-wrap: wrap;
 
     .control {
+
+      .button,.input,.select{
+
+        &:not(:only-child){
+          border-bottom-left-radius: 0;
+          border-top-left-radius: 0;
+
+          &:not(:first-child){
+            margin-left: -4px;
+          }
+        }
+
+        &:not(:last-child) {
+          border-radius: 0px;
+          select, input, button {
+            border-radius: 0px;
+          }
+        }
+
+
+      }
+
+
+      &.is-expanded{
+        .select{
+          width:100%;
+        }
+      }
+
       &:first-child {
         .is-rounded {
           border-bottom-left-radius: $radius-rounded;

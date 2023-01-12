@@ -61,6 +61,7 @@ orderHeader = null;
 orderItems = null;
 orderAdjustments = null;
 comments = null;
+facility=null;
 
 if (orderId) {
     orderHeader = from('OrderHeader').where('orderId', orderId).cache(false).queryFirst();

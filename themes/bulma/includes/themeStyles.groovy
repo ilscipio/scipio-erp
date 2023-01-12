@@ -460,8 +460,8 @@ context.styles.putAll([
         "action_prefix" : "action-",
 
         /* Generic UI functionality action types */
-        "action_nav" : "action-nav ",
-        "action_run" : "action-run",
+        "action_nav" : "button action-nav ",
+        "action_run" : "button action-run",
 
         /* Action state scope styles */
         "action_scope_sys" : "action-scope-sys",

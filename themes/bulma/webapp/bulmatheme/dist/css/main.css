@@ -12378,15 +12378,44 @@ fieldset .fieldgroup-body {
 
 .field.has-addons {
   flex-wrap: wrap; }
-  .field.has-addons .control .button:not(:only-child), .field.has-addons .control .ui-dialog-content button:not(:only-child), .ui-dialog-content .field.has-addons .control button:not(:only-child), .field.has-addons .control .input:not(:only-child), .field.has-addons .control .select:not(:only-child) {
+  .field.has-addons .control span {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: none;
+    display: inline-flex;
+    font-size: 1rem;
+    height: 2.5em;
+    justify-content: flex-start;
+    line-height: 1.5;
+    padding-bottom: calc(0.5em - 1px);
+    padding-left: calc(0.75em - 1px);
+    padding-right: calc(0.75em - 1px);
+    padding-top: calc(0.5em - 1px);
+    position: relative;
+    vertical-align: top;
+    background: #b5b5b5;
+    color: #fff; }
+    .field.has-addons .control span:focus, .field.has-addons .control span.is-focused, .field.has-addons .control span:active, .field.has-addons .control span.is-active {
+      outline: none; }
+    .field.has-addons .control span[disabled],
+    fieldset[disabled] .field.has-addons .control span {
+      cursor: not-allowed; }
+  .field.has-addons .control span:not(:only-child):not(:first-child), .field.has-addons .control .button:not(:only-child):not(:first-child), .field.has-addons .control .ui-dialog-content button:not(:only-child):not(:first-child), .ui-dialog-content .field.has-addons .control button:not(:only-child):not(:first-child), .field.has-addons .control .input:not(:only-child):not(:first-child), .field.has-addons .control .select:not(:only-child):not(:first-child) {
+    margin-left: -4px;
     border-bottom-left-radius: 0;
     border-top-left-radius: 0; }
-    .field.has-addons .control .button:not(:only-child):not(:first-child), .field.has-addons .control .ui-dialog-content button:not(:only-child):not(:first-child), .ui-dialog-content .field.has-addons .control button:not(:only-child):not(:first-child), .field.has-addons .control .input:not(:only-child):not(:first-child), .field.has-addons .control .select:not(:only-child):not(:first-child) {
-      margin-left: -4px; }
-  .field.has-addons .control .button:not(:last-child), .field.has-addons .control .ui-dialog-content button:not(:last-child), .ui-dialog-content .field.has-addons .control button:not(:last-child), .field.has-addons .control .input:not(:last-child), .field.has-addons .control .select:not(:last-child) {
-    border-radius: 0px; }
-    .field.has-addons .control .button:not(:last-child) select, .field.has-addons .control .ui-dialog-content button:not(:last-child) select, .ui-dialog-content .field.has-addons .control button:not(:last-child) select, .field.has-addons .control .button:not(:last-child) input, .field.has-addons .control .ui-dialog-content button:not(:last-child) input, .ui-dialog-content .field.has-addons .control button:not(:last-child) input, .field.has-addons .control .button:not(:last-child) button, .field.has-addons .control .ui-dialog-content button:not(:last-child) button, .ui-dialog-content .field.has-addons .control button:not(:last-child) button, .field.has-addons .control .input:not(:last-child) select, .field.has-addons .control .input:not(:last-child) input, .field.has-addons .control .input:not(:last-child) button, .field.has-addons .control .select:not(:last-child) select, .field.has-addons .control .select:not(:last-child) input, .field.has-addons .control .select:not(:last-child) button {
-      border-radius: 0px; }
+    .field.has-addons .control span:not(:only-child):not(:first-child) button, .field.has-addons .control span:not(:only-child):not(:first-child) input, .field.has-addons .control span:not(:only-child):not(:first-child) select, .field.has-addons .control .button:not(:only-child):not(:first-child) button, .field.has-addons .control .ui-dialog-content button:not(:only-child):not(:first-child) button, .ui-dialog-content .field.has-addons .control button:not(:only-child):not(:first-child) button, .field.has-addons .control .button:not(:only-child):not(:first-child) input, .field.has-addons .control .ui-dialog-content button:not(:only-child):not(:first-child) input, .ui-dialog-content .field.has-addons .control button:not(:only-child):not(:first-child) input, .field.has-addons .control .button:not(:only-child):not(:first-child) select, .field.has-addons .control .ui-dialog-content button:not(:only-child):not(:first-child) select, .ui-dialog-content .field.has-addons .control button:not(:only-child):not(:first-child) select, .field.has-addons .control .input:not(:only-child):not(:first-child) button, .field.has-addons .control .input:not(:only-child):not(:first-child) input, .field.has-addons .control .input:not(:only-child):not(:first-child) select, .field.has-addons .control .select:not(:only-child):not(:first-child) button, .field.has-addons .control .select:not(:only-child):not(:first-child) input, .field.has-addons .control .select:not(:only-child):not(:first-child) select {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0; }
+  .field.has-addons .control span:not(:only-child):not(:last-child), .field.has-addons .control .button:not(:only-child):not(:last-child), .field.has-addons .control .ui-dialog-content button:not(:only-child):not(:last-child), .ui-dialog-content .field.has-addons .control button:not(:only-child):not(:last-child), .field.has-addons .control .input:not(:only-child):not(:last-child), .field.has-addons .control .select:not(:only-child):not(:last-child) {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0; }
+    .field.has-addons .control span:not(:only-child):not(:last-child) button, .field.has-addons .control span:not(:only-child):not(:last-child) input, .field.has-addons .control span:not(:only-child):not(:last-child) select, .field.has-addons .control .button:not(:only-child):not(:last-child) button, .field.has-addons .control .ui-dialog-content button:not(:only-child):not(:last-child) button, .ui-dialog-content .field.has-addons .control button:not(:only-child):not(:last-child) button, .field.has-addons .control .button:not(:only-child):not(:last-child) input, .field.has-addons .control .ui-dialog-content button:not(:only-child):not(:last-child) input, .ui-dialog-content .field.has-addons .control button:not(:only-child):not(:last-child) input, .field.has-addons .control .button:not(:only-child):not(:last-child) select, .field.has-addons .control .ui-dialog-content button:not(:only-child):not(:last-child) select, .ui-dialog-content .field.has-addons .control button:not(:only-child):not(:last-child) select, .field.has-addons .control .input:not(:only-child):not(:last-child) button, .field.has-addons .control .input:not(:only-child):not(:last-child) input, .field.has-addons .control .input:not(:only-child):not(:last-child) select, .field.has-addons .control .select:not(:only-child):not(:last-child) button, .field.has-addons .control .select:not(:only-child):not(:last-child) input, .field.has-addons .control .select:not(:only-child):not(:last-child) select {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0; }
   .field.has-addons .control.is-expanded .select {
     width: 100%; }
   .field.has-addons .control:first-child .is-rounded {

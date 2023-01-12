@@ -12196,6 +12196,8 @@ aside, .aside {
         display: list-item; }
       aside ul.menu-list.is-open li, aside ul.menu-list.is-hovered li, .aside ul.menu-list.is-open li, .aside ul.menu-list.is-hovered li {
         background-color: #363636; }
+    aside ul.menu-list.is-open:has(~ .is-hovered), .aside ul.menu-list.is-open:has(~ .is-hovered) {
+      height: 0; }
     aside ul.menu-list li, .aside ul.menu-list li {
       color: white;
       background-color: #363636; }

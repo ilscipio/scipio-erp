@@ -138,6 +138,10 @@ aside, .aside {
         background-color: $sidebar-li-background;
       }
     }
+    &.is-open:has(~ .is-hovered){
+      //if sibbling exists, remove the height of the other opened element
+      height: 0;
+    }
 
     li {
       color: $sidebar-li;

@@ -12208,8 +12208,16 @@ aside, .aside {
         aside ul.menu-list li a:focus, aside ul.menu-list li a:focus-within, aside ul.menu-list li a:hover, aside ul.menu-list li a.is-active, .aside ul.menu-list li a:focus, .aside ul.menu-list li a:focus-within, .aside ul.menu-list li a:hover, .aside ul.menu-list li a.is-active {
           color: #BD1F1E;
           background-color: #363636; }
-      aside ul.menu-list li.button a:focus, aside ul.menu-list li.button a:focus-within, aside ul.menu-list li.button a:hover, aside ul.menu-list li.button a.is-active, .aside ul.menu-list li.button a:focus, .aside ul.menu-list li.button a:focus-within, .aside ul.menu-list li.button a:hover, .aside ul.menu-list li.button a.is-active {
-        background-color: transparent; }
+      aside ul.menu-list li.button, .aside ul.menu-list li.button {
+        border: none;
+        padding: 0px;
+        margin: 0px;
+        background: #132C47;
+        border-radius: 0px;
+        text-align: left;
+        height: auto; }
+        aside ul.menu-list li.button a:focus, aside ul.menu-list li.button a:focus-within, aside ul.menu-list li.button a:hover, aside ul.menu-list li.button a.is-active, .aside ul.menu-list li.button a:focus, .aside ul.menu-list li.button a:focus-within, .aside ul.menu-list li.button a:hover, .aside ul.menu-list li.button a.is-active {
+          background-color: transparent; }
       aside ul.menu-list li.is-active > a, .aside ul.menu-list li.is-active > a {
         color: #de3130;
         background-color: #363636;

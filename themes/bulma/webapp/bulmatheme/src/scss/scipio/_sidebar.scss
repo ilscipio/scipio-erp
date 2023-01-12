@@ -162,6 +162,14 @@ aside, .aside {
       }
 
       &.button {
+        border:none;
+        padding:0px;
+        margin:0px;
+        background: $primary;
+        border-radius: 0px;
+        text-align:left;
+        height:auto;
+
         a {
           &:focus,
           &:focus-within,

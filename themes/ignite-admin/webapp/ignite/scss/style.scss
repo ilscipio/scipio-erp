@@ -80,21 +80,34 @@
         margin-top: inherit;
         flex-basis: auto;
       }
+
+      &:has(+ .field-entry-postfix) {
+        padding-right:0;
+      }
     }
 
     .field-entry-postfix{
       display: flex;
       align-items: start;
-      margin-left:-30px;
+      align-content: start;
       flex-basis: auto;
+      flex-wrap: wrap;
+      margin-bottom:10px;
+
+      padding-left:0;
+
+      select.field-inline {
+        width:100%;
+      }
 
 
       .btn, .btn-sm, .btn-lg{
         margin-top: inherit;
         line-height: 1.5;
         padding: $btn-padding-y $btn-padding-x;
-        background-color: #f0f3f5;
-        border: 1px solid #e4e7ea;
+        color: $gray-dark;
+        background-color: $gray-lightest;
+        border: 1px solid $border-color;
       }
     }
   }

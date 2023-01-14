@@ -345,6 +345,15 @@ public final class ComponentConfig {
     }
 
     /**
+     * Returns the component by root location.
+     * <p>SCIPIO: NOTE: Per legacy behavior, this returns even disabled components (unlike {@link #getAllComponents()}).</p>
+     * <p>SCIPIO: 3.0.0: Added explicit helper.</p>
+     */
+    public static ComponentConfig getComponentConfigByLocation(String rootLocation) throws ComponentException {
+        return getComponentConfig(null, rootLocation);
+    }
+
+    /**
      * Returns the component by global name.
      * <p>
      * SCIPIO: NOTE: Per legacy behavior, this returns even disabled components (unlike {@link #getAllComponents()}).
@@ -419,28 +428,48 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Returns the given component config IF it is enabled, otherwise throws exception.
-     * Added 2018-10-29.
+     * Returns the given component config IF it is enabled, otherwise throws exception (SCIPIO).
+     * <p>SCIPIO: 2018-10-29: Added.</p>
      */
     public static ComponentConfig getEnabledComponentConfig(String globalName) throws ComponentException {
         ComponentConfig componentConfig = getEnabledComponentConfigOrNull(globalName);
         if (componentConfig == null) {
-            throw new ComponentException.ComponentNotFoundException("No enabled component found named : " + globalName);
+            throw new ComponentException.ComponentNotFoundException("No enabled component found named: " + globalName);
         }
         return componentConfig;
     }
 
     /**
-     * SCIPIO: Returns the given component config IF it is enabled, otherwise null.
-     * Added 2018-10-29.
+     * Returns the given component config IF it is enabled, otherwise throws exception (SCIPIO).
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static ComponentConfig getEnabledComponentConfigByLocation(String rootLocation) throws ComponentException {
+        ComponentConfig componentConfig = getEnabledComponentConfigByLocationOrNull(rootLocation);
+        if (componentConfig == null) {
+            throw new ComponentException.ComponentNotFoundException("No enabled component found for location: " + rootLocation);
+        }
+        return componentConfig;
+    }
+
+    /**
+     * Returns the given component config IF it is enabled, otherwise null (SCIPIO).
+     * <p>SCIPIO: 2018-10-29: Added.</p>
      */
     public static ComponentConfig getEnabledComponentConfigOrNull(String globalName) {
         return componentConfigCache.fromGlobalName(globalName);
     }
 
     /**
-     * SCIPIO: Returns true if the named component is present and enabled.
-     * Added 2018-10-29.
+     * Returns the given component config IF it is enabled, otherwise null (SCIPIO).
+     * <p>SCIPIO: 3.0.0: Added explicit helper.</p>
+     */
+    public static ComponentConfig getEnabledComponentConfigByLocationOrNull(String rootLocation) {
+        return componentConfigCache.fromRootLocation(rootLocation);
+    }
+
+    /**
+     * Returns true if the named component is present and enabled (SCIPIO).
+     * <p>SCIPIO: 2018-10-29: Added.</p>
      */
     public static boolean isComponentEnabled(String globalName) {
         return (componentConfigCache.fromGlobalName(globalName) != null);
@@ -1490,6 +1519,13 @@ public final class ComponentConfig {
         }
 
         ComponentConfig fromRootLocation(String rootLocation) {
+            // SCIPIO: 3.0.0: Since ComponentConfig constructor converts this.rootLocation to forward slashes and this
+            // is the format in the cache, we must also do it here, as well as ensure trailing slash
+            if (!rootLocation.endsWith("/")) {
+                rootLocation = rootLocation + "/";
+            }
+            rootLocation = rootLocation.replace('\\', '/');
+
             String globalName = componentLocations.get(rootLocation);
             if (globalName == null) {
                 return null;

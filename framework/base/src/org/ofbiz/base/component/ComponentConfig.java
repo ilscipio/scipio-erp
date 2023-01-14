@@ -1401,66 +1401,15 @@ public final class ComponentConfig {
         }
     }
 
-    /* SCIPIO: 2018-10-18: This entire class has a completely anti-server thread sync design, 
-       so it is replaced below with an immutable version with non-blocking reads
-    // ComponentConfig instances need to be looked up by their global name and root location,
-    // so this class encapsulates the Maps and synchronization code required to do that.
-    private static final class ComponentConfigCache {
-        // Key is the global name.
-        private final Map<String, ComponentConfig> componentConfigs = new LinkedHashMap<>();
-        // Root location mapped to global name.
-        private final Map<String, String> componentLocations = new HashMap<>();
-
-        private synchronized ComponentConfig fromGlobalName(String globalName) {
-            return componentConfigs.get(globalName);
-        }
-
-        private synchronized ComponentConfig fromRootLocation(String rootLocation) {
-            String globalName = componentLocations.get(rootLocation);
-            if (globalName == null) {
-                return null;
-            }
-            return componentConfigs.get(globalName);
-        }
-
-        private synchronized ComponentConfig put(ComponentConfig config) {
-            String globalName = config.getGlobalName();
-            String fileLocation = config.getRootLocation();
-            componentLocations.put(fileLocation, globalName);
-            return componentConfigs.put(globalName, config);
-        }
-
-        private synchronized Collection<ComponentConfig> values() {
-            return Collections.unmodifiableList(new ArrayList<>(componentConfigs.values()));
-        }
-
-        private synchronized void clear() { // SCIPIO
-            componentConfigs.clear();
-            componentLocations.clear();
-        }
-
-        private synchronized void putAll(Collection<? extends ComponentConfig> configList) { // SCIPIO
-            for(ComponentConfig config : configList) {
-                put(config);
-            }
-        }
-
-        private synchronized void clearAndPutAll(Collection<? extends ComponentConfig> configList) { // SCIPIO: Atomic clear + putAll method.
-            clear();
-            putAll(configList);
-        }
-    }
-    */
-
     /**
      * ComponentConfig instances need to be looked up by their global name and root location,
      * so this class encapsulates the Maps and synchronization code required to do that.
-     * <p>
-     * SCIPIO: Component config cache version that is non-blocking for reads. Each change creates a new instance.
-     * <p>
-     * Re-written 2018-10-18.
+     *
+     * <p>SCIPIO: Component config cache version that is non-blocking for reads. Each change creates a new instance.</p>
+     *
+     * <p>SCIPIO: 2018-10-18: Rewritten for thread-safe design with non-blocking reads (previous stock class was
+     * completely thread-unsafe).</p>
      */
-    @SuppressWarnings("unused")
     private static final class ComponentConfigCache {
         // Key is the global name.
         private final Map<String, ComponentConfig> componentConfigs;
@@ -1541,7 +1490,6 @@ public final class ComponentConfig {
             return componentConfigList.size();
         }
     }
-
 
     /**
      * An object that models the <code>&lt;entity-resource&gt;</code> element.

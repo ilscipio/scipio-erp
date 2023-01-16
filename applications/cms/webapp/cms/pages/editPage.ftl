@@ -62,7 +62,17 @@
               <#local containerClass = addClassArg(containerClass, "page-attr-type-longtext")>
               <#-- DEV NOTE: the rich editor should only display FTL-related functions 
                 if fieldObj.expandLang == "FTL" -->
-              <@field label=fieldLabel labelDetail=labelDetail type="textarea" class="+editor" name=name placeholder=(fieldObj.defaultValue!"") tooltip=tooltip required=required maxlength=maxLength id=id value=value containerClass=containerClass/>
+                <#if isOpenAIComponentPresent>
+                    <#if template?has_content >
+                    <#local productStoreId=(delegator.findOne("WebSite", {"webSiteId":parameters.webSiteId!}, true).productStoreId)!"" />
+                    <#local postfixContent>${generateOpenAICMSPostfix(id,"cmspage.longtext",pageId!,maxlength!null)}</#local>
+                    <@field label=fieldLabel labelDetail=labelDetail type="textarea" class="+editor" name=name placeholder=(fieldObj.defaultValue!"") tooltip=tooltip required=required maxlength=maxLength id=id value=value containerClass=containerClass postfix=true postfixContent=postfixContent attribs={"data-scp-field-name":fieldLabel}/>
+                    <#else>
+                        <@field label=fieldLabel labelDetail=labelDetail type="textarea" class="+editor" name=name placeholder=(fieldObj.defaultValue!"") tooltip=tooltip required=required maxlength=maxLength id=id value=value containerClass=containerClass/>
+                    </#if>
+                <#else>
+                    <@field label=fieldLabel labelDetail=labelDetail type="textarea" class="+editor" name=name placeholder=(fieldObj.defaultValue!"") tooltip=tooltip required=required maxlength=maxLength id=id value=value containerClass=containerClass/>
+                </#if>
             <#break>
             <#case "BOOLEAN">
               <#local containerClass = addClassArg(containerClass, "page-attr-type-boolean")>
@@ -94,7 +104,17 @@
             <#case "SHORT_TEXT">
                 <#local containerClass = addClassArg(containerClass, "page-attr-type-shorttext")>
             <#default>
-                <@field label=fieldLabel labelDetail=labelDetail type="input" name=name placeholder=(fieldObj.defaultValue!"") tooltip=tooltip required=required maxlength=maxLength id=id value=value containerClass=containerClass/>
+                <#if isOpenAIComponentPresent>
+                    <#if template?has_content >
+                        <#local productStoreId=(delegator.findOne("WebSite", {"webSiteId":parameters.webSiteId!}, true).productStoreId)!"" />
+                        <#local postfixContent>${generateOpenAICMSPostfix(id,"cmspage.shorttext",pageId!,maxlength!-1)}</#local>
+                        <@field label=fieldLabel labelDetail=labelDetail type="input" name=name placeholder=(fieldObj.defaultValue!"") tooltip=tooltip required=required maxlength=maxLength id=id value=value containerClass=containerClass postfix=true postfixContent=postfixContent attribs={"data-scp-field-name":fieldLabel}/>
+                    <#else>
+                        <@field label=fieldLabel labelDetail=labelDetail type="input" name=name placeholder=(fieldObj.defaultValue!"") tooltip=tooltip required=required maxlength=maxLength id=id value=value containerClass=containerClass/>
+                    </#if>
+                <#else>
+                    <@field label=fieldLabel labelDetail=labelDetail type="input" name=name placeholder=(fieldObj.defaultValue!"") tooltip=tooltip required=required maxlength=maxLength id=id value=value containerClass=containerClass/>
+                </#if>
         </#switch>
     </#if>
 </#macro>

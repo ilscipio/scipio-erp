@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.ofbiz.base.util.ScipioHttpClient;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -91,6 +92,12 @@ public abstract class CmsControlUtil {
 
     public static boolean verifyValidAccessToken(HttpServletRequest request, Delegator delegator, CmsWebSiteConfig webSiteConfig, CmsCallType renderMode) {
         if (renderMode == CmsCallType.OFBIZ_PREVIEW || webSiteConfig.isRequireLiveAccessToken()) {
+            String clientUserAgent = request.getHeader("user-agent");
+            //Skip validation by internal scipio requests
+            if(ScipioHttpClient.Config.DEFAULT_USER_AGENT.equals(clientUserAgent)){
+                return true;
+            }
+
             String accessToken = CmsControlUtil.getAccessTokenParam(request, webSiteConfig);
             // TODO: REVIEW: the request URI here might not necessarily match one of the page's URIs
             // but won't matter until isValidAccessToken actively checks it

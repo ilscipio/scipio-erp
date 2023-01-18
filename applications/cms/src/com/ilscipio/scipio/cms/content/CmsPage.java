@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -800,7 +801,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     public Map<String, Map<String, ?>> getProducts() {
         Map<String, Map<String, ?>> products = this.products;
         if (products == null) {
-            products = new HashMap<>();
+            products = new LinkedHashMap<>();
             try {
                 List<GenericValue> assocEntities = entity.getRelated("CmsPageProductAssoc", null, null, false);
                 GenericValue asse;

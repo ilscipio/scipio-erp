@@ -2,6 +2,7 @@ package com.ilscipio.scipio.cms.content;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -107,11 +108,11 @@ public class CmsPageContent extends AbstractPreloadable implements Serializable,
     }
 
     public Map<String, Map<String, ?>> getProducts() {
-        return page.getProducts();
+        return (page != null) ? page.getProducts() : Collections.emptyMap();
     }
 
     public Map<String, ?> getProduct(String name) {
-        return page.getProduct(name);
+        return (page != null) ? page.getProduct(name) : null;
     }
 
     public Object getRaw(Object key) {

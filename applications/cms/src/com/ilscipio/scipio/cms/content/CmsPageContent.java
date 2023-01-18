@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 
 import com.ilscipio.scipio.cms.data.Preloadable;
@@ -42,7 +43,9 @@ public class CmsPageContent extends AbstractPreloadable implements Serializable,
     private Map<String, Object> map = new HashMap<>();
 
     public CmsPageContent(Map<String, ?> rootMap, CmsPage page) {
-        map.putAll(rootMap);
+        if (rootMap != null) {
+            map.putAll(rootMap);
+        }
         this.page = page;
     }
 
@@ -103,8 +106,20 @@ public class CmsPageContent extends AbstractPreloadable implements Serializable,
 
     public CmsPageContent setAssetContent(String assetName, CmsPageContent assetContent) {
         put(assetName, assetContent);
-        CmsPageContent content = new CmsPageContent(this, this.page);
-        return content;
+        // SCIPIO: 3.0.0: This appears counterproductive and was never used
+        //CmsPageContent content = new CmsPageContent(this, this.page);
+        //return content;
+        return this;
+    }
+
+    public CmsPageContent addAssetContent(String assetName, Map<String, ?> fields) {
+        CmsPageContent newAssetContent = new CmsPageContent(UtilGenerics.cast(get(assetName)), getPage());
+        newAssetContent.putAll(fields);
+        put(assetName, newAssetContent);
+        // SCIPIO: 3.0.0: This appears counterproductive and was never used
+        //CmsPageContent content = new CmsPageContent(this, this.page);
+        //return content;
+        return this;
     }
 
     public Map<String, Map<String, ?>> getProducts() {

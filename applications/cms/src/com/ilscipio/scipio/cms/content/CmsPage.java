@@ -500,48 +500,55 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     }
 
     protected CmsPageContent getActiveContentModel(boolean cacheActiveVersion) {
-        return getContentModel(null, null, cacheActiveVersion);
+        return getContentModel(null, null, false, cacheActiveVersion);
     }
 
-    public CmsPageContent getContentModel(CmsPageContext context, String versionId) {
-        return getContentModel(context, versionId, true);
+    public CmsPageContent getContentModel(CmsPageContext context, String versionId, boolean clone) {
+        return getContentModel(context, versionId, clone, true);
     }
 
     /**
-     * Retrieves the content model of this page. If the context specifies this
-     * call to be a preview call the last version or given version (as parameter
-     * "version") is returned. Otherwise, the current live content is returned.
-     * The content is preprocessed according to the given page call context.
-     * <p>
-     * 2016: explicit versionId new, for preview mode; this shouldn't check request parameters
+     * Retrieves the content model of this page.
+     *
+     * <p>If the context specifies this call to be a preview call the last
+     * version or given version (as parameter "version") is returned. Otherwise, the current live content is returned.
+     * The content is preprocessed according to the given page call context.</p>
+     *
+     * <p>SCIPIO: 2016: explicit versionId new, for preview mode; this shouldn't check request parameters.</p>
+     * <p>SCIPIO: 3.0.0: Supports explicit versionId without preview mode (all callers already check preview mode
+     * before passing versionId, as they should).</p>
      */
-    protected CmsPageContent getContentModel(CmsPageContext context, String versionId, boolean cacheActiveVersion) {
-        // Initialize contentModel in any case
+    public CmsPageContent getContentModel(CmsPageContext context, String versionId, boolean clone, boolean cacheActiveVersion) {
+        if (context != null && context.isPreview()) {
+            CmsPageVersion previewVersion;
+            if (UtilValidate.isNotEmpty(versionId)) {
+                previewVersion = getVersion(versionId);
+                if (previewVersion == null) {
+                    Debug.logWarning("Could not find page [" + getId() + "] version [" + versionId + "] (preview); using active", module);
+                }
+            } else {
+                previewVersion = getActiveVersion();
+            }
+            if (previewVersion != null) {
+                return new CmsPageContent(previewVersion.getContent(), this);
+            }
+        } else if (UtilValidate.isNotEmpty(versionId)) {
+            // SCIPIO: 3.0.0: All callers already check if isPreview() true before specifying versionId, so
+            // we can safely support explicit versionId using this method
+            CmsPageVersion version = getVersion(versionId);
+            if (version != null) {
+                return new CmsPageContent(version.getContent(), this);
+            } else {
+                Debug.logWarning("Could not find page [" + getId() + "] version [" + versionId + "]; using active", module);
+            }
+        }
+
         CmsPageContent activeContentModel = this.activeContentModel;
         if (activeContentModel == null) {
             activeContentModel = new CmsPageContent(getActiveOrNewVersion(cacheActiveVersion).getContent(), this);
             this.activeContentModel = activeContentModel;
         }
-
-        CmsPageContent cm = null;
-        /*
-         * Set content model for this render to last version or given version if
-         * page view is in preview mode.
-         */
-        if (context != null && context.isPreview()) {
-            CmsPageVersion previewVersion;
-            if (UtilValidate.isNotEmpty(versionId)) {
-                previewVersion = this.getVersion(versionId);
-            } else {
-                previewVersion = getActiveVersion();
-            }
-
-            if (previewVersion != null){
-                cm = new CmsPageContent(previewVersion.getContent(), this);
-            }
-        }
-
-        return cm != null ? cm : activeContentModel;
+        return clone ? activeContentModel.clone() : activeContentModel;
     }
 
     /**
@@ -1977,10 +1984,7 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
          * the page instance.
          */
         public void processAndRender(Writer out, CmsPageContext pageContext, String versionId) {
-            CmsPageContent content = page.getContentModel(pageContext, versionId);
-            if (content != null) {
-                content = content.clone(); // 2016: CLONE because content member on CmsPage instance may be immutable
-            }
+            CmsPageContent content = page.getContentModel(pageContext, versionId, true);
             MapStack<String> context = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
             PtRenderArgs renderArgs = new PtRenderArgs(out, context, content, pageContext, null, null, false);
             renderArgs.setRunPageScripts(true);

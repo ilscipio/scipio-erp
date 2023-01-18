@@ -289,7 +289,7 @@ public class CmsAssetRenderer {
 
         Map<String, String> renders = new LinkedHashMap<>();
         for (CmsAssetTemplate assetTemplate : pageTemplate.getAssetTemplates()) {
-            String assetName = assetTemplate.getName();
+            String assetName = assetTemplate.getImportName();
             StringWriter writer = new StringWriter();
             renderByName(assetName, writer);
             renders.put(assetName, writer.toString());

@@ -154,7 +154,11 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
         MapStack<String> context = CmsRenderUtil.getRenderContextAlways(env);
         CmsPageContext pageContext = CmsRenderUtil.getPageContext(context);
         CmsPageContent pageContent = CmsRenderUtil.getTopPageContent(context);
+        CmsPage page = CmsRenderUtil.getPage(context); // NOTE: May be null (supported)
         CmsPageTemplate pageTemplate = CmsRenderUtil.getPageTemplate(context);
+        if (pageTemplate == null && page != null) {
+            pageTemplate = page.getTemplate();
+        }
 
         boolean newCmsCtx = false;
         if (pageContext == null) {
@@ -162,7 +166,7 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
             pageContext = CmsPageContext.makeFromGenericContext(context);
         }
         if (pageContent == null) {
-            pageContent = new CmsPageContent((CmsPage) null);
+            pageContent = new CmsPageContent(page); // NOTE: page may be null (supported)
         }
 
         Map<String, TemplateModel> params = UtilGenerics.checkMap(paramsUntyped);

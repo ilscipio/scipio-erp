@@ -39,55 +39,57 @@ fieldset{
 
     .control {
 
-      span{
-        @include control();
-        background: $grey-light;
-        color: findColorInvert($grey-light);
-      }
+      :not(.is-checkradio){
+        span{
+          @include control();
+          background: $grey-light;
+          color: findColorInvert($grey-light);
+        }
 
-      span,.button,.input,.select{
-        &:not(:only-child){
-          &:not(:first-child){
-            margin-left: -4px;
-            border-bottom-left-radius: 0;
-            border-top-left-radius: 0;
-
-            button,input,select{
+        span,.button,.input,.select{
+          &:not(:only-child){
+            &:not(:first-child){
+              margin-left: -4px;
               border-bottom-left-radius: 0;
               border-top-left-radius: 0;
+
+              button,input,select{
+                border-bottom-left-radius: 0;
+                border-top-left-radius: 0;
+              }
+
             }
 
-          }
-
-          &:not(:last-child){
-            border-bottom-right-radius: 0;
-            border-top-right-radius: 0;
-
-            button,input,select{
+            &:not(:last-child){
               border-bottom-right-radius: 0;
               border-top-right-radius: 0;
+
+              button,input,select{
+                border-bottom-right-radius: 0;
+                border-top-right-radius: 0;
+              }
             }
           }
         }
-      }
 
 
-      &.is-expanded{
-        .select{
-          width:100%;
+        &.is-expanded{
+          .select{
+            width:100%;
+          }
         }
-      }
 
-      &:first-child {
-        .is-rounded {
-          border-bottom-left-radius: $radius-rounded;
-          border-top-left-radius: $radius-rounded;
+        &:first-child {
+          .is-rounded {
+            border-bottom-left-radius: $radius-rounded;
+            border-top-left-radius: $radius-rounded;
+          }
         }
-      }
-      &:last-child {
-        .is-rounded {
-          border-bottom-right-radius: $radius-rounded;
-          border-top-right-radius: $radius-rounded;
+        &:last-child {
+          .is-rounded {
+            border-bottom-right-radius: $radius-rounded;
+            border-top-right-radius: $radius-rounded;
+          }
         }
       }
     }

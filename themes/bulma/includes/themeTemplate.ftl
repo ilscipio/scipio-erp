@@ -753,7 +753,7 @@ origArgs={} passArgs={} required=false noLabelCell=true noInputCell=true catchAr
 
     <#if (postfix?has_content && postfix)|| (prefix?has_content && prefix)>
         <#if container>
-            <#if !((labelArea && labelPosition == "left") || (labelArea && labelPosition == "right"))>
+            <#if ((labelArea && labelPosition == "left") || (labelArea && labelPosition == "right"))>
                 <#local containerClass = addClassArg(containerClass,"has-addons")>
             </#if>
         </#if>

@@ -32,6 +32,7 @@ public class CmsAssetRenderer {
     protected CmsPageContent pageContent;
     protected CmsPageTemplate pageTemplate;
     protected CmsPage page; // NOTE: page is actually optional to the render in multiple cases (global def)
+    protected Boolean newCmsCtx;
 
     protected String def; // "global"
     protected String webSiteId;
@@ -111,6 +112,15 @@ public class CmsAssetRenderer {
      */
     public CmsAssetRenderer page(CmsPage page) {
         this.page = page;
+        return this;
+    }
+
+    public Boolean newCmsCtx() {
+        return newCmsCtx;
+    }
+
+    public CmsAssetRenderer newCmsCtx(Boolean newCmsCtx) {
+        this.newCmsCtx = newCmsCtx;
         return this;
     }
 
@@ -307,7 +317,10 @@ public class CmsAssetRenderer {
             pageTemplate = page.getTemplate();
         }
 
-        boolean newCmsCtx = false;
+        // TODO: REVIEW: Contrary to CmsAssetDirective, typically we need this inverted because presence of CmsPageContext
+        // is not indicative of context setup having been done or not
+        //boolean newCmsCtx = false;
+        boolean newCmsCtx = !Boolean.FALSE.equals(this.newCmsCtx);
         if (pageContext == null) {
             newCmsCtx = true;
             pageContext = CmsPageContext.makeFromGenericContext(context);
@@ -381,7 +394,11 @@ public class CmsAssetRenderer {
                     }
                 }
             } else {
-                if (newCmsCtx || pageTemplate == null) {
+                // TODO: REVIEW: We must allow newCmsCtx here because the CmsAssetDirective logic about context preparation
+                //  typically will not hold as the page is likely to be already specified.
+                //  Should see if this logic should also be extended to CmsAssetDirective in some way.
+                //if (newCmsCtx || pageTemplate == null) {
+                if (pageTemplate == null) {
                     throw new CmsException("Current rendering context has no existing cmsPageContext or cmsPageTemplate"
                             + " - assets cannot be rendered in non-CMS context in non-global mode (did you mean to use def=\"global\"?)");
                 }

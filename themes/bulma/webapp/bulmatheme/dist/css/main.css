@@ -12377,6 +12377,15 @@ is-rounded
   margin-bottom: .5em; }
   .button.is-rounded, .ui-dialog-content button.is-rounded {
     border-radius: 9999px; }
+  .button .button, .ui-dialog-content button .button, .button .ui-dialog-content button, .ui-dialog-content .button button, .ui-dialog-content button button {
+    padding: inherit;
+    background: inherit;
+    border: inherit;
+    color: inherit;
+    margin: inherit; }
+    .button .button:hover, .ui-dialog-content button .button:hover, .button .ui-dialog-content button:hover, .ui-dialog-content .button button:hover, .ui-dialog-content button button:hover {
+      background: inherit;
+      color: inherit; }
 
 fieldset legend {
   cursor: pointer;

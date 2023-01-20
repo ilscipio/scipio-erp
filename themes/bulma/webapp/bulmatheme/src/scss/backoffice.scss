@@ -19,6 +19,19 @@ is-rounded
   &.is-rounded {
     border-radius: $radius-rounded
   }
+
+  .button {
+    padding:inherit;
+    background:inherit;
+    border:inherit;
+    color:inherit;
+    margin:inherit;
+
+    &:hover{
+      background:inherit;
+      color:inherit;
+    }
+  }
 }
 
 fieldset{

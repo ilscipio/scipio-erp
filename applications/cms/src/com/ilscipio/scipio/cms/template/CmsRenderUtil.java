@@ -248,6 +248,10 @@ public abstract class CmsRenderUtil {
 
     // CONTEXT VARIABLE ACCESSORS
 
+    public static boolean hasCmsRenderContext(Map<String, Object> context) {
+        return CmsRenderTemplate.TemplateRenderer.hasCmsRenderContext(context);
+    }
+
     @SuppressWarnings("unchecked")
     public static MapStack<String> getRenderContext(Environment env) throws TemplateModelException {
         TemplateModel pcm = env.getVariable("context");

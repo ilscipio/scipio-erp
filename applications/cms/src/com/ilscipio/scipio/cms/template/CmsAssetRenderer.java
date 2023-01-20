@@ -32,7 +32,6 @@ public class CmsAssetRenderer {
     protected CmsPageContent pageContent;
     protected CmsPageTemplate pageTemplate;
     protected CmsPage page; // NOTE: page is actually optional to the render in multiple cases (global def)
-    protected Boolean newCmsCtx;
 
     protected String def; // "global"
     protected String webSiteId;
@@ -112,15 +111,6 @@ public class CmsAssetRenderer {
      */
     public CmsAssetRenderer page(CmsPage page) {
         this.page = page;
-        return this;
-    }
-
-    public Boolean newCmsCtx() {
-        return newCmsCtx;
-    }
-
-    public CmsAssetRenderer newCmsCtx(Boolean newCmsCtx) {
-        this.newCmsCtx = newCmsCtx;
         return this;
     }
 
@@ -320,9 +310,7 @@ public class CmsAssetRenderer {
         // TODO: REVIEW: Contrary to CmsAssetDirective, typically we need this inverted because presence of CmsPageContext
         // is not indicative of context setup having been done or not
         //boolean newCmsCtx = false;
-        boolean newCmsCtx = !Boolean.FALSE.equals(this.newCmsCtx);
         if (pageContext == null) {
-            newCmsCtx = true;
             pageContext = CmsPageContext.makeFromGenericContext(context);
         }
         if (pageContent == null) {
@@ -444,7 +432,7 @@ public class CmsAssetRenderer {
                         out = this.out;
                     }
                     assetTemplate.getRenderer().processAndRender(new CmsAssetTemplate.AssetTemplateRenderer.AtRenderArgs(out, stackContext, assetContent, pageContext,
-                            ctxVars, ovrdCtxVars, true, newCmsCtx));
+                            ctxVars, ovrdCtxVars, true));
                 } else if (mode == CmsAssetDirective.Mode.INCLUDE) {
                     assetTemplate.getRenderer().includeTemplate(env);
                 } else if (mode == CmsAssetDirective.Mode.IMPORT) {

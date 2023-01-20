@@ -287,7 +287,8 @@ public interface CmsRenderTemplate extends Serializable {
             private boolean skipExtraCommonCtx;
             private boolean protectScope;
 
-            private boolean newCmsCtx = true; // high-level flag mainly used by subclasses
+            private Boolean newCmsCtx; // high-level flag mainly used by subclasses
+            private Boolean newScreenCtx; // high-level flag mainly used by subclasses
 
             private FlexibleStringExpander txTimeoutExdr;
 
@@ -385,11 +386,17 @@ public interface CmsRenderTemplate extends Serializable {
                 this.protectScope = protectScope;
             }
             public CmsPage getPage() { return (content != null) ? content.getPage() : null; } // workaround for lack of CmsPage property
-            public boolean isNewCmsCtx() {
+            public Boolean getNewCmsCtx() {
                 return newCmsCtx;
             }
-            public void setNewCmsCtx(boolean newCmsCtx) {
+            public void setNewCmsCtx(Boolean newCmsCtx) {
                 this.newCmsCtx = newCmsCtx;
+            }
+            public Boolean getNewScreenCtx() {
+                return newScreenCtx;
+            }
+            public void setNewScreenCtx(Boolean newScreenCtx) {
+                this.newScreenCtx = newScreenCtx;
             }
             public FlexibleStringExpander getTxTimeoutExdr() {
                 return txTimeoutExdr;
@@ -593,14 +600,16 @@ public interface CmsRenderTemplate extends Serializable {
                 populateContextForRenderCmsOnly(renderArgs.getContext(), null,
                         renderArgs.getContent(), renderArgs.getPageContext(), getRenderPageTemplate(renderArgs));
             } else {
-                populateContextForRender(renderArgs.getContext(), null,
-                        renderArgs.getContent(), renderArgs.getPageContext(), getRenderPageTemplate(renderArgs));
+                populateSystemRenderContextForRender(renderArgs.getContext(), renderArgs.getContent(),
+                        renderArgs.getPageContext(), getRenderPageTemplate(renderArgs), renderArgs.getOut());
             }
-            if (!renderArgs.isSystemCtxCmsOnly()) {
-                populateSystemViewHandlerRenderContext(renderArgs.getContext(),
-                        renderArgs.getPageContext().getRequest(), renderArgs.getPageContext().getResponse(),
-                        renderArgs.getOut());
-            }
+        }
+
+        public static void populateSystemRenderContextForRender(MapStack<String> context, CmsPageContent pageContent,
+                                                                CmsPageContext pageContext, CmsPageTemplate pageTemplate,
+                                                                Writer out) {
+            populateContextForRender(context, null, pageContent, pageContext, pageTemplate);
+            populateSystemViewHandlerRenderContext(context, pageContext.getRequest(), pageContext.getResponse(), out);
         }
 
         /**
@@ -654,13 +663,13 @@ public interface CmsRenderTemplate extends Serializable {
 
         /**
          * Populates context for a new request.
-         * <p>
-         * Based on {@link org.ofbiz.widget.renderer.ScreenRenderer#populateContextForRequest}.
-         * NOTE: 2019-06-03: Unlike ScreenRenderer, this does <b>not</b> protect scope - caller must do it as needed.
-         * <p>
-         * DEV NOTE: MUST BE MAINTAINED TO MATCH <code>ScreenRenderer.populateContextForRequest</code>.
+         *
+         * <p>Based on {@link org.ofbiz.widget.renderer.ScreenRenderer#populateContextForRequest}.
+         * NOTE: 2019-06-03: Unlike ScreenRenderer, this does <b>not</b> protect scope - caller must do it as needed.</p>
+         *
+         * <p>DEV NOTE: MUST BE MAINTAINED TO MATCH <code>ScreenRenderer.populateContextForRequest</code>.
          * Try to keep as close as possible in every way to that method (down to code style),
-         * to minimize chances of missing anything.
+         * to minimize chances of missing anything.</p>
          */
         public static void populateContextForRender(MapStack<String> context, ScreenRenderer screens, CmsPageContent pageContent, CmsPageContext pageContext, CmsPageTemplate pageTemplate) {
             // top request-/page-level cms-specific variables
@@ -684,6 +693,10 @@ public interface CmsRenderTemplate extends Serializable {
             context.put("cmsIsPreview", pageContext.isPreview());
             context.put("cmsCtxSysVarNames", cmsCtxSysVarNames);
             context.put(CmsControlState.ATTR, pageContext.getControlState());
+        }
+
+        public static boolean hasCmsRenderContext(Map<String, Object> context) {
+            return (context.get("cmsPageContext") != null);
         }
 
         /**

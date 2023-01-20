@@ -307,9 +307,10 @@ public class CmsAssetRenderer {
             pageTemplate = page.getTemplate();
         }
 
-        boolean newCmsCtx = false;
+        // TODO: REVIEW: Contrary to CmsAssetDirective, typically we need this inverted because presence of CmsPageContext
+        // is not indicative of context setup having been done or not
+        //boolean newCmsCtx = false;
         if (pageContext == null) {
-            newCmsCtx = true;
             pageContext = CmsPageContext.makeFromGenericContext(context);
         }
         if (pageContent == null) {
@@ -381,7 +382,11 @@ public class CmsAssetRenderer {
                     }
                 }
             } else {
-                if (newCmsCtx || pageTemplate == null) {
+                // TODO: REVIEW: We must allow newCmsCtx here because the CmsAssetDirective logic about context preparation
+                //  typically will not hold as the page is likely to be already specified.
+                //  Should see if this logic should also be extended to CmsAssetDirective in some way.
+                //if (newCmsCtx || pageTemplate == null) {
+                if (pageTemplate == null) {
                     throw new CmsException("Current rendering context has no existing cmsPageContext or cmsPageTemplate"
                             + " - assets cannot be rendered in non-CMS context in non-global mode (did you mean to use def=\"global\"?)");
                 }
@@ -427,7 +432,7 @@ public class CmsAssetRenderer {
                         out = this.out;
                     }
                     assetTemplate.getRenderer().processAndRender(new CmsAssetTemplate.AssetTemplateRenderer.AtRenderArgs(out, stackContext, assetContent, pageContext,
-                            ctxVars, ovrdCtxVars, true, newCmsCtx));
+                            ctxVars, ovrdCtxVars, true));
                 } else if (mode == CmsAssetDirective.Mode.INCLUDE) {
                     assetTemplate.getRenderer().includeTemplate(env);
                 } else if (mode == CmsAssetDirective.Mode.IMPORT) {

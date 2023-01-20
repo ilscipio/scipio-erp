@@ -34,6 +34,7 @@ import com.ilscipio.scipio.cms.data.CmsObjectCache;
 import com.ilscipio.scipio.cms.data.CmsObjectCache.CacheEntry;
 import com.ilscipio.scipio.cms.template.CmsScriptTemplate.CmsScriptTemplateAssoc;
 import com.ilscipio.scipio.cms.template.CmsTemplateVersion.ActiveVersionWorker;
+import org.ofbiz.widget.renderer.ScreenRenderer;
 
 /**
  * 2016: Asset template
@@ -470,9 +471,8 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
                 super();
             }
             public AtRenderArgs(Writer out, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
-                                Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean protectScope, boolean newCmsCtx) {
+                                Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean protectScope) {
                 super(out, context, content, pageContext, earlyCtxVars, ovrdCtxVars, protectScope);
-                setNewCmsCtx(newCmsCtx);
             }
         }
 
@@ -483,7 +483,11 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
          */
         @Override
         public Object processAndRender(RenderArgs renderArgs) throws CmsException {
-            if (renderArgs.isNewCmsCtx()) {
+            Boolean newCmsCtx = renderArgs.getNewCmsCtx();
+            if (newCmsCtx == null) {
+                newCmsCtx = !hasCmsRenderContext(renderArgs.getContext());
+            }
+            if (newCmsCtx) {
                 if (renderArgs.getPageContext() == null) {
                     renderArgs.setPageContext(CmsPageContext.makeFromGenericContext(renderArgs.getContext()));
                     if (renderArgs.getContent() == null) {
@@ -492,7 +496,13 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
                 }
                 // here assume context has everything except cms stuff
                 renderArgs.setSkipSystemCtx(false);
-                renderArgs.setSystemCtxCmsOnly(true);
+
+                Boolean newScreenCtx = renderArgs.getNewScreenCtx();
+                if (newScreenCtx == null) {
+                    newScreenCtx = !ScreenRenderer.hasScreenRenderContext(renderArgs.getContext());
+                }
+                renderArgs.setSystemCtxCmsOnly(!newScreenCtx);
+
                 renderArgs.setProtectScopeSystem(false); // don't push system ctx, if it's used
                 renderArgs.setSkipExtraCommonCtx(true);
             } else {

@@ -421,6 +421,10 @@ public class ScreenRenderer implements RenderContextFetcher, RendererInfo { // S
         return this.screenStringRenderer;
     }
 
+    public static boolean hasScreenRenderContext(Map<String, Object> context) {
+        return (context.get("screens") != null);
+    }
+
     public void populateBasicContext(Map<String, Object> parameters, Delegator delegator, LocalDispatcher dispatcher, Security security, Locale locale, GenericValue userLogin) {
         populateBasicContext(getContext(), this, parameters, delegator, dispatcher, security, locale, userLogin);
     }

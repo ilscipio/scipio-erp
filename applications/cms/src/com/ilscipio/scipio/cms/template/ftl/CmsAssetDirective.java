@@ -160,9 +160,7 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
             pageTemplate = page.getTemplate();
         }
 
-        boolean newCmsCtx = false;
         if (pageContext == null) {
-            newCmsCtx = true;
             pageContext = CmsPageContext.makeFromGenericContext(context);
         }
         if (pageContent == null) {
@@ -234,7 +232,7 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
                     }
                 }
             } else {
-                if (newCmsCtx || pageTemplate == null) {
+                if (pageTemplate == null) {
                     throw new IllegalStateException("Current rendering context has no existing cmsPageContext or cmsPageTemplate"
                         + " - assets cannot be rendered in non-CMS context in non-global mode (did you mean to use def=\"global\"?)");
                 }
@@ -271,7 +269,7 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
                 if (mode == Mode.STANDALONE) {
                     // TODO: per-asset share-scope setting (protectScope here)
                     assetTemplate.getRenderer().processAndRender(new AtRenderArgs(out, context, assetContent, pageContext,
-                            ctxVars, ovrdCtxVars, true, newCmsCtx));
+                            ctxVars, ovrdCtxVars, true));
                 } else if (mode == Mode.INCLUDE) {
                     assetTemplate.getRenderer().includeTemplate(env);
                 } else if (mode == Mode.IMPORT) {

@@ -105,19 +105,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //sidebar hover
-    const $sidebarMenus = (document.querySelectorAll('aside, aside .menu-list') || []);
+    const $sidebarMenus = (document.querySelectorAll('aside .menu-list') || []);
     $sidebarMenus.forEach( el => {
-        el.addEventListener('mouseover', () => {
-            if (!el.classList.contains("is-hovered")) {
-                el.classList.add("is-hovered");
-            }
-        });
+        if(el.id !== 'menu_logo'){
+            el.addEventListener('mouseover', () => {
+                if (!el.classList.contains("is-hovered")) {
+                    el.classList.add("is-hovered");
+                }
+                let pel = el.closest('aside');
+                if (!pel.classList.contains("is-hovered")) {
+                    pel.classList.add("is-hovered");
+                }
+            });
 
-        el.addEventListener('mouseout', () => {
-            if (el.classList.contains("is-hovered")) {
-                el.classList.remove("is-hovered");
-            }
-        });
+            el.addEventListener('mouseout', () => {
+                if (el.classList.contains("is-hovered")) {
+                    el.classList.remove("is-hovered");
+                }
+                let pel = el.closest('aside');
+                if (pel.classList.contains("is-hovered")) {
+                    pel.classList.remove("is-hovered");
+                }
+            });
+        }
     });
 
 

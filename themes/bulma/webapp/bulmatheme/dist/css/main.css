@@ -12378,22 +12378,25 @@ is-rounded
   .button.is-rounded, .ui-dialog-content button.is-rounded {
     border-radius: 9999px; }
   .button .button, .ui-dialog-content button .button, .button .ui-dialog-content button, .ui-dialog-content .button button, .ui-dialog-content button button {
-    padding: inherit;
-    background: inherit;
-    border: inherit;
+    padding: 0;
+    background: none;
+    border: none;
     color: inherit;
-    margin: inherit; }
+    margin: 0; }
     .button .button:hover, .ui-dialog-content button .button:hover, .button .ui-dialog-content button:hover, .ui-dialog-content .button button:hover, .ui-dialog-content button button:hover {
-      background: inherit;
-      color: inherit; }
+      background: none;
+      color: inherit;
+      border: none; }
 
 fieldset legend {
   cursor: pointer;
   transition: all 2s linear; }
 
 fieldset .fieldgroup-body {
-  background: #ededed;
   padding: 1rem; }
+  fieldset .fieldgroup-body.is-open {
+    background: rgba(237, 237, 237, 0.4);
+    border-radius: 4px; }
 
 .field.has-addons {
   flex-wrap: wrap; }

@@ -74,7 +74,20 @@
 @import "custom";
 
 .card {
-  form {
+
+    .trumbowyg-box, .trumbowyg-editor {
+      margin-top:0px;
+    }
+
+    .trumbowyg-button-pane{
+      height:34px;
+      min-height:34px;
+
+      &::after{
+        content:none;
+      }
+    }
+
     .field-entry-widget{
       .btn, .btn-sm, .btn-lg{
         margin-top: inherit;
@@ -110,6 +123,5 @@
         border: 1px solid $border-color;
       }
     }
-  }
 }
 

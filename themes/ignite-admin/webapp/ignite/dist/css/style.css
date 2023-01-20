@@ -12834,14 +12834,23 @@ pre.scrollable {
     border-top-right-radius: 0;
     border-top-left-radius: 0; } }
 
-.card form .field-entry-widget .btn, .card form .field-entry-widget .btn-sm, .card form .field-entry-widget .btn-group-sm > .btn, .card form .field-entry-widget .btn-lg, .card form .field-entry-widget .btn-group-lg > .btn {
+.card .trumbowyg-box, .card .trumbowyg-editor {
+  margin-top: 0px; }
+
+.card .trumbowyg-button-pane {
+  height: 34px;
+  min-height: 34px; }
+  .card .trumbowyg-button-pane::after {
+    content: none; }
+
+.card .field-entry-widget .btn, .card .field-entry-widget .btn-sm, .card .field-entry-widget .btn-group-sm > .btn, .card .field-entry-widget .btn-lg, .card .field-entry-widget .btn-group-lg > .btn {
   margin-top: inherit;
   flex-basis: auto; }
 
-.card form .field-entry-widget:has(+ .field-entry-postfix) {
+.card .field-entry-widget:has(+ .field-entry-postfix) {
   padding-right: 0; }
 
-.card form .field-entry-postfix {
+.card .field-entry-postfix {
   display: flex;
   align-items: start;
   align-content: start;
@@ -12849,9 +12858,9 @@ pre.scrollable {
   flex-wrap: wrap;
   margin-bottom: 10px;
   padding-left: 0; }
-  .card form .field-entry-postfix select.field-inline {
+  .card .field-entry-postfix select.field-inline {
     width: 100%; }
-  .card form .field-entry-postfix .btn, .card form .field-entry-postfix .btn-sm, .card form .field-entry-postfix .btn-group-sm > .btn, .card form .field-entry-postfix .btn-lg, .card form .field-entry-postfix .btn-group-lg > .btn {
+  .card .field-entry-postfix .btn, .card .field-entry-postfix .btn-sm, .card .field-entry-postfix .btn-group-sm > .btn, .card .field-entry-postfix .btn-lg, .card .field-entry-postfix .btn-group-lg > .btn {
     margin-top: inherit;
     line-height: 1.5;
     padding: 0.375rem 0.75rem;

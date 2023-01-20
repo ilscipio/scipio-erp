@@ -652,29 +652,27 @@ FORM MACROS
         <#case "file">
         <#break>
         <#case "textarea">
-        <#local overrideDefaultClass = mergeArgMaps(overrideDefaultClass,{"class":"textarea"}) >
+            <#local class = addClassArg(class,"textarea") >
         <#break>
         <#case "select">
-        <#local overrideDefaultClass = mergeArgMaps(overrideDefaultClass,{"class":"select"}) >
+            <#local class = addClassArg(class,"select") >
         <#break>
         <#case "checkbox">
-        <#local overrideDefaultClass = mergeArgMaps(overrideDefaultClass,{"class":"is-checkradio"})>
-        <#break>
         <#case "radio">
-        <#local overrideDefaultClass = mergeArgMaps(overrideDefaultClass,{"class":"is-checkradio"}) >
+            <#local class = addClassArg(class,"is-checkradio") >
         <#break>
         <#case "file">
-        <#local overrideDefaultClass = mergeArgMaps(overrideDefaultClass,{"class":"file-input"}) >
+            <#local class = addClassArg(class,"file-input") >
         <#break>
         <#case "text">
         <#case "input">
         <#case "email">
         <#case "tel">
         <#default>
-        <#local overrideDefaultClass = mergeArgMaps(overrideDefaultClass,{"class":"input"}) >
+            <#local class = addClassArg(class,"input") >
         <#break>
     </#switch>
-
+    <#local overrideDefaultClass = mergeArgMaps(overrideDefaultClass,{"class":class!""}) >
     <#local args = mergeArgMaps(args, overrideDefaultClass)>
     <@scipioStdTmplLib.field args=args ><#nested></@scipioStdTmplLib.field>
 </#macro>

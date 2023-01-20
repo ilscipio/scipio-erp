@@ -48,6 +48,7 @@
     <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/ignite-admin-theme/dist/css/font-awesome.min.css" sequenceId="02"/>
     <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/ignite-admin-theme/dist/css/jquery.dataTables.min.css" sequenceId="05"/>
 
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/trumbowyg/dist/ui/trumbowyg.min.css" sequenceId="11"/>
 
     <!-- Right-to-Left support -->
     <!--<VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_RTL_STYLESHEET" resourceValue="/bulmatheme/rtl/rtl.css" sequenceId="1"/>-->

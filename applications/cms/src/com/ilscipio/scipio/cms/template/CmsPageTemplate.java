@@ -34,8 +34,6 @@ import com.ilscipio.scipio.cms.data.CmsEntityVisit.VisitRelations;
 import com.ilscipio.scipio.cms.data.CmsMajorObject;
 import com.ilscipio.scipio.cms.template.CmsTemplateVersion.ActiveVersionWorker;
 
-import freemarker.core.Environment;
-
 /**
  * The page template determines the presentation of a page. It includes a
  * FreeMarker template and attribute definitions. Page templates also have zero
@@ -563,9 +561,12 @@ public class CmsPageTemplate extends CmsMasterComplexTemplate<CmsPageTemplate, C
             public PtRenderArgs() {
                 super();
             }
-            public PtRenderArgs(Writer out, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
-                                Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean protectScope) {
-                super(out, context, content, pageContext, earlyCtxVars, ovrdCtxVars, protectScope);
+            public PtRenderArgs(Writer out, MapStack<String> context, CmsPageContext pageContext, CmsPage page,
+                                CmsPageContent content, Map<String, Object> earlyCtxVars,
+                                Map<String, Object> attrOvrdCtxVars, Map<String, Object> finalOvrdCtxVars,
+                                boolean protectScope) {
+                super(out, context, pageContext, page, content, earlyCtxVars, attrOvrdCtxVars, finalOvrdCtxVars,
+                        protectScope);
             }
 
             public boolean isRunPageScripts() {

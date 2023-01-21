@@ -153,8 +153,11 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
 
         MapStack<String> context = CmsRenderUtil.getRenderContextAlways(env);
         CmsPageContext pageContext = CmsRenderUtil.getPageContext(context);
-        CmsPageContent pageContent = CmsRenderUtil.getTopPageContent(context);
         CmsPage page = CmsRenderUtil.getPage(context); // NOTE: May be null (supported)
+        CmsPageContent pageContent = CmsRenderUtil.getTopPageContent(context);
+        if (page == null && pageContent != null) {
+            page = pageContent.getPage();
+        }
         CmsPageTemplate pageTemplate = CmsRenderUtil.getPageTemplate(context);
         if (pageTemplate == null && page != null) {
             pageTemplate = page.getTemplate();
@@ -178,9 +181,10 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
             assetId = null;
         }
 
-        Map<String, Object> ctxVars = TransformUtil.getMapArg(params, "ctxVars", null, false, true);
+        Map<String, Object> earlyCtxVars = TransformUtil.getMapArg(params, "ctxVars", null, false, true);
         Map<String, Object> attribs = TransformUtil.getMapArg(params, "attribs", null, false, true);
-        Map<String, Object> ovrdCtxVars = TransformUtil.getMapArg(params, "ovrdCtxVars", null, false, true);
+        Map<String, Object> attrOvrdCtxVars = TransformUtil.getMapArg(params, "ovrdCtxVars", null, false, true);
+        Map<String, Object> finalOvrdCtxVars = TransformUtil.getMapArg(params, "finalOvrdCtxVars", null, false, true);
 
         boolean globalDef = "global".equals(TransformUtil.getStringNonEscapingArg(params, "def"));
 
@@ -225,7 +229,7 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
                 }
 
                 if (mode == Mode.STANDALONE) {
-                    assetContent = new CmsPageContent(pageContent.getPage());
+                    assetContent = new CmsPageContent(page);
                     // Set any content with attribs supplied to macro
                     if (attribs != null) {
                         assetContent.putAll(attribs);
@@ -233,7 +237,7 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
                 }
             } else {
                 if (pageTemplate == null) {
-                    throw new IllegalStateException("Current rendering context has no existing cmsPageContext or cmsPageTemplate"
+                    throw new IllegalStateException("Current rendering context has no existing cmsPage or cmsPageTemplate"
                         + " - assets cannot be rendered in non-CMS context in non-global mode (did you mean to use def=\"global\"?)");
                 }
 
@@ -268,8 +272,8 @@ public class CmsAssetDirective implements TemplateDirectiveModel, Serializable {
                 // render asset
                 if (mode == Mode.STANDALONE) {
                     // TODO: per-asset share-scope setting (protectScope here)
-                    assetTemplate.getRenderer().processAndRender(new AtRenderArgs(out, context, assetContent, pageContext,
-                            ctxVars, ovrdCtxVars, true));
+                    assetTemplate.getRenderer().processAndRender(new AtRenderArgs(out, context, pageContext, page,
+                            assetContent, earlyCtxVars, attrOvrdCtxVars, finalOvrdCtxVars, true));
                 } else if (mode == Mode.INCLUDE) {
                     assetTemplate.getRenderer().includeTemplate(env);
                 } else if (mode == Mode.IMPORT) {

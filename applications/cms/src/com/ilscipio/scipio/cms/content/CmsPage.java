@@ -1973,7 +1973,6 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         protected final CmsPage page;
 
         public PageRenderer(CmsPage page) {
-            super();
             this.page = page;
         }
 
@@ -1986,7 +1985,8 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
         public void processAndRender(Writer out, CmsPageContext pageContext, String versionId) {
             CmsPageContent content = page.getContentModel(pageContext, versionId, true);
             MapStack<String> context = RenderMapStack.createRenderContext(); // SCIPIO: Dedicated context class: MapStack.create();
-            PtRenderArgs renderArgs = new PtRenderArgs(out, context, content, pageContext, null, null, false);
+            PtRenderArgs renderArgs = new PtRenderArgs(out, context, pageContext, page, content, null,
+                    null, null, false);
             renderArgs.setRunPageScripts(true);
             renderArgs.setTxTimeoutExdr(page.getTxTimeoutExdr()); // NOTE: If set, overrides the template's timeout.
             page.getTemplate().getRenderer().processAndRender(renderArgs);

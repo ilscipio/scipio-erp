@@ -275,17 +275,20 @@ public interface CmsRenderTemplate extends Serializable {
             private Writer out;
             private Environment env; // NOTE: optional for standalone render (uses its own environment)
             private MapStack<String> context;
-            private CmsPageContent content;
             private CmsPageContext pageContext;
+            private CmsPage page;
+            private CmsPageContent content;
 
             private Map<String, Object> earlyCtxVars; // early ctx vars, similar to ofbiz widget-style context passing
-            private Map<String, Object> ovrdCtxVars; // attribute-overriding ctx vars
+            private Map<String, Object> attrOvrdCtxVars; // attribute-overriding ctx vars
+            private Map<String, Object> finalOvrdCtxVars; // script-overriding ctx vars
 
+            private boolean protectScope;
             private boolean skipSystemCtx;
+            private boolean skipExtraCommonCtx;
+
             private boolean systemCtxCmsOnly = false;
             private boolean protectScopeSystem = true;
-            private boolean skipExtraCommonCtx;
-            private boolean protectScope;
 
             private Boolean newCmsCtx; // high-level flag mainly used by subclasses
             private Boolean newScreenCtx; // high-level flag mainly used by subclasses
@@ -293,29 +296,35 @@ public interface CmsRenderTemplate extends Serializable {
             private FlexibleStringExpander txTimeoutExdr;
 
             public RenderArgs() {
+                this.protectScope = true;
                 this.skipSystemCtx = false;
                 this.skipExtraCommonCtx = false;
-                this.protectScope = true;
             }
 
-            public RenderArgs(Writer out, Environment env, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
-                    Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean skipSystemCtx, boolean skipExtraCommonCtx, boolean protectScope) {
+            public RenderArgs(Writer out, Environment env, MapStack<String> context, CmsPageContext pageContext,
+                              CmsPage page, CmsPageContent content, Map<String, Object> earlyCtxVars,
+                              Map<String, Object> attrOvrdCtxVars, Map<String, Object> finalOvrdCtxVars,
+                              boolean protectScope, boolean skipSystemCtx, boolean skipExtraCommonCtx) {
                 this.out = out;
-                setEnv(env);
-                this.env = env;
+                this.setEnv(env);
                 this.context = context;
-                this.content = content;
                 this.pageContext = pageContext;
+                this.page = page;
+                this.content = content;
                 this.earlyCtxVars = earlyCtxVars;
-                this.ovrdCtxVars = ovrdCtxVars;
+                this.attrOvrdCtxVars = attrOvrdCtxVars;
+                this.finalOvrdCtxVars = finalOvrdCtxVars;
+                this.protectScope = protectScope;
                 this.skipSystemCtx = skipSystemCtx;
                 this.skipExtraCommonCtx = skipExtraCommonCtx;
-                this.protectScope = protectScope;
             }
 
-            public RenderArgs(Writer out, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
-                    Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean protectScope) {
-                this(out, null, context, content, pageContext, earlyCtxVars, ovrdCtxVars, false, false, protectScope);
+            public RenderArgs(Writer out, MapStack<String> context, CmsPageContext pageContext, CmsPage page,
+                              CmsPageContent content, Map<String, Object> earlyCtxVars,
+                              Map<String, Object> attrOvrdCtxVars, Map<String, Object> finalOvrdCtxVars,
+                              boolean protectScope) {
+                this(out, null, context, pageContext, page, content, earlyCtxVars, attrOvrdCtxVars, finalOvrdCtxVars,
+                        protectScope, false, false);
             }
 
             public Writer getOut() {
@@ -329,7 +338,7 @@ public interface CmsRenderTemplate extends Serializable {
             }
             public void setEnv(Environment env) {
                 this.env = env;
-                if (out == null && env != null) {
+                if (this.out == null && env != null) {
                     this.out = env.getOut();
                 }
             }
@@ -339,17 +348,23 @@ public interface CmsRenderTemplate extends Serializable {
             public void setContext(MapStack<String> context) {
                 this.context = context;
             }
-            public CmsPageContent getContent() {
-                return content;
-            }
-            public void setContent(CmsPageContent content) {
-                this.content = content;
-            }
             public CmsPageContext getPageContext() {
                 return pageContext;
             }
             public void setPageContext(CmsPageContext pageContext) {
                 this.pageContext = pageContext;
+            }
+            public CmsPage getPage() {
+                return page;
+            }
+            public void setPage(CmsPage page) {
+                this.page = page;
+            }
+            public CmsPageContent getContent() {
+                return content;
+            }
+            public void setContent(CmsPageContent content) {
+                this.content = content;
             }
             public Map<String, Object> getEarlyCtxVars() {
                 return earlyCtxVars;
@@ -357,11 +372,21 @@ public interface CmsRenderTemplate extends Serializable {
             public void setEarlyCtxVars(Map<String, Object> earlyCtxVars) {
                 this.earlyCtxVars = earlyCtxVars;
             }
-            public Map<String, Object> getOvrdCtxVars() {
-                return ovrdCtxVars;
+            public Map<String, Object> getAttrOvrdCtxVars() {
+                return attrOvrdCtxVars;
             }
-            public void setOvrdCtxVars(Map<String, Object> lateCtxVars) {
-                this.ovrdCtxVars = lateCtxVars;
+            public void setAttrOvrdCtxVars(Map<String, Object> attrOvrdCtxVars) {
+                this.attrOvrdCtxVars = attrOvrdCtxVars;
+            }
+            public Map<String, Object> getFinalOvrdCtxVars() {
+                return finalOvrdCtxVars;
+            }
+            public void setFinalOvrdCtxVars(Map<String, Object> finalOvrdCtxVars) {
+                this.finalOvrdCtxVars = finalOvrdCtxVars;
+            }
+            public boolean isProtectScope() { return protectScope; }
+            public void setProtectScope(boolean protectScope) {
+                this.protectScope = protectScope;
             }
             public boolean isSkipSystemCtx() {
                 return skipSystemCtx;
@@ -381,11 +406,6 @@ public interface CmsRenderTemplate extends Serializable {
                 return skipExtraCommonCtx;
             }
             public void setSkipExtraCommonCtx(boolean skipExtraCommonCtx) { this.skipExtraCommonCtx = skipExtraCommonCtx; }
-            public boolean isProtectScope() { return protectScope; }
-            public void setProtectScope(boolean protectScope) {
-                this.protectScope = protectScope;
-            }
-            public CmsPage getPage() { return (content != null) ? content.getPage() : null; } // workaround for lack of CmsPage property
             public Boolean getNewCmsCtx() {
                 return newCmsCtx;
             }
@@ -419,7 +439,7 @@ public interface CmsRenderTemplate extends Serializable {
         public Object processAndRender(RenderArgs renderArgs) throws CmsException {
             boolean useTransaction = renderArgs.isTxEnabled(); // NOTE: If txTimeout is exactly the string "0", prevents transaction, even if req attr was set
             boolean beganTransaction = false;
-            final boolean protectScope = !renderArgs.isProtectScope();
+            final boolean protectScope = renderArgs.isProtectScope();
             final int origStackSize = renderArgs.getContext().stackSize();
             if (protectScope) {
                 renderArgs.getContext().push();
@@ -732,10 +752,17 @@ public interface CmsRenderTemplate extends Serializable {
             }
         }
 
-        protected void populateOvrdExtraCtxVars(RenderArgs renderArgs) {
-            if (renderArgs.getOvrdCtxVars() != null) {
+        protected void populateAttrOvrdExtraCtxVars(RenderArgs renderArgs) {
+            if (renderArgs.getAttrOvrdCtxVars() != null) {
                 // apply and consume
-                renderArgs.getContext().putAll(renderArgs.getOvrdCtxVars());
+                renderArgs.getContext().putAll(renderArgs.getAttrOvrdCtxVars());
+            }
+        }
+
+        protected void populateFinalOvrdExtraCtxVars(RenderArgs renderArgs) {
+            if (renderArgs.getFinalOvrdCtxVars() != null) {
+                // apply and consume
+                renderArgs.getContext().putAll(renderArgs.getFinalOvrdCtxVars());
             }
         }
 
@@ -833,7 +860,7 @@ public interface CmsRenderTemplate extends Serializable {
             // simply set immediately.
             // TODO: REVIEW: to simplify, for now just dump all the late vars, basically twice for
             // those that match attribs.
-            populateOvrdExtraCtxVars(renderArgs);
+            populateAttrOvrdExtraCtxVars(renderArgs);
 
             // Expand & transfer attributes to context, and run scripts, in the global order
             // defined by CmsAttributeTemplate.expandPosition together with CmsScriptTemplate.inputPosition.
@@ -856,6 +883,8 @@ public interface CmsRenderTemplate extends Serializable {
                 populateScript(script, renderArgs, contextSkipNames);
                 script = scriptIt.hasNext() ? scriptIt.next() : null;
             }
+
+            populateFinalOvrdExtraCtxVars(renderArgs);
         }
 
         /**
@@ -869,11 +898,11 @@ public interface CmsRenderTemplate extends Serializable {
                 Debug.logWarning("Cms: Attribute template '" + name + "' (id: " + attributeTemplate.getId()
                     + ") uses the name of a reserved system context variable (consider renaming)", module);
             }
-            if (renderArgs.getOvrdCtxVars() != null && renderArgs.getOvrdCtxVars().containsKey(name)) {
+            if (renderArgs.getAttrOvrdCtxVars() != null && renderArgs.getAttrOvrdCtxVars().containsKey(name)) {
                 // overriding var def
                 // NOTE: this should already be in context due to populateOvrdExtraCtxVars call,
                 // but put it again to be safe.
-                renderArgs.getContext().put(name, renderArgs.getOvrdCtxVars().get(name));
+                renderArgs.getContext().put(name, renderArgs.getAttrOvrdCtxVars().get(name));
             } else {
                 // parse and expand the attribute.
                 // NOTE: this both re-stores it in the CmsPageContent (cmsContent)

@@ -19,7 +19,8 @@
 
 
 import org.ofbiz.base.util.*;
-import org.ofbiz.product.catalog.*;
+import org.ofbiz.product.catalog.*
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.*;
 import com.ilscipio.scipio.solr.*;
 

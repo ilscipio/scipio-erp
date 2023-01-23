@@ -470,9 +470,11 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
             public AtRenderArgs() {
                 super();
             }
-            public AtRenderArgs(Writer out, MapStack<String> context, CmsPageContent content, CmsPageContext pageContext,
-                                Map<String, Object> earlyCtxVars, Map<String, Object> ovrdCtxVars, boolean protectScope) {
-                super(out, context, content, pageContext, earlyCtxVars, ovrdCtxVars, protectScope);
+            public AtRenderArgs(Writer out, MapStack<String> context, CmsPageContext pageContext, CmsPage page,
+                                CmsPageContent content, Map<String, Object> earlyCtxVars,
+                                Map<String, Object> attrOvrdCtxVars, Map<String, Object> finalOvrdCtxVars,
+                                boolean protectScope) {
+                super(out, context, pageContext, page, content, earlyCtxVars, attrOvrdCtxVars, finalOvrdCtxVars, protectScope);
             }
         }
 
@@ -494,17 +496,22 @@ public class CmsAssetTemplate extends CmsMasterComplexTemplate<CmsAssetTemplate,
                         renderArgs.setContent(new CmsPageContent((CmsPage) null));
                     }
                 }
-                // here assume context has everything except cms stuff
                 renderArgs.setSkipSystemCtx(false);
 
                 Boolean newScreenCtx = renderArgs.getNewScreenCtx();
                 if (newScreenCtx == null) {
                     newScreenCtx = !ScreenRenderer.hasScreenRenderContext(renderArgs.getContext());
                 }
-                renderArgs.setSystemCtxCmsOnly(!newScreenCtx);
-
-                renderArgs.setProtectScopeSystem(false); // don't push system ctx, if it's used
-                renderArgs.setSkipExtraCommonCtx(true);
+                if (newScreenCtx) {
+                    renderArgs.setSystemCtxCmsOnly(false);
+                    renderArgs.setProtectScopeSystem(true); // don't push system ctx, if it's used
+                    renderArgs.setSkipExtraCommonCtx(false);
+                } else {
+                    // here assume context has everything except cms stuff
+                    renderArgs.setSystemCtxCmsOnly(true);
+                    renderArgs.setProtectScopeSystem(false); // don't push system ctx, if it's used
+                    renderArgs.setSkipExtraCommonCtx(true);
+                }
             } else {
                 // NO SYSTEM context for assets in usual invocations - the system context should be already populated by the page earlier.
                 renderArgs.setSkipSystemCtx(true);

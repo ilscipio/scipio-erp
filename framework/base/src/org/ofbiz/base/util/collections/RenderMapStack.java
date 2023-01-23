@@ -54,6 +54,10 @@ public class RenderMapStack extends MapStack<String> {
         return newValue;
     }
 
+    public static RenderMapStack createEmptyRenderContext() {
+        return new RenderMapStack();
+    }
+
     // NOTE: due to java compiler generics complaining, forced to rename this method... all were renamed due to this.
     //public static RenderMapStack create(Map<String, Object> baseMap) {
     public static RenderMapStack createRenderContext(Map<String, Object> baseMap) {

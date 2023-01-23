@@ -1,18 +1,15 @@
 package com.ilscipio.scipio.cms.template;
 
-import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
 import com.ilscipio.scipio.cms.CmsException;
 import com.ilscipio.scipio.cms.content.CmsPage;
 import com.ilscipio.scipio.cms.content.CmsPageContent;
 import com.ilscipio.scipio.cms.content.CmsPageContext;
 import com.ilscipio.scipio.cms.template.ftl.CmsAssetDirective;
 import freemarker.core.Environment;
-import freemarker.template.TemplateException;
-import freemarker.template.TemplateModel;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
+import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.entity.Delegator;
 
 import java.io.StringWriter;
@@ -29,29 +26,45 @@ public class CmsAssetRenderer {
 
     protected Map<String, Object> context; // NOTE: If this is not a MapStack, one is automatically create around this map
     protected CmsPageContext pageContext;
-    protected CmsPageContent pageContent;
-    protected CmsPageTemplate pageTemplate;
     protected CmsPage page; // NOTE: page is actually optional to the render in multiple cases (global def)
+    protected CmsPageTemplate pageTemplate;
+    protected CmsPageContent pageContent;
 
     protected String def; // "global"
     protected String webSiteId;
     protected Boolean webSiteOptional;
     protected String namespace;
 
-    protected Map<String, Object> ctxVars;
+    protected Map<String, Object> earlyCtxVars;
     protected Map<String, Object> attribs;
-    protected Map<String, Object> ovrdCtxVars;
+    protected Map<String, Object> attrOvrdCtxVars;
+    protected Map<String, Object> finalOvrdCtxVars;
 
     protected String mode;
     protected Writer out;
     protected Environment env; // NOTE: This is unlikely to be very useful here, probably don't use
 
-    public CmsAssetRenderer(Map<String, Object> context, CmsPageContext pageContext, CmsPageContent pageContent, CmsPageTemplate pageTemplate) {
-        this.context = context;
+    public CmsAssetRenderer(CmsPageContext pageContext, CmsPage page, CmsPageContent pageContent) {
         this.pageContext = pageContext;
+        this.page = page;
         this.pageContent = pageContent;
-        this.pageTemplate = pageTemplate;
     }
+
+    public CmsAssetRenderer(CmsPageContext pageContext, CmsPageTemplate pageTemplate, CmsPageContent pageContent) {
+        this.pageContext = pageContext;
+        this.pageTemplate = pageTemplate;
+        this.pageContent = pageContent;
+    }
+
+    public CmsAssetRenderer(CmsPageContext pageContext, CmsPage page) {
+        this.pageContext = pageContext;
+        this.page = page;
+    }
+
+    public CmsAssetRenderer(CmsPageContext pageContext) {
+        this.pageContext = pageContext;
+    }
+
 
     public CmsAssetRenderer(Map<String, Object> context, CmsPage page) {
         this.context = context;
@@ -61,6 +74,7 @@ public class CmsAssetRenderer {
     public CmsAssetRenderer(Map<String, Object> context) {
         this.context = context;
     }
+
 
     public CmsAssetRenderer() {
     }
@@ -83,12 +97,16 @@ public class CmsAssetRenderer {
         return this;
     }
 
-    public CmsPageContent pageContent() {
-        return pageContent;
+    public CmsPage page() {
+        return page;
     }
 
-    public CmsAssetRenderer pageContent(CmsPageContent pageContent) {
-        this.pageContent = pageContent;
+    /**
+     * Sets the CMS page for the render, optional for "global" def and generally optional (due to CmsAssetDirective
+     * not traditionally requiring it).
+     */
+    public CmsAssetRenderer page(CmsPage page) {
+        this.page = page;
         return this;
     }
 
@@ -101,16 +119,12 @@ public class CmsAssetRenderer {
         return this;
     }
 
-    public CmsPage page() {
-        return page;
+    public CmsPageContent pageContent() {
+        return pageContent;
     }
 
-    /**
-     * Sets the CMS page for the render, optional for "global" def and generally optional (due to CmsAssetDirective
-     * not traditionally requiring it).
-     */
-    public CmsAssetRenderer page(CmsPage page) {
-        this.page = page;
+    public CmsAssetRenderer pageContent(CmsPageContent pageContent) {
+        this.pageContent = pageContent;
         return this;
     }
 
@@ -158,12 +172,12 @@ public class CmsAssetRenderer {
         return this;
     }
 
-    public Map<String, Object> ctxVars() {
-        return ctxVars;
+    public Map<String, Object> earlyCtxVars() {
+        return earlyCtxVars;
     }
 
-    public CmsAssetRenderer ctxVars(Map<String, Object> ctxVars) {
-        this.ctxVars = ctxVars;
+    public CmsAssetRenderer earlyCtxVars(Map<String, Object> earlyCtxVars) {
+        this.earlyCtxVars = earlyCtxVars;
         return this;
     }
 
@@ -176,12 +190,21 @@ public class CmsAssetRenderer {
         return this;
     }
 
-    public Map<String, Object> ovrdCtxVars() {
-        return ovrdCtxVars;
+    public Map<String, Object> attrOvrdCtxVars() {
+        return attrOvrdCtxVars;
     }
 
-    public CmsAssetRenderer ovrdCtxVars(Map<String, Object> ovrdCtxVars) {
-        this.ovrdCtxVars = ovrdCtxVars;
+    public CmsAssetRenderer attrOvrdCtxVars(Map<String, Object> attrOvrdCtxVars) {
+        this.attrOvrdCtxVars = attrOvrdCtxVars;
+        return this;
+    }
+
+    public Map<String, Object> finalOvrdCtxVars() {
+        return finalOvrdCtxVars;
+    }
+
+    public CmsAssetRenderer finalOvrdCtxVars(Map<String, Object> finalOvrdCtxVars) {
+        this.finalOvrdCtxVars = finalOvrdCtxVars;
         return this;
     }
 
@@ -302,6 +325,9 @@ public class CmsAssetRenderer {
         CmsPageContext pageContext = this.pageContext;
         CmsPageContent pageContent = this.pageContent;
         CmsPage page = this.page; // NOTE: null is supported here (due to CmsAssetDirective support)
+        if (page == null && pageContent != null) {
+            page = pageContent.getPage();
+        }
         CmsPageTemplate pageTemplate = this.pageTemplate;
         if (pageTemplate == null && page != null) {
             pageTemplate = page.getTemplate();
@@ -311,6 +337,9 @@ public class CmsAssetRenderer {
         // is not indicative of context setup having been done or not
         //boolean newCmsCtx = false;
         if (pageContext == null) {
+            if (context == null) {
+                throw new IllegalArgumentException("Missing page context or render context");
+            }
             pageContext = CmsPageContext.makeFromGenericContext(context);
         }
         if (pageContent == null) {
@@ -327,9 +356,10 @@ public class CmsAssetRenderer {
             assetId = null;
         }
 
-        Map<String, Object> ctxVars = this.ctxVars;
+        Map<String, Object> earlyCtxVars = this.earlyCtxVars;
         Map<String, Object> attribs = this.attribs;
-        Map<String, Object> ovrdCtxVars = this.ovrdCtxVars;
+        Map<String, Object> attrOvrdCtxVars = this.attrOvrdCtxVars;
+        Map<String, Object> finalOvrdCtxVars = this.finalOvrdCtxVars;
 
         boolean globalDef = "global".equals(def != null ? def : this.def);
 
@@ -375,7 +405,7 @@ public class CmsAssetRenderer {
                 }
 
                 if (mode == CmsAssetDirective.Mode.STANDALONE) {
-                    assetContent = new CmsPageContent(pageContent.getPage());
+                    assetContent = new CmsPageContent(page);
                     // Set any content with attribs supplied to macro
                     if (attribs != null) {
                         assetContent.putAll(attribs);
@@ -425,14 +455,18 @@ public class CmsAssetRenderer {
                     MapStack<String> stackContext;
                     if (context instanceof MapStack) {
                         stackContext = UtilGenerics.cast(context);
+                    } else if (context != null) {
+                        stackContext = RenderMapStack.createRenderContext(context);
                     } else {
-                        stackContext = MapStack.create(context);
+                        stackContext = RenderMapStack.createEmptyRenderContext();
                     }
+
                     if (out == null) {
                         out = this.out;
                     }
-                    assetTemplate.getRenderer().processAndRender(new CmsAssetTemplate.AssetTemplateRenderer.AtRenderArgs(out, stackContext, assetContent, pageContext,
-                            ctxVars, ovrdCtxVars, true));
+                    assetTemplate.getRenderer().processAndRender(
+                            new CmsAssetTemplate.AssetTemplateRenderer.AtRenderArgs(out, stackContext, pageContext,
+                                    page, assetContent, earlyCtxVars, attrOvrdCtxVars, finalOvrdCtxVars, true));
                 } else if (mode == CmsAssetDirective.Mode.INCLUDE) {
                     assetTemplate.getRenderer().includeTemplate(env);
                 } else if (mode == CmsAssetDirective.Mode.IMPORT) {

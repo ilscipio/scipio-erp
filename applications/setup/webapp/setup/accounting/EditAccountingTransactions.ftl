@@ -88,38 +88,13 @@
 <@script>
     var actionAcctgTransProps = <@objectAsScript object=(eatObjectProps!{}) lang='js'/>;
     var acctgTransHideShowFormIds = <@objectAsScript object=(eatAllHideShowFormIds!{}) lang='js'/>;
-
-    var openModal = function(modalElem) {
-        try {
-            modalElem.foundation('reveal', 'open');
-        } catch(err) {
-            try {
-                modalElem.modal('show'); 
-            }
-            catch(err) {
-                //t.dispatchEvent(event); // FIXME?
-            }
-        }
-    };
-    var closeModal = function(modalElem) {
-        try {
-            modalElem.foundation('reveal', 'close');
-        } catch(err) {
-            try {
-                modalElem.modal('hide'); 
-            }
-            catch(err) {
-                //t.dispatchEvent(event); // FIXME?
-            }
-        }
-    };
     
     var showPopupMsg = function(popupMsgModalId, msg, extraMsg) {
         var modalElem = jQuery('#' + popupMsgModalId);
         if (modalElem.length) {
             jQuery('.eat-dialogmsg', modalElem).html(msg);
             jQuery('.eat-dialogextramsg', modalElem).html(extraMsg || '');
-            openModal(modalElem);
+            ${modalControl('modalElem','open')}
         } else {
             return alert(msg);
         }        
@@ -134,12 +109,12 @@
             jQuery('.eat-dialogbtn', modalElem).click(function(e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
-                closeModal(modalElem);
+                ${modalControl('modalElem','close')}
                 var selectedName = extractClassNameSuffix(jQuery(this), 'eat-dialogbtn-');
                 continueCallback(selectedName);      
                 return;          
             });            
-            openModal(modalElem);
+            ${modalControl('modalElem','open')}
         } else {
             var result = confirm(msg);
             if (result) {

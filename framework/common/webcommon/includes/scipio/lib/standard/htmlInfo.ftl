@@ -83,6 +83,34 @@ FIXME: Needs parameter to control injection and location of hidden modal content
   </div>
 </#macro>
 
+<#--
+*************
+* Modal Control
+************
+Opens or closes a modal or passes additional attributes to the underling javascript (theme specific implementation)
+
+  * Usage Examples *
+    ${modalControl('myModalElement','open')}
+
+  * Parameters *
+    element                 = (required) Element string
+    type                   	= Command to run (Open/Close)
+
+-->
+<#function modalControl element type="open">
+  <#local call="">
+  <#switch type>
+    <#case "close">
+      <#local call>${element!""}.foundation('reveal', 'close');</#local>
+      <#break>
+    <#case "open">
+    <#default>
+      <#local call>${element!""}.foundation('reveal', 'open');</#local>
+      <#break>
+  </#switch>
+  <#return call/>
+</#function>
+
 <#-- 
 *************
 * Alert box

@@ -1267,7 +1267,25 @@ code package.
             </widgets>
         </section>
     </screen>
-    
+
+    <screen name="ScpCatalogCommon.js">
+        <section>
+            <actions>
+                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
+                <service service-name="getUserPreferenceGroup" result-map="prefResult">
+                    <field-map field-name="userPrefGroupTypeId" value="GLOBAL_PREFERENCES"/>
+                </service>
+                <set field="userPreferences" from-field="prefResult.userPrefMap" global="true"/>
+                <script location="component://common/webcommon/WEB-INF/actions/includes/GetLayoutSettingsVisualThemeResources.groovy" />
+            </actions>
+            <widgets>
+                <platform-specific><html><html-template location="component://product/webapp/catalog/static/ScpCatalogCommon.js.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+
+
     <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
     <screen name="MainSideBarMenu">
         <section>

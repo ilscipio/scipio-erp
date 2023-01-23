@@ -14,7 +14,7 @@ code package.
     
     <!-- All controller entries were exported to external controller files, to simplify the work whilst reviewing all entries -->
     <description>Accounting Manager Module Site Configuration File</description>
-    
+
     <!-- Events to run on every request before security (chains exempt) -->
     <!--
     <preprocessor>
@@ -2917,6 +2917,11 @@ code package.
         <response name="success" type="view" value="ComparativeIncomeStatementsPdf"/>
         <response name="error" type="view" value="ComparativeIncomeStatement"/>
     </request-map>
+
+    <request-map uri="ScpEgltCommon.js">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="ScpEgltCommon.js"/>
+    </request-map>
     
 
     <!-- 
@@ -3343,6 +3348,8 @@ code package.
     <view-map name="InvoicePDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#InvoicePDF" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintCheckPDF" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#PrintCheckPDF" content-type="application/pdf" encoding="none"/>
     <view-map name="PrintInvoices" type="screenfop" page="component://accounting/widget/AccountingPrintScreens.xml#PrintInvoices" content-type="application/pdf" encoding="none"/>
-    
+
+    <!-- Dynamic JS-->
+    <view-map name="ScpEgltCommon.js" type="screen" page="component://accounting/widget/AccountingScreens.xml#ScpEgltCommon.js" content-type="application/javascript"/>
 </site-conf>
 

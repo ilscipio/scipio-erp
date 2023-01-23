@@ -149,13 +149,9 @@ code package.
             $(document).ready(function() {
                 $('#shipmentPackageContent_${shipmentPackageData_index}').click(function() {
                     try {
-                        $('#modal_shipmentPackageContent_${shipmentPackageData_index}').foundation('reveal','open');
+                        let modalElem = $('#modal_shipmentPackageContent_${shipmentPackageData_index}');
+                        ${modalControl('modalElem','open')}
                     } catch(err) {
-                        try {
-                            $('#modal_shipmentPackageContent_${shipmentPackageData_index}').modal('show');
-                        } catch(err) {
-                            //t.dispatchEvent(event);
-                        }
                     }
                 });
             });

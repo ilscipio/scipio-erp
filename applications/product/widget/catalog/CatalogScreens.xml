@@ -262,7 +262,10 @@ code package.
             <actions>
                 <set field="productStoreId" from-field="productStoreId"/>
                 <set field="layoutSettings.javaScripts[]" value="/content/images/ScpContentCommon.js" global="true"/>
-                <set field="layoutSettings.javaScripts[]" value="/catalog/static/ScpCatalogCommon.js" global="true"/>
+                <script lang="groovy"><![CDATA[
+                    context.ScpEgltCommon = System.currentTimeMillis();
+                ]]></script>
+                <set field="layoutSettings.javaScripts[]" value="/catalog/ScpCatalogCommon.js?t=${ScpEgltCommon}" global="true"/>
             </actions>
             <widgets>
                  <decorator-screen name="CommonCatalogDecorator" location="${parameters.mainDecoratorLocation}">

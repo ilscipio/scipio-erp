@@ -12,13 +12,9 @@
 <@script>
     $(document).ready(function() {
         try {
-            $('#modal_removeExpiredCategoryProductMembers').foundation('reveal','open');
+            let modalElem = $('#modal_removeExpiredCategoryProductMembers');
+            ${modalControl('modalElem','open')}
         } catch(err) {
-            try {
-                $('#modal_removeExpiredCategoryProductMembers').modal('show');
-            } catch(err) {
-                //t.dispatchEvent(event);
-            }
         }
     });
 </@script>

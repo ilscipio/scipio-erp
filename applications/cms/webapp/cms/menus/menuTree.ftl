@@ -105,30 +105,19 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
     
     function open_dialog(dialogName){
         try {
-                $('#'+dialogName).foundation('reveal','open');
+                let modalElem = $('#'+dialogName);
+                ${modalControl('modalElem','open')}
                 toggle_editor_fields();
             } catch(err) {
-                try {
-                    $('#'+dialogName).modal('show');
-                    toggle_editor_fields();
-                }
-                catch(err) {
-                    t.dispatchEvent(event);
-                }
             }
         return false;
     }
     
     function close_dialog(dialogName){
         try {
-                $('#'+dialogName).foundation('reveal','close');
+                let modalElem = $('#'+dialogName);
+                ${modalControl('modalElem','close')}
             } catch(err) {
-                try {
-                    $('#'+dialogName).modal('hide'); 
-                }
-                catch(err) {
-                    t.dispatchEvent(event);
-                }
             }
         return false;
     }

@@ -13,13 +13,9 @@
 <@script>
     $(document).ready(function() {
         try {
-            $('#modal_expireAllCategoryProductMembers').foundation('reveal','open');
+            let modalElem = $('#modal_expireAllCategoryProductMembers');
+            ${modalControl('modalElem','open')}
         } catch(err) {
-            try {
-                $('#modal_expireAllCategoryProductMembers').modal('show');
-            } catch(err) {
-                //t.dispatchEvent(event);
-            }
         }
     });
 </@script>

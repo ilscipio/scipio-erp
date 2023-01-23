@@ -59,15 +59,10 @@
         </@modal>
         <@script>
             $(document).ready(function() { 
-                console.log("before revealing...");
                 try {
-                    $('#modal_addExistingContent').foundation('reveal','open');
+                    let modalElem = $('#modal_addExistingContent');
+                    ${modalControl('modalElem','open')}
                 } catch(err) {
-                    try {
-                        $('#modal_addExistingContent').modal('show');
-                    } catch(err) {
-                        //t.dispatchEvent(event);
-                    }
                 }
             });
         </@script>

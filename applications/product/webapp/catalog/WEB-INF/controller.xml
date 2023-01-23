@@ -21,6 +21,7 @@ code package.
     
     <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/>
     <handler name="groovy" type="request" class="org.ofbiz.webapp.event.GroovyEventHandler"/>
+    <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
 
     <firstvisit></firstvisit>
     <!-- Events to run on every request before security (chains exempt) -->
@@ -3171,6 +3172,11 @@ code package.
         <response name="success" type="request" value="json"/>
         <response name="error" type="request" value="json"/>
     </request-map>
+
+    <request-map uri="ScpCatalogCommon.js">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="ScpCatalogCommon.js"/>
+    </request-map>
     
     <!-- ================ Product Tag Requests ================= -->
     <!-- SCIPIO: Removed
@@ -3406,4 +3412,7 @@ code package.
     <view-map name="LookupImageFrame" type="screen" page="component://product/widget/catalog/ImageManagementScreens.xml#LookupImageFrame"/>
     <view-map name="ImageResize" type="screen" page="component://product/widget/catalog/ImageManagementScreens.xml#ImageResize"/> -->
     <!-- end of view mappings -->
+
+    <!-- Dynamic JS-->
+    <view-map name="ScpCatalogCommon.js" type="screen" page="component://product/widget/catalog/CommonScreens.xml#ScpCatalogCommon.js" content-type="application/javascript"/>
 </site-conf>

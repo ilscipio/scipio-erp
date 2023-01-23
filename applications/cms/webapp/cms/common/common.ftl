@@ -304,14 +304,11 @@
             var row = $(this).parent().parent();
             $("#delete-button").attr("href", href);
             try {
-                $('#modal_delete-dialog').foundation('reveal','open');
+                let modalElem = $('#modal_delete-dialog');
+                ${modalControl('modalElem','open')}
             } catch(err) {
-                try {
-                    $('#modal_delete-dialog').modal('show'); 
-                }
-                catch(err) {
                     t.dispatchEvent(event);
-                }
+
             }
         });
     }

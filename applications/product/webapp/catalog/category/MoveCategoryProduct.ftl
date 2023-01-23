@@ -30,13 +30,9 @@
 <@script>
     $(document).ready(function() {
         try {
-            $('#modal_copyCategoryProductMembers').foundation('reveal','open');
+            let modalElem = $('#modal_copyCategoryProductMembers');
+            ${modalControl('modalElem','open')}
         } catch(err) {
-            try {
-                $('#modal_copyCategoryProductMembers').modal('show');
-            } catch(err) {
-                //t.dispatchEvent(event);
-            }
         }
     });
 </@script>

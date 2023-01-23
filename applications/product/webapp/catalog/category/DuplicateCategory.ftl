@@ -26,13 +26,9 @@
 <@script>
     $(document).ready(function() {
         try {
-            $('#modal_duplicateProductCategory').foundation('reveal','open');
+            let modalElem = $('#modal_duplicateProductCategory');
+            ${modalControl('modalElem','open')}
         } catch(err) {
-            try {
-                $('#modal_duplicateProductCategory').modal('show');
-            } catch(err) {
-                //t.dispatchEvent(event);
-            }
         }
     });
 </@script>

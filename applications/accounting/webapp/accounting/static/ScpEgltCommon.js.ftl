@@ -1,23 +1,213 @@
 /**
- * SCIPIO: Common catalog JS, catalog tree (ect) and related form-building core classes.
- * DEV NOTE: do not add any actions on file run (e.g. document ready), classes and functions only.
+ * SCIPIO: GlAccounts tree and related form-building core classes.
  */
 
 /**
- * Catalog tree handler constructor.
- * REQUIRES: 
- * * /content/images/ScpContentCommon.js
+ * A map of jQuery selectors that returns jQuery-wrapped cloned markup.
  */
-function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
+function ScpAcctgFormMarkup(selectors) {
+    this.selectors = selectors;
+    
+    this.getSelMarkup = function(name, defaultMarkupStr) {
+        return ScpAcctgFormMarkup.getCntMarkup(this.selectors[name] ? jQuery(this.selectors[name]) : null, defaultMarkupStr);
+    };
+    this.getCntMarkup = function(markupCnt, defaultMarkupStr) {
+        return ScpAcctgFormMarkup.getCntMarkup(markupCnt, defaultMarkupStr);
+    };
+}
+ScpAcctgFormMarkup.getCntMarkup = function(markupCnt, defaultMarkupStr) {
+    if (markupCnt && markupCnt.length) {
+        return markupCnt.children().clone(true, true);
+    }
+    return defaultMarkupStr ? jQuery(defaultMarkupStr) : null;
+};
+
+/**
+ * Form helper for form handling that must be done separate from the tree.
+ */
+function ScpAcctgFormHelper(data) {
+    var sefh = this;
+ 
+    var reportInternalError = function(msg) {
+        alert("Internal error: " + msg);
+    };
+    
+    this.makeLocFieldNamePrefix = function(typeName, index) {
+        return 'contentField_' + typeName + '.' + index + '.';
+    };
+    
+    this.extractLocalizedFieldName = function(fieldCnt) {
+        typeName = ScpAcctgFormHelper.extractClassNameSuffix(fieldCnt, 'acctg-locfield-for-');
+        if (!typeName) {
+            reportInternalError('missing acctg-locfield-for- class on localized field');
+            return null;
+        }
+        return typeName;
+    };
+    
+    /**
+     * needs at least either: fieldCnt OR (typeName AND allFieldsCnt)
+     */
+    this.getLocalizedFieldProps = function(fieldCnt, typeName, allFieldsCnt) {
+        if (!fieldCnt) {
+            if (!typeName || !allFieldsCnt) {
+                reportInternalError('invalid getLocalizedFieldProps call');
+                return null;
+            }
+            fieldCnt = jQuery('.acctg-locfield-for-'+typeName, allFieldsCnt);
+            if (!fieldCnt.length) {
+                return null; // form doesn't support
+            }
+        } else if (!typeName) {
+            typeName = sefh.extractLocalizedFieldName(fieldCnt);
+            if (!typeName) return null;
+        }
+        
+        // NOTE: template markup is embedded in the html, now under the field itself (due to styling workaround)
+        var entryMarkupTmpl = jQuery('.acctg-markup-locFieldEntry:first', fieldCnt);
+        if (!entryMarkupTmpl.length) {
+            reportInternalError('missing acctg-markup-locFieldEntry html-embedded template');
+            return null;
+        }
+
+        var entries = jQuery('.acctg-locfield-entries', fieldCnt);
+        if (!entries.length) {
+            reportInternalError('missing acctg-locfield-entries container');
+            return null;
+        }
+        
+        return {fieldCnt:fieldCnt, typeName:typeName, entryMarkupTmpl:entryMarkupTmpl, entries:entries};
+    };
+    
+    this.buildLocalizedFieldEntry = function(entryMarkupTmpl, typeName, index, entryData) {
+        var entryMarkup = ScpAcctgFormMarkup.getCntMarkup(entryMarkupTmpl);
+        if (!entryMarkup || !entryMarkup.length) return null;
+        var namePrefix = sefh.makeLocFieldNamePrefix(typeName, index);
+        jQuery('.acctg-locfield-locale', entryMarkup).attr('name', namePrefix+'localeString').val(entryData.localeString || '');
+        jQuery('.acctg-locfield-text', entryMarkup).attr('name', namePrefix+'textData').val(entryData.textData || '');
+        return entryMarkup;
+    };
+
+    this.removeLocalizedFieldEntries = function(fieldProps) {
+        fieldProps.entries.empty();
+    };
+    
+    this.rebuildLocalizedFieldEntries = function(fieldProps, entryDataList) {
+        fieldProps.entries.empty();
+        
+        if (entryDataList && entryDataList.length) {
+            // add the main/default entry (Product[Category]Content, index zero) + ContentAssoc entries
+            jQuery.each(entryDataList, function(index, entryData) {
+                var entryMarkup = sefh.buildLocalizedFieldEntry(fieldProps.entryMarkupTmpl, fieldProps.typeName, index, entryData);
+                if (entryMarkup) {
+                    fieldProps.entries.append(entryMarkup);
+                }
+            });
+        } else {
+            // add empty main/default entry (Product[Category]Content)
+            var entryMarkup = sefh.buildLocalizedFieldEntry(fieldProps.entryMarkupTmpl, fieldProps.typeName, 0, {});
+            if (entryMarkup) {
+                fieldProps.entries.append(entryMarkup);
+            }
+        }
+    };
+    
+    this.removeAllLocalizedFieldEntries = function(allFieldsCnt, typeNames, entryDataListsByType) {
+        jQuery.each(typeNames, function(index, typeName) {
+            var fieldProps = sefh.getLocalizedFieldProps(null, typeName, allFieldsCnt);
+            if (fieldProps) { // if null, either error or not supported by form
+                sefh.removeLocalizedFieldEntries(fieldProps, entryDataListsByType[typeName]);
+            }
+        });
+    };
+    
+    this.rebuildAllLocalizedFieldEntries = function(allFieldsCnt, typeNames, entryDataListsByType) {
+        jQuery.each(typeNames, function(index, typeName) {
+            var fieldProps = sefh.getLocalizedFieldProps(null, typeName, allFieldsCnt);
+            if (fieldProps) { // if null, either error or not supported by form
+                sefh.rebuildLocalizedFieldEntries(fieldProps, entryDataListsByType[typeName]);
+            }
+        });
+    };
+
+    this.addLocalizedFieldEntry = function(fieldProps, entryData) {
+        if (!entryData) entryData = {}; // adds empty
+        
+        var index = jQuery('.acctg-locfield-entry', fieldProps.fieldCnt).length; // starts at zero
+        
+        var entryMarkup = sefh.buildLocalizedFieldEntry(fieldProps.entryMarkupTmpl, fieldProps.typeName, index, entryData);
+        if (entryMarkup) {
+            fieldProps.entries.append(entryMarkup);
+        }
+    };
+    
+    this.handleFieldAdd = function(linkElem) {
+        linkElem = jQuery(linkElem);
+        var fieldCnt = linkElem.closest('.acctg-locfield');
+        if (fieldCnt.length) {
+            var fieldProps = sefh.getLocalizedFieldProps(fieldCnt);
+            if (!fieldProps) return;
+            sefh.addLocalizedFieldEntry(fieldProps, {});
+        } else {
+            reportInternalError('missing acctg-locfield class on localized field');
+        }
+    };
+    
+    /**
+     * DEV NOTE: This INTENTIONALLY does not remove duplicates, because it can happen through
+     * system or user error. This allows user to see the error, and when submit it should correct itself;
+     * this is better than texts silently disappearing.
+     */
+    this.parseViewsByType = function(viewsByType) {
+        /* don't have to do anything; names already match
+        var entryDataListsByType = {};
+        jQuery.each(viewsByType, function(typeName, viewList) {
+            var entryDataList = [];
+            if (viewList) {
+                for(var i=0; i < viewList.length; i++) {
+                    var view = viewList[i];
+                    entryDataList.push({
+                        localeString:view.localeString,
+                        textData:view.textData
+                    });
+                }
+            }
+            entryDataListsByType[typeName] = entryDataList;
+        });
+        return entryDataListsByType;
+        */
+        return viewsByType;
+    };
+}
+ScpAcctgFormHelper.extractClassNameSuffix = function(elem, prefix) {
+    var classes = elem.attr('class').split(/\s+/);
+    var result = null;
+    var startsWith = function(str, prefix) {
+        return (str.lastIndexOf(prefix, 0) === 0);
+    };
+    jQuery.each(classes, function(i, e) {
+        if (startsWith(e, prefix)) {
+            result = e.substring(prefix.length);
+            return false;
+        }
+    });
+    return result;
+};
+// Default instance (used to have properties, not required anymore)
+var scpAcctgFormHelper = new ScpAcctgFormHelper({});
+
+/**
+ * GlAccount tree handler constructor.
+ */
+function ScpAccountingTreeHandler(data) { // TODO?: this object could go in js file
     var scth = this; // capture for private methods and js kludges
-    var slfh = stcLocFieldHandler;
+    var sefh = scpAcctgFormHelper;
     
     scth.fadeOptions = data.fadeOptions || {};
     scth.treeId = data.treeId;
-    scth.productStoreEntity = data.productStoreEntity;
-    scth.productStoreId = data.productStoreEntity.productStoreId;
+    scth.glTopGlAccountEntity = data.topGlAccountEntity;    
     scth.allActionProps = data.actionProps || {};
-    scth.markup = new ScpCntFormMarkup(data.markupSelectors || {});
+    scth.markup = new ScpAcctgFormMarkup(data.markupSelectors || {});
     scth.links = data.links || {};
     scth.hideShowFormIds = data.hideShowFormIds;
     scth.labels = data.labels || {};
@@ -30,7 +220,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     scth.popupMsgModalId = data.popupMsgModalId;
     scth.confirmMsgModalId = data.confirmMsgModalId;
     scth.dialogIdPrefix = data.dialogIdPrefix;
-    scth.catalogLocFieldsInfo = data.catalogLocFieldsInfo || {};
+    scth.objectLocFields = data.objectLocFields || {};
     
     // workaround flags
     // FIXME: these are being used to prevent form changes on event error,
@@ -71,42 +261,29 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         return (str.indexOf(suffix, str.length - suffix.length) !== -1);
     };
     var extractClassNameSuffix = function(elem, prefix) {
-        return ScpCntFormUtil.extractClassNameSuffix(elem, prefix);
+        return ScpAcctgFormHelper.extractClassNameSuffix(elem, prefix);
     };
 
     // TODO: REVIEW: these
     var openModal = function(modalElem) {
         try {
-            modalElem.foundation('reveal', 'open');
+            ${modalControl('modalElem','open')}
         } catch(err) {
-            try {
-                modalElem.modal('show'); 
-            }
-            catch(err) {
-                //t.dispatchEvent(event); // FIXME?
-            }
         }
     };
     var closeModal = function(modalElem) {
         try {
-            modalElem.foundation('reveal', 'close');
+            ${modalControl('modalElem','close')}
         } catch(err) {
-            try {
-                modalElem.modal('hide'); 
-            }
-            catch(err) {
-                //t.dispatchEvent(event); // FIXME?
-            }
         }
     };
 
     // TODO?: blocking mode? return values? callback?
-    var showPopupMsg = function(msg, extraMsg) {
+    var showPopupMsg = function(msg) {
         if (scth.popupMsgModalId) {
             var modalElem = jQuery('#'+scth.popupMsgModalId);
             if (modalElem.length) {
-                jQuery('.ect-dialogmsg', modalElem).html(msg);
-                jQuery('.ect-dialogextramsg', modalElem).html(extraMsg || '');
+                jQuery('.acctg-dialogmsg', modalElem).html(msg);
                 openModal(modalElem);
             } else {
                 return alert(msg);
@@ -115,16 +292,15 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
             return alert(msg);
         }
     };
-    var showConfirmMsg = function(msg, extraMsg, modalElem, continueCallback) {
+    var showConfirmMsg = function(msg, modalElem, continueCallback) {
         if ((!modalElem || !modalElem.length) && scth.confirmMsgModalId) {
             modalElem = jQuery('#'+scth.confirmMsgModalId);
         }
         if (modalElem && modalElem.length) {
-            jQuery('.ect-dialogmsg', modalElem).html(msg);
-            jQuery('.ect-dialogextramsg', modalElem).html(extraMsg || '');
-            jQuery('.ect-dialogbtn', modalElem).click(function() {
+            jQuery('.acctg-dialogmsg', modalElem).html(msg);
+            jQuery('.acctg-dialogbtn', modalElem).click(function() {
                 closeModal(modalElem);
-                var selectedName = extractClassNameSuffix(jQuery(this), 'ect-dialogbtn-');
+                var selectedName = extractClassNameSuffix(jQuery(this), 'acctg-dialogbtn-');
                 continueCallback(selectedName);
             });
             openModal(modalElem);
@@ -228,9 +404,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         }
         return ($parent) ? $node : null; // prevents returning the root node
     };
-    var getCatalogNodeForNode = function($node) {
-        return getTopLevelNode($node);
-    }
+    
     var getNodeObjectType = function($node) {
         if ($node && $node.data) return $node.data.type; // same names, 1-for-1 mapping
         else return null;
@@ -344,25 +518,14 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         var desc = null;
         var objectType = getNodeObjectType($node);
         //var objectId = getNodeObjectId($node);
-        if (objectType === 'catalog') {
+        if (objectType === 'glAccount') {
             desc = $node.text + ' (' + scth.labels.catalog + ')';
-        } else if (objectType === 'category') {
-            desc = $node.text + ' (' + scth.labels.category + ')';
-        } else if (objectType === 'product') {
-            desc = $node.text + ' (' + scth.labels.product + ')';
         } else if ($node && $node.text) { // fallback
             desc = $node.text;
         }
         return desc;
     };
-    var getStoreObjectDesc = function() { // TODO: version that works without node
-        var desc = null;
-        if (scth.productStoreEntity) {
-            desc = scth.productStoreEntity.storeName + ' [' + scth.productStoreEntity.productStoreId + '] (' + scth.labels.store + ')';
-        }
-        return desc;
-    };
-    
+        
     /**
      * Renames and/or filters out parameters by name as requested by caller action props.
      * To prevent entries in paramNames from being included you must set paramNamesMode "explicit".
@@ -383,7 +546,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
                     if (k === 'data') {
                         resParams.data = v;
                     } else {
-                        var replName = actionProps.paramNames[k];
+                        var replName = actionProps.paramNames[k];                        
                         if (!isUndefOrNull(replName)) {
                             if (jQuery.type(replName) === 'array') {
                                 jQuery.each(replName, function(i, e) {
@@ -414,34 +577,18 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         return resParams;
     };
     
-    var setCheckboxChecked = function(field, state) {
-        if (field.is("input[type=checkbox]")) {
-            field.prop('checked', state);
-        } else {
-            jQuery("input[type=checkbox]", field).prop('checked', state);
-        }
-    };
-    
     /**
      * By default, clears all fields/elems having "etc-xxxfield" classes.
      */
     this.clearFormCommon = function(form, params, ai) {
-        jQuery('.ect-inputfield', form).filter(':input').val('');
-        jQuery('.ect-displayfield', form).html('');
-        jQuery('.ect-managefield', form).html('');
-        jQuery('.ect-checkfield', form).each(function() {
-            var field = jQuery(this);
-            if (field.hasClass('ect-initial-checked')) {
-                setCheckboxChecked(field, true);
-            } else {
-                setCheckboxChecked(field, false);
-            }
-        });
+        jQuery('.acctg-inputfield', form).filter(':input').val('');
+        jQuery('.acctg-displayfield', form).html('');
+        jQuery('.acctg-managefield', form).html('');
         
         if (params.local) {
             var localizedFields = params.local.localizedFields;
             if (localizedFields) {
-                slfh.removeAllLocalizedFieldEntries(form, localizedFields.typeNames, localizedFields.entryDataListsByType);
+                sefh.removeAllLocalizedFieldEntries(form, localizedFields.typeNames, localizedFields.entryDataListsByType);
             }
         }
     };
@@ -449,7 +596,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     this.makeManageLinkForElem = function(elem, name, value, form, params, ai) {
         if (value) {
             // FIXME: unhardcode markup
-            var markup = jQuery('<a href="javascript:void(0);" class="ect-managefield-link">' + value + '</a>');
+            var markup = jQuery('<a href="javascript:void(0);" class="acctg-managefield-link">' + value + '</a>');
             markup.click(function() {
                 scth.execManageForNode(ai.node);
             });
@@ -463,40 +610,82 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         if (isUndefOrNull(value)) {
             value = ai.defaultParams[name] || '';
         }
-        if (elem.is(':input')) {
-            elem.val(value);
-        } else if (elem.hasClass('ect-displayfield')) {
+        // console.log("elem id: " + elem.prop('id') + " name: " + name + " value: " + value);
+        if (elem.is('input:checkbox')) {
+        	if (value && (value === true || value === "Y"))
+        		elem.attr("checked", true);
+        } else if (elem.is(':input')) {
+        	if (name.endsWith("_i18n")) {
+        		id = elem.prop('id');
+        		newId = "#" + id.substr(0, id.lastIndexOf('_i18n'));
+        		elem = jQuery(newId);
+        		// console.log("i18n elem id: " + newId + " name: " + elem.prop('name') + " value: " + value);
+        	}
+        	if (elem.hasClass("acctg-inputdate")) {        		
+        		if (value) {
+        			var datetime = new Date(value);        		
+        			elem.val(datetime.toLocaleDateString());
+        		}
+        	} else if (elem) {
+        		elem.val(value);
+        	}
+        } else if (elem.is('select')) {
+        	elem.val(value);        	
+        } else if (elem.hasClass('acctg-displayfield')) {
             elem.html(value);
-        } else if (elem.hasClass('ect-managefield')) {
+        } else if (elem.hasClass('acctg-managefield')) {
             scth.makeManageLinkForElem(elem, name, value, form, params, ai);
+        } else if (elem.is('span') && elem.hasClass('acctg-inputfield') && elem.hasClass('checkbox-item')) {
+        	childElem = jQuery(jQuery(elem).children('input[type="checkbox"]')[0]);        	
+        	childElem.val(value);
+        	if (value == true || value == "Y" ) {
+        		childElem.attr("checked", true);
+        	}
         } else {
-            reportInternalError('form field misconfigured for use with catalog tree - no value can be assigned. form id: ' + 
+            reportInternalError('form field misconfigured for use with tree - no value can be assigned. form id: ' + 
                 elem.closest('form').prop('id') + 
                 ', elem tag: ' + elem.prop('tagName') +
                 ', class: ' + elem.attr('class') +
+                ', id: ' + elem.attr('id') +
                 ',  name: ' + elem.prop('name'));
         }
     };
     
-    this.getEctFormFieldName = function(elem) {
-        var name = null;
+    this.getAcctgFormFieldName = function(elem) {
+        var name = null;        
         if (elem.is(':input')) {
             name = elem.prop('name');
             if (!name) {
-                if (elem.hasClass('ect-inputfield')) {
-                    name = extractClassNameSuffix(elem, 'ect-inputfield-for-'); 
+                if (elem.hasClass('acctg-inputfield')) {
+                    name = extractClassNameSuffix(elem, 'acctg-inputfield-for-'); 
                 }
             }
-        } else if (elem.hasClass('ect-displayfield')) {
-            name = extractClassNameSuffix(elem, 'ect-displayfield-for-'); 
-        } else if (elem.hasClass('ect-managefield')) {
-            name = extractClassNameSuffix(elem, 'ect-managefield-for-'); 
-        } 
+            if (name.endsWith("_i18n")) {        		
+        		name = name.substr(0, name.lastIndexOf('_i18n'));        		
+//        		console.log("i18n elem name: " + name);
+        	}
+        } else if (elem.hasClass('acctg-displayfield')) {
+            name = extractClassNameSuffix(elem, 'acctg-displayfield-for-'); 
+        } else if (elem.hasClass('acctg-managefield')) {
+            name = extractClassNameSuffix(elem, 'acctg-managefield-for-'); 
+        } else if (elem.is('span') && elem.hasClass('acctg-inputfield') && elem.hasClass('checkbox-item')) {        
+        	childElem = jQuery(jQuery(elem.children('input[type="checkbox"]')[0]));
+        	if (childElem) {	        	
+	    	    name = childElem.prop('name');
+	    	    if (!name) {
+	                if (childElem.hasClass('acctg-inputfield')) {
+	                    name = extractClassNameSuffix(childElem, 'acctg-inputfield-for-'); 
+	                }
+	            }    
+        	}
+        }
+        
         if (!name) {
-            reportInternalError('form field misconfigured for use with catalog tree' +
+            reportInternalError('form field misconfigured for use with tree' +
                 ' - no name can be extracted from it. form id: ' + elem.closest('form').prop('id') + 
                 ', elem tag: ' + elem.prop('tagName') +
                 ', class: ' + elem.attr('class') +
+                ', id: ' + elem.attr('id') +
                 ',  name: ' + elem.prop('name'));
         }
         return name;
@@ -504,16 +693,15 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     
     /**
      * Default populate form implementation.
-     * Each form field/elem with "ect-xxxclass" receives a param or empty value/html.
-     * TODO?: special handling for "ect-nonvaluefield" class, not yet established.
+     * Each form field/elem with "acctg-xxxclass" receives a param or empty value/html.
      */
     this.populateFormCommon = function(form, params, ai) {
         if (isObj(params)) {
             var fieldHandlers = ai.actionProps.populateFormFields || {};
             
-            jQuery('.ect-inputfield, .ect-displayfield, .ect-managefield', form).each(function(i, elem) {
+            jQuery('.acctg-inputfield, .acctg-displayfield, .acctg-managefield', form).each(function(i, elem) {
                 elem = jQuery(elem);
-                var name = scth.getEctFormFieldName(elem);
+                var name = scth.getAcctgFormFieldName(elem);
                 if (name) {
                     var value = params[name];
                     
@@ -533,7 +721,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
             if (params.local) {
                 var localizedFields = params.local.localizedFields;
                 if (localizedFields) {
-                    slfh.rebuildAllLocalizedFieldEntries(form, localizedFields.typeNames, localizedFields.entryDataListsByType);
+                    sefh.rebuildAllLocalizedFieldEntries(form, localizedFields.typeNames, localizedFields.entryDataListsByType);
                 }
             }
         }
@@ -541,17 +729,17 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     
     var getCommonTreeFields = function(form, params, ai) {
         return {
-            ectTargetNodePath: getNodeObjectIdPathString(ai.node), // the "current" node path
-            ectNewTargetNodePath: params.ectNewTargetNodePath, // the "next" node path IF event success (must be set by callers)
-            ectSubmittedFormId: form.prop('id')
+            acctgTargetNodePath: getNodeObjectIdPathString(ai.node), // the "current" node path
+            acctgNewTargetNodePath: params.acctgNewTargetNodePath, // the "next" node path IF event success (must be set by callers)
+            acctgSubmittedFormId: form.prop('id')
         };
     };
     
     var populateFormCommonTreeFieldsOnly = function(form, params, ai) {
         var fields = getCommonTreeFields(form, params, ai);
-        jQuery('input[name=ectTargetNodePath].ect-inputfield', form).val(fields.ectTargetNodePath || '');
-        jQuery('input[name=ectNewTargetNodePath].ect-inputfield', form).val(fields.ectNewTargetNodePath || '');
-        jQuery('input[name=ectSubmittedFormId].ect-inputfield', form).val(fields.ectSubmittedFormId || '');
+        jQuery('input[name=acctgTargetNodePath].acctg-inputfield', form).val(fields.acctgTargetNodePath || '');
+        jQuery('input[name=acctgNewTargetNodePath].acctg-inputfield', form).val(fields.acctgNewTargetNodePath || '');
+        jQuery('input[name=acctgSubmittedFormId].acctg-inputfield', form).val(fields.acctgSubmittedFormId || '');
     };
     
     var populateForm = function(form, params, ai) {
@@ -594,9 +782,8 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         // FIXME?: the confirm message should occur earlier than this, but need new factor points
         var confirmMsg = params.local.confirmMsg || ai.actionProps.confirmMsg;
         if (confirmMsg) {
-            var confirmExtraMsg = params.local.confirmExtraMsg || ai.actionProps.confirmExtraMsg;
             var modalElem = jQuery('#'+ scth.dialogIdPrefix + ai.objectType + '-' + ai.actionType);
-            showConfirmMsg(confirmMsg, confirmExtraMsg, modalElem, function(subActionType) {
+            showConfirmMsg(confirmMsg, modalElem, function(subActionType) {
                 params.subActionType = subActionType;
                 if (preParamNamesMap && preParamNamesMap.subActionType) {
                     if (typeof preParamNamesMap.subActionType === 'function') {
@@ -607,7 +794,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
                 }
                 
                 // check if the modal had any params, dump them into params
-                jQuery('form.ect-dialogopts-form :input', modalElem).each(function(i, input) {
+                jQuery('form.acctg-dialogopts-form :input', modalElem).each(function(i, input) {
                     input = jQuery(input);
                     var name = input.prop('name');
                     if (name) params[name] = input.val();
@@ -629,7 +816,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
      * NOTE: caller can pass params and call setActionPropsParams instead (convenience).
      */
     var execActionTarget = function(ai, params) {
-        var coreExec = function() {
+        var coreExec = function() {        	
             params = getResolvedActionPropsParams(ai, params);
             if (ai.actionProps.type == "link") {
                 openLink(ai.actionProps.url, params, ai.actionProps.target);
@@ -677,50 +864,50 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         };
 
  
-    /**
+        /**
      * Merges the entity fields for the node together.
      */
     this.getNodeEntitiesMerged = function($node) {
         var params = {};
         jQuery.each($node.data || {}, function(k, v) {
             if (endsWith(k, 'Entity')) {
-                jQuery.extend(params, v);
-            }
-        });
-        return params;
-    };
- 
-    var substituteMsg = function(msg, values, quoteChar, useHtml, htmlEscapeValues) {
-        if (msg && values) {
-            if (quoteChar === false) quoteChar = '';
-        else if (!quoteChar) quoteChar = "'";
-        
-        var spanOpen = '<span class="ect-dialogmsg-recordname">';
-        var spanClose = '</span>';
-        if (useHtml === false) {
-            spanOpen = '';
-            spanClose = '';
-        }
-
-        jQuery.each(values, function(k, value) {
-            if (value) {
-                value = quoteChar+value+quoteChar;
-                if (htmlEscapeValues !== false) {
-                    value = htmlMarkupEscape(value);
-                }
-                value = spanOpen+value+spanClose;
-                msg = msg.replace('${'+k+'}', value);
+                    jQuery.extend(params, v);
                 }
             });
-        }
-        return msg;
-    };
+            return params;
+        };
  
-    var substituteConfirmMsg = function(ai, params, values, quoteChar, useHtml, htmlEscapeValues) {
-        var confirmMsg = params.local.confirmMsg || ai.actionProps.confirmMsg;
-        confirmMsg = substituteMsg(confirmMsg, values, quoteChar, useHtml, htmlEscapeValues);
-        params.local.confirmMsg = confirmMsg;
-    };
+        var substituteMsg = function(msg, values, quoteChar, useHtml, htmlEscapeValues) {
+            if (msg && values) {
+                if (quoteChar === false) quoteChar = '';
+            else if (!quoteChar) quoteChar = "'";
+            
+            var spanOpen = '<span class="acctg-dialogmsg-recordname">';
+            var spanClose = '</span>';
+            if (useHtml === false) {
+                spanOpen = '';
+                spanClose = '';
+            }
+
+            jQuery.each(values, function(k, value) {
+                if (value) {
+                    value = quoteChar+value+quoteChar;
+                    if (htmlEscapeValues !== false) {
+                        value = htmlMarkupEscape(value);
+                    }
+                    value = spanOpen+value+spanClose;
+                    msg = msg.replace('${'+k+'}', value);
+                    }
+                });
+            }
+            return msg;
+        };
+ 
+        var substituteConfirmMsg = function(ai, params, values, quoteChar, useHtml, htmlEscapeValues) {
+            var confirmMsg = params.local.confirmMsg || ai.actionProps.confirmMsg;
+            confirmMsg = substituteMsg(confirmMsg, values, quoteChar, useHtml, htmlEscapeValues);
+            params.local.confirmMsg = confirmMsg;
+        };
  
     /**
      * Prepares params for the action, for links & form filling. 
@@ -731,13 +918,17 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
      */
     var makeParamsMap = function(ai, mergeEntities) {
         var params = {};
-        
-        // store & catalog (these not necessarily included in entities)
-        params.productStoreId = scth.productStoreId;
-        if (ai.objectType == "catalog") {
-            params.prodCatalogId = ai.objectId;
+
+        if (ai.objectType == "glAccount") {
+            params.topGlAccountId = ai.objectId;
+        } else if (ai.objectType == "timePeriod") {
+        	if (ai.actionType === "add") {
+        		params.parentPeriodId = ai.objectId;
+        	} else {
+        		params.customTimePeriodId = ai.objectId;
+        	}
         } else if (ai.node) {
-            params.prodCatalogId = getNodeObjectId(getCatalogNodeForNode(ai.node))
+//            params.topGlAccountId = getNodeObjectId(getTopLevelNode(ai.node))
         }
         
         // merge any *Entity fields into params map (this takes care of objectId & parent id)
@@ -769,16 +960,16 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
             success: function(data) {
                 if (data._ERROR_MESSAGE_ || data._ERROR_MESSAGE_LIST_) {
                     if (data._ERROR_MESSAGE_) {
-                        reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_ + ' (' + scth.labels.tryreloadhint + ')');
+                        reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_);
                     } else {
-                        reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_LIST_[0] + ' (' + scth.labels.tryreloadhint + ')');
+                        reportError(scth.labels.errorfromserver + ': ' + data._ERROR_MESSAGE_LIST_[0]);
                     }
                 } else {
                     successCb(data);
                 }
             },
             error: function() {
-                reportError(scth.labels.servercommerror + ' (' + scth.labels.tryreloadhint + ')');
+                reportError(scth.labels.servercommerror);
             }
         });   
     };
@@ -813,20 +1004,29 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         return ai;
     };
     
-    var initLocFieldParams = function(params, objectType) {
-        var fieldInfo = scth.catalogLocFieldsInfo[objectType];
-        if (fieldInfo) {
-            params.local.localizedFields = {
-                typeNames: fieldInfo.typeNames,      
-                entryDataListsByType: {}
+    this.execSelectForNode = function($node) {
+    	var ai = getActionInfo($node, "select");
+    	var params = makeParamsMap(ai);
+    	
+    	checkExecConfirm(ai, params, {}, function() {
+    		var execSelect = function() {
+                execActionTarget(ai, params);
             };
-        }
-        return fieldInfo;
+            
+            doExecSelect = true;
+            if (ai.objectType === 'glAccount') {
+            	execSelect();
+            } else if (ai.objectType === 'timePeriod') {
+            	execSelect();
+            }
+    	});    	
     };
     
     this.execEditForNode = function($node) {
         var ai = getActionInfo($node, "edit");
         var params = makeParamsMap(ai);
+        // default params OK
+        
         checkExecConfirm(ai, params, {}, function() {
             var execEdit = function() {
                 execActionTarget(ai, params);
@@ -834,55 +1034,37 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
             
             var doExecEdit = true;
             if (specFlags.noShowFormPopulate !== true) {
-                var fieldInfo = initLocFieldParams(params, ai.objectType);
-                if (ai.objectType === 'category') {
-                    if (scth.links.getProductCategoryExtendedData) {
+                
+                var fieldInfo = scth.objectLocFields[ai.objectType];
+                
+                if (ai.objectType === 'glAccount') {
+                    if (scth.links.getGlAccountExtendedData) {
                         doExecEdit = false;
-                        runAjax(scth.links.getProductCategoryExtendedData, {
-                                productCategoryId: ai.objectId,
-                                prodCatContentTypeIdList: fieldInfo.typeNameListStr,
-                                getViewsByType: true,
-                                getTextByTypeAndLocale: false
+                        runAjax(scth.links.getGlAccountExtendedData, {
+                                glAccountId: ai.objectId,
                             }, 
                             function(data) {
-                                if (data.productCategory) {
-                                    jQuery.extend(params, data.productCategory);
-                                    
-                                    if (data.viewsByType) {
-                                        //alert('server result: ' + JSON.stringify(data.textByTypeAndLocale, null, 2));
-                                        params.local.localizedFields.entryDataListsByType = slfh.parseViewsByType(data.viewsByType);
-                                    }
-                                    execEdit();
-                                } else {
-                                    
+                                if (data.glAccount) {
+                                	params = $.extend(params, data.glAccount);
                                 }
+                                execEdit();
                             }
                         );
                     }
-                } else if (ai.objectType === 'product') {
-                    if (scth.links.getProductExtendedData) {
-                        doExecEdit = false;
-                        runAjax(scth.links.getProductExtendedData, {
-                                productId: ai.objectId,
-                                productContentTypeIdList: fieldInfo.typeNameListStr,
-                                getViewsByType: true,
-                                getTextByTypeAndLocale: false
+                } else if (ai.objectType === 'timePeriod') {
+                	if (scth.links.getTimePeriodExtendedData) {
+                		doExecEdit = false;
+                        runAjax(scth.links.getTimePeriodExtendedData, {
+                                customTimePeriodId: ai.objectId,
                             }, 
                             function(data) {
-                                if (data.product) {
-                                    jQuery.extend(params, data.product);
-
-                                    if (data.viewsByType) {
-                                        //alert('server result: ' + JSON.stringify(data.textByTypeAndLocale, null, 2));
-                                        params.local.localizedFields.entryDataListsByType = slfh.parseViewsByType(data.viewsByType);
-                                    }
-                                    execEdit();
-                                } else {
-                                    
+                                if (data.timePeriod) {
+                                	params = $.extend(params, data.timePeriod);
                                 }
+                                execEdit();
                             }
                         );
-                    }
+                	}
                 }
             }
             if (doExecEdit) {
@@ -897,154 +1079,12 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         var draggable = true;
         jQuery.each($nodeOrList, function(i, $node) {
             var objectType = getNodeObjectType($node);
-            if (objectType !== 'category' && objectType !== 'product') {
+            if (objectType !== 'glAccount') {
                 draggable = false;
                 return false;
             }
         });
         return draggable;
-    };
-    
-    /**
-     * Returns true only if all nodes are valid for copy/move to the target.
-     */
-    this.isValidCopyMoveTarget = function($nodeOrList, $targetNode) {
-        if (!$nodeOrList || !$targetNode || isRootNode($targetNode)) return false;
-        $nodeOrList = ensureArray($nodeOrList);
-        if ($nodeOrList.length <= 0) return false;
-        
-        var targetObjectId = getNodeObjectId($targetNode);
-        var targetType = getNodeObjectType($targetNode);
-        if (targetType !== 'catalog' && targetType !== 'category') return false;
-        
-        var result = true;
-        for(var i=0; i < $nodeOrList.length; i++) {
-            var $node = $nodeOrList[i];
-        
-            if (!$node || isRootNode($node)) return false;
-            
-            var objectType = getNodeObjectType($node);
-            if (objectType !== 'category' && objectType !== 'product') return false;
-            
-            var $parent = getParentNode($node);
-            if (!$parent) return false;
-            
-            // check if target is already us (?!) or our parent
-            if ($node.id === $targetNode.id || $node.id === $parent.id) return false;
-            // must also check via "real" object ID
-            var objectId = getNodeObjectId($node);
-            if (objectType === targetType && objectId === targetObjectId) return false;
-            var parentType = getNodeObjectType($parent);
-            var parentObjectId = getNodeObjectId($parent);
-            if (parentType === targetType && parentObjectId === targetObjectId) return false;
-            
-            if (objectType === 'product') {
-                // products can only go under categories
-                if (targetType !== 'category') return false;
-            } else {
-                // category can't go under itself
-                if (isChildNodeOf($node, $targetNode)) return false;
-            }
-            
-            // make sure the object is not already child of the target
-            
-            if (getChildNodeByObjectId($targetNode, objectId, objectType)) return false;
-        }
-        return true;  
-    };
-    
-    this.execCopyMoveAssocForNode = function($node, $targetNode) {
-        if (!scth.isValidCopyMoveTarget($node, $targetNode)) {
-            return false;
-        }
-    
-        var ai = getActionInfo($node, "copymoveassoc");
-        var params = makeParamsMap(ai);
-        
-        // target to_ node
-        var targetObjectType = getNodeObjectType($targetNode);
-        if (targetObjectType === 'catalog') {
-            params.to_prodCatalogId = getNodeObjectId($targetNode);
-            // if already a catalog relation, preserve the type,
-            // otherwise use caller default (user can edit after)...
-            if (params.prodCatalogCategoryTypeId) {
-                params.to_prodCatalogCategoryTypeId = params.prodCatalogCategoryTypeId;
-            } else {
-                // get default from catalog newcategory defaultParams
-                var cncDefParams = getActionPropsDefaultParams(getActionProps("catalog", "newcategory"));
-                if (cncDefParams.prodCatalogCategoryTypeId) {
-                    params.to_prodCatalogCategoryTypeId = cncDefParams.prodCatalogCategoryTypeId;
-                } else {
-                    params.to_prodCatalogCategoryTypeId = "PCCT_BROWSE_ROOT"; // fallback default (can't be empty)
-                }
-            }
-            params.to_parentProductCategoryId = null;
-        } else if (targetObjectType === 'category') {
-            params.to_prodCatalogId = null;
-            params.to_prodCatalogCategoryTypeId = null;
-            params.to_parentProductCategoryId = getNodeObjectId($targetNode);
-        }
-        params.to_fromDate = null; // TODO?: no way to populate - service will make it
-        params.to_sequenceNum = null; // TODO?: no way to populate (unreliable), can't reuse previous, but could be desirable...
-        
-        substituteConfirmMsg(ai, params, {
-            toRecordName: getNodeObjectDesc($targetNode)
-        });
-        
-        // NOTE: this path is used on success only and further adjusted server-side
-        params.ectNewTargetNodePath = getNodeObjectIdPathString($targetNode);
-        
-        // FIXME: the checkExecConfirm should be earlier in function, but this is working for time being
-        var effArgs = {};
-        checkExecConfirm(ai, params, 
-            {subActionType: function(subActionType, params, ai) {
-                if ("copy" === subActionType) {
-                    effArgs.ai = getActionInfo($node, "copyassoc");
-                    params.deleteAssocMode = null;
-                    params.returnAssocFields = "true"; // for now, switching to the new node after copy...
-                } else if ("move-remove" === subActionType) {
-                    effArgs.ai = getActionInfo($node, "moveassoc");
-                    params.deleteAssocMode = "remove";
-                    params.returnAssocFields = "true";
-                } else if ("move-expire" === subActionType) {
-                    effArgs.ai = getActionInfo($node, "moveassoc");
-                    params.deleteAssocMode = "expire";
-                    params.returnAssocFields = "true";
-                } else {
-                    // should not happen
-                    reportInternalError("invalid copy/move sub action type: " + subActionType);
-                }
-            }},
-            function() {
-                if (effArgs.ai) {
-                    execActionTarget(effArgs.ai, params);
-                }
-            }
-        );
-    };
-    
-    this.execRemoveAssocForNode = function($node) {
-        var ai = getActionInfo($node, "removeassoc");
-        var params = makeParamsMap(ai);
-        
-        var targetDesc;
-        if (ai.objectType === 'catalog') {
-            targetDesc = getStoreObjectDesc();
-        } else {
-            targetDesc = getNodeObjectDesc(getParentNode($node));
-        }
-        substituteConfirmMsg(ai, params, {
-            toRecordName: targetDesc
-        });
-        
-        // default params OK
-        checkExecConfirm(ai, params, {subActionType:"deleteAssocMode"}, function() {
-            if (params.deleteAssocMode) {
-                execActionTarget(ai, params);
-            } else {
-                reportInternalError('removeassoc received no deleteAssocMode from dialog (confirm dialog error - aborting)');
-            }
-        });
     };
     
     this.execRemoveForNode = function($node) {
@@ -1062,83 +1102,30 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         });
     };
     
-    this.execNewProductForNode = function($node) {
-        var ai = getActionInfo($node, "newproduct");
-        
-        // SPECIAL: the default entity merge doesn't work for this
-        var params = makeParamsMap(ai, false);
-        if (ai.objectType == "category") {
-            params.productCategoryId = ai.objectId;
-            // SPECIAL: we will set primaryProductCategoryId because it's the most common case,
-            // although not guaranteed always wanted
-            params.primaryProductCategoryId = params.productCategoryId;
-            params.isVirtual = "N";
-            params.isVariant = "N";
-        }
-        
-        checkExecConfirm(ai, params, {}, function() {
-            initLocFieldParams(params, ai.objectType);
-            execActionTarget(ai, params);
-        });
-    };
+    this.execNewForNode = function($node) {
+    	var ai = getActionInfo($node, "add");
+    	var params = makeParamsMap(ai);
+
+    	checkExecConfirm(ai, params, {}, function() {
+          execActionTarget(ai, params);
+    	});
+    }
     
-    this.execNewCategoryForNode = function($node) {
-        var ai = getActionInfo($node, "newcategory");
-        
-        // SPECIAL: the default entity merge doesn't work for this
-        var params = makeParamsMap(ai, false);
-        if (ai.objectType == "catalog") {
-            // prodCatalogId will be ok
-        } else if (ai.objectType == "category") {
-            params.parentProductCategoryId = ai.objectId;
-        }
-        
-        checkExecConfirm(ai, params, {}, function() {
-            initLocFieldParams(params, ai.objectType);
-            execActionTarget(ai, params);
-        });
-    };
-    
-    this.execNewCatalog = function() {
-        var ai = getActionInfo(null, "newcatalog", "default");
-        var params = makeParamsMap(ai);
-        // default params OK
-        checkExecConfirm(ai, params, {}, function() {
-            initLocFieldParams(params, ai.objectType);
-            execActionTarget(ai, params);
-        });
-    };
-    
-    this.execAddProductForNode = function($node) {
-        var ai = getActionInfo($node, "addproduct");
+    /**
+    this.execNewGlAccount = function() {
+        var ai = getActionInfo(null, "newglaccount", "default");
         var params = makeParamsMap(ai);
         // default params OK
         checkExecConfirm(ai, params, {}, function() {
             execActionTarget(ai, params);
         });
     };
-    
-    this.execAddCategoryForNode = function($node) {
-        var ai = getActionInfo($node, "addcategory");
-        
-        // SPECIAL: the default entity merge doesn't work for this
-        var params = makeParamsMap(ai, false);
-        if (ai.objectType == "catalog") {
-            // prodCatalogId will be ok
-        } else if (ai.objectType == "category") {
-            params.parentProductCategoryId = ai.objectId;
-        }
-        
-        checkExecConfirm(ai, params, {}, function() {
-            execActionTarget(ai, params);
-        });
-    };
-    
-    this.execAddCatalog = function() {
-        var ai = getActionInfo(null, "addcatalog", "default");
+    */   
+    this.execNewTimePeriod = function() {
+        var ai = getActionInfo(null, "add", "timePeriod");
         var params = makeParamsMap(ai);
         // default params OK
-        checkExecConfirm(ai, params, {}, function() {
+        checkExecConfirm(ai, params, {}, function() {            
             execActionTarget(ai, params);
         });
     };
@@ -1146,6 +1133,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     this.execManageForNode = function($node) {
         var ai = getActionInfo($node, "manage");
         var params = makeParamsMap(ai);
+        params.glAccountId = ai.objectId;
         // default params OK
         checkExecConfirm(ai, params, {}, function() {
             execActionTarget(ai, params);
@@ -1153,26 +1141,14 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     };
     
     this.execForNode = function(actionType, $node, $targetNode) {
-        if (actionType === "edit") {
+    	if (actionType === "select") {
             return this.execEditForNode($node);
-        } else if (actionType === "copymoveassoc") {
-            return this.execCopyMoveAssocForNode($node, $targetNode);
-        } else if (actionType === "removeassoc") {
-            return this.execRemoveAssocForNode($node);
+    	} else if (actionType === "edit") {
+            return this.execEditForNode($node);
         } else if (actionType === "remove") {
             return this.execRemoveForNode($node);
-        } else if (actionType === "newproduct") {
-            return this.execNewProductForNode($node);
-        } else if (actionType === "newcategory") {
-            return this.execNewCategoryForNode($node);
-        } else if (actionType === "newcatalog") {
-            return this.execNewCatalog();
-        } else if (actionType === "addproduct") {
-            return this.execAddProductForNode($node);
-        } else if (actionType === "addcategory") {
-            return this.execAddCategoryForNode($node);
-        } else if (actionType === "addcatalog") {
-            return this.execAddCatalog();
+        } else if (actionType === "add") {
+            return this.execNewForNode($node);
         } else if (actionType === "manage") {
             return this.execManageForNode($node);
         } else {
@@ -1188,6 +1164,14 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     var getMenuActionDefs = function($node) {
         var nodeObjectIsParent = isNodeObjectParent($node);
         return {
+        	select: {
+                "separator_before": false,
+                "separator_after": false,
+                "label": scth.labels.select,
+                "action": function(obj) {
+                    scth.execSelectForNode($node);
+                }
+            },
             edit: {
                 "separator_before": false,
                 "separator_after": false,
@@ -1195,15 +1179,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
                 "action": function(obj) {
                     scth.execEditForNode($node);
                 }
-            },
-            removeassoc: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.removeassoc,
-                "action": function(obj) {
-                    scth.execRemoveAssocForNode($node);
-                }
-            },
+            },          
             remove: {
                 "separator_before": false,
                 "separator_after": false,
@@ -1213,36 +1189,12 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
                     scth.execRemoveForNode($node);
                 }
             },
-            newcategory: {
+            add: {
                 "separator_before": false,
                 "separator_after": false,
-                "label": scth.labels.newcategory,
+                "label": scth.labels.add,
                 "action": function(obj) {
-                    scth.execNewCategoryForNode($node);
-                }
-            },
-            addcategory: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.addcategory,
-                "action": function(obj) {
-                    scth.execAddCategoryForNode($node);
-                }
-            },
-            newproduct: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.newproduct,
-                "action": function(obj) {
-                    scth.execNewProductForNode($node);
-                }
-            },
-            addproduct: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.addproduct,
-                "action": function(obj) {
-                    scth.execAddProductForNode($node);
+                    scth.execNewForNode($node);
                 }
             },
             manage: {
@@ -1251,22 +1203,6 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
                 "label": scth.labels.manage,
                 "action": function(obj) {
                     scth.execManageForNode($node);
-                }
-            },
-            newcatalog: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.newcatalog,
-                "action": function(obj) {
-                    scth.execNewCatalog();
-                }
-            },
-            addcatalog: {
-                "separator_before": false,
-                "separator_after": false,
-                "label": scth.labels.addcatalog,
-                "action": function(obj) {
-                    scth.execAddCatalog();
                 }
             }
         };
@@ -1283,39 +1219,19 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
         };
         
         var menuDefs = {};
-        if (objectType == 'catalog') {
+        if (objectType == 'glAccount' || objectType == 'timePeriod') {
             menuDefs = {
-                "edit": setDefLabel(defs.edit, scth.labels.editcatalog),
-                "removeassoc": setDefLabel(defs.removeassoc, scth.labels.removefromstore),
-                "remove": setDefLabel(defs.remove, scth.labels.deletecatalog),
-                "manage": setDefLabel(defs.manage, scth.labels.managecatalog),
-                "newcategory": defs.newcategory,
-                "addcategory": defs.addcategory,
-            };
-        } else if (objectType == 'category') {
-            menuDefs = {
-                "edit": setDefLabel(defs.edit, scth.labels.editcategory),
-                "removeassoc": setDefLabel(defs.removeassoc, 
-                    (parentObjectType === 'catalog') ? scth.labels.removefromcatalog : scth.labels.removefromcategory),
-                "remove": setDefLabel(defs.remove, scth.labels.deletecategory),
-                "manage": setDefLabel(defs.manage, scth.labels.managecategory),
-                "newcategory": setDefLabel(defs.newcategory, scth.labels.newsubcategory),
-                "addcategory": setDefLabel(defs.addcategory, scth.labels.addsubcategory),
-                "newproduct": defs.newproduct,
-                "addproduct": defs.addproduct
-            };
-        } else if (objectType == 'product') {
-            menuDefs = {
-                "edit": setDefLabel(defs.edit, scth.labels.editproduct),
-                "removeassoc": setDefLabel(defs.removeassoc, scth.labels.removefromcategory),
-                "remove": setDefLabel(defs.remove, scth.labels.deleteproduct),
-                "manage": setDefLabel(defs.manage, scth.labels.manageproduct)
+            	"add": defs.add,            
+                "edit": defs.edit,
+                "select": defs.select,
+                "remove": defs.remove,
+                "manage": defs.manage
             };
         }
         
         // filter - allows caller to omit certain menu items
         var resMenuDefs = {};
-        jQuery.each(menuDefs, function(k, v) {
+        jQuery.each(menuDefs, function(k, v) {        	
             if (isActionPropsValid(objectType, k)) {
                 resMenuDefs[k] = v;
             }
@@ -1328,7 +1244,7 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
     };
     
     this.sideMenuHandler = function($node) {
-        var $el = jQuery("#ect-action-menu");
+        var $el = jQuery("#acctg-action-menu-" + $node.data.type);
         var menuDefs = getMenuDefs($node);
         
         var useDividers = true;
@@ -1452,6 +1368,8 @@ function ScpCatalogTreeHandler(data) { // TODO?: this object could go in js file
             } else {
                 return false;
             }
+        } else if (op === "deselect_node") {
+        	console.log("node ===> " + node.id)
         }
         return false;
     };

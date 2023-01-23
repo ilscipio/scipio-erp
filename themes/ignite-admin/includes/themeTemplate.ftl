@@ -369,6 +369,20 @@ NOTES:
   </div>
 </#macro>
 
+<#function modalControl element type="open">
+    <#local call="">
+    <#switch type>
+        <#case "close">
+        <#local call>${element!""}.modal('hide');</#local>
+        <#break>
+        <#case "open">
+        <#default>
+        <#local call>${element!""}.modal('show');</#local>
+        <#break>
+    </#switch>
+    <#return call/>
+</#function>
+
 <#-- @slider main markup - theme override -->
 <#macro slider_markup title="" id="" sliderIdNum=0 class="" library="" controls=true indicator=true
 jsOptions="" origArgs={} passArgs={} catchArgs...>

@@ -99,6 +99,40 @@ containerClass="" containerStyle="" origArgs={} passArgs={} catchArgs...>
     </div>
 </#macro>
 
+<#function modalControl element type="open">
+    <#local call="" />
+    <#switch type?lower_case>
+        <#case "close">
+            <#local call>
+                if(${element!""} !== undefined){
+                    if (${element!""} instanceof jQuery){
+                        ${element!""}.removeClass('is-active');
+                    }else{
+                        ${element!""}.classList.remove('is-active');
+                    }
+                }else{
+                    document.getElementById('${element!""}').classList.remove('is-active');
+                }
+            </#local>
+            <#break>
+        <#case "open">
+        <#default>
+            <#local call>
+                if(${element!""} !== undefined){
+                    if (obj instanceof jQuery){
+                        ${element!""}.addClass('is-active');
+                    }else{
+                        ${element!""}.classList.add('is-active');
+                    }
+                }else{
+                    document.getElementById('${element!""}').classList.add('is-active');
+                }
+            </#local>
+            <#break>
+    </#switch>
+    <#return call/>
+</#function>
+
 <#-- @nav main markup - theme override -->
 <#macro nav_markup type="" id="" class="" style="" activeElem="" origArgs={} passArgs={} catchArgs...>
     <#switch type>

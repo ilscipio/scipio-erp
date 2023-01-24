@@ -12023,7 +12023,8 @@ canvas {
   transition: opacity 0.5s;
   opacity: 0;
   visibility: hidden;
-  overflow-y: auto; }
+  overflow-y: auto;
+  backdrop-filter: blur(4px); }
   .navbar-apps-overlay .navbar-wrap {
     position: relative;
     top: 25%;
@@ -12041,8 +12042,8 @@ canvas {
       flex-direction: column;
       justify-content: center;
       border: 2px solid #fff;
-      border-radius: 3px;
       background-color: #132C47;
+      background-image: linear-gradient(to left bottom, #132C47, #08131f);
       border-radius: 0.2rem;
       color: #fff;
       text-transform: uppercase;
@@ -12057,7 +12058,8 @@ canvas {
         margin-bottom: 1rem; }
       .navbar-apps-overlay .navbar-wrap .navbar-item:focus, .navbar-apps-overlay .navbar-wrap .navbar-item:focus-within, .navbar-apps-overlay .navbar-wrap .navbar-item:hover, .navbar-apps-overlay .navbar-wrap .navbar-item.is-active {
         color: #fff;
-        background-color: #BD1F1E; }
+        background-color: #BD1F1E;
+        background-image: linear-gradient(to left bottom, #BD1F1E, #911817); }
   .navbar-apps-overlay.is-active {
     opacity: 1;
     visibility: visible; }

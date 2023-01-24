@@ -129,6 +129,8 @@
   visibility: hidden;
   overflow-y:auto;
 
+  backdrop-filter: blur(4px);
+
   .navbar-wrap{
     position: relative;
     top: 25%;
@@ -149,8 +151,8 @@
       justify-content: center;
 
       border: 2px solid #fff;
-      border-radius: 3px;
       background-color: $navbar-apps-overlay-item-background;
+      background-image: linear-gradient(to left bottom, $navbar-apps-overlay-item-background, bulmaDarken($navbar-apps-overlay-item-background,10%));
       border-radius: $navbar-apps-overlay-item-radius;
       color: $navbar-apps-overlay-item;
       text-transform: uppercase;
@@ -170,6 +172,8 @@
       &.is-active {
         color: $navbar-apps-overlay-item-hover;
         background-color: $navbar-apps-overlay-item-background-hover;
+        background-image: linear-gradient(to left bottom, $navbar-apps-overlay-item-background-hover, bulmaDarken($navbar-apps-overlay-item-background-hover,10%));
+
       }
 
 

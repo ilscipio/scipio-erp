@@ -12059,7 +12059,8 @@ canvas {
       .navbar-apps-overlay .navbar-wrap .navbar-item:focus, .navbar-apps-overlay .navbar-wrap .navbar-item:focus-within, .navbar-apps-overlay .navbar-wrap .navbar-item:hover, .navbar-apps-overlay .navbar-wrap .navbar-item.is-active {
         color: #fff;
         background-color: #BD1F1E;
-        background-image: linear-gradient(to left bottom, #BD1F1E, #911817); }
+        background-image: linear-gradient(to left bottom, #BD1F1E, #911817);
+        transform: translateY(-5px) scale(1.05) translateZ(0); }
   .navbar-apps-overlay.is-active {
     opacity: 1;
     visibility: visible; }

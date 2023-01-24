@@ -173,7 +173,7 @@
         color: $navbar-apps-overlay-item-hover;
         background-color: $navbar-apps-overlay-item-background-hover;
         background-image: linear-gradient(to left bottom, $navbar-apps-overlay-item-background-hover, bulmaDarken($navbar-apps-overlay-item-background-hover,10%));
-
+        transform: translateY(-5px) scale(1.05) translateZ(0);
       }
 
 

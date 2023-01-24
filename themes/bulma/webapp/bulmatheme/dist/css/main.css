@@ -12024,7 +12024,7 @@ canvas {
   opacity: 0;
   visibility: hidden;
   overflow-y: auto;
-  backdrop-filter: blur(4px); }
+  backdrop-filter: blur(4px) grayscale(1); }
   .navbar-apps-overlay .navbar-wrap {
     position: relative;
     top: 25%;

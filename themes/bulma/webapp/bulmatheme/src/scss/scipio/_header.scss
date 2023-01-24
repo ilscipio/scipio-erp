@@ -129,7 +129,7 @@
   visibility: hidden;
   overflow-y:auto;
 
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px) grayscale(1);
 
   .navbar-wrap{
     position: relative;

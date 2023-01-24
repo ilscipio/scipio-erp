@@ -5,76 +5,94 @@ project_dir="$(pwd)"
 print_title() { echo -e "SCIPIO-ERP Addons and Themes Git Merging Script\n"; }
 
 print_usage() {
-  echo "usage: ./git-addons [ACTION] [ADDON]... [OPTION]...
+  echo "usage: ./git-addons [action] [addons]... [options]...
 
 ACTIONS
 
-  help                Show this help dialog.
+  help                      Show this help dialog.
 
-  config              Configures the specified addon(s) and (by default) commits
-                      any configuration changes made to the Git working copy.
-                      Note: The 'pull' command automatically runs this for newly-added addons.
-                      Note (2018-08-14): This currently does nothing for most addons; reserved for future use.
-                      Command-specific options (see options descriptions):
-                        -t, --no-commit   Do not create a Git commit for the config changes.
+  config                    Configures the specified addon(s) and (by default) commits
+                            any configuration changes made to the Git working copy.
+                            
+                            Note: The 'pull' command automatically runs this for newly-added addons.
+                            Note (2018-08-14): This currently does nothing for most addons; reserved for future use.
+                            
+                            Command-specific options (see options descriptions):
+                                -t, --no-commit       Do not create a Git commit for the config changes.
                       
-  install-xxxx        Combines the 'pull', 'config' and 'load-xxx' commands;
-                      runs 'pull' to fetch the specified addons, followed by 'config',
-                      followed by 'load-xxx' to load the specified seed and/or demo data.
-                      This is often enough to fully install an addon in a single copy
-                      of Scipio (for demoing or small setups), but usually this is
-                      not ideal for production setups (see discussion below).
-                      Command-specific options:
-                        -t, --no-commit   Do not create a Git commit for config changes.
+  install-xxxx [addons]     Combines the 'pull', 'config' and 'load-xxx' commands.
+  
+                            Runs 'pull' to fetch the specified addons, followed by 'config',
+                            followed by 'load-xxx' to load the specified seed and/or demo data.
+                            This is often enough to fully install an addon in a single copy
+                            of Scipio (for demoing or small setups), but usually this is
+                            not ideal for production setups (see discussion below).
+                            
+                            Command-specific options:
+                                -t, --no-commit       Do not create a Git commit for config changes.
 
-  list                List currently installed addons.
-                      Command-specific options:
-                        -a, --all         Show all recognized addons instead of installed ones.
+  list                      List currently installed addons.
+  
+                            Command-specific options:
+                                -a, --all             Show all recognized addons instead of installed ones.
 
-  load-xxxx           Loads seed and/or demo data for the specified addon(s) only,
-                      where load-xxxx is an Ant data load target ('./ant load-xxx') or alias.
-                      This addon must first have been added using 'pull'.
-                      Common targets (for more descriptions and targets, use: './ant -p'):
-                        load-demo         Load all data, including demo data (for demoing Scipio)
-                        load-production   Load seed, seed-initial and ext data (alias for load-extseed)
-                        load-seed         Load only seed data (not seed-initial, demo, or ext*)
-                      Command-specific options:
-                        (none)
+  load-xxxx [addons]        Loads seed and/or demo data for the specified addon(s) only,
+                            where load-xxxx is an Ant data load target ('./ant load-xxx') or alias.
+                            This addon must first have been added using 'pull'.
                       
-  pull                Add or merge (as appropriate) the named addon into working copy
-                      using git subtree.
-                      In addition, for newly-added addons, this will automatically 
-                      attempt to run the 'config' action if applicable, unless --no-config is passed.
-                      Command-specific options:
-                        -a, --all         Update all existing addons already present.
-                        -g, --no-config   Do not run 'config' action.
+                            Common targets (for more descriptions and targets, use: './ant -p'):
+                                load-demo           Load all data, including demo data (for demoing Scipio)
+                                load-production     Load seed, seed-initial and ext data (alias for load-extseed)
+                                load-seed           Load only seed data (not seed-initial, demo, or ext*)
+                          
+                            Command-specific options:
+                                (none)
+                      
+  pull [addons]             Add or merge as appropriate addons into working copy using git subtree.
+                            
+                            In addition, for newly-added addons, this will automatically attempt to run the 'config' 
+                            action if applicable, unless --no-config is passed.
+                            
+                            Command-specific options:
+                                -a, --all           Update all existing supported addons.
+                                -g, --no-config     Do not run 'config' action.
+                        
+  push [addons]             Push addons to their upstream repos using git subtree.
+  
+                            For this command to work, git-addons-config entries must be configured with the "push" option,
+                            otherwise must contain SCIPIO_ADDONS_OP_PUSH_ALL=true.
 
-  remote-reset        Force reset the remote for the specified addon(s).
-                      Command-specific options:
-                        -a, --all         Update all existing addons already present.
+                            Command-specific options:
+                                -a, --all           Update all existing supported addons.
 
+  remote-reset [addons]     Force reset addon remotes.
+  
+                            Command-specific options:
+                                -a, --all           Update all existing supported addons.
+                                
 OPTIONS (must come after ACTION and ADDON names):
 
-  -a, --all           Apply action to all recognized addons; meaning varies by action.
+  -a, --all                 Apply action to all existing supported addons.
   
-  -n, --dry-run       Dry run (git commands that modify working copy are not run)
+  -n, --dry-run             Dry run (git commands that modify working copy are not run)
 
-  -z, --no-commit     Do not commit configuration changes produced by the 'config'
-                      or 'install' commands.
-                      If you specify this, you may need to manually commit the
-                      changes afterward (if any), using 'git commit' on command line;
-                      this allows specifying a custom commit message.
-                      Note: The 'pull' command always creates a new commit regardless
-                      of this flag (git subtree always creates a new commit).
+  -z, --no-commit           Do not commit configuration changes produced by the 'config'
+                            or 'install' commands.
+                      
+                            If you specify this, you may need to manually commit the
+                            changes afterward (if any), using 'git commit' on command line;
+                            this allows specifying a custom commit message.
+                            
+                            Note: The 'pull' command always creates a new commit regardless
+                            of this flag (git subtree always creates a new commit).
 
-  -g, --no-config     For 'pull', prevents automatic run of the 'config' action.
+  -g, --no-config           pull: Prevent automatic run of the 'config' action hook.
 
-  -e, --no-msg-edit   Sets GIT_MERGE_AUTOEDIT=no, so no git prompts for merge messages 
-                      (unless problems).
+  -e, --no-msg-edit         Sets GIT_MERGE_AUTOEDIT=no, so no git prompts for merge messages (unless problems).
 
-  -h, --help          General help or help about specific command
+  -h, --help                General help or help about specific command
 
-  -v, --verbose       Verbose output (currently also counts as 'debug' - output subject to change)
+  -v, --verbose             Verbose output (currently also counts as 'debug' - output subject to change)
 
 DESCRIPTION
 
@@ -173,9 +191,7 @@ Steps to pull, configure and load data for new addon into existing databases (pr
 #
 
 print_usage_cmd_pull() {
-  echo "pull: add or merges the SCIPIO-ERP addon with the given addon-name.
-
-Alternatively, if --all is provided, pulls all existing addons in the working copy.
+  echo "pull: Add or merge as appropriate addons into working copy using git subtree.
 
 If its component directory does not exist, it is added using 'git subtree add' command.
 
@@ -185,13 +201,18 @@ The command internally knows the correct target folder for the SCIPIO-ERP addons
 "
 }
 
+print_usage_cmd_push() {
+  echo "push: Push addons to their upstream repos using git subtree.
+
+The command internally knows the correct target folder for the SCIPIO-ERP addons.
+"
+}
+
 print_usage_cmd_remote_reset() {
-  echo "remote-reset: Reset remote for the addon
+  echo "remote-reset: Force reset addon remotes.
 
-Supports --all to reset all addon remotes.
-
-May be needed if you have old repository locations, because the pull command
-will not override existing remotes.
+May be needed if you have old repository locations as the pull command
+will not override existing remotes or they may be outdated.
 "
 }
 
@@ -448,7 +469,7 @@ extract_pos_args() {
 
 parse_options() {
   # Official options
-  ACTION="$1"
+  ACTION="${1}"
   VERBOSE=0
   HELP=0
   ALLADDONS=0
@@ -473,6 +494,8 @@ parse_options() {
     ACTION=help
     HELP=1
   elif [ "${ACTION}" = "pull" ]; then
+    TARGETADDONS=$(extract_pos_args "${@:2}")
+  elif [ "${ACTION}" = "push" ]; then
     TARGETADDONS=$(extract_pos_args "${@:2}")
   elif [ "${ACTION}" = "remote-reset" ]; then
     TARGETADDONS=$(extract_pos_args "${@:2}")
@@ -537,11 +560,26 @@ process_action() {
         pull_addons_all || return
       else
         if [ -z "${TARGETADDONS}" ]; then
-          print_error_usage "missing addon-name or --all arguments"
+          print_error_usage "missing addon names or --all arguments"
           return 2
         fi
         check_target_addons ${TARGETADDONS} || return
         pull_addons ${TARGETADDONS} || return
+      fi
+    fi
+  elif [ "${ACTION}" = "push" ]; then
+    if [ "${HELP}" -eq 1 ]; then
+      print_usage_cmd_push
+    else
+      if [ "${ALLADDONS}" -eq 1 ]; then
+        push_addons_all || return
+      else
+        if [ -z "${TARGETADDONS}" ]; then
+          print_error_usage "missing addon names or --all arguments"
+          return 2
+        fi
+        check_target_addons ${TARGETADDONS} || return
+        push_addons ${TARGETADDONS} || return
       fi
     fi
   elif [ "${ACTION}" = "remote-reset" ]; then
@@ -552,7 +590,7 @@ process_action() {
         remote_reset_addons_all
       else
         if [ -z "${TARGETADDONS}" ]; then
-          print_error_usage "missing addon-name or --all arguments"
+          print_error_usage "missing addon names or --all arguments"
           return 2
         fi
         check_target_addons ${TARGETADDONS} || return
@@ -619,7 +657,7 @@ get_present_addons() {
   done
   ADDONS=$(echo ${ADDONS})
   if [ -z "${ADDONS}" ]; then
-    print_msg "No addons detected in working copy; please install some addons before using --all (pull [addon-name]); use 'list --all' for available"
+    print_msg "No addons detected in working copy; please install addons before using --all: pull [addons]; see: list --all"
     return 2
   fi
   #print_msg "Addons auto-detected in working copy (--all):\n${ADDONS}"
@@ -806,7 +844,8 @@ pull_addon() {
       ensure_addon_remote || return
 
       print_msg "Running 'git subtree pull' for existing subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
-      callgit subtree pull --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Pull failed. Please verify, resolve conflicts and re-run script. [If due to conflicts, try these commands: 'git mergetool'; afterward, 'git merge --continue'; or to abort, 'git reset --hard']"; return 1; }
+      callgit subtree pull --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || \
+        { echo "Subtree pull failed. Please verify, resolve conflicts and re-run script. For conflict resolution try 'git mergetool'; afterward, 'git merge --continue'; or to abort, 'git reset --hard'."; return 1; }
     fi
   else
     if [ "${REPOTYPE}" = "submodule" ]; then
@@ -824,6 +863,51 @@ pull_addon() {
       callgit subtree add --squash "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || { echo "Subtree add failed. Please verify."; return 1; }
     fi
     AUTOCONFIG_ADDONS+=("${ADDON_NAME}")
+  fi
+}
+
+declare -a AUTOCONFIG_ADDONS
+push_addons() {
+  print_targetaddons_msg "push" "$@"
+  AUTOCONFIG_ADDONS=()
+  for ADDON; do
+    get_addon_info "${ADDON}" || return
+    push_addon || return
+  done
+}
+
+declare -a AUTOCONFIG_ADDONS
+push_addons_all() {
+  get_valid_addons || return
+  print_targetaddons_all_msg "push"
+  AUTOCONFIG_ADDONS=() 
+  for ADDON in ${ADDONS}; do
+    get_addon_info "${ADDON}" || return
+    push_addon || return
+  done
+}
+
+# TODO: better missing config detection, using file presence and flags in files (add component name to AUTOCONFIG_ADDONS array)
+push_addon() {
+  print_subheader "push" "${ADDON_NAME}"
+  if is_addon_dir_present; then
+    check_addon_supported || return 0
+    if [ "${ADDON_OPTION_PUSH_ON}" = "true" ] || [ "${SCIPIO_ADDONS_OP_PUSH_ALL}" = "true" ]; then
+      if is_addon_submodule; then
+        print_error "push: submodules not yet supported - please ask"
+        return 1
+      else
+        ensure_addon_remote || return
+
+        print_msg "Running 'git subtree push' for existing subtree addon ${ADDON_NAME} -> ${ADDON_DIR} (branch: ${ADDON_BRANCH})..."
+        callgit subtree push "--prefix=${ADDON_DIR}" "${ADDON_NAME}" "${ADDON_BRANCH}" || \
+          { echo "Subtree push failed. Please verify, resolve conflicts and re-run script."; return 1; }
+      fi
+    else
+      print_error "push: not supported for addon, skipping: ${ADDON_NAME}"
+    fi
+  else
+    print_error "push: addon not installed: ${ADDON_NAME}"
   fi
 }
 
@@ -986,6 +1070,11 @@ get_addon_info() {
   ADDON_BRANCHPREFIX="${ADDON_BRANCHPREFIX%/}"
   ADDON_BRANCH="${ADDON_BRANCHPREFIX}/${SCIPIO_BRANCH}"
   ADDON_BRANCH="${ADDON_BRANCH#/}"
+  ADDON_OPTIONS="${ADDON_INFO[5]}"
+  ADDON_OPTION_PUSH_ON=false
+  if echo "${ADDON_OPTIONS}" | grep -qP '(^|,)push(=true|,|$)'; then
+    ADDON_OPTION_PUSH_ON=true
+  fi
 }
 
 get_addon_component_info() {
@@ -1019,17 +1108,17 @@ get_addons_component_names() {
   done
 }
 
-source "./git-addons-config" || { print_error_req "git-addons-config script file is missing or not sourceable"; exit 2; }
+source "./git-addons-config" || { print_error_req "git-addons-config script file missing or not sourceable"; exit 2; }
 if [ ! -z "${SCIPIO_ADDONS_CONFIG_EXT}" ] && [ -f "${SCIPIO_ADDONS_CONFIG_EXT}" ]; then
-  source "${SCIPIO_ADDONS_CONFIG_EXT}" || { print_error_req "external '${SCIPIO_ADDONS_CONFIG_EXT}' config script file is not sourceable"; exit 2; }
+  source "${SCIPIO_ADDONS_CONFIG_EXT}" || { print_error_req "external '${SCIPIO_ADDONS_CONFIG_EXT}' config script file not sourceable"; exit 2; }
 fi
 if [ -f "./addons/scipio-dev/git-addons-config-dev" ]; then
-  source "./addons/scipio-dev/git-addons-config-dev" || { print_error_req "addons/scipio-dev/git-addons-config-dev script file is not sourceable"; exit 2; }
+  source "./addons/scipio-dev/git-addons-config-dev" || { print_error_req "addons/scipio-dev/git-addons-config-dev script file not sourceable"; exit 2; }
 fi
 if [ -f "./git-addons-config-dev" ]; then
-  source "./git-addons-config-dev" || { print_error_req "git-addons-config-dev script file is not sourceable"; exit 2; }
+  source "./git-addons-config-dev" || { print_error_req "git-addons-config-dev script file not sourceable"; exit 2; }
 fi
 if [ -f "./git-addons-config-local" ]; then
-  source "./git-addons-config-local" || { print_error_req "git-addons-config-local script file is not sourceable"; exit 2; }
+  source "./git-addons-config-local" || { print_error_req "git-addons-config-local script file not sourceable"; exit 2; }
 fi
 process_main "$@" || exit $?

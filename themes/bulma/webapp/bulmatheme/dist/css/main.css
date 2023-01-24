@@ -12428,6 +12428,19 @@ fieldset .fieldgroup-body {
     .field.has-addons .control :not(.is-checkradio) span[disabled],
     fieldset[disabled] .field.has-addons .control :not(.is-checkradio) span {
       cursor: not-allowed; }
+  .field.has-addons .control :not(.is-checkradio).CodeMirror span {
+    background: inherit;
+    color: inherit;
+    padding: inherit;
+    display: inherit;
+    line-height: inherit;
+    font-size: inherit;
+    border: inherit;
+    justify-content: inherit;
+    border-radius: inherit;
+    height: inherit;
+    position: inherit;
+    vertical-align: inherit; }
   .field.has-addons .control :not(.is-checkradio) span:not(:only-child):not(:first-child), .field.has-addons .control :not(.is-checkradio) .button:not(:only-child):not(:first-child), .field.has-addons .control :not(.is-checkradio) .ui-dialog-content button:not(:only-child):not(:first-child), .ui-dialog-content .field.has-addons .control :not(.is-checkradio) button:not(:only-child):not(:first-child), .field.has-addons .control :not(.is-checkradio) .input:not(:only-child):not(:first-child), .field.has-addons .control :not(.is-checkradio) .select:not(:only-child):not(:first-child) {
     margin-left: -4px;
     border-bottom-left-radius: 0;

@@ -64,6 +64,23 @@ fieldset{
           color: findColorInvert($grey-light);
         }
 
+        &.CodeMirror{
+          span {
+            background:inherit;
+            color:inherit;
+            padding:inherit;
+            display:inherit;
+            line-height: inherit;
+            font-size:inherit;
+            border:inherit;
+            justify-content: inherit;
+            border-radius:inherit;
+            height:inherit;
+            position:inherit;
+            vertical-align:inherit;
+          }
+        }
+
         span,.button,.input,.select{
           &:not(:only-child){
             &:not(:first-child){

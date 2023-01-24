@@ -9,7 +9,7 @@
 
 <#-- Sets sidebar based on cookie value -->
 <#assign cookies = request.getCookies()!/>
-<#assign hasSideBarActive = false />
+<#assign hasSideBarActive = true />
 <#if cookies?has_content>
     <#assign cookieName = "scpSidebar">
     <#list cookies?filter(x -> cookieName == x.name) as x>

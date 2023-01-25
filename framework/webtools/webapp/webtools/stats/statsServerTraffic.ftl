@@ -1,5 +1,5 @@
 <#assign library=chartLibrary!"foundation"/>
-<#assign currData=rewrapMap(chartData, "raw-simple")>/>
+<#assign currData=rewrapMap(chartData, "raw-simple")/>
 <#assign fieldIdNum=fieldIdNum!0/>
 
 <#if title?has_content><@heading relLevel=1>${title}</@heading></#if>

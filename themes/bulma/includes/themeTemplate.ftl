@@ -234,9 +234,20 @@ origArgs={} passArgs={} catchArgs...>
     </#if>
 </#macro>
 
+<#macro menuitem args={} inlineArgs...>
+    <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.menuitem_defaultArgs)>
+    <#local dummy = localsPutAll(args)>
+    <#local args = mergeArgMaps(args, {
+    "class" : "",
+    "contentClass" : contentClass+class
+    })>
+    <@scipioStdTmplLib.menuitem args=args><#nested></@scipioStdTmplLib.menuitem>
+</#macro>
+
 <#macro menuitem_markup type="" menuType="" menuSpecialType="" name="" menuName="" class="" id="" style="" attribs={}
 excludeAttribs=[] inlineItem=false htmlwrap="li" disabled=false selected=false active=false activeTarget=""
 isNestedMenu=false menuLevel=1 parentMenuType="" parentMenuSpecialType="" itemIndex=0 itemCount="" origArgs={} passArgs={} catchArgs...>
+    <#local dummy=pushRequestStack("scp_menutitem_class",class) />
     <#if !inlineItem && htmlwrap?has_content>
         <${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
     </#if>

@@ -218,7 +218,7 @@ context.styles.putAll([
         "menu_tab_item_contentactivetarget" : "active-target",
         "menu_tab_item_contentactiveancestor" : "active-ancestor",
         "menu_tab_item_contentselected" : "is-selected",
-        "menu_tab_item_link" : "button  is-white",
+        "menu_tab_item_link" : "button is-link",
         "menu_tab_item_text" : "text-entry",
         "menu_tab_item_submit" : "",
         "menu_subtab" : "nav nav-tabs menu-type-subtab",
@@ -237,7 +237,7 @@ context.styles.putAll([
         "menu_subtab_item_contentactivetarget" : "active-target",
         "menu_subtab_item_contentactiveancestor" : "active-ancestor",
         "menu_subtab_item_contentselected" : "is-selected",
-        "menu_subtab_item_link" : "button  is-white",
+        "menu_subtab_item_link" : "button is-link",
         "menu_subtab_item_text" : "text-entry",
         "menu_subtab_item_submit" : "",
         /* Default section menu */
@@ -257,9 +257,9 @@ context.styles.putAll([
         "menu_section_item_contentactivetarget" : "active-target",
         "menu_section_item_contentactiveancestor" : "active-ancestor",
         "menu_section_item_contentselected" : "is-selected",
-        "menu_section_item_link" : "button  is-white",
+        "menu_section_item_link" : "button is-link",
         "menu_section_item_text" : "text-entry",
-        "menu_section_item_submit" : "button  is-white",
+        "menu_section_item_submit" : "button is-info",
         /* Default section menu inlined with title
             FIXME: looks too big/clumsy with these buttons (floats right of title) */
         "menu_section_inline" : "menu-type-section-inline",
@@ -278,9 +278,9 @@ context.styles.putAll([
         "menu_section_inline_item_contentactivetarget" : "active-target",
         "menu_section_inline_item_contentactiveancestor" : "active-ancestor",
         "menu_section_inline_item_contentselected" : "is-selected",
-        "menu_section_inline_item_link" : "button  is-white",
+        "menu_section_inline_item_link" : "button is-link",
         "menu_section_inline_item_text" : "text-entry",
-        "menu_section_inline_item_submit" : "button  is-white",
+        "menu_section_inline_item_submit" : "button is-info",
         /* default entry is used for any encountered menu types that have no specific entries in this hash */
         "menu_default" : "menu-type-default",
         "menu_default_altnested" : "menu-type-default",
@@ -1099,7 +1099,7 @@ context.styles.putAll([
                 "listSortableClass" : "asmListSortable",
                 "listItemClass" : "asmListItem",
                 "listItemLabelClass" : "asmListItemLabel",
-                "removeClass" : "asmListItemRemove button is-white",
+                "removeClass" : "asmListItemRemove button is-info",
                 "highlightClass" : "asmHighlight"
         ],
 

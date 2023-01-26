@@ -119,7 +119,7 @@ containerClass="" containerStyle="" origArgs={} passArgs={} catchArgs...>
         <#default>
             <#local call>
                 if(${element!""} !== undefined){
-                    if (obj instanceof jQuery){
+                    if (${element!""} instanceof jQuery){
                         ${element!""}.addClass('is-active');
                     }else{
                         ${element!""}.classList.add('is-active');
@@ -698,6 +698,9 @@ FORM MACROS
         <#break>
         <#case "textarea">
             <#local class = addClassArg(class,"textarea") >
+            <#if readonly>
+                <#local class = addClassArg(class,"readonly is-info") >
+            </#if>
         <#break>
         <#case "select">
             <#local class = addClassArg(class,"select") >

@@ -12863,7 +12863,4 @@ pre.scrollable {
   .card .field-entry-postfix .btn, .card .field-entry-postfix .btn-sm, .card .field-entry-postfix .btn-group-sm > .btn, .card .field-entry-postfix .btn-lg, .card .field-entry-postfix .btn-group-lg > .btn {
     margin-top: inherit;
     line-height: 1.5;
-    padding: 0.375rem 0.75rem;
-    color: #263238;
-    background-color: #eceff1;
-    border: 1px solid #cfd8dc; }
+    padding: 0.375rem 0.75rem; }

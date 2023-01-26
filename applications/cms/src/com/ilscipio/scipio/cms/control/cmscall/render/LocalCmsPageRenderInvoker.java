@@ -21,6 +21,9 @@ import com.ilscipio.scipio.cms.control.CmsView;
 import com.ilscipio.scipio.cms.control.cmscall.CmsCallType;
 import com.ilscipio.scipio.cms.template.CmsRenderUtil;
 import com.ilscipio.scipio.cms.template.RendererType;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestHandlerException;
 import org.ofbiz.webapp.view.ViewHandler;
@@ -89,7 +92,14 @@ public class LocalCmsPageRenderInvoker extends RenderInvoker {
             // set RequestHandler.makeLink log level to something less drastic,
             // because missing controller request URIs are regular occurrence
             // on /website and /backendsite
-            request.setAttribute("_SCP_LINK_ERROR_LEVEL_", Debug.WARNING);
+            String linkLogLevelName = EntityUtilProperties.getPropertyValue("url", "cms.url.build.preview.logLevel",
+                    null, (Delegator) request.getAttribute("delegator"));
+            if (UtilValidate.isNotEmpty(linkLogLevelName)) {
+                Integer linkLogLevel = Debug.getLevelFromString(linkLogLevelName);
+                if (linkLogLevel != null) {
+                    request.setAttribute("_SCP_LINK_ERROR_LEVEL_", linkLogLevel);
+                }
+            }
         }
 
         request.setAttribute("cmsPage", cmsPage);

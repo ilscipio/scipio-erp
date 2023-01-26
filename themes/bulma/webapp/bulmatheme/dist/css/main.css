@@ -12401,6 +12401,9 @@ fieldset .fieldgroup-body {
     background: rgba(237, 237, 237, 0.4);
     border-radius: 4px; }
 
+.textarea.readonly {
+  background: #dbdbdb; }
+
 .field.has-addons {
   flex-wrap: wrap; }
   .field.has-addons .control :not(.is-checkradio) span {

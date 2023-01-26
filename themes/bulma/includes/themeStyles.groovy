@@ -829,7 +829,7 @@ context.styles.putAll([
         "login_body" : "panel-block",
 
         /* Alert Box */
-        "alert_wrap" : "notification",
+        "alert_wrap" : "notification mb-4",
         "alert_prefix_type" : "",     /* Bootstrap: "alert-"; Note: This may be removed */
         "alert_type_info" : "is-info",
         "alert_type_success" : "is-success",

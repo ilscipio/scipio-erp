@@ -73,6 +73,7 @@ containerClass="" containerStyle="" origArgs={} passArgs={} catchArgs...>
 <#-- @modal main markup - theme override -->
 <#macro modal_markup id="" modalId="" linkId="" label="" href="" class="" icon="" title="" footer="" linkClass="" origArgs={} passArgs={} catchArgs...>
     <#local class = addClassArg(class, "modal-card")>
+    <#if !title?has_content && origArgs?has_content><#local title=origArgs.title!"" /></#if>
     <#local linkClass = addClassArg(linkClass, "js-modal-trigger")>
     <a data-href="${escapeFullUrl(href, 'html')}"<@compiledClassAttribStr class=linkClass/><#if linkId?has_content> id="${linkId}"</#if> data-toggle="modal" data-target="${escapeVal(modalId, 'html')}"><#if icon?has_content><i class="${escapeVal(icon, 'html')}"></i> </#if>${escapeVal(label, 'htmlmarkup')}</a>
     <div id="${escapeVal(modalId, 'html')}" role="dialog" aria-hidden="true" class="${styles.modal_wrap!""}">

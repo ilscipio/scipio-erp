@@ -2393,7 +2393,9 @@ public class RequestHandler {
 
         // SCIPIO: Sanity check: null/missing URL
         if (url == null) { // Allow empty for root webapp requests: || url.isEmpty()
-            Debug.logError("makeLink: Received null URL; returning null" + getMakeLinkLogSuffix(), module);
+            Debug.log(getMakeLinkErrorLogLevel((HttpServletRequest) context.get("request"), delegator), null,
+                    "makeLink: Cannot build link: null uri "
+                            + targetWebappInfo + getMakeLinkLogSuffix(), module);
             return null;
         }
 
@@ -2534,7 +2536,23 @@ public class RequestHandler {
 
     private static int getMakeLinkErrorLogLevel(HttpServletRequest request, Delegator delegator) {
         Integer level = (request != null) ? (Integer) request.getAttribute("_SCP_LINK_ERROR_LEVEL_") : null;
-        return (level != null) ? level : Debug.ERROR;
+        if (level != null) {
+            return level;
+        }
+        if (delegator == null) {
+            if (request != null) {
+                delegator = (Delegator) request.getAttribute("delegator");
+            }
+            if (delegator == null) {
+                delegator = Delegator.defaultDelegator();
+            }
+        }
+        Integer logLevel = null;
+        String logLevelName = EntityUtilProperties.getPropertyValue("url", "webapp.url.build.defaultLogLevel", delegator);
+        if (UtilValidate.isNotEmpty(logLevelName)) {
+            logLevel = Debug.getLevelFromString(logLevelName);
+        }
+        return (logLevel != null) ? logLevel : Debug.ERROR;
     }
 
     /**

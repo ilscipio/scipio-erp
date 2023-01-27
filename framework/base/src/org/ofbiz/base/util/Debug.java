@@ -50,7 +50,7 @@ public final class Debug {
     private static final String[] levelProps = {"", "print.verbose", "print.timing", "print.info", "print.important", "print.warning", "print.error", "print.fatal"};
     private static final Level[] levelObjs = {Level.OFF, Level.DEBUG, Level.TRACE, Level.INFO, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
 
-    private static final Map<String, Integer> levelStringMap = new HashMap<String, Integer>();
+    private static final Map<String, Integer> levelStringMap;
 
     private static final boolean levelOnCache[] = new boolean[8]; // this field is not thread safe
 
@@ -83,14 +83,16 @@ public final class Debug {
     private static final Debug INSTANCE = new Debug(); // SCIPIO: This is for FreeMarkerWorker (only!)
     
     static {
-        levelStringMap.put("verbose", Debug.VERBOSE);
-        levelStringMap.put("timing", Debug.TIMING);
-        levelStringMap.put("info", Debug.INFO);
-        levelStringMap.put("important", Debug.IMPORTANT);
-        levelStringMap.put("warning", Debug.WARNING);
-        levelStringMap.put("error", Debug.ERROR);
-        levelStringMap.put("fatal", Debug.FATAL);
-        levelStringMap.put("always", Debug.ALWAYS);
+        Map<String, Integer> lsm = new HashMap<>();
+        lsm.put("verbose", Debug.VERBOSE);
+        lsm.put("timing", Debug.TIMING);
+        lsm.put("info", Debug.INFO);
+        lsm.put("important", Debug.IMPORTANT);
+        lsm.put("warning", Debug.WARNING);
+        lsm.put("error", Debug.ERROR);
+        lsm.put("fatal", Debug.FATAL);
+        lsm.put("always", Debug.ALWAYS);
+        levelStringMap = lsm;
 
         // initialize levelOnCache
         Properties properties = UtilProperties.createProperties("debug.properties");

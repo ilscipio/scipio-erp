@@ -49,7 +49,7 @@ FIXME: Needs parameter to control injection and location of hidden modal content
                                   but other characters should not be manually escaped (apart from URL parameter encoding).
 -->
 <#assign modal_defaultArgs = {
-  "id":"", "label":"", "href":"", "icon":"", "class":"","linkClass":"", "passArgs":{}
+  "id":"", "label":"", "href":"", "icon":"", "class":"","title":"","linkClass":"", "passArgs":{}
 }>
 <#macro modal args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, scipioStdTmplLib.modal_defaultArgs)>
@@ -69,7 +69,7 @@ FIXME: Needs parameter to control injection and location of hidden modal content
   <#local linkHasContent = icon?has_content || label?has_content>
   <#local modalId = "modal_" + id>
   <#local linkId = "modal_link_" + id>
-  <@modal_markup id=id modalId=modalId linkId=linkId label=label href=href class=class linkClass=linkClass icon=icon linkHasContent=linkHasContent origArgs=origArgs passArgs=passArgs><#nested></@modal_markup>
+  <@modal_markup id=id modalId=modalId linkId=linkId label=label href=href class=class linkClass=linkClass icon=icon title=title linkHasContent=linkHasContent origArgs=origArgs passArgs=passArgs><#nested></@modal_markup>
 </#macro>
 
 <#-- @modal main markup - theme override -->

@@ -425,6 +425,12 @@ code {
   .TRACE {color:$grey-light;}
 }
 
+.modal{
+  .modal-card-head{
+    background-image: linear-gradient(to left bottom, $modal-card-head-background-color, bulmaDarken($modal-card-head-background-color,10%));
+  }
+}
+
 pre.scrollable {
   max-height:500px;
   overflow-x:scroll;

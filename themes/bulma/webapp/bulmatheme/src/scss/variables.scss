@@ -334,3 +334,7 @@ $section-card-column3-border: bulmaLighten($purple,0%);
 $section-card-column4-border: bulmaLighten($primary,0%);
 $section-card-column5-border: bulmaLighten($turquoise,0%);
 $section-card-column6-border: bulmaLighten($warning,0%);
+
+
+$modal-card-head-background-color: $primary;
+$modal-card-title-color: findColorInvert($modal-card-head-background-color);

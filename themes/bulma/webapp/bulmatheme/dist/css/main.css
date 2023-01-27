@@ -3777,7 +3777,7 @@ button.dropdown-item {
 .modal-card-head,
 .modal-card-foot {
   align-items: center;
-  background-color: #ededed;
+  background-color: #132C47;
   display: flex;
   flex-shrink: 0;
   justify-content: flex-start;
@@ -3790,7 +3790,7 @@ button.dropdown-item {
   border-top-right-radius: 6px; }
 
 .modal-card-title {
-  color: #363636;
+  color: #fff;
   flex-grow: 1;
   flex-shrink: 0;
   font-size: 1.5rem;
@@ -12660,6 +12660,9 @@ code {
     font-weight: bold; }
   code .TRACE {
     color: #b5b5b5; }
+
+.modal .modal-card-head {
+  background-image: linear-gradient(to left bottom, #132C47, #08131f); }
 
 pre.scrollable {
   max-height: 500px;

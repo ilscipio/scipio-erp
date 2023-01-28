@@ -31,6 +31,7 @@ package org.ofbiz.base.metrics;
 import java.util.Collection;
 import java.util.TreeSet;
 
+import com.ilscipio.scipio.ce.base.metrics.Metric;
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.UtilProperties;
@@ -112,6 +113,43 @@ public final class MetricsFactory {
             }
             double threshold = 0.0;
             attributeValue = element.getAttribute("threshold");
+            if (!attributeValue.isEmpty()) {
+                threshold = Double.parseDouble(attributeValue);
+            }
+            result = new MetricsImpl(name, estimationSize, estimationTime, smoothing, threshold);
+            METRICS_CACHE.putIfAbsent(name, result);
+            result = METRICS_CACHE.get(name);
+        }
+        return result;
+    }
+
+    /**
+     * Creates a <code>Metrics</code> instance based on {@link Metric}.
+     * @see #getInstance(Element)
+     */
+    public static Metrics getInstance(Metric metric) {
+        Assert.notNull("element", metric);
+        String name = metric.name();
+        Assert.notEmpty("name attribute", name);
+        Metrics result = METRICS_CACHE.get(name);
+        if (result == null) {
+            int estimationSize = UtilProperties.getPropertyAsInteger("serverstats", "metrics.estimation.size", 100);
+            String attributeValue = metric.estimationSize();
+            if (!attributeValue.isEmpty()) {
+                estimationSize = Integer.parseInt(attributeValue);
+            }
+            long estimationTime = UtilProperties.getPropertyAsLong("serverstats", "metrics.estimation.time", 1000);
+            attributeValue = metric.estimationTime();
+            if (!attributeValue.isEmpty()) {
+                estimationTime = Long.parseLong(attributeValue);
+            }
+            double smoothing = UtilProperties.getPropertyNumber("serverstats", "metrics.smoothing.factor", 0.7);
+            attributeValue = metric.smoothing();
+            if (!attributeValue.isEmpty()) {
+                smoothing = Double.parseDouble(attributeValue);
+            }
+            double threshold = 0.0;
+            attributeValue = metric.threshold();
             if (!attributeValue.isEmpty()) {
                 threshold = Double.parseDouble(attributeValue);
             }

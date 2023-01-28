@@ -43,6 +43,9 @@ public interface EventHandler {
 
     /**
      * Invoke the web event
+     *
+     * <p>SCIPIO: 3.0.0: Modified to return Object for annotations ControlResponse support.</p>
+     *
      * @param event Contains information about what to execute
      * @param requestMap Contains information about the request-map the event was called from
      * @param request The servlet request object
@@ -51,5 +54,6 @@ public interface EventHandler {
      *@return String Result code
      *@throws EventHandlerException
      */
-    public String invoke(Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException;
+    public Object invoke(Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException;
+
 }

@@ -21,11 +21,10 @@ package org.ofbiz.base.component;
 import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
-import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -50,7 +49,6 @@ import org.w3c.dom.Element;
  * An object that models the <code>&lt;ofbiz-component&gt;</code> element.
  *
  * @see <code>ofbiz-component.xsd</code>
- *
  */
 public final class ComponentConfig {
 
@@ -73,7 +71,11 @@ public final class ComponentConfig {
     //private static final Map<String, List<WebappInfo>> serverWebApps = new LinkedHashMap<>();
     private static volatile Map<String, List<WebappInfo>> serverWebApps = Collections.unmodifiableMap(new LinkedHashMap<>());
     private static final Object serverWebAppsSyncObj = new Object();
-    /** SCIPIO: Maps component::webapp name of the old webapp to the new webapp. */
+    /**
+     * Maps component::webapp name of the old webapp to the new webapp.
+     *
+     * <p>SCIPIO: Added.</p>
+     */
     private static volatile Map<String, WebappInfo> overriddenWebappNameMap = Collections.emptyMap();
     private static final Object overriddenWebappsSyncObj = new Object();
 
@@ -98,11 +100,10 @@ public final class ComponentConfig {
 
     /**
      * Gets all ENABLED components (enabled="true" or implicit).
-     * <p>
-     * SCIPIO: NOTE: This EXCLUDES components marked enabled="false" and always has, but was poorly
-     * named historically. This is the same as {@link #getEnabledComponents()}.
-     * <p>
-     * NOTE: There is inconsistency with {@link #getComponentConfig}.
+     *
+     * <p>SCIPIO: NOTE: This EXCLUDES components marked enabled="false" and always has, but was poorly
+     * named historically. This is the same as {@link #getEnabledComponents()}. There is inconsistency with
+     * {@link #getComponentConfig}.</p>
      */
     public static Collection<ComponentConfig> getAllComponents() {
         return componentConfigCache.values();
@@ -110,6 +111,7 @@ public final class ComponentConfig {
 
     /**
      * Get all components resources directly under "dir" folders, typically config/ and dtd/ (non-recursive).
+     *
      * <p>SCIPIO: 2.1.0: Added for global label namespace support.</p>
      */
     public static List<URL> getAllComponentsRootResourceFileURLs(java.io.FilenameFilter fnFilter) {
@@ -140,17 +142,20 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Gets all ENABLED components (enabled="true" or implicit).
-     * NOTE: This is the same as {@link #getAllComponents()}, added for clarity.
-     * Added 2018-10-18.
+     * Gets all ENABLED components (enabled="true" or implicit).
+     *
+     * <p>NOTE: This is the same as {@link #getAllComponents()}, added for clarity.</p>
+     *
+     * <p>SCIPIO: Added 2018-10-18.</p>
      */
     public static Collection<ComponentConfig> getEnabledComponents() {
         return componentConfigCache.values();
     }
 
     /**
-     * SCIPIO: Gets all DISABLED components (enabled="false").
-     * Added 2018-10-18.
+     * Gets all DISABLED components (enabled="false").
+     *
+     * <p>SCIPIO: Added 2018-10-18.</p>
      */
     public static Collection<ComponentConfig> getDisabledComponents() {
         return disabledComponentConfigCache.values();
@@ -259,7 +264,9 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Returns webapp infos by context root (mount-point).
+     * Returns webapp infos by context root (mount-point).
+     *
+     * <p>SCIPIO: Added.</p>
      */
     private static Map<String, List<WebappInfo>> getAllWebappResourceInfosByContextRoot(Collection<ComponentConfig> componentList, String componentName) {
         Map<String, List<WebappInfo>> contextRootWebappInfos = new HashMap<>();
@@ -336,8 +343,8 @@ public final class ComponentConfig {
 
     /**
      * Returns the component by global name.
-     * <p>
-     * SCIPIO: NOTE: Per legacy behavior, this returns even disabled components (unlike {@link #getAllComponents()}).
+     *
+     * <p>SCIPIO: NOTE: Per legacy behavior, this returns even disabled components (unlike {@link #getAllComponents()}).</p>
      */
     public static ComponentConfig getComponentConfig(String globalName) throws ComponentException {
         // TODO: we need to look up the rootLocation from the container config, or this will blow up
@@ -345,32 +352,44 @@ public final class ComponentConfig {
     }
 
     /**
-     * Returns the component by root location.
+     * Returns the component by global name.
+     *
      * <p>SCIPIO: NOTE: Per legacy behavior, this returns even disabled components (unlike {@link #getAllComponents()}).</p>
-     * <p>SCIPIO: 3.0.0: Added explicit helper.</p>
      */
-    public static ComponentConfig getComponentConfigByLocation(String rootLocation) throws ComponentException {
-        return getComponentConfig(null, rootLocation);
+    public static ComponentConfig getComponentConfig(String globalName, String rootLocation) throws ComponentException {
+        return getComponentConfig(globalName, rootLocation, false);
     }
 
     /**
      * Returns the component by global name.
-     * <p>
-     * SCIPIO: NOTE: Per legacy behavior, this returns even disabled components (unlike {@link #getAllComponents()}).
+     *
+     * <p>SCIPIO: NOTE: Per legacy behavior, this returns even disabled components (unlike {@link #getAllComponents()}).</p>
      */
-    public static ComponentConfig getComponentConfig(String globalName, String rootLocation) throws ComponentException {
+    public static ComponentConfig getComponentConfig(String globalName, String rootLocation, boolean existingOnly) throws ComponentException {
         ComponentConfig componentConfig = checkComponentConfig(globalName, rootLocation); // SCIPIO: 2018-10-18: delegated
         if (componentConfig != null) {
             return componentConfig;
-        }
-        if (rootLocation == null) {
+        } else if (existingOnly) {
+            if (globalName != null) {
+                throw new ComponentException.ComponentNotFoundException("No component found named: " + globalName);
+            } else if (rootLocation != null) {
+                throw new ComponentException.ComponentNotFoundException("No component found named: " + rootLocation);
+            } else {
+                throw new ComponentException.ComponentNotFoundException("No component found, none specified", new NullPointerException());
+            }
+        } else if (rootLocation == null) {
             // Do we really need to do this?
             // SCIPIO: 2017-08-03: The answer to above is yes.
             // SCIPIO: 2017-08-03: Now using better exception below to identify specifically when component not found
             // so that caller can handle gracefully or simply skip.
             //throw new ComponentException("No component found named : " + globalName);
-            throw new ComponentException.ComponentNotFoundException("No component found named : " + globalName);
+            if (globalName != null) {
+                throw new ComponentException.ComponentNotFoundException("No component found named: " + globalName);
+            } else {
+                throw new ComponentException.ComponentNotFoundException("No component found, none specified", new NullPointerException());
+            }
         }
+
         // SCIPIO: 2018-10-18: Use an immutable config cache now, with sync (mostly) only on writes
         // IN ADDITION, use a sync block here, as this ensures that the ComponentConfig instances are unique globally,
         // which may prevent unexpected problems
@@ -383,18 +402,30 @@ public final class ComponentConfig {
             componentConfig = new ComponentConfig(globalName, rootLocation);
             if (componentConfig.enabled()) {
                 //componentConfigCache.put(componentConfig);
-                componentConfigCache = componentConfigCache.copyAndPut(componentConfig);
+                componentConfigCache = componentConfigCache.copyCacheAndPut(componentConfig);
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("Registered new component in cache: " + componentConfig + " (total: " + componentConfigCache.size() + ")", module);
                 }
             } else {
-                disabledComponentConfigCache = disabledComponentConfigCache.copyAndPut(componentConfig); // SCIPIO: 2018-10-18: new disabled component cache
+                // SCIPIO: 2018-10-18: New disabled component cache
+                disabledComponentConfigCache = disabledComponentConfigCache.copyCacheAndPut(componentConfig);
                 if (Debug.verboseOn()) {
                     Debug.logVerbose("Registered new disabled component in cache: " + componentConfig + " (total disabled: " + disabledComponentConfigCache.size() + ")", module);
                 }
             }
             return componentConfig;
         }
+    }
+
+    /**
+     * Returns the component by root location.
+     *
+     * <p>NOTE: Per legacy behavior, this returns even disabled components (unlike {@link #getAllComponents()}).</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added explicit helper.</p>
+     */
+    public static ComponentConfig getComponentConfigByLocation(String rootLocation) throws ComponentException {
+        return getComponentConfig(null, rootLocation);
     }
 
     private static ComponentConfig checkComponentConfig(String globalName, String rootLocation) { // SCIPIO: 2018-10-18: refactored from method above
@@ -409,7 +440,14 @@ public final class ComponentConfig {
         return null;
     }
 
-    private static ComponentConfig checkComponentConfig(ComponentConfigCache componentConfigCache, String globalName, String rootLocation) { // SCIPIO: 2018-10-18: refactored from method above
+    /**
+     * Returns the component from the given cache using global name, root location or a resource path/URL from which
+     * root location can be extracted.
+     *
+     * <p>SCIPIO: 2018-10-18: Refactored from {@link #checkComponentConfig(String, String)}.</p>
+     */
+    private static ComponentConfig checkComponentConfig(ComponentConfigCache componentConfigCache, String globalName,
+                                                        String rootLocation) {
         // Original stock code checks
         ComponentConfig componentConfig;
         if (globalName != null && !globalName.isEmpty()) {
@@ -428,7 +466,8 @@ public final class ComponentConfig {
     }
 
     /**
-     * Returns the given component config IF it is enabled, otherwise throws exception (SCIPIO).
+     * Returns the given component config IF it is enabled, otherwise throws exception.
+     *
      * <p>SCIPIO: 2018-10-29: Added.</p>
      */
     public static ComponentConfig getEnabledComponentConfig(String globalName) throws ComponentException {
@@ -440,7 +479,8 @@ public final class ComponentConfig {
     }
 
     /**
-     * Returns the given component config IF it is enabled, otherwise throws exception (SCIPIO).
+     * Returns the given component config IF it is enabled, otherwise throws exception.
+     *
      * <p>SCIPIO: 3.0.0: Added.</p>
      */
     public static ComponentConfig getEnabledComponentConfigByLocation(String rootLocation) throws ComponentException {
@@ -453,6 +493,7 @@ public final class ComponentConfig {
 
     /**
      * Returns the given component config IF it is enabled, otherwise null (SCIPIO).
+     *
      * <p>SCIPIO: 2018-10-29: Added.</p>
      */
     public static ComponentConfig getEnabledComponentConfigOrNull(String globalName) {
@@ -461,6 +502,7 @@ public final class ComponentConfig {
 
     /**
      * Returns the given component config IF it is enabled, otherwise null (SCIPIO).
+     *
      * <p>SCIPIO: 3.0.0: Added explicit helper.</p>
      */
     public static ComponentConfig getEnabledComponentConfigByLocationOrNull(String rootLocation) {
@@ -469,6 +511,7 @@ public final class ComponentConfig {
 
     /**
      * Returns true if the named component is present and enabled (SCIPIO).
+     *
      * <p>SCIPIO: 2018-10-29: Added.</p>
      */
     public static boolean isComponentEnabled(String globalName) {
@@ -476,9 +519,11 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Returns true if the named component is present in the filesystem,
+     * Returns true if the named component is present in the filesystem,
      * without guarantee it is enabled.
-     * Added 2018-10-29.
+     *
+     * <p>SCIPIO: Added 2018-10-29.</p>
+     *
      * @see #isComponentEnabled(String)
      */
     public static boolean isComponentPresent(String globalName) {
@@ -487,8 +532,11 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Special method for initialization only to set the global component order.
-     * Public only by force - intended ONLY for use from {@link org.ofbiz.base.container.ComponentContainer}.
+     * Special method for initialization only to set the global component order.
+     *
+     * <p>Public only by force - intended ONLY for use from {@link org.ofbiz.base.container.ComponentContainer}.</p>
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static void clearStoreComponents(List<ComponentConfig> componentList) {
         synchronized(componentConfigCacheSyncObj) {
@@ -543,7 +591,11 @@ public final class ComponentConfig {
         return cc.getURL(resourceLoaderName, location);
     }
 
-    // SCIPIO
+    /**
+     * Server context root webapp cache.
+     *
+     * <p>SCIPIO: Added.</p>
+     */
     private static Map<String, Map<String, WebappInfo>> serverContextRootWebappInfoCache;
 
     private static Map<String, Map<String, WebappInfo>> getServerContextRootWebappInfoMap() {
@@ -597,10 +649,12 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Gets a resolved map of the effective WebappInfo for each given context root (contextPath),
+     * Gets a resolved map of the effective WebappInfo for each given context root (contextPath),
      * with optional server filter (usually recommended).
-     * <p>
-     * NOTE: This must only be called post-loading due to caching - do not call during loading!
+     *
+     * <p>SCIPIO: NOTE: This must only be called post-loading due to caching - do not call during loading!</p>
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static Map<String, WebappInfo> getWebappInfosByContextRoot(String serverName) {
         if (serverName != null) {
@@ -612,10 +666,10 @@ public final class ComponentConfig {
 
     /**
      * Gets webapp info by context root, with optional server filter (usually recommended).
-     * <p>
-     * SCIPIO: 2018-08-08: modified to support a cache.
-     * <p>
-     * NOTE: This must only be called post-loading due to caching - do not call during loading!
+     *
+     * <p>SCIPIO: NOTE: This must only be called post-loading due to caching - do not call during loading!</p>
+     *
+     * <p>SCIPIO: 2018-08-08: Modified to support a cache.</p>
      */
     public static WebappInfo getWebappInfoByContextRoot(String serverName, String contextRoot) {
         if (serverName != null) {
@@ -628,10 +682,10 @@ public final class ComponentConfig {
 
     /**
      * Gets webapp info by server name and context root.
-     * <p>
-     * SCIPIO: 2018-08-08: modified to support a cache.
-     * <p>
-     * NOTE: This must only be called post-loading due to caching - do not call during loading!
+     *
+     * <p>SCIPIO: NOTE: This must only be called post-loading due to caching - do not call during loading!</p>
+     *
+     * <p>SCIPIO: 2018-08-08: Modified to support a cache.</p>
      */
     public static WebappInfo getWebAppInfo(String serverName, String contextRoot) {
         return getWebappInfoByContextRoot(serverName, contextRoot);
@@ -652,8 +706,13 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Returns the exact WebappInfo by name (no overrides).
-     * NOTE: not for use during initialization (TODO: later may use caching).
+     * Returns the exact WebappInfo by name (no overrides).
+     *
+     * <p>NOTE: Not for use during initialization.</p>
+     *
+     * <p>TODO: Use caching.</p>
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static WebappInfo getWebappInfoByName(String componentName, String webappName) throws IllegalArgumentException {
         WebappInfo webappInfo = null;
@@ -669,16 +728,20 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Maps the component::webapp name of an overridden webapp to the new webapp.
-     * This ONLY returns non-null if the webapp was actually overridden.
+     * Maps the component::webapp name of an overridden webapp to the new webapp.
+     *
+     * <p>Only returns non-null if the webapp was actually overridden.</p>
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static WebappInfo getOverriddenWebappInfoByName(String componentName, String webappName) {
         return overriddenWebappNameMap.get(componentName+"::"+webappName);
     }
 
     /**
-     * SCIPIO: Maps the component::webapp name of an overridden webapp to the new webapp, otherwise
-     * the webapp itself, or null.
+     * Maps the component::webapp name of an overridden webapp to the new webapp, otherwise the webapp itself, or null.
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static WebappInfo getEffectiveWebappInfoByName(String componentName, String webappName) {
         WebappInfo webappInfo = getOverriddenWebappInfoByName(componentName, webappName);
@@ -705,9 +768,12 @@ public final class ComponentConfig {
     private final List<WebappInfo> webappInfos;
     private final List<ContainerConfig.Container> containers;
     /**
-     * SCIPIO: The components this one depends on.
-     * This is the implementation of the "depends-on" element (existed in stock ofbiz xsd, but not implemented).
-     * Does not contain duplicates.
+     * The components this one depends on.
+     *
+     * <p>This is the implementation of the "depends-on" element (existed in stock ofbiz xsd, but not implemented).
+     * Does not contain duplicates.</p>
+     *
+     * <p>SCIPIO: Added.</p>
      */
     private final List<String> componentDependencies;
     private final List<ClasspathSpecialInfo> classpathSpecialInfos; // SCIPIO: added 2018-06-18
@@ -882,7 +948,9 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Copy constructor, with extra optional overrides such as explicit webappInfos.
+     * Copy constructor, with extra optional overrides such as explicit webappInfos.
+     *
+     * <p>SCIPIO: Added.</p>
      */
     private ComponentConfig(ComponentConfig other, List<WebappInfo> webappInfos) {
         this.globalName = other.globalName;
@@ -915,9 +983,12 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Returns the scipio-component.xml, scipio-theme.xml or ofbiz-component.xml file for the given component directory,
+     * Returns the scipio-component.xml, scipio-theme.xml or ofbiz-component.xml file for the given component directory,
      * or null if not found.
-     * <p>DEV NOTE: DUPLICATED AT: <code>org.ofbiz.base.start.Config#getComponentFile</code>
+     *
+     * <p>DEV NOTE: Duplicated to: <code>org.ofbiz.base.start.Config#getComponentFile</code>
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static File getComponentFile(File componentDir) {
         File file = new File(componentDir, SCIPIO_COMPONENT_XML_FILENAME);
@@ -936,8 +1007,10 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Returns the scipio-component.xml, scipio-theme.xml or ofbiz-component.xml file for the given component directory,
+     * Returns the scipio-component.xml, scipio-theme.xml or ofbiz-component.xml file for the given component directory,
      * or null if not found.
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static File getComponentFile(String componentDir) { // SCIPIO: DEV NOTE: DUPLICATED AT: org.ofbiz.base.start.Config#getComponentFile
         File file = FileUtil.getFile(componentDir + "/" + SCIPIO_COMPONENT_XML_FILENAME);
@@ -956,10 +1029,13 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Returns the scipio-component.xml, scipio-theme.xml or ofbiz-component.xml file URL for the given component directory,
+     * Returns the scipio-component.xml, scipio-theme.xml or ofbiz-component.xml file URL for the given component directory,
      * or null if not found.
-     * NOTE: There is no way to determine the URL reliably unless the file exists, but otherwise scipio-component.xml would
-     * be considered the "default".
+     *
+     * <p>NOTE: There is no way to determine the URL reliably unless the file exists, but otherwise scipio-component.xml would
+     * be considered the "default".</p>
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static URL getComponentFileUrl(String componentDir) {
         String xmlFilename = componentDir + "/" + SCIPIO_COMPONENT_XML_FILENAME;
@@ -1034,6 +1110,11 @@ public final class ComponentConfig {
         return this.resourceLoaderInfos;
     }
 
+    /**
+     * Returns absolute path to component, INCLUDING trailing slash.
+     *
+     * <p>SCIPIO: NOTE: Includes trailing slash.</p>
+     */
     public String getRootLocation() {
         return this.rootLocation;
     }
@@ -1096,14 +1177,18 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Returns the names of components this component depends on.
+     * Returns the names of components this component depends on.
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public List<String> getComponentDependencies() {
         return componentDependencies;
     }
 
     /**
-     * SCIPIO: Returns the special libraries.
+     * Returns the special libraries.
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public List<ClasspathSpecialInfo> getClasspathSpecialInfos() {
         return classpathSpecialInfos;
@@ -1127,7 +1212,9 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Returns the component names for a list of configs.
+     * Returns the component names for a list of configs.
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static List<String> getComponentNames(Collection<ComponentConfig> componentList) {
         List<String> names = new ArrayList<>(componentList.size());
@@ -1138,7 +1225,9 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Creates a (order-preserving) map of component names to configs from a list of configs.
+     * Creates a (order-preserving) map of component names to configs from a list of configs.
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static Map<String, ComponentConfig> makeComponentNameMap(Collection<ComponentConfig> componentList) {
         Map<String, ComponentConfig> map = new LinkedHashMap<>();
@@ -1149,9 +1238,11 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Reads special JAR locations for given purpose.
-     * Only consults global entries (not those constrained to specific webapps).
-     * Added 2018-06-18.
+     * Reads special JAR locations for given purpose.
+     *
+     * <p>Only consults global entries (not those constrained to specific webapps).</p>
+     *
+     * <p>SCIPIO: Added 2018-06-18.</p>
      */
     public static List<File> readClasspathSpecialJarLocations(String purpose) {
         List<File> jarLocations = new ArrayList<>();
@@ -1162,11 +1253,12 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Reads special JAR locations for given purpose for given component,
-     * with optional webapp filter.
-     * NOTE: If no webapp filter is given, returns only locations that are not
-     * restricted to specific component webapps.
-     * Added 2018-06-18.
+     * Reads special JAR locations for given purpose for given component, with optional webapp filter.
+     *
+     * <p>NOTE: If no webapp filter is given, returns only locations that are not restricted to specific component
+     * webapps.</p>
+     *
+     * <p>SCIPIO: Added 2018-06-18.</p>
      */
     public static List<File> readClasspathSpecialJarLocations(ComponentConfig componentConfig, String purpose, String webappName) {
         List<File> jarLocations = new ArrayList<>();
@@ -1175,11 +1267,13 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Reads special JAR locations for given purpose for given component,
+     * Reads special JAR locations for given purpose for given component,
      * with optional webapp filter.
-     * NOTE: If no webapp filter is given, returns only locations that are not
-     * restricted to specific component webapps.
-     * Added 2018-06-18.
+     *
+     * <p>NOTE: If no webapp filter is given, returns only locations that are not restricted to specific component
+     * webapps.</p>
+     *
+     * <p>SCIPIO: Added 2018-06-18.</p>
      */
     private static void readClasspathSpecialJarLocations(List<File> jarLocations, ComponentConfig componentConfig, String purpose, String webappName) {
         String configRoot = componentConfig.getRootLocation();
@@ -1233,8 +1327,10 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Post-processes the global list of loaded components after all
+     * Post-processes the global list of loaded components after all
      * <code>scipio-component.xml</code> files have been read (hook/callback) (new 2017-01-19).
+     *
+     * <p>SCIPIO: Added.</p>
      */
     public static List<ComponentConfig> postProcessComponentConfigs(List<ComponentConfig> componentList) {
         componentList = (postProcessWebappInfos(componentList));
@@ -1242,7 +1338,9 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: Post-processes the webapp infos of component list.
+     * Post-processes the webapp infos of component list.
+     *
+     * <p>SCIPIO: Added.</p>
      */
     private static List<ComponentConfig> postProcessWebappInfos(List<ComponentConfig> componentList) {
         // Find all duplicate mount-points
@@ -1310,33 +1408,140 @@ public final class ComponentConfig {
     }
 
     /**
+     * For an absolute or relative-to-project-root path, URL, or URI to a file under a component, returns the component.
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public static ComponentConfig getComponentConfigFromResource(Object location) {
+        if (location instanceof String && ((String) location).startsWith("component://")) {
+            return getComponentConfigByComponentUrl((String) location);
+        }
+        String path = UtilURL.getAbsolutePath(location);
+        if (path == null) {
+            return null;
+        }
+        // For this check, always append a / even if it's a file or already there so the startsWith is sure to work if equal to root location
+        String checkPath = path + "/";
+        for (ComponentConfig cc : componentConfigCache.componentConfigList) {
+            if (checkPath.startsWith(cc.getRootLocation())) { // NOTE: rootLocation ends with / so this works as-is
+                return cc;
+            }
+        }
+        for (ComponentConfig cc : disabledComponentConfigCache.componentConfigList) {
+            if (checkPath.startsWith(cc.getRootLocation())) { // NOTE: rootLocation ends with / so this works as-is
+                return cc;
+            }
+        }
+        //throw new ComponentException.ComponentNotFoundException("Could not find component by path for location: " + location);
+        return null;
+    }
+
+    /**
+     * For a component:// URL to a file under a component, returns the component.
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public static ComponentConfig getComponentConfigByComponentUrl(String componentUrl) {
+        String componentName = getComponentNameFromComponentUrl(componentUrl);
+        try {
+            return getComponentConfig(componentName);
+        } catch (ComponentException e) {
+            return null;
+        }
+    }
+
+    /**
+     * For a component:// URL, return the component name.
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public static String getComponentNameFromComponentUrl(String componentUrl) {
+        if (!"component://".startsWith(componentUrl)) {
+            throw new IllegalArgumentException("Not a component:// URL [" + componentUrl + "]");
+        }
+        int nextSlash = componentUrl.indexOf('/', "component://".length());
+        if (nextSlash <= 0) {
+            throw new IllegalArgumentException("Invalid component:// URL [" + componentUrl + "]");
+        }
+        String componentName = componentUrl.substring("component://".length(), nextSlash);
+        return (!componentName.isEmpty()) ? componentName : null;
+    }
+
+    /**
+     * For an absolute or relative-to-project-root path to a file under a webapp, returns the webapp, or optionally the
+     * default webapp if the resource is outside the webapp path.
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public static WebappInfo getWebappInfoFromResource(Object location, boolean useDefault) {
+        if (location instanceof String && ((String) location).startsWith("component://")) {
+            return getWebappInfoFromResourceByComponentUrl((String) location, useDefault);
+        }
+        String path = UtilURL.getAbsolutePath(location);
+        if (path == null) {
+            return null;
+        }
+        // For this check, always append a / even if it's a file or already there so the startsWith is sure to work if equal to root location
+        String checkPath = path + "/";
+        ComponentConfig component = null;
+        for (ComponentConfig cc : componentConfigCache.componentConfigList) {
+            if (checkPath.startsWith(cc.getRootLocation())) { // NOTE: rootLocation ends with / so this works as-is
+                component = cc;
+                break;
+            }
+        }
+        if (component == null) {
+            for (ComponentConfig cc : disabledComponentConfigCache.componentConfigList) {
+                if (checkPath.startsWith(cc.getRootLocation())) { // NOTE: rootLocation ends with / so this works as-is
+                    component = cc;
+                    break;
+                }
+            }
+            if (component == null) {
+                return null;
+            }
+        }
+        if (path.length() > component.getRootLocation().length()) {
+            String relPath = path.substring(component.getRootLocation().length());
+            String checkRelPath = relPath + "/";
+            for (WebappInfo wi : component.getWebappInfos()) {
+                if (checkRelPath.startsWith(wi.getRelativeLocation() + "/")) {
+                    return wi;
+                }
+            }
+        }
+        if (useDefault) {
+            return component.getWebappInfos().get(0);
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * For a component:// URL to a file under a webapp, returns the webapp, or optionally the default webapp
      * if the resource is outside the webapp path.
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
      */
-    public static WebappInfo getWebappInfoFromComponentResource(String componentUrl, boolean useDefault) {
+    public static WebappInfo getWebappInfoFromResourceByComponentUrl(String componentUrl, boolean useDefault) {
         if (!"component://".startsWith(componentUrl)) {
-            throw new IllegalArgumentException("Cannot get webapp info from component resource: not a component:// URL [" +
+            throw new IllegalArgumentException("Not a component:// URL [" +
                     componentUrl + "]");
         }
         int nextSlash = componentUrl.indexOf('/', "component://".length());
         if (nextSlash <= 0) {
-            throw new IllegalArgumentException("Cannot get webapp info from component resource: invalid component:// URL [" +
+            throw new IllegalArgumentException("Invalid component:// URL [" +
                     componentUrl + "]");
         }
         String componentName = componentUrl.substring("component://".length(), nextSlash);
         if (UtilValidate.isEmpty(componentName)) {
-            throw new IllegalArgumentException("Cannot get webapp info from component resource: invalid component name in URL [" +
-                    componentUrl + "]");
+            throw new IllegalArgumentException("Invalid component name in URL [" +  componentUrl + "]");
         }
-        ComponentConfig cc;
+        ComponentConfig cc = null;
         try {
             cc = getComponentConfig(componentName);
         } catch (ComponentException e) {
-            throw new IllegalArgumentException(e);
-        }
-        if (cc == null) {
-            throw new IllegalArgumentException("Cannot get webapp info from component resource: invalid component name [" +
-                    componentName + "] in URL [" + componentUrl + "]");
+            return null;
         }
         if (UtilValidate.isEmpty(cc.getWebappInfos())) {
             return null;
@@ -1358,7 +1563,6 @@ public final class ComponentConfig {
      * An object that models the <code>&lt;classpath&gt;</code> element.
      *
      * @see <code>ofbiz-component.xsd</code>
-     *
      */
     public static class ClasspathInfo { // SCIPIO: removed "final"
         public final ComponentConfig componentConfig;
@@ -1373,7 +1577,9 @@ public final class ComponentConfig {
     }
 
     /**
-     * SCIPIO: An object that models the <code>&lt;classpath-special&gt;</code> element.
+     * An object that models the <code>&lt;classpath-special&gt;</code> element.
+     *
+     * <p>SCIPIO: Added.</p>
      *
      * @see <code>ofbiz-component.xsd</code>
      */
@@ -1405,10 +1611,8 @@ public final class ComponentConfig {
      * ComponentConfig instances need to be looked up by their global name and root location,
      * so this class encapsulates the Maps and synchronization code required to do that.
      *
-     * <p>SCIPIO: Component config cache version that is non-blocking for reads. Each change creates a new instance.</p>
-     *
      * <p>SCIPIO: 2018-10-18: Rewritten for thread-safe design with non-blocking reads (previous stock class was
-     * completely thread-unsafe).</p>
+     * completely thread-unsafe) where each change creates a new instance.</p>
      */
     private static final class ComponentConfigCache {
         // Key is the global name.
@@ -1431,8 +1635,8 @@ public final class ComponentConfig {
             if (newConfigs != null) {
                 for(ComponentConfig config : newConfigs) {
                     String globalName = config.getGlobalName();
-                    String fileLocation = config.getRootLocation();
-                    componentLocations.put(fileLocation, globalName);
+                    String rootLocation = config.getRootLocation();
+                    componentLocations.put(rootLocation, globalName);
                     componentConfigs.put(globalName, config);
                 }
             }
@@ -1450,16 +1654,20 @@ public final class ComponentConfig {
         }
 
         /**
-         * SCIPIO: Returns cloned instance with the given config added.
+         * Returns cloned instance with the given config added.
+         *
+         * <p>SCIPIO: Added.</p>
          */
-        ComponentConfigCache copyAndPut(ComponentConfig config) {
+        ComponentConfigCache copyCacheAndPut(ComponentConfig config) {
             return new ComponentConfigCache(this, (UtilMisc.toList(config)));
         }
 
         /**
-         * SCIPIO: Returns cloned instance with the given configs added.
+         * Returns cloned instance with the given configs added.
+         *
+         * <p>SCIPIO: Added.</p>
          */
-        ComponentConfigCache copyAndPutAll(Collection<? extends ComponentConfig> configList) {
+        ComponentConfigCache copyCacheAndPutAll(Collection<? extends ComponentConfig> configList) {
             return new ComponentConfigCache(this, configList);
         }
 
@@ -1495,7 +1703,6 @@ public final class ComponentConfig {
      * An object that models the <code>&lt;entity-resource&gt;</code> element.
      *
      * @see <code>ofbiz-component.xsd</code>
-     *
      */
     public static final class EntityResourceInfo extends ResourceInfo {
         public final String type;
@@ -1512,7 +1719,6 @@ public final class ComponentConfig {
      * An object that models the <code>&lt;keystore&gt;</code> element.
      *
      * @see <code>ofbiz-component.xsd</code>
-     *
      */
     public static final class KeystoreInfo extends ResourceInfo {
         private final String name;
@@ -1589,7 +1795,6 @@ public final class ComponentConfig {
      * An object that models the <code>&lt;resource-loader&gt;</code> element.
      *
      * @see <code>ofbiz-component.xsd</code>
-     *
      */
     public static final class ResourceLoaderInfo {
         public final String name;
@@ -1609,7 +1814,6 @@ public final class ComponentConfig {
      * An object that models the <code>&lt;service-resource&gt;</code> element.
      *
      * @see <code>ofbiz-component.xsd</code>
-     *
      */
     public static final class ServiceResourceInfo extends ResourceInfo {
         public final String type;
@@ -1624,7 +1828,6 @@ public final class ComponentConfig {
      * An object that models the <code>&lt;test-suite&gt;</code> element.
      *
      * @see <code>ofbiz-component.xsd</code>
-     *
      */
     public static final class TestSuiteInfo extends ResourceInfo {
         public TestSuiteInfo(ComponentConfig componentConfig, Element element) {
@@ -1636,7 +1839,6 @@ public final class ComponentConfig {
      * An object that models the <code>&lt;webapp&gt;</code> element.
      *
      * @see <code>ofbiz-component.xsd</code>
-     *
      */
     public static final class WebappInfo {
         // FIXME: These fields should be private - since we have accessors - but
@@ -1658,7 +1860,12 @@ public final class ComponentConfig {
         // CatalinaContainer modifies this field.
         private volatile boolean appBarDisplay;
         private final String accessPermission;
-        private final String overrideMode; // SCIPIO: 2017-01-19: new override mode, to handle duplicate mount-points
+        /**
+         * Override mode, to handle duplicate mount-points.
+         *
+         * <p>SCIPIO: 2017-01-19: Added.</p>
+         */
+        private final String overrideMode;
 
         private WebappInfo(ComponentConfig componentConfig, Element element) {
             this.componentConfig = componentConfig;
@@ -1694,7 +1901,12 @@ public final class ComponentConfig {
             } else {
                 this.contextRoot = this.mountPoint;
             }
-            this.location = element.getAttribute("location");
+            // SCIPIO: 3.0.0: Ensure no trailing slash
+            String location = element.getAttribute("location");
+            if (location.length() > 0 && !"/".equals(location) && location.endsWith("/")) {
+                location = location.substring(0, location.length() - 1);
+            }
+            this.location = location;
             this.appBarDisplay = !"false".equals(element.getAttribute("app-bar-display"));
             this.privileged = !"false".equals(element.getAttribute("privileged"));
             this.accessPermission = element.getAttribute("access-permission");
@@ -1746,7 +1958,9 @@ public final class ComponentConfig {
         }
 
         /**
-         * SCIPIO: Copy constructor, with optional parent/backreference override for component config.
+         * Copy constructor, with optional parent/backreference override for component config.
+         *
+         * <p>SCIPIO: Added.</p>
          */
         private WebappInfo(WebappInfo other, ComponentConfig componentConfig) {
             this.componentConfig = (componentConfig != null) ? componentConfig : other.componentConfig;
@@ -1792,8 +2006,22 @@ public final class ComponentConfig {
             return initParameters;
         }
 
+        /**
+         * Returns absolute webapp path including home and component root location, without trailing slash.
+         *
+         * <p>SCIPIO: NOTE: For as-is relative location, use {@link #getRelativeLocation()}</p>.
+         */
         public String getLocation() {
             return componentConfig.getRootLocation() + location;
+        }
+
+        /**
+         * Returns webapp path relative to component, without trailing slash.
+         *
+         * <p>SCIPIO: 3.0.0: Added.</p>
+         */
+        public String getRelativeLocation() {
+            return location;
         }
 
         public String getName() {

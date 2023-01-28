@@ -52,7 +52,7 @@ public class SurveyEvents {
         }
         String eventResponse = null;
         try {
-            eventResponse = rh.runEvent(request, response, createSurveyResponseEvent, requestMap, null);
+            eventResponse = RequestHandler.getEventResponseName(rh.runEvent(request, response, createSurveyResponseEvent, requestMap, null));
         } catch (EventHandlerException e) {
             Debug.logError(e, module);
             return "error";

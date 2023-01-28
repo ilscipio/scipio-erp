@@ -39,7 +39,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.RequestHandler;
-import org.ofbiz.webapp.control.RequestHandlerException;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.webapp.view.AbstractViewHandler;
@@ -236,7 +235,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
         try {
             for (ConfigXMLReader.Event event: controllerConfig.getPreScreenRenderEventList().values()) {
                 try {
-                    String returnString = requestHandler.runEvent(request, response, event, requestMap, "pre-screen-render");
+                    String returnString = (String) requestHandler.runEvent(request, response, event, requestMap, "pre-screen-render");
                     if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
                         throw new EventHandlerException("Pre-Screen-Render event did not return 'success'.");
                     }
@@ -264,7 +263,7 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
         try {
             for (ConfigXMLReader.Event event: controllerConfig.getPostScreenRenderEventList().values()) {
                 try {
-                    String returnString = requestHandler.runEvent(request, response, event, requestMap, "post-screen-render");
+                    String returnString = (String) requestHandler.runEvent(request, response, event, requestMap, "post-screen-render");
                     if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
                         throw new EventHandlerException("Post-Screen-Render event did not return 'success'.");
                     }
@@ -277,10 +276,5 @@ public class MacroScreenViewHandler extends AbstractViewHandler implements ViewH
             throw new ViewHandlerException(e);
         }
     }
-
-
-
-
-
 
 }

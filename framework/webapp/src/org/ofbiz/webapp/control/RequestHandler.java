@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
+import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Debug;
@@ -526,7 +527,7 @@ public class RequestHandler {
                 try {
                     for (ConfigXMLReader.Event event: controllerConfig.getFirstVisitEventList().values()) {
                         try {
-                            String returnString = this.runEvent(request, response, event, null, "firstvisit");
+                            String returnString = (String) this.runEvent(request, response, event, null, "firstvisit");
                             if (returnString == null || "none".equalsIgnoreCase(returnString)) {
                                 interruptRequest = true;
                             } else if (!"success".equalsIgnoreCase(returnString)) {
@@ -546,7 +547,7 @@ public class RequestHandler {
             try {
                 for (ConfigXMLReader.Event event: controllerConfig.getPreprocessorEventList().values()) {
                     try {
-                        String returnString = this.runEvent(request, response, event, null, "preprocessor");
+                        String returnString = (String) this.runEvent(request, response, event, null, "preprocessor");
                         if (returnString == null || "none".equalsIgnoreCase(returnString)) {
                             interruptRequest = true;
                         } else if (!"success".equalsIgnoreCase(returnString)) {
@@ -617,7 +618,7 @@ public class RequestHandler {
             String checkLoginReturnString = null;
 
             try {
-                checkLoginReturnString = this.runEvent(request, response, checkLoginEvent, null, "security-auth");
+                checkLoginReturnString = (String) this.runEvent(request, response, checkLoginEvent, null, "security-auth");
             } catch (EventHandlerException e) {
                 throw new RequestHandlerException(e.getMessage(), e);
             }
@@ -673,13 +674,25 @@ public class RequestHandler {
         ConfigXMLReader.RequestResponse nextRequestResponse = null;
 
         // Invoke the defined event (unless login failed)
+        RequestResponse returnedEventResponse = null; // SCIPIO: 3.0.0: Now supports ControlResponse/RequestResponse from events
         if (eventReturn == null && requestMap.event != null) {
             if (requestMap.event.type != null && requestMap.event.path != null && requestMap.event.invoke != null) {
                 try {
                     long eventStartTime = System.currentTimeMillis();
 
                     // run the request event
-                    eventReturn = this.runEvent(request, response, requestMap.event, requestMap, "request");
+                    Object eventReturnObject = this.runEvent(request, response, requestMap.event, requestMap, "request");
+                    if (eventReturnObject instanceof String) {
+                        eventReturn = (String) eventReturnObject;
+                    } else if (eventReturnObject instanceof ControlResponse) {
+                        returnedEventResponse = ((ControlResponse) eventReturnObject).asRequestResponse();
+                        eventReturn = returnedEventResponse.getName();
+                    } else if (eventReturnObject instanceof RequestResponse) {
+                        returnedEventResponse = (RequestResponse) eventReturnObject;
+                        eventReturn = returnedEventResponse.getName();
+                    } else if (eventReturnObject != null) {
+                        throw new EventHandlerException("Illegal event return type: " + eventReturnObject.getClass().getName());
+                    }
 
                     if (requestMap.event.metrics != null) {
                         requestMap.event.metrics.recordServiceRate(1, System.currentTimeMillis() - startTime);
@@ -714,6 +727,9 @@ public class RequestHandler {
         ConfigXMLReader.RequestResponse eventReturnBasedRequestResponse;
         if (eventReturn == null) {
             eventReturnBasedRequestResponse = null;
+        } else if (returnedEventResponse != null) { // SCIPIO: 3.0.0: Get directly from event first
+            eventReturnBasedRequestResponse = returnedEventResponse;
+            nextRequestResponse = returnedEventResponse;
         } else {
             eventReturnBasedRequestResponse = requestMap.requestResponseMap.get(eventReturn);
             if (eventReturnBasedRequestResponse == null && "none".equals(eventReturn)) {
@@ -824,17 +840,26 @@ public class RequestHandler {
             }
         }
 
-        ConfigXMLReader.RequestResponse successResponse = requestMap.requestResponseMap.get("success");
-        if ((eventReturn == null || "success".equals(eventReturn)) && successResponse != null && "request".equals(successResponse.type)) {
-            // chains will override any url defined views; but we will save the view for the very end
-            if (UtilValidate.isNotEmpty(overrideViewUri)) {
-                request.setAttribute("_POST_CHAIN_VIEW_", overrideViewUri);
+        if (returnedEventResponse != null) {
+            // SCIPIO: 3.0.0: Handle explicit returned event response
+            if ("success".equals(returnedEventResponse.name) && "request".equals(returnedEventResponse.type)) {
+                if (UtilValidate.isNotEmpty(overrideViewUri)) {
+                    request.setAttribute("_POST_CHAIN_VIEW_", overrideViewUri);
+                }
             }
-            nextRequestResponse = successResponse;
-        }
+        } else {
+            ConfigXMLReader.RequestResponse successResponse = requestMap.requestResponseMap.get("success");
+            if ((eventReturn == null || "success".equals(eventReturn)) && successResponse != null && "request".equals(successResponse.type)) {
+                // chains will override any url defined views; but we will save the view for the very end
+                if (UtilValidate.isNotEmpty(overrideViewUri)) {
+                    request.setAttribute("_POST_CHAIN_VIEW_", overrideViewUri);
+                }
+                nextRequestResponse = successResponse;
+            }
 
-        // Make sure we have some sort of response to go to
-        if (nextRequestResponse == null) nextRequestResponse = successResponse;
+            // Make sure we have some sort of response to go to
+            if (nextRequestResponse == null) nextRequestResponse = successResponse;
+        }
 
         if (nextRequestResponse == null) {
             throw new RequestHandlerException("Illegal response; handler could not process request [" + requestMap.uri + "] and event return [" + eventReturn + "].");
@@ -875,7 +900,7 @@ public class RequestHandler {
             try {
                 for (ConfigXMLReader.Event event: controllerConfig.getPostprocessorEventList().values()) {
                     try {
-                        String returnString = this.runEvent(request, response, event, requestMap, "postprocessor");
+                        String returnString = (String) this.runEvent(request, response, event, requestMap, "postprocessor");
                         if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
                             throw new EventHandlerException("Post-Processor event did not return 'success'.");
                         }
@@ -1070,6 +1095,7 @@ public class RequestHandler {
     /**
      * Restores _LAST_VIEW_PARAMS_/_HOME_VIEW_PARAMS_/_SAVED_VIEW_PARAMS_ to request attributes for request attributes,
      * to scpReqParamsOvrd for request parameters, and returns the appropriate view name.
+     *
      * <p>SCIPIO: 2.1.0: Factored out from {@link #doRequest}</p>
      */
     private String restoreViewParamsAndGetViewName(HttpServletRequest request, String overrideViewUri, String eventReturn,
@@ -1114,8 +1140,9 @@ public class RequestHandler {
     }
 
     /**
-     * SCIPIO: Checks default view for view-last and view-home.
-     * Added 2018-10-26.
+     * Checks default view for view-last and view-home.
+     *
+     * <p>SCIPIO: 2018-10-26: Added.</p>
      */
     String getDefaultViewLastView(String viewName, ConfigXMLReader.RequestResponse nextRequestResponse, RequestMap requestMap, 
             ControllerConfig controllerConfig, HttpServletRequest request) throws RequestHandlerException {
@@ -1184,17 +1211,20 @@ public class RequestHandler {
         request.removeAttribute("_DEF_EVENT_MSG_"); // Always remove this, to limit its lifespan
     }
 
-    /** Find the event handler and invoke an event. */
-    public String runEvent(HttpServletRequest request, HttpServletResponse response,
+    /**
+     * Find the event handler and invoke an event.
+     * <p>SCIPIO: 3.0.0: Now returns Object to support {@link ControlResponse} results.</p>
+     */
+    public Object runEvent(HttpServletRequest request, HttpServletResponse response,
             ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {
 
         // SCIPIO: 2018-11-19: implement synchronize
-        String eventReturn = runEventImpl(request, response, event.getSynchronizeExprList(), 0, event, requestMap, trigger);
+        Object eventReturn = runEventImpl(request, response, event.getSynchronizeExprList(), 0, event, requestMap, trigger);
         if (Debug.verboseOn() || (Debug.infoOn() && "request".equals(trigger))) Debug.logInfo("Ran Event [" + event.type + ":" + event.path + "#" + event.invoke + "] from [" + trigger + "], result is [" + eventReturn + "]", module);
         return eventReturn;
     }
 
-    private String runEventImpl(HttpServletRequest request, HttpServletResponse response, List<ConfigXMLReader.ValueExpr> synchronizeExprList, int synchronizeObjIndex, // SCIPIO
+    private Object runEventImpl(HttpServletRequest request, HttpServletResponse response, List<ConfigXMLReader.ValueExpr> synchronizeExprList, int synchronizeObjIndex, // SCIPIO
             ConfigXMLReader.Event event, ConfigXMLReader.RequestMap requestMap, String trigger) throws EventHandlerException {
         if (synchronizeExprList == null || synchronizeObjIndex >= synchronizeExprList.size()) {
             final EventHandler eventHandler = eventFactory.getEventHandler(event.type);
@@ -1217,7 +1247,7 @@ public class RequestHandler {
                     public void init(ServletContext context) throws EventHandlerException {
                     }
                     @Override
-                    public String invoke(Iterator<EventHandlerWrapper> handlers, Event event, RequestMap requestMap,
+                    public Object invoke(Iterator<EventHandlerWrapper> handlers, Event event, RequestMap requestMap,
                             HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
                         return invokeCore(eventHandler, event, requestMap, request, response);
                     }
@@ -1239,7 +1269,7 @@ public class RequestHandler {
         }
     }
 
-    private String invokeCore(EventHandler eventHandler, Event event, RequestMap requestMap, HttpServletRequest request,
+    private Object invokeCore(EventHandler eventHandler, Event event, RequestMap requestMap, HttpServletRequest request,
                               HttpServletResponse response) throws EventHandlerException {
         // SCIPIO: process param-to-attr
         if (event.getParamToAttrList() != null) {
@@ -2938,7 +2968,7 @@ public class RequestHandler {
         try {
             for (ConfigXMLReader.Event event: getControllerConfig().getAfterLoginEventList().values()) {
                 try {
-                    String returnString = this.runEvent(request, response, event, null, "after-login");
+                    String returnString = (String) this.runEvent(request, response, event, null, "after-login");
                     if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
                         throw new EventHandlerException("Pre-Processor event did not return 'success'.");
                     }
@@ -2955,7 +2985,7 @@ public class RequestHandler {
         try {
             for (ConfigXMLReader.Event event: getControllerConfig().getBeforeLogoutEventList().values()) {
                 try {
-                    String returnString = this.runEvent(request, response, event, null, "before-logout");
+                    String returnString = (String) this.runEvent(request, response, event, null, "before-logout");
                     if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
                         throw new EventHandlerException("Pre-Processor event did not return 'success'.");
                     }
@@ -2972,7 +3002,7 @@ public class RequestHandler {
         try {
             for (ConfigXMLReader.Event event: getControllerConfig().getAfterLogoutEventList().values()) {
                 try {
-                    String returnString = this.runEvent(request, response, event, null, "after-logout");
+                    String returnString = (String) this.runEvent(request, response, event, null, "after-logout");
                     if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
                         throw new EventHandlerException("Pre-Processor event did not return 'success'.");
                     }
@@ -3387,14 +3417,45 @@ public class RequestHandler {
         }
         for (ConfigXMLReader.Event event : events.values()) {
             try {
-                String returnString = requestHandler.runEvent(request, response, event, requestMap, trigger);
-                if (returnString != null && !"success".equalsIgnoreCase(returnString)) {
+                String eventReturn = null;
+                RequestResponse returnedEventResponse = null; // SCIPIO: 3.0.0: Now supports ControlResponse/RequestResponse from events
+                Object eventReturnObject = requestHandler.runEvent(request, response, event, requestMap, trigger);
+                if (eventReturnObject instanceof String) {
+                    eventReturn = (String) eventReturnObject;
+                } else if (eventReturnObject instanceof ControlResponse) {
+                    returnedEventResponse = ((ControlResponse) eventReturnObject).asRequestResponse();
+                    eventReturn = returnedEventResponse.getName();
+                } else if (eventReturnObject instanceof RequestResponse) {
+                    returnedEventResponse = (RequestResponse) eventReturnObject;
+                    eventReturn = returnedEventResponse.getName();
+                } else if (eventReturnObject != null) {
+                    throw new EventHandlerException("Illegal event return type: " + eventReturnObject.getClass().getName());
+                }
+                if (eventReturn != null && !"success".equalsIgnoreCase(eventReturn)) {
                     throw new EventHandlerException("Event [" + trigger + "] did not return 'success'.");
                 }
             } catch (EventHandlerException e) {
-
                 Debug.logError(e, module);
             }
+        }
+    }
+
+    /**
+     * Helper method to return the event response name (usually "success" or "error") from an event response, for use
+     * in old code transitioning to {@link ControlResponse} support.
+     * <p>SCIPIO: 3.0.0: Added for annotations/ControlResponse support.</p>
+     */
+    public static String getEventResponseName(Object eventResult) throws EventHandlerException {
+        if (eventResult instanceof String) {
+            return (String) eventResult;
+        } else if (eventResult instanceof ControlResponse) {
+            return ((ControlResponse) eventResult).responseName();
+        } else if (eventResult instanceof RequestResponse) {
+            return ((RequestResponse) eventResult).getName();
+        } else if (eventResult != null) {
+            throw new EventHandlerException("Illegal event return type: " + eventResult.getClass().getName());
+        } else {
+            return null;
         }
     }
 }

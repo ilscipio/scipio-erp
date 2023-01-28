@@ -18,6 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.base.util;
 
+import org.ofbiz.base.location.FlexibleLocation;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -148,7 +150,6 @@ public final class UtilURL {
             url = new URL(urlString);
         } catch (MalformedURLException e) {
         }
-
         return url;
     }
 
@@ -169,12 +170,12 @@ public final class UtilURL {
     /**
      * Gets file location (URL) relative to project root from an absolute file path.
      * NOTE: The file path is NOT a URL! This is a convenience method.
-     * <p>
-     * SCIPIO: NOTE: 2018-12-06: This method is modified so that it will now return null
+     *
+     * <p>SCIPIO: 2018-12-06: This method is modified so that it will now return null
      * if the given fileUrl is not under the project root; this is done for common sense
-     * and for security concerns about the original callers of this method.
+     * and for security concerns about the original callers of this method.</p>
      */
-    public static String getOfbizHomeRelativeLocationFromFilePath(String path) { // SCIPIO: String overload + impl moved
+    public static String getOfbizHomeRelativeLocationFromFilePath(String path) {
         if (path == null) {
             return null;
         }
@@ -194,11 +195,11 @@ public final class UtilURL {
     }
 
     /**
-     * Gets file location (URL) relative to project root.
-     * <p>
-     * SCIPIO: NOTE: 2018-12-06: This method is modified so that it will now return null
+     * Gets file location (URL) relative to project root (SCIPIO).
+     *
+     * <p>SCIPIO: 2018-12-06: This method is modified so that it will now return null
      * if the given fileUrl is not under the project root; this is done for common sense
-     * and for security concerns about the original callers of this method.
+     * and for security concerns about the original callers of this method.</p>
      */
     public static String getOfbizHomeRelativeLocation(URL fileUrl) {
         if (fileUrl == null) {
@@ -208,17 +209,63 @@ public final class UtilURL {
     }
 
     /**
-     * SCIPIO: Gets file location (URI) relative to project root.
-     * <p>
-     * SCIPIO: NOTE: 2018-12-06: This method is modified so that it will now return null
+     * Gets file location (URI) relative to project root (SCIPIO).
+     *
+     * <p>SCIPIO: 2018-12-06: This method is modified so that it will now return null
      * if the given fileUrl is not under the project root; this is done for common sense
-     * and for security concerns about the original callers of this method.
+     * and for security concerns about the original callers of this method.</p>
      */
     public static String getOfbizHomeRelativeLocation(URI fileUrl) { // SCIPIO: URI overload
         if (fileUrl == null) {
             return null;
         }
         return getOfbizHomeRelativeLocationFromFilePath(fileUrl.getPath());
-
     }
+
+    /**
+     * For a URL or URI, returns the absolute file path; for a file path, returns absolute path if not already absolute.
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public static String getAbsolutePath(Object location) {
+        if (location instanceof String) {
+            String locationStr = (String) location;
+            if (locationStr.isEmpty()) {
+                return null;
+            }
+            if (FlexibleLocation.isUrlLocation(locationStr)) {
+                try {
+                    URL url = FlexibleLocation.resolveLocation(locationStr);
+                    return url.getPath();
+                } catch (MalformedURLException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            } else {
+                if (new File(locationStr).isAbsolute()) {
+                    return locationStr;
+                } else {
+                    String ofbizHome = System.getProperty("ofbiz.home");
+                    if (ofbizHome == null) {
+                        Debug.logWarning("No ofbiz.home property set in environment", module);
+                        return null;
+                    }
+                    String newFilename = ofbizHome;
+                    if (!newFilename.endsWith("/") && !locationStr.startsWith("/")) {
+                        newFilename = newFilename + "/";
+                    }
+                    newFilename = newFilename + locationStr;
+                    return newFilename;
+                }
+            }
+        } else if (location instanceof URI) {
+            return ((URI) location).getPath();
+        } else if (location instanceof URL) {
+            return ((URL) location).getPath();
+        } else if (location == null) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Not a path, URI or URL: " + location.getClass().getName());
+        }
+    }
+
 }

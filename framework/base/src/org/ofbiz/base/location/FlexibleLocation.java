@@ -37,9 +37,8 @@ import org.ofbiz.base.util.UtilValidate;
 
 /**
  * A special location resolver that uses Strings like URLs, but with more options.
- *
  */
-public final class FlexibleLocation {
+public abstract class FlexibleLocation {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final Map<String, LocationResolver> locationResolvers;
@@ -77,6 +76,8 @@ public final class FlexibleLocation {
         locationResolvers = Collections.unmodifiableMap(resolverMap);
         protocolNames = Collections.unmodifiableSet(new LinkedHashSet<>(new TreeSet<>(resolverMap.keySet())));
     }
+
+    private FlexibleLocation() {}
 
     /** Returns the read-only internal map of protocol names to location resolvers, keys unordered (SCIPIO: no reason to keep private). */
     public static Map<String, LocationResolver> getLocationResolvers() {
@@ -272,5 +273,4 @@ public final class FlexibleLocation {
         return FlexibleLocation.isUrlLocation(value) ? resolveFileUrlAsPath(value) : defaultValue;
     }
 
-    private FlexibleLocation() {}
 }

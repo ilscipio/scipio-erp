@@ -44,10 +44,12 @@ public class ComponentException extends GenericConfigException {
     }
 
     /**
-     * SCIPIO: Exception specifically to indicate a component was not found, so callers can handle.
-     * WARN/FIXME: currently (2017-08-03), not enough code will be using this for it to be reliable everywhere, so
-     * cannot rely on methods throwing the appropriate subclass at this time.
-     * Added 2017-08-03.
+     * Exception specifically to indicate a component was not found, so callers can handle.
+     *
+     * <p>SCIPIO: WARN: currently (2017-08-03), not enough code will be using this for it to be reliable everywhere, so
+     * cannot rely on methods throwing the appropriate subclass at this time.</p>
+     *
+     * <p>SCIPIO: 2017-08-03: Added.</p>
      */
     public static class ComponentNotFoundException extends ComponentException {
 
@@ -64,6 +66,31 @@ public class ComponentException extends GenericConfigException {
         }
 
         protected ComponentNotFoundException(Throwable nested) {
+            super(nested);
+        }
+
+    }
+
+    /**
+     * Exception specifically to indicate a webapp was not found, so callers can handle.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static class WebappNotFoundException extends ComponentException {
+
+        protected WebappNotFoundException() {
+            super();
+        }
+
+        protected WebappNotFoundException(String str, Throwable nested) {
+            super(str, nested);
+        }
+
+        protected WebappNotFoundException(String str) {
+            super(str);
+        }
+
+        protected WebappNotFoundException(Throwable nested) {
             super(nested);
         }
 

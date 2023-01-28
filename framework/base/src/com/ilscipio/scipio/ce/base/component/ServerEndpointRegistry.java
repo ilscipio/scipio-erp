@@ -30,7 +30,7 @@ public class ServerEndpointRegistry {
         String cacheKey = toKey(webappInfo);
         WebappEndpoints we = webappEndpointsMap.get(cacheKey);
         if (we == null) {
-            WebappReflectRegistry.WebappReflectInfo wri = WebappReflectRegistry.registerWebappReflectInfo(webappInfo);
+            WebappReflectRegistry.WebappReflectInfo wri = WebappReflectRegistry.getWebappReflectInfo(webappInfo);
             Set<Class<?>> annotatedClasses = Collections.emptySet();
             if (wri != null) {
                 ReflectQuery rq = wri.getReflectQuery();

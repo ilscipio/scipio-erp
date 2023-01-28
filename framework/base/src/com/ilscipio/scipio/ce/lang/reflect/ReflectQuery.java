@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 public class ReflectQuery {
 
     private static final UtilCache<String, ReflectQuery> URL_CACHE = UtilCache.createUtilCache("reflect.query");
+    public static final ReflectQuery NONE = new ReflectQuery(null);
 
     protected final Collection<URL> jarUrls;
     /**
@@ -43,14 +45,14 @@ public class ReflectQuery {
     protected final Reflections reflections;
 
     protected ReflectQuery(Collection<URL> jarUrls) {
-        this.jarUrls = jarUrls;
-        this.reflections = new Reflections(new ConfigurationBuilder()
+        this.jarUrls = (jarUrls != null && !jarUrls.isEmpty()) ? jarUrls : Collections.emptySet();
+        this.reflections = !this.jarUrls.isEmpty() ? new Reflections(new ConfigurationBuilder()
                 .setScanners(new TypeAnnotationsScanner(), new SubTypesScanner(), new MethodAnnotationsScanner())
                 // TODO: REVIEW: could slow down loading:
                 //  new FieldAnnotationsScanner(), new MemberUsageScanner(), new MethodParameterNamesScanner(),
                 //                        , new ResourcesScanner(), new MethodParameterScanner(),
                 //                        new TypeElementsScanner()
-                .setUrls(jarUrls));
+                .setUrls(jarUrls)) : null;
     }
 
     /*
@@ -58,7 +60,9 @@ public class ReflectQuery {
      */
 
     public static ReflectQuery fromJarUrls(Collection<URL> jarUrls, boolean useCache) {
-        if (!useCache) {
+        if (jarUrls == null || jarUrls.isEmpty()) {
+            return NONE;
+        } else if (!useCache) {
             return new ReflectQuery(jarUrls);
         }
         Set<String> orderedUrls = new TreeSet<>();
@@ -78,6 +82,8 @@ public class ReflectQuery {
         return fromJarUrls(getJarUrlsForFiles(jarFiles), useCache);
     }
 
+    public boolean hasDefs() { return reflections != null; }
+
     public Reflections getReflections() {
         return reflections;
     }
@@ -91,10 +97,16 @@ public class ReflectQuery {
      */
 
     public Set<Class<?>> getAnnotatedClasses(Class<? extends Annotation> cls) {
+        if (getReflections() == null) {
+            return Collections.emptySet();
+        }
         return getReflections().getTypesAnnotatedWith(cls);
     }
 
     public Set<Class<?>> getAnnotatedClasses(Collection<Class<? extends Annotation>> clsList) {
+        if (getReflections() == null) {
+            return Collections.emptySet();
+        }
         Set<Class<?>> allClasses = new LinkedHashSet<>();
         for(Class<? extends Annotation> annotationCls : clsList) {
             Set<Class<?>> classes = getAnnotatedClasses(annotationCls);
@@ -106,10 +118,16 @@ public class ReflectQuery {
     }
 
     public Set<Method> getAnnotatedMethods(Class<? extends Annotation> cls) {
+        if (getReflections() == null) {
+            return Collections.emptySet();
+        }
         return getReflections().getMethodsAnnotatedWith(cls);
     }
 
     public Set<Method> getAnnotatedMethods(Collection<Class<? extends Annotation>> clsList) {
+        if (getReflections() == null) {
+            return Collections.emptySet();
+        }
         Set<Method> allMethods = new LinkedHashSet<>();
         for(Class<? extends Annotation> annotationCls : clsList) {
             Set<Method> methods = getAnnotatedMethods(annotationCls);

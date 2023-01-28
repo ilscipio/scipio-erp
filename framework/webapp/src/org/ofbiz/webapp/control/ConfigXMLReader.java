@@ -20,6 +20,7 @@ package org.ofbiz.webapp.control;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,7 +42,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ilscipio.scipio.ce.base.component.WebappReflectRegistry;
+import com.ilscipio.scipio.ce.lang.reflect.ReflectQuery;
 import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
+import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
+import com.ilscipio.scipio.ce.webapp.control.Request;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentURLException.ComponentNotFoundURLException;
@@ -446,7 +451,7 @@ public class ConfigXMLReader {
 
         public ControllerConfig(URL url) throws WebAppConfigurationException {
             this.url = url;
-            Builder builder = new Builder(); // SCIPIO
+            Builder builder = new Builder(url); // SCIPIO
 
             if (url != null) { // SCIPIO: Added condition (for ControllerConfig.NULL_CONFIG)
                 Element rootElement = loadDocument(url);
@@ -1488,6 +1493,11 @@ public class ConfigXMLReader {
 
         protected static class Builder extends ConfigFields { // SCIPIO: 2018-11-07: ugly kludge for initialization
 
+        protected final URL url;
+        protected Builder(URL url) {
+            this.url = url;
+        }
+
         private void optimizeFields() {
             ((ArrayList<Include>) this.includes).trimToSize();
             ((ArrayList<Include>) this.includesPreLocal).trimToSize();
@@ -1762,6 +1772,25 @@ public class ConfigXMLReader {
             for (Element requestMapElement : UtilXml.childElementList(root, "request-map")) {
                 RequestMap requestMap = new RequestMap(requestMapElement);
                 this.requestMapMap.put(requestMap.uri, requestMap);
+            }
+            loadRequestAnnotations(); // SCIPIO: 3.0.0: Added
+        }
+
+        private void loadRequestAnnotations() { // SCIPIO: 3.0.0: Added
+            if (url == null) {
+                return;
+            }
+            Debug.logInfo("Controller URL: [" + url + "] [" + url.getProtocol() + "]", module);
+            ReflectQuery reflectQuery = WebappReflectRegistry.getReflectQueryForResource(url);
+            if (reflectQuery != null) {
+                for (Method method : reflectQuery.getAnnotatedMethods(Request.class)) {
+                    RequestMap requestMap = new RequestMap(method, null);
+                    this.requestMapMap.put(requestMap.uri, requestMap);
+                }
+                // TODO: class support
+                //for (Class<?> cls : reflectQuery.getAnnotatedClasses(Request.class)) {
+                //    Request requestAnnotation = cls.getAnnotation(Request.class);
+                //}
             }
         }
 
@@ -2095,7 +2124,7 @@ public class ConfigXMLReader {
             this.globalTransaction = !"false".equals(eventElement.getAttribute("global-transaction"));
             String tt = eventElement.getAttribute("transaction-timeout");
             int transactionTimeout = DEFAULT_TRANSACTION_TIMEOUT; // SCIPIO: Locals
-            if(!tt.isEmpty()) {
+            if (!tt.isEmpty()) {
                 transactionTimeout = Integer.valueOf(tt);
             }
             this.transactionTimeout = transactionTimeout;
@@ -2109,11 +2138,11 @@ public class ConfigXMLReader {
             // SCIPIO: new attribs
             String transStr = eventElement.getAttribute("transaction");
             if ("true".equals(transStr)) {
-                transaction = Boolean.TRUE;
+                this.transaction = Boolean.TRUE;
             } else if ("false".equals(transStr)) {
-                transaction = Boolean.FALSE;
+                this.transaction = Boolean.FALSE;
             } else {
-                transaction = null;
+                this.transaction = null;
             }
             this.abortTransaction = eventElement.getAttribute("abort-transaction");
             
@@ -2190,6 +2219,106 @@ public class ConfigXMLReader {
                     }
                 }
             }
+            this.paramToAttrList = UtilMisc.unmodifiableOptimizedOrNull(paramToAttrList);
+            this.paramToAttrNamesSet = UtilValidate.isNotEmpty(paramToAttrNamesList) ?
+                    Collections.unmodifiableSet(new LinkedHashSet<>(paramToAttrNamesList)) : null;
+        }
+
+        public Event(Method annMethod, Class<?> parentClass) {
+            com.ilscipio.scipio.ce.webapp.control.Event event = annMethod.getAnnotation(com.ilscipio.scipio.ce.webapp.control.Event.class);
+            String type = (event != null) ? event.type() : null;
+            this.type = UtilValidate.isNotEmpty(type) ? type : "java";
+            this.path = (parentClass != null) ? parentClass.getName() : annMethod.getDeclaringClass().getName();
+            this.invoke = annMethod.getName();
+            this.globalTransaction = !"false".equals(event != null ? event.globalTransaction() : "true");
+            String tt = (event != null) ? event.transactionTimeout() : "";
+            int transactionTimeout = DEFAULT_TRANSACTION_TIMEOUT; // SCIPIO: Locals
+            if (!tt.isEmpty()) {
+                transactionTimeout = Integer.valueOf(tt);
+            }
+            this.transactionTimeout = transactionTimeout;
+            // Get metrics.
+            if (event != null && event.metric().length > 0) {
+                this.metrics = MetricsFactory.getInstance(event.metric()[0]);
+            } else { // SCIPIO
+                this.metrics = null;
+            }
+            // SCIPIO: new attribs
+            this.transaction = UtilMisc.booleanValue((event != null) ? event.transaction() : null);
+            this.abortTransaction = (event != null) ? event.abortTransaction() : "";
+            List<ValueExpr> synchronizedExprList = null;
+            if (event != null && event.synchronizedValues() != null && event.synchronizedValues().length > 0) {
+                synchronizedExprList = new ArrayList<>(event.synchronizedValues().length);
+                for(String synchronizedValue : event.synchronizedValues()) {
+                    synchronizedExprList.add(ValueExpr.getInstance(ValueExpr.ensureDelims(synchronizedValue)));
+                }
+            }
+            this.synchronizedExprList = synchronizedExprList;
+            this.scriptBody = null;
+            Map<String, Object> properties = null;
+            /* TODO: not essential
+            List<? extends Element> propertyElements = UtilXml.childElementList(eventElement, "property");
+            if (UtilValidate.isNotEmpty(propertyElements)) {
+                properties = new HashMap<>();
+                for(Element propertyElement : propertyElements) {
+                    String name = propertyElement.getAttribute("name");
+                    String type = propertyElement.getAttribute("type");
+                    String valueStr = propertyElement.getAttribute("value");
+                    //String scope = propertyElement.getAttribute("scope"); // TODO?: future
+                    Object value = null;
+                    if (UtilValidate.isNotEmpty(valueStr)) { // NOTE: empty allowed; means override inherited with null
+                        try {
+                            //Map<String, Object> propertyCtx = new HashMap<>();
+                            // TODO?: Don't support this for static properties for now, so they can be analyzed statically
+                            //FlexibleStringExpander expr = FlexibleStringExpander.getInstance(valueStr);
+                            //Object result = expr.expand(propertyCtx);
+                            Object result = valueStr;
+                            if (result != null && UtilValidate.isNotEmpty(type)) {
+                                value = ObjectType.simpleTypeConvert(result, type, null, null);
+                            } else {
+                                value = result;
+                            }
+                        } catch (Exception e) {
+                            Debug.logError(e, "Unable to evaluate event property '" + name
+                                    + "' for event (will be null)", module);
+                        }
+                    }
+                    properties.put(name, value);
+                }
+            }
+             */
+            this.staticProperties = (properties != null) ? Collections.unmodifiableMap(properties) : Collections.emptyMap();
+
+            List<ParamToAttr> paramToAttrList = null;
+            List<String> paramToAttrNamesList = null;
+            /* TODO: not essential
+            List<? extends Element> paramToAttrElements = UtilXml.childElementList(eventElement, "param-to-attr");
+            if (UtilValidate.isNotEmpty(paramToAttrElements)) {
+                paramToAttrList = new ArrayList<>();
+                paramToAttrNamesList = new ArrayList<>();
+                for(Element element : paramToAttrElements) {
+                    String nameStr = element.getAttribute("name");
+                    if (nameStr.length() == 0) {
+                        Debug.logError("param-to-attr: missing name attribute; ignoring directive", module);
+                        continue;
+                    }
+                    String toNameStr = element.getAttribute("to-name");
+                    String[] names = nameStr.split(",");
+                    String[] toNames = toNameStr.length() > 0 ? toNameStr.split(",") : null;
+                    if (toNames != null && toNames.length != names.length) {
+                        Debug.logError("param-to-attr: to-name comma-separated list has different number of names than name attribute; ignoring directive", module);
+                        continue;
+                    }
+                    boolean override = UtilMisc.booleanValue(element.getAttribute("override"), false);
+                    boolean setIfNull = UtilMisc.booleanValue(element.getAttribute("set-if-null"), true);
+                    boolean setIfEmpty = UtilMisc.booleanValue(element.getAttribute("set-if-empty"), true);
+                    for(int i = 0; i < names.length; i++) {
+                        paramToAttrList.add(new ParamToAttr(names[i], toNames != null && i < toNames.length ? toNames[i] : names[i], override, setIfNull, setIfEmpty));
+                        paramToAttrNamesList.add(names[i]);
+                    }
+                }
+            }
+             */
             this.paramToAttrList = UtilMisc.unmodifiableOptimizedOrNull(paramToAttrList);
             this.paramToAttrNamesSet = UtilValidate.isNotEmpty(paramToAttrNamesList) ?
                     Collections.unmodifiableSet(new LinkedHashSet<>(paramToAttrNamesList)) : null;
@@ -2477,6 +2606,89 @@ public class ConfigXMLReader {
             }
             this.overrideMode = OverrideMode.fromNameAlways(requestMapElement.getAttribute("override-mode"));
             this.securityAuthCheckEvent = securityAuthCheckEvent;
+        }
+
+        public RequestMap(Method annMethod, Class<?> annClass) {
+            Request request = (annClass != null) ? annClass.getAnnotation(Request.class) : annMethod.getAnnotation(Request.class);
+            if (request == null) {
+                throw new IllegalArgumentException("Missing request annotation on method [" + annMethod + "]");
+            }
+            // Get the URI info
+            this.uri = request.uri();
+            // SCIPIO: HTTP methods
+            // NOTE: We will be permissive to uppercase for security reasons, but should be written with lowercase in files.
+            String methodStr = request.method();
+            if (methodStr.isEmpty()) {
+                this.methods = Collections.emptySet();
+                methodsSpecified = false;
+            } else if ("all".equalsIgnoreCase(methodStr)) {
+                this.methods = Collections.emptySet();
+                methodsSpecified = true;
+            } else {
+                String[] methodList = methodStr.toLowerCase(Locale.getDefault()).split("\\s*,\\s*");
+                Set<String> methods = new HashSet<>();
+                for(String method : methodList) {
+                    if (!allowedMethods.contains(method)) {
+                        Debug.logError("request-map '" + this.uri + "' specifies invalid HTTP method: "
+                                + method + " in value '" + methodStr + "' (allowed values: " + allowedMethods + ")", module);
+                    } else {
+                        methods.add(method);
+                    }
+                }
+                this.methods = methods;
+                methodsSpecified = true;
+            }
+            this.edit = true;
+            this.editSpecified = false; // SCIPIO
+
+            String trackServerHitStr = request.trackServerHit();
+            this.trackServerHit = !"false".equals(trackServerHitStr);
+            this.trackServerHitSpecified = UtilValidate.isNotEmpty(trackServerHitStr); // SCIPIO
+            String trackVisitStr = request.trackVisit();
+            this.trackVisit = !"false".equals(trackVisitStr);
+            this.trackVisitSpecified = UtilValidate.isNotEmpty(trackVisitStr); // SCIPIO
+            // Check for security
+            boolean securityHttps = true; // SCIPIO: Added locals here
+            if (!UtilProperties.propertyValueEqualsIgnoreCase("url", "no.http", "Y")) {
+                securityHttps = !"false".equals(request.secure());
+            } else {
+                String httpRequestMapList = UtilProperties.getPropertyValue("url", "http.request-map.list");
+                if (UtilValidate.isNotEmpty(httpRequestMapList)) {
+                    List<String> reqList = StringUtil.split(httpRequestMapList, ",");
+                    if (reqList.contains(this.uri)) {
+                        securityHttps = !"false".equals(request.secure());
+                    }
+                }
+            }
+            this.securityHttps = securityHttps; // SCIPIO: Added locals here
+            this.securityAuth = "true".equals(request.auth());
+            this.securityCert = "true".equals(request.cert());
+            this.securityExternalView = !"false".equals(request.externalView());
+            this.securityDirectRequest = !"false".equals(request.directRequest());
+            this.securityAuthCheckEvent = request.authCheckEvent();
+            this.securitySpecified = !(request.secure().isEmpty() && request.auth().isEmpty() &&
+                    request.cert().isEmpty() && request.externalView().isEmpty() && request.directRequest().isEmpty() &&
+                    request.authCheckEvent().isEmpty());
+            // Check for event
+            this.event = new Event(annMethod, annClass);
+            // Check for description
+            this.description = request.description();
+            // Get the response(s)
+            // SCIPIO: handled dynamically
+            //Map<String, RequestResponse> requestResponseMap = new HashMap<String, RequestResponse>(); // SCIPIO
+            //for (Element responseElement : UtilXml.childElementList(requestMapElement, "response")) {
+            //    RequestResponse response = new RequestResponse(responseElement);
+            //    requestResponseMap.put(response.name, response);
+            //}
+            //this.requestResponseMap = requestResponseMap;
+            this.requestResponseMap = Collections.emptyMap();
+            // Get metrics.
+            if (request.metric().length > 0) {
+                this.metrics = MetricsFactory.getInstance(request.metric()[0]);
+            } else { // SCIPIO
+                this.metrics = null;
+            }
+            this.overrideMode = OverrideMode.fromNameAlways(request.overrideMode());
         }
 
         /**
@@ -2783,6 +2995,35 @@ public class ConfigXMLReader {
             this.connectionState = connectionState.isEmpty() ? null : connectionState;
             Boolean allowCacheRedirect = UtilMisc.booleanValue(responseElement.getAttribute("allow-cache-redirect")); // SCIPIO
             this.allowCacheRedirect = allowCacheRedirect;
+        }
+
+        /**
+         * ControlResponse builder constructor.
+         * <p>SCIPIO: 3.0.0: Added.</p>
+         */
+        public RequestResponse(ControlResponse cr) {
+            this.name = (cr.responseName() != null) ? cr.responseName() : (cr.error() ? "error" : "success");
+            this.type = cr.type().getName();
+            this.value = cr.value();
+            this.statusCode = (cr.statusCode() != null) ? cr.statusCode().toString() : null;
+            this.statusCodeNumber = cr.statusCode();
+            this.saveLastView = Boolean.TRUE.equals(cr.saveLastView());
+            this.saveCurrentView = Boolean.TRUE.equals(cr.saveCurrentView());
+            this.saveHomeView = Boolean.TRUE.equals(cr.saveHomeView());
+            this.redirectParameterMap = (cr.redirectParameterMap() != null) ? cr.redirectParameterMap() : Collections.emptyMap();
+            this.redirectParameterValueMap = (cr.redirectParameterValueMap() != null) ? cr.redirectParameterValueMap() : Collections.emptyMap();
+            this.excludeParameterSet = cr.excludeParameterSet();
+            this.includeMode = (cr.includeMode() != null) ? cr.includeMode() : "auto";
+            this.allowViewSave = cr.allowViewSave();
+            this.typeEnum = cr.type();
+            this.valueExpr = ValueExpr.getInstance(cr.value());
+            AttributesSpec spec = this.typeEnum.getRedirectAttributesDefault();
+            if (UtilValidate.isNotEmpty(cr.saveRequest()) || cr.includeRequestAttributes() != null || cr.excludeRequestAttributes() != null) {
+                spec = AttributesSpec.getSpec(cr.saveRequest(), cr.includeRequestAttributes(), cr.excludeRequestAttributes());
+            }
+            this.redirectAttributes = spec;
+            this.connectionState = cr.connectionState();
+            this.allowCacheRedirect = cr.allowCacheRedirect();
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)

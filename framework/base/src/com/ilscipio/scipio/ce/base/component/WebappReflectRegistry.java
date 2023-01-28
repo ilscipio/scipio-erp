@@ -30,10 +30,7 @@ public class WebappReflectRegistry {
     }
 
     public static WebappReflectInfo registerWebappReflectInfo(ComponentConfig.WebappInfo webappInfo,
-                                                              Collection<URL> jarUrls, boolean useCache) {
-        if (!useCache) {
-            return new WebappReflectInfo(webappInfo, jarUrls, false);
-        }
+                                                              Collection<URL> jarUrls) {
         String cacheKey = toKey(webappInfo);
         WebappReflectInfo wri = REGISTRY.get(cacheKey);
         if (wri == null) {
@@ -41,6 +38,9 @@ public class WebappReflectRegistry {
             WebappReflectInfo prevWri = REGISTRY.putIfAbsent(cacheKey, wri);
             if (prevWri != null) {
                 wri = prevWri;
+            } else {
+                // Also register the component part, excluding webapp jars
+                ComponentReflectRegistry.registerComponentReflectInfo(wri, jarUrls);
             }
         }
         return wri;
@@ -83,7 +83,7 @@ public class WebappReflectRegistry {
 
         @Override
         public void scanJars(ComponentConfig.WebappInfo webappInfo, List<File> jarFiles, Set<String> jarNames) {
-            registerWebappReflectInfo(webappInfo, ReflectQuery.getJarUrlsForFiles(jarFiles), true);
+            registerWebappReflectInfo(webappInfo, ReflectQuery.getJarUrlsForFiles(jarFiles));
         }
 
         public static class Factory implements FilterJarsScanner.Factory {
@@ -94,4 +94,26 @@ public class WebappReflectRegistry {
         }
     }
 
+    /**
+     * For an absolute or relative-to-project-root path, URI or URL to a file, if the path points under a webapp,
+     * returns a {@link ReflectQuery} for the whole webapp and component jars; if only under component, returns for
+     * component jars only.
+     */
+    public static ReflectQuery getReflectQueryForResource(Object location) {
+        ComponentConfig.WebappInfo webappInfo = ComponentConfig.getWebappInfoFromResource(location, false);
+        if (webappInfo != null) {
+            WebappReflectRegistry.WebappReflectInfo wri = WebappReflectRegistry.getWebappReflectInfo(webappInfo);
+            if (wri != null) {
+                return wri.getReflectQuery();
+            }
+        }
+        ComponentConfig componentConfig = ComponentConfig.getComponentConfigFromResource(location);
+        if (componentConfig != null) {
+            ComponentReflectRegistry.ComponentReflectInfo cri = ComponentReflectRegistry.getComponentReflectInfo(componentConfig);
+            if (cri != null) {
+                return cri.getReflectQuery();
+            }
+        }
+        return null;
+    }
 }

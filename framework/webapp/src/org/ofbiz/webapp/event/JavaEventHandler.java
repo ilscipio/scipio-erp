@@ -25,6 +25,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
@@ -63,7 +64,7 @@ public class JavaEventHandler implements EventHandler {
     /**
      * @see org.ofbiz.webapp.event.EventHandler#invoke(ConfigXMLReader.Event, ConfigXMLReader.RequestMap, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
-    public String invoke(Event event, RequestMap requestMap,
+    public Object invoke(Event event, RequestMap requestMap,
             HttpServletRequest request, HttpServletResponse response)
                     throws EventHandlerException {
         Class<?> k = classes.computeIfAbsent(event.path, JavaEventHandler::loadClass);
@@ -84,7 +85,20 @@ public class JavaEventHandler implements EventHandler {
             began = TransactionUtil.begin(timeout);
             Method m = k.getMethod(event.invoke, HttpServletRequest.class,
                                    HttpServletResponse.class);
-            String ret = (String) m.invoke(null, request, response);
+            // SCIPIO: 3.0.0: Support Object result for annotations
+            String ret = null;
+            Object retObj = m.invoke(null, request, response);
+            if (retObj instanceof String) {
+                ret = (String) retObj;
+            } else if (retObj instanceof ControlResponse) {
+                ConfigXMLReader.RequestResponse retEvtResp = ((ControlResponse) retObj).asRequestResponse();
+                ret = retEvtResp.getName();
+            } else if (retObj instanceof ConfigXMLReader.RequestResponse) {
+                ConfigXMLReader.RequestResponse retEvtResp = (ConfigXMLReader.RequestResponse) retObj;
+                ret = retEvtResp.getName();
+            } else if (retObj != null) {
+                throw new EventHandlerException("Illegal event return type: " + retObj.getClass().getName());
+            }
             if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + ret, module);
 
             // SCIPIO: Trigger transaction abort if configured
@@ -97,7 +111,7 @@ public class JavaEventHandler implements EventHandler {
                 rollback = true;
             }
 
-            return ret;
+            return retObj;
         } catch (java.lang.reflect.InvocationTargetException e) {
             Throwable t = e.getTargetException();
 

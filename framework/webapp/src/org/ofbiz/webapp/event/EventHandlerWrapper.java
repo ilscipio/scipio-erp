@@ -6,6 +6,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
 
@@ -22,7 +23,7 @@ public interface EventHandlerWrapper {
      * definition files for rendering pages or handler options.
      * @throws EventHandlerException
      */
-    public void init(ServletContext context) throws EventHandlerException;
+    void init(ServletContext context) throws EventHandlerException;
 
     /**
      * Invoke the web event
@@ -32,9 +33,9 @@ public interface EventHandlerWrapper {
      * @param request The servlet request object
      * @param response The servlet response object
      *
-     *@return String Result code
-     *@throws EventHandlerException
+     * @return Object Result code, normally String or {@link ControlResponse}
+     * @throws EventHandlerException
      */
-    public String invoke(Iterator<EventHandlerWrapper> handlers, Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException;
+    Object invoke(Iterator<EventHandlerWrapper> handlers, Event event, RequestMap requestMap, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException;
 
 }

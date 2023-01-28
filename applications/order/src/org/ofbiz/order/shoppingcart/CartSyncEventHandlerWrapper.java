@@ -17,6 +17,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
+import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.event.EventHandlerException;
 import org.ofbiz.webapp.event.EventHandlerWrapper;
 
@@ -39,7 +40,7 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
     }
 
     @Override
-    public String invoke(Iterator<EventHandlerWrapper> handlers, Event event, RequestMap requestMap,
+    public Object invoke(Iterator<EventHandlerWrapper> handlers, Event event, RequestMap requestMap,
             HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         if (targetHandlers.contains(event.getType())) {
             DispatchContext dctx = ((LocalDispatcher) request.getAttribute("dispatcher")).getDispatchContext();
@@ -57,7 +58,8 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
                         Debug.logInfo("Begin shoppingCart.update cart sync section for event service '" + serviceName + "'"
                                 + getLogSuffix(), module);
                     }
-                    String result;
+                    Object eventResult;
+                    String eventResultName;
                     final boolean createCartIfMissing = false;
                     try (CartUpdate cartUpdate = CartUpdate.updateSection(request, createCartIfMissing)) {
                         // NOTE: cartUpdate automatically populates the "shoppingCart" request attribute
@@ -69,7 +71,8 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
                         // to ensure the session attribute shoppingCart is not changed between now
                         // and the time the ServiceEventHandler re-reads the attribute.
 
-                        result = handlers.next().invoke(handlers, event, requestMap, request, response);
+                        eventResult = handlers.next().invoke(handlers, event, requestMap, request, response);
+                        eventResultName = RequestHandler.getEventResponseName(eventResult);
 
                         // Special case: shoppingCart INOUT
                         // If OUT cart changed, simply let it replace our cart copy through CartUpdate.commit
@@ -88,7 +91,7 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
                         }
 
                         if (cart != null) {
-                            if ("error".equals(result)) {
+                            if ("error".equals(eventResultName)) {
                                 Debug.logWarning("Event service '" + serviceName
                                     + "' returned occur; discarding shoppingCart changes" + getLogSuffix(), module);
                             } else {
@@ -101,7 +104,7 @@ public class CartSyncEventHandlerWrapper implements EventHandlerWrapper {
                         Debug.logInfo("End shoppingCart.update cart sync section for event service '" + serviceName + "'"
                                 + getLogSuffix(), module);
                     }
-                    return result;
+                    return eventResult;
                 }
             }
         }

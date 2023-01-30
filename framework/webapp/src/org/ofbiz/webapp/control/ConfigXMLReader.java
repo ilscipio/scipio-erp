@@ -20,6 +20,7 @@ package org.ofbiz.webapp.control;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -47,6 +48,7 @@ import com.ilscipio.scipio.ce.lang.reflect.ReflectQuery;
 import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
 import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
 import com.ilscipio.scipio.ce.webapp.control.Request;
+import com.ilscipio.scipio.ce.webapp.control.View;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentURLException.ComponentNotFoundURLException;
@@ -1780,7 +1782,7 @@ public class ConfigXMLReader {
             if (url == null) {
                 return;
             }
-            Debug.logInfo("Controller URL: [" + url + "] [" + url.getProtocol() + "]", module);
+            Debug.logInfo("Controller URL: [" + url + "] [" + url.getProtocol() + "] - loading request annotations", module);
             ReflectQuery reflectQuery = WebappReflectRegistry.getReflectQueryForResource(url);
             if (reflectQuery != null) {
                 for (Method method : reflectQuery.getAnnotatedMethods(Request.class)) {
@@ -1798,6 +1800,21 @@ public class ConfigXMLReader {
             for (Element viewMapElement : UtilXml.childElementList(rootElement, "view-map")) {
                 ViewMap viewMap = new ViewMap(viewMapElement);
                 this.viewMapMap.put(viewMap.name, viewMap);
+            }
+            loadViewAnnotations(); // SCIPIO: 3.0.0: Added
+        }
+
+        private void loadViewAnnotations() { // SCIPIO: 3.0.0: Added
+            if (url == null) {
+                return;
+            }
+            Debug.logInfo("Controller URL: [" + url + "] [" + url.getProtocol() + "] - loading view annotations", module);
+            ReflectQuery reflectQuery = WebappReflectRegistry.getReflectQueryForResource(url);
+            if (reflectQuery != null) {
+                for (Field field : reflectQuery.getAnnotatedFields(View.class)) {
+                    ViewMap viewMap = new ViewMap(field);
+                    this.viewMapMap.put(viewMap.name, viewMap);
+                }
             }
         }
 
@@ -3354,6 +3371,30 @@ public class ConfigXMLReader {
             Map<String, Object> properties = new LinkedHashMap<>(baseView.getProperties());
             properties.putAll(overrideView.getProperties());
             this.properties = UtilValidate.isNotEmpty(properties) ? Collections.unmodifiableMap(properties) : Collections.emptyMap();
+        }
+
+        public ViewMap(Field annField) {
+            View view = annField.getAnnotation(View.class);
+
+            this.name = view.name();
+            String page = view.page(); // SCIPIO: made local
+            String type = view.type();
+            this.type = UtilValidate.isNotEmpty(type) ? type : "default";
+            this.info = view.info();
+            this.contentType = view.contentType();
+            this.noCache = "true".equals(view.noCache());
+            this.encoding = view.encoding();
+            String xFrameOption = view.xFrameOptions();
+            this.xFrameOption = UtilValidate.isNotEmpty(xFrameOption) ? xFrameOption : "sameorigin";
+            this.strictTransportSecurity = view.strictTransportSecurity();
+            this.description = view.description();
+            String access = view.access();
+            this.access = UtilValidate.isNotEmpty(access) ? access : "public";
+            if (UtilValidate.isEmpty(page)) {
+                page = this.name;
+            }
+            this.page = page;
+            this.properties = Collections.emptyMap();
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)

@@ -49,7 +49,7 @@ public @interface Request {
     String controller() default "";
 
     /**
-     * The HTTP method allowed for this request; "get", "post" or "all", default: "all".
+     * The HTTP method allowed for this request; "get", "post" or "all", default "all".
      */
     String method() default "";
 

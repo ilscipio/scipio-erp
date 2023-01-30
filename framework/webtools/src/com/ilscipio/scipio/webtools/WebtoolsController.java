@@ -4,6 +4,7 @@ import com.ilscipio.scipio.ce.base.metrics.Metric;
 import com.ilscipio.scipio.ce.webapp.control.Controller;
 import com.ilscipio.scipio.ce.webapp.control.Request;
 import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
+import com.ilscipio.scipio.ce.webapp.control.View;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,9 +25,20 @@ public class WebtoolsController {
     /*
      * Event responses.
      * NOTE: For performance and reuse these can be left static here, because it internally caches the XML-emulating
-     * class, but this is not strictly necessary.
+     * class, but this is not strictly necessary. However, it is very useful for defining views themselves using
+     * the @View annotation.
      */
+
     protected static final ControlResponse.ViewLast VIEW_MAIN_LAST = ControlResponse.viewLast("main");
+
+    /**
+     * View definition and control response for events.
+     *
+     * <p>Here the annotation is equivalent to {@code <view/>} definition, and the ControlResponse instance
+     * can be returned by events. NOTE: The ControlResponse instance does not need to be unique.</p>
+     */
+    @View(name = "maincopy", type = "screen", page = "component://webtools/widget/CommonScreens.xml#main")
+    protected static final ControlResponse.View VIEW_MAINCOPY = ControlResponse.view("maincopy");
 
     @Request(uri = "testViewLast")
     public static Object testViewLast(HttpServletRequest request, HttpServletResponse response) {
@@ -38,6 +50,11 @@ public class WebtoolsController {
     @Request(uri = "testViewMain")
     public static Object testViewMain(HttpServletRequest request, HttpServletResponse response) {
         return ControlResponse.view("main");
+    }
+
+    @Request(uri = "testViewMainCopy")
+    public static Object testViewMainCopy(HttpServletRequest request, HttpServletResponse response) {
+        return VIEW_MAINCOPY;
     }
 
 }

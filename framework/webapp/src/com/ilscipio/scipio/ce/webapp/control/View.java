@@ -33,11 +33,11 @@ public @interface View {
     String controller() default "";
 
     /**
-     * The name of the view handler that will render the output: screen, screenfop, etc.
+     * The name of the view handler that will render the output: "screen", "screenfop", etc., default "default".
      *
      * <p>A most comprehensive list can be found in the handlers-controller.</p>
      */
-    String type() default "";
+    String type() default "default";
 
     /**
      * The page mapped to this view.
@@ -65,7 +65,7 @@ public @interface View {
     /**
      * Send no-cache headers if set to true, default "false".
      */
-    String noCache() default "";
+    String noCache() default "false";
 
     /**
      * Provides clickjacking protection by instructing browsers that this page should not be placed within a frame, default "sameorigin".
@@ -79,7 +79,7 @@ public @interface View {
      * <p>Allow from is supported by IE and Firefox, but not Chrome or Safari. It will also interfere with In Page
      * Google Analytics since it requires your page to be framed by Google.</p>
      */
-    String xFrameOptions() default "";
+    String xFrameOptions() default "sameorigin";
 
     /**
      * <p>HTTP Strict-Transport-Security (HSTS) enforces secure (HTTP over SSL/TLS) connections to the server.</p>

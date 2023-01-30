@@ -51,7 +51,7 @@ public @interface Request {
     /**
      * The HTTP method allowed for this request; "get", "post" or "all", default "all".
      */
-    String method() default "";
+    String method() default "all";
 
     /**
      * Whether or not to track first visit (related to firstvisit preprocessor); "true" or "false", default "true".
@@ -66,12 +66,12 @@ public @interface Request {
     /**
      * Whether to redirect to https protocol whenever an insecure request is made; "true" or "false", default "true".
      */
-    String secure() default "";
+    String secure() default "true";
 
     /**
      * Whether to forward to the login page when the user is not logged in; "true" or "false", default "false".
      */
-    String auth() default "";
+    String auth() default "false";
 
     /**
      * Name of an alternative request URI whose event to use for login check; default "checkLogin".
@@ -81,23 +81,23 @@ public @interface Request {
     /**
      * Whether to check for HTTPS client (x.509) security and throw exception if not secured; "true" or "false", default "false".
      */
-    String cert() default "";
+    String cert() default "false";
 
     /**
      * Whether to allow overriding the view through the URL using the uri/view switch; "true" or "false", default "true".
      */
-    String externalView() default "";
+    String externalView() default "true";
 
     /**
      * Whether to allow direct public access or only internal request chaining; "true" or "false", default "true".
      */
-    String directRequest() default "";
+    String directRequest() default "true";
 
     /**
      * Controls how the request-map should override or inherit from any existing request-maps with the same uri;
      * "replace" or "merge", default "replace".
      */
-    String overrideMode() default "";
+    String overrideMode() default "replace";
 
     /**
      * Description for request.

@@ -15,6 +15,7 @@ import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,9 +28,11 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
- * Wrapper around org.reflections/org.reflections8 library for simplified use.
+ * Annotations reflection scanner - wrapper around org.reflections/org.reflections8 library for simplified use.
+ *
  * <p>DEV NOTE: This does not currently fully abstract Reflections; it's intended to add helper calls around expensive
  * cached operations, but some abstractions are available and more may be added.</p>
+ *
  * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
  */
 public class ReflectQuery {
@@ -38,6 +41,7 @@ public class ReflectQuery {
     public static final ReflectQuery NONE = new ReflectQuery(null);
 
     protected final Collection<URL> jarUrls;
+
     /**
      * The Reflections object, which acts as queryable cache for expensive operations.
      * <p>If a method is called which requires type scanners which were not specified at creation, it may be rebuilt.</p>
@@ -47,11 +51,15 @@ public class ReflectQuery {
     protected ReflectQuery(Collection<URL> jarUrls) {
         this.jarUrls = (jarUrls != null && !jarUrls.isEmpty()) ? jarUrls : Collections.emptySet();
         this.reflections = !this.jarUrls.isEmpty() ? new Reflections(new ConfigurationBuilder()
-                .setScanners(new TypeAnnotationsScanner(), new SubTypesScanner(), new MethodAnnotationsScanner())
-                // TODO: REVIEW: could slow down loading:
-                //  new FieldAnnotationsScanner(), new MemberUsageScanner(), new MethodParameterNamesScanner(),
-                //                        , new ResourcesScanner(), new MethodParameterScanner(),
-                //                        new TypeElementsScanner()
+                .setScanners(new TypeAnnotationsScanner(),
+                        new SubTypesScanner(),
+                        new MethodAnnotationsScanner(),
+                        new FieldAnnotationsScanner(),
+                        new MemberUsageScanner(),
+                        new MethodParameterNamesScanner(),
+                        new ResourcesScanner(),
+                        new MethodParameterScanner(),
+                        new TypeElementsScanner())
                 .setUrls(jarUrls)) : null;
     }
 
@@ -96,19 +104,19 @@ public class ReflectQuery {
      * Queries
      */
 
-    public Set<Class<?>> getAnnotatedClasses(Class<? extends Annotation> cls) {
+    public Set<Class<?>> getAnnotatedClasses(Class<? extends Annotation> annCls) {
         if (getReflections() == null) {
             return Collections.emptySet();
         }
-        return getReflections().getTypesAnnotatedWith(cls);
+        return getReflections().getTypesAnnotatedWith(annCls);
     }
 
-    public Set<Class<?>> getAnnotatedClasses(Collection<Class<? extends Annotation>> clsList) {
+    public Set<Class<?>> getAnnotatedClasses(Collection<Class<? extends Annotation>> annClsList) {
         if (getReflections() == null) {
             return Collections.emptySet();
         }
         Set<Class<?>> allClasses = new LinkedHashSet<>();
-        for(Class<? extends Annotation> annotationCls : clsList) {
+        for(Class<? extends Annotation> annotationCls : annClsList) {
             Set<Class<?>> classes = getAnnotatedClasses(annotationCls);
             if (classes != null) {
                 allClasses.addAll(classes);
@@ -117,25 +125,46 @@ public class ReflectQuery {
         return allClasses;
     }
 
-    public Set<Method> getAnnotatedMethods(Class<? extends Annotation> cls) {
+    public Set<Method> getAnnotatedMethods(Class<? extends Annotation> annCls) {
         if (getReflections() == null) {
             return Collections.emptySet();
         }
-        return getReflections().getMethodsAnnotatedWith(cls);
+        return getReflections().getMethodsAnnotatedWith(annCls);
     }
 
-    public Set<Method> getAnnotatedMethods(Collection<Class<? extends Annotation>> clsList) {
+    public Set<Method> getAnnotatedMethods(Collection<Class<? extends Annotation>> annClsList) {
         if (getReflections() == null) {
             return Collections.emptySet();
         }
         Set<Method> allMethods = new LinkedHashSet<>();
-        for(Class<? extends Annotation> annotationCls : clsList) {
+        for(Class<? extends Annotation> annotationCls : annClsList) {
             Set<Method> methods = getAnnotatedMethods(annotationCls);
             if (methods != null) {
                 allMethods.addAll(methods);
             }
         }
         return allMethods;
+    }
+
+    public Set<Field> getAnnotatedFields(Class<? extends Annotation> annCls) {
+        if (getReflections() == null) {
+            return Collections.emptySet();
+        }
+        return getReflections().getFieldsAnnotatedWith(annCls);
+    }
+
+    public Set<Field> getAnnotatedFields(Collection<Class<? extends Annotation>> annClsList) {
+        if (getReflections() == null) {
+            return Collections.emptySet();
+        }
+        Set<Field> allFields = new LinkedHashSet<>();
+        for(Class<? extends Annotation> annotationCls : annClsList) {
+            Set<Field> fields = getAnnotatedFields(annotationCls);
+            if (fields != null) {
+                allFields.addAll(fields);
+            }
+        }
+        return allFields;
     }
 
     public static List<URL> getJarUrlsForFiles(Collection<File> jarFiles) {
@@ -147,4 +176,5 @@ public class ReflectQuery {
             }
         }).collect(Collectors.toList());
     }
+
 }

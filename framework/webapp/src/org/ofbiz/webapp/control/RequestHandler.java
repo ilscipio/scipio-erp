@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
-import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
+import com.ilscipio.scipio.ce.webapp.control.def.ControlResponse;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Debug;

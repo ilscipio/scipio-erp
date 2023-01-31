@@ -25,7 +25,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
+import com.ilscipio.scipio.ce.webapp.control.def.ControlResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;

@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.ce.webapp.control;
+package com.ilscipio.scipio.ce.webapp.control.def;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -15,7 +15,7 @@ import org.ofbiz.webapp.control.RequestHandler;
  * <p>Traditionally, events only returned response names, but these ControlResponse objects may now be returned
  * instead of response names for arbitrary and complex flow control and to help support annotations.</p>
  *
- * <p>NOTE: These responses are only valid to be returned from {@link com.ilscipio.scipio.ce.webapp.control.Request}
+ * <p>NOTE: These responses are only valid to be returned from {@link com.ilscipio.scipio.ce.webapp.control.def.Request}
  * events and controller <code>request-map</code> events, and not preprocessor/postprocessor or other types of events.</p>
  *
  * <p>SCIPIO: 3.0.0: Added for annotations support and versatile events.</p>
@@ -1258,4 +1258,5 @@ public abstract class ControlResponse implements Serializable {
             return (UrlRedirect) super.allowCacheRedirect(allowCacheRedirect);
         }
     }
+
 }

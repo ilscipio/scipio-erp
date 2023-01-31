@@ -46,9 +46,9 @@ import javax.servlet.http.HttpSession;
 import com.ilscipio.scipio.ce.base.component.WebappReflectRegistry;
 import com.ilscipio.scipio.ce.lang.reflect.ReflectQuery;
 import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
-import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
-import com.ilscipio.scipio.ce.webapp.control.Request;
-import com.ilscipio.scipio.ce.webapp.control.View;
+import com.ilscipio.scipio.ce.webapp.control.def.ControlResponse;
+import com.ilscipio.scipio.ce.webapp.control.def.Request;
+import com.ilscipio.scipio.ce.webapp.control.def.View;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.component.ComponentURLException.ComponentNotFoundURLException;
@@ -2242,7 +2242,7 @@ public class ConfigXMLReader {
         }
 
         public Event(Method annMethod, Class<?> parentClass) {
-            com.ilscipio.scipio.ce.webapp.control.Event event = annMethod.getAnnotation(com.ilscipio.scipio.ce.webapp.control.Event.class);
+            com.ilscipio.scipio.ce.webapp.control.def.Event event = annMethod.getAnnotation(com.ilscipio.scipio.ce.webapp.control.def.Event.class);
             String type = (event != null) ? event.type() : null;
             this.type = UtilValidate.isNotEmpty(type) ? type : "java";
             this.path = (parentClass != null) ? parentClass.getName() : annMethod.getDeclaringClass().getName();

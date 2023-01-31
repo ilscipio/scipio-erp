@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.ce.webapp.control;
+package com.ilscipio.scipio.ce.webapp.control.def;
 
 import com.ilscipio.scipio.ce.base.metrics.Metric;
 

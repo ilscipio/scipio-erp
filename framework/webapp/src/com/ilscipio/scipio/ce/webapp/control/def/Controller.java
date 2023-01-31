@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.ce.webapp.control;
+package com.ilscipio.scipio.ce.webapp.control.def;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

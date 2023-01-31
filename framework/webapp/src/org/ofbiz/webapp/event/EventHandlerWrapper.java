@@ -6,7 +6,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
+import com.ilscipio.scipio.ce.webapp.control.def.ControlResponse;
 import org.ofbiz.webapp.control.ConfigXMLReader.Event;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
 

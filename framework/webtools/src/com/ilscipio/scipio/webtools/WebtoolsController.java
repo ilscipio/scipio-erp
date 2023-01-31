@@ -1,10 +1,9 @@
 package com.ilscipio.scipio.webtools;
 
-import com.ilscipio.scipio.ce.base.metrics.Metric;
-import com.ilscipio.scipio.ce.webapp.control.Controller;
-import com.ilscipio.scipio.ce.webapp.control.Request;
-import com.ilscipio.scipio.ce.webapp.control.ControlResponse;
-import com.ilscipio.scipio.ce.webapp.control.View;
+import com.ilscipio.scipio.ce.webapp.control.def.Controller;
+import com.ilscipio.scipio.ce.webapp.control.def.Request;
+import com.ilscipio.scipio.ce.webapp.control.def.ControlResponse;
+import com.ilscipio.scipio.ce.webapp.control.def.View;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

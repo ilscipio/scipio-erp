@@ -1,4 +1,4 @@
-package com.ilscipio.scipio.ce.base.metrics;
+package com.ilscipio.scipio.ce.base.metrics.def;
 
 /**
  * Metric configuration.

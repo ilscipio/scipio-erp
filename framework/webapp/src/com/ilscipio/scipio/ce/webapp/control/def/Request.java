@@ -1,6 +1,6 @@
 package com.ilscipio.scipio.ce.webapp.control.def;
 
-import com.ilscipio.scipio.ce.base.metrics.Metric;
+import com.ilscipio.scipio.ce.base.metrics.def.Metric;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

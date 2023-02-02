@@ -31,7 +31,7 @@ package org.ofbiz.base.metrics;
 import java.util.Collection;
 import java.util.TreeSet;
 
-import com.ilscipio.scipio.ce.base.metrics.Metric;
+import com.ilscipio.scipio.ce.base.metrics.def.Metric;
 import org.ofbiz.base.lang.ThreadSafe;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.UtilProperties;

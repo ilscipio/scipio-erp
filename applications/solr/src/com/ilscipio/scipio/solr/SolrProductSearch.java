@@ -1002,7 +1002,6 @@ public abstract class SolrProductSearch {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map<String, Object> result;
         try {
-//            Map<String, Map<String, Object>> catLevel = new HashMap<>();
             List<Map<String, List<Map<String, Object>>>> catLevel = UtilMisc.newList();
 
             String catalogId = (String) context.get("catalogId");
@@ -1028,11 +1027,10 @@ public abstract class SolrProductSearch {
                 Map<String, Object> categoriesExtended = getAllCategoriesFromMap(allCategoriesMap, elements);
                 allCategoriesMap.putAll(categoriesExtended);
             }
-            
             for (String catKey : allCategoriesMap.keySet()) {
-//                Debug.log("building extended top category: " + catKey);                
+//                Debug.log("building extended top category: " + catKey);
                 Map<String, List<Map<String, Object>>> categoryMap = UtilMisc.newInsertOrderMap();
-                categoryMap.put("menu-0", prepareAndRunSolrCategoryQuery(dctx, context, catalogId, "0/" + catKey, "1/" + catKey + "/", 0));
+                categoryMap.put("menu-0", prepareAndRunSolrCategoryQuery(dctx, context, catalogId, "0/" + catKey, "0/" + catKey, 0));
                 catLevel.add(buildCategoriesExtendedFromMap(categoryMap, (Map<String, Object>) allCategoriesMap.get(catKey), "/" + catKey,
                         dctx, context, catalogId));
             }
@@ -1055,7 +1053,7 @@ public abstract class SolrProductSearch {
             Map<String, Object> multiLevelEntryCategoryMap, String currentTrail, DispatchContext dctx, Map<String, Object> context, String catalogId)
             throws Exception {
         for (String catKey : multiLevelEntryCategoryMap.keySet()) {
-            String trail = currentTrail + "/" + catKey; 
+            String trail = currentTrail + "/" + catKey;
             Map<String, Object> multiLevelEntryCategory = (Map<String, Object>) multiLevelEntryCategoryMap.get(catKey);
             if (UtilValidate.isNotEmpty(multiLevelEntryCategory)) {
                 categoriesExtended.putAll(buildCategoriesExtendedFromMap(categoriesExtended, multiLevelEntryCategory, trail, dctx, context, catalogId));
@@ -1071,7 +1069,7 @@ public abstract class SolrProductSearch {
                 Debug.logInfo("Solr: getSideDeepCategories: level: " + level + " iterating element: " + catKey + "   categoryPath: " + categoryPath
                         + " facetPrefix: " + facetPrefix, module);
             }
-            List<Map<String, Object>> tempList = prepareAndRunSolrCategoryQuery(dctx, context, catalogId, categoryPath, facetPrefix, level);
+            List<Map<String, Object>> tempList = prepareAndRunSolrCategoryQuery(dctx, context, catalogId, categoryPath, categoryPath, level);
             if (categoriesExtended.containsKey("menu-" + level)) {
                 categoriesExtended.get("menu-" + level).addAll(tempList);
             } else {

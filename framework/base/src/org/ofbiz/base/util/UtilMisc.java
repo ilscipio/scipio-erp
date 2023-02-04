@@ -366,6 +366,9 @@ public final class UtilMisc {
 
     /**
      * Create a set from the passed objects.
+     * <p>SCIPIO: 3.0.0: NOTE: This can now always be expected to return an insert-order-preserving set, because this
+     * generally increases the predictibility and reliability of various operations (security, stability, queries,
+     * logging, etc.).</p>
      * @param data
      * @return theSet
      */
@@ -374,23 +377,39 @@ public final class UtilMisc {
         if (data == null) {
             return null;
         }
-        return new LinkedHashSet<>(Arrays.asList(data)); // SCIPIO: 2.1.0: Optimized
+        return new LinkedHashSet<>(Arrays.asList(data));
     }
 
+    /**
+     * Gets from or creates a set from the passed collection.
+     * <p>SCIPIO: 3.0.0: NOTE: This can now always be expected to return an insert-order-preserving set, because this
+     * generally increases the predictibility and reliability of various operations (security, stability, queries,
+     * logging, etc.).</p>
+     * @param collection
+     * @return theSet
+     */
     public static <T> Set<T> toSet(Collection<T> collection) {
         if (collection == null) {
             return null;
         } else  if (collection instanceof Set<?>) {
             return (Set<T>) collection;
         }
-        return new LinkedHashSet<>(collection); // SCIPIO: 2.1.0: Optimized
+        return new LinkedHashSet<>(collection);
     }
 
+    /**
+     * Creates a set from the passed array.
+     * <p>SCIPIO: 3.0.0: NOTE: This can now always be expected to return an insert-order-preserving set, because this
+     * generally increases the predictibility and reliability of various operations (security, stability, queries,
+     * logging, etc.).</p>
+     * @param data
+     * @return theSet
+     */
     public static <T> Set<T> toSetArray(T[] data) {
         if (data == null) {
             return null;
         }
-        return new LinkedHashSet<>(Arrays.asList(data)); // SCIPIO: 2.1.0: Optimized
+        return new LinkedHashSet<>(Arrays.asList(data));
     }
 
     /**

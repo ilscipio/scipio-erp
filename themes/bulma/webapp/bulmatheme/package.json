@@ -59,7 +59,7 @@
     "has-flag": "^4.0.0",
     "has-unicode": "^2.0.1",
     "hosted-git-info": "^4.1.0",
-    "http-cache-semantics": "^4.1.0",
+    "http-cache-semantics": "^4.1.1",
     "http-proxy-agent": "^5.0.0",
     "https-proxy-agent": "^5.0.1",
     "humanize-ms": "^1.2.1",

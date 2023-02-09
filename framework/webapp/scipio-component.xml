@@ -17,7 +17,7 @@ code package.
     <classpath type="jar" location="build/lib/*"/>
 
     <!-- SCIPIO: For web annotations
-    <classpath-special purpose="server-scan" type="jar" location="build/lib/ofbiz-webapp.jar"/>-->
+    <classpath-special purpose="annotations" type="jar" location="build/lib/ofbiz-webapp.jar"/>-->
 
     <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
     <!--

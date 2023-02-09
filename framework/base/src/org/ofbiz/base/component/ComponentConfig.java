@@ -25,6 +25,7 @@ import java.net.URI;
 import java.net.URL;
 import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -121,7 +122,7 @@ public final class ComponentConfig {
         List<URL> resourceURLs = new ArrayList<>();
         for(ComponentConfig cc : ComponentConfig.getAllComponents()) {
             for (ComponentConfig.ClasspathInfo ci : cc.getClasspathInfos()) {
-                if ("dir".equals(ci.type)) {
+                if ("dir".equals(ci.getType())) {
                     File configDir = new File(cc.getRootLocation(), ci.location);
                     File[] files = configDir.listFiles(fnFilter);
                     if (files != null && files.length > 0) {
@@ -1208,7 +1209,7 @@ public final class ComponentConfig {
 
     @Override
     public String toString() { // SCIPIO: Added 2018-09-25
-        return "[globalName=" + globalName + ", rootLocation=" + rootLocation + "]";
+        return "[componentName=" + globalName + ", rootLocation=" + rootLocation + "]";
     }
 
     /**
@@ -1253,6 +1254,15 @@ public final class ComponentConfig {
     }
 
     /**
+     * Reads special JAR locations for given purpose for given component.
+     *
+     * <p>SCIPIO: Added 2018-06-18.</p>
+     */
+    public static List<File> readClasspathSpecialJarLocations(ComponentConfig componentConfig, String purpose) {
+        return readClasspathSpecialJarLocations(componentConfig, purpose, null);
+    }
+
+    /**
      * Reads special JAR locations for given purpose for given component, with optional webapp filter.
      *
      * <p>NOTE: If no webapp filter is given, returns only locations that are not restricted to specific component
@@ -1279,11 +1289,11 @@ public final class ComponentConfig {
         String configRoot = componentConfig.getRootLocation();
         configRoot = configRoot.replace('\\', '/');
         for(ComponentConfig.ClasspathSpecialInfo info : componentConfig.getClasspathSpecialInfos()) {
-            if (purpose != null && !purpose.equals(info.purpose)) {
+            if (purpose != null && !info.getPurposes().contains(purpose)) {
                 continue;
             }
             if (webappName != null) {
-                if (!info.webappNames.contains(webappName)) {
+                if (!info.getWebappNames().contains(webappName)) {
                     continue;
                 }
             } else {
@@ -1291,11 +1301,11 @@ public final class ComponentConfig {
                     continue;
                 }
             }
-            String type = info.type;
+            String type = info.getType();
             if (type == null || !("jar".equals(type) || "dir".equals(type))) {
                 continue;
             }
-            String location = info.location.replace('\\', '/');
+            String location = info.getLocation().replace('\\', '/');
             if (location.startsWith("/")) {
                 location = location.substring(1);
             }
@@ -1309,16 +1319,19 @@ public final class ComponentConfig {
             File path = new File(configRoot, dirLoc);
             if (path.exists()) {
                 if (path.isDirectory()) {
-                    for (File file: path.listFiles()) {
-                        String fileName = file.getName().toLowerCase();
-                        if (fileName.endsWith(".jar")) {
-                            jarLocations.add(file);
+                    File[] listFiles = path.listFiles();
+                    if (listFiles != null) {
+                        for (File file : listFiles) {
+                            String fileName = file.getName().toLowerCase();
+                            if (fileName.endsWith(".jar")) {
+                                jarLocations.add(file);
+                            }
                         }
                     }
                 } else {
                     jarLocations.add(path);
                 }
-            } else if (!info.optional) {
+            } else if (!info.isOptional()) {
                 Debug.logError("Non-optional classpath-special entry location for component '" 
                         + componentConfig.getGlobalName() + "' references non-existent path: "
                         + path, module);
@@ -1574,6 +1587,18 @@ public final class ComponentConfig {
             this.type = element.getAttribute("type");
             this.location = element.getAttribute("location");
         }
+
+        public ComponentConfig getComponentConfig() {
+            return componentConfig;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getLocation() {
+            return location;
+        }
     }
 
     /**
@@ -1584,12 +1609,13 @@ public final class ComponentConfig {
      * @see <code>ofbiz-component.xsd</code>
      */
     public static class ClasspathSpecialInfo extends ClasspathInfo {
-        public final String purpose;
-        public final Set<String> webappNames;
-        public final boolean optional;
+        private final Set<String> purposes;
+        private final Set<String> webappNames;
+        private final boolean optional;
+
         ClasspathSpecialInfo(ComponentConfig componentConfig, Element element) {
             super(componentConfig, element);
-            this.purpose = element.getAttribute("purpose");
+            this.purposes = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(element.getAttribute("purpose").split(","))));
             List<? extends Element> webappElements = UtilXml.childElementList(element, "webapp");
             Set<String> webappNames = new HashSet<>();
             for(Element webappElement : webappElements) {
@@ -1604,6 +1630,18 @@ public final class ComponentConfig {
 
         public boolean isWebappSpecific() {
             return (webappNames != null);
+        }
+
+        public Set<String> getPurposes() {
+            return purposes;
+        }
+
+        public Set<String> getWebappNames() {
+            return webappNames;
+        }
+
+        public boolean isOptional() {
+            return optional;
         }
     }
 
@@ -1842,7 +1880,7 @@ public final class ComponentConfig {
      */
     public static final class WebappInfo {
         // FIXME: These fields should be private - since we have accessors - but
-        // client code accesses the fields directly.
+        //  client code accesses the fields directly.
         public final ComponentConfig componentConfig;
         public final List<String> virtualHosts;
         public final Map<String, String> initParameters;
@@ -1980,6 +2018,10 @@ public final class ComponentConfig {
             this.appBarDisplay = other.appBarDisplay;
             this.accessPermission = other.accessPermission;
             this.overrideMode = other.overrideMode;
+        }
+
+        public ComponentConfig getComponentConfig() {
+            return componentConfig;
         }
 
         public synchronized boolean getAppBarDisplay() {

@@ -35,11 +35,16 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -501,4 +506,25 @@ public final class FileUtil {
         zis.closeEntry();
         zis.close();
     }
+
+    public static Set<String> fileNames(Collection<File> files) {
+        if (files == null) {
+            return null;
+        }
+        return files.stream().map(File::getName).collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    public static Collection<URL> fileUrls(Collection<File> files) {
+        if (files == null) {
+            return null;
+        }
+        return files.stream().map(file -> {
+            try {
+                return file.toURI().toURL();
+            } catch (MalformedURLException e) {
+                throw new IllegalArgumentException(e);
+            }
+        }).collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
 }

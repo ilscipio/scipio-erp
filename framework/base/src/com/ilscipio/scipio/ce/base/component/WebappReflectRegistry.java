@@ -4,55 +4,56 @@ import com.ilscipio.scipio.ce.lang.reflect.ReflectQuery;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
 
-import java.io.File;
 import java.net.URL;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Per-webapp reflection and annotation scanner.
+ *
  * <p>Abstracts the jar file locations and bundles them using {@link ReflectQuery}.</p>
+ *
  * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
  */
 public class WebappReflectRegistry {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final Map<String, WebappReflectInfo> REGISTRY = new ConcurrentHashMap<>();
-
-    public static WebappReflectInfo getWebappReflectInfo(ComponentConfig.WebappInfo webappInfo) {
-        return REGISTRY.get(toKey(webappInfo));
-    }
+    private static final Map<String, WebappReflectInfo> NAME_REGISTRY = new ConcurrentHashMap<>();
+    private static final Map<String, WebappReflectInfo> MOUNT_REGISTRY = new ConcurrentHashMap<>();
 
     public static Collection<WebappReflectInfo> getWebappReflectInfos() {
-        return REGISTRY.values();
+        return NAME_REGISTRY.values();
+    }
+
+    public static WebappReflectInfo getWebappReflectInfo(ComponentConfig.WebappInfo webappInfo) {
+        return NAME_REGISTRY.get(webappInfo.getComponentConfig().getGlobalName() + "::" + webappInfo.getName());
+    }
+
+    public static WebappReflectInfo getWebappReflectInfoByName(String componentName, String webappName) {
+        return NAME_REGISTRY.get(componentName + "::" + webappName);
+    }
+
+    public static WebappReflectInfo getWebappReflectInfoByMount(String server, String contextRoot) {
+        return MOUNT_REGISTRY.get(server + "::" + contextRoot);
     }
 
     public static WebappReflectInfo registerWebappReflectInfo(ComponentConfig.WebappInfo webappInfo,
                                                               Collection<URL> jarUrls) {
-        String cacheKey = toKey(webappInfo);
-        WebappReflectInfo wri = REGISTRY.get(cacheKey);
+        String nameKey = webappInfo.getComponentConfig().getGlobalName() + "::" + webappInfo.getName();
+        WebappReflectInfo wri = NAME_REGISTRY.get(nameKey);
         if (wri == null) {
             wri = new WebappReflectInfo(webappInfo, jarUrls, true);
-            WebappReflectInfo prevWri = REGISTRY.putIfAbsent(cacheKey, wri);
+            WebappReflectInfo prevWri = NAME_REGISTRY.putIfAbsent(nameKey, wri);
             if (prevWri != null) {
                 wri = prevWri;
             } else {
+                MOUNT_REGISTRY.put(webappInfo.getServer() + "::" + webappInfo.getContextRoot(), wri);
                 // Also register the component part, excluding webapp jars
-                ComponentReflectRegistry.registerComponentReflectInfo(wri, jarUrls);
+                // SCIPIO: 3.0.0: Now loaded separately by CatalinaContainer
+                //ComponentReflectRegistry.registerComponentReflectInfo(wri, jarUrls);
             }
         }
         return wri;
-    }
-
-    public static WebappReflectInfo registerWebappReflectInfo(ComponentConfig.WebappInfo webappInfo) {
-        String cacheKey = toKey(webappInfo);
-        return REGISTRY.get(cacheKey);
-    }
-
-    protected static String toKey(ComponentConfig.WebappInfo webappInfo) {
-        return webappInfo.getServer() + "::" + webappInfo.getContextRoot();
     }
 
     public static class WebappReflectInfo {
@@ -75,22 +76,6 @@ public class WebappReflectRegistry {
 
         public ReflectQuery getReflectQuery() {
             return reflectQuery;
-        }
-    }
-
-    public static class JarScanner implements FilterJarsScanner {
-        private static final JarScanner DEFAULT = new JarScanner();
-
-        @Override
-        public void scanJars(ComponentConfig.WebappInfo webappInfo, List<File> jarFiles, Set<String> jarNames) {
-            registerWebappReflectInfo(webappInfo, ReflectQuery.getJarUrlsForFiles(jarFiles));
-        }
-
-        public static class Factory implements FilterJarsScanner.Factory {
-            @Override
-            public FilterJarsScanner makeScanner() {
-                return DEFAULT;
-            }
         }
     }
 

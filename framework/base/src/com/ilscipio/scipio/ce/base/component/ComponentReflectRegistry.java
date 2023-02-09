@@ -12,19 +12,33 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Per-component reflection and annotation scanner - excludes webapp jars.
+ *
  * <p>Abstracts the jar file locations and bundles them using {@link ReflectQuery}.</p>
+ *
  * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
  */
 public class ComponentReflectRegistry {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final Map<String, ComponentReflectInfo> REGISTRY = new ConcurrentHashMap<>();
+    private static final Map<String, ComponentReflectInfo> NAME_REGISTRY = new ConcurrentHashMap<>();
+
+    public static Collection<ComponentReflectInfo> getComponentReflectInfos() {
+        return NAME_REGISTRY.values();
+    }
+
+    public static ComponentReflectInfo getComponentReflectInfo(ComponentConfig component) {
+        return NAME_REGISTRY.get(component.getGlobalName());
+    }
+
+    public static ComponentReflectInfo getComponentReflectInfoByName(String componentName) {
+        return NAME_REGISTRY.get(componentName);
+    }
 
     public static ComponentReflectInfo registerComponentReflectInfo(ComponentConfig component, Collection<URL> jarUrls) {
-        String cacheKey = toKey(component);
-        ComponentReflectInfo cri = REGISTRY.get(cacheKey);
+        String nameKey = component.getGlobalName();
+        ComponentReflectInfo cri = NAME_REGISTRY.get(nameKey);
         if (cri == null) {
             cri = new ComponentReflectInfo(component, jarUrls, true);
-            ComponentReflectInfo prevCri = REGISTRY.putIfAbsent(cacheKey, cri);
+            ComponentReflectInfo prevCri = NAME_REGISTRY.putIfAbsent(nameKey, cri);
             if (prevCri != null) {
                 cri = prevCri;
             }
@@ -32,6 +46,10 @@ public class ComponentReflectRegistry {
         return cri;
     }
 
+    /**
+     * @deprecated Component reflect info is now loaded separately by CatalinaContainer to support webapp-less components
+     */
+    @Deprecated
     public static ComponentReflectInfo registerComponentReflectInfo(WebappReflectRegistry.WebappReflectInfo webappReflectInfo,
                                                                     Collection<URL> jarUrls) {
         Collection<URL> componentJarUrls = new ArrayList<>(jarUrls.size());
@@ -42,22 +60,6 @@ public class ComponentReflectRegistry {
             }
         }
         return registerComponentReflectInfo(webappReflectInfo.getWebappInfo().componentConfig, componentJarUrls);
-    }
-
-    public static Collection<ComponentReflectInfo> getComponentReflectInfos() {
-        return REGISTRY.values();
-    }
-
-    public static ComponentReflectInfo getComponentReflectInfo(ComponentConfig component) {
-        return REGISTRY.get(toKey(component));
-    }
-
-    public static ComponentReflectInfo getComponentReflectInfo(String componentName) {
-        return REGISTRY.get(componentName);
-    }
-
-    protected static String toKey(ComponentConfig component) {
-        return component.getGlobalName();
     }
 
     public static class ComponentReflectInfo {

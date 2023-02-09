@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.ce.lang.reflect;
 
+import org.ofbiz.base.util.FileUtil;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.reflections.Reflections;
 import org.reflections.scanners.FieldAnnotationsScanner;
@@ -87,7 +88,7 @@ public class ReflectQuery {
     }
 
     public static ReflectQuery fromJarFiles(Collection<File> jarFiles, boolean useCache) {
-        return fromJarUrls(getJarUrlsForFiles(jarFiles), useCache);
+        return fromJarUrls(FileUtil.fileUrls(jarFiles), useCache);
     }
 
     public boolean hasDefs() { return reflections != null; }
@@ -165,16 +166,6 @@ public class ReflectQuery {
             }
         }
         return allFields;
-    }
-
-    public static List<URL> getJarUrlsForFiles(Collection<File> jarFiles) {
-        return jarFiles.stream().map(file -> {
-            try {
-                return file.toURI().toURL();
-            } catch (MalformedURLException e) {
-                throw new IllegalArgumentException(e);
-            }
-        }).collect(Collectors.toList());
     }
 
 }

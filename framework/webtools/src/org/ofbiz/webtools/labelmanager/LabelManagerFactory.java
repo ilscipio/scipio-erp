@@ -141,13 +141,13 @@ public class LabelManagerFactory {
         Map<String, LabelFile> filesFound = new TreeMap<String, LabelFile>();
         List<ClasspathInfo> cpInfos = ComponentConfig.getAllClasspathInfos();
         for (ClasspathInfo cpi : cpInfos) {
-            if ("dir".equals(cpi.type)) {
-                String configRoot = cpi.componentConfig.getRootLocation();
+            if ("dir".equals(cpi.getType())) {
+                String configRoot = cpi.getComponentConfig().getRootLocation();
                 configRoot = configRoot.replace('\\', '/');
                 if (!configRoot.endsWith("/")) {
                     configRoot = configRoot + "/";
                 }
-                String location = cpi.location.replace('\\', '/');
+                String location = cpi.getLocation().replace('\\', '/');
                 if (location.startsWith("/")) {
                     location = location.substring(1);
                 }
@@ -157,7 +157,7 @@ public class LabelManagerFactory {
                     if (!includeExtension && fileName.lastIndexOf('.') > 0) { // SCIPIO
                         fileName = fileName.substring(0, fileName.lastIndexOf('.'));
                     }
-                    filesFound.put(fileName, new LabelFile(resourceFile, cpi.componentConfig.getComponentName()));
+                    filesFound.put(fileName, new LabelFile(resourceFile, cpi.getComponentConfig().getComponentName()));
                 }
             }
         }

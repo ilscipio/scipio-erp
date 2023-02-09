@@ -18,155 +18,68 @@
  *******************************************************************************/
 package org.ofbiz.catalina.container;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
-import com.ilscipio.scipio.ce.base.component.FilterJarsScanner;
+import com.ilscipio.scipio.ce.base.component.ComponentLibScanConfig;
+import com.ilscipio.scipio.ce.base.component.FilterJarScanner;
 import org.apache.tomcat.JarScanType;
 import org.apache.tomcat.util.scan.StandardJarScanFilter;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.FileUtil;
 
 import javax.servlet.ServletContext;
 
 /**
  * Catalina Container Jar Filter.
- * <p>
- * SCIPIO: 2018-10-02: This class is completely redesigned.
+ *
+ * <p>SCIPIO: 2018-10-02: This class is completely redesigned.</p>
  */
 final class FilterJars extends StandardJarScanFilter {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    private static Set<String> globalScanEnabledJarNames;
-    private final WebappInfo webappInfo;
-    private static ServletContext servletContext = null;
 
-    static {
-        Set<String> jarNames = new LinkedHashSet<>();
-        readGlobalScanEnabledJarNames(jarNames);
-        Debug.logInfo("Global server-scan enabled JAR names: " + jarNames, module);
-        globalScanEnabledJarNames = jarNames;
+    private final WebappInfo webappInfo;
+    private final Set<String> scanEnabledJarNames;
+
+    public FilterJars(WebappInfo webappInfo, ServletContext context, ComponentLibScanConfig libScan) {
+        this.webappInfo = webappInfo;
+        //this.servletContext = context;
+        this.scanEnabledJarNames = FileUtil.fileNames(libScan.getWebserverJars());
     }
 
-    //private final WebappInfo webappInfo;
-    private Set<String> scanEnabledJarNames;
+    public static FilterJars scanJarsAndCreateFilter(WebappInfo webappInfo, ServletContext context) {
+        ComponentLibScanConfig libScan = scanJars(webappInfo);
+        return new FilterJars(webappInfo, context, libScan);
+    }
 
-    public FilterJars(WebappInfo webappInfo, ServletContext context) {
-        super();
-        this.webappInfo = webappInfo;
-        this.servletContext = context;
-        this.scanEnabledJarNames = getCombinedScanEnabledJarNames(webappInfo);
+    public static ComponentLibScanConfig scanJars(ComponentConfig component) {
+        ComponentLibScanConfig libScan = new ComponentLibScanConfig(ComponentLibScanConfig.ScanType.PLATFORM).readScanJars(component);
+        Debug.logInfo("[component=" + component.getComponentName() + "]" +
+                ": Webserver filter JARs: " + FileUtil.fileNames(libScan.getWebserverJars()), module);
+        Debug.logInfo("[component=" + component.getComponentName() + "]" +
+                ": Scanning platform JARs: " + FileUtil.fileNames(libScan.getPlatformJars()), module);
+        FilterJarScanner.Registry.getDefault().scanJars(component, libScan);
+        return libScan;
+    }
+
+    public static ComponentLibScanConfig scanJars(WebappInfo webappInfo) {
+        ComponentLibScanConfig libScan = new ComponentLibScanConfig(ComponentLibScanConfig.ScanType.PLATFORM,
+                ComponentLibScanConfig.ScanType.WEBSERVER).readScanJars(webappInfo);
+        Debug.logInfo("[component=" + webappInfo.getComponentConfig().getComponentName() +
+                ", webapp=" + webappInfo.getName() + "]" +
+                ": Webserver filter JARs: " + FileUtil.fileNames(libScan.getWebserverJars()), module);
+        Debug.logInfo("[component=" + webappInfo.getComponentConfig().getComponentName() +
+                ", webapp=" + webappInfo.getName() + "]" +
+                ": Scanning platform JARs: " + FileUtil.fileNames(libScan.getPlatformJars()), module);
+        FilterJarScanner.Registry.getDefault().scanJars(webappInfo, libScan);
+        return libScan;
     }
 
     @Override
-    public boolean check(final JarScanType jarScanType, final String jarName) {
-        return scanEnabledJarNames.contains(jarName); // SCIPIO: 2018-10-03: Simplified
-    }
-    
-    static Set<String> getCombinedScanEnabledJarNames(WebappInfo webappInfo) {
-        Set<String> jarNames = new LinkedHashSet<>();
-        List<File> jarFiles = new ArrayList<>();
-
-        // SCIPIO: 2019-12-21: Added scanning of base jars
-        String configRoot = webappInfo.componentConfig.getRootLocation();
-        configRoot = configRoot.replace('\\', '/');
-        for(ComponentConfig.ClasspathInfo info : webappInfo.componentConfig.getClasspathInfos()){
-            if("jar".equals(info.type)){
-                String location = info.location.replace('\\', '/');
-                if (location.startsWith("/")) {
-                    location = location.substring(1);
-                }
-                String dirLoc = location;
-                if (dirLoc.endsWith("/*")) {
-                    // strip off the slash splat
-                    dirLoc = location.substring(0, location.length() - 2);
-                }
-                String fileNameSeparator = ("\\".equals(File.separator) ? "\\" + File.separator : File.separator);
-                dirLoc = dirLoc.replaceAll("/+|\\\\+", fileNameSeparator);
-                File path = new File(configRoot, dirLoc);
-                if (path.exists()) {
-                    if (path.isDirectory()) {
-                        File[] files = path.listFiles();
-                        if (files != null) {
-                            for (File file : files) {
-                                String fileName = file.getName().toLowerCase();
-                                if (fileName.endsWith(".jar")) {
-                                    jarNames.add(file.getName());
-                                    jarFiles.add(file);
-                                }
-                            }
-                        }
-                    } else {
-                        jarNames.add(path.getName());
-                        jarFiles.add(path);
-                    }
-                }
-            }
-        }
-
-        readWebappScanEnabledJarNames(jarNames, webappInfo);
-        if (jarNames.isEmpty()) {
-            return globalScanEnabledJarNames;
-        }
-        Debug.logInfo("Webapp-specific server-scan enabled JAR names for " 
-                + webappInfo + ": " + jarNames, module);
-        jarNames.addAll(globalScanEnabledJarNames);
-
-        // SCIPIO
-        if (!jarFiles.isEmpty()) {
-            FilterJarsScanner.Registry.getDefault().scanJars(webappInfo, jarFiles, jarNames);
-        }
-
-        return jarNames;
+    public boolean check(JarScanType jarScanType, String jarName) {
+        return scanEnabledJarNames.contains(jarName);
     }
 
-    static void readGlobalScanEnabledJarNames(Set<String> jarNames) {
-        if (UtilProperties.getPropertyAsBoolean("catalina", "webSocket", false)) {
-            // SCIPIO: 2018-10-02: This should not be needed in our current setup, 
-            // will only slow loading down.
-            //jarNames.add("ofbiz.jar");
-            for(File file : ComponentConfig.readClasspathSpecialJarLocations("websockets")) {
-                jarNames.add(file.getName());
-            }
-
-            /*
-            https://stackoverflow.com/questions/20127800/mapping-websocketendpoints-in-a-web-xml-file
-
-            Reflections reflections = new Reflections("org.home.junk");
-            Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(javax.annotation.);
-
-            // Get a reference to the ServerContainer
-            javax.websocket.server.ServerContainer ServerContainer =
-                    (javax.websocket.server.ServerContainer)
-                            servletContext.getAttribute("javax.websocket.server.ServerContainer");
-            // Add endpoint manually to server container
-            serverContainer.addEndpoint(game.WebSocketEndpoint.class);
-             */
-        }
-
-        for(File file : ComponentConfig.readClasspathSpecialJarLocations("server-scan")) {
-            jarNames.add(file.getName());
-        }
-    }
-
-    static void readWebappScanEnabledJarNames(Set<String> jarNames, WebappInfo webappInfo) {
-        if (UtilProperties.getPropertyAsBoolean("catalina", "webSocket", false)) {
-            // SCIPIO: 2018-10-02: This should not be needed in our current setup, 
-            // will only slow loading down.
-            //jarNames.add("ofbiz.jar");
-            for(File file : ComponentConfig.readClasspathSpecialJarLocations(webappInfo.componentConfig,
-                    "websockets", webappInfo.getName())) {
-                jarNames.add(file.getName());
-            }
-        }
-        for(File file : ComponentConfig.readClasspathSpecialJarLocations(webappInfo.componentConfig,
-                "server-scan", webappInfo.getName())) {
-            jarNames.add(file.getName());
-        }
-    }
 }

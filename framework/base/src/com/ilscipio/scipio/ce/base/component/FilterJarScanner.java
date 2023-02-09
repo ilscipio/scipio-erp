@@ -6,22 +6,23 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * Callback interface for manual JAR scanners (SCIPIO).
+ * Callback interface for manual JAR scanners.
+ *
+ * <p>SCIPIO: 3.0.0: Enhanced for annotations support.</p>
  */
-public interface FilterJarsScanner {
+public interface FilterJarScanner {
 
-    void scanJars(ComponentConfig.WebappInfo webappInfo, List<File> jarFiles, Set<String> jarNames);
+    void scanJars(ComponentConfig component, ComponentLibScanConfig libScan);
+
+    void scanJars(ComponentConfig.WebappInfo webappInfo, ComponentLibScanConfig libScan);
 
     interface Factory {
-        FilterJarsScanner makeScanner();
+        FilterJarScanner makeScanner();
     }
 
     class Registry {
@@ -42,7 +43,7 @@ public interface FilterJarsScanner {
             Map<String, Factory> factoryMap = new HashMap<>();
             Map<String, Map<String, String>> configs = new LinkedHashMap<>();
             UtilProperties.extractPropertiesWithPrefixAndId(configs, UtilProperties.getProperties("catalina"), "filterJarsScanner.");
-            for(Map.Entry<String, Map<String, String>> entry : configs.entrySet()) {
+            for (Map.Entry<String, Map<String, String>> entry : configs.entrySet()) {
                 String factoryClsName = entry.getValue().get("factoryClass");
                 if (UtilValidate.isNotEmpty(factoryClsName)) {
                     try {
@@ -58,9 +59,15 @@ public interface FilterJarsScanner {
             return factoryMap;
         }
 
-        public void scanJars(ComponentConfig.WebappInfo webappInfo, List<File> jarFiles, Set<String> jarNames) {
+        public void scanJars(ComponentConfig component, ComponentLibScanConfig libScan) {
             for(Map.Entry<String, Factory> entry : factoryMap.entrySet()) {
-                entry.getValue().makeScanner().scanJars(webappInfo, jarFiles, jarNames);
+                entry.getValue().makeScanner().scanJars(component, libScan);
+            }
+        }
+
+        public void scanJars(ComponentConfig.WebappInfo webappInfo, ComponentLibScanConfig libScan) {
+            for(Map.Entry<String, Factory> entry : factoryMap.entrySet()) {
+                entry.getValue().makeScanner().scanJars(webappInfo, libScan);
             }
         }
     }

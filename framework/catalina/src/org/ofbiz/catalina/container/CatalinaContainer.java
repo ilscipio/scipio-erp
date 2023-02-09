@@ -28,10 +28,8 @@ import java.util.concurrent.ScheduledExecutorService;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.websocket.server.ServerContainer;
 
 import org.apache.catalina.Cluster;
-import org.apache.catalina.Context;
 import org.apache.catalina.Engine;
 import org.apache.catalina.Globals;
 import org.apache.catalina.Host;
@@ -76,7 +74,6 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.util.EntityUtilProperties;
-import org.reflections.Reflections;
 import org.w3c.dom.Document;
 
 /*
@@ -482,7 +479,7 @@ public class CatalinaContainer implements Container {
         return connector;
     }
 
-    private Callable<Context> createContext(final ComponentConfig.WebappInfo appInfo) throws ContainerException {
+    private Callable<Object> createContext(final ComponentConfig.WebappInfo appInfo) throws ContainerException {
         Debug.logInfo("Creating context [" + appInfo.name + "]", module);
         final Engine engine = tomcat.getEngine();
 
@@ -506,8 +503,8 @@ public class CatalinaContainer implements Container {
                 host.addAlias(vhi.next());
             }
         }
-        return new Callable<Context>() {
-            public Context call() throws ContainerException, LifecycleException {
+        return new Callable<Object>() {
+            public Object call() throws ContainerException, LifecycleException {
                 try {
                     StandardContext context = configureContext(engine, host, appInfo);
                     host.addChild(context);
@@ -582,8 +579,9 @@ public class CatalinaContainer implements Container {
         }
 
         JarScanner jarScanner = context.getJarScanner();
+        FilterJars jarFilter = FilterJars.scanJarsAndCreateFilter(appInfo, context.getServletContext());
         if (jarScanner != null) { // SCIPIO: 2018-10-03: Moved this out from next block independence from StandardJarScanner 
-            jarScanner.setJarScanFilter(new FilterJars(appInfo, context.getServletContext())); // SCIPIO: 2018-10-03: Pass webapp info
+            jarScanner.setJarScanFilter(jarFilter);
         }
         if (jarScanner instanceof StandardJarScanner) {
             StandardJarScanner standardJarScanner = (StandardJarScanner) jarScanner;
@@ -639,46 +637,64 @@ public class CatalinaContainer implements Container {
         return context;
     }
 
+    private Callable<Object> readComponentInfo(ComponentConfig component) { // SCIPIO: 3.0.0: Added for annotations support
+        return new Callable<Object>() {
+            public Object call() throws ContainerException {
+                try {
+                    FilterJars.scanJars(component);
+                    return new Object();
+                } catch(Exception e) {
+                    throw new ContainerException(e.getMessage() + " [component: " + component.getGlobalName() + "]", e);
+                }
+            }
+        };
+    }
+
     protected void loadComponents() throws ContainerException {
         if (tomcat == null) {
             throw new ContainerException("Cannot load web applications without Tomcat instance!");
         }
 
+        // SCIPIO: 3.0.0: This is now traversed per-component because we must load some non-webapp JARs for ReflectQuery here, in the right order
         // load the applications
-        List<ComponentConfig.WebappInfo> webResourceInfos = ComponentConfig.getAllWebappResourceInfos();
+        //List<ComponentConfig.WebappInfo> webResourceInfos = ComponentConfig.getAllWebappResourceInfos();
         List<String> loadedMounts = new ArrayList<String>();
-        if (webResourceInfos == null) {
-            return;
-        }
+        //if (webResourceInfos == null) {
+        //    return;
+        //}
 
         ScheduledExecutorService executor = ExecutionPool.getScheduledExecutor(CATALINA_THREAD_GROUP, "catalina-startup", Runtime.getRuntime().availableProcessors(), 0, true);
         try {
-            List<Future<Context>> futures = new ArrayList<Future<Context>>();
+            List<Future<Object>> futures = new ArrayList<>();
 
-            for (int i = webResourceInfos.size(); i > 0; i--) {
-                ComponentConfig.WebappInfo appInfo = webResourceInfos.get(i - 1);
-                String engineName = appInfo.server;
-                List<String> virtualHosts = appInfo.getVirtualHosts();
-                String mount = appInfo.getContextRoot();
-                List<String> keys = new ArrayList<String>();
-                if (virtualHosts.isEmpty()) {
-                    keys.add(engineName + ":DEFAULT:" + mount);
-                } else {
-                    for (String virtualHost: virtualHosts) {
-                        keys.add(engineName + ":" + virtualHost + ":" + mount);
+            for (ComponentConfig component : ComponentConfig.getAllComponents()) {
+                // SCIPIO: 3.0.0: Load non-webapp, component JAR scan info, independently from webapps (even if slower/redundant)
+                futures.add(executor.submit(readComponentInfo(component)));
+
+                for (ComponentConfig.WebappInfo appInfo : component.getWebappInfos()) {
+                    String engineName = appInfo.server;
+                    List<String> virtualHosts = appInfo.getVirtualHosts();
+                    String mount = appInfo.getContextRoot();
+                    List<String> keys = new ArrayList<String>();
+                    if (virtualHosts.isEmpty()) {
+                        keys.add(engineName + ":DEFAULT:" + mount);
+                    } else {
+                        for (String virtualHost : virtualHosts) {
+                            keys.add(engineName + ":" + virtualHost + ":" + mount);
+                        }
                     }
-                }
-                if (!keys.removeAll(loadedMounts)) {
-                    // nothing was removed from the new list of keys; this
-                    // means there are no existing loaded entries that overlap
-                    // with the new set
-                    if (!appInfo.location.isEmpty()) {
-                        futures.add(executor.submit(createContext(appInfo)));
+                    if (!keys.removeAll(loadedMounts)) {
+                        // nothing was removed from the new list of keys; this
+                        // means there are no existing loaded entries that overlap
+                        // with the new set
+                        if (!appInfo.location.isEmpty()) {
+                            futures.add(executor.submit(createContext(appInfo)));
+                        }
+                        loadedMounts.addAll(keys);
+                    } else {
+                        appInfo.setAppBarDisplay(false); // disable app bar display on overridden apps
+                        Debug.logInfo("Duplicate webapp mount; not loading : " + appInfo.getName() + " / " + appInfo.getLocation(), module);
                     }
-                    loadedMounts.addAll(keys);
-                } else {
-                    appInfo.setAppBarDisplay(false); // disable app bar display on overridden apps
-                    Debug.logInfo("Duplicate webapp mount; not loading : " + appInfo.getName() + " / " + appInfo.getLocation(), module);
                 }
             }
             ExecutionPool.getAllFutures(futures);

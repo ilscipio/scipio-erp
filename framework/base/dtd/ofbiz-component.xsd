@@ -139,10 +139,11 @@ under the License.
         <xs:attribute name="purpose" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
-                    <xs:enumeration value="server-scan">
+                    <xs:enumeration value="annotations">
                         <xs:annotation>
                             <xs:documentation>
-                                Enables scanning specified libraries by the webserver for annotations (always).
+                                Enables scanning specified libraries by the webserver for annotations (including websockets)
+                                such as @ServerEndpoint and by custom/scipio reflection code such as @Request, @Service.
 
                                 If webapps are specified using the child webapp element, only those webapps
                                 from this component are affected; otherwise EVERY webapp in the system 
@@ -150,23 +151,40 @@ under the License.
                                 NOTE: For most client uses, it is highly recommended to specify a webapp(s).
 
                                 Warning: This can increase server load times, especially if you do not specify any webapps.
-                                Added 2018-07-02.
+                                SCIPIO: 3.0.0: Added, replacing "server-scan".
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>
-                    <xs:enumeration value="websockets">
+                    <xs:enumeration value="webserver-annotations">
                         <xs:annotation>
                             <xs:documentation>
-                                Enables scanning specified libraries by the webserver for WebSockets-related annotations;
-                                only used when webSocket=true is set in catalina.properties.
+                                Enables scanning specified libraries by the webserver for annotations (including websockets),
+                                such as @ServerEndpoint, but NOT by the Scipio platform such as @Request, @Service.
 
                                 If webapps are specified using the child webapp element, only those webapps
-                                from this component are affected; otherwise EVERY webapp in the system 
+                                from this component are affected; otherwise EVERY webapp in the system
                                 that has these libraries on their classpath will have this jar scanned.
                                 NOTE: For most client uses, it is highly recommended to specify a webapp(s).
 
                                 Warning: This can increase server load times, especially if you do not specify any webapps.
-                                Added 2018-06-18.
+                                SCIPIO: 3.0.0: Added, replacing "websockets".
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:enumeration>
+                    <xs:enumeration value="platform-annotations">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Enables scanning specified libraries by the Scipio platform for custom annotations, but
+                                NOT webserver/tomcat. This is to scan only annotations such as @Request, @Service,
+                                but not webserver-specific ones such as @ServerEndpoint.
+
+                                If webapps are specified using the child webapp element, only those webapps
+                                from this component are affected; otherwise EVERY webapp in the system
+                                that has these libraries on their classpath will have this jar scanned.
+                                NOTE: For most client uses, it is highly recommended to specify a webapp(s).
+
+                                Warning: This can increase server load times, especially if you do not specify any webapps.
+                                SCIPIO: 3.0.0: Added.
                             </xs:documentation>
                         </xs:annotation>
                     </xs:enumeration>

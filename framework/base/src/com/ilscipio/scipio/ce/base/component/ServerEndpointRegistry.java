@@ -13,7 +13,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Registry of per-webapp ServerEndpoint-annotated classes (SCIPIO).
+ * Registry of per-webapp ServerEndpoint-annotated classes.
+ *
+ * <p>SCIPIO: 3.0.0: Enhanced for annotations support.</p>
  */
 public class ServerEndpointRegistry {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

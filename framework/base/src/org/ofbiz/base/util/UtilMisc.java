@@ -2011,21 +2011,22 @@ public final class UtilMisc {
      * @return The outCollection, for convenience
      */
     public static <T, C extends Collection<T>> C addAll(C outCollection, Enumeration<T> inEnumeration) {
-        if (inEnumeration == null) {
-            return null;
-        }
-        while(inEnumeration.hasMoreElements()) {
-            outCollection.add(inEnumeration.nextElement());
+        if (inEnumeration != null && outCollection != null) {
+            while (inEnumeration.hasMoreElements()) {
+                outCollection.add(inEnumeration.nextElement());
+            }
         }
         return outCollection;
     }
 
     /**
-     * SCIPIO: Calls out.addAll for every passed collection on the outCollection.
+     * Calls out.addAll for every passed collection on the outCollection.
+     *
+     * <p>SCIPIO: 3.0.0: More robust; removed varargs array due to compiler warnings.</p>
      */
-    public static <C extends Collection<O>, O> C addAll(C outCollection, Collection<? extends O>... collections) {
-        for(Collection<? extends O> collection : collections) {
-            outCollection.addAll(collection);
+    public static <C extends Collection<O>, O> C addAll(C outCollection, Collection<? extends O> inCollection) {
+        if (inCollection != null && outCollection != null) {
+            outCollection.addAll(inCollection);
         }
         return outCollection;
     }
@@ -2206,7 +2207,9 @@ public final class UtilMisc {
      * Adds the given values pairs to the collection and returns the collection, for chaining (SCIPIO).
      */
     public static <C extends Collection<E>, E> C add(C collection, Collection<? extends E> newElems) {
-        collection.addAll(newElems);
+        if (collection != null && newElems != null) {
+            collection.addAll(newElems);
+        }
         return collection;
     }
 
@@ -2214,7 +2217,9 @@ public final class UtilMisc {
      * Adds the given values pairs to the collection and returns the collection, for chaining (SCIPIO).
      */
     public static <C extends Collection<E>, E> C add(C collection, E... newElems) {
-        collection.addAll(Arrays.asList(newElems));
+        if (collection != null && newElems != null) {
+            collection.addAll(List.of(newElems));
+        }
         return collection;
     }
 

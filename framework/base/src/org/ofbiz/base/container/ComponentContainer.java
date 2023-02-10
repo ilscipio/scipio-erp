@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ilscipio.scipio.ce.base.component.ComponentReflectLoader;
 import org.ofbiz.base.component.AlreadyLoadedException;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentException;
@@ -130,6 +131,9 @@ public class ComponentContainer implements Container {
 
         // SCIPIO: Replace the globally-cached component definitions with our revamped list
         ComponentConfig.clearStoreComponents(componentList);
+
+        // SCIPIO: 3.0.0: Added for annotations support
+        ComponentReflectLoader.loadComponentAnnotations();
     }
 
     // SCIPIO: augmented with explicit componentList, explicitOrder, noLoad

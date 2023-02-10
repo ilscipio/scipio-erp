@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Component lib/jar scan config reader/builder - Lists jar files to be scanned by {@link ReflectJarScanner} and the
- * web container.
+ * Component lib/jar scan and annotations config reader/builder - Lists jar files to be scanned by
+ * {@link PlatformJarScanner} and the web container.
  *
  * <p>NOTE: Currently does not cache reads (could be done with component/webapp name as keys), which could be useful
  * to pass this around a greater scope.</p>
@@ -21,7 +21,7 @@ import java.util.Set;
  * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
  */
 @NotThreadSafe
-public class ComponentLibScanConfig {
+public class ComponentReflectConfig {
 
     /**
      * Default JAR scan locations - needed to prevent over-scanning of third-party libraries (slowdowns and
@@ -38,13 +38,13 @@ public class ComponentLibScanConfig {
     protected Collection<File> platformJars;
     protected Collection<File> webserverJars;
 
-    public ComponentLibScanConfig(Collection<File> platformJars, Collection<File> webserverJars) {
+    public ComponentReflectConfig(Collection<File> platformJars, Collection<File> webserverJars) {
         this.platformJars = platformJars;
         this.webserverJars = webserverJars;
         this.defaultJarScanDirs = DEFAULT_JAR_SCAN_DIRS;
     }
 
-    public ComponentLibScanConfig(ScanType... scanTypes) {
+    public ComponentReflectConfig(ScanType... scanTypes) {
         this(List.of(scanTypes).contains(ScanType.PLATFORM) ? new LinkedHashSet<>() : null,
                 List.of(scanTypes).contains(ScanType.WEBSERVER) ? new LinkedHashSet<>() : null);
     }
@@ -61,24 +61,24 @@ public class ComponentLibScanConfig {
         return webserverJars;
     }
 
-    public ComponentLibScanConfig readScanJars(ComponentConfig component) {
+    public ComponentReflectConfig readScanJars(ComponentConfig component) {
         readDefaultScanJars(component);
         readExplicitScanJars(component);
         return this;
     }
 
-    public ComponentLibScanConfig readScanJars(ComponentConfig.WebappInfo webappInfo) {
+    public ComponentReflectConfig readScanJars(ComponentConfig.WebappInfo webappInfo) {
         readDefaultScanJars(webappInfo);
         readExplicitScanJars(webappInfo);
         return this;
     }
 
-    public ComponentLibScanConfig readDefaultScanJars(ComponentConfig component) {
+    public ComponentReflectConfig readDefaultScanJars(ComponentConfig component) {
         readComponentLibScanJars(component);
         return this;
     }
 
-    public ComponentLibScanConfig readDefaultScanJars(ComponentConfig.WebappInfo webappInfo) {
+    public ComponentReflectConfig readDefaultScanJars(ComponentConfig.WebappInfo webappInfo) {
         // WARN: This scan all component-level sources for each webapp, so definitions will be shared between webapps
         //  which must be understood by the developer. So to make definitions webapp-specific, either deploy libs to
         //  WEB-INF/lib using build script or create single-webapp components.
@@ -94,14 +94,14 @@ public class ComponentLibScanConfig {
      *  all webapps .
      */
     @Deprecated
-    public ComponentLibScanConfig readDefaultScanJars() {
+    public ComponentReflectConfig readDefaultScanJars() {
         // Here ofbiz.jar would have been loaded if it amalgamated all build libs like upstream, but even then we don't
         //  really want it here (design flaw)
         //jarFiles.add(..."ofbiz.jar")
         return this;
     }
 
-    public ComponentLibScanConfig readExplicitScanJars(ComponentConfig component) {
+    public ComponentReflectConfig readExplicitScanJars(ComponentConfig component) {
         Collection<File> jarFiles;
 
         if (UtilProperties.getPropertyAsBoolean("catalina", "webSocket", false)) { // deprecated
@@ -129,7 +129,7 @@ public class ComponentLibScanConfig {
         return this;
     }
 
-    public ComponentLibScanConfig readExplicitScanJars(ComponentConfig.WebappInfo webappInfo) {
+    public ComponentReflectConfig readExplicitScanJars(ComponentConfig.WebappInfo webappInfo) {
         Collection<File> jarFiles;
 
         if (UtilProperties.getPropertyAsBoolean("catalina", "webSocket", false)) { // deprecated
@@ -162,7 +162,7 @@ public class ComponentLibScanConfig {
         return this;
     }
 
-    public ComponentLibScanConfig readExplicitScanJars() {
+    public ComponentReflectConfig readExplicitScanJars() {
         Collection<File> jarFiles;
 
         if (UtilProperties.getPropertyAsBoolean("catalina", "webSocket", false)) { // deprecated
@@ -190,7 +190,7 @@ public class ComponentLibScanConfig {
         return this;
     }
 
-    public ComponentLibScanConfig readComponentLibScanJars(ComponentConfig component) {
+    public ComponentReflectConfig readComponentLibScanJars(ComponentConfig component) {
         String configRoot = component.getRootLocation();
         //configRoot = configRoot.replace('\\', '/');  // Not applicable here - always forward thanks to constructor
         for (ComponentConfig.ClasspathInfo info : component.getClasspathInfos()) {
@@ -235,7 +235,7 @@ public class ComponentLibScanConfig {
         return this;
     }
 
-    public ComponentLibScanConfig readWebappLibScanJars(ComponentConfig.WebappInfo webappInfo) {
+    public ComponentReflectConfig readWebappLibScanJars(ComponentConfig.WebappInfo webappInfo) {
         File path = new File(webappInfo.getLocation(), "WEB-INF/lib");
         if (path.exists() && path.isDirectory()) {
             File[] files = path.listFiles();

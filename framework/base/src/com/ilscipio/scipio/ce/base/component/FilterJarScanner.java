@@ -17,9 +17,9 @@ import java.util.Map;
  */
 public interface FilterJarScanner {
 
-    void scanJars(ComponentConfig component, ComponentLibScanConfig libScan);
+    void scanJars(ComponentConfig component, ComponentReflectConfig libScan);
 
-    void scanJars(ComponentConfig.WebappInfo webappInfo, ComponentLibScanConfig libScan);
+    void scanJars(ComponentConfig.WebappInfo webappInfo, ComponentReflectConfig libScan);
 
     interface Factory {
         FilterJarScanner makeScanner();
@@ -59,13 +59,13 @@ public interface FilterJarScanner {
             return factoryMap;
         }
 
-        public void scanJars(ComponentConfig component, ComponentLibScanConfig libScan) {
+        public void scanJars(ComponentConfig component, ComponentReflectConfig libScan) {
             for(Map.Entry<String, Factory> entry : factoryMap.entrySet()) {
                 entry.getValue().makeScanner().scanJars(component, libScan);
             }
         }
 
-        public void scanJars(ComponentConfig.WebappInfo webappInfo, ComponentLibScanConfig libScan) {
+        public void scanJars(ComponentConfig.WebappInfo webappInfo, ComponentReflectConfig libScan) {
             for(Map.Entry<String, Factory> entry : factoryMap.entrySet()) {
                 entry.getValue().makeScanner().scanJars(webappInfo, libScan);
             }

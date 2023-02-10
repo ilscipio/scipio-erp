@@ -579,8 +579,8 @@ public class CatalinaContainer implements Container {
         }
 
         JarScanner jarScanner = context.getJarScanner();
-        FilterJars jarFilter = FilterJars.scanJarsAndCreateFilter(appInfo, context.getServletContext());
-        if (jarScanner != null) { // SCIPIO: 2018-10-03: Moved this out from next block independence from StandardJarScanner 
+        if (jarScanner != null) { // SCIPIO: 2018-10-03: Moved this out from next block independence from StandardJarScanner
+            FilterJars jarFilter = FilterJars.createFilter(appInfo, context.getServletContext());
             jarScanner.setJarScanFilter(jarFilter);
         }
         if (jarScanner instanceof StandardJarScanner) {
@@ -637,19 +637,6 @@ public class CatalinaContainer implements Container {
         return context;
     }
 
-    private Callable<Object> readComponentInfo(ComponentConfig component) { // SCIPIO: 3.0.0: Added for annotations support
-        return new Callable<Object>() {
-            public Object call() throws ContainerException {
-                try {
-                    FilterJars.scanJars(component);
-                    return new Object();
-                } catch(Exception e) {
-                    throw new ContainerException(e.getMessage() + " [component: " + component.getGlobalName() + "]", e);
-                }
-            }
-        };
-    }
-
     protected void loadComponents() throws ContainerException {
         if (tomcat == null) {
             throw new ContainerException("Cannot load web applications without Tomcat instance!");
@@ -668,9 +655,6 @@ public class CatalinaContainer implements Container {
             List<Future<Object>> futures = new ArrayList<>();
 
             for (ComponentConfig component : ComponentConfig.getAllComponents()) {
-                // SCIPIO: 3.0.0: Load non-webapp, component JAR scan info, independently from webapps (even if slower/redundant)
-                futures.add(executor.submit(readComponentInfo(component)));
-
                 for (ComponentConfig.WebappInfo appInfo : component.getWebappInfos()) {
                     String engineName = appInfo.server;
                     List<String> virtualHosts = appInfo.getVirtualHosts();

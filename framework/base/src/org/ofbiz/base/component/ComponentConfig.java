@@ -2066,6 +2066,14 @@ public final class ComponentConfig {
             return location;
         }
 
+        /**
+         * Returns true if location was set (usually containing WEB-INF).
+         *
+         * <p>SCIPIO: 3.0.0: Added.</p>
+         */
+        public boolean hasLocation() {
+            return !location.isEmpty();
+        }
         public String getName() {
             return name;
         }

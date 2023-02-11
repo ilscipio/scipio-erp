@@ -25,6 +25,8 @@ import java.util.concurrent.Future;
 
 import javax.wsdl.WSDLException;
 
+import com.ilscipio.scipio.ce.base.component.ComponentReflectInfo;
+import com.ilscipio.scipio.ce.base.component.ComponentReflectRegistry;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.config.GenericConfigException;
@@ -362,6 +364,19 @@ public class DispatchContext implements Serializable {
         };
     }
 
+    /**
+     * Creates a per-component service reader for {@link com.ilscipio.scipio.service.def.Service}.
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    private Callable<Map<String, ModelService>> createAnnotationsServiceReaderCallable(ComponentReflectInfo reflectInfo) {
+        return new Callable<Map<String, ModelService>>() {
+            public Map<String, ModelService> call() throws Exception {
+                return ModelServiceReader.getModelServiceMap(reflectInfo, DispatchContext.this.getDelegator());
+            }
+        };
+    }
+
     private Map<String, ModelService> getGlobalServiceMap() {
         Map<String, ModelService> serviceMap = modelServiceMapByModel.get(this.model);
         if (serviceMap == null) {
@@ -385,6 +400,12 @@ public class DispatchContext implements Serializable {
             for (ComponentConfig.ServiceResourceInfo componentResourceInfo: ComponentConfig.getAllServiceResourceInfos("model")) {
                 futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createServiceReaderCallable(componentResourceInfo.createResourceHandler())));
             }
+
+            // SCIPIO: 3.0.0: Handle @Service annotation definitions
+            for (ComponentReflectInfo cri : ComponentReflectRegistry.getReflectInfos()) {
+                futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createAnnotationsServiceReaderCallable(cri)));
+            }
+
             for (Map<String, ModelService> servicesMap: ExecutionPool.getAllFutures(futures)) {
                 if (servicesMap != null) {
                     // SCIPIO: 2.1.0: Check duplicates for overriddenService

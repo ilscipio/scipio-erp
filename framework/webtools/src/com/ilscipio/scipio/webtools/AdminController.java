@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  * <p>SCIPIO: 3.0.0: Added for annotations support example.</p>
  */
 @Controller(controller = "webtools")
-public class WebtoolsController {
+public abstract class AdminController {
 
     /*
      * Event responses.

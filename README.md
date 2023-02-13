@@ -161,7 +161,7 @@ For detailed information and changes about the SCIPIO ERP suite, visit the offic
 
 You can get in touch with the us at:
 
-  [https://www.ilscipio.com](https://www.ilscipio.com "Community Forum")
+  [https://www.ilscipio.com](https://www.ilscipio.com "Ilscipio")
 
 ## OFBiz
 Scipio ERP is a fork of the Apache OFBiz project.

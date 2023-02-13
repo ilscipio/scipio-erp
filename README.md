@@ -12,7 +12,7 @@
 
 **************************************************************************
 ```
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg?style=flat)](http://makeapullrequest.com) [![Maintainability](https://api.codeclimate.com/v1/badges/0193ee026d92287b5db0/maintainability)](https://codeclimate.com/github/ilscipio/scipio-erp/maintainability) [![Discourse topics](https://img.shields.io/discourse/https/forum.scipioerp.com/topics.svg)](https://forum.scipioerp.com) [![Read the Docs](https://img.shields.io/readthedocs/pip.svg)](https://www.scipioerp.com/community/developer/installation-configuration/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-blue.svg?style=flat)](http://makeapullrequest.com) [![Maintainability](https://api.codeclimate.com/v1/badges/0193ee026d92287b5db0/maintainability)](https://codeclimate.com/github/ilscipio/scipio-erp/maintainability) [![Read the Docs](https://img.shields.io/readthedocs/pip.svg)](https://www.scipioerp.com/community/developer/installation-configuration/)
 
 # SCIPIO ERP - Community Edition
 ![Scipio ERP is a toolkit for the development of modern business applications.](https://www.scipioerp.com/files/2018/06/slider_desk_900.jpg)
@@ -21,7 +21,6 @@
 * [Demo](https://www.scipioerp.com/demo/)
 * [Developer Docs](https://www.scipioerp.com/community/developer/installation-configuration/)
 * [User Docs](https://www.scipioerp.com/community/end-user/applications/)
-* [Community](https://forum.scipioerp.com/)
 
 ## What is Scipio ERP
 Scipio ERP is an Open Source Business Application Toolkit based on Java 8 and a built-in
@@ -160,9 +159,9 @@ For detailed information and changes about the SCIPIO ERP suite, visit the offic
 
   [https://www.scipioerp.com](https://www.scipioerp.com "Scipio ERP Website")
 
-You can get in touch with the community over at:
+You can get in touch with the us at:
 
-  [https://forum.scipioerp.com](https://forum.scipioerp.com "Community Forum")
+  [https://www.ilscipio.com](https://www.ilscipio.com "Community Forum")
 
 ## OFBiz
 Scipio ERP is a fork of the Apache OFBiz project.

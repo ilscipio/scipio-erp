@@ -13,7 +13,7 @@
     "browser-sync": "^2.26.5",
     "browserify": "^16.2.3",
     "del": "^2.2.2",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-bower-src": "^0.1.0",
     "gulp-concat": "^2.6.0",

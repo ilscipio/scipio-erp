@@ -21,6 +21,34 @@ public interface ServiceHandler {
     //Map<String, Object> exec(ServiceContext ctx) throws GeneralException;
 
     /**
+     * Standard parameter-less service execution method.
+     *
+     * <p>Implementations of this rely on class members initialized through {@link Local#Local(ServiceContext)}
+     * or {@link Local#init(ServiceContext)} (dynamically determined by reflection at runtime).</p>
+     */
+    interface Exec extends ServiceHandler {
+        Map<String, Object> exec() throws GeneralException;
+    }
+
+    /**
+     * Standard single-parameter {@link ServiceContext} service execution method.
+     *
+     * <p>Useful when translating old code to new class format or to avoid class members for whatever reason.</p>
+     */
+    interface ExecStandard extends ServiceHandler {
+        Map<String, Object> exec(ServiceContext ctx) throws GeneralException;
+    }
+
+    /**
+     * Legacy two-parameter {@link DispatchContext} service execution method.
+     *
+     * <p>Useful when translating old code to new class format.</p>
+     */
+    interface ExecLegacy extends ServiceHandler {
+        Map<String, Object> exec(DispatchContext dctx, Map<String, Object> ctx) throws GeneralException;
+    }
+
+    /**
      * A service handler created once and reused for many service calls.
      * <p>The service engine automatically creates singleton instances of these handlers.</p>
      */
@@ -45,7 +73,7 @@ public interface ServiceHandler {
      * the service context constructor does not.</p>
      */
     abstract class Local implements ServiceHandler {
-        /** The ServiceContext for the service call; always non-null after {@link #Dynamic(ServiceContext)} or {@link #init(ServiceContext)}. */
+        /** The ServiceContext for the service call; always non-null after {@link #Local(ServiceContext)} or {@link #init(ServiceContext)}. */
         protected ServiceContext ctx;
         /** DispatchContext for the service call, for easy access from legacy code. */
         protected DispatchContext dctx; // legacy code support
@@ -74,7 +102,7 @@ public interface ServiceHandler {
         }
 
         /**
-         * Called by service engine invocations for subclasses that rely on {@link #Dynamic()}.
+         * Called by service engine invocations for subclasses that rely on {@link #Local()}.
          */
         public Local init(ServiceContext ctx) {
             setServiceContext(ctx);

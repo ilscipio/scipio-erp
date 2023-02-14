@@ -128,6 +128,31 @@ public class ModelServiceReader implements Serializable {
             Map<String, ModelService> modelServices = new LinkedHashMap<>();
 
             int i = 0;
+            for (Class<?> serviceClass : reflectInfo.getReflectQuery().getAnnotatedClasses(Service.class)) {
+                Service serviceDef = serviceClass.getAnnotation(Service.class);
+                String serviceName = UtilValidate.isNotEmpty(serviceDef.name()) ? serviceDef.name() :
+                    serviceClass.getSimpleName().substring(0, 1).toLowerCase() +
+                            (serviceClass.getSimpleName().length() > 1 ? serviceClass.getSimpleName().substring(1) : "");
+
+                // check to see if service with same name has already been read
+                // SCIPIO: Preserve the previous service temporarily using an alias that will be removed later
+                //if (modelServices.containsKey(serviceName)) {
+                ModelService overriddenService = modelServices.get(serviceName);
+                if (overriddenService != null) {
+                    Debug.logInfo("Service " + serviceName + " is defined more than once, " +
+                            "most recent will over-write previous definition(s)", module);
+                }
+                ModelService service = createModelService(serviceName, serviceClass, null, serviceDef, overriddenService);
+
+                // SCIPIO: 2018-09-10: new ability to perform additional validation at load time
+                if (loadValidateHigh) {
+                    service.validateModel();
+                }
+
+                modelServices.put(serviceName, service);
+                i++;
+            }
+
             for (Method serviceMethod : reflectInfo.getReflectQuery().getAnnotatedMethods(Service.class)) {
                 Service serviceDef = serviceMethod.getAnnotation(Service.class);
                 String serviceName = UtilValidate.isNotEmpty(serviceDef.name()) ? serviceDef.name() : serviceMethod.getName();
@@ -140,7 +165,7 @@ public class ModelServiceReader implements Serializable {
                     Debug.logInfo("Service " + serviceName + " is defined more than once, " +
                             "most recent will over-write previous definition(s)", module);
                 }
-                ModelService service = createModelService(serviceName, serviceMethod, serviceDef, overriddenService);
+                ModelService service = createModelService(serviceName, null, serviceMethod, serviceDef, overriddenService);
 
                 // SCIPIO: 2018-09-10: new ability to perform additional validation at load time
                 if (loadValidateHigh) {
@@ -416,14 +441,15 @@ public class ModelServiceReader implements Serializable {
      *
      * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
      */
-    private ModelService createModelService(String serviceName, Method serviceMethod, Service serviceDef, ModelService overriddenService) {
+    private ModelService createModelService(String serviceName, Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService overriddenService) {
         ModelService service = new ModelService();
 
         service.name = serviceName;
-        service.definitionLocation = serviceMethod.getDeclaringClass().getName();
+        service.definitionLocation = (serviceMethod != null) ? serviceMethod.getDeclaringClass().getName() :
+                (serviceClass.getEnclosingClass() != null ? serviceClass.getEnclosingClass().getName() : serviceClass.getName());
         service.engineName = "java";
-        service.location = serviceMethod.getDeclaringClass().getName();
-        service.invoke = serviceMethod.getName();
+        service.location = (serviceMethod != null) ? serviceMethod.getDeclaringClass().getName() : serviceClass.getName();
+        service.invoke = (serviceMethod != null) ? serviceMethod.getName() : "exec";
         service.semaphore = serviceDef.semaphore();
         service.defaultEntityName = serviceDef.defaultEntityName();
         service.fromLoader = "annotations";
@@ -433,13 +459,23 @@ public class ModelServiceReader implements Serializable {
         service.accessorInvoke = UtilValidate.nullIfEmpty(serviceDef.accessorInvoke());
 
         // SCIPIO: log level
-        LogLevel logLevel = LogLevel.fromName(serviceDef.log(), null);
+        LogLevel logLevel = null;
+        try {
+            logLevel = LogLevel.fromName(serviceDef.log(), null);
+        } catch (Exception e) {
+            Debug.logError(e, "@Service [" + serviceName + "] invalid log() value: " + serviceDef.log(), module);
+        }
         if (logLevel == null) {
             logLevel = "true".equalsIgnoreCase(serviceDef.debug()) ? LogLevel.DEBUG : LogLevel.NORMAL;
         }
         service.logLevel = logLevel;
         // SCIPIO: eca (default) log level
-        LogLevel ecaLogLevel = LogLevel.fromName(serviceDef.logEca(), null);
+        LogLevel ecaLogLevel = null;
+        try {
+            ecaLogLevel = LogLevel.fromName(serviceDef.logEca(), null);
+        } catch (Exception e) {
+            Debug.logError(e, "@Service [" + serviceName + "] invalid logEca() value: " + serviceDef.logEca(), module);
+        }
         if (ecaLogLevel == null) {
             ecaLogLevel = "true".equalsIgnoreCase(serviceDef.debug()) ? LogLevel.DEBUG : LogLevel.NORMAL;
         }
@@ -520,20 +556,20 @@ public class ModelServiceReader implements Serializable {
         service.transactionTimeout = timeout;
 
         service.description = serviceDef.description();
-        this.createNamespace(serviceMethod, serviceDef, service);
+        this.createNamespace(serviceClass, serviceMethod, serviceDef, service);
 
         // construct the context
         service.contextInfo = new HashMap<>();
-        this.createNotification(serviceMethod, serviceDef, service);
-        this.createPermission(serviceMethod, serviceDef, service);
-        this.createPermGroups(serviceMethod, serviceDef, service);
-        this.createGroupDefs(serviceMethod, serviceDef, service);
-        this.createImplDefs(serviceMethod, serviceDef, service);
-        this.createAutoAttrDefs(serviceMethod, serviceDef, service);
-        this.createAttrDefs(serviceMethod, serviceDef, service);
-        this.createOverrideDefs(serviceMethod, serviceDef, service);
-        this.createDeprecated(serviceMethod, serviceDef, service);
-        this.createProperties(serviceMethod, serviceDef, service); // SCIPIO: 2018-11-23
+        this.createNotification(serviceClass, serviceMethod, serviceDef, service);
+        this.createPermission(serviceClass, serviceMethod, serviceDef, service);
+        this.createPermGroups(serviceClass, serviceMethod, serviceDef, service);
+        this.createGroupDefs(serviceClass, serviceMethod, serviceDef, service);
+        this.createImplDefs(serviceClass, serviceMethod, serviceDef, service);
+        this.createAutoAttrDefs(serviceClass, serviceMethod, serviceDef, service);
+        this.createAttrDefs(serviceClass, serviceMethod, serviceDef, service);
+        this.createOverrideDefs(serviceClass, serviceMethod, serviceDef, service);
+        this.createDeprecated(serviceClass, serviceMethod, serviceDef, service);
+        this.createProperties(serviceClass, serviceMethod, serviceDef, service); // SCIPIO: 2018-11-23
         // Get metrics.
         if (serviceDef.metrics().length > 0) {
             service.metrics = MetricsFactory.getInstance(serviceDef.metrics()[0]);
@@ -630,7 +666,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createNotification(Method serviceMethod, Service serviceDef, ModelService model) {
+    private void createNotification(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService model) {
         // default notification groups
         ModelNotification nSuccess = new ModelNotification();
         nSuccess.notificationEvent = "success";
@@ -669,7 +705,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createPermission(Method serviceMethod, Service serviceDef, ModelService model) {
+    private void createPermission(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService model) {
         if (serviceDef.permissionService().length > 0) {
             if (serviceDef.permissionService().length > 1) {
                 Debug.logError("Annotated @Service [" + model.name + "] has more than one permissionService() " +
@@ -693,11 +729,11 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createPermGroups(Method serviceMethod, Service serviceDef, ModelService model) {
+    private void createPermGroups(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService model) {
         for (Permissions permissionsDef : serviceDef.permissions()) {
             ModelPermGroup group = new ModelPermGroup();
             group.joinType = permissionsDef.joinType();
-            createGroupPermissions(serviceMethod, serviceDef, permissionsDef, group, model);
+            createGroupPermissions(serviceClass, serviceMethod, serviceDef, permissionsDef, group, model);
             model.permissionGroups.add(group);
         }
     }
@@ -743,7 +779,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createGroupPermissions(Method serviceMethod, Service serviceDef, Permissions permissionsDef,
+    private void createGroupPermissions(Class<?> serviceClass, Method serviceMethod, Service serviceDef, Permissions permissionsDef,
                                         ModelPermGroup group, ModelService service) {
         // create the simple permissions
         for (Permission permissionDef : permissionsDef.permissions()) {
@@ -800,7 +836,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createGroupDefs(Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createGroupDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         // SCIPIO: 3.0.0: Not for annotations
     }
 
@@ -814,7 +850,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createImplDefs(Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createImplDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         for (Implements implementsDef : serviceDef.implemented()) {
             String serviceName = implementsDef.service();
             boolean optional = UtilXml.checkBoolean(implementsDef.optional(), false);
@@ -830,9 +866,9 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createAutoAttrDefs(Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createAutoAttrDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         for (EntityAttributes entityAttributesDef : serviceDef.entityAttributes()) {
-            createAutoAttrDef(serviceMethod, serviceDef, entityAttributesDef, service);
+            createAutoAttrDef(serviceClass, serviceMethod, serviceDef, entityAttributesDef, service);
         }
     }
 
@@ -917,7 +953,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createAutoAttrDef(Method serviceMethod, Service serviceDef, EntityAttributes entityAttributesDef, ModelService service) {
+    private void createAutoAttrDef(Class<?> serviceClass, Method serviceMethod, Service serviceDef, EntityAttributes entityAttributesDef, ModelService service) {
         // get the entity name; first from the auto-attributes then from the service def
         String entityName = UtilXml.checkEmpty(entityAttributesDef.entityName());
         if (UtilValidate.isEmpty(entityName)) {
@@ -1057,7 +1093,7 @@ public class ModelServiceReader implements Serializable {
         createDefaultAttrDefs(service);
     }
 
-    private void createAttrDefs(Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createAttrDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         // Add in the defined attributes (override the above defaults if specified)
         for (Attribute attributeDef : serviceDef.attributes()) {
             ModelParam param = new ModelParam();
@@ -1109,7 +1145,7 @@ public class ModelServiceReader implements Serializable {
             }
 
             // set the validators
-            this.addValidators(serviceMethod, serviceDef, attributeDef, param);
+            this.addValidators(serviceClass, serviceMethod, serviceDef, attributeDef, param);
             service.addParam(param);
         }
 
@@ -1295,7 +1331,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createOverrideDefs(Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createOverrideDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         for (OverrideAttribute overrideAttributeDef : serviceDef.overrideAttributes()) {
             String name = UtilXml.checkEmpty(overrideAttributeDef.name());
             ModelParam param = service.getParam(name);
@@ -1363,7 +1399,7 @@ public class ModelServiceReader implements Serializable {
                 }
 
                 // override validators
-                this.addValidators(serviceMethod, serviceDef, overrideAttributeDef, param);
+                this.addValidators(serviceClass, serviceMethod, serviceDef, overrideAttributeDef, param);
 
                 if (directToParams) {
                     service.addParam(param);
@@ -1387,7 +1423,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createDeprecated(Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createDeprecated(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         if (UtilValidate.isNotEmpty(serviceDef.deprecated())) {
             service.deprecatedUseInstead = serviceDef.deprecatedBy();
             service.deprecatedSince = serviceDef.deprecatedSince();
@@ -1419,7 +1455,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createProperties(Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createProperties(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         if (serviceDef.properties().length > 0) {
             Map<String, Object> properties = new LinkedHashMap<>();
             for(Property propertyDef : serviceDef.properties()) {
@@ -1465,7 +1501,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createNamespace(Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createNamespace(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         if (UtilValidate.isNotEmpty(serviceDef.namespace())) {
             service.nameSpace = serviceDef.namespace();
             service.nameSpacePrefix = serviceDef.namespacePrefix();
@@ -1499,7 +1535,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void addValidators(Method serviceMethod, Service serviceDef, Attribute attributeDef, ModelParam param) {
+    private void addValidators(Class<?> serviceClass, Method serviceMethod, Service serviceDef, Attribute attributeDef, ModelParam param) {
         if (attributeDef.typeValidate().length > 0) {
             // always clear out old ones; never append
             param.validators = new ArrayList<>(); // SCIPIO: switched to ArrayList
@@ -1523,7 +1559,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void addValidators(Method serviceMethod, Service serviceDef, OverrideAttribute attributeDef, ModelParam param) {
+    private void addValidators(Class<?> serviceClass, Method serviceMethod, Service serviceDef, OverrideAttribute attributeDef, ModelParam param) {
         if (attributeDef.typeValidate().length > 0) {
             // always clear out old ones; never append
             param.validators = new ArrayList<>(); // SCIPIO: switched to ArrayList

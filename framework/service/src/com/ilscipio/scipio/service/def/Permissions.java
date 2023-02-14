@@ -17,7 +17,7 @@ public @interface Permissions {
     /**
      * Required permissions join type; "OR" or "AND", default "OR".
      */
-    String joinType();
+    String joinType() default "";
 
     /**
      * Entity permissions, joined using {@link #joinType()}.

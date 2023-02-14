@@ -3,9 +3,15 @@ package com.ilscipio.scipio.service.test;
 import com.ilscipio.scipio.service.def.Attribute;
 import com.ilscipio.scipio.service.def.EntityAttributes;
 import com.ilscipio.scipio.service.def.Implements;
+import com.ilscipio.scipio.service.def.OverrideAttribute;
+import com.ilscipio.scipio.service.def.Permission;
+import com.ilscipio.scipio.service.def.PermissionService;
+import com.ilscipio.scipio.service.def.Permissions;
 import com.ilscipio.scipio.service.def.Service;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.service.ServiceContext;
+import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceUtil;
 
 import java.util.Map;
@@ -21,11 +27,12 @@ public abstract class ServiceTestServices {
 
     @Service(
             attributes = {
-                    @Attribute(name = "param1", type = "String", mode = "IN", defaultValue = "test value 1", optional = "true")
+                    @Attribute(name = "param1", type = "String", mode = "IN", defaultValue = "test value 1", optional = "true"),
+                    @Attribute(name = "result1", type = "String", mode = "OUT", optional = "true")
             }
     )
-    public static Map<String, Object> adminTestAnnotations1(ServiceContext ctx) {
-        Debug.logInfo("adminTestAnnotations1: input: " + ctx.context(), module);
+    public static Map<String, Object> serviceAnnotationsTest1(ServiceContext ctx) {
+        Debug.logInfo("serviceAnnotationsTest1: input: " + ctx.context(), module);
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("result1", "test result value 1");
         return result;
@@ -38,22 +45,45 @@ public abstract class ServiceTestServices {
                     @Attribute(name = "result1", type = "String", mode = "OUT", optional = "true")
             }
     )
-    public static Map<String, Object> adminTestAnnotations2(ServiceContext ctx) {
-        Debug.logInfo("adminTestAnnotations2: input: " + ctx.context(), module);
+    public static class ServiceAnnotationsTest2 extends ServiceHandler.Local implements ServiceHandler.Exec {
+        public ServiceAnnotationsTest2(ServiceContext ctx) { // NOTE: If omitted, init(ServiceContext) is called instead
+            super(ctx);
+        }
+
+        @Override
+        public Map<String, Object> exec() {
+            Debug.logInfo("serviceAnnotationsTest2: input: " + ctx.context(), module);
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("result1", "test result value 1");
+            return result;
+        }
+    }
+
+    @Service(
+            implemented = {
+                    @Implements(service = "serviceAnnotationsTest1")
+            },
+            auth = "true",
+            permissionService = {
+                    @PermissionService(service = "commonGenericPermission", mainAction = "UPDATE")
+            }
+    )
+    public static Map<String, Object> serviceAnnotationsTest3(ServiceContext ctx) {
+        Debug.logInfo("serviceAnnotationsTest3: input: " + ctx.context(), module);
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("result1", "test result value 1");
         return result;
     }
 
     @Service(
-            name = "adminTestAnnotations2Extended",
+            name = "serviceAnnotationsTest4Extended",
             description = "Extended @Service annotations test service (2)",
             deprecated = "Test deprecation message",
             deprecatedSince = "2023-02-10",
-            deprecatedBy = "adminTestAnnotations1",
+            deprecatedBy = "serviceAnnotationsTest3",
             implemented = {
-                    @Implements(service = "adminTestAnnotations1"),
-                    @Implements(service = "adminTestAnnotations2")
+                    @Implements(service = "serviceAnnotationsTest1"),
+                    @Implements(service = "serviceAnnotationsTest2")
             },
             defaultEntityName = "Person",
             entityAttributes = {
@@ -65,12 +95,40 @@ public abstract class ServiceTestServices {
                     @Attribute(name = "param4", type = "String", mode = "IN", defaultValue = "test value 4", optional = "true"),
                     @Attribute(name = "result2", type = "String", mode = "OUT", optional = "true")
             },
-            auth = "true"
+            auth = "true",
+            permissions = {
+                    @Permissions(
+                            joinType = "AND",
+                            permissions = {
+                                    @Permission(permission = "OFBTOOLS", action = "_VIEW")
+                            },
+                            services = {
+                                    @PermissionService(service = "commonGenericPermission", mainAction = "UPDATE")
+                            }
+                    )
+            },
+            log = "debug",
+            overrideAttributes = {
+                    @OverrideAttribute(name = "param1", defaultValue = "test value 1 override"),
+                    @OverrideAttribute(name = "param2", defaultValue = "test value 2 override"),
+            },
+            logEca = "debug",
+            maxRetry = "3",
+            priority = "25",
+            jobPoolPersist = "pool",
+            requireNewTransaction = "true",
+            validate = "true",
+            semaphore = "fail",
+            semaphoreSleep = "1000",
+            semaphoreWaitSeconds = "800",
+            startDelay = "200",
+            hideResultInLog = "false"
     )
-    public static Map<String, Object> adminTestAnnotations2Ext(ServiceContext ctx) {
-        Debug.logInfo("adminTestAnnotations2Ext: input: " + ctx.context(), module);
+    public static Map<String, Object> serviceAnnotationsTest4Ext(ServiceContext ctx) {
+        Debug.logInfo("serviceAnnotationsTest4Extended: input: " + ctx.context(), module);
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("result1", "test result value 1");
+        result.put("result2", "test result value 2");
         return result;
     }
 

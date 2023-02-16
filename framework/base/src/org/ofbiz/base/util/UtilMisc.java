@@ -50,6 +50,7 @@ import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+import com.ilscipio.scipio.util.collections.MapType;
 import org.apache.commons.collections4.iterators.EnumerationIterator;
 import org.ofbiz.base.util.collections.MapComparator;
 
@@ -131,6 +132,9 @@ public final class UtilMisc {
 
     /**
      * Create a map from passed nameX, valueX parameters
+     *
+     * <p>SCIPIO: 3.0.0: Now supports alternative key order default map type.</p>
+     *
      * @return The resulting Map
      */
     @SuppressWarnings("unchecked")
@@ -143,7 +147,7 @@ public final class UtilMisc {
             Debug.logInfo(e, module);
             throw e;
         }
-        Map<K, V> map = new HashMap<>();
+        Map<K, V> map = MapType.DEFAULT.newMap();
         for (int i = 0; i < data.length;) {
             map.put((K) data[i++], (V) data[i++]);
         }
@@ -151,11 +155,14 @@ public final class UtilMisc {
     }
 
     /**
-     * Create a map from passed nameX, valueX parameters, as ordered map (currently LinkedHashMap) (SCIPIO).
+     * Create a map from passed nameX, valueX parameters, as linked map (currently LinkedHashMap).
+     *
+     * <p>SCIPIO: 3.0.0: New name to replaced toOrderedMap due to naming ambiguity (very clear in java).</p>
+     *
      * @return The resulting Map
      */
     @SuppressWarnings("unchecked")
-    public static <K, V> Map<K, V> toOrderedMap(Object... data) {
+    public static <K, V> Map<K, V> toLinkedMap(Object... data) {
         if (data.length == 1 && data[0] instanceof Map) {
             return UtilGenerics.<K, V>checkMap(data[0]);
         }
@@ -169,6 +176,14 @@ public final class UtilMisc {
             map.put((K) data[i++], (V) data[i++]);
         }
         return map;
+    }
+
+    /**
+     * @deprecated SCIPIO: 3.0.0: Use {@link #toLinkedMap(Object...)} due to naming ambiguity.
+     */
+    @Deprecated
+    public static <K, V> Map<K, V> toOrderedMap(Object... data) {
+        return toLinkedMap(data);
     }
 
     /**
@@ -208,9 +223,9 @@ public final class UtilMisc {
 
     public static <K, V> Map<K, V> makeMapWritable(Map<K, ? extends V> map) {
         if (map == null) {
-            return new HashMap<>();
+            return MapType.DEFAULT.newMap();
         }
-        Map<K, V> result = new HashMap<>(map.size());
+        Map<K, V> result = MapType.DEFAULT.newMap(map.size());
         result.putAll(map);
         return result;
     }
@@ -988,7 +1003,7 @@ public final class UtilMisc {
      * is of the same type as the other toMap calls in this class.
      */
     public static <K, V> Map<K, V> newMap() {
-        return new HashMap<>();
+        return MapType.DEFAULT.newMap();
     }
 
     /**
@@ -999,7 +1014,7 @@ public final class UtilMisc {
      * @see #newMap()
      */
     public static <K, V> Map<K, V> newMap(Map<? extends K, ? extends V> map) {
-        return new HashMap<>(map);
+        return MapType.DEFAULT.newMap(map);
     }
 
     /**
@@ -1011,7 +1026,7 @@ public final class UtilMisc {
      * @see #newMap()
      */
     public static <K, V> Map<K, V> newMap(int initialCapacity) {
-        return new HashMap<>(initialCapacity);
+        return MapType.DEFAULT.newMap(initialCapacity);
     }
 
     /**

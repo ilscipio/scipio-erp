@@ -211,7 +211,7 @@ public class GeneralException extends Exception implements SettablePropertyMessa
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public GeneralException setProperties(Object... properties) {
-        return setProperties(UtilMisc.toOrderedMap(properties));
+        return setProperties(UtilMisc.toLinkedMap(properties));
     }
 
     /**
@@ -244,7 +244,7 @@ public class GeneralException extends Exception implements SettablePropertyMessa
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public GeneralException addProperties(Object... properties) {
-        return addProperties(UtilMisc.toOrderedMap(properties));
+        return addProperties(UtilMisc.toLinkedMap(properties));
     }
 
     /**

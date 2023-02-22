@@ -10,6 +10,7 @@ import java.util.TimeZone;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilRandom;
@@ -219,7 +220,11 @@ public class LocalDataGenerator extends AbstractDataGenerator {
 
         order.setOrderDate(UtilRandom.generateRandomTimestamp(context));
         order.setOrderType(orderType);
-        order.setOrderName("Demo Order " + UtilDateTime.timeStampToString(order.getOrderDate(), (TimeZone) context.get("timeZone"), (Locale) context.get("locale")));
+        TimeZone timeZone = (TimeZone) context.get("timeZone");
+        if (UtilValidate.isEmpty(timeZone)) {
+            timeZone = TimeZone.getDefault();
+        }
+        order.setOrderName("Demo Order " + UtilDateTime.timeStampToString(order.getOrderDate(), timeZone, (Locale) context.get("locale")));
         order.setRemainingSubTotal(remainingSubTotal);
         order.setGrandTotal(grandTotal);
         order.setCreatedBy(userLoginId);

@@ -23,7 +23,7 @@ code package.
     -->
     <service name="demoDataGenerator" engine="interface">        
         <attribute name="dataGeneratorProviderId" type="String" mode="IN" optional="true" />        
-        <attribute name="num" type="Integer" mode="IN" optional="true" />
+        <attribute name="num" type="Integer" mode="IN" optional="true" default-value="50" />
         <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="dataIntervalMs" type="Long" mode="IN" optional="true" default-value="0"/>

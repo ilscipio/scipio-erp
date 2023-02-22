@@ -259,6 +259,7 @@ public class PersistedServiceJob extends GenericServiceJob {
             } else {
                 newJob.set("currentRetryCount", 0L);
             }
+            newJob.set("runtimeDataId", jobValue.getString("runtimeDataId"));
             nextRecurrence = next;
             // Set priority if missing
             // SCIPIO: DON'T: null will indicate normal OR ModelService.priority, and this is unnecessary anyway

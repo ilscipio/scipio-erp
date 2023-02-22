@@ -529,6 +529,7 @@ public final class JobManager {
                             newJob.set("parentJobId", pJobId);
                             newJob.set("startDateTime", null);
                             newJob.set("runByInstanceId", null);
+                            newJob.set("runtimeDataId", job.getString("runtimeDataId"));
 
                             // if Queued Job is crashed then its corresponding new Job should have TempExprId and recurrenceInfoId to continue further scheduling.
                             if ("SERVICE_QUEUED".equals(job.getString("statusId"))) {

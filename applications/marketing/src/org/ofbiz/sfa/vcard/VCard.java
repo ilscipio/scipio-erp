@@ -321,7 +321,9 @@ public class VCard {
             }
             String saveToFilename = fullName + ".vcf";
             file = FileUtil.getFile(saveToDirectory + "/" + saveToFilename);
-            Ezvcard.write(vcard).go(file);
+            // SCIPIO: 3.0.0: Updated for vcard 0.12
+            //Ezvcard.write(vcard).go(file);
+            Ezvcard.write(vcard).go(file.toPath());
         } catch (FileNotFoundException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError(UtilProperties.getMessage(resourceError,

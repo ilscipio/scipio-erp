@@ -23,7 +23,7 @@
 * [User Docs](https://www.scipioerp.com/community/end-user/applications/)
 
 ## What is Scipio ERP
-Scipio ERP is an Open Source Business Application Toolkit based on Java 8 and a built-in
+Scipio ERP is an Open Source Business Application Toolkit based on Java 11+ and a built-in
 Tomcat application server. We provide standard applications, functions (services)
 and a well thought-out datamodel, so that you can create modern web applications.
 
@@ -66,41 +66,33 @@ modern HTML frameworks.
 * 4+GB RAM, 2+GB free hard disk space
 
 ### Software Requirements
-* Java 1.8 (or greater) SDK
-* Apache ANT
+* Java 11 JDK or greater (Openjdk or Oracle)
 
 ### Recommended Development Tools
-* GIT Client
-* Eclipse Java IDE
-  * m2eclipse
-  * Groovy-eclipse
-  * Freemarker IDE editor (select from JBooss tools plugin)
+* Git client
+* JetBrains IntelliJ IDEA with Scipio ERP Plugin
 
 ### Prerequisites
 In order to install SCIPIO ERP, the following prerequisites must be installed:
-* Java 1.8 (or greater) SDK
+* Java 11 JDK or greater
   * Download and Install
-  * Set JAVA_HOME Path
-  * Validate Settings
-* Install Apache Ant
-  * Download and Install
+  * Set JAVA_HOME Path (Windows)
 
 ### Download
-The standard way to get SCIPIO ERP to is to checkout the 2.x branch, which
-provides you with the latest version of the 2.x.x line with latest important updates:
+The standard way to get SCIPIO ERP is to checkout the master (main) branch, which
+provides you with the latest stable version with important updates:
 
 1. Open your command line and run:
   * git clone https://github.com/ilscipio/scipio-erp.git
   * cd scipio-erp
-  * git checkout 2.x
+  * git checkout master
 
-You may also use the master branch (simply omit step c.), the main development branch,
-for access to latest features and changes, but it is subject to compatibility-breaking
-changes without notice (unless you have a supported client project, in which case we
-will assist). For some projects, master may be the recommended branch to use.
+Note it is also possible to checkout specific version tags as well as stable
+version series this way (e.g., git checkout 2.x), but main branch typically
+contains the desirable setup for most demo, server and client usages.
 
 ### Installation Process
-In order to install, the following steps must be taken:
+In order to install on a client system or start on a server, the following steps should be used:
 
 1. Open your command line, go to the extracted folder and run:
   * Linux ./install.sh
@@ -119,11 +111,13 @@ In order to install, the following steps must be taken:
   Username: admin
   Password: scipio
 
+Note: These steps are typically too limited for developers; see section below.
+
                      **Congratulations, you have installed SCIPIO ERP!**
 
 ### Updates
 1. Retrieve latest code updates from git:
-a. git checkout 2.x
+a. git checkout master
 b. git pull
 
 2. Reload visual themes:
@@ -149,10 +143,39 @@ or for brief help and command list, type:
   ./git-addons help
 
 ### Docker
-We also provide Docker images if you would like to try out Scipio with minimal effort. To create a fully functional SCIPIO ERP instance with some demo data already loaded, you can create a container with the following command:
+We also provide Docker images if you would like to try out Scipio with minimal effort. 
+To create a fully functional SCIPIO ERP instance with some demo data already loaded, 
+you can create a container with the following command:
 
   docker create -p 8080:8080 -p 8443:8443 ilscipio/scipio-erp:demo
 
+### Development
+For developers, the install/start commands above are typically too limited.
+The JetBrains IntelliJ IDEA integrated development environment with Scipio ERP Plugin
+(found in the integrated IDEA plugin store) is highly recommended and, for compilation and 
+development tasks, the traditional bundled Apache Ant commands may and sometimes should be used instead:
+
+1. Clear local database (Derby), clean out old JARs, build, load demo data to database and start:
+  * Linux ./ant clean-all build load-demo start-debug
+  * OS X: ./ant clean-all build load-demo start-debug
+  * Windows: ant.bat clean-all build load-demo start-debug
+
+Commands can be listed using: ant -p (./ant -p)
+
+Commonly used and useful Ant developer commands:
+  * clean-all (implies clean-data clean-logs)
+  * clean-data (Warning: This deletes local Derby database demo data, but not PostgreSQL/external)
+  * clean-logs
+  * build
+  * rebuild
+  * lib-clean-cache-full (in case of maven/ivy issues)
+  * lib-update-force (in case of maven/ivy issues)
+  * start-debug
+  * restart-debug
+  * rebuild-debug
+  * stop-wait
+
+This is a quick cheat sheet and further information for developers can be found on the website documentation.
 
 ## Support
 For detailed information and changes about the SCIPIO ERP suite, visit the official website at:

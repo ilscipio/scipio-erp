@@ -348,7 +348,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * Cached reflection info for StandardJavaEngine.
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
-    Object javaServiceReflectInfo;
+    transient Object javaServiceReflectInfo;
 
     /**
      * Access modifier for publicly-reachable interfaces.

@@ -41,10 +41,10 @@ code package.
     <!-- ================================================================== -->
 
     <target name="classes" depends="prepare,check-lib-update"><!-- SCIPIO: added per-component lib update check -->
-        <javac18>
+        <javac-std>
             <!-- exclude the payment processor packages; comment if you have libs -->
             <exclude name="org/ofbiz/order/thirdparty/taxware/**"/>
-        </javac18>
+        </javac-std>
     </target>
 
     <target name="jar" depends="classes">

@@ -236,7 +236,7 @@ public class EmailServices {
             }
             if (UtilValidate.isNotEmpty(socketFactoryClass)) {
                 props.put("mail.smtp.socketFactory.class", socketFactoryClass);
-                Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider()); // SCIPIO: 2018-08-30: TODO: REVIEW: can remove now?
+                //Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider()); // SCIPIO: 3.0.0: Obsolete in java 11+
             }
             if (UtilValidate.isNotEmpty(socketFactoryFallback)) {
                 props.put("mail.smtp.socketFactory.fallback", socketFactoryFallback);

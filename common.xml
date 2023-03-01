@@ -78,7 +78,7 @@ code package.
 
     <target name="classes" depends="prepare,check-lib-update">
         <!-- SCIPIO: per-comonent lib update hook -->
-        <javac18 />
+        <javac-std />
     </target>
 
     <target name="jar" depends="classes">

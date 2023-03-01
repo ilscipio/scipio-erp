@@ -44,7 +44,7 @@ code package.
     <!-- ================================================================== -->
 
     <target name="classes" depends="prepare,check-lib-update"><!-- SCIPIO: added per-component lib update check -->
-        <javac18/>
+        <javac-std/>
     </target>
 
     <target name="jar" depends="classes">

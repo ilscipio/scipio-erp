@@ -149,13 +149,14 @@ From command line, Scipio build should be invoked using the provided ant launch 
                         </then>
                     </if>
 
-                    <!-- SCIPIO: 2017-09-06: JDK version minimum requirement is now 1.8 -->
-                    <condition property="javaatleast18">
+                    <echo message="Current Java version (ant.java.version): ${ant.java.version}"/>
+                    <!-- SCIPIO: 3.0.0: JDK version minimum requirement is now 11 -->
+                    <condition property="javaatleast11">
                         <not>
-                            <matches pattern="^1\.[0-7]($|\..*)" string="${ant.java.version}"/>
+                            <matches pattern="^1\.[0-8]($|\..*)" string="${ant.java.version}"/>
                         </not>
                     </condition>
-                    <fail unless="javaatleast18" message="Please upgrade java to at least 1.8. Current Java version is ${ant.java.version}"/>
+                    <fail unless="javaatleast11" message="Please upgrade Java JDK to 11 or higher."/>
 
                     <property name="checkreqs.ran" value="true"/>
                 </then>
@@ -264,25 +265,18 @@ From command line, Scipio build should be invoked using the provided ant launch 
         </javac>
     </presetdef>
 
-    <presetdef name="javac17">
-        <default-javac compiler="javac1.7" target="1.7" source="1.7" encoding="UTF-8" includeantruntime="false">
+    <!-- SCIPIO: 3.0.0: javac-std replaces javac18 and targets minimum JDK 11  -->
+    <presetdef name="javac-std">
+        <default-javac compiler="javac10+" target="11" source="11" encoding="UTF-8" includeantruntime="false">
             <compilerarg value="-Xlint:-path"/>
-            <!--
-            Please leave this line here.  It makes it easier to enable/disable it.
-            <compilerarg value="-Xlint:unchecked"/>
-            -->
+            <!-- Please leave this line here.  It makes it easier to enable/disable it. -->
+            <!--<compilerarg value="-Xlint:unchecked"/>-->
         </default-javac>
     </presetdef>
 
-    <!-- SCIPIO: new explicit target for java 1.8-compatibility -->
+    <!-- SCIPIO: 3.0.0: DEPRECATED: Delegates to javac-std -->
     <presetdef name="javac18">
-        <default-javac compiler="javac1.8" target="1.8" source="1.8" encoding="UTF-8" includeantruntime="false">
-            <compilerarg value="-Xlint:-path"/>
-            <!--
-            Please leave this line here.  It makes it easier to enable/disable it.
-            <compilerarg value="-Xlint:unchecked"/>
-            -->
-        </default-javac>
+        <javac-std/>
     </presetdef>
 
     <presetdef name="default-javadoc">

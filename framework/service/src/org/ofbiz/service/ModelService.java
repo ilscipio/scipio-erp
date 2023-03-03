@@ -1426,10 +1426,13 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     }
 
     /**
-     * Run the interface update and inherit all interface parameters
-     * @param dctx The DispatchContext to use for service lookups
+     * Run the interface update and inherit all interface parameters.
+     *
+     * <p>SCIPIO: 3.0.0: Refactored to avoid use of {@link DispatchContext#getModelService(String)} to fix contention/threading there.</p>
+     *
+     * @param serviceMap The DispatchContext's service map to use for service lookups
      */
-    public synchronized void interfaceUpdate(DispatchContext dctx) throws GenericServiceException {
+    public synchronized void interfaceUpdate(Map<String, ModelService> serviceMap) throws GenericServiceException {
         if (!inheritedParameters) {
             // SCIPIO: prevent stack overflows
             Integer maxCalls = IFC_CALLS.get();
@@ -1441,8 +1444,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 IFC_CALLS.set(maxCalls != null ? maxCalls + 1 : 1);
 
                 // SCIPIO: Also update overriddenService
-                if (overriddenService != null && !overriddenService.inheritedParameters) {
-                    overriddenService.interfaceUpdate(dctx);
+                if (overriddenService != null && !overriddenService.inheritedParameters()) {
+                    overriddenService.interfaceUpdate(serviceMap);
                 }
 
                 // services w/ engine 'group' auto-implement the grouped services
@@ -1461,7 +1464,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                 }
 
                 // handle interfaces
-                if (UtilValidate.isNotEmpty(implServices) && dctx != null) {
+                if (UtilValidate.isNotEmpty(implServices) && serviceMap != null) {
                     // SCIPIO: newImplServices strips the overriddenService from the definition (makeshift solution for now)
                     // so that other code that needs to process service defs don't get stuck in endless loop (compatilibyt)
                     Set<ModelServiceIface> newImplServices = new LinkedHashSet<>();
@@ -1475,7 +1478,12 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                         if (overriddenService != null && serviceName.equals(overriddenService.name)) {
                             model = overriddenService;
                         } else {
-                            model = dctx.getModelService(serviceName);
+                            // SCIPIO: 3.0.0: Instead of this, use the service map directly and run interfaceUpdate ourselves
+                            //model = dctx.getModelService(serviceName);
+                            model = serviceMap.get(serviceName);
+                            if (model != null && !model.inheritedParameters()) {
+                                model.interfaceUpdate(serviceMap);
+                            }
                             newImplServices.add(iface);
                         }
                         if (model != null) {
@@ -1503,7 +1511,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
                             // SCIPIO: 2018-11-23: Inherit custom properties
                             if (!model.properties.isEmpty()) {
-                                Map<String, Object> newProperties = new HashMap<>(model.properties);
+                                Map<String, Object> newProperties = new LinkedHashMap<>(model.properties);
                                 newProperties.putAll(this.properties);
                                 this.properties = Collections.unmodifiableMap(newProperties);
                                 if (Debug.verboseOn() && newProperties.size() > 0) {

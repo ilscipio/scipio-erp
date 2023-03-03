@@ -275,9 +275,10 @@ public class DispatchContext implements Serializable {
     public ModelService getModelService(String serviceName) throws GenericServiceException {
         Map<String, ModelService> serviceMap = getGlobalServiceMap();
         ModelService retVal = serviceMap.get(serviceName);
-        if (retVal != null && !retVal.inheritedParameters()) {
-            retVal.interfaceUpdate(this);
-        }
+        // SCIPIO: 3.0.0: Now done in getGlobalServiceMap() to avoid synchronized contention
+        //if (retVal != null && !retVal.inheritedParameters()) {
+        //    retVal.interfaceUpdate(this);
+        //}
         if (retVal == null) {
             throw new GenericServiceException("Cannot locate service by name (" + serviceName + ")");
         }
@@ -359,7 +360,8 @@ public class DispatchContext implements Serializable {
     private Callable<Map<String, ModelService>> createServiceReaderCallable(final ResourceHandler handler) {
         return new Callable<Map<String, ModelService>>() {
             public Map<String, ModelService> call() throws Exception {
-                return ModelServiceReader.getModelServiceMap(handler, DispatchContext.this.getDelegator());
+                // SCIPIO: 3.0.0: Wrapped in unmodifiable to ensure thread safety
+                return Collections.unmodifiableMap(ModelServiceReader.getModelServiceMap(handler, DispatchContext.this.getDelegator()));
             }
         };
     }
@@ -372,7 +374,8 @@ public class DispatchContext implements Serializable {
     private Callable<Map<String, ModelService>> createAnnotationsServiceReaderCallable(ComponentReflectInfo reflectInfo) {
         return new Callable<Map<String, ModelService>>() {
             public Map<String, ModelService> call() throws Exception {
-                return ModelServiceReader.getModelServiceMap(reflectInfo, DispatchContext.this.getDelegator());
+                // SCIPIO: 3.0.0: Wrapped in unmodifiable to ensure thread safety
+                return Collections.unmodifiableMap(ModelServiceReader.getModelServiceMap(reflectInfo, DispatchContext.this.getDelegator()));
             }
         };
     }
@@ -418,6 +421,19 @@ public class DispatchContext implements Serializable {
                              modelService.updateOverriddenService(prevModelService);
                          }
                          serviceMap.put(serviceName, modelService);
+                    }
+                }
+            }
+
+            // SCIPIO: 3.0.0: Now do interfaceUpdate() calls in advance here to avoid contention/threading issues on getModelService() calls
+            // Thread safety should be ensured by the following modelServiceMapByModel.putIfAbsentAndGet call and others.
+            for (Map.Entry<String, ModelService> serviceEntry : serviceMap.entrySet()) {
+                ModelService modelService = serviceEntry.getValue();
+                if (!modelService.inheritedParameters()) {
+                    try {
+                        modelService.interfaceUpdate(serviceMap);
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, "Could not update interfaces for service [" + modelService.name + "]", module);
                     }
                 }
             }

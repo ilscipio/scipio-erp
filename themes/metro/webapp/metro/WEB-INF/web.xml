@@ -45,4 +45,40 @@ code package.
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
     </filter-mapping>
+
+    <security-constraint>
+        <display-name>Restricted</display-name>
+        <web-resource-collection>
+            <web-resource-name>Restricted</web-resource-name>
+            <url-pattern>/bower_components/*</url-pattern>
+            <url-pattern>/node_modules/*</url-pattern>
+            <url-pattern>/scss/*</url-pattern>
+            <url-pattern>/.bowerrc</url-pattern>
+            <url-pattern>/.gitignore</url-pattern>
+            <url-pattern>/.npmrc</url-pattern>
+            <url-pattern>/bower.json</url-pattern>
+            <url-pattern>/changelog.md</url-pattern>
+            <url-pattern>/changelog.txt</url-pattern>
+            <url-pattern>/CHANGELOG.md</url-pattern>
+            <url-pattern>/CHANGELOG.txt</url-pattern>
+            <url-pattern>/config.rb</url-pattern>
+            <url-pattern>/Gemfile</url-pattern>
+            <url-pattern>/Gemfile.lock</url-pattern>
+            <url-pattern>/gulpfile.js</url-pattern>
+            <url-pattern>/humans.txt</url-pattern>
+            <url-pattern>/index.html</url-pattern>
+            <url-pattern>/npm-shrinkwrap.json</url-pattern>
+            <url-pattern>/package.json</url-pattern>
+            <url-pattern>/package-lock.json</url-pattern>
+            <url-pattern>/readme.md</url-pattern>
+            <url-pattern>/readme.txt</url-pattern>
+            <url-pattern>/README.md</url-pattern>
+            <url-pattern>/README.txt</url-pattern>
+            <url-pattern>/README_ilscipio.md</url-pattern>
+            <url-pattern>/README_ilscipio.txt</url-pattern>
+            <url-pattern>/screenshot.jpg</url-pattern>
+            <url-pattern>/screenshot.png</url-pattern>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
 </web-app>

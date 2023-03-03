@@ -1452,19 +1452,10 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
                         group = ServiceGroupReader.getGroupModel(this.location);
                     }
                     if (group != null) {
-                        // SCIPIO: 2.1.0: if group send-mode == all only get first service params as it is expected to be ran sequentially
-                        // FIXME: Likely a temporary fix
-                        if (group.getSendMode().equals("all")) {
-                            if (UtilValidate.isNotEmpty(group.getServices())) {
-                                GroupServiceModel sm = group.getServices().get(0);
-                                implServices.add(new ModelServiceIface(sm.getName(), sm.isOptional()));
-                            }
-                        } else {
-                            for (GroupServiceModel sm : group.getServices()) {
-                                implServices.add(new ModelServiceIface(sm.getName(), sm.isOptional()));
-                                if (Debug.verboseOn())
-                                    Debug.logVerbose("Adding service [" + sm.getName() + "] as interface of: [" + this.name + "]", module);
-                            }
+                        for (GroupServiceModel sm : group.getServices()) {
+                            implServices.add(new ModelServiceIface(sm.getName(), sm.isOptional()));
+                            if (Debug.verboseOn())
+                                Debug.logVerbose("Adding service [" + sm.getName() + "] as interface of: [" + this.name + "]", module);
                         }
                     }
                 }

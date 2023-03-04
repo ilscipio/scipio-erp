@@ -89,8 +89,6 @@ under the License.
             <url-pattern>/README.txt</url-pattern>
             <url-pattern>/README_ilscipio.md</url-pattern>
             <url-pattern>/README_ilscipio.txt</url-pattern>
-            <url-pattern>/screenshot.jpg</url-pattern>
-            <url-pattern>/screenshot.png</url-pattern>
         </web-resource-collection>
         <auth-constraint />
     </security-constraint>

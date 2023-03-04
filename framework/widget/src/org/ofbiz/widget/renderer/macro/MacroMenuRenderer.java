@@ -31,6 +31,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
@@ -636,12 +638,33 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         MenuRenderState renderState = MenuRenderState.retrieve(context); // SCIPIO
         parameters.put("id", menu.getId());
-        parameters.put("style", menu.getMenuContainerStyle(context));
+        String style = menu.getMenuContainerStyle(context);
+        String menuCtxRole = renderState.getMenuCtxRoleOrEmpty();
+
+        // SCIPIO: 3.0.0: For screen/section menus, make sure property typed in the style string, because most of them
+        //  are not so in the *Menus.xml files
+        if ("screenlet-nav-menu".equals(menuCtxRole)) {
+            String plainStyle = TemplateFtlUtil.getPlainClassArgNames(style);
+            boolean hasMenuTypeStyle = false;
+            if (UtilValidate.isNotEmpty(plainStyle)) {
+                for (String singleStyle : StringUtils.split(plainStyle, ' ')) {
+                    if (singleStyle.startsWith("menu-type-")) {
+                        hasMenuTypeStyle = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasMenuTypeStyle) {
+                style += (UtilValidate.isNotEmpty(style) ? " " : "") + "+menu-type-section";
+            }
+        }
+
+        parameters.put("style", style);
         parameters.put("title", menu.getTitle(context));
         // SCIPIO: new attribs
         parameters.put("titleStyle", menu.getTitleStyle(context));
         parameters.put("inlineEntries", renderState.isInlineEntries());
-        parameters.put("menuCtxRole", renderState.getMenuCtxRoleOrEmpty());
+        parameters.put("menuCtxRole", menuCtxRole);
 
         MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();

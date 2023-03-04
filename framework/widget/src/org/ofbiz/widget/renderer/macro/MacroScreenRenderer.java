@@ -780,6 +780,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         String menuString = "";
         boolean showMore = false;
         String menuRole = ""; // SCIPIO
+        Boolean menuItemsInlined = null; // SCIPIO
         if (UtilValidate.isNotEmpty(title) || navMenu != null || navForm != null || collapsible) {
             showMore = true;
             if (collapsible) {
@@ -805,6 +806,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
                 //context.put("menuStringRenderer", renderer);
                 Map<String, Object> menuRenderArgs = UtilMisc.getMapFromMap(context, "menuRenderArgs");
                 menuRenderArgs.put("inlineEntries", Boolean.TRUE);
+                menuItemsInlined = true;
                 menuRenderArgs.put("menuCtxRole", "screenlet-nav-menu");
                 try {
                     navMenu.renderWidgetString(sb, context, this);
@@ -842,6 +844,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         parameters.put("collapsed", collapsed);
         parameters.put("javaScriptEnabled", javaScriptEnabled);
         parameters.put("menuRole", menuRole); // SCIPIO
+        parameters.put("menuItemsInlined", (menuItemsInlined != null) ? menuItemsInlined : "");
         executeMacro(writer, "renderScreenletBegin", parameters);
     }
 

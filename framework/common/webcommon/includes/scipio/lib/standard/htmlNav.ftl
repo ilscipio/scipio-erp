@@ -995,7 +995,9 @@ menu item element must override this and provide a proper check.
     menuContent   = string of HTML markup
 -->
 <#function isMenuMarkupItemsInline menuContent>
-  <#return menuContent?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<li(\s|>).*', 'rs')>
+  <#-- SCIPIO: 3.0.0: We can support more by default since this check is rather trivial
+  <#return menuContent?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<li(\s|>).*', 'rs')>-->
+  <#return menuContent?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<(li|a|span|button|input)(\s|>).*', 'rs')>
 </#function>
 
 <#-- 

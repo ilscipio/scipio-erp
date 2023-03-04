@@ -152,11 +152,11 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
 <#macro renderContentFrame fullUrl width height border extraArgs...><iframe src="${escapeFullUrl(fullUrl, 'html')}" width="${width}" height="${height}"<#if border?has_content> border="${escapeVal(border, 'html')}"</#if> /></#macro>
 
 <#-- SCIPIO: new params: menuRole, titleStyle -->
-<#macro renderScreenletBegin id="" title="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true menuRole="" titleStyle="" extraArgs...>
+<#macro renderScreenletBegin id="" title="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false showMore=true collapsed=false javaScriptEnabled=true menuString="" menuRole="" menuItemsInlined="" titleStyle="" extraArgs...>
     <#-- now delegates to Scipio implementation. -->
     <#-- NOTE (2016-09-09): We NO LONGER pass collapsibleAreaId - there is no explicit attribute in screen widgets, 
         and we should let @section_core assign a default so it is consistent system-wide: contentId=collapsibleAreaId -->
-    <@section_core open=true close=false id=id title=title collapsible=collapsible saveCollapsed=saveCollapsed contentId="" expandToolTip=expandToolTip collapseToolTip=collapseToolTip fullUrlString=fullUrlString padded=padded menuContent=menuString 
+    <@section_core open=true close=false id=id title=title collapsible=collapsible saveCollapsed=saveCollapsed contentId="" expandToolTip=expandToolTip collapseToolTip=collapseToolTip fullUrlString=fullUrlString padded=padded menuContent=menuString menuItemsInlined=menuItemsInlined
         showMore=showMore collapsed=collapsed javaScriptEnabled=javaScriptEnabled fromScreenDef=true menuRole=menuRole requireMenu=false forceEmptyMenu=false hasContent=true titleStyle=titleStyle titleContainerStyle="" titleConsumeLevel=true 
         autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" />
 </#macro>

@@ -97,13 +97,12 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
                 </#list>
             </form><#rt/>
         </#if>
-        <a 
-            <#if id?has_content>id="${escapeVal(id, 'html')}"</#if> 
-            <#if style?has_content>class="${escapeVal(style, 'html')}"</#if> 
-            <#if name?has_content>name="${escapeVal(name, 'html')}"</#if> 
-            <#if targetWindow?has_content>target="${escapeVal(targetWindow, 'html')}"</#if> 
-            <#-- FIXME: dangerous lookup -->
-            href="<#if "hidden-form"==linkType>javascript:document['${escapeVal(uniqueItemName, 'js-html')}'].submit()<#else>${escapeFullUrl(linkUrl, 'html')}</#if>"><#rt/>
+        <a
+            <#if id?has_content>id="${escapeVal(id, 'html')}"</#if>
+            <#if style?has_content>class="${escapeVal(style, 'html')}"</#if>
+            <#if name?has_content>name="${escapeVal(name, 'html')}"</#if>
+            <#if targetWindow?has_content>target="${escapeVal(targetWindow, 'html')}"</#if>
+            href="<#if "hidden-form" == linkType>javascript:document['${escapeVal(uniqueItemName, 'js-html')}'].submit()<#else>${escapeFullUrl(linkUrl, 'html')}</#if>"><#rt/>
             <#if imgStr?has_content>${imgStr}</#if><#if text?has_content>${escapeVal(text, 'htmlmarkup')}</#if>
         </a>
     <#else>

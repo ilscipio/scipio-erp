@@ -238,4 +238,12 @@ code package.
         <attribute name="pathResults" mode="OUT" type="List" optional="true"/>
         <attribute name="classNameResults" mode="OUT" type="List" optional="true"/>
     </service>
+
+    <!-- Import/Export -->
+    <service name="excelI18nImport" engine="java" log="quiet" hideResultInLog="true" log-eca="quiet"
+             location="com.ilscipio.scipio.util.CatalogImportExportServices" invoke="excelI18nImport" auth="false">
+        <description>Update or create category content based on an Excel file</description>
+        <implements service="uploadFileInterface" optional="true"/>
+        <attribute name="templateName" type="String" mode="IN" optional="false"/>
+    </service>
 </services>

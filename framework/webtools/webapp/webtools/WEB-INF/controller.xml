@@ -892,6 +892,19 @@ code package.
         <response name="error" type="view" value="SolrStatus"/>      
     </request-map>
 
+
+    <!-- Scipio 3.0 implementations-->
+    <request-map uri="excelimport">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ExcelImport"/>
+    </request-map>
+    <request-map uri="excelI18nImport">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="excelI18nImport" />
+        <response name="success" type="request" value="excelimport"/>
+    </request-map>
+
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -1023,6 +1036,9 @@ code package.
     <!-- SCIPIO: hotwire widgets -->
     <view-map name="hotwireStaticComments" type="screen" page="component://webtools/widget/MiscScreens.xml#hotwireStaticComments"/>
     <view-map name="hotwireEmptyView" type="screen" page="component://webtools/widget/MiscScreens.xml#hotwireEmptyView"/>
+
+    <!-- SCIPIO: import/export -->
+    <view-map name="ExcelImport" type="screen" page="component://webtools/widget/EntityScreens.xml#ExcelImport"/>
 
     <!-- end of view mappings -->
 </site-conf>

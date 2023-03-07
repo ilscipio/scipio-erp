@@ -81,15 +81,15 @@ public class CatalogImportExportServices {
                         }
 
                     }else{
-                        Properties serviceProps = new Properties();
-                        Properties entityProps = new Properties();
+                        Map<String,Object> serviceProps = new HashMap<String,Object>();
+                        Map<String,Object> entityProps = new HashMap<String,Object>();
 
                         for(Cell cell : row){
-                            String fieldValue = cell.getStringCellValue();
+                            String cellValue = cell.getStringCellValue();
 
                             if(headerInfo.get(cell.getColumnIndex())!=null){
                                 Map<String,Object> serviceContext = new HashMap<String,Object>();
-                                serviceContext.put("value",fieldValue);
+                                serviceContext.put("cellValue",cellValue);
                                 serviceContext.put("userLogin",userLogin);
 
                                 primaryIdMap.forEach( (key,location)-> {
@@ -106,6 +106,9 @@ public class CatalogImportExportServices {
                                 String localeStr = headerInfoProps.get("locale");
                                 String fieldName = headerInfoProps.get("name");
                                 serviceContext.put("locale",localeStr);
+
+                                serviceContext.put("today",UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+                                serviceContext.put("now",UtilDateTime.nowTimestamp());
 
                                 //fetch existing entity value
                                 if(UtilValidate.isNotEmpty(entityName)){
@@ -131,14 +134,17 @@ public class CatalogImportExportServices {
                                         condition = condition.append(condition,EntityUtil.getFilterByDateExpr());
                                     }
 
+                                    boolean hasLocale = false;
                                     EntityCondition conditionWithLocale = condition;
                                     //most of the entities have "locale" mapped as "localeString", so setting it here
                                     if(UtilValidate.isNotEmpty(localeStr) && myLookupModel.getField("localeString")!= null){
                                         conditionWithLocale = conditionWithLocale.append(conditionWithLocale,EntityCondition.makeCondition("localeString",localeStr));
+                                        hasLocale = true;
                                     }
                                     // Still checking against "locale" just in case
                                     if(UtilValidate.isNotEmpty(localeStr) && myLookupModel.getField("locale")!= null){
                                         conditionWithLocale = conditionWithLocale.append(conditionWithLocale,EntityCondition.makeCondition("locale",localeStr));
+                                        hasLocale = true;
                                     }
 
 
@@ -148,11 +154,10 @@ public class CatalogImportExportServices {
                                     try {
                                         results = delegator.findList(entityName, conditionWithLocale, null, null, null, false);
                                         if(UtilValidate.isEmpty(results)){
-                                            serviceName = createService;
-                                            serviceType = "create";
                                             results = delegator.findList(entityName, condition, null, null, null, false);
-                                            if(results.isEmpty()){
-                                                serviceName = null;
+                                            if(!hasLocale || (hasLocale && UtilValidate.isEmpty(results))){
+                                                serviceName = createService;
+                                                serviceType = "create";
                                             }
                                         }
                                     }catch (Exception e){
@@ -166,6 +171,8 @@ public class CatalogImportExportServices {
                                     });
 
                                     if(UtilValidate.isNotEmpty(serviceName)){
+                                        Map<String,String> serviceParameters = UtilProperties.getPropertiesWithPrefix(headerInfoProps,serviceType+".parameters.");
+
                                         if(UtilValidate.isNotEmpty(results)) {
                                             GenericValue origEntry = results.get(0);
                                             //serviceContext.putAll(origEntry.getAllFields());
@@ -175,9 +182,6 @@ public class CatalogImportExportServices {
                                                 }
                                             });
                                         }
-
-
-                                        Map<String,String> serviceParameters = UtilProperties.getPropertiesWithPrefix(headerInfoProps,serviceType+".parameters.");
 
                                         serviceParameters.forEach((key,value) -> {
                                             serviceContext.put(key,substituteVariables(value,serviceProps));
@@ -211,8 +215,8 @@ public class CatalogImportExportServices {
                                     }else{
                                         //Update the entity directly
                                         GenericValue origEntry = results.get(0);
-                                        if(!origEntry.get(fieldName).equals(fieldValue)){
-                                            origEntry.set(fieldName,fieldValue);
+                                        if(!origEntry.get(fieldName).equals(cellValue)){
+                                            origEntry.set(fieldName,cellValue);
                                             origEntry.createOrStore();
                                         }
                                     }
@@ -233,7 +237,7 @@ public class CatalogImportExportServices {
         return ServiceUtil.returnSuccess();
     }
 
-    public static String substituteVariables(String originalValue, Properties replaceProps){
+    public static String substituteVariables(String originalValue, Map<String,Object> replaceProps){
         String str = StringSubstitutor.replace(originalValue, replaceProps);
         str=str.replaceAll("\\$\\{([^}]*?)\\}",""); //replace leftover variables
         if(str.trim().equals("null") || str.trim().length()==0){

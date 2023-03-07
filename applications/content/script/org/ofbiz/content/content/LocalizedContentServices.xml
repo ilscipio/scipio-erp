@@ -114,8 +114,8 @@
                         </iterate>
                         <if-compare field="localeFound" operator="equals" type="Boolean" value="false">
                             <!-- create new -->
-                            <set-service-fields service-name="createSimpleTextContent" map="parameters" to-map="createCtx"/>
-                            <call-service service-name="createSimpleTextContent" in-map-name="createCtx">
+                            <set-service-fields service-name="createSimpleTextContentForAlternateLocale" map="parameters" to-map="createCtx"/>
+                            <call-service service-name="createSimpleTextContentForAlternateLocale" in-map-name="createCtx">
                                 <result-to-result result-name="contentId"/>
                             </call-service>
                         </if-compare>

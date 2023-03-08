@@ -386,6 +386,7 @@
         <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.16" conf="base,sources"/>
         <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.13" conf="base,sources"/>
         <dependency org="org.apache.poi" name="poi" rev="5.2.3" conf="base,sources"/>
+        <dependency org="org.apache.poi" name="poi-ooxml" rev="5.2.3" conf="base,sources"/>
 
         <!-- solr component (applications/solr/ivy.xml)
             Based on solr-provided JAR libraries found in solr-7.x.x.tgz package (solr-7.x.x/server/lib/)

@@ -544,6 +544,8 @@ code package.
     <screen name="ExcelImport">
         <section>
             <actions>
+                <set field="titleProperty" value="WebtoolsEntityExcelImport"/>
+                <set field="activeSubMenuItem" value="EntityExcelImport"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">

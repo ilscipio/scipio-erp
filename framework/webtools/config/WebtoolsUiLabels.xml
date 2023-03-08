@@ -27,6 +27,10 @@
         <value xml:lang="zh">连接池状态</value>
         <value xml:lang="zh-TW">連接池狀態</value>
     </property>
+    <property key="EntityExcelImport">
+        <value xml:lang="de">Excel Import</value>
+        <value xml:lang="en">Excel Import</value>
+    </property>
     <property key="EntityImportDeletFile">
         <value xml:lang="de">Lösche ${fileName}</value>
         <value xml:lang="en">Deleting ${fileName}</value>

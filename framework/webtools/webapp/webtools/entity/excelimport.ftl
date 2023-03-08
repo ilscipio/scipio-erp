@@ -1,4 +1,4 @@
-<@section title=getLabel("EntityExcelImport")>
+<@section>
     <@form name="excelI18nImport" method="POST" action="excelI18nImport" enctype="multipart/form-data">
         <@field type="select" name="templateName" label="Template" class="${styles.field_select_default!}">
             <#assign xslxTemplateProperties = Static["org.ofbiz.base.util.UtilProperties"].getMergedPropertiesFromAllComponents("ExcelImport")/>

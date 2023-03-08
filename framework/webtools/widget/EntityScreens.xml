@@ -544,7 +544,7 @@ code package.
     <screen name="ExcelImport">
         <section>
             <actions>
-                <set field="titleProperty" value="WebtoolsEntityExcelImport"/>
+                <set field="titleProperty" value="EntityExcelImport"/>
                 <set field="activeSubMenuItem" value="EntityExcelImport"/>
             </actions>
             <widgets>

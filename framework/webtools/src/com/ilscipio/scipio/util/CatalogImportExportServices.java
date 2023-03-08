@@ -18,7 +18,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CatalogImportExportServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
-    private static final Properties SCIPIO_IMPORT_PROPERTIES = UtilProperties.getProperties("ExcelImport");
+    private static final Properties SCIPIO_IMPORT_PROPERTIES = UtilProperties.getMergedPropertiesFromAllComponents("ExcelImport");
+
+
     private static final String SCIPIO_IMPORT_PREFIX = "xlsx";
 
     /**

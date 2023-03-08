@@ -549,7 +549,7 @@ code package.
                 <decorator-screen name="CommonImportExportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://webtools/webapp/webtools/entity/importexport.ftl"/></html>
+                            <html><html-template location="component://webtools/webapp/webtools/entity/excelimport.ftl"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

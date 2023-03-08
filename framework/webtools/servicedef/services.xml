@@ -244,6 +244,7 @@ code package.
              location="com.ilscipio.scipio.util.CatalogImportExportServices" invoke="excelI18nImport" auth="false">
         <description>Update or create category content based on an Excel file</description>
         <implements service="uploadFileInterface" optional="true"/>
+        <attribute name="runAsync" type="Boolean" mode="IN" optional="false" default-value="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="false"/>
     </service>
 </services>

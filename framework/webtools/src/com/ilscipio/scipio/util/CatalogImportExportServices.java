@@ -33,12 +33,14 @@ public class CatalogImportExportServices {
         Locale locale = (Locale) context.get("locale");
         ByteBuffer byteBuffer = (ByteBuffer) context.get("uploadedFile");
         String templateName = (String) context.get("templateName") != null ? context.get("templateName")+"." : "";
+        Boolean runAsync = (Boolean) context.get("runAsync");
         String fileSize = (String) context.get("_uploadedFile_size");
         String fileName = (String) context.get("_uploadedFile_fileName");
         String contentType = (String) context.get("_uploadedFile_contentType");
         Map<String,String> categoryProperties = UtilProperties.getPropertiesWithPrefix(SCIPIO_IMPORT_PROPERTIES,SCIPIO_IMPORT_PREFIX+"."+templateName);
         Map<String,Integer> primaryIdMap = new HashMap<String,Integer>();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        List<String> errorList = new ArrayList<>();
 
         try(InputStream is = new ByteArrayInputStream(byteBuffer.array())) {
             //Create Workbook instance holding reference to .xlsx file
@@ -203,15 +205,25 @@ public class CatalogImportExportServices {
                                             );
 
                                             if (isSafeToDispatch.get()) {
-                                                Map<String, Object> serviceResult = dispatcher.runSync(serviceName, serviceFields, true);
+                                                if(runAsync){
+                                                    dispatcher.runAsync(serviceName, serviceFields, false);
+                                                }else{
+                                                    Map<String, Object> serviceResult = dispatcher.runSync(serviceName, serviceFields, true);
 
-                                                if (ServiceUtil.isSuccess(serviceResult)) {
-                                                    Debug.logInfo("Imported field value: " + cell.getAddress().formatAsString(), module);
+                                                    if (ServiceUtil.isSuccess(serviceResult)) {
+                                                        Debug.logInfo("Imported field value: " + cell.getAddress().formatAsString(), module);
+                                                    }else{
+                                                        errorList.add("Couldn't import field "+cell.getAddress().formatAsString()+". Service returned with error: "+serviceResult.get("errorMessageList"));
+                                                    }
                                                 }
+                                            }else{
+                                                errorList.add("Couldn't run service "+serviceName+" for cell "+cell.getAddress().formatAsString()+" as some info was missing from service: "+serviceFields);
                                             }
                                         } catch (ServiceValidationException ex){
+                                            errorList.add("ServiceValidationException: Couldn't update from field value: "+cell.getAddress().formatAsString()+"");
                                             Debug.logWarning("Couldn't update from field value: "+cell.getAddress().formatAsString(),module);
                                         } catch (GenericServiceException ex){
+                                            errorList.add("GenericServiceException: Couldn't update from field value: "+cell.getAddress().formatAsString());
                                             Debug.logWarning("Couldn't update from field value: "+cell.getAddress().formatAsString(),module);
                                         }
                                     }else{
@@ -232,7 +244,12 @@ public class CatalogImportExportServices {
 
 
         }catch (Exception e) {
+            errorList.add("An exception was thrown: "+e.getMessage());
             ServiceUtil.returnError(e.getMessage());
+        }
+
+        if(!errorList.isEmpty()){
+            return ServiceUtil.returnFailure(errorList);
         }
 
 

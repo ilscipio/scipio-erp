@@ -50,7 +50,6 @@ code package.
         <display-name>Restricted</display-name>
         <web-resource-collection>
             <web-resource-name>Restricted</web-resource-name>
-            <url-pattern>/bower_components/*</url-pattern>
             <url-pattern>/node_modules/*</url-pattern>
             <url-pattern>/scss/*</url-pattern>
             <url-pattern>/.bowerrc</url-pattern>

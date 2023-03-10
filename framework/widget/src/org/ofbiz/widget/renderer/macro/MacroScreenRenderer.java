@@ -271,11 +271,15 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
 
     public void renderScreenBegin(Appendable writer, Map<String, Object> context) throws IOException {
         contextHandler.registerInitialContext(writer, context);
-        executeMacro(writer, "renderScreenBegin", null);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("isHtmlContentType", !ModelWidget.isNonMarkupContentType(context)); // SCIPIO: 3.0.0: Added
+        executeMacro(writer, "renderScreenBegin", parameters);
     }
 
     public void renderScreenEnd(Appendable writer, Map<String, Object> context) throws IOException {
-        executeMacro(writer, "renderScreenEnd", null);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("isHtmlContentType", !ModelWidget.isNonMarkupContentType(context)); // SCIPIO: 3.0.0: Added
+        executeMacro(writer, "renderScreenEnd", parameters);
     }
 
     public void renderSectionBegin(Appendable writer, Map<String, Object> context, ModelScreenWidget.Section section) throws IOException {

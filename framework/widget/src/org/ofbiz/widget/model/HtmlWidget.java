@@ -126,8 +126,10 @@ public class HtmlWidget extends ModelScreenWidget {
 
         if (location.endsWith(".ftl")) {
             try {
-                Map<String, ? extends Object> parameters = UtilGenerics.checkMap(context.get("parameters"));
-                boolean insertWidgetBoundaryComments = ModelWidget.widgetBoundaryCommentsEnabled(parameters);
+                // SCIPIO: 3.0.0: This should be passing context map since we don't even want to check parameters anymore (security)
+                //Map<String, ? extends Object> parameters = UtilGenerics.checkMap(context.get("parameters"));
+                //boolean insertWidgetBoundaryComments = ModelWidget.widgetBoundaryCommentsEnabled(parameters);
+                boolean insertWidgetBoundaryComments = ModelWidget.widgetBoundaryCommentsEnabled(context);
                 if (insertWidgetBoundaryComments) {
                     writer.append(HtmlWidgetRenderer.formatBoundaryComment("Begin", "Template", location));
                 }
@@ -160,8 +162,10 @@ public class HtmlWidget extends ModelScreenWidget {
         //Debug.logInfo("Rendering inlined template of type [" + type + "] with context: \n" + context, module);
 
         try {
-            Map<String, ? extends Object> parameters = UtilGenerics.checkMap(context.get("parameters"));
-            boolean insertWidgetBoundaryComments = ModelWidget.widgetBoundaryCommentsEnabled(parameters);
+            // SCIPIO: 3.0.0: This should be passing context map since we don't even want to check parameters anymore (security)
+            //Map<String, ? extends Object> parameters = UtilGenerics.checkMap(context.get("parameters"));
+            //boolean insertWidgetBoundaryComments = ModelWidget.widgetBoundaryCommentsEnabled(parameters);
+            boolean insertWidgetBoundaryComments = ModelWidget.widgetBoundaryCommentsEnabled(context);
             if (insertWidgetBoundaryComments) {
                 writer.append(HtmlWidgetRenderer.formatBoundaryComment("Begin", "Inline Template", templateId));
             }

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -163,9 +164,14 @@ public abstract class ModelWidget implements Serializable {
      * <code>widget.properties</code> file, then that setting will override all other settings and
      * disable all widget boundary comments.
      *
+     * <p>SCIPIO: 3.0.0: Now returns false for application/javascript response content-type.</p>
+     *
      * @param context Optional context Map
      */
-    public static boolean widgetBoundaryCommentsEnabled(Map<String, ? extends Object> context) {
+    public static boolean widgetBoundaryCommentsEnabled(Map<String, ?> context) {
+        if (isNonMarkupContentType(context)) { // SCIPIO
+            return false;
+        }
         // SCIPIO: cached
         //boolean result = "true".equals(UtilProperties.getPropertyValue("widget", "widget.verbose"));
         boolean result = widgetBoundaryCommentsEnabledGlobal(context);
@@ -191,6 +197,35 @@ public abstract class ModelWidget implements Serializable {
             }
         }
         return result;
+    }
+
+    /**
+     * Checks if response content-type is a non-HTML markup that specifically should not contain !DOCTYPE or boundary comments.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static boolean isNonMarkupContentType(Map<String, ?> context) {
+        if (context == null) {
+            return false;
+        }
+        Object responseObj = context.get("response");
+        if (responseObj instanceof HttpServletResponse) {
+            return isNonMarkupContentType((HttpServletResponse) responseObj);
+        }
+        return false;
+    }
+
+    /**
+     * Checks if response content-type is a non-HTML markup that specifically should not contain !DOCTYPE or boundary comments.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static boolean isNonMarkupContentType(HttpServletResponse response) {
+        String contentType = response.getContentType();
+        if (contentType != null && (contentType.equals("application/javascript") || contentType.startsWith("application/javascript;"))) {
+            return true;
+        }
+        return false;
     }
 
     /**

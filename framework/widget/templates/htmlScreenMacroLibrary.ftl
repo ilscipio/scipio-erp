@@ -13,10 +13,12 @@ NOTE: 2016-10-05: Widget early HTML encoding is now DISABLED for all HTML macros
     As a result all macros here must take care to html-escape as well as js-escape values.
     Use escapeVal/escapeFullUrl for this.
 -->
-<#macro renderScreenBegin extraArgs...>
+<#macro renderScreenBegin isHtmlContentType=true extraArgs...>
 <#-- SCIPIO: NOTE: HTML head open is now in scipio template macros. 
      In OOTB ofbiz no context is passed here (locale, etc.) so did not belong here and cleaner if in scipio macros. -->
+<#if isHtmlContentType>
 <!DOCTYPE html>
+</#if>
 </#macro>
 
 <#macro renderScreenEnd extraArgs...>

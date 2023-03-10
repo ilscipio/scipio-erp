@@ -21,7 +21,7 @@
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-    <!-- SCIPIO: 2017-12-06: New services file dedicated to localization services -->
+    <!-- SCIPIO: 3.0.0: DEPRECATED: Implementations moved to org.ofbiz.content.content.LocalizedContentServices -->
 
     <!-- SCIPIO: 2017-12-06: MOVED here from component://product/script/org/ofbiz/product/product/ProductContentServices.xml,
         because it did not belong there at all (DEV NOTE: this is a rare exception! and is very short) -->

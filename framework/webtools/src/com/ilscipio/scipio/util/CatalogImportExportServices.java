@@ -12,6 +12,7 @@ import org.ofbiz.service.*;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -50,7 +51,8 @@ public class CatalogImportExportServices {
             Map<Integer,Map> headerInfo = new HashMap<Integer,Map>();
             for (Sheet sheet : workbook ) {
                 for (Row row : sheet) {
-                    if ( row == null || row.getCell(0).getStringCellValue().startsWith("#")){
+                    if(row==null) continue;
+                    if ( row == null || row.getCell(0).getCellType().equals(CellType.STRING) && row.getCell(0).getStringCellValue().startsWith("#")){
                         //skip to first row with content that is not a comment row
                         continue;
                     }
@@ -60,6 +62,9 @@ public class CatalogImportExportServices {
                         headerRead= true;
                         for(Cell cell : row){
                             Map<String,String> headerInfoProps = new HashMap<>();
+                            if(!cell.getCellType().equals(CellType.STRING)){
+                                continue;
+                            }
                             String attrName = cell.getStringCellValue();
 
                             String attrNameWithoutLocale = attrName;
@@ -89,7 +94,23 @@ public class CatalogImportExportServices {
                         Map<String,Object> entityProps = new HashMap<String,Object>();
 
                         for(Cell cell : row){
-                            String cellValue = cell.getStringCellValue();
+                            Object cellValue = null;
+                            switch(cell.getCellType()){
+                                case STRING:
+                                    cellValue = cell.getStringCellValue();
+                                    break;
+                                case BLANK:
+                                    cellValue = null;
+                                    break;
+                                case NUMERIC:
+                                    cellValue = new BigDecimal(cell.getNumericCellValue());
+                                    break;
+                                case BOOLEAN:
+                                    cellValue = cell.getBooleanCellValue();
+                                    break;
+                                default:
+                                    break;
+                            }
 
                             if(headerInfo.get(cell.getColumnIndex())!=null){
                                 Map<String,Object> serviceContext = new HashMap<String,Object>();

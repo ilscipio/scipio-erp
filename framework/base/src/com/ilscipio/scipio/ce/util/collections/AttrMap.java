@@ -1,5 +1,7 @@
 package com.ilscipio.scipio.ce.util.collections;
 
+import org.ofbiz.base.util.UtilValidate;
+
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Map;
@@ -86,6 +88,29 @@ public interface AttrMap extends ScipioMap<String, Object> {
      */
     default <T> T attrIfSet(Object key, T defaultValue) {
         return attrIfSet(key, () -> defaultValue);
+    }
+
+    /**
+     * Returns an attribute value from the context/map only if {@link UtilValidate#isNotEmpty(Object)} returns true, or otherwise the given default value supplied
+     * by the given supplier callback or lambda function.
+     */
+    default <T> T attrNonEmpty(Object key, Supplier<? extends T> defaultValueSupplier) {
+        T value = attr(key);
+        return UtilValidate.isNotEmpty(value) ? value : defaultValueSupplier.get();
+    }
+
+    /**
+     * Returns an attribute value from the context/map only if {@link UtilValidate#isNotEmpty(Object)} returns true, or otherwise the given default value.
+     */
+    default <T> T attrNonEmpty(Object key, T defaultValue) {
+        return attrNonEmpty(key, () -> defaultValue);
+    }
+
+    /**
+     * Returns an attribute value from the context/map only if {@link UtilValidate#isNotEmpty(Object)} returns true, or otherwise null.
+     */
+    default <T> T attrNonEmpty(Object key) {
+        return attrNonEmpty(key, () -> null);
     }
 
     /*

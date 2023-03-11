@@ -1295,7 +1295,8 @@
             - supports either explicit contentId or relying on localeString to find record to update (added 2017-10-26)
             - WARN: For high-level operation, use replaceContentLocalizedSimpleTexts</description>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
-        <attribute name="mainContentId" type="String" mode="IN" optional="false"/>
+        <attribute name="mainContentId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="createMainContent" type="Boolean" mode="IN" optional="true" default-value="true"/>
         <attribute name="text" type="String" mode="IN" optional="false" allow-html="any"/>
         <override name="localeString" optional="false"/>
         <override name="contentId" mode="INOUT"/>

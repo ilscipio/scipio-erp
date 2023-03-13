@@ -901,7 +901,7 @@ code package.
     <request-map uri="excelI18nImport">
         <security https="true" auth="true"/>
         <event type="service" invoke="excelI18nImport" />
-        <response name="success" type="request" value="excelimport"/>
+        <response name="success" type="request-redirect" value="excelimport"/>
     </request-map>
 
 

@@ -1,6 +1,6 @@
 <@section>
     <@form name="excelI18nImport" method="POST" action="excelI18nImport" enctype="multipart/form-data">
-        <@field type="select" name="templateName" required=true label="Template" class="${styles.field_select_default!}">
+        <@field type="select" name="templateName" id="excelTemplateName" required=true label="Template" class="${styles.field_select_default!}" onChange="loadCurrentTemplateExample();">
             <#assign xslxTemplateProperties = Static["org.ofbiz.base.util.UtilProperties"].getMergedPropertiesFromAllComponents("ExcelImport")/>
             <#if xslxTemplateProperties?has_content>
                 <#assign templateNames = Static["org.ofbiz.base.util.UtilProperties"].getPropertiesWithPrefixSuffix(xslxTemplateProperties, "xlsx.",".xlsxTemplateName",true,false,false)/>
@@ -13,8 +13,27 @@
             </#if>
         </@field>
         <@field type="file" name="uploadedFile" label=getLabel("ContentFile") required=true attribs={"accept":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"} />
+        <@field type="generic" label=getLabel("Example","CommonUiLabels")>
+            <a href="#" target="_blank" id="excelDownloadAnchor" class="${styles.link_run_local_inline!} ${styles.text_color_primary!}">${getLabel("ContentDownload")}</a>
+        </@field>
         <@field type="submitarea">
             <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_add!}" />
         </@field>
     </@form>
 </@section>
+
+<@script>
+    var templateDownloadLocations = {<#t>
+    <#assign templateLocations = Static["org.ofbiz.base.util.UtilProperties"].getPropertiesWithPrefixSuffix(xslxTemplateProperties, "xlsx.",".xlsxReference",true,false,false)!""/><#t>
+    <#if templateLocations?has_content>
+        <#list templateLocations.keySet() as key>
+            '${key}' : '${raw(templateLocations[key])}',
+        </#list>
+    </#if>
+    };
+
+    function loadCurrentTemplateExample(){
+        document.getElementById("excelDownloadAnchor").href= templateDownloadLocations[document.getElementById("excelTemplateName").value];
+    }
+    loadCurrentTemplateExample();
+</@script>

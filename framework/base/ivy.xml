@@ -206,7 +206,7 @@
         <dependency org="org.apache.commons" name="commons-compress" rev="1.22" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-csv" rev="1.10.0" conf="base,commons,sources"/>
         <dependency org="commons-el" name="commons-el" rev="1.0" conf="base,commons,sources"/>
-        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.3" conf="base,commons,sources"/><!-- TODO: 1.4 (known issues) -->
+        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.5" conf="base,commons,sources"/>
         <dependency org="commons-io" name="commons-io" rev="2.11.0" conf="base,commons,sources"/>
         <dependency org="commons-lang" name="commons-lang" rev="2.6" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-lang3" rev="3.12.0" conf="base,commons,sources"/>

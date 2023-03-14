@@ -31,6 +31,14 @@
         <value xml:lang="de">Excel Import</value>
         <value xml:lang="en">Excel Import</value>
     </property>
+    <property key="EntityExcelImportStartRow">
+        <value xml:lang="de">Ab Zeile</value>
+        <value xml:lang="en">From Row</value>
+    </property>
+    <property key="EntityExcelImportEndRow">
+        <value xml:lang="de">Bis Zeile</value>
+        <value xml:lang="en">To Row</value>
+    </property>
     <property key="EntityImportDeletFile">
         <value xml:lang="de">Lösche ${fileName}</value>
         <value xml:lang="en">Deleting ${fileName}</value>

@@ -4,17 +4,22 @@ import org.apache.commons.text.StringSubstitutor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.service.*;
 import org.apache.poi.ss.usermodel.*;
 
+import javax.transaction.Transaction;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CatalogImportExportServices {
@@ -35,6 +40,8 @@ public class CatalogImportExportServices {
         ByteBuffer byteBuffer = (ByteBuffer) context.get("uploadedFile");
         String templateName = (String) context.get("templateName") != null ? context.get("templateName")+"." : "";
         Boolean runAsync = (Boolean) context.get("runAsync");
+        Integer startRow = (Integer) context.get("startRow");
+        Integer endRow = (Integer) context.get("endRow");
         String fileSize = (String) context.get("_uploadedFile_size");
         String fileName = (String) context.get("_uploadedFile_fileName");
         String contentType = (String) context.get("_uploadedFile_contentType");
@@ -49,9 +56,16 @@ public class CatalogImportExportServices {
             boolean headerRead = false;
 
             Map<Integer,Map> headerInfo = new HashMap<Integer,Map>();
-            for (Sheet sheet : workbook ) {
+            if(workbook.getSheetAt(0) !=null){
+                Sheet sheet = workbook.getSheetAt(0);
                 for (Row row : sheet) {
-                    if(row==null) continue;
+
+                    //skip anything that follows the last rows
+                    if(row.getRowNum() > sheet.getLastRowNum()){
+                        break;
+                    }
+
+                    //skip empty rows
                     if ( row == null || row.getCell(0).getCellType().equals(CellType.STRING) && row.getCell(0).getStringCellValue().startsWith("#")){
                         //skip to first row with content that is not a comment row
                         continue;
@@ -93,7 +107,36 @@ public class CatalogImportExportServices {
                         Map<String,Object> serviceProps = new HashMap<String,Object>();
                         Map<String,Object> entityProps = new HashMap<String,Object>();
 
+                        if ((UtilValidate.isNotEmpty(startRow) && row.getRowNum() < startRow)
+                                || (UtilValidate.isNotEmpty(endRow) && row.getRowNum() > endRow)) {
+                            continue;
+                        }
+
+
+                        boolean beganTransaction = false;
+                        Transaction parentTransaction = null;
+                        try {
+                            parentTransaction = TransactionUtil.suspend();
+                            beganTransaction = TransactionUtil.begin();
+                        } catch (GenericTransactionException e1) {
+                            Debug.logError(e1, module);
+                            errorList.add("Cannot resume transaction: "+e1.getMessage());
+                        }
+
+
+                        //Handle cell information and commit
                         for(Cell cell : row){
+                            //skip empty cells
+                            if (cell == null || cell.getCellType() == CellType.BLANK || (cell.getCellType().equals(CellType.STRING) && UtilValidate.isEmpty(cell.getStringCellValue()))) {
+                                continue;
+                            }
+
+                            //skip primary key fields
+                            if(primaryIdMap.containsValue(cell.getColumnIndex())){
+                                continue;
+                            }
+
+                            //read value
                             Object cellValue = null;
                             switch(cell.getCellType()){
                                 case STRING:
@@ -118,7 +161,9 @@ public class CatalogImportExportServices {
                                 serviceContext.put("userLogin",userLogin);
 
                                 primaryIdMap.forEach( (key,location)-> {
-                                    serviceContext.put(key,row.getCell(location).getStringCellValue());
+                                    if(row.getCell(location).getCellType().equals(CellType.STRING)){
+                                        serviceContext.put(key,row.getCell(location).getStringCellValue());
+                                    }
                                 });
 
                                 Map<String,String> headerInfoProps = headerInfo.get(cell.getColumnIndex());
@@ -148,50 +193,60 @@ public class CatalogImportExportServices {
                                         entityParameters.put(key,substituteVariables(value,entityProps));
                                     });
 
-                                    //If entity has a thruDate, select only current entries
-                                    EntityCondition condition = EntityCondition.makeCondition(
-                                            EntityCondition.makeCondition(entityParameters)
-                                    );
-
-                                    ModelEntity myLookupModel = delegator.getModelEntity(entityName);
-
-                                    if(myLookupModel.getField("thruDate") != null) {
-                                        condition = condition.append(condition,EntityUtil.getFilterByDateExpr());
-                                    }
-
-                                    boolean hasLocale = false;
-                                    EntityCondition conditionWithLocale = condition;
-                                    //most of the entities have "locale" mapped as "localeString", so setting it here
-                                    if(UtilValidate.isNotEmpty(localeStr) && myLookupModel.getField("localeString")!= null){
-                                        conditionWithLocale = conditionWithLocale.append(conditionWithLocale,EntityCondition.makeCondition("localeString",localeStr));
-                                        hasLocale = true;
-                                    }
-                                    // Still checking against "locale" just in case
-                                    if(UtilValidate.isNotEmpty(localeStr) && myLookupModel.getField("locale")!= null){
-                                        conditionWithLocale = conditionWithLocale.append(conditionWithLocale,EntityCondition.makeCondition("locale",localeStr));
-                                        hasLocale = true;
-                                    }
-
-
-                                    List<GenericValue> results = null;
                                     String serviceName = updateService;
                                     String serviceType = "update";
-                                    try {
-                                        results = delegator.findList(entityName, conditionWithLocale, null, null, null, false);
-                                        if(UtilValidate.isEmpty(results)){
-                                            results = delegator.findList(entityName, condition, null, null, null, false);
-                                            if(!hasLocale || (hasLocale && UtilValidate.isEmpty(results))){
-                                                serviceName = createService;
-                                                serviceType = "create";
-                                            }
+                                    List<GenericValue> results = null;
+
+                                    //if entityparameters are empty, skip the lookup as it would never return anything useful
+                                    if(UtilValidate.isNotEmpty(entityParameters)) {
+                                        //If entity has a thruDate, select only current entries
+                                        EntityCondition condition = EntityCondition.makeCondition(
+                                                EntityCondition.makeCondition(entityParameters)
+                                        );
+
+                                        ModelEntity myLookupModel = delegator.getModelEntity(entityName);
+
+                                        if (myLookupModel.getField("thruDate") != null) {
+                                            condition = condition.append(condition, EntityUtil.getFilterByDateExpr());
                                         }
-                                    }catch (Exception e){
+
+                                        boolean hasLocale = false;
+                                        EntityCondition conditionWithLocale = condition;
+                                        //most of the entities have "locale" mapped as "localeString", so setting it here
+                                        if (UtilValidate.isNotEmpty(localeStr) && myLookupModel.getField("localeString") != null) {
+                                            conditionWithLocale = conditionWithLocale.append(conditionWithLocale, EntityCondition.makeCondition("localeString", localeStr));
+                                            hasLocale = true;
+                                        }
+                                        // Still checking against "locale" just in case
+                                        if (UtilValidate.isNotEmpty(localeStr) && myLookupModel.getField("locale") != null) {
+                                            conditionWithLocale = conditionWithLocale.append(conditionWithLocale, EntityCondition.makeCondition("locale", localeStr));
+                                            hasLocale = true;
+                                        }
+
+
+                                        serviceName = updateService;
+                                        serviceType = "update";
+                                        try {
+                                            results = delegator.findList(entityName, conditionWithLocale, null, null, null, false);
+                                            if (UtilValidate.isEmpty(results)) {
+                                                results = delegator.findList(entityName, condition, null, null, null, false);
+                                                if (!hasLocale || (hasLocale && UtilValidate.isEmpty(results))) {
+                                                    serviceName = createService;
+                                                    serviceType = "create";
+                                                }
+                                            }
+                                        } catch (Exception e) {
+                                            TransactionUtil.rollback(beganTransaction, "Error importing cell", e);
+                                        }
+                                    }else{
+                                        serviceName = createService;
+                                        serviceType = "create";
                                     }
 
                                     //Check if entry exists, if so, set it in context
-                                    serviceContext.forEach((key,value)->{
-                                        if(UtilValidate.isNotEmpty(value)){
-                                            serviceProps.put(key,value);
+                                    serviceContext.forEach((key, value) -> {
+                                        if (UtilValidate.isNotEmpty(value)) {
+                                            serviceProps.put(key, value);
                                         }
                                     });
 
@@ -226,10 +281,10 @@ public class CatalogImportExportServices {
                                             );
 
                                             if (isSafeToDispatch.get()) {
-                                                if(runAsync){
-                                                    dispatcher.runAsync(serviceName, serviceFields, false);
+                                                if(UtilValidate.isNotEmpty(runAsync) && runAsync){
+                                                    dispatcher.runAsync(serviceName, serviceFields, true);
                                                 }else{
-                                                    Map<String, Object> serviceResult = dispatcher.runSync(serviceName, serviceFields, true);
+                                                    Map<String, Object> serviceResult = dispatcher.runSync(serviceName, serviceFields);
 
                                                     if (ServiceUtil.isSuccess(serviceResult)) {
                                                         Debug.logInfo("Imported field value: " + cell.getAddress().formatAsString(), module);
@@ -241,28 +296,50 @@ public class CatalogImportExportServices {
                                                 errorList.add("Couldn't run service "+serviceName+" for cell "+cell.getAddress().formatAsString()+" as some info was missing from service: "+serviceFields);
                                             }
                                         } catch (ServiceValidationException ex){
+                                            TransactionUtil.rollback(beganTransaction, "Error importing cell "+cell.getAddress().formatAsString(),	ex);
                                             errorList.add("ServiceValidationException: Couldn't update from field value: "+cell.getAddress().formatAsString()+"");
                                             Debug.logWarning("Couldn't update from field value: "+cell.getAddress().formatAsString(),module);
                                         } catch (GenericServiceException ex){
+                                            TransactionUtil.rollback(beganTransaction, "Error importing cell "+cell.getAddress().formatAsString(),	ex);
                                             errorList.add("GenericServiceException: Couldn't update from field value: "+cell.getAddress().formatAsString());
                                             Debug.logWarning("Couldn't update from field value: "+cell.getAddress().formatAsString(),module);
                                         }
                                     }else{
                                         //Update the entity directly
-                                        GenericValue origEntry = results.get(0);
-                                        if(!origEntry.get(fieldName).equals(cellValue)){
-                                            origEntry.set(fieldName,cellValue);
-                                            origEntry.createOrStore();
+                                        try{
+                                            GenericValue origEntry = results.get(0);
+                                            if(!origEntry.get(fieldName).equals(cellValue)){
+                                                origEntry.set(fieldName,cellValue);
+                                                origEntry.createOrStore();
+                                            }
+                                        } catch (GenericEntityException ex){
+                                            TransactionUtil.rollback(beganTransaction, "Error importing cell "+cell.getAddress().formatAsString(),	ex);
+                                            errorList.add("GenericEntityException: Couldn't create or store entity value for fieldName "+fieldName+" and cell: "+cell.getAddress().formatAsString());
+                                            Debug.logWarning("Couldn't update from field value: "+cell.getAddress().formatAsString(),module);
                                         }
                                     }
                                 }
                             }
                         }
+
+                        try {
+                            TransactionUtil.commit(beganTransaction);
+                            if (parentTransaction != null) TransactionUtil.resume(parentTransaction);
+                        } catch (GenericTransactionException e) {
+                            Debug.logError(e, module);
+                            errorList.add("Cannot resume transaction: "+e.getMessage());
+                        }finally {
+                            try {
+                                if (parentTransaction != null) TransactionUtil.resume(parentTransaction);
+                            } catch (GenericTransactionException e) {
+                                errorList.add("Cannot resume transaction: "+e.getMessage());
+                                Debug.logError(e, "Cannot resume transaction:"+e.getMessage(), module);
+                            }
+                        }
+
                     }
                 }
             }
-
-
 
         }catch (Exception e) {
             errorList.add("An exception was thrown: "+e.getMessage());

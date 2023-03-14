@@ -110,50 +110,51 @@
         <!-- base jars -->
         <dependency org="net.sf.barcode4j" name="barcode4j" rev="2.1" conf="base,sources"/>
         <dependency org="net.sf.barcode4j" name="barcode4j-fop-ext" rev="2.1" conf="base,sources"/>
-        <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.10" conf="base,sources"/><!-- NOTE: deps are excluded further below -->
-        <dependency org="org.apache.xmlgraphics" name="fop" rev="2.3" conf="base,sources"/>
-        <dependency org="org.apache.xmlgraphics" name="xmlgraphics-commons" rev="2.3" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.5.13" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpclient-cache" rev="4.5.13" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.14" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpcore-nio" rev="4.4.14" conf="base,sources"/>
-        <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.5.13" conf="base,sources"/>
+        <dependency org="org.apache.xmlgraphics" name="batik-all" rev="1.16" conf="base,sources"/><!-- NOTE: deps are excluded further below -->
+        <dependency org="org.apache.xmlgraphics" name="fop" rev="2.8" conf="base,sources"/>
+        <dependency org="org.apache.xmlgraphics" name="xmlgraphics-commons" rev="2.8" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient" rev="4.5.14" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpclient-cache" rev="4.5.14" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpcore" rev="4.4.16" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpcore-nio" rev="4.4.16" conf="base,sources"/>
+        <dependency org="org.apache.httpcomponents" name="httpmime" rev="4.5.14" conf="base,sources"/>
         <!-- SCIPIO: 2020-01-14: Added Apache HTTP Client async -->
-        <dependency org="org.apache.httpcomponents" name="httpasyncclient" rev="4.1.4" conf="base,sources" />
+        <dependency org="org.apache.httpcomponents" name="httpasyncclient" rev="4.1.5" conf="base,sources" />
         <dependency org="net.sourceforge.nekohtml" name="nekohtml" rev="1.9.22" conf="base,sources"/>
-        <dependency org="com.ibm.icu" name="icu4j" rev="63.1" conf="base,sources"/>
+        <dependency org="com.ibm.icu" name="icu4j" rev="72.1" conf="base,sources"/>
         <dependency org="javolution" name="javolution" rev="5.5.1" conf="base,sources"/><!-- TODO: increase: blocked by EntitySaxReader -->
-        <dependency org="org.freemarker" name="freemarker" rev="2.3.31" conf="base,sources"/>
+        <dependency org="org.freemarker" name="freemarker" rev="2.3.32" conf="base,sources"/>
         <dependency org="com.google.guava" name="guava" rev="31.1-jre" conf="base,sources"/>
         <dependency org="com.google.code.findbugs" name="jsr305" rev="3.0.2" conf="base,sources"/>
         <dependency org="de.odysseus.juel" name="juel-impl" rev="2.2.7" conf="base,sources"/>
         <dependency org="de.odysseus.juel" name="juel-spi" rev="2.2.7" conf="base,sources"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.19.0" conf="base,sources"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.19.0" conf="base,sources"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.19.0" conf="base,sources"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-1.2-api" rev="2.20.0" conf="base,sources"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-api" rev="2.20.0" conf="base,sources"/>
+        <dependency org="org.apache.logging.log4j" name="log4j-core" rev="2.20.0" conf="base,sources"/>
         <dependency org="org.apache.logging.log4j" name="log4j-nosql" rev="2.9.1" conf="base,sources"/>
-        <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.19.0" conf="base,sources"/>
-        <dependency org="org.slf4j" name="slf4j-api" rev="1.8.0-beta4" conf="base,sources"/><!-- 1.8 required by log4j 2.11+ (https://www.slf4j.org/faq.html#changesInVersion18) -->
+        <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.20.0" conf="base,sources"/>
+        <dependency org="org.apache.xmlbeans" name="xmlbeans" rev="4.0.0" conf="base,sources"/><!-- FIXME: Last version supported by axis2 -->
+        <dependency org="org.slf4j" name="slf4j-api" rev="2.0.6" conf="base,sources"/><!-- 1.8 required by log4j 2.11+ (https://www.slf4j.org/faq.html#changesInVersion18) -->
         <dependency org="io.sentry" name="sentry-log4j2" rev="1.7.30" conf="base,sources"/><!-- Error reporting: https://sentry.io -->
         <dependency org="com.sun.mail" name="jakarta.mail" rev="1.6.7" conf="base,sources"/>
-        <dependency org="xerces" name="xercesImpl" rev="2.12.0" conf="base,sources"/>
-        <dependency org="xml-apis" name="xml-apis" rev="1.4.01" conf="base,sources"/>
+        <dependency org="xerces" name="xercesImpl" rev="2.12.2" conf="base,sources"/>
+        <dependency org="xml-apis" name="xml-apis" rev="2.0.2" conf="base,sources"/>
         <dependency org="xml-apis" name="xml-apis-ext" rev="1.3.04" conf="base,sources"/><!-- FIXME?: should be same version as xml-apis -->
         <dependency org="xalan" name="xalan" rev="2.7.2" conf="base,sources"/>
         <dependency org="xalan" name="serializer" rev="2.7.2" conf="base,sources"/><!-- NOTE: orig ofbiz jar "serializer-2.9.1" (?) had MANIFEST.MF 2.7.1 -->
         <dependency org="org.apache.xmlrpc" name="xmlrpc-client" rev="3.1.3" conf="base,sources"/>
         <dependency org="org.apache.xmlrpc" name="xmlrpc-common" rev="3.1.3" conf="base,sources"/>
         <dependency org="org.apache.xmlrpc" name="xmlrpc-server" rev="3.1.3" conf="base,sources"/>
-        <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.19" conf="base,sources"/>
+        <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.20" conf="base,sources"/>
         <!--<dependency org="xpp3" name="xpp3" rev="1.1.4c" conf="base,sources"/> xstream dep: now fetched via xpp3-core + xmlpull transitive deps -->
-        <dependency org="org.owasp.esapi" name="esapi" rev="2.1.0.1" conf="base,sources"/>
-        <dependency org="org.owasp.antisamy" name="antisamy" rev="1.7.1" conf="base,sources"/><!-- esapi dependency -->
+        <dependency org="org.owasp.esapi" name="esapi" rev="2.5.1.0" conf="base,sources"/>
+        <dependency org="org.owasp.antisamy" name="antisamy" rev="1.7.2" conf="base,sources"/><!-- esapi dependency -->
         <dependency org="com.googlecode.owasp-java-html-sanitizer" name="owasp-java-html-sanitizer" rev="20220608.1" conf="base,sources"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.14.0" conf="base,sources"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.14.0" conf="base,sources"/>
-        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.14.0" conf="base,sources"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.14.2" conf="base,sources"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.14.2" conf="base,sources"/>
+        <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.14.2" conf="base,sources"/>
         <dependency org="org.jdom" name="jdom" rev="1.1.3" conf="base,sources"/><!-- TODO: REVIEW: not used in any code; but some libs _might_ have it as optional dependency -->
-        <dependency org="joda-time" name="joda-time" rev="2.12.1" conf="base,sources" />
+        <dependency org="joda-time" name="joda-time" rev="2.12.2" conf="base,sources" />
         <dependency org="org.apache.avalon.framework" name="avalon-framework-impl" rev="4.3.1" conf="base,sources"/>
         <dependency org="org.apache.avalon.framework" name="avalon-framework-api" rev="4.3.1" conf="base,sources"/>
         <dependency org="org.apache.tika" name="tika-core" rev="1.28.5" conf="base,sources"/>
@@ -164,10 +165,10 @@
         <!-- 2018-03-20: Not yet needed for framework (is shadowed in Camel addon)
         <dependency org="com.github.ben-manes.caffeine" name="caffeine" rev="2.6.2" conf="base,sources"/>-->
         <dependency org="com.github.dfabulich" name="sitemapgen4j" rev="1.1.2" conf="base,sources"/><!-- SCIPIO: 2017-11: new -->
-        <dependency org="org.mnode.ical4j" name="ical4j" rev="2.2.0" conf="base,sources"/><!-- TODO?: there is now 2.x.x line; incompatible API -->
+        <dependency org="org.mnode.ical4j" name="ical4j" rev="2.2.7" conf="base,sources"/><!-- TODO?: there is now 2.x.x line; incompatible API -->
         <dependency org="org.apache.shiro" name="shiro-core" rev="1.4.2" conf="base,sources"/>
-        <dependency org="com.google.code.gson" name="gson" rev="2.10" conf="base,sources"/>
-        <dependency org="com.googlecode.libphonenumber" name="libphonenumber" rev="8.13.0" conf="base,sources"/>
+        <dependency org="com.google.code.gson" name="gson" rev="2.10.1" conf="base,sources"/>
+        <dependency org="com.googlecode.libphonenumber" name="libphonenumber" rev="8.13.7" conf="base,sources"/>
         <dependency org="org.apache.sshd" name="sshd-common" rev="2.1.0" conf="base,sources"/>
         <dependency org="org.apache.sshd" name="sshd-core" rev="2.1.0" conf="base,sources"/>
         <dependency org="org.apache.sshd" name="sshd-sftp" rev="2.1.0" conf="base,sources"/>
@@ -178,8 +179,8 @@
 
         <!-- jdk11 removed JDK packages -->
         <dependency org="javax.xml.bind" name="jaxb-api" rev="2.4.0-b180830.0359" conf="base-jdk11,sources-jdk11"/>
-        <dependency org="com.sun.xml.bind" name="jaxb-core" rev="4.0.1" conf="base-jdk11,sources-jdk11"/>
-        <dependency org="com.sun.xml.bind" name="jaxb-impl" rev="4.0.1" conf="base-jdk11,sources-jdk11"/>
+        <dependency org="com.sun.xml.bind" name="jaxb-core" rev="4.0.2" conf="base-jdk11,sources-jdk11"/>
+        <dependency org="com.sun.xml.bind" name="jaxb-impl" rev="4.0.2" conf="base-jdk11,sources-jdk11"/>
 
         <!-- base qrcode jars -->
         <dependency org="com.google.zxing" name="core" rev="3.5.1" conf="base,sources"/><!-- stock qrcode -->
@@ -194,7 +195,7 @@
                 libs (javolution, xml-apis) and was not shipped with ofbiz 14/15 - ->
             <exclude module="jtidy"/>
         </dependency>-->
-        <dependency org="org.jsoup" name="jsoup" rev="1.15.3" conf="base,sources"/><!-- security: CVE-2015-6748 (transitive dep) -->
+        <dependency org="org.jsoup" name="jsoup" rev="1.15.4" conf="base,sources"/><!-- security: CVE-2015-6748 (transitive dep) -->
 
         <!-- commons jars -->
         <!-- NOTE: these should generally be updated together (some deps between them and historical compat issues) -->
@@ -203,7 +204,7 @@
         <dependency org="commons-collections" name="commons-collections" rev="3.2.2" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-collections4" rev="4.4" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-compress" rev="1.22" conf="base,commons,sources"/>
-        <dependency org="org.apache.commons" name="commons-csv" rev="1.9.0" conf="base,commons,sources"/>
+        <dependency org="org.apache.commons" name="commons-csv" rev="1.10.0" conf="base,commons,sources"/>
         <dependency org="commons-el" name="commons-el" rev="1.0" conf="base,commons,sources"/>
         <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.3" conf="base,commons,sources"/><!-- TODO: 1.4 (known issues) -->
         <dependency org="commons-io" name="commons-io" rev="2.11.0" conf="base,commons,sources"/>
@@ -211,7 +212,7 @@
         <dependency org="org.apache.commons" name="commons-lang3" rev="3.12.0" conf="base,commons,sources"/>
         <dependency org="commons-logging" name="commons-logging" rev="1.2" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-math3" rev="3.6.1" conf="base,commons,sources"/>
-        <dependency org="commons-net" name="commons-net" rev="3.8.0" conf="base,commons,sources"/>
+        <dependency org="commons-net" name="commons-net" rev="3.9.0" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-pool2" rev="2.11.1" conf="base,commons,sources"/>
         <dependency org="org.apache.commons" name="commons-text" rev="1.10.0" conf="base,commons,sources"/>
         <dependency org="commons-validator" name="commons-validator" rev="1.7" conf="base,commons,sources"/>
@@ -229,32 +230,32 @@
         <!-- scripting jars -->
         <!--<dependency org="antlr" name="antlr" rev="2.7.6" conf="base,scripting,sources"/> unused in code and version quite old -->
         <dependency org="bsf" name="bsf" rev="2.4.0" conf="base,scripting,sources"/><!-- NOTE: 2.x is different API than 3.x; keeping latest 2.x; see ant-apache-bsf deps -->
-        <dependency org="org.codehaus.groovy" name="groovy-all" rev="3.0.13" conf="base,scripting,groovy,sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-dateutil" rev="3.0.13" conf="base,scripting,groovy,sources"/><!-- NOTE: Not included in groovy-all since 2.5 -->
+        <dependency org="org.codehaus.groovy" name="groovy-all" rev="3.0.16" conf="base,scripting,groovy,sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-dateutil" rev="3.0.16" conf="base,scripting,groovy,sources"/><!-- NOTE: Not included in groovy-all since 2.5 -->
         <!-- The following groovy compiled JARs are included by groovy-all, but must be explicit here for the sources (since 2.5) -->
-        <dependency org="org.codehaus.groovy" name="groovy" rev="3.0.13" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy" rev="3.0.16" conf="sources"/>
         <!-- These are not accessed directly in Scipio sources, so omitting for now
-        <dependency org="org.codehaus.groovy" name="groovy-ant" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-cli-commons" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-cli-picocli" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-console" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-datetime" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-docgenerator" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-groovydoc" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-groovysh" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-jmx" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-json" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-jsr223" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-macro" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-nio" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-servlet" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-sql" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-swing" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-templates" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-test" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-test-junit5" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-testng" rev="3.0.13" conf="sources"/>
-        <dependency org="org.codehaus.groovy" name="groovy-xml" rev="3.0.13" conf="sources"/>-->
+        <dependency org="org.codehaus.groovy" name="groovy-ant" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-cli-commons" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-cli-picocli" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-console" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-datetime" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-docgenerator" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-groovydoc" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-groovysh" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-jmx" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-json" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-jsr223" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-macro" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-nio" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-servlet" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-sql" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-swing" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-templates" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-test" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-test-junit5" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-testng" rev="3.0.16" conf="sources"/>
+        <dependency org="org.codehaus.groovy" name="groovy-xml" rev="3.0.16" conf="sources"/>-->
         <!-- Jakarta ORO is provided in filesystem due to ivy dependency, and excluded below NOTE: Jakarta ORO is a closed project
         <dependency org="oro" name="oro" rev="2.0.8" conf="base,scripting,sources"/>-->
 
@@ -262,12 +263,12 @@
         <!-- (none) -->
 
         <!-- media jars -->
-        <dependency org="net.coobird" name="thumbnailator" rev="0.4.18" conf="base,media,sources"/>
+        <dependency org="net.coobird" name="thumbnailator" rev="0.4.19" conf="base,media,sources"/>
         <dependency org="com.mortennobel" name="java-image-scaling" rev="0.8.6" conf="base,media,sources"/>
         <dependency org="com.jhlabs" name="filters" rev="2.0.235-1" conf="base,sources"/><!-- transitive dep for mortennobel (was outdated) -->
         <dependency org="org.imgscalr" name="imgscalr-lib" rev="4.2" conf="base,media,sources"/>
-        <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.9.3" conf="base,media,sources"/>
-        <dependency org="com.tinify" name="tinify" rev="1.8.0" conf="base,media,sources"/>
+        <dependency org="com.twelvemonkeys.common" name="common-image" rev="3.9.4" conf="base,media,sources"/>
+        <dependency org="com.tinify" name="tinify" rev="1.8.2" conf="base,media,sources"/>
 
         <!-- ImageIO plugin jars - these plug directly into java's ImageIO and may affect the system globally
             NOTE: Usually only one of these should be uncommented per image format -->
@@ -291,20 +292,20 @@
 
         <!-- catalina component (framework/catalina/ivy.xml) -->
         <!-- catalina: tomcat -->
-        <dependency org="org.apache.tomcat" name="tomcat-api" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-websocket" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-websocket-api" rev="9.0.69" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-api" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-catalina-ha" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-coyote" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jasper" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jni" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-tribes" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-util-scan" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-websocket" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-websocket-api" rev="9.0.73" conf="base,sources"/>
         <!-- gone since 8.5.3+?
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="9.0.69" conf="base,sources"/>-->
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat.extras" name="tomcat-extras-juli-adapters" rev="9.0.73" conf="base,sources"/>-->
         <!-- let the jasper compile dep give us the version it wants (NOTE: its version numbers are unrelated to org.eclipse.jdt.core.compiler! very confusing!)
         <dependency org="org.eclipse.jdt" name="ecj" rev="xxx" conf="base,sources"/>-->
 
@@ -314,10 +315,10 @@
             But for sources, the tomcat files have unusable documentation, so we use the official java API files instead;
             so we put the official servlet API jars in j2eespecs-ref dir (see build/base.xml for the renaming).
             NOTE: the tomcat-provided jar are renamed in base/build.xml so they match the API ones in name (TODO: REVIEW: still necessary?) -->
-        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="9.0.69" conf="base,sources"/>
-        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="9.0.69" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-servlet-api" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-jsp-api" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-el-api" rev="9.0.73" conf="base,sources"/>
+        <dependency org="org.apache.tomcat" name="tomcat-annotations-api" rev="9.0.73" conf="base,sources"/>
         <dependency org="javax.servlet" name="javax.servlet-api" rev="4.0.1" conf="base,j2eespecs,sources"/>
         <dependency org="javax.servlet.jsp" name="javax.servlet.jsp-api" rev="2.3.3" conf="base,j2eespecs,sources"/>
         <dependency org="javax.el" name="javax.el-api" rev="3.0.1-b06" conf="base,j2eespecs,sources"/>
@@ -350,10 +351,10 @@
         <dependency org="wsdl4j" name="wsdl4j" rev="1.6.3" conf="base,sources"/>
 
         <!-- testtools component (framework/testtools/ivy.xml) -->
-        <dependency org="org.springframework" name="spring-core" rev="5.3.24" conf="base,sources">
+        <dependency org="org.springframework" name="spring-core" rev="5.3.25" conf="base,sources">
             <exclude module="spring-jcl"/><!-- interferes with commons-logging -->
         </dependency>
-        <dependency org="org.springframework" name="spring-test" rev="5.3.24" conf="base,sources">
+        <dependency org="org.springframework" name="spring-test" rev="5.3.25" conf="base,sources">
             <exclude module="spring-jcl"/><!-- interferes with commons-logging -->
         </dependency>
 
@@ -371,7 +372,7 @@
         <dependency org="org.bouncycastle" name="bcpkix-jdk18on" rev="1.72" conf="base,sources"/>
         <dependency org="org.bouncycastle" name="bcmail-jdk18on" rev="1.72" conf="base,sources"/>
         <dependency org="org.bouncycastle" name="bcprov-jdk18on" rev="1.72" conf="base,sources"/>
-        <dependency org="com.rometools" name="rome" rev="1.12.0" conf="base,sources"/>
+        <dependency org="com.rometools" name="rome" rev="2.1.0" conf="base,sources"/>
         <dependency org="org.tuckey" name="urlrewritefilter" rev="4.0.4" conf="base,sources"/>
 
         <!--
@@ -382,11 +383,11 @@
 
         <!-- content component (applications/content/ivy.xml) -->
         <!-- TODO: REVIEW: pdfbox was no longer in use by code at time of this writing (2018-03), but it may have future use... -->
-        <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.13" conf="base,sources"/>
-        <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.16" conf="base,sources"/>
-        <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.13" conf="base,sources"/>
-        <dependency org="org.apache.poi" name="poi" rev="5.2.3" conf="base,sources"/>
-        <dependency org="org.apache.poi" name="poi-ooxml" rev="5.2.3" conf="base,sources"/>
+        <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.27" conf="base,sources"/>
+        <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.17" conf="base,sources"/>
+        <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.27" conf="base,sources"/>
+        <dependency org="org.apache.poi" name="poi" rev="5.0.0" conf="base,sources"/>
+        <dependency org="org.apache.poi" name="poi-ooxml" rev="5.0.0" conf="base,sources"/>
 
         <!-- solr component (applications/solr/ivy.xml)
             Based on solr-provided JAR libraries found in solr-7.x.x.tgz package (solr-7.x.x/server/lib/)
@@ -462,7 +463,7 @@
         -->
 
         <!-- deps for main build.xml ant task: download-activemq -->
-        <dependency org="org.apache.activemq" name="activemq-all" rev="5.15.10" conf="activemq"/>
+        <dependency org="org.apache.activemq" name="activemq-all" rev="5.17.4" conf="activemq"/>
 
         <!-- deps for main build.xml ant task: download-cobertura -->
         <dependency org="net.sourceforge.cobertura" name="cobertura" rev="2.1.1" conf="cobertura">

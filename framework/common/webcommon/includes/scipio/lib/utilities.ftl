@@ -1722,7 +1722,7 @@ Adds parameters from a hash to a URL param string (no full URL logic).
   <#local res = paramStr>
   <#local paramMap = toSimpleMap(paramMap)>
   <#list mapKeys(paramMap) as key>
-    <#if res?has_content && (!res?ends_with(paramDelim))>
+    <#if res?has_content && (!res?ends_with("?")) && (!res?ends_with(paramDelim))>
       <#local res = res + paramDelim>
     </#if>
     <#if includeEmpty || paramMap[key]?has_content>

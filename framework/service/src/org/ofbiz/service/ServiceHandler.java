@@ -104,41 +104,37 @@ public interface ServiceHandler {
         /**
          * Called by service engine invocations for subclasses that rely on {@link #Local()}.
          */
-        public Local init(ServiceContext ctx) {
+        public void init(ServiceContext ctx) {
             setServiceContext(ctx);
-            return this;
         }
 
-        protected Local setServiceContext(ServiceContext ctx) {
+        protected void setServiceContext(ServiceContext ctx) {
             this.ctx = ctx;
             this.dctx = ctx.dctx();
             this.context = ctx.context();
-            return this;
         }
 
         /**
          * Replaces {@link #ctx} and {@link #context} as applicable using given context.
          */
-        protected Local setContext(Map<String, ?> context) {
+        protected void setContext(Map<String, ?> context) {
             if (this.ctx != null) {
                 setServiceContext(ctx.from(context));
             } else {
                 this.context = UtilGenerics.cast(context);
             }
-            return this;
         }
 
         /**
          * Replaces the context in {@link #ctx} and {@link #context} as applicable with a copy.
          * <p>Can be used instead of UtilMisc.makeMapWritable.</p>
          */
-        protected Local setContextCopy() {
+        protected void setContextCopy() {
             if (this.ctx != null) {
                 setServiceContext(ctx.copy());
             } else {
                 this.context = new HashMap<>(context);
             }
-            return this;
         }
 
         // No method is explicitly defined because 3 overloads and various exception signatures are supported:

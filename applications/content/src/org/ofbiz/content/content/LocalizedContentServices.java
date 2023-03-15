@@ -195,13 +195,12 @@ public abstract class LocalizedContentServices {
         protected String contentId;
         protected String localeString;
 
-        public CreateUpdateSimpleTextContentForAlternateLocale init(ServiceContext ctx) {
+        public void init(ServiceContext ctx) {
             super.init(ctx);
             mainContentId = ctx.attrNonEmpty("mainContentId");
             createMainContent = ctx.attr("createMainContent", true);
             contentId = ctx.attrNonEmpty("contentId");
             localeString = ctx.attr("localeString");
-            return this;
         }
 
         @Override

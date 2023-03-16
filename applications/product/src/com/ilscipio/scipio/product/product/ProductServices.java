@@ -4,6 +4,8 @@ import java.sql.Timestamp;
 import java.util.*;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.content.CommonContentWrapper;
@@ -138,4 +140,74 @@ public abstract class ProductServices {
             return ServiceUtil.returnSuccess("Precached ProductContentWrapper for " + productCount + " products");
         }
     }
+
+    public static class CreateUpdateProductSimpleTextContentForAlternateLocale extends ServiceHandler.Local implements ServiceHandler.Exec {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+        protected String productId;
+        protected String productContentTypeId;
+        protected Timestamp productContentFromDate;
+        protected String mainContentId;
+        protected String contentId;
+
+        public void init(ServiceContext ctx) {
+            super.init(ctx);
+            productId = ctx.attrNonEmpty("productId");
+            productContentTypeId = ctx.attrNonEmpty("productContentTypeId");
+            productContentFromDate = ctx.attr("productContentFromDate");
+            mainContentId = ctx.attrNonEmpty("mainContentId");
+            contentId = ctx.attrNonEmpty("contentId");
+        }
+
+        @Override
+        public Map<String, Object> exec() {
+            try {
+                Map<String, Object> productContentFields = UtilMisc.toMap("productId", productId, "productContentTypeId", productContentTypeId);
+                boolean filterByDate = true;
+                if (UtilValidate.isNotEmpty(productContentFromDate)) {
+                    productContentFields.put("fromDate", productContentFromDate);
+                    filterByDate = false;
+                }
+                GenericValue productContent = ctx.delegator().from("ProductContent").where(productContentFields).filterByDate(filterByDate).queryFirst();
+                if (productContent == null) {
+                    productContentFromDate = UtilDateTime.nowTimestamp();
+                    productContent = ctx.delegator().makeValue("ProductContent",
+                            "productId", productId, "productContentTypeId", productContentTypeId,
+                            "contentId", mainContentId, "fromDate", productContentFromDate);
+                    productContent = productContent.create();
+                } else {
+                    productContentFromDate = productContent.getTimestamp("fromDate");
+                    if (mainContentId == null) {
+                        mainContentId = productContent.getString("contentId");
+                    }
+                }
+
+                Map<String, Object> updateContentCtx = ctx.makeValidInContext("createUpdateSimpleTextContentForAlternateLocale");
+                if (mainContentId != null) {
+                    updateContentCtx.put("mainContentId", mainContentId);
+                }
+                Map<String, Object> updateContentResult = ctx.dispatcher().runSync("createUpdateSimpleTextContentForAlternateLocale", updateContentCtx);
+                if (!ServiceUtil.isSuccess(updateContentResult)) {
+                    return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateContentResult)));
+                }
+                mainContentId = (String) updateContentResult.get("mainContentId");
+                contentId = (String) updateContentResult.get("contentId");
+                productContent.refresh();
+                if (UtilValidate.isEmpty(productContent.getString("contentId"))) {
+                    productContent.set("contentId", mainContentId);
+                }
+                return populateServiceResult(ServiceUtil.returnSuccess());
+            } catch (GeneralException e) {
+                return populateServiceResult(ServiceUtil.returnError(e.toString()));
+            }
+        }
+
+        protected Map<String, Object> populateServiceResult(Map<String, Object> result) {
+            result.put("productContentFromDate", productContentFromDate);
+            result.put("mainContentId", mainContentId);
+            result.put("contentId", contentId);
+            return result;
+        }
+    }
+
 }

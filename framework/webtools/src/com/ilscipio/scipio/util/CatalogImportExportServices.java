@@ -15,11 +15,13 @@ import org.ofbiz.service.*;
 import org.apache.poi.ss.usermodel.*;
 
 import javax.transaction.Transaction;
+import javax.ws.rs.core.GenericEntity;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CatalogImportExportServices {
@@ -39,7 +41,7 @@ public class CatalogImportExportServices {
         Locale locale = (Locale) context.get("locale");
         ByteBuffer byteBuffer = (ByteBuffer) context.get("uploadedFile");
         String templateName = (String) context.get("templateName") != null ? context.get("templateName")+"." : "";
-        Boolean runAsync = (Boolean) context.get("runAsync");
+        String serviceMode = (String) context.get("serviceMode");
         Integer startRow = (Integer) context.get("startRow");
         Integer endRow = (Integer) context.get("endRow");
         String fileSize = (String) context.get("_uploadedFile_size");
@@ -58,7 +60,9 @@ public class CatalogImportExportServices {
             Map<Integer,Map> headerInfo = new HashMap<Integer,Map>();
             if(workbook.getSheetAt(0) !=null){
                 Sheet sheet = workbook.getSheetAt(0);
+                int rowIndex = -1;
                 for (Row row : sheet) {
+                    rowIndex++;
 
                     //skip anything that follows the last rows
                     if(row.getRowNum() > sheet.getLastRowNum()){
@@ -112,245 +116,276 @@ public class CatalogImportExportServices {
                             continue;
                         }
 
-
+                        int cellIndex = 0;
+                        String cellAddr = null;
+                        String entityName = null;
+                        Map<String, Object> entityFields = null;
                         boolean beganTransaction = false;
                         Transaction parentTransaction = null;
+                        Throwable transactionEx = null;
                         try {
-                            parentTransaction = TransactionUtil.suspend();
-                            beganTransaction = TransactionUtil.begin();
-                        } catch (GenericTransactionException e1) {
-                            Debug.logError(e1, module);
-                            errorList.add("Cannot resume transaction: "+e1.getMessage());
-                        }
-
-
-                        //Handle cell information and commit
-                        for(Cell cell : row){
-                            //skip empty cells
-                            if (cell == null || cell.getCellType() == CellType.BLANK || (cell.getCellType().equals(CellType.STRING) && UtilValidate.isEmpty(cell.getStringCellValue()))) {
-                                continue;
+                            if (TransactionUtil.isTransactionInPlace()) {
+                                parentTransaction = TransactionUtil.suspend();
                             }
+                            try { // Per-row transaction and atomic error handling
+                                beganTransaction = TransactionUtil.begin();
 
-                            //skip primary key fields
-                            if(primaryIdMap.containsValue(cell.getColumnIndex())){
-                                continue;
-                            }
-
-                            //read value
-                            Object cellValue = null;
-                            switch(cell.getCellType()){
-                                case STRING:
-                                    cellValue = cell.getStringCellValue();
-                                    break;
-                                case BLANK:
-                                    cellValue = null;
-                                    break;
-                                case NUMERIC:
-                                    cellValue = new BigDecimal(cell.getNumericCellValue());
-                                    break;
-                                case BOOLEAN:
-                                    cellValue = cell.getBooleanCellValue();
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                            if(headerInfo.get(cell.getColumnIndex())!=null){
-                                Map<String,Object> serviceContext = new HashMap<String,Object>();
-                                serviceContext.put("cellValue",cellValue);
-                                serviceContext.put("userLogin",userLogin);
-
-                                primaryIdMap.forEach( (key,location)-> {
-                                    if(row.getCell(location).getCellType().equals(CellType.STRING)){
-                                        serviceContext.put(key,row.getCell(location).getStringCellValue());
+                                //Handle cell information and commit
+                                cellIndex = -1;
+                                for (Cell cell : row) {
+                                    cellIndex++;
+                                    cellAddr = cell.getAddress().formatAsString();
+                                    //skip empty cells
+                                    if (cell == null || cell.getCellType() == CellType.BLANK || (cell.getCellType().equals(CellType.STRING) && UtilValidate.isEmpty(cell.getStringCellValue()))) {
+                                        continue;
                                     }
-                                });
 
-                                Map<String,String> headerInfoProps = headerInfo.get(cell.getColumnIndex());
+                                    //skip primary key fields
+                                    if (primaryIdMap.containsValue(cell.getColumnIndex())) {
+                                        continue;
+                                    }
 
-                                String entityName = headerInfoProps.get("entity");
-                                Map<String,String> entityParameters = UtilProperties.getPropertiesWithPrefix(headerInfoProps,"entity.parameter.");
-                                Map<String,String> entityConfig = UtilProperties.getPropertiesWithPrefix(headerInfoProps,"entity.config.");
-                                String createService = headerInfoProps.get("create");
-                                String updateService = headerInfoProps.get("update");
-                                String localeStr = headerInfoProps.get("locale");
-                                String fieldName = headerInfoProps.get("name");
-                                serviceContext.put("locale",localeStr);
+                                    //reset per-row fields
+                                    entityName = null;
+                                    entityFields = new LinkedHashMap<>();
 
-                                serviceContext.put("today",UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
-                                serviceContext.put("now",UtilDateTime.nowTimestamp());
+                                    //read value
+                                    Object cellValue = null;
+                                    switch (cell.getCellType()) {
+                                        case STRING:
+                                            cellValue = cell.getStringCellValue();
+                                            break;
+                                        case BLANK:
+                                            cellValue = null;
+                                            break;
+                                        case NUMERIC:
+                                            cellValue = new BigDecimal(cell.getNumericCellValue());
+                                            break;
+                                        case BOOLEAN:
+                                            cellValue = cell.getBooleanCellValue();
+                                            break;
+                                        default:
+                                            break;
+                                    }
 
-                                //fetch existing entity value
-                                if(UtilValidate.isNotEmpty(entityName)){
+                                    if (headerInfo.get(cell.getColumnIndex()) != null) {
+                                        Map<String, Object> serviceContext = new HashMap<>();
+                                        serviceContext.put("cellValue", cellValue);
+                                        serviceContext.put("userLogin", userLogin);
 
-                                    serviceContext.forEach((key,value)->{
-                                        if(UtilValidate.isNotEmpty(value)){
-                                            entityProps.put(key,value);
-                                        }
-                                    });
-
-                                    entityParameters.forEach((key,value) -> {
-                                        entityParameters.put(key,substituteVariables(value,entityProps));
-                                    });
-
-                                    String serviceName = updateService;
-                                    String serviceType = "update";
-                                    List<GenericValue> results = null;
-
-                                    //if entityparameters are empty, skip the lookup as it would never return anything useful
-                                    if(UtilValidate.isNotEmpty(entityParameters)) {
-                                        //If entity has a thruDate, select only current entries
-                                        EntityCondition condition = EntityCondition.makeCondition(
-                                                EntityCondition.makeCondition(entityParameters)
-                                        );
-
-                                        ModelEntity myLookupModel = delegator.getModelEntity(entityName);
-
-                                        if (myLookupModel.getField("thruDate") != null) {
-                                            condition = condition.append(condition, EntityUtil.getFilterByDateExpr());
-                                        }
-
-                                        boolean hasLocale = false;
-                                        EntityCondition conditionWithLocale = condition;
-                                        //most of the entities have "locale" mapped as "localeString", so setting it here
-                                        if (UtilValidate.isNotEmpty(localeStr) && myLookupModel.getField("localeString") != null) {
-                                            conditionWithLocale = conditionWithLocale.append(conditionWithLocale, EntityCondition.makeCondition("localeString", localeStr));
-                                            hasLocale = true;
-                                        }
-                                        // Still checking against "locale" just in case
-                                        if (UtilValidate.isNotEmpty(localeStr) && myLookupModel.getField("locale") != null) {
-                                            conditionWithLocale = conditionWithLocale.append(conditionWithLocale, EntityCondition.makeCondition("locale", localeStr));
-                                            hasLocale = true;
-                                        }
-
-
-                                        serviceName = updateService;
-                                        serviceType = "update";
-                                        try {
-                                            results = delegator.findList(entityName, conditionWithLocale, null, null, null, false);
-                                            if (UtilValidate.isEmpty(results)) {
-                                                results = delegator.findList(entityName, condition, null, null, null, false);
-                                                if (!hasLocale || (hasLocale && UtilValidate.isEmpty(results))) {
-                                                    serviceName = createService;
-                                                    serviceType = "create";
-                                                }
+                                        primaryIdMap.forEach((key, location) -> {
+                                            if (row.getCell(location).getCellType().equals(CellType.STRING)) {
+                                                serviceContext.put(key, row.getCell(location).getStringCellValue());
                                             }
-                                        } catch (Exception e) {
-                                            TransactionUtil.rollback(beganTransaction, "Error importing cell", e);
-                                        }
-                                    }else{
-                                        serviceName = createService;
-                                        serviceType = "create";
-                                    }
-
-                                    //Check if entry exists, if so, set it in context
-                                    serviceContext.forEach((key, value) -> {
-                                        if (UtilValidate.isNotEmpty(value)) {
-                                            serviceProps.put(key, value);
-                                        }
-                                    });
-
-                                    if(UtilValidate.isNotEmpty(serviceName)){
-                                        Map<String,String> serviceParameters = UtilProperties.getPropertiesWithPrefix(headerInfoProps,serviceType+".parameters.");
-
-                                        if(UtilValidate.isNotEmpty(results)) {
-                                            GenericValue origEntry = results.get(0);
-                                            //serviceContext.putAll(origEntry.getAllFields());
-                                            origEntry.forEach((key,value)->{
-                                                if(UtilValidate.isNotEmpty(value)){
-                                                    serviceProps.put(key,value);
-                                                }
-                                            });
-                                        }
-
-                                        serviceParameters.forEach((key,value) -> {
-                                            serviceContext.put(key,substituteVariables(value,serviceProps));
                                         });
 
-                                        Map<String,Object> serviceFields = dispatcher.getDispatchContext().
-                                                makeValidContext(serviceName,ModelService.IN_PARAM,serviceContext);
+                                        Map<String, String> headerInfoProps = headerInfo.get(cell.getColumnIndex());
 
-                                        try {
-                                            AtomicBoolean isSafeToDispatch = new AtomicBoolean(true);
-                                            dispatcher.getModelService(serviceName).getInModelParamList().forEach(
-                                                    s -> {
-                                                        if (!s.optional && UtilValidate.isEmpty(serviceFields.get(s.getName()))) {
-                                                            isSafeToDispatch.set(false);
+                                        entityName = headerInfoProps.get("entity");
+                                        Map<String, String> entityParameters = UtilProperties.getPropertiesWithPrefix(headerInfoProps, "entity.parameter.");
+                                        Map<String, String> entityConfig = UtilProperties.getPropertiesWithPrefix(headerInfoProps, "entity.config.");
+                                        String createService = headerInfoProps.get("create");
+                                        String updateService = headerInfoProps.get("update");
+                                        String localeStr = headerInfoProps.get("locale");
+                                        String fieldName = headerInfoProps.get("name");
+                                        serviceContext.put("locale", localeStr);
+
+                                        serviceContext.put("today", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
+                                        serviceContext.put("now", UtilDateTime.nowTimestamp());
+
+                                        //fetch existing entity value
+                                        if (UtilValidate.isNotEmpty(entityName)) {
+
+                                            serviceContext.forEach((key, value) -> {
+                                                if (UtilValidate.isNotEmpty(value)) {
+                                                    entityProps.put(key, value);
+                                                }
+                                            });
+
+                                            Map<String, Object> targetEntityFields = entityFields; // final field kludge
+                                            entityParameters.forEach((key, value) -> {
+                                                targetEntityFields.put(key, substituteVariables(value, entityProps));
+                                            });
+
+                                            String serviceName = updateService;
+                                            String serviceType = "update";
+                                            List<GenericValue> results = null;
+
+                                            //if entityparameters are empty, skip the lookup as it would never return anything useful
+                                            if (UtilValidate.isNotEmpty(entityFields)) {
+                                                //If entity has a thruDate, select only current entries
+                                                EntityCondition condition = EntityCondition.makeCondition(
+                                                        EntityCondition.makeCondition(entityFields)
+                                                );
+
+                                                ModelEntity myLookupModel = delegator.getModelEntity(entityName);
+
+                                                if (myLookupModel.getField("thruDate") != null) {
+                                                    condition = EntityCondition.append(condition, EntityUtil.getFilterByDateExpr());
+                                                }
+
+                                                boolean hasLocale = false;
+                                                EntityCondition conditionWithLocale = condition;
+                                                //most of the entities have "locale" mapped as "localeString", so setting it here
+                                                if (UtilValidate.isNotEmpty(localeStr) && myLookupModel.getField("localeString") != null) {
+                                                    conditionWithLocale = EntityCondition.append(conditionWithLocale, EntityCondition.makeCondition("localeString", localeStr));
+                                                    hasLocale = true;
+                                                }
+                                                // Still checking against "locale" just in case
+                                                if (UtilValidate.isNotEmpty(localeStr) && myLookupModel.getField("locale") != null) {
+                                                    conditionWithLocale = EntityCondition.append(conditionWithLocale, EntityCondition.makeCondition("locale", localeStr));
+                                                    hasLocale = true;
+                                                }
+
+                                                serviceName = updateService;
+                                                serviceType = "update";
+
+                                                try {
+                                                    results = delegator.findList(entityName, conditionWithLocale, null, null, null, false);
+                                                    if (UtilValidate.isEmpty(results)) {
+                                                        results = delegator.findList(entityName, condition, null, null, null, false);
+                                                        if (!hasLocale || (hasLocale && UtilValidate.isEmpty(results))) {
+                                                            serviceName = createService;
+                                                            serviceType = "create";
                                                         }
                                                     }
-                                            );
-
-                                            if (isSafeToDispatch.get()) {
-                                                if(UtilValidate.isNotEmpty(runAsync) && runAsync){
-                                                    dispatcher.runAsync(serviceName, serviceFields, true);
-                                                }else{
-                                                    Map<String, Object> serviceResult = dispatcher.runSync(serviceName, serviceFields);
-
-                                                    if (ServiceUtil.isSuccess(serviceResult)) {
-                                                        Debug.logInfo("Imported field value: " + cell.getAddress().formatAsString(), module);
-                                                    }else{
-                                                        errorList.add("Couldn't import field "+cell.getAddress().formatAsString()+". Service returned with error: "+serviceResult.get("errorMessageList"));
-                                                    }
+                                                } catch (GenericEntityException e) {
+                                                    throw new GenericEntityException("Could not find entity [" + entityName + "]" + e.getMessage(), e);
                                                 }
-                                            }else{
-                                                errorList.add("Couldn't run service "+serviceName+" for cell "+cell.getAddress().formatAsString()+" as some info was missing from service: "+serviceFields);
+                                            } else {
+                                                serviceName = createService;
+                                                serviceType = "create";
                                             }
-                                        } catch (ServiceValidationException ex){
-                                            TransactionUtil.rollback(beganTransaction, "Error importing cell "+cell.getAddress().formatAsString(),	ex);
-                                            errorList.add("ServiceValidationException: Couldn't update from field value: "+cell.getAddress().formatAsString()+"");
-                                            Debug.logWarning("Couldn't update from field value: "+cell.getAddress().formatAsString(),module);
-                                        } catch (GenericServiceException ex){
-                                            TransactionUtil.rollback(beganTransaction, "Error importing cell "+cell.getAddress().formatAsString(),	ex);
-                                            errorList.add("GenericServiceException: Couldn't update from field value: "+cell.getAddress().formatAsString());
-                                            Debug.logWarning("Couldn't update from field value: "+cell.getAddress().formatAsString(),module);
-                                        }
-                                    }else{
-                                        //Update the entity directly
-                                        try{
-                                            GenericValue origEntry = results.get(0);
-                                            if(!origEntry.get(fieldName).equals(cellValue)){
-                                                origEntry.set(fieldName,cellValue);
-                                                origEntry.createOrStore();
+
+                                            //Check if entry exists, if so, set it in context
+                                            serviceContext.forEach((key, value) -> {
+                                                if (UtilValidate.isNotEmpty(value)) {
+                                                    serviceProps.put(key, value);
+                                                }
+                                            });
+
+                                            if (UtilValidate.isNotEmpty(serviceName)) {
+                                                Map<String, String> serviceParameters = UtilProperties.getPropertiesWithPrefix(headerInfoProps, serviceType + ".parameters.");
+
+                                                if (UtilValidate.isNotEmpty(results)) {
+                                                    GenericValue origEntry = results.get(0);
+                                                    //serviceContext.putAll(origEntry.getAllFields());
+                                                    origEntry.forEach((key, value) -> {
+                                                        if (UtilValidate.isNotEmpty(value)) {
+                                                            serviceProps.put(key, value);
+                                                        }
+                                                    });
+                                                }
+
+                                                serviceParameters.forEach((key, value) -> {
+                                                    serviceContext.put(key, substituteVariables(value, serviceProps));
+                                                });
+
+                                                Map<String, Object> serviceFields = dispatcher.getDispatchContext().
+                                                        makeValidContext(serviceName, ModelService.IN_PARAM, serviceContext);
+
+                                                try {
+                                                    List<String> missingServiceParams = new CopyOnWriteArrayList<>();
+                                                    dispatcher.getModelService(serviceName).getInModelParamList().forEach(
+                                                            s -> {
+                                                                if (!s.optional && UtilValidate.isEmpty(serviceFields.get(s.getName()))) {
+                                                                    missingServiceParams.add(s.getName());
+                                                                }
+                                                            }
+                                                    );
+
+                                                    if (missingServiceParams.isEmpty()) {
+                                                        if ("async".equals(serviceMode)) {
+                                                            dispatcher.runAsync(serviceName, serviceFields, false);
+                                                        } else if ("async-persist".equals(serviceMode)) {
+                                                            // FIXME: Specify/eliminate retries on errors
+                                                            dispatcher.runAsync(serviceName, serviceFields, true);
+                                                        } else {
+                                                            Map<String, Object> serviceResult = dispatcher.runSync(serviceName, serviceFields);
+
+                                                            if (ServiceUtil.isSuccess(serviceResult)) {
+                                                                Debug.logInfo("Imported field value: " + cell.getAddress().formatAsString(), module);
+                                                            } else {
+                                                                throw new GenericServiceException("Could not import field " + cell.getAddress().formatAsString() +
+                                                                        ". Service returned with error: " + ServiceUtil.getErrorMessage(serviceResult));
+                                                            }
+                                                        }
+                                                    } else {
+                                                        throw new GenericServiceException("Could not run service [" + serviceName + "] for cell " + cell.getAddress().formatAsString() +
+                                                                ": fields " + missingServiceParams + " were missing from service invocation: " + serviceFields);
+                                                    }
+                                                } catch (GenericServiceException ex) {
+                                                    throw new GenericServiceException("Could not update from field value: " + cell.getAddress().formatAsString()
+                                                        + ": " + ex.getMessage(), ex);
+                                                }
+                                            } else {
+                                                //Update the entity directly
+                                                try {
+                                                    GenericValue origEntry = results.get(0);
+                                                    if (!origEntry.get(fieldName).equals(cellValue)) {
+                                                        origEntry.set(fieldName, cellValue);
+                                                        origEntry.createOrStore();
+                                                    }
+                                                } catch (GenericEntityException ex) {
+                                                    throw new GenericEntityException("Could not create or store entity value for fieldName [" + fieldName + "] and cell: " +
+                                                            cell.getAddress().formatAsString() + ": " + ex.getMessage(), ex);
+                                                }
                                             }
-                                        } catch (GenericEntityException ex){
-                                            TransactionUtil.rollback(beganTransaction, "Error importing cell "+cell.getAddress().formatAsString(),	ex);
-                                            errorList.add("GenericEntityException: Couldn't create or store entity value for fieldName "+fieldName+" and cell: "+cell.getAddress().formatAsString());
-                                            Debug.logWarning("Couldn't update from field value: "+cell.getAddress().formatAsString(),module);
                                         }
                                     }
                                 }
-                            }
-                        }
 
-                        try {
-                            TransactionUtil.commit(beganTransaction);
-                            if (parentTransaction != null) TransactionUtil.resume(parentTransaction);
+                            } catch (Throwable t) { // Per-row transaction and atomic error handling
+                                transactionEx = t;
+                                String msg = "Cell [" + cellAddr + "]: Could not create or update entity [" + entityName + "] [" + entityFields + "]";
+                                Debug.logWarning(msg + ": " + t.getMessage(), module);
+                                errorList.add(msg + ": " + t.getMessage());
+                            } finally { // finally required to ensure transaction rollback or commit happens (binary)
+                                if (transactionEx != null) {
+                                    try {
+                                        if (TransactionUtil.isTransactionInPlace()) {
+                                            TransactionUtil.rollback(beganTransaction, transactionEx.toString(), transactionEx);
+                                        }
+                                    } catch (GenericTransactionException e) {
+                                        // NOTE: Normally this is considered a fatal error, but best to absorb it here for now
+                                        Debug.logError(e, "Unable to rollback transaction", module);
+                                        errorList.add("Unable to rollback transaction: " + e.getMessage());
+                                    }
+                                } else {
+                                    try {
+                                        TransactionUtil.commit(beganTransaction);
+                                    } catch (GenericTransactionException e) {
+                                        // NOTE: Normally this is considered a fatal error, but best to absorb it here for now
+                                        Debug.logError(e, "Cannot commit transaction", module);
+                                        errorList.add("Cannot commit transaction: " + e.getMessage());
+                                    }
+                                }
+                            }
                         } catch (GenericTransactionException e) {
                             Debug.logError(e, module);
-                            errorList.add("Cannot resume transaction: "+e.getMessage());
-                        }finally {
+                            errorList.add("Cannot suspend transaction: " + e.getMessage());
+                        } finally {
                             try {
-                                if (parentTransaction != null) TransactionUtil.resume(parentTransaction);
+                                if (parentTransaction != null) {
+                                    TransactionUtil.resume(parentTransaction);
+                                }
                             } catch (GenericTransactionException e) {
-                                errorList.add("Cannot resume transaction: "+e.getMessage());
-                                Debug.logError(e, "Cannot resume transaction:"+e.getMessage(), module);
+                                errorList.add("Cannot resume transaction: " + e.getMessage());
+                                Debug.logError(e, "Cannot resume transaction", module);
                             }
                         }
-
                     }
                 }
             }
 
         }catch (Exception e) {
-            errorList.add("An exception was thrown: "+e.getMessage());
-            ServiceUtil.returnError(e.getMessage());
+            errorList.add("Unexpected exception: "+e.getMessage());
+            return ServiceUtil.returnError(e.getMessage(), errorList);
         }
 
         if(!errorList.isEmpty()){
             return ServiceUtil.returnFailure(errorList);
         }
-
-
         return ServiceUtil.returnSuccess();
     }
 

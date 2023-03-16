@@ -241,10 +241,13 @@ code package.
 
     <!-- Import/Export -->
     <service name="excelI18nImport" engine="java" log="quiet" hideResultInLog="true" log-eca="quiet"
-             location="com.ilscipio.scipio.util.CatalogImportExportServices" invoke="excelI18nImport" auth="false">
+             location="com.ilscipio.scipio.util.CatalogImportExportServices" invoke="excelI18nImport" auth="false"
+             use-transaction="false">
         <description>Update or create category content based on an Excel file</description>
         <implements service="uploadFileInterface" optional="true"/>
-        <attribute name="runAsync" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="serviceMode" type="String" mode="IN" optional="true" default-value="sync">
+            <description>One of: sync, async, async-persist</description>
+        </attribute>
         <attribute name="startRow" type="Integer" mode="IN" optional="true"/>
         <attribute name="endRow" type="Integer" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="false"/>

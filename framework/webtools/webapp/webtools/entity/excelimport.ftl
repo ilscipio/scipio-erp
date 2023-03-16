@@ -36,7 +36,11 @@
         </@row>
         <@row>
             <@cell columns=6>
-                <@field type="checkbox" name="runAsync" label="Async" value="true" checked=true/>
+                <@field type="select" name="serviceMode" id="excelServiceMode" required=true label="Service Mode" class="${styles.field_select_default!}">
+                    <option value="sync"<#if "sync" == parameters.serviceMode!> selected="selected"</#if>>sync</option>
+                    <option value="async"<#if "async" == parameters.serviceMode!> selected="selected"</#if>>async</option>
+                    <option value="async-persist"<#if "async-persist" == parameters.serviceMode!> selected="selected"</#if>>async-persist</option>
+                </@field>
             </@cell>
         </@row>
         <@row>

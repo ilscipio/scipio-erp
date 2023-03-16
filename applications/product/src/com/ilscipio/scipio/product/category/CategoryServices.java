@@ -1,10 +1,14 @@
 package com.ilscipio.scipio.product.category;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -15,6 +19,8 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceContext;
+import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.product.category.CategoryWorker.TreeBuildOptions;
@@ -106,5 +112,74 @@ public abstract class CategoryServices {
         result.put("treeList", resultList);
         result.put("categoryEntityOutMap", categoryEntityOutMap);
         return result;
+    }
+
+    public static class CreateUpdateProductCategorySimpleTextContentForAlternateLocale extends ServiceHandler.Local implements ServiceHandler.Exec {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+        protected String productCategoryId;
+        protected String prodCatContentTypeId;
+        protected Timestamp prodCatContentFromDate;
+        protected String mainContentId;
+        protected String contentId;
+
+        public void init(ServiceContext ctx) {
+            super.init(ctx);
+            productCategoryId = ctx.attrNonEmpty("productCategoryId");
+            prodCatContentTypeId = ctx.attrNonEmpty("prodCatContentTypeId");
+            prodCatContentFromDate = ctx.attr("prodCatContentFromDate");
+            mainContentId = ctx.attrNonEmpty("mainContentId");
+            contentId = ctx.attrNonEmpty("contentId");
+        }
+
+        @Override
+        public Map<String, Object> exec() {
+            try {
+                Map<String, Object> productContentFields = UtilMisc.toMap("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId);
+                boolean filterByDate = true;
+                if (UtilValidate.isNotEmpty(prodCatContentFromDate)) {
+                    productContentFields.put("fromDate", prodCatContentFromDate);
+                    filterByDate = false;
+                }
+                GenericValue prodCatContent = ctx.delegator().from("ProductCategoryContent").where(productContentFields).filterByDate(filterByDate).queryFirst();
+                if (prodCatContent == null) {
+                    prodCatContentFromDate = UtilDateTime.nowTimestamp();
+                    prodCatContent = ctx.delegator().makeValue("ProductCategoryContent",
+                            "productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId,
+                            "contentId", mainContentId, "fromDate", prodCatContentFromDate);
+                    prodCatContent = prodCatContent.create();
+                } else {
+                    prodCatContentFromDate = prodCatContent.getTimestamp("fromDate");
+                    if (mainContentId == null) {
+                        mainContentId = prodCatContent.getString("contentId");
+                    }
+                }
+
+                Map<String, Object> updateContentCtx = ctx.makeValidInContext("createUpdateSimpleTextContentForAlternateLocale");
+                if (mainContentId != null) {
+                    updateContentCtx.put("mainContentId", mainContentId);
+                }
+                Map<String, Object> updateContentResult = ctx.dispatcher().runSync("createUpdateSimpleTextContentForAlternateLocale", updateContentCtx);
+                if (!ServiceUtil.isSuccess(updateContentResult)) {
+                    return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateContentResult)));
+                }
+                mainContentId = (String) updateContentResult.get("mainContentId");
+                contentId = (String) updateContentResult.get("contentId");
+                prodCatContent.refresh();
+                if (UtilValidate.isEmpty(prodCatContent.getString("contentId"))) {
+                    prodCatContent.set("contentId", mainContentId);
+                }
+                return populateServiceResult(ServiceUtil.returnSuccess());
+            } catch (GeneralException e) {
+                return populateServiceResult(ServiceUtil.returnError(e.toString()));
+            }
+        }
+
+        protected Map<String, Object> populateServiceResult(Map<String, Object> result) {
+            result.put("prodCatContentFromDate", prodCatContentFromDate);
+            result.put("mainContentId", mainContentId);
+            result.put("contentId", contentId);
+            return result;
+        }
     }
 }

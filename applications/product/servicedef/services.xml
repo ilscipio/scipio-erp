@@ -2794,4 +2794,28 @@ code package.
         <attribute name="mimeTypeIdList" type="List" mode="IN" optional="true"/>
         <attribute name="localeList" type="List" mode="IN" optional="true"/>
     </service>
+
+    <service name="createUpdateProductSimpleTextContentForAlternateLocale" engine="java"
+             location="com.ilscipio.scipio.product.product.ProductServices$CreateUpdateProductSimpleTextContentForAlternateLocale" invoke="exec">
+        <description>Creates or updates simple text content for alternate locale for product
+            - supports either explicit contentId or relying on localeString to find record to update
+            - WARN: For high-level operation, use replaceContentLocalizedSimpleTexts</description>
+        <implements service="createUpdateSimpleTextContentForAlternateLocale"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productContentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productContentFromDate" type="Timestamp" mode="INOUT" optional="true"/>
+        <!-- DEV NOTE: Be careful adding parameters for ProductContent since they may end up passed to ContentAssoc instead -->
+    </service>
+
+    <service name="createUpdateProductCategorySimpleTextContentForAlternateLocale" engine="java"
+             location="com.ilscipio.scipio.product.category.CategoryServices$CreateUpdateProductCategorySimpleTextContentForAlternateLocale" invoke="exec">
+        <description>Creates or updates simple text content for alternate locale for product category
+            - supports either explicit contentId or relying on localeString to find record to update
+            - WARN: For high-level operation, use replaceContentLocalizedSimpleTexts</description>
+        <implements service="createUpdateSimpleTextContentForAlternateLocale"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatContentTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatContentFromDate" type="Timestamp" mode="INOUT" optional="true"/>
+        <!-- DEV NOTE: Be careful adding parameters for ProductContent since they may end up passed to ContentAssoc instead -->
+    </service>
 </services>

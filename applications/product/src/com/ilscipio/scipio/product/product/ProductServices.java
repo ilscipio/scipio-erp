@@ -141,7 +141,7 @@ public abstract class ProductServices {
         }
     }
 
-    public static class CreateUpdateProductSimpleTextContentForAlternateLocale extends ServiceHandler.Local implements ServiceHandler.Exec {
+    public static class CreateUpdateProductSimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
         protected String productId;

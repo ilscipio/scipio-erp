@@ -114,7 +114,7 @@ public abstract class CategoryServices {
         return result;
     }
 
-    public static class CreateUpdateProductCategorySimpleTextContentForAlternateLocale extends ServiceHandler.Local implements ServiceHandler.Exec {
+    public static class CreateUpdateProductCategorySimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
         protected String productCategoryId;

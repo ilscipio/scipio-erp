@@ -38,6 +38,7 @@ public class CatalogImportExportServices {
     public static Map<String, Object> excelI18nImport(DispatchContext dctx, Map<String, ? extends Object> context) throws IOException {
         Delegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
+        int logLevel = Debug.getLevel(context.get("logLevel"), Debug.VERBOSE);
         Locale locale = (Locale) context.get("locale");
         ByteBuffer byteBuffer = (ByteBuffer) context.get("uploadedFile");
         String templateName = (String) context.get("templateName") != null ? context.get("templateName")+"." : "";
@@ -56,6 +57,7 @@ public class CatalogImportExportServices {
             //Create Workbook instance holding reference to .xlsx file
             XSSFWorkbook workbook = new XSSFWorkbook(is);
             boolean headerRead = false;
+            String workbookName = "workbook"; // TODO
 
             Map<Integer,Map> headerInfo = new HashMap<Integer,Map>();
             if(workbook.getSheetAt(0) !=null){
@@ -294,6 +296,10 @@ public class CatalogImportExportServices {
                                                             }
                                                     );
 
+                                                    if (logLevel == Debug.INFO || logLevel == Debug.VERBOSE) {
+                                                        Debug.log(logLevel, workbookName + " [" + cellAddr + "]: Starting service [" +
+                                                                serviceName + ", " + serviceMode + "]" + (logLevel == Debug.VERBOSE ? ": " + serviceFields : ""), module);
+                                                    }
                                                     if (missingServiceParams.isEmpty()) {
                                                         if ("async".equals(serviceMode)) {
                                                             dispatcher.runAsync(serviceName, serviceFields, false);
@@ -304,31 +310,33 @@ public class CatalogImportExportServices {
                                                             Map<String, Object> serviceResult = dispatcher.runSync(serviceName, serviceFields);
 
                                                             if (ServiceUtil.isSuccess(serviceResult)) {
-                                                                Debug.logInfo("Imported field value: " + cell.getAddress().formatAsString(), module);
+                                                                Debug.logInfo(workbookName + " [" + cellAddr + "]: Imported field value: " + cellAddr, module);
                                                             } else {
-                                                                throw new GenericServiceException("Could not import field " + cell.getAddress().formatAsString() +
+                                                                throw new GenericServiceException("Could not import field " + cellAddr +
                                                                         ". Service returned with error: " + ServiceUtil.getErrorMessage(serviceResult));
                                                             }
                                                         }
                                                     } else {
-                                                        throw new GenericServiceException("Could not run service [" + serviceName + "] for cell " + cell.getAddress().formatAsString() +
-                                                                ": fields " + missingServiceParams + " were missing from service invocation: " + serviceFields);
+                                                        throw new GenericServiceException("Could not run service [" + serviceName + "]: fields " + missingServiceParams +
+                                                                " were missing from service invocation: " + serviceFields);
                                                     }
-                                                } catch (GenericServiceException ex) {
-                                                    throw new GenericServiceException("Could not update from field value: " + cell.getAddress().formatAsString()
-                                                        + ": " + ex.getMessage(), ex);
+                                                } catch (GenericServiceException e) {
+                                                    throw new GenericServiceException("Could not update from field value: " + e.getMessage(), e);
                                                 }
                                             } else {
                                                 //Update the entity directly
+                                                if (logLevel == Debug.INFO || logLevel == Debug.VERBOSE) {
+                                                    Debug.log(logLevel, workbookName + " [" + cellAddr + "]: Updating entity [" +
+                                                            entityName + "." + fieldName + "]", module);
+                                                }
                                                 try {
                                                     GenericValue origEntry = results.get(0);
                                                     if (!origEntry.get(fieldName).equals(cellValue)) {
                                                         origEntry.set(fieldName, cellValue);
                                                         origEntry.createOrStore();
                                                     }
-                                                } catch (GenericEntityException ex) {
-                                                    throw new GenericEntityException("Could not create or store entity value for fieldName [" + fieldName + "] and cell: " +
-                                                            cell.getAddress().formatAsString() + ": " + ex.getMessage(), ex);
+                                                } catch (GenericEntityException e) {
+                                                    throw new GenericEntityException("Could not create or store entity value for fieldName [" + fieldName + "]: " + e.getMessage(), e);
                                                 }
                                             }
                                         }
@@ -337,9 +345,9 @@ public class CatalogImportExportServices {
 
                             } catch (Throwable t) { // Per-row transaction and atomic error handling
                                 transactionEx = t;
-                                String msg = "Cell [" + cellAddr + "]: Could not create or update entity [" + entityName + "] [" + entityFields + "]";
-                                Debug.logWarning(msg + ": " + t.getMessage(), module);
-                                errorList.add(msg + ": " + t.getMessage());
+                                String msg = "Could not create or update entity [" + entityName + "] [" + entityFields + "]";
+                                Debug.logWarning(workbookName + " [" + cellAddr + "]: " + msg + ": " + t.getMessage(), module);
+                                errorList.add("[" + cellAddr + "]: " + msg + ": " + t.getMessage());
                             } finally { // finally required to ensure transaction rollback or commit happens (binary)
                                 if (transactionEx != null) {
                                     try {
@@ -348,30 +356,30 @@ public class CatalogImportExportServices {
                                         }
                                     } catch (GenericTransactionException e) {
                                         // NOTE: Normally this is considered a fatal error, but best to absorb it here for now
-                                        Debug.logError(e, "Unable to rollback transaction", module);
-                                        errorList.add("Unable to rollback transaction: " + e.getMessage());
+                                        Debug.logError(e, workbookName + " [" + cellAddr + "]: Unable to rollback transaction", module);
+                                        errorList.add("[" + cellAddr + "]: Unable to rollback transaction: " + e.getMessage());
                                     }
                                 } else {
                                     try {
                                         TransactionUtil.commit(beganTransaction);
                                     } catch (GenericTransactionException e) {
                                         // NOTE: Normally this is considered a fatal error, but best to absorb it here for now
-                                        Debug.logError(e, "Cannot commit transaction", module);
-                                        errorList.add("Cannot commit transaction: " + e.getMessage());
+                                        Debug.logError(e, workbookName + " [" + cellAddr + "]: Cannot commit transaction", module);
+                                        errorList.add("[" + cellAddr + "]: Cannot commit transaction: " + e.getMessage());
                                     }
                                 }
                             }
                         } catch (GenericTransactionException e) {
-                            Debug.logError(e, module);
-                            errorList.add("Cannot suspend transaction: " + e.getMessage());
+                            Debug.logError(e, workbookName + " [" +  cellAddr + "]: Cannot suspend transaction", module);
+                            errorList.add("[" + cellAddr + "]: Cannot suspend transaction: " + e.getMessage());
                         } finally {
                             try {
                                 if (parentTransaction != null) {
                                     TransactionUtil.resume(parentTransaction);
                                 }
                             } catch (GenericTransactionException e) {
-                                errorList.add("Cannot resume transaction: " + e.getMessage());
-                                Debug.logError(e, "Cannot resume transaction", module);
+                                Debug.logError(e, workbookName + " [" +  cellAddr + "]: Cannot resume transaction", module);
+                                errorList.add("[" + cellAddr + "]: Cannot resume transaction: " + e.getMessage());
                             }
                         }
                     }

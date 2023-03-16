@@ -164,19 +164,19 @@ public abstract class ProductServices {
             try {
                 Map<String, Object> productContentFields = UtilMisc.toMap("productId", productId, "productContentTypeId", productContentTypeId);
                 boolean filterByDate = true;
-                if (UtilValidate.isNotEmpty(productContentFromDate)) {
+                if (productContentFromDate != null) {
                     productContentFields.put("fromDate", productContentFromDate);
                     filterByDate = false;
                 }
+                if (mainContentId != null) {
+                    productContentFields.put("contentId", mainContentId);
+                }
+                Debug.logInfo("Looking up ProductContent for " + productContentFields, module);
                 GenericValue productContent = ctx.delegator().from("ProductContent").where(productContentFields).filterByDate(filterByDate).queryFirst();
-                if (productContent == null) {
-                    productContentFromDate = UtilDateTime.nowTimestamp();
-                    productContent = ctx.delegator().makeValue("ProductContent",
-                            "productId", productId, "productContentTypeId", productContentTypeId,
-                            "contentId", mainContentId, "fromDate", productContentFromDate);
-                    productContent = productContent.create();
-                } else {
-                    productContentFromDate = productContent.getTimestamp("fromDate");
+                if (productContent != null) {
+                    if (productContentFromDate == null) {
+                        productContentFromDate = productContent.getTimestamp("fromDate");
+                    }
                     if (mainContentId == null) {
                         mainContentId = productContent.getString("contentId");
                     }
@@ -190,12 +190,29 @@ public abstract class ProductServices {
                 if (!ServiceUtil.isSuccess(updateContentResult)) {
                     return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateContentResult)));
                 }
-                mainContentId = (String) updateContentResult.get("mainContentId");
-                contentId = (String) updateContentResult.get("contentId");
-                productContent.refresh();
-                if (UtilValidate.isEmpty(productContent.getString("contentId"))) {
-                    productContent.set("contentId", mainContentId);
+                mainContentId = UtilValidate.nullIfEmpty(updateContentResult.get("mainContentId"));
+                if (mainContentId == null) {
+                    return populateServiceResult(ServiceUtil.returnError("No mainContentId available"));
                 }
+                contentId = (String) updateContentResult.get("contentId");
+
+                // re-lookup (minimize concurrency issues)
+                productContentFields.put("contentId", mainContentId);
+                productContent = ctx.delegator().from("ProductContent").where(productContentFields).filterByDate(filterByDate).queryFirst();
+                if (productContent == null) {
+                    productContentFromDate = UtilDateTime.nowTimestamp();
+                    productContent = ctx.delegator().makeValue("ProductContent",
+                            "productId", productId, "productContentTypeId", productContentTypeId,
+                            "contentId", mainContentId, "fromDate", productContentFromDate);
+                    productContent = productContent.create();
+                } else {
+                    productContentFromDate = productContent.getTimestamp("fromDate");
+                    if (UtilValidate.isEmpty(productContent.getString("contentId"))) {
+                        productContent.set("contentId", mainContentId);
+                        productContent.store();
+                    }
+                }
+
                 return populateServiceResult(ServiceUtil.returnSuccess());
             } catch (GeneralException e) {
                 return populateServiceResult(ServiceUtil.returnError(e.toString()));

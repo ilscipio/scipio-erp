@@ -251,5 +251,8 @@ code package.
         <attribute name="startRow" type="Integer" mode="IN" optional="true"/>
         <attribute name="endRow" type="Integer" mode="IN" optional="true"/>
         <attribute name="templateName" type="String" mode="IN" optional="false"/>
+        <attribute name="logLevel" type="String" mode="IN" optional="true" default-value="info">
+            <description>Service-relative log level; pne of: info, verbose, important, warning</description>
+        </attribute>
     </service>
 </services>

@@ -135,21 +135,21 @@ public abstract class CategoryServices {
         @Override
         public Map<String, Object> exec() {
             try {
-                Map<String, Object> productContentFields = UtilMisc.toMap("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId);
+                Map<String, Object> prodCatContentFields = UtilMisc.toMap("productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId);
                 boolean filterByDate = true;
-                if (UtilValidate.isNotEmpty(prodCatContentFromDate)) {
-                    productContentFields.put("fromDate", prodCatContentFromDate);
+                if (prodCatContentFromDate != null) {
+                    prodCatContentFields.put("fromDate", prodCatContentFromDate);
                     filterByDate = false;
                 }
-                GenericValue prodCatContent = ctx.delegator().from("ProductCategoryContent").where(productContentFields).filterByDate(filterByDate).queryFirst();
-                if (prodCatContent == null) {
-                    prodCatContentFromDate = UtilDateTime.nowTimestamp();
-                    prodCatContent = ctx.delegator().makeValue("ProductCategoryContent",
-                            "productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId,
-                            "contentId", mainContentId, "fromDate", prodCatContentFromDate);
-                    prodCatContent = prodCatContent.create();
-                } else {
-                    prodCatContentFromDate = prodCatContent.getTimestamp("fromDate");
+                if (mainContentId != null) {
+                    prodCatContentFields.put("contentId", mainContentId);
+                }
+                Debug.logInfo("Looking up ProductCategoryContent for " + prodCatContentFields, module);
+                GenericValue prodCatContent = ctx.delegator().from("ProductCategoryContent").where(prodCatContentFields).filterByDate(filterByDate).queryFirst();
+                if (prodCatContent != null) {
+                    if (prodCatContentFromDate == null) {
+                        prodCatContentFromDate = prodCatContent.getTimestamp("fromDate");
+                    }
                     if (mainContentId == null) {
                         mainContentId = prodCatContent.getString("contentId");
                     }
@@ -164,11 +164,28 @@ public abstract class CategoryServices {
                     return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateContentResult)));
                 }
                 mainContentId = (String) updateContentResult.get("mainContentId");
-                contentId = (String) updateContentResult.get("contentId");
-                prodCatContent.refresh();
-                if (UtilValidate.isEmpty(prodCatContent.getString("contentId"))) {
-                    prodCatContent.set("contentId", mainContentId);
+                if (UtilValidate.isEmpty(mainContentId)) {
+                    return populateServiceResult(ServiceUtil.returnError("No mainContentId available"));
                 }
+                contentId = (String) updateContentResult.get("contentId");
+
+                // re-lookup (minimize concurrency issues)
+                prodCatContentFields.put("contentId", mainContentId);
+                prodCatContent = ctx.delegator().from("ProductContent").where(prodCatContentFields).filterByDate(filterByDate).queryFirst();
+                if (prodCatContent == null) {
+                    prodCatContentFromDate = UtilDateTime.nowTimestamp();
+                    prodCatContent = ctx.delegator().makeValue("ProductCategoryContent",
+                            "productCategoryId", productCategoryId, "prodCatContentTypeId", prodCatContentTypeId,
+                            "contentId", mainContentId, "fromDate", prodCatContentFromDate);
+                    prodCatContent = prodCatContent.create();
+                } else {
+                    prodCatContentFromDate = prodCatContent.getTimestamp("fromDate");
+                    if (UtilValidate.isEmpty(prodCatContent.getString("contentId"))) {
+                        prodCatContent.set("contentId", mainContentId);
+                        prodCatContent.store();
+                    }
+                }
+
                 return populateServiceResult(ServiceUtil.returnSuccess());
             } catch (GeneralException e) {
                 return populateServiceResult(ServiceUtil.returnError(e.toString()));

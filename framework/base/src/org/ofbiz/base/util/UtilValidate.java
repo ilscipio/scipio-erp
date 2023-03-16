@@ -262,8 +262,8 @@ public final class UtilValidate {
      * <p>
      * Acts as a convenient filter to minimize the number of intermediate variables and repeated container accesses.
      */
-    public static <T> T nullIfEmpty(T value) {
-        return isEmpty(value) ? null : value;
+    public static <T> T nullIfEmpty(Object value) {
+        return isEmpty(value) ? null : UtilGenerics.cast(value);
     }
 
     /**
@@ -271,8 +271,8 @@ public final class UtilValidate {
      * <p>
      * Acts as a convenient filter to minimize the number of intermediate variables and repeated container accesses.
      */
-    public static <T> T nullIfEmptyString(T value) {
-        return (value instanceof CharSequence && ((CharSequence) value).length() == 0) ? null : value;
+    public static <T extends CharSequence> T nullIfEmptyString(Object value) {
+        return (value instanceof CharSequence && ((CharSequence) value).length() == 0) ? null : UtilGenerics.cast(value);
     }
 
     /**

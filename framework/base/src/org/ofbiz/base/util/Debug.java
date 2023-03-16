@@ -42,6 +42,20 @@ public final class Debug {
     public static final int ERROR = 6;
     public static final int FATAL = 7;
 
+    // SCIPIO: 3.0.0: Added/standardized helpful constants (renamed from levelStringMap)
+    // Levels: always, verbose, timing, info, important, warning", error, fatal
+    public static final Set<String> LEVEL_NAMES = Set.of("always", "verbose", "timing", "info", "important", "warning", "error", "fatal");
+    public static final List<String> LEVEL_NAMES_LIST = List.copyOf(LEVEL_NAMES);
+    public static final Map<String, Integer> LEVEL_NAMES_MAP = Map.of(
+            "always", Debug.ALWAYS,
+            "verbose", Debug.VERBOSE,
+            "timing", Debug.TIMING,
+            "info", Debug.INFO,
+            "important", Debug.IMPORTANT,
+            "warning", Debug.WARNING,
+            "error", Debug.ERROR,
+            "fatal", Debug.FATAL);
+
     /**
      * SCIPIO: The locale of the log entries. This is always {@link Locale#ENGLISH}.
      */
@@ -49,8 +63,6 @@ public final class Debug {
 
     private static final String[] levelProps = {"", "print.verbose", "print.timing", "print.info", "print.important", "print.warning", "print.error", "print.fatal"};
     private static final Level[] levelObjs = {Level.OFF, Level.DEBUG, Level.TRACE, Level.INFO, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
-
-    private static final Map<String, Integer> levelStringMap;
 
     private static final boolean levelOnCache[] = new boolean[8]; // this field is not thread safe
 
@@ -83,16 +95,6 @@ public final class Debug {
     private static final Debug INSTANCE = new Debug(); // SCIPIO: This is for FreeMarkerWorker (only!)
     
     static {
-        Map<String, Integer> lsm = new HashMap<>();
-        lsm.put("verbose", Debug.VERBOSE);
-        lsm.put("timing", Debug.TIMING);
-        lsm.put("info", Debug.INFO);
-        lsm.put("important", Debug.IMPORTANT);
-        lsm.put("warning", Debug.WARNING);
-        lsm.put("error", Debug.ERROR);
-        lsm.put("fatal", Debug.FATAL);
-        lsm.put("always", Debug.ALWAYS);
-        levelStringMap = lsm;
 
         // initialize levelOnCache
         Properties properties = UtilProperties.createProperties("debug.properties");
@@ -133,7 +135,7 @@ public final class Debug {
         if (levelName == null) {
             return null;
         }
-        return levelStringMap.get(levelName.toLowerCase(Locale.getDefault()));
+        return LEVEL_NAMES_MAP.get(levelName.toLowerCase(Locale.getDefault()));
     }
 
     /** Gets an Integer representing the level number from a String representing the level name; will return default value if not found (SCIPIO). */

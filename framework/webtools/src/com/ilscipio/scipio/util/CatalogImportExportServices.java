@@ -15,14 +15,11 @@ import org.ofbiz.service.*;
 import org.apache.poi.ss.usermodel.*;
 
 import javax.transaction.Transaction;
-import javax.ws.rs.core.GenericEntity;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.util.*;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CatalogImportExportServices {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());

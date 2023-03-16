@@ -7,10 +7,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Service implementation interface.
+ * Service implementation interface and abstract classes.
+ *
+ * <p>Implicitly supports the {@link com.ilscipio.scipio.service.def.Service} annotation, but they can be used
+ * completely independently.</p>
+ *
+ * <p>The recommended way to write new services is by extending {@link ServiceHandler.LocalExec}.</p>
+ *
  * <p>Typically an implementation will provided either a default constructor or a constructor taking a
  * {@link ServiceContext}; the default constructor causes a delayed call to {@link Local#init(ServiceContext)} whereas
  * the service context constructor does not.</p>
+ *
+ * <p>SCIPIO: 3.0.0: Added optional {@link ServiceHandler.Exec}, {@link ServiceHandler.LocalExec} for standardization.</p>
  * <p>SCIPIO: 2.1.0: Added and integrated into service engine. See for example.</p>
  */
 public interface ServiceHandler {
@@ -145,6 +153,25 @@ public interface ServiceHandler {
         //public final Map<String, Object> exec(ServiceContext ctx) throws GeneralException {
         //    return exec();
         //}
+    }
+
+    /**
+     * A service handler created and invoked at every service call that implements {@link Exec}.
+     *
+     * <p>Designed to hold a {@link ServiceContext} exposed as {@link #ctx} to service implementations, with
+     * support for legacy {@link #dctx} and {@link #context} variables for legacy code.</p>
+     *
+     * <p>Typically an implementation will provided either a default constructor or a constructor taking a
+     * {@link ServiceContext}; the default constructor causes a delayed call to {@link Local#init(ServiceContext)} whereas
+     * the service context constructor does not.</p>
+     */
+    abstract class LocalExec extends Local implements Exec {
+        public LocalExec(ServiceContext ctx) {
+            super(ctx);
+        }
+
+        public LocalExec() {
+        }
     }
 
     interface Accessor {

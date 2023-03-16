@@ -119,7 +119,11 @@ public final class ServiceUtil {
         return returnProblem(ModelService.RESPOND_FAIL, errorMessage, null, null, null);
     }
 
-    /** Returns fail service message. SCIPIO: added missing service overload, 2017-11-01. */
+    /**
+     * Returns fail service message.
+     *
+     * <p>SCIPIO: 2017-11-01: Added missing overload.</p>
+     */
     public static Map<String, Object> returnFailure(String errorMessage, List<? extends Object> errorMessageList) {
         return returnProblem(ModelService.RESPOND_FAIL, errorMessage, errorMessageList, null, null);
     }
@@ -214,56 +218,67 @@ public final class ServiceUtil {
         return result;
     }
 
-    /** SCIPIO: Creates a service error result map from the given exception using the given localizable intro message
+    /**
+     * Creates a service error result map from the given exception using the given localizable intro message
      * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()}
      * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type,
      * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
      * In other words this abstracts and automated the service result building from exception messages.
-     * Added 2017-12-07.
+     *
+     * <p>SCIPIO: 2017-12-07: Added.</p>
      */
     public static Map<String, Object> returnError(PropertyMessage messageIntro, Throwable t, Locale locale) {
         return returnError(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale),
                 PropertyMessageExUtil.getExceptionMessageList(t, locale));
     }
 
-    /** SCIPIO: Creates a service error result map from the given exception using the given static intro message
+    /**
+     * Creates a service error result map from the given exception using the given static intro message
      * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()}
      * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type,
      * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
      * In other words this abstracts and automated the service result building from exception messages.
-     * Added 2017-12-07.
+     *
+     * <p>SCIPIO: 2017-12-07: Added.</p>
      */
     public static Map<String, Object> returnError(String messageIntro, Throwable t, Locale locale) {
         return returnError(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale),
                 PropertyMessageExUtil.getExceptionMessageList(t, locale));
     }
 
-    /** SCIPIO: Creates a service error result map from the given exception using the given localizable intro message
+    /**
+     * Creates a service error result map from the given exception using the given localizable intro message
      * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()}
      * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type,
      * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
      * In other words this abstracts and automated the service result building from exception messages.
-     * Added 2017-12-07.
+     *
+     * <p>SCIPIO: 2017-12-07: Added.</p>
      */
     public static Map<String, Object> returnFailure(PropertyMessage messageIntro, Throwable t, Locale locale) {
         return returnFailure(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale),
                 PropertyMessageExUtil.getExceptionMessageList(t, locale));
     }
 
-    /** SCIPIO: Creates a service error result map from the given exception using the given localizable intro message
+    /**
+     * Creates a service error result map from the given exception using the given localizable intro message
      * combined with a suffix message taken from either a localizable property message via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessage()}
      * stored in the exception if it implements PropertyMessageEx or the exception detail message if any other exception type,
      * in addition to any message lists stored in the exception via {@link org.ofbiz.base.util.PropertyMessageEx#getPropertyMessageList()}.
      * In other words this abstracts and automated the service result building from exception messages.
-     * Added 2017-12-07.
+     *
+     * <p>SCIPIO: 2017-12-07: Added.</p>
      */
     public static Map<String, Object> returnFailure(String messageIntro, Throwable t, Locale locale) {
         return returnFailure(PropertyMessageExUtil.makeServiceMessage(messageIntro, t, locale),
                 PropertyMessageExUtil.getExceptionMessageList(t, locale));
     }
 
-    /** Copies the given result's response code, success/error messages and any {@link ModelService#SYS_RESPONSE_FIELDS} into a new service result map (SCIPIO).
-     * In other words copies only the fields (system service attributes) common to all services. NOTE: Currently null values are not preserved because not significant. */
+    /**
+     * Copies the given result's response code, success/error messages and any {@link ModelService#SYS_RESPONSE_FIELDS} into a new service result map (SCIPIO).
+     * In other words copies only the fields (system service attributes) common to all services.
+     * NOTE: Currently null values are not preserved because not significant.
+     */
     public static Map<String, Object> returnResultSysFields(Map<String, Object> otherResult) {
         Map<String, Object> result = new HashMap<>();
         for(String key : ModelService.SYS_RESPONSE_FIELDS) {
@@ -275,8 +290,11 @@ public final class ServiceUtil {
         return result;
     }
 
-    /** Copies the given result's response code, success/error messages and any {@link ModelService#SYS_RESPONSE_FIELDS} into a new service result map (SCIPIO), with deep copies of collections.
-     * In other words copies only the fields (system service attributes) common to all services. NOTE: Currently null values are not preserved because not significant. */
+    /**
+     * Copies the given result's response code, success/error messages and any {@link ModelService#SYS_RESPONSE_FIELDS} into a new service result map (SCIPIO), with deep copies of collections.
+     * In other words copies only the fields (system service attributes) common to all services.
+     * NOTE: Currently null values are not preserved because not significant.
+     */
     public static Map<String, Object> returnResultSysFieldsDeep(Map<String, Object> otherResult) {
         Map<String, Object> result = new HashMap<>();
         for(String key : ModelService.SYS_RESPONSE_FIELDS) {

@@ -318,7 +318,7 @@ public class CatalogImportExportServices {
                                                                 " were missing from service invocation: " + serviceFields);
                                                     }
                                                 } catch (GenericServiceException e) {
-                                                    throw new GenericServiceException("Could not update from field value: " + e.getMessage(), e);
+                                                    throw new GenericServiceException("Could not update from field value: "+cellAddr +" " + e.getMessage(), e);
                                                 }
                                             } else {
                                                 //Update the entity directly

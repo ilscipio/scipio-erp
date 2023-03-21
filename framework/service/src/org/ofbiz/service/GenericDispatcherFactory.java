@@ -86,13 +86,13 @@ public class GenericDispatcherFactory implements LocalDispatcherFactory {
         }
 
         @Override
-        public Map<String, Object> runSync(String serviceName, Map<String, ? extends Object> context) throws ServiceValidationException, GenericServiceException {
+        public ServiceResult runSync(String serviceName, Map<String, ? extends Object> context) throws ServiceValidationException, GenericServiceException {
             ModelService service = ctx.getModelService(serviceName);
             return dispatcher.runSync(this.name, service, context);
         }
 
         @Override
-        public Map<String, Object> runSync(String serviceName, Map<String, ? extends Object> context, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        public ServiceResult runSync(String serviceName, Map<String, ? extends Object> context, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
             ModelService service = ctx.getModelService(serviceName);
             // clone the model service for updates
             ModelService cloned = new ModelService(service);
@@ -107,7 +107,7 @@ public class GenericDispatcherFactory implements LocalDispatcherFactory {
         }
 
         @Override
-        public Map<String, Object> runSync(String serviceName, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+        public ServiceResult runSync(String serviceName, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
             return runSync(serviceName, ServiceUtil.makeContext(context), transactionTimeout, requireNewTransaction);
         }
 

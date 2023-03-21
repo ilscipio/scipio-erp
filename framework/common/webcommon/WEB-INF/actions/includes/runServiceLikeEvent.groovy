@@ -216,7 +216,7 @@ if (doExec) {
             String resultKey = rme.getKey();
             Object resultValue = rme.getValue();
     
-            if (resultKey != null && !ModelService.isSysResponseField(resultKey)) { // SCIPIO: simplified with isSysResponseField
+            if (resultKey != null && !ModelService.OUT_SYS_PARAMS.contains(resultKey)) { // SCIPIO: simplified with isSysResponseField
                 if (updateReqAttr) {
                     request.setAttribute(resultKey, resultValue);
                 }

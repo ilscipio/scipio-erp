@@ -27,10 +27,13 @@ import org.ofbiz.service.job.JobManager;
 
 /**
  * A local service dispatcher. This is the main API for the service engine.
+ *
  * <p>Instances of <code>LocalDispatcher</code> are based on a {@link org.ofbiz.entity.Delegator}
  * instance and an entity model reader name. You can get a <code>LocalDispatcher</code> instance
  * by calling the {@link org.ofbiz.service.ServiceDispatcher#getLocalDispatcher(String, Delegator)}
  * factory method.</p>
+ *
+ * <p>SCIPIO: 3.0.0: {@link LocalDispatcher#runSync} methods now return {@link ServiceResult}; various enhancements.</p>
  */
 public interface LocalDispatcher {
 
@@ -59,7 +62,7 @@ public interface LocalDispatcher {
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    Map<String, Object> runSync(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException;
+    ServiceResult runSync(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException;
 
     /**
      * Run the service synchronously with a specified timeout and return the result.
@@ -72,8 +75,8 @@ public interface LocalDispatcher {
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    Map<String, Object> runSync(String serviceName, Map<String, ? extends Object> context, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
-    Map<String, Object> runSync(String serviceName, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    ServiceResult runSync(String serviceName, Map<String, ? extends Object> context, int transactionTimeout, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
+    ServiceResult runSync(String serviceName, int transactionTimeout, boolean requireNewTransaction, Object... context) throws ServiceAuthException, ServiceValidationException, GenericServiceException;
 
     /**
      * Run the service synchronously, with optional separate transaction (SCIPIO).
@@ -85,7 +88,7 @@ public interface LocalDispatcher {
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    default Map<String, Object> runSync(String serviceName, Map<String, ? extends Object> context, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+    default ServiceResult runSync(String serviceName, Map<String, ? extends Object> context, boolean requireNewTransaction) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         return runSync(serviceName, context, -1, requireNewTransaction);
     }
 
@@ -98,7 +101,7 @@ public interface LocalDispatcher {
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    default Map<String, Object> runSyncNewTrans(String serviceName, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+    default ServiceResult runSyncNewTrans(String serviceName, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         return runSync(serviceName, context, -1, true);
     }
 
@@ -504,33 +507,87 @@ public interface LocalDispatcher {
     }
 
     /**
-     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName (SCIPIO).
-     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
-     * This is the same as <code>getDispatchContext().makeValidContext(...)</code>. Added 2019-01-31.
-     * @param serviceName The name of the service to obtain parameters for
-     * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
+     *
+     * <p>NOTE: This goes not guarantee the context will be 100% valid - there may be missing fields.</p>
+     *
+     * <p>NOTE: The best way to call {@link #makeValidContext} methods is with an inlined
+     * "IN"/"OUT"/"INOUT"/"IN-SYS"/"OUT-SYS"/"INOUT-SYS" mode parameter because they are fixed and linking {@link ModelService}
+     * adds needless verbosity and imports.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added options overload.</p>
+     *
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT), according to {@link ModelService#PARAM_MODES}
      * @param context The initial set of values to pull from
+     * @param options The options
      * @return Map contains any valid values
      * @throws GenericServiceException
      */
-    default Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ? extends Object> context) throws GenericServiceException {
-        return getDispatchContext().makeValidContext(serviceName, mode, context);
+    default Map<String, Object> makeValidContext(ModelService model, String mode, Map<String, ?> context, MakeValidOptions options) throws GenericServiceException {
+        return getDispatchContext().makeValidContext(model, mode, context, options);
     }
 
     /**
-     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName (SCIPIO).
-     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
-     * New method: This is the same as <code>DispatchContext.makeValidContext(...)</code>. Added 2019-01-31.
-     * @param model The ModelService object of the service to obtain parameters for
-     * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName.
+     *
+     * <p>NOTE: This goes not guarantee the context will be 100% valid - there may be missing fields.</p>
+     *
+     * <p>NOTE: The best way to call {@link #makeValidContext} methods is with an inlined
+     * "IN"/"OUT"/"INOUT"/"IN-SYS"/"OUT-SYS"/"INOUT-SYS" mode parameter because they are fixed and linking {@link ModelService}
+     * adds needless verbosity and imports.</p>
+     *
+     * @param serviceName The name of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT), according to {@link ModelService#PARAM_MODES}
      * @param context The initial set of values to pull from
      * @return Map contains any valid values
      * @throws GenericServiceException
      */
-    default Map<String, Object> makeValidContext(ModelService model, String mode, Map<String, ? extends Object> context) throws GenericServiceException {
+    default Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ?> context) throws GenericServiceException {
+        return getDispatchContext().makeValidContext(serviceName, mode, context, null);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName.
+     *
+     * <p>NOTE: This goes not guarantee the context will be 100% valid - there may be missing fields.</p>
+     *
+     * <p>NOTE: The best way to call {@link #makeValidContext} methods is with an inlined
+     * "IN"/"OUT"/"INOUT"/"IN-SYS"/"OUT-SYS"/"INOUT-SYS" mode parameter because they are fixed and linking {@link ModelService}
+     * adds needless verbosity and imports.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added options overload.</p>
+     *
+     * @param serviceName The name of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT), according to {@link ModelService#PARAM_MODES}
+     * @param context The initial set of values to pull from
+     * @param options The options
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    default Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ?> context, MakeValidOptions options) throws GenericServiceException {
+        return getDispatchContext().makeValidContext(serviceName, mode, context, options);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
+     * @deprecated SCIPIO: 3.0.0: This method is static and you can simply call {@link ModelService#makeValid(String, Map, MakeValidOptions)} instead.
+     *
+     * <p>NOTE: This goes not guarantee the context will be 100% valid - there may be missing fields.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added options overload.</p>
+     *
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT), according to {@link ModelService#PARAM_MODES}
+     * @param context The initial set of values to pull from
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    default Map<String, Object> makeValidContext(ModelService model, String mode, Map<String, ?> context) throws GenericServiceException {
         // SCIPIO: NOTE: For unknown reasons, this method is static on DispatchContext, but this is not suitable
         // for LocalDispatcher and even counterproductive.
-        return DispatchContext.makeValidContext(model, mode, context);
+        return getDispatchContext().makeValidContext(model, mode, context, null);
     }
+
 }
 

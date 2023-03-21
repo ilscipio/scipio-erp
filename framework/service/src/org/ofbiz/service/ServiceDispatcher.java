@@ -243,7 +243,7 @@ public class ServiceDispatcher {
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public Map<String, Object> runSync(String localName, ModelService service, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+    public ServiceResult runSync(String localName, ModelService service, Map<String, ? extends Object> context) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         return runSync(localName, service, context, true);
     }
 
@@ -271,14 +271,14 @@ public class ServiceDispatcher {
      * @throws ServiceValidationException
      * @throws GenericServiceException
      */
-    public Map<String, Object> runSync(String localName, ModelService modelService, Map<String, ? extends Object> params, boolean validateOut) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
+    public ServiceResult runSync(String localName, ModelService modelService, Map<String, ? extends Object> params, boolean validateOut) throws ServiceAuthException, ServiceValidationException, GenericServiceException {
         long serviceStartTime = System.currentTimeMillis();
         Map<String, Object> result = new HashMap<>();
         ServiceSemaphore lock = null;
         Map<String, List<ServiceEcaRule>> eventMap = null;
         Map<String, Object> ecaContext = null;
         RunningService rs = null;
-        DispatchContext ctx = localContext.get(localName);
+        DispatchContext dctx = localContext.get(localName);
         GenericEngine engine = null;
         Transaction parentTransaction = null;
         boolean isFailure = false;
@@ -372,15 +372,15 @@ public class ServiceDispatcher {
 
                     // setup global transaction ECA listeners to execute later
                     if (eventMap != null) {
-                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-rollback", ctx, context, result, isError, isFailure);
+                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-rollback", dctx, context, result, isError, isFailure);
                     }
                     if (eventMap != null) {
-                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit", ctx, context, result, isError, isFailure);
+                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit", dctx, context, result, isError, isFailure);
                     }
 
                     // pre-auth ECA
                     if (eventMap != null) {
-                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "auth", ctx, context, result, isError, isFailure);
+                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "auth", dctx, context, result, isError, isFailure);
                     }
 
                     // check for pre-auth failure/errors
@@ -401,7 +401,7 @@ public class ServiceDispatcher {
 
                     // pre-validate ECA
                     if (eventMap != null) {
-                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "in-validate", ctx, context, result, isError, isFailure);
+                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "in-validate", dctx, context, result, isError, isFailure);
                     }
 
                     // check for pre-validate failure/errors
@@ -420,7 +420,7 @@ public class ServiceDispatcher {
 
                     // pre-invoke ECA
                     if (eventMap != null) {
-                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "invoke", ctx, context, result, isError, isFailure);
+                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "invoke", dctx, context, result, isError, isFailure);
                     }
 
                     // check for pre-invoke failure/errors
@@ -431,7 +431,7 @@ public class ServiceDispatcher {
                     if (!isError && !isFailure) {
                         Map<String, Object> invokeResult = null;
                         //invokeResult = engine.runSync(localName, modelService, context);
-                        invokeResult = runSync(localName, modelService, context, ctx, engine); // SCIPIO
+                        invokeResult = runSync(localName, modelService, context, dctx, engine); // SCIPIO
                         engine.sendCallbacks(modelService, context, invokeResult, GenericEngine.SYNC_MODE);
                         if (invokeResult != null) {
                             result.putAll(invokeResult);
@@ -518,7 +518,7 @@ public class ServiceDispatcher {
                 if (modelService.validate && validateOut) {
                     // pre-out-validate ECA
                     if (eventMap != null) {
-                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "out-validate", ctx, ecaContext, result, isError, isFailure);
+                        ServiceEcaUtil.evalRules(modelService.name, eventMap, "out-validate", dctx, ecaContext, result, isError, isFailure);
                     }
                     try {
                         modelService.validate(result, ModelService.OUT_PARAM, locale);
@@ -529,7 +529,7 @@ public class ServiceDispatcher {
 
                 // pre-commit ECA
                 if (eventMap != null) {
-                    ServiceEcaUtil.evalRules(modelService.name, eventMap, "commit", ctx, ecaContext, result, isError, isFailure);
+                    ServiceEcaUtil.evalRules(modelService.name, eventMap, "commit", dctx, ecaContext, result, isError, isFailure);
                 }
 
                 // check for pre-commit failure/errors
@@ -538,7 +538,7 @@ public class ServiceDispatcher {
 
                 // global-commit-post-run ECA, like global-commit but gets the context after the service is run
                 if (eventMap != null) {
-                    ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit-post-run", ctx, ecaContext, result, isError, isFailure);
+                    ServiceEcaUtil.evalRules(modelService.name, eventMap, "global-commit-post-run", dctx, ecaContext, result, isError, isFailure);
                 }
 
                 // check for failure and log on info level; this is used for debugging
@@ -625,7 +625,7 @@ public class ServiceDispatcher {
 
         // pre-return ECA
         if (eventMap != null) {
-            ServiceEcaUtil.evalRules(modelService.name, eventMap, "return", ctx, ecaContext, result, isError, isFailure);
+            ServiceEcaUtil.evalRules(modelService.name, eventMap, "return", dctx, ecaContext, result, isError, isFailure);
         }
 
         rs.setEndStamp();
@@ -659,7 +659,9 @@ public class ServiceDispatcher {
         if (modelService.metrics != null) {
             modelService.metrics.recordServiceRate(1, timeToRun);
         }
-        return result;
+
+        // SCIPIO: 3.0.0: Now auto-wraps better ServiceResult return type
+        return ServiceResult.from(modelService, dctx, result);
     }
 
     private Map<String, Object> runSync(String localName, ModelService modelService, Map<String, Object> context, DispatchContext dctx, GenericEngine engine) throws GenericServiceException { // SCIPIO
@@ -726,7 +728,7 @@ public class ServiceDispatcher {
         Locale locale = this.checkLocale(context);
 
         // setup the engine and context
-        DispatchContext ctx = localContext.get(localName);
+        DispatchContext dctx = localContext.get(localName);
         GenericEngine engine = this.getGenericEngine(service.engineName);
 
         // for isolated transactions
@@ -766,7 +768,7 @@ public class ServiceDispatcher {
 
                 // pre-auth ECA
                 if (eventMap != null) {
-                    ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, result, isError, isFailure);
+                    ServiceEcaUtil.evalRules(service.name, eventMap, "auth", dctx, context, result, isError, isFailure);
                 }
 
                 context = checkAuth(localName, context, service, locale); // SCIPIO: locale
@@ -778,7 +780,7 @@ public class ServiceDispatcher {
 
                 // pre-validate ECA
                 if (eventMap != null) {
-                    ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, result, isError, isFailure);
+                    ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", dctx, context, result, isError, isFailure);
                 }
 
                 // check for pre-validate failure/errors

@@ -18,6 +18,11 @@ public @interface EntityAttributes {
     String entityName() default "";
 
     /**
+     * Field name prefix.
+     */
+    String prefix() default "";
+
+    /**
      * Mode for attributes; "IN", "OUT" or "INOUT".
      */
     String mode();

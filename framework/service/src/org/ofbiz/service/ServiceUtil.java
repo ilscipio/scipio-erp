@@ -68,6 +68,11 @@ public final class ServiceUtil {
     public static final String resource = "ServiceErrorUiLabels"; // SCIPIO: 2018-08-29: keep public for backward-compat
     private static final Map<String, Object> SUCCESS_READ_ONLY = Collections.unmodifiableMap(returnMessage(ModelService.RESPOND_SUCCESS, null)); // SCIPIO
 
+    /**
+     * SCIPIO: The default message prefix.
+     */
+    private static final String defaultMessagePrefix = UtilProperties.getMessageNoTrim("DefaultMessages", "service.message.prefix", Locale.getDefault());;
+
     /** A little short-cut method to check to see if a service returned an error */
     public static boolean isError(Map<String, ? extends Object> results) {
         if (results == null || results.get(ModelService.RESPONSE_MESSAGE) == null) {
@@ -275,40 +280,25 @@ public final class ServiceUtil {
     }
 
     /**
-     * Copies the given result's response code, success/error messages and any {@link ModelService#SYS_RESPONSE_FIELDS} into a new service result map (SCIPIO).
+     * Copies the given result's response code, success/error messages and any {@link ModelService#OUT_SYS_PARAMS} into a new service result map (SCIPIO).
      * In other words copies only the fields (system service attributes) common to all services.
      * NOTE: Currently null values are not preserved because not significant.
+     * @deprecated SCIPIO: 3.0.0: Use {@link ServiceResult#responseCopy(Map)}
      */
+    @Deprecated
     public static Map<String, Object> returnResultSysFields(Map<String, Object> otherResult) {
-        Map<String, Object> result = new HashMap<>();
-        for(String key : ModelService.SYS_RESPONSE_FIELDS) {
-            Object value = otherResult.get(key);
-            if (value != null) { // never really need to preserve nulls for these: || otherResult.containsKey(key)
-                result.put(key, value);
-            }
-        }
-        return result;
+        return UtilMisc.putKeys(new HashMap<>(), otherResult, ModelService.OUT_SYS_PARAMS, false);
     }
 
     /**
-     * Copies the given result's response code, success/error messages and any {@link ModelService#SYS_RESPONSE_FIELDS} into a new service result map (SCIPIO), with deep copies of collections.
+     * Copies the given result's response code, success/error messages and any {@link ModelService#OUT_SYS_PARAMS} into a new service result map (SCIPIO), with deep copies of collections.
      * In other words copies only the fields (system service attributes) common to all services.
      * NOTE: Currently null values are not preserved because not significant.
+     * @deprecated SCIPIO: 3.0.0: Use {@link ServiceResult#responseCopy(Map)} (there is no "deep" for these anymore - pointless)
      */
+    @Deprecated
     public static Map<String, Object> returnResultSysFieldsDeep(Map<String, Object> otherResult) {
-        Map<String, Object> result = new HashMap<>();
-        for(String key : ModelService.SYS_RESPONSE_FIELDS) {
-            Object value = otherResult.get(key);
-            if (value != null) { // never really need to preserve nulls for these: || otherResult.containsKey(key)
-                if (value instanceof Collection) {
-                    value = new ArrayList<>((Collection<?>) value);
-                } else if (value instanceof Map) {
-                    value = new LinkedHashMap<>((Map<?, ?>) value);
-                }
-                result.put(key, value);
-            }
-        }
-        return result;
+        return returnResultSysFields(otherResult);
     }
 
     /** A small routine used all over to improve code efficiency, get the partyId and does a security check
@@ -356,7 +346,6 @@ public final class ServiceUtil {
         if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(eventMessage) && UtilValidate.isNotEmpty(defaultMessage)) {
             request.setAttribute("_EVENT_MESSAGE_", defaultMessage);
         }
-
     }
 
     /**
@@ -660,11 +649,6 @@ public final class ServiceUtil {
     public static String getErrorAndSuccessMessage(Map<String, ? extends Object> result) {
         return getErrorAndSuccessMessage(result, "; ", null, null);
     }
-
-    /**
-     * SCIPIO: The default message prefix.
-     */
-    private static final String defaultMessagePrefix = UtilProperties.getMessageNoTrim("DefaultMessages", "service.message.prefix", Locale.getDefault());;
 
     /**
      * Joins messages from a list into a single string.

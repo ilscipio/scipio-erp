@@ -1568,6 +1568,24 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="prefix" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        camelCase attribute name prefix to prepend to names from the incoming map (not the to-map).
+
+                        SCIPIO: 3.0.0: Added.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+            <xs:attribute type="xs:string" name="to-prefix" use="optional">
+                <xs:annotation>
+                    <xs:documentation>
+                        camelCase attribute name prefix to prepend to names from the outgoing map (not the source map).
+
+                        SCIPIO: 3.0.0: Added.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
 

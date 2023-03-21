@@ -54,10 +54,12 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
+import org.ofbiz.service.ServiceResult;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.config.model.JmsService;
@@ -308,7 +310,7 @@ public class JmsServiceEngine extends AbstractEngine {
         return ServiceUtil.returnSuccess();
     }
 
-    protected Map<String, Object> run(ModelService modelService, Map<String, Object> context) throws GenericServiceException {
+    protected ServiceResult run(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
         JmsService serviceElement = getServiceElement(modelService);
         if (serviceElement == null) { // SCIPIO
             throw new GenericServiceException("Could not get JMS service for service [" + modelService.name + "]; is JMS configured in serviceengine.xml?");
@@ -325,21 +327,24 @@ public class JmsServiceEngine extends AbstractEngine {
             else
                 throw new GenericServiceException("Illegal server messaging type.");
         }
-        return result;
+
+        // SCIPIO: 3.0.0: Produce a ServiceResult here
+        DispatchContext dctx = dispatcher.getLocalContext(localName);
+        return ServiceResult.from(modelService, dctx, result);
     }
 
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map)
      */
     public Map<String, Object> runSync(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
-        return run(modelService, context);
+        return run(localName, modelService, context);
     }
 
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runSyncIgnore(java.lang.String, org.ofbiz.service.ModelService, java.util.Map)
      */
     public void runSyncIgnore(String localName, ModelService modelService, Map<String, Object> context) throws GenericServiceException {
-        run(modelService, context);
+        run(localName, modelService, context);
     }
 
     /**
@@ -347,7 +352,7 @@ public class JmsServiceEngine extends AbstractEngine {
      */
     public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, GenericRequester requester, boolean persist) throws GenericServiceException {
         long startTime = System.currentTimeMillis();
-        Map<String, Object> result = run(modelService, context);
+        ServiceResult result = run(localName, modelService, context);
         requester.receiveResult(result);
         return new JmsJobInfo(modelService, startTime); // SCIPIO
     }
@@ -357,7 +362,7 @@ public class JmsServiceEngine extends AbstractEngine {
      */
     public JobInfo runAsync(String localName, ModelService modelService, Map<String, Object> context, boolean persist) throws GenericServiceException {
         long startTime = System.currentTimeMillis();
-        run(modelService, context);
+        run(localName, modelService, context);
         return new JmsJobInfo(modelService, startTime); // SCIPIO
     }
 

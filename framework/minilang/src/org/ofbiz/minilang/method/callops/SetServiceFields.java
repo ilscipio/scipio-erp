@@ -18,8 +18,8 @@
  *******************************************************************************/
 package org.ofbiz.minilang.method.callops;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +35,7 @@ import org.ofbiz.minilang.artifact.ArtifactInfoContext;
 import org.ofbiz.minilang.method.MethodContext;
 import org.ofbiz.minilang.method.MethodOperation;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.MakeValidOptions;
 import org.ofbiz.service.ModelService;
 import org.w3c.dom.Element;
 
@@ -61,11 +62,13 @@ public final class SetServiceFields extends MethodOperation {
     private final FlexibleStringExpander serviceNameFse;
     private final FlexibleMapAccessor<Map<String, Object>> toMapFma;
     private final String mode;
+    private final FlexibleStringExpander prefixFse; // SCIPIO: 3.0.0: Added
+    private final FlexibleStringExpander toPrefixFse; // SCIPIO: 3.0.0: Added
 
     public SetServiceFields(Element element, SimpleMethod simpleMethod) throws MiniLangException {
         super(element, simpleMethod);
         if (MiniLangValidate.validationOn()) {
-            MiniLangValidate.attributeNames(simpleMethod, element, "service-name", "map", "to-map", "mode");
+            MiniLangValidate.attributeNames(simpleMethod, element, "service-name", "map", "to-map", "mode", "prefix", "to-prefix");
             MiniLangValidate.requiredAttributes(simpleMethod, element, "service-name", "map", "to-map");
             MiniLangValidate.constantPlusExpressionAttributes(simpleMethod, element, "service-name");
             MiniLangValidate.expressionAttributes(simpleMethod, element, "map", "to-map");
@@ -80,6 +83,8 @@ public final class SetServiceFields extends MethodOperation {
         mapFma = FlexibleMapAccessor.getInstance(element.getAttribute("map"));
         toMapFma = FlexibleMapAccessor.getInstance(element.getAttribute("to-map"));
         mode = ModelService.OUT_PARAM.equals(element.getAttribute("mode")) ? ModelService.OUT_PARAM : ModelService.IN_PARAM;
+        prefixFse = FlexibleStringExpander.getInstance(element.getAttribute("prefix"));
+        toPrefixFse = FlexibleStringExpander.getInstance(element.getAttribute("to-prefix"));
     }
 
     @Override
@@ -103,8 +108,17 @@ public final class SetServiceFields extends MethodOperation {
             toMap = new HashMap<String, Object>();
             toMapFma.put(methodContext.getEnvMap(), toMap);
         }
-        List<Object> errorMessages = new LinkedList<Object>();
-        Map<String, Object> validAttributes = modelService.makeValid(fromMap, mode, true, errorMessages, methodContext.getTimeZone(), methodContext.getLocale());
+        String prefix = prefixFse.expandString(methodContext.getEnvMap());
+        String toPrefix = toPrefixFse.expandString(methodContext.getEnvMap());
+
+        List<Object> errorMessages = new ArrayList<Object>();
+        Map<String, Object> validAttributes = modelService.makeValid(mode, fromMap, new MakeValidOptions()
+                        .includeInternal(true)
+                        .errorMessages(errorMessages)
+                        .timeZone(methodContext.getTimeZone())
+                        .locale(methodContext.getLocale())
+                        .namePrefix(prefix)
+                        .toNamePrefix(toPrefix));
         if (errorMessages.size() > 0) {
             for (Object obj : errorMessages) {
                 simpleMethod.addErrorMessage(methodContext, (String) obj);

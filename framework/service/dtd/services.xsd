@@ -434,9 +434,17 @@ under the License.
         </xs:attribute>
         <xs:attribute name="type-convert" type="xs:boolean">
             <xs:annotation><xs:documentation>
-                SCIPIO: If set to true, if the attribute in context is of different type, it is automatically
+                If set to true, if the attribute in context is of different type, it is automatically
                 converted to this attribute's type, otherwise a validation error occurs. Default: false
-                Added 2019-01-04.
+
+                SCIPIO: 2019-01-04: Added.
+            </xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="prefix" type="xs:string">
+            <xs:annotation><xs:documentation>
+                Field name prefix.
+
+                SCIPIO: 3.0.0: Added.
             </xs:documentation></xs:annotation>
         </xs:attribute>
     </xs:attributeGroup>

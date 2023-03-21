@@ -45,11 +45,7 @@ public abstract class ServiceTestServices {
                     @Attribute(name = "result1", type = "String", mode = "OUT", optional = "true")
             }
     )
-    public static class ServiceAnnotationsTest2 extends ServiceHandler.Local implements ServiceHandler.Exec {
-        public ServiceAnnotationsTest2(ServiceContext ctx) { // NOTE: If omitted, init(ServiceContext) is called instead
-            super(ctx);
-        }
-
+    public static class ServiceAnnotationsTest2 extends ServiceHandler.LocalExec {
         @Override
         public Map<String, Object> exec() {
             Debug.logInfo("serviceAnnotationsTest2: input: " + ctx.context(), module);

@@ -51,6 +51,7 @@ import org.ofbiz.base.metrics.MetricsFactory;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilTimer;
@@ -882,6 +883,8 @@ public class ModelServiceReader implements Serializable {
             }
         }
 
+        String prefix = autoElement.getAttribute("prefix"); // SCIPIO: 3.0.0: Added
+
         // get the include type 'pk|nonpk|all'
         String includeType = UtilXml.checkEmpty(autoElement.getAttribute("include"));
         boolean includePk = "pk".equals(includeType) || "all".equals(includeType);
@@ -892,7 +895,7 @@ public class ModelServiceReader implements Serializable {
         }
 
         if (delegator != null && entityName != null) {
-            Map<String, ModelParam> modelParamMap = new LinkedHashMap<>();
+            Map<String, ModelParam> modelParamMap = new LinkedHashMap<>(); // SCIPIO: NOTE: keys are unprefixed (to prevent compatibility break with exclude)
             try {
                 ModelEntity entity = delegator.getModelEntity(entityName);
                 if (entity == null) {
@@ -908,7 +911,7 @@ public class ModelServiceReader implements Serializable {
                         }
                         ModelParam param = new ModelParam();
                         param.entityName = entityName;
-                        param.fieldName = field.getName();
+                        param.fieldName = StringUtil.prefixFieldNameCamelCase(field.getName(), prefix);
                         param.name = field.getName();
                         param.type = fieldType.getJavaType();
                         // this is a special case where we use something different in the service layer than we do in the entity/data layer
@@ -963,6 +966,8 @@ public class ModelServiceReader implements Serializable {
             }
         }
 
+        String prefix = entityAttributesDef.prefix(); // SCIPIO: 3.0.0: Added
+
         // get the include type 'pk|nonpk|all'
         String includeType = UtilXml.checkEmpty(entityAttributesDef.include());
         boolean includePk = "pk".equals(includeType) || "all".equals(includeType);
@@ -989,7 +994,7 @@ public class ModelServiceReader implements Serializable {
                         }
                         ModelParam param = new ModelParam();
                         param.entityName = entityName;
-                        param.fieldName = field.getName();
+                        param.fieldName = StringUtil.prefixFieldNameCamelCase(field.getName(), prefix);
                         param.name = field.getName();
                         param.type = fieldType.getJavaType();
                         // this is a special case where we use something different in the service layer than we do in the entity/data layer

@@ -56,6 +56,7 @@ import org.ofbiz.base.metrics.Metrics;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
@@ -74,25 +75,149 @@ import com.ibm.wsdl.extensions.soap.SOAPBodyImpl;
 import com.ibm.wsdl.extensions.soap.SOAPOperationImpl;
 
 /**
- * Generic Service Model Class
+ * Generic Service Model Class.
+ *
+ * <p>SCIPIO: 3.0.0: Getters added for member fields which were public in legacy code; should be preferred; improved {@link #makeValid}.</p>
  */
 @SuppressWarnings("serial")
 public class ModelService extends AbstractMap<String, Object> implements Serializable {
+
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
     private static final Field[] MODEL_SERVICE_FIELDS;
-    private static final Map<String, Field> MODEL_SERVICE_FIELD_MAP = new LinkedHashMap<>();
+    private static final Map<String, Field> MODEL_SERVICE_FIELD_MAP;
     static {
         MODEL_SERVICE_FIELDS = ModelService.class.getFields();
-        for (Field field: MODEL_SERVICE_FIELDS) {
-            MODEL_SERVICE_FIELD_MAP.put(field.getName(), field);
+        Map<String, Field> fieldMap = new LinkedHashMap<>();
+        for (Field field : MODEL_SERVICE_FIELDS) {
+            fieldMap.put(field.getName(), field);
         }
+        MODEL_SERVICE_FIELD_MAP = Collections.unmodifiableMap(fieldMap);
     }
-    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static final String XSD = "http://www.w3.org/2001/XMLSchema";
     public static final String TNS = "http://ofbiz.apache.org/service/";
-    public static final String OUT_PARAM = "OUT";
+
+    public static final String resource = "ServiceErrorUiLabels";
+
+    /**
+     * Service parameter mode representing input fields, for use with {@link #makeValid}.
+     *
+     * <p>NOTE: When specifying to {@link #makeValid}, it's best to simply hardcode the string for brevity and imports.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added special *-SYS modes, which instruct makeValid to only transfer common system fields.</p>
+     */
     public static final String IN_PARAM = "IN";
+
+    /**
+     * Service parameter mode representing output fields, for use with {@link #makeValid}.
+     *
+     * <p>NOTE: When specifying to {@link #makeValid}, it's best to simply hardcode the string for brevity and imports.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added special *-SYS modes, which instruct makeValid to only transfer common system fields.</p>
+     */
+    public static final String OUT_PARAM = "OUT";
+
+    /**
+     * Service parameter mode representing input and output fields, for use with {@link #makeValid}.
+     *
+     * <p>NOTE: When specifying to {@link #makeValid}, it's best to simply hardcode the string for brevity and imports.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added special *-SYS modes, which instruct makeValid to only transfer common system fields.</p>
+     */
     public static final String IN_OUT_PARAM = "INOUT";
+
+    /**
+     * Service parameter mode representing only the common input system fields {@link #IN_SYS_PARAMS}, for use with {@link #makeValid}.
+     *
+     * <p>NOTE: When specifying to {@link #makeValid}, it's best to simply hardcode the string for brevity and imports.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added special *-SYS modes, which instruct makeValid to only transfer common system fields.</p>
+     */
+    public static final String IN_SYS_PARAM = "IN-SYS";
+
+    /**
+     * Service parameter mode representing only the common output system fields {@link #OUT_SYS_PARAMS}, for use with {@link #makeValid}.
+     *
+     * <p>NOTE: When specifying to {@link #makeValid}, it's best to simply hardcode the string for brevity and imports.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added special *-SYS modes, which instruct makeValid to only transfer common system fields.</p>
+     */
+    public static final String OUT_SYS_PARAM = "OUT-SYS";
+
+    /**
+     * Service parameter representing only the common input and output system fields {@link #IN_OUT_SYS_PARAMS}, for use with {@link #makeValid}.
+     *
+     * <p>NOTE: When specifying to {@link #makeValid}, it's best to simply hardcode the string for brevity and imports.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added special *-SYS modes, which instruct makeValid to only transfer common system fields.</p>
+     */
+    public static final String IN_OUT_SYS_PARAM = "INOUT-SYS";
+
+    /**
+     * Maps service parameter mode to the corresponding I/O mode without suffix.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static final Map<String, String> PARAM_MODE_IO_MAP = UtilMisc.constMap(
+            IN_PARAM, IN_PARAM,
+            OUT_PARAM, OUT_PARAM,
+            IN_OUT_PARAM, IN_OUT_PARAM,
+            IN_SYS_PARAM, IN_PARAM,
+            OUT_SYS_PARAM, OUT_PARAM,
+            IN_OUT_SYS_PARAM, IN_OUT_PARAM);
+
+    public static final List<String> PARAM_MODES_IO = List.of(IN_PARAM, OUT_PARAM, IN_OUT_PARAM);
+    public static final List<String> PARAM_MODES_SYS = List.of(IN_SYS_PARAM, OUT_SYS_PARAM, IN_OUT_SYS_PARAM);
+    public static final List<String> PARAM_MODES = List.copyOf(UtilMisc.addAll(new LinkedHashSet<>(PARAM_MODES_IO), PARAM_MODES_SYS));
+
+    public static final String LOCALE = "locale";
+    public static final String TIMEZONE = "timeZone";
+    public static final String USERLOGIN = "userLogin";
+    public static final String LOGIN_USERNAME = "login.username";
+    public static final String LOGIN_PASSWORD = "login.password";
+
+    /**
+     * Default service parameter input system fields, including login.username and login.password.
+     *
+     * <p>These are the parameters by default transferred when {@link #IN_SYS_PARAM} or {@link #IN_OUT_SYS_PARAM}
+     * are passed as {@link #makeValid} service context mode.</p>
+     *
+     * <p>NOTE: "system" is not necessarily equivalent to the definition of "internal" for every service, and is preferable
+     * for most client code service context operations.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static final List<String> IN_SYS_PARAMS = List.of(
+            "locale",
+            "timeZone",
+            "userLogin",
+            "login.username",
+            "login.password");
+
+    public static final List<String> IN_PW_PARAMS = List.of(
+            "login.username",
+            "login.password");
+
+    /**
+     * Default service input system parameters, including login.username and login.password.
+     *
+     * <p>NOTE: "system" is not necessarily equivalent to the definition of "internal" for every service, and is preferable
+     * for most client code service context operations.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static final List<String> IN_SYSPW_PARAMS = IN_SYS_PARAMS;
+
+    /**
+     * Default service input system parameters, excluding login.username and login.password.
+     *
+     * <p>NOTE: "system" is not necessarily equivalent to the definition of "internal" for every service, and is preferable
+     * for most client code service context operations.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static final List<String> IN_SYSNOPW_PARAMS = List.copyOf(IN_SYSPW_PARAMS.stream().filter(p -> !IN_PW_PARAMS.contains(p)).collect(Collectors.toList()));
 
     public static final String RESPONSE_MESSAGE = "responseMessage";
     public static final String RESPOND_SUCCESS = "success";
@@ -105,22 +230,61 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public static final String SUCCESS_MESSAGE_LIST = "successMessageList";
 
     /**
-     * SCIPIO: List of the common system response field keys returnable in service results.
-     * Added 2017-11-28.
+     * Default service input system parameters.
+     *
+     * <p>These are the parameters by default transferred when {@link #OUT_SYS_PARAM} or {@link #IN_OUT_SYS_PARAM}
+     * are passed as {@link #makeValid} service context mode.</p>
+     *
+     * <p>NOTE: "system" is not necessarily equivalent to the definition of "internal" for every service, and is preferable
+     * for most client code service context operations.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
      */
-    public static final List<String> SYS_RESPONSE_FIELDS = UtilMisc.unmodifiableArrayList(
+    public static final List<String> OUT_SYS_PARAMS = List.of(
             RESPONSE_MESSAGE,
-            ERROR_MESSAGE, ERROR_MESSAGE_LIST, ERROR_MESSAGE_MAP,
-            SUCCESS_MESSAGE, SUCCESS_MESSAGE_LIST
-    );
+            ERROR_MESSAGE,
+            ERROR_MESSAGE_LIST,
+            ERROR_MESSAGE_MAP,
+            SUCCESS_MESSAGE,
+            SUCCESS_MESSAGE_LIST);
 
     /**
-     * SCIPIO: List of the common system response field keys returnable in service results, as a (Hash)Set.
-     * Added 2018-11-23.
+     * Default service input system parameters.
+     *
+     * <p>NOTE: "system" is not necessarily equivalent to the definition of "internal" for every service, and is preferable
+     * for most client code service context operations.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
      */
-    public static final Set<String> SYS_RESPONSE_FIELDS_SET = UtilMisc.unmodifiableHashSetCopy(SYS_RESPONSE_FIELDS);
+    public static final List<String> IN_OUT_SYS_PARAMS = List.copyOf(UtilMisc.addAll(new ArrayList<>(IN_SYS_PARAMS), OUT_SYS_PARAMS));
 
-    public static final String resource = "ServiceErrorUiLabels";
+    /**
+     * Maps special service parameter modes that designate specific parameters to the corresponding fields for that mode.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static final Map<String, List<String>> PARAM_MODE_PARAMS_MAP = UtilMisc.constMap(
+            IN_SYS_PARAM, IN_SYS_PARAMS,
+            OUT_SYS_PARAM, OUT_SYS_PARAMS,
+            IN_OUT_SYS_PARAM, IN_OUT_SYS_PARAMS);
+
+    /**
+     * List of the common system response field keys returnable in service results.
+     * @deprecated SCIPIO: 3.0.0: Use {@link #OUT_SYS_PARAMS}
+     *
+     * <p>SCIPIO: 2017-11-28: Added.</p>
+     */
+    @Deprecated
+    public static final List<String> SYS_RESPONSE_FIELDS = OUT_SYS_PARAMS;
+
+    /**
+     * List of the common system response field keys returnable in service results, as a (Hash)Set.
+     * @deprecated SCIPIO: 3.0.0: Use {@link #OUT_SYS_PARAMS}
+     *
+     * <p>SCIPIO: 2017-11-23: Added.</p>
+     */
+    @Deprecated
+    public static final Set<String> SYS_RESPONSE_FIELDS_SET = UtilMisc.constSetCopy(OUT_SYS_PARAMS);
 
     // SCIPIO: Added 2017-09-13
     private static final int logParamLevel;
@@ -129,8 +293,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         logParamLevel = (level != null) ? level : Debug.INFO;
     }
 
-    // SCIPIO: Added 2019-01-31
-    public static final List<String> COMMON_INTERNAL_IN_FIELDS = UtilMisc.unmodifiableArrayList("userLogin", "locale", "timeZone");
+    @Deprecated
+    public static final List<String> COMMON_INTERNAL_IN_FIELDS = IN_SYSNOPW_PARAMS;
 
     /**
      * Stack overflow limit for interfaceUpdate.
@@ -572,6 +736,158 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         return "";
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDefinitionLocation() {
+        return definitionLocation;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getEngineName() {
+        return engineName;
+    }
+
+    public String getNameSpace() {
+        return nameSpace;
+    }
+
+    public String getNameSpacePrefix() {
+        return nameSpacePrefix;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getInvoke() {
+        return invoke;
+    }
+
+    public String getAccessorLocation() {
+        return accessorLocation;
+    }
+
+    public String getAccessorInvoke() {
+        return accessorInvoke;
+    }
+
+    public String getDefaultEntityName() {
+        return defaultEntityName;
+    }
+
+    public String getFromLoader() {
+        return fromLoader;
+    }
+
+    public boolean isAuth() {
+        return auth;
+    }
+
+    public boolean isExport() {
+        return export;
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    public boolean isValidate() {
+        return validate;
+    }
+
+    public boolean isUseTransaction() {
+        return useTransaction;
+    }
+
+    public boolean isRequireNewTransaction() {
+        return requireNewTransaction;
+    }
+
+    public int getTransactionTimeout() {
+        return transactionTimeout;
+    }
+
+    public int getMaxRetry() {
+        return maxRetry;
+    }
+
+    public String getPermissionServiceName() {
+        return permissionServiceName;
+    }
+
+    public String getPermissionMainAction() {
+        return permissionMainAction;
+    }
+
+    public String getPermissionResourceDesc() {
+        return permissionResourceDesc;
+    }
+
+    public String getSemaphore() {
+        return semaphore;
+    }
+
+    public int getSemaphoreWait() {
+        return semaphoreWait;
+    }
+
+    public int getSemaphoreSleep() {
+        return semaphoreSleep;
+    }
+
+    public boolean isHideResultInLog() {
+        return hideResultInLog;
+    }
+
+    public Set<ModelServiceIface> getImplServices() {
+        return implServices;
+    }
+
+    public Set<ModelParam> getOverrideParameters() {
+        return overrideParameters;
+    }
+
+    public List<ModelPermGroup> getPermissionGroups() {
+        return permissionGroups;
+    }
+
+    public List<ModelNotification> getNotifications() {
+        return notifications;
+    }
+
+    public GroupModel getInternalGroup() {
+        return internalGroup;
+    }
+
+    public String getDeprecatedUseInstead() {
+        return deprecatedUseInstead;
+    }
+
+    public String getDeprecatedSince() {
+        return deprecatedSince;
+    }
+
+    public String getDeprecatedReason() {
+        return deprecatedReason;
+    }
+
+    public Map<String, ModelParam> getContextInfo() {
+        return contextInfo;
+    }
+
+    public List<ModelParam> getContextParamList() {
+        return contextParamList;
+    }
+
+    public Metrics getMetrics() {
+        return metrics;
+    }
+
     /**
      * Test if we have already inherited our interface parameters
      * @return boolean
@@ -846,7 +1162,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @param test The map to test its value types.
      * @param reverse Test the maps in reverse.
      */
-    public static void validate(Map<String, String> info, Map<String, ? extends Object> test, boolean reverse, ModelService model, String mode, Locale locale) throws ServiceValidationException {
+    public static void validate(Map<String, String> info, Map<String, ?> test, boolean reverse, ModelService model, String mode, Locale locale) throws ServiceValidationException {
         if (info == null || test == null) {
             throw new ServiceValidationException("Cannot validate NULL maps", model);
         }
@@ -1051,39 +1367,157 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     /**
      * Creates a new Map based from an existing map with just valid parameters.
      * Tries to convert parameters to required type.
-     * @param source The source map
-     * @param mode The mode which to build the new map
+     *
+     * <p>SCIPIO: 3.0.0: Reimplemented with {@link MakeValidOptions}; reordered source/mode overload to match DispatchContext.makeValidContext.</p>
+     *
+     * @param mode    The mode which to build the new map, one of {@link #PARAM_MODES}
+     * @param source  The source map
+     * @param options The options
      */
-    public Map<String, Object> makeValid(Map<String, ? extends Object> source, String mode) {
-        return makeValid(source, mode, true, null);
+    public Map<String, Object> makeValid(String mode, Map<String, ?> source, MakeValidOptions options) {
+        if (options == null) {
+            options = MakeValidOptions.DEFAULT;
+        }
+        Map<String, Object> target = options.targetContext();
+        if (target == null) {
+            target = new HashMap<>();
+        }
+        if (source == null) {
+            return target;
+        }
+        if (contextInfo.size() == 0) {
+            return target;
+        }
+
+        Boolean includeInternal = options.includeInternal();
+        if (includeInternal == null) {
+            includeInternal = true;
+        }
+        boolean includeStandard = true;
+        List<Object> errorMessages = options.errorMessages();
+        TimeZone timeZone = options.timeZone();
+        Locale locale = options.locale();
+        String namePrefix = options.namePrefix();
+        String toNamePrefix = options.toNamePrefix();
+        if (locale == null) {
+            locale = getLocale(source, errorMessages); // SCIPIO: Refactored
+        }
+        if (timeZone == null) {
+            timeZone = getTimeZone(source, locale, errorMessages); // SCIPIO: Refactored
+        }
+
+        List<ModelParam> targetParams = getParamModeModelParamList(mode);
+        if (targetParams == null) {
+            targetParams = getContextParamList();
+        }
+        if (PARAM_MODES_SYS.contains(mode)) {
+            mode = PARAM_MODE_IO_MAP.get(mode);
+        } else if (!PARAM_MODES_IO.contains(mode)) {
+            // SCIPIO: 3.0.0: Now throws exception here because we have a strict set of allowed values for mode
+            //  (anythng else should never happen; it simply swallows errors dandgerously) and fixes inconsistency with DispatchContext
+            //return target;
+            throw new IllegalArgumentException("Invalid makeValid service parameters mode: " + mode + " (supported: " + ModelService.PARAM_MODES + ")");
+        }
+
+        for (ModelParam param : targetParams) {
+            if ((param.mode.equals(mode) || param.mode.equals(IN_OUT_PARAM)) &&
+                    ((param.internal && includeInternal) || (!param.internal && includeStandard))) {
+                // SCIPIO: 3.0.0: Added src/dst prefix
+                String srcKey = StringUtil.prefixFieldNameCamelCase(param.name, namePrefix);
+                String dstKey = StringUtil.prefixFieldNameCamelCase(param.name, toNamePrefix);
+
+                if (source.containsKey(srcKey)) {
+                    Object value = source.get(srcKey);
+                    try {
+                        // no need to fail on type conversion; the validator will catch this
+                        value = ObjectType.simpleTypeConvert(value, param.type, null, timeZone, locale, false);
+                    } catch (GeneralException e) {
+                        String errMsg = "Type conversion of field [" + srcKey + "] to type [" + param.type + "] failed for value \"" + value + "\": " + e;
+                        Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                        if (errorMessages != null) {
+                            errorMessages.add(errMsg);
+                        }
+                    }
+                    target.put(dstKey, value);
+                } else if (UtilValidate.isNotEmpty(param.stringMapPrefix)) {
+                    // internal map of strings
+                    Map<String, Object> paramMap = this.makePrefixMap(source, param, namePrefix);
+                    if (UtilValidate.isNotEmpty(paramMap)) {
+                        target.put(dstKey, paramMap);
+                    }
+                } else if (UtilValidate.isNotEmpty(param.stringListSuffix)) {
+                    // internal list of strings
+                    List<Object> paramList = this.makeSuffixList(source, param);
+                    if (UtilValidate.isNotEmpty(paramList)) {
+                        target.put(dstKey, paramList);
+                    }
+                }
+            }
+        }
+        return target;
     }
 
     /**
      * Creates a new Map based from an existing map with just valid parameters.
      * Tries to convert parameters to required type.
+     *
+     * <p>SCIPIO: 3.0.0: Added consistent-parameter overload to match DispatchContext.makeValidContext.</p>
+     *
+     * @param mode The mode which to build the new map, one of {@link #PARAM_MODES}
+     * @param source The source map
+     */
+    public Map<String, Object> makeValid(String mode, Map<String, ?> source) {
+        return makeValid(mode, source, null);
+    }
+
+    /**
+     * Creates a new Map based from an existing map with just valid parameters.
+     * Tries to convert parameters to required type.
+     *
+     * <p>SCIPIO: Prefer {@link #makeValid(String, Map)}.</p>
+     *
+     * @param source The source map
+     * @param mode The mode which to build the new map
+     */
+    public Map<String, Object> makeValid(Map<String, ?> source, String mode) {
+        return makeValid(mode, source, null);
+    }
+
+    /**
+     * Creates a new Map based from an existing map with just valid parameters.
+     * Tries to convert parameters to required type.
+     *
+     * <p>SCIPIO: Prefer {@link #makeValid(String, Map, MakeValidOptions)}.</p>
+     *
      * @param source The source map
      * @param mode The mode which to build the new map
      * @param includeInternal When false will exclude internal fields
      */
-    public Map<String, Object> makeValid(Map<String, ? extends Object> source, String mode, boolean includeInternal, List<Object> errorMessages) {
+    public Map<String, Object> makeValid(Map<String, ?> source, String mode, boolean includeInternal, List<Object> errorMessages) {
         return makeValid(source, mode, includeInternal, errorMessages, null);
     }
 
     /**
      * Creates a new Map based from an existing map with just valid parameters.
      * Tries to convert parameters to required type.
+     *
+     * <p>SCIPIO: Prefer {@link #makeValid(String, Map, MakeValidOptions)}.</p>
+     *
      * @param source The source map
      * @param mode The mode which to build the new map
      * @param includeInternal When false will exclude internal fields
      * @param locale Locale to use to do some type conversion
      */
-    public Map<String, Object> makeValid(Map<String, ? extends Object> source, String mode, boolean includeInternal, List<Object> errorMessages, Locale locale) {
+    public Map<String, Object> makeValid(Map<String, ?> source, String mode, boolean includeInternal, List<Object> errorMessages, Locale locale) {
         return makeValid(source, mode, includeInternal, errorMessages, null, locale);
     }
 
     /**
      * Creates a new Map based from an existing map with just valid parameters.
      * Tries to convert parameters to required type.
+     *
+     * <p>SCIPIO: Prefer {@link #makeValid(String, Map, MakeValidOptions)}.</p>
+     *
      * @param source The source map
      * @param mode The mode which to build the new map
      * @param includeInternal When false will exclude internal fields
@@ -1091,66 +1525,8 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @param timeZone TimeZone to use to do some type conversion
      * @param locale Locale to use to do some type conversion
      */
-    public Map<String, Object> makeValid(Map<String, ? extends Object> source, String mode, boolean includeInternal, List<Object> errorMessages, TimeZone timeZone, Locale locale) {
-        Map<String, Object> target = new HashMap<>();
-
-        if (source == null) {
-            return target;
-        }
-        if (!IN_PARAM.equals(mode) && !OUT_PARAM.equals(mode) && !IN_OUT_PARAM.equals(mode)) {
-            return target;
-        }
-        if (contextInfo.size() == 0) {
-            return target;
-        }
-
-        if (locale == null) {
-            locale = getLocale(source, errorMessages); // SCIPIO: Refactored
-        }
-
-        if (timeZone == null) {
-            timeZone = getTimeZone(source, locale, errorMessages); // SCIPIO: Refactored
-        }
-
-        for (ModelParam param: contextParamList) {
-            if (param.mode.equals(IN_OUT_PARAM) || param.mode.equals(mode)) {
-                String key = param.name;
-
-                // internal map of strings
-                if (UtilValidate.isNotEmpty(param.stringMapPrefix) && !source.containsKey(key)) {
-                    Map<String, Object> paramMap = this.makePrefixMap(source, param);
-                    if (UtilValidate.isNotEmpty(paramMap)) {
-                        target.put(key, paramMap);
-                    }
-                // internal list of strings
-                } else if (UtilValidate.isNotEmpty(param.stringListSuffix) && !source.containsKey(key)) {
-                    List<Object> paramList = this.makeSuffixList(source, param);
-                    if (UtilValidate.isNotEmpty(paramList)) {
-                        target.put(key, paramList);
-                    }
-                // other attributes
-                } else {
-                    if (source.containsKey(key)) {
-                        if ((param.internal && includeInternal) || (!param.internal)) {
-                            Object value = source.get(key);
-
-                            try {
-                                // no need to fail on type conversion; the validator will catch this
-                                value = ObjectType.simpleTypeConvert(value, param.type, null, timeZone, locale, false);
-                            } catch (GeneralException e) {
-                                String errMsg = "Type conversion of field [" + key + "] to type [" + param.type + "] failed for value \"" + value + "\": " + e.toString();
-                                Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
-                                if (errorMessages != null) {
-                                    errorMessages.add(errMsg);
-                                }
-                            }
-                            target.put(key, value);
-                        }
-                    }
-                }
-            }
-        }
-        return target;
+    public Map<String, Object> makeValid(Map<String, ?> source, String mode, boolean includeInternal, List<Object> errorMessages, TimeZone timeZone, Locale locale) {
+        return makeValid(mode, source, new MakeValidOptions(includeInternal, errorMessages, timeZone, locale));
     }
 
     private Locale getLocale(Map<String, ?> source, List<? super String> errorMessages) { // SCIPIO: Refactored from makeValid
@@ -1245,21 +1621,24 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         }
     }
 
-    private Map<String, Object> makePrefixMap(Map<String, ? extends Object> source, ModelParam param) {
-        Map<String, Object> paramMap = new HashMap<>();
-        for (Map.Entry<String, ? extends Object> entry: source.entrySet()) {
+    private Map<String, Object> makePrefixMap(Map<String, ?> source, ModelParam param, String namePrefix) {
+        Map<String, Object> paramMap = new LinkedHashMap<>();
+        String stringMapPrefix = StringUtil.prefixFieldNameCamelCase(param.stringMapPrefix, namePrefix);
+        for (Map.Entry<String, ?> entry: source.entrySet()) {
             String key = entry.getKey();
-            if (key.startsWith(param.stringMapPrefix)) {
-                key=key.replace(param.stringMapPrefix,"");
+            if (key.startsWith(stringMapPrefix)) {
+                // SCIPIO: 3.0.0: Fixed - inappropriate and slow
+                //key=key.replace(param.stringMapPrefix,"");
+                key = key.substring(stringMapPrefix.length());
                 paramMap.put(key, entry.getValue());
             }
         }
         return paramMap;
     }
 
-    private List<Object> makeSuffixList(Map<String, ? extends Object> source, ModelParam param) {
+    private List<Object> makeSuffixList(Map<String, ?> source, ModelParam param) {
         List<Object> paramList = new ArrayList<>(source.size()); // SCIPIO: switched to ArrayList
-        for (Map.Entry<String, ? extends Object> entry: source.entrySet()) {
+        for (Map.Entry<String, ?> entry: source.entrySet()) {
             String key = entry.getKey();
             if (key.endsWith(param.stringListSuffix)) {
                 paramList.add(entry.getValue());
@@ -1278,7 +1657,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @param context Map containing userLogin and context information
      * @return result of permission service invocation
      */
-    public Map<String, Object> evalPermission(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public Map<String, Object> evalPermission(DispatchContext dctx, Map<String, ?> context) {
         if (UtilValidate.isNotEmpty(this.permissionServiceName)) {
             ModelService thisService;
             ModelService permission;
@@ -1333,7 +1712,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     /**
      * Evaluates notifications
      */
-    public void evalNotifications(DispatchContext dctx, Map<String, ? extends Object> context, Map<String, Object> result) {
+    public void evalNotifications(DispatchContext dctx, Map<String, ?> context, Map<String, Object> result) {
         for (ModelNotification notify: this.notifications) {
             notify.callNotify(dctx, this, context, result);
         }
@@ -1345,7 +1724,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * @param context Map containing userLogin information
      * @return true if all permissions evaluate true.
      */
-    public boolean evalPermissions(DispatchContext dctx, Map<String, ? extends Object> context) {
+    public boolean evalPermissions(DispatchContext dctx, Map<String, ?> context) {
         // old permission checking
         if (this.containsPermissions()) {
             for (ModelPermGroup group: this.permissionGroups) {
@@ -1361,7 +1740,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * Gets a list of required IN parameters in sequence.
      * @return A list of required IN parameters in the order which they were defined.
      */
-    public List<Object> getInParameterSequence(Map<String, ? extends Object> source) {
+    public List<Object> getInParameterSequence(Map<String, ?> source) {
         List<Object> target = new ArrayList<>(this.contextParamList.size()); // SCIPIO: switched to ArrayList
         if (source == null) {
             return target;
@@ -1388,9 +1767,27 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
      * the service was created.
      */
     public List<ModelParam> getModelParamList() {
-        List<ModelParam> newList = new ArrayList<>(this.contextParamList); // SCIPIO: switched to ArrayList
-        //newList.addAll(this.contextParamList);
-        return newList;
+        return new ArrayList<>(this.contextParamList);
+    }
+
+    public List<ModelParam> getNamedModelParamList(String mode, Collection<String> paramNames) {
+        List<ModelParam> targetParams = new ArrayList<>(paramNames.size());
+        for (String paramName : paramNames) {
+            ModelParam param = contextInfo.get(paramName);
+            if (param != null) {
+                targetParams.add(param);
+            }
+        }
+        return targetParams;
+    }
+
+    public List<ModelParam> getNamedModelParamList(String mode, Object... paramNames) {
+        return getNamedModelParamList(mode, Arrays.asList(paramNames));
+    }
+
+    public List<ModelParam> getParamModeModelParamList(String mode) {
+        List<String> paramNames = PARAM_MODE_PARAMS_MAP.get(mode);
+        return (paramNames != null) ? getNamedModelParamList(mode, paramNames) : null;
     }
 
     /**
@@ -2597,9 +2994,11 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     /**
      * SCIPIO: Returns true if the given field name is in {@link #SYS_RESPONSE_FIELDS}.
+     * @deprecated SCIPIO: 3.0.0: Use {@link #OUT_SYS_PARAMS}
      */
+    @Deprecated
     public static boolean isSysResponseField(String fieldName) {
-        return SYS_RESPONSE_FIELDS_SET.contains(fieldName);
+        return OUT_SYS_PARAMS.contains(fieldName);
     }
 
     /**
@@ -2653,4 +3052,25 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     public void setJavaServiceReflectInfo(Object javaServiceReflectInfo) {
         this.javaServiceReflectInfo = javaServiceReflectInfo;
     }
+
+    /**
+     * For "IN-SYS", returns "IN".
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getParamModeIO(String mode) {
+        int sep = mode.indexOf('-');
+        return (sep >= 0) ? mode.substring(0, sep) : mode;
+    }
+
+    /**
+     * For "IN-SYS", returns "SYS".
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getParamModeScope(String mode) {
+        int sep = mode.indexOf('-');
+        return (sep >= 0) ? mode.substring(sep + 1) : "";
+    }
+
 }

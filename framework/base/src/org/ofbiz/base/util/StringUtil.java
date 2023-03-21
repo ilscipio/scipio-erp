@@ -1103,4 +1103,19 @@ public class StringUtil {
         }
         return str;
     }
+
+    /**
+     * Prefixes a camelCase field name.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String prefixFieldNameCamelCase(String fieldName, String prefix) {
+        if (UtilValidate.isEmpty(fieldName)) {
+            throw new IllegalArgumentException("Missing field name");
+        }
+        if (UtilValidate.isEmpty(prefix)) {
+            return fieldName;
+        }
+        return prefix + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+    }
 }

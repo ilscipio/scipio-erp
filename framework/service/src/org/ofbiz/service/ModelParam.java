@@ -32,7 +32,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 
 /**
- * Generic Service Model Parameter
+ * Generic Service Model Parameter.
  */
 @SuppressWarnings("serial")
 public class ModelParam implements Serializable {

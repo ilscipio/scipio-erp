@@ -45,7 +45,9 @@ import org.ofbiz.service.eca.ServiceEcaUtil;
 import org.w3c.dom.Document;
 
 /**
- * Dispatcher Context
+ * Dispatcher Context.
+ *
+ * <p>SCIPIO: 3.0.0: Improved {@link #makeValidContext} methods to support IN-SYS, OUT-SYS, INOUT-SYS mode target parameters.</p>
  */
 @SuppressWarnings("serial")
 public class DispatchContext implements Serializable {
@@ -148,123 +150,129 @@ public class DispatchContext implements Serializable {
 
     /**
      * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
-     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields.
+     *
+     * <p>NOTE: This goes not guarantee the context will be 100% valid - there may be missing fields.</p>
+     *
+     * <p>NOTE: The best way to call {@link #makeValidContext} methods is with an inlined
+     * "IN"/"OUT"/"INOUT"/"IN-SYS"/"OUT-SYS"/"INOUT-SYS" mode parameter because they are fixed and linking {@link ModelService}
+     * adds needless verbosity and imports.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added options overload.</p>
+     *
+     * @param service The {@link ModelService} object of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT), according to {@link ModelService#PARAM_MODES}
+     * @param context The initial set of values to pull from
+     * @param options The options
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map<String, Object> makeValidContext(ModelService service, String mode, Map<String, ?> context, MakeValidOptions options) throws GenericServiceException {
+        return service.makeValid(mode, context, options);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName.
+     *
+     * <p>NOTE: This goes not guarantee the context will be 100% valid - there may be missing fields.</p>
+     *
+     * <p>NOTE: The best way to call {@link #makeValidContext} methods is with an inlined
+     * "IN"/"OUT"/"INOUT"/"IN-SYS"/"OUT-SYS"/"INOUT-SYS" mode parameter because they are fixed and linking {@link ModelService}
+     * adds needless verbosity and imports.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added options overload.</p>
+     *
      * @param serviceName The name of the service to obtain parameters for
-     * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT), according to {@link ModelService#PARAM_MODES}
      * @param context The initial set of values to pull from
+     * @param options The options
      * @return Map contains any valid values
      * @throws GenericServiceException
      */
-    public Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ? extends Object> context) throws GenericServiceException {
-        ModelService model = getModelService(serviceName);
-        return makeValidContext(model, mode, context);
+    public Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ?> context, MakeValidOptions options) throws GenericServiceException {
+        return makeValidContext(getModelService(serviceName), mode, context, options);
     }
 
     /**
-     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
-     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
-     * @param model The ModelService object of the service to obtain parameters for
-     * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
-     * @param context The initial set of values to pull from
-     * @return Map contains any valid values
-     * @throws GenericServiceException
-     */
-    public static Map<String, Object> makeValidContext(ModelService model, String mode, Map<String, ? extends Object> context) throws GenericServiceException {
-        Map<String, Object> newContext;
-
-        int modeInt = 0;
-        if (mode.equalsIgnoreCase(ModelService.IN_PARAM)) {
-            modeInt = 1;
-        } else if (mode.equalsIgnoreCase(ModelService.OUT_PARAM)) {
-            modeInt = 2;
-        }
-
-        if (model == null) {
-            throw new GenericServiceException("Model service is null! Should never happen.");
-        }
-        switch (modeInt) {
-            case 1:
-                newContext = model.makeValid(context, ModelService.IN_PARAM, true, null);
-                break;
-            case 2:
-                newContext = model.makeValid(context, ModelService.OUT_PARAM, true, null);
-                break;
-            default:
-                throw new GenericServiceException("Invalid mode, should be either IN or OUT");
-        }
-        return newContext;
-    }
-
-    /**
-     * Uses an existing map of name value pairs and extracts the IN keys which are used in serviceName (SCIPIO)
-     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName.
+     *
+     * <p>NOTE: This goes not guarantee the context will be 100% valid - there may be missing fields.</p>
+     *
+     * <p>NOTE: The best way to call {@link #makeValidContext} methods is with an inlined
+     * "IN"/"OUT"/"INOUT"/"IN-SYS"/"OUT-SYS"/"INOUT-SYS" mode parameter because they are fixed and linking {@link ModelService}
+     * adds needless verbosity and imports.</p>
+     *
      * @param serviceName The name of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT), according to {@link ModelService#PARAM_MODES}
      * @param context The initial set of values to pull from
      * @return Map contains any valid values
      * @throws GenericServiceException
      */
-    public Map<String, Object> makeValidInContext(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException {
-        return makeValidContext(serviceName, ModelService.IN_PARAM, context);
+    public Map<String, Object> makeValidContext(String serviceName, String mode, Map<String, ?> context) throws GenericServiceException {
+        return makeValidContext(serviceName, mode, context, null);
     }
 
     /**
-     * Uses an existing map of name value pairs and extracts the IN keys which are used in serviceName (SCIPIO)
-     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
-     * @param model The ModelService object of the service to obtain parameters for
-     * @param context The initial set of values to pull from
-     * @return Map contains any valid values
-     * @throws GenericServiceException
+     * Uses an existing map of name value pairs and extracts the IN keys which are used in serviceName.
+     * @deprecated Use non-static <code>makeValidContext(..., "IN"/"OUT"/"INOUT", ...) or {@link ModelService#makeValid} directly</code>
      */
-    public Map<String, Object> makeValidInContext(ModelService model, Map<String, ? extends Object> context) throws GenericServiceException {
-        return makeValidContext(model, ModelService.IN_PARAM, context);
+    @Deprecated
+    public static Map<String, Object> makeValidContext(ModelService model, String mode, Map<String, ?> context) throws GenericServiceException {
+        return model.makeValid(mode, context);
     }
 
     /**
-     * Uses an existing map of name value pairs and extracts the OUT keys which are used in serviceName (SCIPIO)
-     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
-     * @param serviceName The name of the service to obtain parameters for
-     * @param context The initial set of values to pull from
-     * @return Map contains any valid values
-     * @throws GenericServiceException
+     * Uses an existing map of name value pairs and extracts the IN keys which are used in serviceName.
+     * @deprecated Use <code>makeValidContext(..., "IN"/"OUT"/"INOUT", ...)</code>
      */
-    public Map<String, Object> makeValidOutContext(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException {
-        return makeValidContext(serviceName, ModelService.OUT_PARAM, context);
+    @Deprecated
+    public Map<String, Object> makeValidInContext(String serviceName, Map<String, ?> context) throws GenericServiceException {
+        return makeValidContext(serviceName, ModelService.IN_PARAM, context, null);
     }
 
     /**
-     * Uses an existing map of name value pairs and extracts the OUT keys which are used in serviceName (SCIPIO)
-     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
-     * @param model The ModelService object of the service to obtain parameters for
-     * @param context The initial set of values to pull from
-     * @return Map contains any valid values
-     * @throws GenericServiceException
+     * Uses an existing map of name value pairs and extracts the IN keys which are used in serviceName.
+     * @deprecated Use <code>makeValidContext(..., "IN"/"OUT"/"INOUT", ...)</code>
      */
-    public Map<String, Object> makeValidOutContext(ModelService model, Map<String, ? extends Object> context) throws GenericServiceException {
-        return makeValidContext(model, ModelService.OUT_PARAM, context);
+    @Deprecated
+    public Map<String, Object> makeValidInContext(ModelService model, Map<String, ?> context) throws GenericServiceException {
+        return makeValidContext(model, ModelService.IN_PARAM, context, null);
     }
 
     /**
-     * Uses an existing map of name value pairs and extracts the IN and OUT keys which are used in serviceName (SCIPIO)
-     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
-     * @param serviceName The name of the service to obtain parameters for
-     * @param context The initial set of values to pull from
-     * @return Map contains any valid values
-     * @throws GenericServiceException
+     * Uses an existing map of name value pairs and extracts the OUT keys which are used in serviceName.
+     * @deprecated Use <code>makeValidContext(..., "IN"/"OUT"/"INOUT", ...)</code>
      */
-    public Map<String, Object> makeValidInOutContext(String serviceName, Map<String, ? extends Object> context) throws GenericServiceException {
-        return makeValidContext(serviceName, ModelService.IN_OUT_PARAM, context);
+    @Deprecated
+    public Map<String, Object> makeValidOutContext(String serviceName, Map<String, ?> context) throws GenericServiceException {
+        return makeValidContext(serviceName, ModelService.OUT_PARAM, context, null);
     }
 
     /**
-     * Uses an existing map of name value pairs and extracts the IN and OUT keys which are used in serviceName (SCIPIO)
-     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields
-     * @param model The ModelService object of the service to obtain parameters for
-     * @param context The initial set of values to pull from
-     * @return Map contains any valid values
-     * @throws GenericServiceException
+     * Uses an existing map of name value pairs and extracts the OUT keys which are used in serviceName.
+     * @deprecated Use <code>makeValidContext(..., "IN"/"OUT"/"INOUT", ...)</code>
      */
-    public Map<String, Object> makeValidInOutContext(ModelService model, Map<String, ? extends Object> context) throws GenericServiceException {
-        return makeValidContext(model, ModelService.IN_OUT_PARAM, context);
+    @Deprecated
+    public Map<String, Object> makeValidOutContext(ModelService model, Map<String, ?> context) throws GenericServiceException {
+        return makeValidContext(model, ModelService.OUT_PARAM, context, null);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the IN and OUT keys which are used in serviceName.
+     * @deprecated Use <code>makeValidContext(..., "IN"/"OUT"/"INOUT", ...)</code>
+     */
+    @Deprecated
+    public Map<String, Object> makeValidInOutContext(String serviceName, Map<String, ?> context) throws GenericServiceException {
+        return makeValidContext(serviceName, ModelService.IN_OUT_PARAM, context, null);
+    }
+
+    /**
+     * Uses an existing map of name value pairs and extracts the IN and OUT keys which are used in serviceName.
+     * @deprecated Use <code>makeValidContext(..., "IN"/"OUT"/"INOUT", ...)</code>
+     */
+    @Deprecated
+    public Map<String, Object> makeValidInOutContext(ModelService model, Map<String, ?> context) throws GenericServiceException {
+        return makeValidContext(model, ModelService.IN_OUT_PARAM, context, null);
     }
 
     /**
@@ -286,7 +294,7 @@ public class DispatchContext implements Serializable {
     }
 
     /**
-     * Gets the ModelService instance that corresponds to given the name, throwing IllegalArgumentException if not found (SCIPIO).
+     * Gets the ModelService instance that corresponds to given the name, throwing IllegalArgumentException if not found.
      * @param serviceName Name of the service
      * @return GenericServiceModel that corresponds to the serviceName
      */
@@ -313,7 +321,12 @@ public class DispatchContext implements Serializable {
 
     /**
      * Returns the model of the last invoked service, or null if no service executing (SCIPIO).
+     *
+     * <p>NOTE: After {@link LocalDispatcher#runSync} returns from a call, this will return null as the current-thread
+     * current ModelService variable will have been cleared by then.</p>
+     *
      * @return the current service model, or null if no service executing
+     * @see ServiceContext#service()
      */
     public ModelService getModelService() {
         return currentModelService.get();

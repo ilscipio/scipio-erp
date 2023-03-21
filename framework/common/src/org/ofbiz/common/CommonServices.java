@@ -245,7 +245,8 @@ public class CommonServices {
      * <p>This service does not have required parameters and does not validate.</p>
      * <p>SCIPIO: 2.1.0: Refactored for tests.</p>
      */
-    public static class EchoService extends ServiceHandler.Local {
+    public static class EchoService extends ServiceHandler.LocalExec {
+        @Override
         public Map<String, Object> exec() {
             Map<String, Object> result = new LinkedHashMap<>(ServiceUtil.returnSuccessReadOnly());
             result.putAll(ctx);
@@ -265,8 +266,8 @@ public class CommonServices {
      * Log all service; logs all passed parameters.
      * <p>SCIPIO: 2.1.0: Refactored for tests.</p>
      */
-    public static class LogAllService extends ServiceHandler.Local {
-        public LogAllService(ServiceContext ctx) { super(ctx); }
+    public static class LogAllService extends ServiceHandler.LocalExec {
+        @Override
         public Map<String, Object> exec() {
             StringBuilder sb = new StringBuilder("Received " + ctx.size() + " arguments:");
             for(Map.Entry<String, ?> entry : ctx.entrySet()) {

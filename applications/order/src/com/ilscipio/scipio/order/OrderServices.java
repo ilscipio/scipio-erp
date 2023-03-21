@@ -30,7 +30,7 @@ public abstract class OrderServices {
     /**
      * Implements populateBestSellingCategory service; service overrides can override any protected methods.
      */
-    public static class PopulateBestSellingCategory extends ServiceHandler.Local {
+    public static class PopulateBestSellingCategory extends ServiceHandler.LocalExec {
         protected static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
         protected String productCategoryId;
@@ -86,6 +86,7 @@ public abstract class OrderServices {
             this.logEvery = ctx.attr("logEvery");
         }
 
+        @Override
         public Map<String, Object> exec() throws ServiceValidationException {
             try {
                 productCategory = ctx.delegator().from("ProductCategory").where("productCategoryId", productCategoryId).queryOne();

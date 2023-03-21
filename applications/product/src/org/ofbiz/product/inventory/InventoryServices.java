@@ -1065,7 +1065,7 @@ public class InventoryServices {
             int errorCount = 0;
             while((product = eli.next()) != null) {
                 String productId = product.getString("productId");
-                Map<String, Object> servCtx = ctx.makeValidInContext("setProductLastInventoryCount", ctx);
+                Map<String, Object> servCtx = ctx.makeValidContext("setProductLastInventoryCount", "IN", ctx);
                 servCtx.put("productId", productId);
                 servCtx.put("lastInvMode", "SCHEDULED");
                 Map<String, Object> res = ctx.dispatcher().runSyncNewTrans("setProductLastInventoryCount", servCtx);

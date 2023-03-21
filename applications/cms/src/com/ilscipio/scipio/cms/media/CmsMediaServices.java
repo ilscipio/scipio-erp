@@ -802,7 +802,7 @@ public abstract class CmsMediaServices {
                 }
 
                 try {
-                    Map<String, Object> resizeCtx = ctx.makeValidInContext("contentImageAutoRescale", ctx);
+                    Map<String, Object> resizeCtx = ctx.makeValidContext("contentImageAutoRescale", "IN", ctx);
                     resizeCtx.put("contentId", contentId);
                     resizeCtx.put("contentDataResource", contentDataResource);
                     resizeCtx.put("createNew", forceCreate);

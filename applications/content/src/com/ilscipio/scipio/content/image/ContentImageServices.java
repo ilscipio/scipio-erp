@@ -1411,7 +1411,7 @@ public abstract class ContentImageServices {
             dataResourceFields.put("isPublic", dataResource.get("isPublic"));
             //}
 
-            Map<String, Object> resizeCtx = ctx.makeValidInContext("contentImageDbScaleInAllSizeCore", ctx);
+            Map<String, Object> resizeCtx = ctx.makeValidContext("contentImageDbScaleInAllSizeCore", "IN");
             resizeCtx.put("imageOrigContentId", contentId);
             resizeCtx.put("imageProfile", imageProfile);
             resizeCtx.put("fileSizeDataResAttrName", FileTypeUtil.FILE_SIZE_ATTRIBUTE_NAME);

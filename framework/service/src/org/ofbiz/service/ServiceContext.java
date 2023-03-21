@@ -305,8 +305,11 @@ public class ServiceContext extends MapWrapper.Abstract<String, Object> implemen
         if (model == null) {
             model = service();
         }
+        // Instead of a Map, make a ServiceContext
         ServiceContext targetCtx = fromServiceMode(model, mode);
-        dctx().makeValidContext(model, mode, context, options.targetContext(targetCtx.context()));
+        options = (options != null) ? options.copy() : new MakeValidOptions();
+        options.targetContext(targetCtx.context());
+        dctx().makeValidContext(model, mode, context, options);
         return UtilGenerics.cast(targetCtx);
     }
 

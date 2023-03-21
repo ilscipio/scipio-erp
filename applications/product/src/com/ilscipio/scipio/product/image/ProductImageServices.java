@@ -83,7 +83,7 @@ public class ProductImageServices {
 
         Map<String, Object> contentCtx;
         try {
-            contentCtx = ctx.makeValidInContext("contentImageFileScaleInAllSizeCore", ctx.context());
+            contentCtx = ctx.makeValidContext("contentImageFileScaleInAllSizeCore", "IN", ctx.context());
         } catch (GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
@@ -223,7 +223,7 @@ public class ProductImageServices {
 
         if (Boolean.TRUE.equals(ctx.attr("clearCaches"))) {
             try {
-                Map<String, Object> clearCachesCtx = ctx.makeValidInContext("productImageVariantsClearCaches", ctx.context());
+                Map<String, Object> clearCachesCtx = ctx.makeValidContext("productImageVariantsClearCaches", "IN", ctx.context());
                 clearCachesCtx.put("productId", productId);
                 clearCachesCtx.put("distribute", true);
                 Map<String, Object> clearCachesResult = ctx.dispatcher().runSync("productImageVariantsClearCaches", clearCachesCtx);
@@ -829,7 +829,7 @@ public class ProductImageServices {
 
                 productCount++;
                 try {
-                    Map<String, Object> servCtx = ctx.makeValidInContext("productImageAutoRescale", ctx);
+                    Map<String, Object> servCtx = ctx.makeValidContext("productImageAutoRescale", "IN", ctx);
                     if (product != null) {
                         // avoid just in case, separate transaction
                         //servCtx.put("product", product);

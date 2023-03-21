@@ -49,6 +49,10 @@ public class MakeValidOptions {
         this(null, includeInternal, errorMessages, timeZone, locale, null, null);
     }
 
+    public MakeValidOptions copy() {
+        return new MakeValidOptions(this);
+    }
+
     public Map<String, Object> targetContext() {
         return targetContext;
     }

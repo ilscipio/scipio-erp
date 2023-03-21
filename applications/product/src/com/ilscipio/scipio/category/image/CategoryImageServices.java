@@ -73,7 +73,7 @@ public class CategoryImageServices {
 
         Map<String, Object> contentCtx;
         try {
-            contentCtx = ctx.makeValidInContext("contentImageFileScaleInAllSizeCore", ctx.context());
+            contentCtx = ctx.makeValidContext("contentImageFileScaleInAllSizeCore", "IN", ctx.context());
         } catch (GenericServiceException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
@@ -212,7 +212,7 @@ public class CategoryImageServices {
 
         if (Boolean.TRUE.equals(ctx.attr("clearCaches"))) {
             try {
-                Map<String, Object> clearCachesCtx = ctx.makeValidInContext("categoryImageVariantsClearCaches", ctx.context());
+                Map<String, Object> clearCachesCtx = ctx.makeValidContext("categoryImageVariantsClearCaches", "IN", ctx.context());
                 clearCachesCtx.put("productCategoryId", productCategoryId);
                 clearCachesCtx.put("distribute", true);
                 Map<String, Object> clearCachesResult = ctx.dispatcher().runSync("categoryImageVariantsClearCaches", clearCachesCtx);
@@ -784,7 +784,7 @@ public class CategoryImageServices {
 
                 productCategoryCount++;
                 try {
-                    Map<String, Object> servCtx = ctx.makeValidInContext("categoryImageAutoRescale", ctx);
+                    Map<String, Object> servCtx = ctx.makeValidContext("categoryImageAutoRescale", "IN", ctx);
                     if (productCategory != null) {
                         servCtx.put("productCategoryId", productCategory.get("productCategoryId"));
                     } else if (UtilValidate.isNotEmpty(productCategoryId)) {

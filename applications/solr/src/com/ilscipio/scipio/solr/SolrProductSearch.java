@@ -51,6 +51,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceContext;
+import org.ofbiz.service.ServiceResult;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.solr.util.DirectJsonRequest;
@@ -662,7 +663,9 @@ public abstract class SolrProductSearch {
     /**
      * Performs solr products search.
      */
-    public static Map<String, Object> solrProductsSearch(DispatchContext dctx, Map<String, Object> context) {
+    public static Map<String, Object> solrProductsSearch(ServiceContext ctx) {
+        DispatchContext dctx = ctx.dctx();
+        Map<String, Object> context = ctx.context();
         Map<String, Object> result;
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
@@ -689,7 +692,7 @@ public abstract class SolrProductSearch {
 
             Map<String, Object> searchResult = dispatcher.runSync("runSolrQuery", dispatchMap);
             if (!ServiceUtil.isSuccess(searchResult)) {
-                return copySolrQueryExtraOutParams(searchResult, ServiceUtil.returnResultSysFields(searchResult));
+                return copySolrQueryExtraOutParams(searchResult, ctx.responseCopy(searchResult));
             }
             QueryResponse queryResult = (QueryResponse) searchResult.get("queryResult");
             result = ServiceUtil.returnSuccess();

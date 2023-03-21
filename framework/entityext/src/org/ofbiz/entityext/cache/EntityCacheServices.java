@@ -331,7 +331,7 @@ public class EntityCacheServices implements DistributedCacheClear {
         }
     }
 
-    public static abstract class UtilCacheFilterOp extends ServiceHandler.Local {
+    public static abstract class UtilCacheFilterOp extends ServiceHandler.LocalExec {
     }
 
     /**
@@ -339,6 +339,7 @@ public class EntityCacheServices implements DistributedCacheClear {
      * <p>SCIPIO: 2.1.0: Added for {@link UtilCache} improvements.</p>
      */
     public static class UtilCacheCountBy extends UtilCacheFilterOp {
+        @Override
         public Map<String, Object> exec() throws ServiceValidationException {
             try {
                 UtilCache<?, ?> cache = UtilCache.findCache(ctx.getStringOrEmpty("cacheName"));
@@ -386,6 +387,7 @@ public class EntityCacheServices implements DistributedCacheClear {
      * <p>SCIPIO: 2.1.0: Added for {@link UtilCache} improvements.</p>
      */
     public static class UtilCacheRemoveBy extends UtilCacheFilterOp {
+        @Override
         public Map<String, Object> exec() throws ServiceValidationException {
             try {
                 UtilCache<?, ?> cache = UtilCache.findCache(ctx.getStringOrEmpty("cacheName"));

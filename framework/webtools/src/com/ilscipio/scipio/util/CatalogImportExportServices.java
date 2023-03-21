@@ -187,7 +187,9 @@ public class CatalogImportExportServices {
                                         String updateService = headerInfoProps.get("update");
                                         String localeStr = headerInfoProps.get("locale");
                                         String fieldName = headerInfoProps.get("name");
-                                        serviceContext.put("locale", localeStr);
+                                        // FlexibleStringExpander requires Locale
+                                        serviceContext.put("locale", UtilMisc.parseLocale(localeStr));
+                                        //serviceContext.put("locale", localeStr);
 
                                         serviceContext.put("today", UtilDateTime.getDayStart(UtilDateTime.nowTimestamp()));
                                         serviceContext.put("now", UtilDateTime.nowTimestamp());
@@ -309,8 +311,8 @@ public class CatalogImportExportServices {
                                                             if (ServiceUtil.isSuccess(serviceResult)) {
                                                                 Debug.logInfo(workbookName + " [" + cellAddr + "]: Imported field value: " + cellAddr, module);
                                                             } else {
-                                                                throw new GenericServiceException("Could not import field " + cellAddr +
-                                                                        ". Service returned with error: " + ServiceUtil.getErrorMessage(serviceResult));
+                                                                throw new GenericServiceException("Could not import field [" + cellAddr +
+                                                                        "] using service [" + serviceName + "]. Service returned with error: " + ServiceUtil.getErrorMessage(serviceResult));
                                                             }
                                                         }
                                                     } else {

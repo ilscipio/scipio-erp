@@ -587,7 +587,7 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         }
 
         public Builder<K, V> indexDefs(Object... indexDefs) {
-            return indexDefs(UtilMisc.toLinkedMap(indexDefs));
+            return indexDefs(UtilMisc.orderedMap(indexDefs));
         }
 
         public Integer seqNum() {

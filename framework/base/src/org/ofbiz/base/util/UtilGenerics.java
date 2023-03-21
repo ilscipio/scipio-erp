@@ -27,7 +27,6 @@ import java.util.Stack;
 
 /**
  * Generics handling utilities.
- * <p>SCIPIO: 2.1.0: This class is headed toward deprecation (redundant); prefer {@link UtilMisc#cast(Object)}.</p>
  */
 public final class UtilGenerics {
 
@@ -37,7 +36,6 @@ public final class UtilGenerics {
 
     /**
      * Casts object to given type.
-     * <p>SCIPIO: 2.1.0: Now considered deprecated (not annotated); prefer {@link UtilMisc#cast(Object)}.
      */
     @SuppressWarnings("unchecked")
     public static <V> V cast(Object object) {
@@ -46,7 +44,6 @@ public final class UtilGenerics {
 
     /**
      * Casts object to given type or return given default value if null.
-     * <p>SCIPIO: 2.1.0: Now considered deprecated (not annotated); prefer {@link UtilMisc#cast(Object)}.
      */
     public static <V> V castNonNull(Object object, V defaultValue) {
         return (object != null) ? (V) object : defaultValue;

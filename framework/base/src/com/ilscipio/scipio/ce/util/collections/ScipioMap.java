@@ -1,40 +1,52 @@
 package com.ilscipio.scipio.ce.util.collections;
 
+import org.ofbiz.base.util.UtilMisc;
+
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 /**
- * Enhanced {@link Map} interface for Scipio ERP for generic map utilities.
- * <p>Note: For service attribute and context-related interfaces, use {@link AttrMap}; ScipioMap is a generic
- * Map extension scoped to Scipio ERP and related projects.</p>
- * <p>SCIPIO: 2.1.0: Added to replace ExtendedMap and UtilMisc.</p>
+ * Enhanced {@link Map} interface for Scipio ERP for generic map utilities, intended for both framework reuse of common
+ * Map methods for implementations like ServiceContext and GenericValue; as a facade for client code to the numerous common utilities
+ * it is not scheduled to replace {@link UtilMisc} for now (this class suffer from static method ambiguity for now).
+ *
+ * <p>NOTE: The ScipioMap instance methods are mostly intended as a reusable mixin (abstract class) for our
+ * implementations, such that some static methods on this class return a Map instead of a ScipioMap to client code.</p>
+ *
+ * <p>This class's methods default to insert-order-preserving collections (LinkedHashMap).
+ *
+ * <p>NOTE: For service attribute and context-related interfaces, use {@link AttrMap}; ScipioMap is a generic
+ * {@link Map} extension scoped to Scipio ERP and related projects and does not deal with contexts or attributes but rather
+ * language-level Java Map- and primitive-level Map interface additions.</p>
+ *
+ * <p>SCIPIO: 3.0.0: Added {@link #of}/{@link #copyOf}, insert-order-preserving versions of {@link Map#of}/{@link Map#copyOf}.</p>
+ * <p>SCIPIO: 2.1.0: Added to replace ExtendedMap and {@link UtilMisc}.</p>
  */
 public interface ScipioMap<K, V> extends Map<K, V> {
 
-    /*
-     * Factory methods
-     */
+    class Wrapper<K, V> extends MapWrapper.Single<K, V> implements ScipioMap<K, V>, MapWrapper<K, V>, Serializable {
+        private static final Wrapper<?, ?> EMPTY = new Wrapper<>(Collections.emptyMap());
+
+        public Wrapper(Map<? extends K, ? extends V> wrapped) {
+            super(wrapped);
+        }
+    }
 
     /**
      * If map is an ScipioMap, returns it as-is, otherwise returns a new {@link Wrapper} delegating wrapper, null,
      * or IllegalArgumentException if another type.
      */
-    static <K, V> ScipioMap<K, V> from(Object map) {
+    static <K, V> ScipioMap<K, V> as(Object map) {
         if (map instanceof ScipioMap) {
             @SuppressWarnings("unchecked")
             ScipioMap<K, V> scipioMap = (ScipioMap<K, V>) map;
@@ -42,7 +54,7 @@ public interface ScipioMap<K, V> extends Map<K, V> {
         } else if (map instanceof Map) {
             @SuppressWarnings("unchecked")
             Map<? extends K, ? extends V> simpleMap = (Map<? extends K, ? extends V>) map;
-            return wrap(simpleMap);
+            return new Wrapper<>(simpleMap);
         } else if (map == null) {
             return null;
         } else {
@@ -51,583 +63,107 @@ public interface ScipioMap<K, V> extends Map<K, V> {
     }
 
     /**
-     * Returns a new {@link Wrapper} delegating wrapper around the map, even if it is already wrapped.
-     * @see #from(Object)
-     */
-    static <K, V> ScipioMap<K, V> wrap(Map<? extends K, ? extends V> map) {
-        return new Wrapper<K, V>(map);
-    }
-
-    /**
      * Returns the Map wrapped by the given wrapper, null if null, otherwise IllegalArgumentException.
-     * <p>This may be needed because {@link ScipioMap} does not extend {@link MapWrapper}.</p>
-     * @see MapWrapper#wrappedMap(Object)
+     * <p>This may be needed because {@link ScipioMap} does not extend {@link MapWrapper} itself.</p>
+     * @see MapWrapper#wrapped(Object)
      */
-    static <K, V> Map<K, V> wrappedMap(Object mapWrapper) {
-        return MapWrapper.wrappedMap(mapWrapper);
+    static <K, V> Map<K, V> wrapped(Object mapWrapper) {
+        return MapWrapper.wrapped(mapWrapper);
     }
 
     /**
-     * Creates a new map initialized from the given key-value pairs; currently {@link LinkedHashMap}.
-     * <p>Note: When the code critically requires insertion order, explicit {@link #newOrderedMap} is preferred.</p>
-     * @see #newOrderedMap(Map)
+     * Returns the empty unmodifiable map wrapper.
      */
-    static <K, V> ScipioMap<K, V> toMap(Object... keyValuePairs) {
-        return toOrderedMap(keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty map; currently {@link LinkedHashMap}.
-     * <p>Note: When the code critically requires insertion order, explicit {@link #newOrderedMap} is preferred.</p>
-     * @see #newOrderedMap() 
-     */
-    static <K, V> ScipioMap<K, V> newMap() {
-        return newOrderedMap();
-    }
-
-    /**
-     * Creates a new map initialized from the given map; currently {@link LinkedHashMap}.
-     * <p>Note: When the code critically requires insertion order, explicit {@link #newOrderedMap} is preferred.</p>
-     * @see #newOrderedMap(Map) 
-     */
-    static <K, V> ScipioMap<K, V> newMap(Map<? extends K, ? extends V> map) {
-        return newOrderedMap(map);
-    }
-
-    /**
-     * Creates a new map initialized from the given map and key-value pairs; currently {@link LinkedHashMap}.
-     * <p>Note: When the code critically requires insertion order, explicit {@link #newOrderedMap} is preferred.</p>
-     * @see #newOrderedMap(Map)
-     */
-    static <K, V> ScipioMap<K, V> newMap(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return newOrderedMap(map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty map from capacity options; currently {@link LinkedHashMap}.
-     * <p>Note: When the code critically requires insertion order, explicit {@link #newOrderedMap} is preferred.</p>
-     * @see #newOrderedMap(int)
-     */
-    static <K, V> ScipioMap<K, V> newMap(int initialCapacity) {
-        return newOrderedMap(initialCapacity);
-    }
-
-    /**
-     * Creates a new empty map from capacity options; currently {@link LinkedHashMap}.
-     * <p>Note: When the code critically requires insertion order, explicit {@link #newOrderedMap} is preferred.</p>
-     * @see #newOrderedMap(int, float) 
-     */
-    static <K, V> ScipioMap<K, V> newMap(int initialCapacity, float loadFactor) {
-        return newOrderedMap(initialCapacity, loadFactor);
-    }
-
-    /**
-     * Creates a new empty map from capacity options; currently {@link LinkedHashMap}.
-     * <p>Note: When the code critically requires insertion order, explicit {@link #newOrderedMap} is preferred.</p>
-     * @see #newOrderedMap(int, float)
-     */
-    static <K, V> ScipioMap<K, V> newMap(int initialCapacity, Map<? extends K, ? extends V> map,
-                                         Object... keyValuePairs) {
-        return newOrderedMap(initialCapacity, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty map from capacity options; currently {@link LinkedHashMap}.
-     * <p>Note: When the code critically requires insertion order, explicit {@link #newOrderedMap} is preferred.</p>
-     * @see #newOrderedMap(int, float)
-     */
-    static <K, V> ScipioMap<K, V> newMap(int initialCapacity, float loadFactor, Map<? extends K, ? extends V> map,
-                                         Object... keyValuePairs) {
-        return newOrderedMap(initialCapacity, loadFactor, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving map initialized from the given key-value pairs; currently
-     * {@link LinkedHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> toOrderedMap(Object... keyValuePairs) {
-        return new ScipioLinkedHashMap<>(null, keyValuePairs);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving empty map; currently {@link LinkedHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newOrderedMap() {
-        return new ScipioLinkedHashMap<>();
-    }
-
-    /**
-     * Creates a new, insert-order-preserving map initialized from the given map; currently {@link LinkedHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newOrderedMap(Map<? extends K, ? extends V> map) {
-        return new ScipioLinkedHashMap<>(map);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving map initialized from the given map and key-value pairs; currently
-     * {@link LinkedHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newOrderedMap(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioLinkedHashMap<>(map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving empty map from capacity options; currently {@link LinkedHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newOrderedMap(int initialCapacity) {
-        return new ScipioLinkedHashMap<>(initialCapacity);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving empty map from capacity options; currently {@link LinkedHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newOrderedMap(int initialCapacity, float loadFactor) {
-        return new ScipioLinkedHashMap<>(initialCapacity, loadFactor);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving empty map from capacity options; currently {@link LinkedHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newOrderedMap(int initialCapacity, float loadFactor, boolean accessOrder) {
-        return new ScipioLinkedHashMap<>(initialCapacity, loadFactor, accessOrder);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving empty map from capacity options; currently {@link LinkedHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newOrderedMap(int initialCapacity, Map<? extends K, ? extends V> map,
-                                                Object... keyValuePairs) {
-        return new ScipioLinkedHashMap<>(initialCapacity, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving empty map from capacity options; currently {@link LinkedHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newOrderedMap(int initialCapacity, float loadFactor,
-                                                Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioLinkedHashMap<>(initialCapacity, loadFactor, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving empty map from capacity options; currently {@link LinkedHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newOrderedMap(int initialCapacity, float loadFactor, boolean accessOrder,
-                                                Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioLinkedHashMap<>(initialCapacity, loadFactor, accessOrder, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new unordered fast map initialized from the given key-value pairs; currently {@link HashMap}.
-     */
-    static <K, V> ScipioMap<K, V> toFastMap(Object... keyValuePairs) {
-        return new ScipioHashMap<>(null, keyValuePairs);
-    }
-
-    /**
-     * Creates a new unordered empty fast map; currently {@link HashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newFastMap() {
-        return new ScipioHashMap<>();
-    }
-
-    /**
-     * Creates a new unordered fast map initialized from the given map; currently {@link HashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newFastMap(Map<? extends K, ? extends V> map) {
-        return new ScipioHashMap<>(map);
-    }
-
-    /**
-     * Creates a new unordered fast map initialized from the given map and key-value pairs; currently {@link HashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newFastMap(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioHashMap<>(map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new unordered fast map from capacity options; currently {@link HashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newFastMap(int initialCapacity) {
-        return new ScipioHashMap<>(initialCapacity);
-    }
-
-    /**
-     * Creates a new unordered fast map from capacity options; currently {@link HashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newFastMap(int initialCapacity, float loadFactor) {
-        return new ScipioHashMap<>(initialCapacity, loadFactor);
-    }
-
-    /**
-     * Creates a new unordered fast map from capacity options; currently {@link HashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newFastMap(int initialCapacity, Map<? extends K, ? extends V> map,
-                                             Object... keyValuePairs) {
-        return new ScipioHashMap<>(initialCapacity, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new unordered fast map from capacity options; currently {@link HashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newFastMap(int initialCapacity, float loadFactor, Map<? extends K, ? extends V> map,
-                                             Object... keyValuePairs) {
-        return new ScipioHashMap<>(initialCapacity, loadFactor, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new sorted map initialized from the given key-value pairs; currently {@link TreeMap}.
-     */
-    static <K, V> ScipioMap<K, V> toSortedMap(Object... keyValuePairs) {
-        return new ScipioTreeMap<>(null, keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty sorted map; currently {@link TreeMap}.
-     */
-    static <K, V> ScipioMap<K, V> newSortedMap() {
-        return new ScipioTreeMap<>();
-    }
-
-    /**
-     * Creates a new sorted map initialized from the given map; currently {@link TreeMap}.
-     */
-    static <K, V> ScipioMap<K, V> newSortedMap(Map<? extends K, ? extends V> map) {
-        return new ScipioTreeMap<>(map);
-    }
-
-    /**
-     * Creates a new sorted map initialized from the given sorted map; currently {@link TreeMap}.
-     */
-    static <K, V> ScipioMap<K, V> newSortedMap(SortedMap<K, ? extends V> map) {
-        return new ScipioTreeMap<>(map);
-    }
-
-    /**
-     * Creates a new sorted map initialized from the given map and key-value pairs; currently {@link TreeMap}.
-     */
-    static <K, V> ScipioMap<K, V> newSortedMap(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioTreeMap<>(map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new sorted map initialized from the given map and key-value pairs; currently {@link TreeMap}.
-     */
-    static <K, V> ScipioMap<K, V> newSortedMap(SortedMap<K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioTreeMap<>(map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty sorted map; currently {@link TreeMap}.
-     */
-    static <K, V> ScipioMap<K, V> newSortedMap(Comparator<? super K> comparator) {
-        return new ScipioTreeMap<>(comparator);
-    }
-
-    /**
-     * Creates a new sorted map; currently {@link TreeMap}.
-     */
-    static <K, V> ScipioMap<K, V> newSortedMap(Comparator<? super K> comparator, Map<? extends K, ? extends V> map,
-                                               Object... keyValuePairs) {
-        return new ScipioTreeMap<>(comparator, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new thread-safe unordered map initialized from the given key-value pairs; currently
-     * {@link ConcurrentHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> toConcurrentMap(Object... keyValuePairs) {
-        return new ScipioConcurrentHashMap<>(null, keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty thread-safe unordered map; currently {@link ConcurrentHashMap}.
-     * <p>Note: {@link #putAll} operations are not atomic.</p>
-     */
-    static <K, V> ScipioMap<K, V> newConcurrentMap() {
-        return new ScipioConcurrentHashMap<>();
-    }
-
-    /**
-     * Creates a new thread-safe unordered map initialized from the given map; currently {@link ConcurrentHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newConcurrentMap(Map<? extends K, ? extends V> map) {
-        return new ScipioConcurrentHashMap<>(map);
-    }
-
-    /**
-     * Creates a new thread-safe unordered map initialized from the given map and key-value pairs; currently
-     * {@link ConcurrentHashMap}.
-     */
-    static <K, V> ScipioMap<K, V> newConcurrentMap(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioConcurrentHashMap<>(map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty thread-safe unordered map from capacity options; currently {@link ConcurrentHashMap}.
-     * <p>Note: {@link #putAll} operations are not atomic.</p>
-     */
-    static <K, V> ScipioMap<K, V> newConcurrentMap(int initialCapacity, float loadFactor) {
-        return new ScipioConcurrentHashMap<>(initialCapacity, loadFactor);
-    }
-
-    /**
-     * Creates a new empty thread-safe unordered map from capacity options; currently {@link ConcurrentHashMap}.
-     * <p>Note: {@link #putAll} operations are not atomic.</p>
-     */
-    static <K, V> ScipioMap<K, V> newConcurrentMap(int initialCapacity, float loadFactor, int concurrencyLevel) {
-        return new ScipioConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel);
-    }
-
-    /**
-     * Creates a new empty thread-safe unordered map from capacity options; currently {@link ConcurrentHashMap}.
-     * <p>Note: {@link #putAll} operations are not atomic.</p>
-     */
-    static <K, V> ScipioMap<K, V> newConcurrentMap(int initialCapacity, Map<? extends K, ? extends V> map,
-                                                   Object... keyValuePairs) {
-        return new ScipioConcurrentHashMap<>(initialCapacity, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty thread-safe unordered map from capacity options; currently {@link ConcurrentHashMap}.
-     * <p>Note: {@link #putAll} operations are not atomic.</p>
-     */
-    static <K, V> ScipioMap<K, V> newConcurrentMap(int initialCapacity, float loadFactor,
-                                                   Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioConcurrentHashMap<>(initialCapacity, loadFactor, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty thread-safe unordered map from capacity options; currently {@link ConcurrentHashMap}.
-     * <p>Note: {@link #putAll} operations are not atomic.</p>
-     */
-    static <K, V> ScipioMap<K, V> newConcurrentMap(int initialCapacity, float loadFactor, int concurrencyLevel,
-                                                   Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioConcurrentHashMap<>(initialCapacity, loadFactor, concurrencyLevel, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty unmodifiable map; currently {@link Collections#emptyMap()}.
-     */
-    static <K, V> ScipioMap<K, V> emptyMap() {
+    static <K, V> ScipioMap<K, V> emptyWrapper() {
         @SuppressWarnings("unchecked")
-        ScipioMap<K, V> emptyMap = (ScipioMap<K, V>) Wrapper.EMPTY;
-        return emptyMap;
+        ScipioMap<K, V> emptyWrapper = (ScipioMap<K, V>) Wrapper.EMPTY;
+        return emptyWrapper;
     }
 
     /**
-     * Creates a new unmodifiable map from given key-value pairs; currently {@link LinkedHashMap} or
-     * {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
+     * Create a map from passed nameX, valueX parameters, as umodifiable/read-only linked map (currently LinkedHashMap).
+     *
+     * <p>NOTE: This is intended as a guaranteed-safe replacement for {@link Map#of} with respect
+     * insertion order guarantees.</p>
+     *
+     * @return The resulting Map
      */
-    static <K, V> ScipioMap<K, V> toReadOnlyMap(Object... keyValuePairs) {
-        return toReadOnlyOrderedMap(keyValuePairs);
+    @SuppressWarnings("unchecked")
+    static <K, V> Map<K, V> of(Object... data) {
+        return Collections.unmodifiableMap(putPairs(new LinkedHashMap<>(), data));
     }
 
     /**
-     * Creates a new unmodifiable map from given map; currently {@link LinkedHashMap} or {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
+     * Create a map from passed nameX, valueX parameters, as umodifiable/read-only linked map (currently LinkedHashMap).
+     *
+     * <p>NOTE: This is intended as a guaranteed-safe replacement for {@link Map#copyOf(Map)} with respect
+     * insertion order guarantees.</p>
+     *
+     * @return The resulting Map
      */
-    static <K, V> ScipioMap<K, V> newReadOnlyMap(Map<? extends K, ? extends V> map) {
-        return newReadOnlyOrderedMap(map);
+    @SuppressWarnings("unchecked")
+    static <K, V> Map<K, V> ofCopy(Map<? extends K, ? extends V> map) {
+        return Collections.unmodifiableMap(new LinkedHashMap<>(map));
     }
 
-    /**
-     * Creates a new unmodifiable map from given map and key-value pairs; currently {@link LinkedHashMap} or
-     * {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyMap(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return newReadOnlyOrderedMap(map, keyValuePairs);
-    }
 
-    /**
-     * Creates a new empty map from capacity options; currently {@link LinkedHashMap}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     * <p>Note: When the code critically requires insertion order, explicit {@link #newReadOnlyOrderedMap} is
-     * preferred.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyMap(int initialCapacity, Map<? extends K, ? extends V> map,
-                                                 Object... keyValuePairs) {
-        return newReadOnlyOrderedMap(initialCapacity, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new empty map from capacity options; currently {@link LinkedHashMap}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     * <p>Note: When the code critically requires insertion order, explicit {@link #newOrderedMap} is preferred.</p>
-     * @see #newOrderedMap(int, float)
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyMap(int initialCapacity, float loadFactor, Map<? extends K, ? extends V> map,
-                                                 Object... keyValuePairs) {
-        return newReadOnlyOrderedMap(initialCapacity, loadFactor, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new unmodifiable insertion-order-presering map from given key-value pairs; currently
-     * {@link LinkedHashMap} or {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> toReadOnlyOrderedMap(Object... keyValuePairs) {
-        return new ScipioLinkedHashMap<>(null, keyValuePairs);
-        //return wrap(Collections.unmodifiableMap(putAll(new LinkedHashMap<>(), firstKey, firstValue, keyValuePairs)));
-    }
-
-    /**
-     * Creates a new unmodifiable insertion-order-presering map from given map; currently {@link LinkedHashMap} or
-     * {@link Collections#emptyMap()}.
-     * FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyOrderedMap(Map<? extends K, ? extends V> map) {
-        return new ScipioLinkedHashMap<>(map);
-        //return !map.isEmpty() ? Collections.unmodifiableMap(new ScipioLinkedHashMap<K, V>(map)) : Collections.emptyMap();
-    }
-
-    /**
-     * Creates a new unmodifiable insertion-order-presering map from given key-value pairs; currently
-     * {@link LinkedHashMap} or {@link Collections#emptyMap()}.
-     * FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyOrderedMap(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioLinkedHashMap<>(map, keyValuePairs);
-        //return wrap(Collections.unmodifiableMap(putAll(new LinkedHashMap<>(map), firstKey, firstValue, keyValuePairs)));
-    }
-
-    /**
-     * Creates a new, insert-order-preserving empty map from capacity options; currently {@link LinkedHashMap}.
-     * FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyOrderedMap(int initialCapacity, Map<? extends K, ? extends V> map,
-                                                        Object... keyValuePairs) {
-        return new ScipioLinkedHashMap<>(initialCapacity, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving empty map from capacity options; currently {@link LinkedHashMap}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyOrderedMap(int initialCapacity, float loadFactor,
-                                                        Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioLinkedHashMap<>(initialCapacity, loadFactor, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new, insert-order-preserving empty map from capacity options; currently {@link LinkedHashMap}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyOrderedMap(int initialCapacity, float loadFactor, boolean accessOrder,
-                                                        Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioLinkedHashMap<>(initialCapacity, loadFactor, accessOrder, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new unmodifiable fast unordered map from given key-value pairs; currently {@link HashMap} or
-     * {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> toReadOnlyFastMap(Object... keyValuePairs) {
-        return new ScipioHashMap<>(null, keyValuePairs);
-        //return wrap(Collections.unmodifiableMap(putAll(new HashMap<>(), firstKey, firstValue, keyValuePairs)));
-    }
-
-    /**
-     * Creates a new unmodifiable fast unordered map from given map; currently {@link HashMap} or
-     * {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyFastMap(Map<? extends K, ? extends V> map) {
-        return new ScipioHashMap<>(map);
-        //return wrap(!map.isEmpty() ? Collections.unmodifiableMap(new HashMap<>(map)) : Collections.emptyMap());
-    }
-
-    /**
-     * Creates a new unmodifiable fast unordered map from given map and key-value pairs; currently {@link HashMap} or
-     * {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyFastMap(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioHashMap<>(map, keyValuePairs);
-        //return wrap(Collections.unmodifiableMap(putAll(new HashMap<>(map), firstKey, firstValue, keyValuePairs)));
-    }
-
-    /**
-     * Creates a new unordered fast map from capacity options; currently {@link HashMap}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyFastMap(int initialCapacity, Map<? extends K, ? extends V> map,
-                                                     Object... keyValuePairs) {
-        return new ScipioHashMap<>(initialCapacity, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new unordered fast map from capacity options; currently {@link HashMap}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlyFastMap(int initialCapacity, float loadFactor,
-                                                     Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioHashMap<>(initialCapacity, loadFactor, map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new unmodifiable sorted map from given key-value pairs; currently {@link TreeMap} or
-     * {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> toReadOnlySortedMap(Object... keyValuePairs) {
-        return new ScipioTreeMap<>(null, keyValuePairs);
-    }
-
-    /**
-     * Creates a new unmodifiable sorted map from given map; currently {@link TreeMap} or
-     * {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlySortedMap(Map<? extends K, ? extends V> map) {
-        return new ScipioTreeMap<>(map);
-        //return wrap(!map.isEmpty() ? Collections.unmodifiableSortedMap(new TreeMap<>(map)) : Collections.emptyMap());
-    }
-
-    /**
-     * Creates a new unmodifiable sorted map from given map and key-value pairs; currently {@link TreeMap} or
-     * {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlySortedMap(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioTreeMap<>(map, keyValuePairs);
-    }
-
-    /**
-     * Creates a new unmodifiable sorted map from given key-value pairs; currently {@link TreeMap} or
-     * {@link Collections#emptyMap()}.
-     * <p>FIXME: Not correctly using unmodifiable classes at this time; make sure to use final/volatile fields for
-     * the instance or safe publishing.</p>
-     */
-    static <K, V> ScipioMap<K, V> newReadOnlySortedMap(Comparator<? super K> comparator,
-                                                       Map<? extends K, ? extends V> map, Object... keyValuePairs) {
-        return new ScipioTreeMap<>(comparator, map, keyValuePairs);
-    }
 
     /*
-     * Map extension instance methods
+     * Map extension instance methods and helper public static methods
      */
+
+    static <K, V, E extends Entry<K, V>, C extends Collection<E>> C entries(C out, BiFunction<K, V, E> entryProducer,
+                                                                            Object... keyValuePairs) {
+        if (keyValuePairs.length % 2 != 0) {
+            throw new IllegalArgumentException("Uneven number of key-value pair arguments");
+        } else if (keyValuePairs.length > 0) {
+            List<? extends Entry<? extends K, ? extends V>> entries =
+                    new ArrayList<>(keyValuePairs.length / 2);
+            for (int i = 0; i < keyValuePairs.length; i += 2) {
+                @SuppressWarnings("unchecked")
+                K key = (K) keyValuePairs[i];
+                @SuppressWarnings("unchecked")
+                V value = (V) keyValuePairs[i + 1];
+                out.add(entryProducer.apply(key, value));
+            }
+        }
+        return out;
+    }
+
+    static <K, V> Set<Map.Entry<K, V>> entrySet(Object... keyValuePairs) {
+        return entries(new LinkedHashSet<>(), AbstractMap.SimpleEntry::new, keyValuePairs);
+    }
+
+    static <K, V> List<Map.Entry<K, V>> entryList(Object... keyValuePairs) {
+        return entries(new ArrayList<>(keyValuePairs.length / 2), AbstractMap.SimpleEntry::new, keyValuePairs);
+    }
+
+    /**
+     * Puts each key-value pair in the form of {@link Map.Entry} into the map.
+     * <p>Not atomic for concurrent operations unless overridden.</p>
+     * @see #putAll(Map)
+     * @see #putPairs(Object...)
+     */
+    default ScipioMap<K, V> putEntries(Iterable<? extends Map.Entry<? extends K, ? extends V>> entries) {
+        for (Map.Entry<? extends K, ? extends V> entry : entries) {
+            put(entry.getKey(), entry.getValue());
+        }
+        return this;
+    }
+
+    /**
+     * Helper putAll implementation with key filter and (on caller's discretion).
+     */
+    static <K, V, M extends Map<K, V>> M putKeys(M out, Map<? extends K, ? extends V> in, Collection<? extends K> keys, boolean preserveNull) {
+        return UtilMisc.putKeys(out, in, keys, preserveNull);
+    }
+
+    /**
+     * Helper putAll implementation with key filter and (on caller's discretion).
+     */
+    default ScipioMap<K, V> putKeys(Map<? extends K, ? extends V> in, Collection<K> keys, boolean preserveNull) {
+        return putKeys(this, in, keys, preserveNull);
+    }
 
     /**
      * Puts each key-value pair into the map.
@@ -657,27 +193,31 @@ public interface ScipioMap<K, V> extends Map<K, V> {
         return putPairs(this, keyValuePairs);
     }
 
-    /**
-     * Puts each key-value pair in the form of {@link Map.Entry} into the map.
-     * <p>Not atomic for concurrent operations unless overridden.</p>
-     * @see #putAll(Map)
-     * @see #putPairs(Object...)
-     */
-    default ScipioMap<K, V> putEntries(Iterable<? extends Map.Entry<? extends K, ? extends V>> entries) {
-        for (Map.Entry<? extends K, ? extends V> entry : entries) {
-            put(entry.getKey(), entry.getValue());
-        }
-        return this;
-    }
+//    /**
+//     * Puts each key-value pair into the map.
+//     * <p>Not atomic for concurrent operations unless overridden.</p>
+//     * @see #putAll(Map)
+//     * @see #putEntries(Iterable)
+//     */
+//    default ScipioMap<K, V> put(K key1, V value1, K key2, V value2, Object... keyValuePairs) {
+//        put(key1, value1);
+//        put(key2, value2);
+//        if (keyValuePairs.length > 2) {
+//            putPairs(this, keyValuePairs);
+//        }
+//        return this;
+//    }
 
     /**
      * Puts each key-value pair into the map from a map, key-value pairs or both.
+     *
      * <p>Not atomic for concurrent operations unless overridden.</p>
+     *
      * @see #putAll(Map)
      * @see #putEntries(Iterable)
      * @see #putPairs(Object...)
      */
-    default ScipioMap<K, V> putAllOrPairs(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
+    default ScipioMap<K, V> putAll(Map<? extends K, ? extends V> map, Object... keyValuePairs) {
         if (map != null) {
             putAll(map);
         }
@@ -685,6 +225,23 @@ public interface ScipioMap<K, V> extends Map<K, V> {
             putPairs(keyValuePairs);
         }
         return this;
+    }
+
+    /**
+     * Puts each key-value pair into the map from a map, key-value pairs or both.
+     *
+     * @see #putAll(Map)
+     * @see #putEntries(Iterable)
+     * @see #putPairs(Object...)
+     */
+    static <K, V, M extends Map<K, V>> M putAll(M out, Map<? extends K, ? extends V> map, Object... keyValuePairs) {
+        if (map != null) {
+            out.putAll(map);
+        }
+        if (keyValuePairs.length > 0) {
+            putPairs(out, keyValuePairs);
+        }
+        return out;
     }
 
     /**
@@ -825,46 +382,4 @@ public interface ScipioMap<K, V> extends Map<K, V> {
         return getStringNonEmptyTrim(key, () -> null);
     }
 
-    /*
-     * Abstract classes and reference implementations
-     */
-
-    class Wrapper<K, V> extends MapWrapper.Single<K, V> implements ScipioMap<K, V>, MapWrapper<K, V>, Serializable {
-        private static final Wrapper<?, ?> EMPTY = new Wrapper<>(Collections.emptyMap());
-
-        public Wrapper(Map<? extends K, ? extends V> wrappedMap) {
-            super(wrappedMap);
-        }
-    }
-
-    /*
-     * Generic map and entry helpers
-     */
-
-    static <K, V, E extends Entry<K, V>, C extends Collection<E>> C toEntries(C out, BiFunction<K, V, E> entryProducer,
-                                                                              Object... keyValuePairs) {
-        if (keyValuePairs.length % 2 != 0) {
-            throw new IllegalArgumentException("Uneven number of key-value pair arguments");
-        } else if (keyValuePairs.length > 0) {
-            List<? extends Entry<? extends K, ? extends V>> entries =
-                    new ArrayList<>(keyValuePairs.length / 2);
-            for (int i = 0; i < keyValuePairs.length; i += 2) {
-                @SuppressWarnings("unchecked")
-                K key = (K) keyValuePairs[i];
-                @SuppressWarnings("unchecked")
-                V value = (V) keyValuePairs[i + 1];
-                out.add(entryProducer.apply(key, value));
-            }
-        }
-        return out;
-    }
-
-    static <K, V> Set<Map.Entry<K, V>> toEntrySet(Object... keyValuePairs) {
-        return toEntries(new LinkedHashSet<>(), AbstractMap.SimpleEntry::new, keyValuePairs);
-    }
-
-    static <K, V> List<Map.Entry<K, V>> toEntryList(Object... keyValuePairs) {
-        return toEntries(new ArrayList<>(keyValuePairs.length / 2), AbstractMap.SimpleEntry::new,
-                keyValuePairs);
-    }
 }

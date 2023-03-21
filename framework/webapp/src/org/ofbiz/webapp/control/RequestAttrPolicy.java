@@ -293,7 +293,7 @@ public final class RequestAttrPolicy {
         }
 
         private static RequestAttrNamePolicy create(Collection<String> noSaveAttrSet) {
-            return new RequestAttrNamePolicy(UtilMisc.asHashSetNonNull(noSaveAttrSet));
+            return new RequestAttrNamePolicy(noSaveAttrSet != null ? UtilMisc.asSet(noSaveAttrSet) : new HashSet<>());
         }
 
         public static RequestAttrNamePolicy create() {

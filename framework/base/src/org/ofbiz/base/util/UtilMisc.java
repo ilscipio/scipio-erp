@@ -50,13 +50,14 @@ import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
-import com.ilscipio.scipio.util.collections.MapType;
+import com.ilscipio.scipio.ce.util.collections.ScipioMap;
 import org.apache.commons.collections4.iterators.EnumerationIterator;
 import org.ofbiz.base.util.collections.MapComparator;
 
 /**
  * General and most commonly used language and utility functions for common types such as collections, maps, booleans,
  * locales, generics and casts ({@link #cast(Object)}).
+ *
  * <p>SCIPIO: NOTE: This is a misnomer for a general language and utility function namespace class and would have been
  * more accurate as UtilLang. Although split classes for utilities (UtilMap, UtilList, UtilBoolean, etc.) are sometimes
  * clearer, this is a longstanding legacy class conveniently shortly named that is already automatically and manually
@@ -65,28 +66,31 @@ import org.ofbiz.base.util.collections.MapComparator;
  * and type methods are also found in {@link UtilNumber}, {@link UtilValidate} and others - some may be moved or
  * duplicated into UtilMisc in the future as facades; meanwhile alternative enhanced type-specific classes already exist
  * (such as ScipioMap and others) and may be used for more advanced purposes and additional helpers.</p>
+ *
+ * <p>SCIPIO: 3.0.0: Added several new utils such as {@link #constMap(Object...)} and deprecated code in transition;
+ *  moving toward super-generic helpers such as {@link #put(Map, Object...)} (eliminates need for tons of overloads).</p>
  * <p>SCIPIO: 2.1.0: Now contains {@link #cast(Object)} as more succinct and UtilGenerics is headed toward deprecation.</p>
  */
-public final class UtilMisc {
+public class UtilMisc {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    public static final BigDecimal ZERO_BD = BigDecimal.ZERO; // SCIPIO: 2018-08-30: keeping public for backward-compat
-
     private static final UtilMisc INSTANCE = new UtilMisc(); // SCIPIO: This is for FreeMarkerWorker (only!)
 
-    private UtilMisc () {}
+    @Deprecated
+    public static final BigDecimal ZERO_BD = BigDecimal.ZERO;
 
     /**
      * Casts object to given type.
-     * <p>SCIPIO: 2.1.0: Replaces {@link UtilGenerics#cast(Object)} as more succinct and UtilGenerics is headed toward deprecation.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added as more succinct than {@link UtilGenerics#cast}.</p>
      */
     @SuppressWarnings("unchecked")
     public static <V> V cast(Object object) {
         return (V) object;
     }
 
-    public static final <T extends Throwable> T initCause(T throwable, Throwable cause) {
+    public static <T extends Throwable> T initCause(T throwable, Throwable cause) {
         throwable.initCause(cause);
         return throwable;
     }
@@ -109,7 +113,6 @@ public final class UtilMisc {
             if (obj1.size() == obj2.size() && obj1.containsAll(obj2) && obj2.containsAll(obj1)) {
                 return 0;
             }
-
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
@@ -131,77 +134,188 @@ public final class UtilMisc {
     }
 
     /**
+     * Gets (casts) a map from the given value.
+     *
+     * <p>NOTE: This is for consistency but asList, asSet have serious uses.</p>
+     *
+     * @return The resulting Map
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> asMap(Object map) {
+        return (map != null) ? (Map<K, V>) map : null;
+    }
+
+    /**
      * Create a map from passed nameX, valueX parameters
      *
-     * <p>SCIPIO: 3.0.0: Now supports alternative key order default map type.</p>
+     * <p>SCIPIO: TODO: This should ideally return insert-order-preserving maps (LinkedHashMap), which was the FastMap behavior.</p>
+     *
+     * @return The resulting Map
+     */
+    public static <K, V> Map<K, V> toMap(Object... keyValuePairs) {
+        if (keyValuePairs.length == 1 && keyValuePairs[0] instanceof Map) {
+            return cast(keyValuePairs[0]);
+        }
+        return put(new HashMap<>(), keyValuePairs);
+    }
+
+    /**
+     * Create a map from passed nameX, valueX parameters, as ordered map (currently LinkedHashMap).
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
      *
      * @return The resulting Map
      */
     @SuppressWarnings("unchecked")
-    public static <K, V> Map<K, V> toMap(Object... data) {
-        if (data.length == 1 && data[0] instanceof Map) {
-            return UtilGenerics.<K, V>checkMap(data[0]);
+    public static <K, V> Map<K, V> orderedMap(Object... keyValuePairs) {
+        if (keyValuePairs.length == 1 && keyValuePairs[0] instanceof Map) {
+            return cast(keyValuePairs[0]);
         }
-        if (data.length % 2 == 1) {
-            IllegalArgumentException e = new IllegalArgumentException("You must pass an even sized array to the toMap method (size = " + data.length + ")");
-            Debug.logInfo(e, module);
-            throw e;
-        }
-        Map<K, V> map = MapType.DEFAULT.newMap();
-        for (int i = 0; i < data.length;) {
-            map.put((K) data[i++], (V) data[i++]);
-        }
-        return map;
+        return put(new LinkedHashMap<>(), keyValuePairs);
     }
 
     /**
-     * Create a map from passed nameX, valueX parameters, as linked map (currently LinkedHashMap).
+     * Create a map from passed nameX, valueX parameters, as fast random order map (currently HashMap).
      *
-     * <p>SCIPIO: 3.0.0: New name to replaced toOrderedMap due to naming ambiguity (very clear in java).</p>
+     * <p>SCIPIO: 3.0.0: Added.</p>
      *
      * @return The resulting Map
      */
     @SuppressWarnings("unchecked")
-    public static <K, V> Map<K, V> toLinkedMap(Object... data) {
-        if (data.length == 1 && data[0] instanceof Map) {
-            return UtilGenerics.<K, V>checkMap(data[0]);
+    public static <K, V> Map<K, V> randomMap(Object... keyValuePairs) {
+        if (keyValuePairs.length == 1 && keyValuePairs[0] instanceof Map) {
+            return cast(keyValuePairs[0]);
         }
-        if (data.length % 2 == 1) {
-            IllegalArgumentException e = new IllegalArgumentException("You must pass an even sized array to the toMap method (size = " + data.length + ")");
-            Debug.logInfo(e, module);
-            throw e;
-        }
-        Map<K, V> map = new LinkedHashMap<>();
-        for (int i = 0; i < data.length;) {
-            map.put((K) data[i++], (V) data[i++]);
-        }
-        return map;
+        return put(new HashMap<>(), keyValuePairs);
     }
 
     /**
-     * @deprecated SCIPIO: 3.0.0: Use {@link #toLinkedMap(Object...)} due to naming ambiguity.
+     * Create a map from passed nameX, valueX parameters, as umodifiable/read-only ordered map (currently LinkedHashMap).
+     *
+     * @return The resulting Map
      */
-    @Deprecated
-    public static <K, V> Map<K, V> toOrderedMap(Object... data) {
-        return toLinkedMap(data);
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> constMap(Object... keyValuePairs) {
+        return Collections.unmodifiableMap(orderedMap(keyValuePairs));
+        //return Map.of(keyValuePairs); // Unordered
+    }
+
+    /**
+     * Create a map from passed nameX, valueX parameters, as umodifiable/read-only ordered map (currently LinkedHashMap).
+     *
+     * @return The resulting Map
+     */
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> constMapCopy(Map<? extends K, ? extends V> map) {
+        return Collections.unmodifiableMap(new LinkedHashMap<>(map));
+        //return Map.copyOf(map); // Unordered
+    }
+
+    /**
+     * Puts the given key-value pairs into the map and returns the map, for chaining.
+     *
+     * <p>SCIPIO: 3.0.0: Made this method prominent because it's extremely short, convenient and works with all map types.</p>
+     * <p>SCIPIO: 2.1.0: Added.</p>
+     *
+     * @return The same map (for chaining)
+     */
+    public static <M extends Map<K, V>, K, V> M put(M map, Object... keyValuePairs) {
+        if ((keyValuePairs.length % 2) != 0) {
+            throw new IllegalArgumentException("Uneven number of key-value pair arguments");
+        }
+        for (int i = 0; i < keyValuePairs.length; i += 2) {
+            @SuppressWarnings("unchecked")
+            K key = (K) keyValuePairs[i];
+            @SuppressWarnings("unchecked")
+            V value = (V) keyValuePairs[i + 1];
+            map.put(key, value);
+        }
+        return map;
     }
 
     /**
      * Create a map from passed nameX, valueX parameters, into provided map (currently LinkedHashMap).
+     *
+     * <p>TODO: Deprecate in favor of superior shorthand {@link #put(Map, Object...)} as this hasn't been in use for long.</p>
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @return The same map (for chaining)
+     * @see #put(Map, Object...)
      */
     @SuppressWarnings("unchecked")
-    public static <K, V, M extends Map<K, V>> M putAll(M map, Object... data) {
-        if (data.length % 2 != 0) {
-            IllegalArgumentException e = new IllegalArgumentException("You must pass an even sized array to the toMap method (size = " + data.length + ")");
-            Debug.logInfo(e, module);
-            throw e;
-        }
-        for (int i = 0; i < data.length;) {
-            map.put((K) data[i++], (V) data[i++]);
+    public static <K, V, M extends Map<K, V>> M putAll(M map, Object... keyValuePairs) {
+        return put(map, keyValuePairs);
+    }
+
+    /**
+     * SCIPIO: For an inMap with generics Map&lt;K, V&gt;, populates and returns the opposite mapping outMap, Map&lt;V, K&gt;
+     * Added 2017-07-12.
+     */
+    public static <K, V> Map<V, K> putAllReverseMapping(Map<V, K> map, Map<? extends K, ? extends V> inMap) {
+        for (Map.Entry<? extends K, ? extends V> entry : inMap.entrySet()) {
+            map.put(entry.getValue(), entry.getKey());
         }
         return map;
+    }
+
+    /**
+     * Transfers specified keys from in to out map.
+     *
+     * <p>SCIPIO: 2017-12-04: Added.</p>
+     */
+    public static <M extends Map<K, V>, K, V> M putKeys(M map, Map<? extends K, ? extends V> inMap, Collection<? extends K> keys) {
+        for (K key : keys) {
+            map.put(key, inMap.get(key));
+        }
+        return map;
+    }
+
+    /**
+     * Transfers all or part of the specified keys from in to out (this) map, with null-treatment options.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @param preserveNull If null, transfer all keys even if missing from source; if false, transfer only non-null values from source;
+     *                     if true, transfer only non-null and keys present in source ({@link Map#containsKey}
+     */
+    public static <K, V, M extends Map<K, V>> M putKeys(M map, Map<? extends K, ? extends V> inMap, Collection<? extends K> keys, Boolean preserveNull) {
+        if (keys == null) {
+            keys = inMap.keySet();
+        }
+        if (preserveNull == null) {
+            for (K key : keys) {
+                map.put(key, inMap.get(key));
+            }
+        } else if (preserveNull) {
+            for (K key : keys) {
+                V value = inMap.get(key);
+                if (value != null || inMap.containsKey(key)) { // NOTE: Optimized to leave containsKey() last because most values are non-null
+                    map.put(key, value);
+                }
+            }
+        } else {
+            for (K key : keys) {
+                V value = inMap.get(key);
+                if (value != null) {
+                    map.put(key, value);
+                }
+            }
+        }
+        return map;
+    }
+
+    /**
+     * Transfers specified keys from in to out map.
+     *
+     * <p>SCIPIO: 3.0.0: Changed unused overload signature to fix compilation ambiguity.</p>
+     *
+     * @param preserveNull If null, transfer all keys even if missing from source; if false, transfer only non-null values from source;
+     *                     if true, transfer only non-null and keys present in source ({@link Map#containsKey}
+     */
+    @SafeVarargs
+    public static <M extends Map<K, V>, K, V> M putKeys(M map, Map<? extends K, ? extends V> inMap, Boolean preserveNull, K... keys) {
+        return putKeys(map, inMap, Arrays.asList(keys), preserveNull);
     }
 
     public static <K, V> String printMap(Map<? extends K, ? extends V> theMap) {
@@ -216,26 +330,15 @@ public final class UtilMisc {
     }
 
     public static <T> List<T> makeListWritable(Collection<? extends T> col) {
-        List<T> result = (col != null) ? new ArrayList<>(col) : new ArrayList<>(); // SCIPIO: switched to ArrayList
-        //if (col != null) result.addAll(col);
-        return result;
+        return (col != null) ? new ArrayList<>(col) : new ArrayList<>();
     }
 
     public static <K, V> Map<K, V> makeMapWritable(Map<K, ? extends V> map) {
-        if (map == null) {
-            return MapType.DEFAULT.newMap();
-        }
-        Map<K, V> result = MapType.DEFAULT.newMap(map.size());
-        result.putAll(map);
-        return result;
+        return (map != null) ? new HashMap<>(map) : new HashMap<>();
     }
 
     public static <T> Set<T> makeSetWritable(Collection<? extends T> col) {
-        Set<T> result = new LinkedHashSet<>();
-        if (col != null) {
-            result.addAll(col);
-        }
-        return result;
+        return (col != null) ? new LinkedHashSet<>(col) : new LinkedHashSet<>();
     }
 
     /**
@@ -274,7 +377,7 @@ public final class UtilMisc {
         toSort.addAll(listOfMaps);
         try {
             MapComparator mc = new MapComparator(sortKeys);
-            Collections.sort(toSort, mc);
+            toSort.sort(mc);
         } catch (Exception e) {
             Debug.logError(e, "Problems sorting list of maps; returning null.", module);
             return null;
@@ -313,7 +416,7 @@ public final class UtilMisc {
         Object currentNumberObj = theMap.get(mapKey);
         BigDecimal currentNumber = null;
         if (currentNumberObj == null) {
-            currentNumber = ZERO_BD;
+            currentNumber = BigDecimal.ZERO;
         } else if (currentNumberObj instanceof BigDecimal) {
             currentNumber = (BigDecimal) currentNumberObj;
         } else if (currentNumberObj instanceof Double) {
@@ -324,7 +427,7 @@ public final class UtilMisc {
             throw new IllegalArgumentException("In addToBigDecimalInMap found a Map value of a type not supported: " + currentNumberObj.getClass().getName());
         }
 
-        if (addNumber == null || ZERO_BD.compareTo(addNumber) == 0) {
+        if (addNumber == null || BigDecimal.ZERO.compareTo(addNumber) == 0) {
             return currentNumber;
         }
         currentNumber = currentNumber.add(addNumber);
@@ -340,7 +443,7 @@ public final class UtilMisc {
         if (c == null) {
             return null;
         }
-        Set<T> theSet = null;
+        Set<T> theSet;
         if (c instanceof Set<?>) {
             theSet = (Set<T>) c;
         } else {
@@ -380,36 +483,97 @@ public final class UtilMisc {
     }
 
     /**
-     * Create a set from the passed objects.
-     * <p>SCIPIO: 3.0.0: NOTE: This can now always be expected to return an insert-order-preserving set, because this
+     * Gets set or creates an ordered set copy from the passed collection.
+     *
+     * <p>NOTE: This can now always be expected to return an insert-order-preserving set, because this
      * generally increases the predictibility and reliability of various operations (security, stability, queries,
      * logging, etc.).</p>
-     * @param data
-     * @return theSet
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
      */
-    @SafeVarargs
-    public static <T> Set<T> toSet(T... data) {
-        if (data == null) {
+    public static <T> Set<T> asSet(Object collection) {
+        if (collection == null) {
             return null;
+        } else if (collection instanceof Set) {
+            return cast(collection);
+        } else if (collection instanceof Collection) {
+            return new LinkedHashSet<>(UtilMisc.<Collection<T>>cast(collection));
+        } else {
+            throw new IllegalArgumentException("Not a collection: " + collection.getClass().getName());
         }
-        return new LinkedHashSet<>(Arrays.asList(data));
     }
 
     /**
-     * Gets from or creates a set from the passed collection.
+     * Create an ordered set copy from the passed objects.
+     *
      * <p>SCIPIO: 3.0.0: NOTE: This can now always be expected to return an insert-order-preserving set, because this
      * generally increases the predictibility and reliability of various operations (security, stability, queries,
      * logging, etc.).</p>
+     *
+     * @param elems
+     * @return theSet
+     */
+    @SafeVarargs
+    public static <T> Set<T> toSet(T... elems) {
+        return new LinkedHashSet<>(Arrays.asList(elems));
+    }
+
+    /**
+     * Gets or creates an ordered set copy from the passed collection.
+     *
+     * <p>NOTE: This can now always be expected to return an insert-order-preserving set when one is created, because this
+     * generally increases the predictibility and reliability of various operations (security, stability, queries,
+     * logging, etc.).</p>
+     *
+     * <p>TODO: Should be deprecated in favor of {@link #asSet} because much clearer and this one conflicts with {@link #toSet(Object...)}.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Made order-preserving and now always creates a copy for safety and caller modification.</p>
+     *
      * @param collection
      * @return theSet
      */
     public static <T> Set<T> toSet(Collection<T> collection) {
-        if (collection == null) {
-            return null;
-        } else  if (collection instanceof Set<?>) {
-            return (Set<T>) collection;
-        }
-        return new LinkedHashSet<>(collection);
+        return (collection != null) ? (collection instanceof Set ? (Set<T>) collection : new LinkedHashSet<>(collection)) : null;
+    }
+
+    /**
+     * Create a fast random set copy from the passed objects.
+     *
+     * <p>SCIPIO: 3.0.0: Added because {@link #toSet} is no longer random and sometimes this is explicitly desired.
+     * You can also use {@link Set#of} and {@link Set#copyOf} for immutable versions.</p>
+     *
+     * @see Set#of
+     */
+    @SafeVarargs
+    public static <T> Set<T> randomSet(T... elems) {
+        return (elems != null) ? new HashSet<>(Arrays.asList(elems)) : null;
+    }
+
+    /**
+     * Gets from or creates an unmodifiable ordered set copy from the passed elements.
+     *
+     * <p>NOTE: This can now always be expected to return an insert-order-preserving set, because this
+     * generally increases the predictibility and reliability of various operations (security, stability, queries,
+     * logging, etc.).</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> Set<T> constSet(T... elems) {
+        return Collections.unmodifiableSet(toSet(elems));
+    }
+
+    /**
+     * Gets from or creates an unmodifiable ordered set copy from the passed collection.
+     *
+     * <p>NOTE: This can now always be expected to return an insert-order-preserving set, because this
+     * generally increases the predictibility and reliability of various operations (security, stability, queries,
+     * logging, etc.).</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static <T> Set<T> constSetCopy(Collection<? extends T> coll) {
+        return Collections.unmodifiableSet(new LinkedHashSet<>(coll));
     }
 
     /**
@@ -417,8 +581,6 @@ public final class UtilMisc {
      * <p>SCIPIO: 3.0.0: NOTE: This can now always be expected to return an insert-order-preserving set, because this
      * generally increases the predictibility and reliability of various operations (security, stability, queries,
      * logging, etc.).</p>
-     * @param data
-     * @return theSet
      */
     public static <T> Set<T> toSetArray(T[] data) {
         if (data == null) {
@@ -428,7 +590,10 @@ public final class UtilMisc {
     }
 
     /**
-     * SCIPIO: Create a HashSet from passed objX parameters
+     * SCIPIO: Create a HashSet from passed objX parameters.
+     *
+     * <p>TODO: Deprecate in favor of {@link #randomSet}.</p>
+     *
      * @return The resulting HashSet
      */
     @SafeVarargs
@@ -437,11 +602,32 @@ public final class UtilMisc {
     }
 
     /**
-     * SCIPIO: Create a HashSet from collection
+     * SCIPIO: Create a HashSet from passed objX parameters.
+     *
+     * <p>TODO: Deprecate in favor of {@link #randomSet}.</p>
+     *
      * @return The resulting HashSet
      */
+    @Deprecated
     public static <T> Set<T> toHashSet(Collection<? extends T> collection) {
         return new HashSet<T>(collection);
+    }
+
+    /**
+     * Gets list or creates a list copy from the passed collection.
+     *
+     * <p>NOTE: This can now always be expected to return an insert-order-preserving set, because this
+     * generally increases the predictibility and reliability of various operations (security, stability, queries,
+     * logging, etc.).</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @param collection
+     * @return The list
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> asList(Object collection) {
+        return (collection != null) ? (collection instanceof List ? (List<T>) collection : new ArrayList<>((Collection<T>) collection)) : null;
     }
 
     /**
@@ -451,42 +637,46 @@ public final class UtilMisc {
      */
     @SafeVarargs
     public static <T> List<T> toList(T... data) {
-        if(data == null){
-            return null;
-        }
-        /* SCIPIO: switched to ArrayList
-        List<T> list = new LinkedList<>();
-
-        for(T t : data){
-            list.add(t);
-        }
-
-        return list;
-        */
         return new ArrayList<>(Arrays.asList(data));
     }
 
-    public static <T> List<T> toList(Collection<T> collection) {
-        if (collection == null) {
-            return null;
-        }
-        if (collection instanceof List<?>) {
-            return (List<T>) collection;
-        }
-        List<T> list = new ArrayList<>(collection); // SCIPIO: switched to ArrayList
-        //collection.list.addAll(collection);
-        return list;
+    /**
+     * Gets or creates a list copy from the passed collection.
+     *
+     * <p>TODO: Should be deprecated in favor of {@link #asList} because much clearer and this one conflicts with {@link #toList(Object...)}.</p>
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> toList(Collection<? extends T> collection) {
+        return asList(collection);
+    }
+
+    /**
+     * Creates an unmodifiable ordered list copy from the passed elements.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @param elems
+     * @return theSet
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> List<T> constList(T... elems) {
+        return List.copyOf(Arrays.asList(elems));
+    }
+
+    /**
+     * Creates an unmodifiable ordered list copy from the passed collection.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @param collection
+     * @return theSet
+     */
+    public static <T> List<T> constListCopy(Collection<? extends T> collection) {
+        return List.copyOf(collection);
     }
 
     public static <T> List<T> toListArray(T[] data) {
-        if (data == null) {
-            return null;
-        }
-        List<T> list = new ArrayList<T>(Arrays.asList(data)); // SCIPIO: switched to ArrayList
-        //for (T value: data) {
-        //    list.add(value);
-        //}
-        return list;
+        return (data != null) ? new ArrayList<T>(Arrays.asList(data)) : null;
     }
 
     public static <K, V> void addToListInMap(V element, Map<K, ?> theMap, K listKey) { // SCIPIO: Generalized this: Map<K, Object>
@@ -1003,7 +1193,7 @@ public final class UtilMisc {
      * is of the same type as the other toMap calls in this class.
      */
     public static <K, V> Map<K, V> newMap() {
-        return MapType.DEFAULT.newMap();
+        return new HashMap<>();
     }
 
     /**
@@ -1014,7 +1204,7 @@ public final class UtilMisc {
      * @see #newMap()
      */
     public static <K, V> Map<K, V> newMap(Map<? extends K, ? extends V> map) {
-        return MapType.DEFAULT.newMap(map);
+        return new HashMap<>(map);
     }
 
     /**
@@ -1026,7 +1216,7 @@ public final class UtilMisc {
      * @see #newMap()
      */
     public static <K, V> Map<K, V> newMap(int initialCapacity) {
-        return MapType.DEFAULT.newMap(initialCapacity);
+        return new HashMap<>(initialCapacity);
     }
 
     /**
@@ -1358,6 +1548,8 @@ public final class UtilMisc {
     /**
      * SCIPIO: Returns an unmodifiable hash set.
      * (We use this pattern constantly.)
+     *
+     * TODO: Deprecate in favor of {@link #constSet}
      */
     @SuppressWarnings("unchecked")
     public static <T> Set<T> unmodifiableHashSet(T... elems) {
@@ -1366,6 +1558,8 @@ public final class UtilMisc {
 
     /**
      * SCIPIO: Returns an unmodifiable hash set copied from the given collection.
+     *
+     * TODO: Deprecate in favor of {@link #constSetCopy}
      */
     public static <T> Set<T> unmodifiableHashSetCopy(Collection<? extends T> collection) {
         return Collections.unmodifiableSet(new HashSet<T>(collection));
@@ -1375,6 +1569,7 @@ public final class UtilMisc {
      * SCIPIO: Returns an unmodifiable hash set copied from the given collection, with support for extra elements.
      * If collection is null, a new one is created.
      */
+    @Deprecated
     public static <T> Set<T> unmodifiableHashSetCopyAdd(Collection<? extends T> collection, T... addValues) {
         Set<T> set = (collection != null) ? new HashSet<>(collection) : new HashSet<>();
         for (T value : addValues) {
@@ -1386,6 +1581,7 @@ public final class UtilMisc {
     /**
      * SCIPIO: Returns an unmodifiable hash set copied from the given collection, with support for extra elements.
      */
+    @Deprecated
     public static <T> Set<T> unmodifiableHashSetCopyRemove(Collection<? extends T> collection, T... removeValues) {
         Set<T> set = new HashSet<>(collection);
         for (T value : removeValues) {
@@ -1396,6 +1592,8 @@ public final class UtilMisc {
 
     /**
      * SCIPIO: Returns an unmodifiable linked hash set.
+     *
+     * TODO: Deprecate in favor of {@link #constSet}
      */
     @SuppressWarnings("unchecked")
     public static <T> Set<T> unmodifiableLinkedHashSet(T... elems) {
@@ -1403,8 +1601,11 @@ public final class UtilMisc {
     }
 
     /**
-     * SCIPIO: Returns an unmodifiable linked hash set copied from the given collection.
+     * SCIPIO: Returns an unmodifiable linked hash set.
+     *
+     * TODO: Deprecate in favor of {@link #constSetCopy}
      */
+    @SuppressWarnings("unchecked")
     public static <T> Set<T> unmodifiableLinkedHashSetCopy(Collection<? extends T> collection) {
         return Collections.unmodifiableSet(new LinkedHashSet<>(collection));
     }
@@ -1413,6 +1614,7 @@ public final class UtilMisc {
      * SCIPIO: Returns an unmodifiable linked hash set copied from the given collection, with support for extra elements.
      * If collection is null, a new one is created.
      */
+    @Deprecated
     public static <T> Set<T> unmodifiableLinkedHashSetCopyAdd(Collection<? extends T> collection, T... addValues) {
         Set<T> set = (collection != null) ? new LinkedHashSet<>(collection) : new LinkedHashSet<>();
         for(T value : addValues) {
@@ -1424,6 +1626,7 @@ public final class UtilMisc {
     /**
      * SCIPIO: Returns an unmodifiable linked hash set copied from the given collection, with support for extra elements.
      */
+    @Deprecated
     public static <T> Set<T> unmodifiableLinkedHashSetCopyRemove(Collection<? extends T> collection, T... removeValues) {
         Set<T> set = new LinkedHashSet<>(collection);
         for(T value : removeValues) {
@@ -1434,6 +1637,8 @@ public final class UtilMisc {
 
     /**
      * SCIPIO: Returns an unmodifiable array list.
+     *
+     * TODO: Deprecate in favor of List.of
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> unmodifiableArrayList(T... elems) {
@@ -1442,6 +1647,8 @@ public final class UtilMisc {
 
     /**
      * SCIPIO: Returns an unmodifiable array list copied from the given collection.
+     *
+     * TODO: Deprecate in favor of List.copyOf
      */
     public static <T> List<T> unmodifiableArrayListCopy(Collection<? extends T> collection) {
         return Collections.unmodifiableList(new ArrayList<>(collection));
@@ -1451,6 +1658,7 @@ public final class UtilMisc {
      * SCIPIO: Returns an unmodifiable array list copied from the given collection, with support for extra elements.
      * If collection is null, a new one is created.
      */
+    @Deprecated
     public static <T> List<T> unmodifiableArrayListCopyAdd(Collection<? extends T> collection, T... addValues) {
         List<T> list = (collection != null) ? new ArrayList<>(collection) : new ArrayList<>();
         for(T value : addValues) {
@@ -1462,6 +1670,7 @@ public final class UtilMisc {
     /**
      * SCIPIO: Returns an unmodifiable array list copied from the given collection, with support for extra elements.
      */
+    @Deprecated
     public static <T> List<T> unmodifiableArrayListCopyRemove(Collection<? extends T> collection, T... removeValues) {
         List<T> list = new ArrayList<>(collection);
         for(T value : removeValues) {
@@ -1473,6 +1682,7 @@ public final class UtilMisc {
     /**
      * SCIPIO: Returns an unmodifiable linked list.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> List<T> unmodifiableLinkedList(T... elems) {
         return Collections.unmodifiableList(new LinkedList<>(Arrays.asList(elems)));
@@ -1481,6 +1691,7 @@ public final class UtilMisc {
     /**
      * SCIPIO: Returns an unmodifiable linked list copied from the given collection.
      */
+    @Deprecated
     public static <T> List<T> unmodifiableLinkedListCopy(Collection<? extends T> collection) {
         return Collections.unmodifiableList(new LinkedList<>(collection));
     }
@@ -1489,6 +1700,7 @@ public final class UtilMisc {
      * SCIPIO: Returns an unmodifiable linked list copied from the given collection, with support for extra elements.
      * If collection is null, a new one is created.
      */
+    @Deprecated
     public static <T> List<T> unmodifiableLinkedListCopyAdd(Collection<? extends T> collection, T... addValues) {
         List<T> list = (collection != null) ? new LinkedList<>(collection) : new LinkedList<>();
         for(T value : addValues) {
@@ -1500,6 +1712,7 @@ public final class UtilMisc {
     /**
      * SCIPIO: Returns an unmodifiable linked list copied from the given collection, with support for extra elements.
      */
+    @Deprecated
     public static <T> List<T> unmodifiableLinkedListCopyRemove(Collection<? extends T> collection, T... removeValues) {
         List<T> list = new LinkedList<>(collection);
         for(T value : removeValues) {
@@ -1509,37 +1722,10 @@ public final class UtilMisc {
     }
 
     /**
-     * SCIPIO: For an inMap with generics Map&lt;K, V&gt;, populates and returns the opposite mapping outMap, Map&lt;V, K&gt;
-     * Added 2017-07-12.
-     */
-    public static <K, V> Map<V, K> putAllReverseMapping(Map<V, K> outMap, Map<? extends K, ? extends V> inMap) {
-        for(Map.Entry<? extends K, ? extends V> entry : inMap.entrySet()) {
-            outMap.put(entry.getValue(), entry.getKey());
-        }
-        return outMap;
-    }
-
-    /**
-     * SCIPIO: Transfers the specified keys from inMap to outMap.
-     * Added 2017-12-04.
-     */
-    public static <K, V> void putKeys(Map<K, V> outMap, Map<? extends K, ? extends V> inMap, Collection<K> keys) {
-        for(K key : keys) { outMap.put(key, inMap.get(key)); }
-    }
-
-    /**
-     * SCIPIO: Transfers the specified keys from inMap to outMap.
-     * Added 2017-12-04.
-     */
-    @SafeVarargs
-    public static <K, V> void putKeys(Map<K, V> outMap, Map<? extends K, ? extends V> inMap, K... keys) {
-        for(K key : keys) { outMap.put(key, inMap.get(key)); }
-    }
-
-    /**
      * SCIPIO: Creates a hash map copy with specified keys.
      * Added 2017-12-04.
      */
+    @Deprecated
     public static <K, V> Map<K, V> toHashMapWithKeys(Map<? extends K, ? extends V> inMap, Collection<K> keys) {
         Map<K, V> outMap = new HashMap<>();
         for(K key : keys) { outMap.put(key, inMap.get(key)); }
@@ -1550,6 +1736,7 @@ public final class UtilMisc {
      * SCIPIO: Creates a hash map copy including specified keys.
      * Added 2017-12-04.
      */
+    @Deprecated
     @SafeVarargs
     public static <K, V> Map<K, V> toHashMapWithKeys(Map<? extends K, ? extends V> inMap, K... keys) {
         Map<K, V> outMap = new HashMap<>();
@@ -1561,6 +1748,7 @@ public final class UtilMisc {
      * SCIPIO: Creates a hash map copy excluding specified keys.
      * Added 2017-12-04.
      */
+    @Deprecated
     public static <K, V> Map<K, V> toHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, Collection<K> keys) {
         Map<K, V> outMap = new HashMap<>();
         for(Map.Entry<? extends K, ? extends V> entry : inMap.entrySet()) {
@@ -1573,6 +1761,7 @@ public final class UtilMisc {
      * SCIPIO: Creates a hash map copy excluding specified keys.
      * Added 2017-12-04.
      */
+    @Deprecated
     @SafeVarargs
     public static <K, V> Map<K, V> toHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, K... keys) {
         return toHashMapWithoutKeys(inMap, new HashSet<>(Arrays.asList(keys)));
@@ -1584,6 +1773,7 @@ public final class UtilMisc {
      * NOTE: this is slower than {@link #toLinkedHashMapWithKeysNewOrder}.
      * Added 2017-12-04.
      */
+    @Deprecated
     public static <K, V> Map<K, V> toLinkedHashMapWithKeysOrigOrder(Map<? extends K, ? extends V> inMap, Collection<K> keys) {
         Map<K, V> outMap = new LinkedHashMap<>();
         for(Map.Entry<? extends K, ? extends V> entry : inMap.entrySet()) {
@@ -1598,6 +1788,7 @@ public final class UtilMisc {
      * NOTE: this is slower than {@link #toLinkedHashMapWithKeysNewOrder}.
      * Added 2017-12-04.
      */
+    @Deprecated
     @SafeVarargs
     public static <K, V> Map<K, V> toLinkedHashMapWithKeysOrigOrder(Map<? extends K, ? extends V> inMap, K... keys) {
         return toLinkedHashMapWithKeysOrigOrder(inMap, new HashSet<>(Arrays.asList(keys)));
@@ -1608,6 +1799,7 @@ public final class UtilMisc {
      * key order determined by the order of the passed keys collection parameter.
      * Added 2017-12-04.
      */
+    @Deprecated
     public static <K, V> Map<K, V> toLinkedHashMapWithKeysNewOrder(Map<? extends K, ? extends V> inMap, Collection<K> keys) {
         Map<K, V> outMap = new HashMap<>();
         for(K key : keys) { outMap.put(key, inMap.get(key)); }
@@ -1619,6 +1811,7 @@ public final class UtilMisc {
      * key order determined by the order of the passed keys collection parameter.
      * Added 2017-12-04.
      */
+    @Deprecated
     @SafeVarargs
     public static <K, V> Map<K, V> toLinkedHashMapWithKeysNewOrder(Map<? extends K, ? extends V> inMap, K... keys) {
         Map<K, V> outMap = new HashMap<>();
@@ -1631,6 +1824,7 @@ public final class UtilMisc {
      * The original key order is preserved.
      * Added 2017-12-04.
      */
+    @Deprecated
     public static <K, V> Map<K, V> toLinkedHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, Collection<K> keys) {
         Map<K, V> outMap = new LinkedHashMap<>();
         for(Map.Entry<? extends K, ? extends V> entry : inMap.entrySet()) {
@@ -1644,6 +1838,7 @@ public final class UtilMisc {
      * The original key order is preserved.
      * Added 2017-12-04.
      */
+    @Deprecated
     @SafeVarargs
     public static <K, V> Map<K, V> toLinkedHashMapWithoutKeys(Map<? extends K, ? extends V> inMap, K... keys) {
         return toLinkedHashMapWithoutKeys(inMap, new HashSet<>(Arrays.asList(keys)));
@@ -1719,7 +1914,7 @@ public final class UtilMisc {
         if (collection == null) {
             return false;
         }
-        for(T value : testValues) {
+        for (T value : testValues) {
             if (!collection.contains(value)) {
                 return false;
             }
@@ -1731,6 +1926,7 @@ public final class UtilMisc {
      * SCIPIO: If the given value is already an ArrayList or null, returns it as-is; otherwise returns a copy as an ArrayList.
      * Added 2018-11-23.
      */
+    @Deprecated
     public static <T> List<T> asArrayList(Collection<T> value) {
         return (value instanceof ArrayList || value == null) ? (List<T>) value : new ArrayList<>(value);
     }
@@ -1740,6 +1936,7 @@ public final class UtilMisc {
      * ArrayList copy from it; if null, returns null; if other type, throws ClassCastException.
      * Added 2019-01-23.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> List<T> asArrayList(Object value) {
         return (value instanceof ArrayList || value == null) ? (List<T>) value : new ArrayList<T>((Collection<T>) value);
@@ -1749,6 +1946,7 @@ public final class UtilMisc {
      * SCIPIO: If the given value is not already a HashSet or null, returns it as-is; otherwise returns a copy as a HashSet.
      * Added 2019-01-23.
      */
+    @Deprecated
     public static <T> Set<T> asHashSet(Collection<T> value) {
         return (value instanceof HashSet || value == null) ? (Set<T>) value : new HashSet<>(value);
     }
@@ -1758,6 +1956,7 @@ public final class UtilMisc {
      * HashSet copy from it; if null, returns null; if other type, throws ClassCastException.
      * Added 2019-01-23.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> Set<T> asHashSet(Object value) {
         return (value instanceof HashSet || value == null) ? (Set<T>) value : new HashSet<T>((Collection<T>) value);
@@ -1767,6 +1966,7 @@ public final class UtilMisc {
      * SCIPIO: If the given value is not already a LinkedHashSet or null, returns it as-is; otherwise returns a copy as a LinkedHashSet.
      * Added 2019-01-23.
      */
+    @Deprecated
     public static <T> Set<T> asLinkedHashSet(Collection<T> value) {
         return (value instanceof LinkedHashSet || value == null) ? (Set<T>) value : new LinkedHashSet<>(value);
     }
@@ -1776,6 +1976,7 @@ public final class UtilMisc {
      * LinkedHashSet copy from it; if null, returns null; if other type, throws ClassCastException.
      * Added 2019-01-23.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> Set<T> asLinkedHashSet(Object value) {
         return (value instanceof LinkedHashSet || value == null) ? (Set<T>) value : new LinkedHashSet<T>((Collection<T>) value);
@@ -1785,6 +1986,7 @@ public final class UtilMisc {
      * SCIPIO: If the given value is not already a HashMap or null, returns it as-is; otherwise returns a copy as a HashMap.
      * Added 2019-01-23.
      */
+    @Deprecated
     public static <K, V> Map<K, V> asHashMap(Map<K, V> value) {
         return (value instanceof HashMap || value == null) ? (Map<K, V>) value : new HashMap<>(value);
     }
@@ -1794,6 +1996,7 @@ public final class UtilMisc {
      * HashMap copy from it; if null, returns null; if other type, throws ClassCastException.
      * Added 2019-01-23.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> asHashMap(Object value) {
         return (value instanceof HashMap || value == null) ? (Map<K, V>) value : new HashMap<K, V>((Map<K, V>) value);
@@ -1803,6 +2006,7 @@ public final class UtilMisc {
      * SCIPIO: If the given value is not already a LinkedHashMap or null, returns it as-is; otherwise returns a copy as a LinkedHashMap.
      * Added 2019-01-23.
      */
+    @Deprecated
     public static <K, V> Map<K, V> asLinkedHashMap(Map<K, V> value) {
         return (value instanceof LinkedHashMap || value == null) ? (Map<K, V>) value : new LinkedHashMap<>(value);
     }
@@ -1812,6 +2016,7 @@ public final class UtilMisc {
      * LinkedHashMap copy from it; if null, returns null; if other type, throws ClassCastException.
      * Added 2019-01-23.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> asLinkedHashMap(Object value) {
         return (value instanceof LinkedHashMap || value == null) ? (Map<K, V>) value : new LinkedHashMap<K, V>((Map<K, V>) value);
@@ -1822,6 +2027,7 @@ public final class UtilMisc {
      * if null, returns empty.
      * Added 2018-11-23.
      */
+    @Deprecated
     public static <T> List<T> asArrayListNonNull(Collection<T> value) {
         return (value instanceof ArrayList) ? (List<T>) value : ((value == null) ? new ArrayList<>() : new ArrayList<>(value));
     }
@@ -1831,6 +2037,7 @@ public final class UtilMisc {
      * ArrayList copy from it; if null, returns empty; if other type, throws ClassCastException.
      * Added 2019-01-23.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> List<T> asArrayListNonNull(Object value) {
         return (value instanceof ArrayList) ? (List<T>) value : ((value == null) ? new ArrayList<>() : new ArrayList<>((Collection<T>) value));
@@ -1841,6 +2048,7 @@ public final class UtilMisc {
      * if null, returns empty.
      * Added 2019-01-23.
      */
+    @Deprecated
     public static <T> Set<T> asHashSetNonNull(Collection<T> value) {
         return (value instanceof HashSet) ? (Set<T>) value : ((value == null) ? new HashSet<>() : new HashSet<>(value));
     }
@@ -1850,6 +2058,7 @@ public final class UtilMisc {
      * HashSet copy from it; if null, returns empty; if other type, throws ClassCastException.
      * Added 2019-01-23.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> Set<T> asHashSetNonNull(Object value) {
         return (value instanceof HashSet) ? (Set<T>) value : ((value == null) ? new HashSet<>() : new HashSet<>((Collection<T>) value));
@@ -1860,6 +2069,7 @@ public final class UtilMisc {
      * if null, returns empty.
      * Added 2019-01-23.
      */
+    @Deprecated
     public static <T> Set<T> asLinkedHashSetNonNull(Collection<T> value) {
         return (value instanceof LinkedHashSet) ? (Set<T>) value : ((value == null) ? new LinkedHashSet<>() : new LinkedHashSet<>(value));
     }
@@ -1869,6 +2079,7 @@ public final class UtilMisc {
      * LinkedHashSet copy from it; if null, returns empty; if other type, throws ClassCastException.
      * Added 2019-01-23.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <T> Set<T> asLinkedHashSetNonNull(Object value) {
         return (value instanceof LinkedHashSet) ? (Set<T>) value : ((value == null) ? new LinkedHashSet<>() : new LinkedHashSet<>((Collection<T>) value));
@@ -1879,6 +2090,7 @@ public final class UtilMisc {
      * if null, returns empty.
      * Added 2019-01-23.
      */
+    @Deprecated
     public static <K, V> Map<K, V> asHashMapNonNull(Map<K, V> value) {
         return (value instanceof HashMap) ? (Map<K, V>) value : ((value == null) ? new HashMap<>() : new HashMap<>(value));
     }
@@ -1888,6 +2100,7 @@ public final class UtilMisc {
      * HashMap copy from it; if null, returns empty; if other type, throws ClassCastException.
      * Added 2019-01-23.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> asHashMapNonNull(Object value) {
         return (value instanceof HashMap) ? (Map<K, V>) value : ((value == null) ? new HashMap<>() : new HashMap<>((Map<K, V>) value));
@@ -1898,6 +2111,7 @@ public final class UtilMisc {
      * if null, returns empty.
      * Added 2019-01-23.
      */
+    @Deprecated
     public static <K, V> Map<K, V> asLinkedHashMapNonNull(Map<K, V> value) {
         return (value instanceof LinkedHashMap) ? (Map<K, V>) value : ((value == null) ? new LinkedHashMap<>() : new LinkedHashMap<>(value));
     }
@@ -1907,6 +2121,7 @@ public final class UtilMisc {
      * LinkedHashMap copy from it; if null, returns empty; if other type, throws ClassCastException.
      * Added 2019-01-23.
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> asLinkedHashMapNonNull(Object value) {
         return (value instanceof LinkedHashMap) ? (Map<K, V>) value : ((value == null) ? new LinkedHashMap<>() : new LinkedHashMap<>((Map<K, V>) value));
@@ -2020,7 +2235,47 @@ public final class UtilMisc {
     }
 
     /**
+     * Adds the given values pairs to the collection and returns the collection, for chaining (SCIPIO).
+     * @deprecated SCIPIO: 3.0.0: Redundant/misnamed; use {@link #addAll(Collection, Collection)}
+     */
+    @Deprecated
+    public static <C extends Collection<E>, E> C add(C collection, Collection<? extends E> newElems) {
+        if (collection != null && newElems != null) {
+            collection.addAll(newElems);
+        }
+        return collection;
+    }
+
+    /**
+     * Adds the given values pairs to the collection and returns the collection, for chaining (SCIPIO).
+     */
+    @SafeVarargs
+    public static <C extends Collection<E>, E> C add(C collection, E... newElems) {
+        if (collection != null && newElems != null) {
+            collection.addAll(List.of(newElems));
+        }
+        return collection;
+    }
+
+    /**
+     * Calls out.addAll for every passed collection on the outCollection.
+     *
+     * <p>SCIPIO: 3.0.0: More robust; removed varargs array due to compiler warnings.</p>
+     *
+     * @param outCollection The collection to add the inCollection values to
+     * @param inCollection The source collection
+     * @return The outCollection, for convenience
+     */
+    public static <C extends Collection<O>, O> C addAll(C outCollection, Collection<? extends O> inCollection) {
+        if (inCollection != null && outCollection != null) {
+            outCollection.addAll(inCollection);
+        }
+        return outCollection;
+    }
+
+    /**
      * SCIPIO: Adds the given enumeration's elements to the given out collection.
+     *
      * @param outCollection The collection to add the inEnumeration values to
      * @param inEnumeration The source enumeration
      * @return The outCollection, for convenience
@@ -2035,13 +2290,35 @@ public final class UtilMisc {
     }
 
     /**
-     * Calls out.addAll for every passed collection on the outCollection.
+     * Calls out.removeAll for every passed collection on the outCollection.
      *
-     * <p>SCIPIO: 3.0.0: More robust; removed varargs array due to compiler warnings.</p>
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @param outCollection The collection to remove the inCollection values from
+     * @param inCollection The source collection
+     * @return The outCollection, for convenience
      */
-    public static <C extends Collection<O>, O> C addAll(C outCollection, Collection<? extends O> inCollection) {
+    public static <C extends Collection<O>, O> C removeAll(C outCollection, Collection<? extends O> inCollection) {
         if (inCollection != null && outCollection != null) {
-            outCollection.addAll(inCollection);
+            outCollection.removeAll(inCollection);
+        }
+        return outCollection;
+    }
+
+    /**
+     * Adds the given enumeration's elements to the given out collection.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @param outCollection The collection to remove the inEnumeration values from
+     * @param inEnumeration The source enumeration
+     * @return The outCollection, for convenience
+     */
+    public static <T, C extends Collection<T>> C removeAll(C outCollection, Enumeration<T> inEnumeration) {
+        if (inEnumeration != null && outCollection != null) {
+            while (inEnumeration.hasMoreElements()) {
+                outCollection.remove(inEnumeration.nextElement());
+            }
         }
         return outCollection;
     }
@@ -2216,40 +2493,6 @@ public final class UtilMisc {
 
     public static <V, T extends V> V getFirst(List<T> list) {
         return (list != null) ? list.get(0) : null;
-    }
-
-    /**
-     * Adds the given values pairs to the collection and returns the collection, for chaining (SCIPIO).
-     */
-    public static <C extends Collection<E>, E> C add(C collection, Collection<? extends E> newElems) {
-        if (collection != null && newElems != null) {
-            collection.addAll(newElems);
-        }
-        return collection;
-    }
-
-    /**
-     * Adds the given values pairs to the collection and returns the collection, for chaining (SCIPIO).
-     */
-    public static <C extends Collection<E>, E> C add(C collection, E... newElems) {
-        if (collection != null && newElems != null) {
-            collection.addAll(List.of(newElems));
-        }
-        return collection;
-    }
-
-    /**
-     * Puts the given key-value pairs into the map and returns the map, for chaining (SCIPIO).
-     */
-    public static <M extends Map<K, V>, K, V> M put(M map, Object... keyValuePairs) {
-        for (int i = 0; i < keyValuePairs.length;) {
-            @SuppressWarnings("unchecked")
-            K key = (K) keyValuePairs[i++];
-            @SuppressWarnings("unchecked")
-            V value = (V) keyValuePairs[i++];
-            map.put(key, value);
-        }
-        return map;
     }
 
     /**

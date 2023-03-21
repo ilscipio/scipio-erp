@@ -33,15 +33,103 @@ import org.ofbiz.base.lang.Factory;
 import org.ofbiz.base.lang.SourceMonitored;
 
 /**
- * UtilObject
- *
+ * Object and reflection utilities.
  */
 @SourceMonitored
 public final class UtilObject {
+
     private UtilObject() {
     }
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    /**
+     * Casts object to given type.
+     *
+     * <p>DEV NOTE: This was the correct location for this call because it object has nothing to do with generics or collections
+     * and is a primitive language feature.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Migrated from {@link UtilGenerics#cast(Object)} as more succinct and UtilGenerics is headed toward deprecation.</p>
+     */
+    @SuppressWarnings("unchecked")
+    private static <V> V cast(Object object) {
+        return (V) object;
+    }
+
+    /**
+     * If the given name value is a string starting with an uppercase character ("MY_VALUE"), returns it as-is, otherwise applies
+     * a project-standard name conversion heuristic, which consists of uppercasing and substituting "-" with "_" ("my-value" -> "MY_VALUE").
+     *
+     * <p>If name is null or empty, returns as-is (this method cannot check the validity of the name anyway),
+     * because in some cases empty string is significant (use nullIfEmpty).</p>
+     *
+     * <p>The result is intended for use with {@link Enum#valueOf(Class, String)} but does not guarantee a valid
+     * value since there is no class parameter.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String constantName(Object name) {
+        if (name == null) {
+            return null;
+        }
+        String nameStr = (String) name;
+        if (nameStr.isEmpty()) {
+            return "";
+        }
+        char first = nameStr.charAt(0);
+        if (first >= 'A' && first <= 'Z') {
+            return nameStr;
+        } else {
+            return nameStr.replace('-', '_').toUpperCase();
+        }
+    }
+
+    /**
+     * If the given name value is a string starting with a lowercase character ("my-value"), returns it as-is, otherwise applies
+     * a project-standard name conversion heuristic, which consists of lowercasing and substituting "_" with "-" ("MY_VALUE" -> "my-value").
+     *
+     * <p>If name is null or empty, returns as-is (this method cannot check the validity of the name anyway),
+     * because in some cases empty string is significant (use nullIfEmpty).</p>
+     *
+     * <p>This can be used to convert an enum value to an attribute value.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String attrName(Object name) {
+        if (name == null) {
+            return null;
+        }
+        String nameStr = (String) name;
+        if (nameStr.isEmpty()) {
+            return "";
+        }
+        char first = nameStr.charAt(0);
+        if (first >= 'a' && first <= 'z') {
+            return nameStr;
+        } else {
+            return nameStr.replace('_', '-').toLowerCase();
+        }
+    }
+
+    /**
+     * If the given name value is a string starting with an uppercase character, returns the given corresponding enum value,
+     * otherwise applies a project-standard name conversion heuristic, which consists of lowercasing and substituting "-" with "_",
+     * and returns the given corresponding enum.
+     *
+     * <p>The result is intended as drop-in replacement for {@link Enum#valueOf(Class, String)}.</p>
+     *
+     * <p>If enum name is null or empty, returns null, but if the value is non-empty and invalid, IllegalArgumentException is thrown.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static <E extends Enum<E>> E enumValue(Class<E> cls, Object name) throws IllegalArgumentException {
+        String enumValueName = constantName(name);
+        if (enumValueName == null || enumValueName.isEmpty()) {
+            return null;
+        }
+        return Enum.valueOf(cls, enumValueName);
+    }
+
 
     public static byte[] getBytes(InputStream is) {
         byte[] buffer = new byte[4 * 1024];

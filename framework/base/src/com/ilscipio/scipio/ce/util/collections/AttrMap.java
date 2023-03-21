@@ -21,7 +21,7 @@ public interface AttrMap extends ScipioMap<String, Object> {
      * If map is an AttrMap, returns it as-is, otherwise returns a new {@link Wrapper} around the map, null, or
      * IllegalArgumentException if another type.
      */
-    static AttrMap from(Object map) {
+    static AttrMap as(Object map) {
         if (map instanceof AttrMap) {
             return (AttrMap) map;
         } else if (map instanceof Map) {
@@ -37,7 +37,7 @@ public interface AttrMap extends ScipioMap<String, Object> {
 
     /**
      * Returns a new {@link Wrapper} around the map, even if it already one.
-     * @see #from(Object)
+     * @see #as(Object)
      */
     static AttrMap wrap(Map<String, ?> map) {
         return new Wrapper(map);

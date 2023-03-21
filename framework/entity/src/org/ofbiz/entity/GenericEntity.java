@@ -1436,37 +1436,78 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
         return GenericPK.create(this.getDelegator(), getModelEntity(), fields, getModelEntity().getPkFieldNames());
     }
 
-    /** go through the pks and for each one see if there is an entry in fields to set */
-    public void setPKFields(Map<? extends Object, ? extends Object> fields) {
+    /**
+     * Go through the pks and for each one see if there is an entry in fields to set.
+     */
+    public void setPKFields(Map<? extends Object, ?> fields) {
         setAllFields(fields, true, null, Boolean.TRUE);
     }
 
-    /** go through the pks and for each one see if there is an entry in fields to set */
-    public void setPKFields(Map<? extends Object, ? extends Object> fields, boolean setIfEmpty) {
+    /**
+     * Go through the pks and for each one see if there is an entry in fields to set.
+     */
+    public void setPKFields(Map<? extends Object, ?> fields, boolean setIfEmpty) {
         setAllFields(fields, setIfEmpty, null, Boolean.TRUE);
     }
 
-    /** go through the non-pks and for each one see if there is an entry in fields to set */
-    public void setNonPKFields(Map<? extends Object, ? extends Object> fields) {
+    /**
+     * Go through the pks and for each one see if there is an entry in fields to set.
+     *
+     * <p>SCIPIO: 3.0.0: Added namePrefix overload.</p>
+     */
+    public void setPKFields(Map<? extends Object, ?> fields, boolean setIfEmpty, String namePrefix) {
+        setAllFields(fields, setIfEmpty, namePrefix, Boolean.TRUE);
+    }
+
+    /**
+     * Go through the non-pks and for each one see if there is an entry in fields to set.
+     */
+    public void setNonPKFields(Map<? extends Object, ?> fields) {
         setAllFields(fields, true, null, Boolean.FALSE);
     }
 
-    /** go through the non-pks and for each one see if there is an entry in fields to set */
-    public void setNonPKFields(Map<? extends Object, ? extends Object> fields, boolean setIfEmpty) {
+    /**
+     * Go through the non-pks and for each one see if there is an entry in fields to set.
+     */
+    public void setNonPKFields(Map<? extends Object, ?> fields, boolean setIfEmpty) {
         setAllFields(fields, setIfEmpty, null, Boolean.FALSE);
     }
 
+    /**
+     * Go through the non-pks and for each one see if there is an entry in fields to set.
+     *
+     * <p>SCIPIO: 3.0.0: Added namePrefix overload.</p>
+     */
+    public void setNonPKFields(Map<? extends Object, ?> fields, boolean setIfEmpty, String namePrefix) {
+        setAllFields(fields, setIfEmpty, namePrefix, Boolean.FALSE);
+    }
+
     /** Intelligently sets fields on this entity from the Map of fields passed in (SCIPIO). */
-    public void setAllFields(Map<? extends Object, ? extends Object> fields) {
+    public void setAllFields(Map<? extends Object, ?> fields) {
         setAllFields(fields, true, null, null);
     }
 
     /** Intelligently sets fields on this entity from the Map of fields passed in (SCIPIO). */
-    public void setAllFields(Map<? extends Object, ? extends Object> fields, boolean setIfEmpty) {
+    public void setAllFields(Map<? extends Object, ?> fields, boolean setIfEmpty) {
         setAllFields(fields, setIfEmpty, null, null);
     }
-    
-    /** Intelligently sets fields on this entity from the Map of fields passed in
+
+    /**
+     * Intelligently sets fields on this entity from the Map of fields passed in.
+     *
+     * <p>SCIPIO: 3.0.0: Added namePrefix overload.</p>
+     *
+     * @param fields The fields Map to get the values from
+     * @param setIfEmpty Used to specify whether empty/null values in the field Map should over-write non-empty values in this entity
+     * @param namePrefix If not null or empty will be pre-pended to each field name (upper-casing the first letter of the field name first), and that will be used as the fields Map lookup name instead of the field-name
+     */
+    public void setAllFields(Map<? extends Object, ?> fields, boolean setIfEmpty, String namePrefix) {
+        setAllFields(fields, setIfEmpty, namePrefix, null);
+    }
+
+    /**
+     * Intelligently sets fields on this entity from the Map of fields passed in.
+     *
      * @param fields The fields Map to get the values from
      * @param setIfEmpty Used to specify whether empty/null values in the field Map should over-write non-empty values in this entity
      * @param namePrefix If not null or empty will be pre-pended to each field name (upper-casing the first letter of the field name first), and that will be used as the fields Map lookup name instead of the field-name

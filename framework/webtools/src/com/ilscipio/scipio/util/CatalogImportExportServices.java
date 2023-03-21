@@ -1,8 +1,8 @@
 package com.ilscipio.scipio.util;
 
-import org.apache.commons.text.StringSubstitutor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -395,7 +395,8 @@ public class CatalogImportExportServices {
     }
 
     public static String substituteVariables(String originalValue, Map<String,Object> replaceProps){
-        String str = StringSubstitutor.replace(originalValue, replaceProps);
+        String str = FlexibleStringExpander.expandString(originalValue, replaceProps);
+        //String str = StringSubstitutor.replace(originalValue, replaceProps);
         str=str.replaceAll("\\$\\{([^}]*?)\\}",""); //replace leftover variables
         if(str.trim().equals("null") || str.trim().length()==0){
             return null;

@@ -706,14 +706,21 @@
 
     <simple-method method-name="createSimpleTextContent" short-description="Create Simple Text Content">
         <set-service-fields service-name="createContent" map="parameters" to-map="createSimpleTextContent"/>
-        <set value="DOCUMENT" field="createSimpleTextContent.contentTypeId"/>
+        <!-- SCIPIO: 3.0.0: Unhardcoded DOCUMENT -->
+        <if-empty field="createSimpleTextContent.contentTypeId">
+            <set field="createSimpleTextContent.contentTypeId" value="DOCUMENT"/>
+        </if-empty>
 
-        <set from-field="parameters.text" field="createSimpleText.textData"/>
+        <set field="createSimpleText.textData" from="parameters.text" />
 
-        <set-service-fields service-name="createDataResource" map="parameters" to-map="createSimpleTextDataResource"/>
+        <!-- SCIPIO: 3.0.0: Now supports DataResource fields through dr prefix -->
+        <set-service-fields service-name="createDataResource" map="parameters" to-map="createSimpleTextDataResource" prefix="dr"/>
         <set value="ELECTRONIC_TEXT" field="createSimpleTextDataResource.dataResourceTypeId"/>
-        <set value="FTL" field="createSimpleTextDataResource.dataTemplateTypeId"/>
-
+        <!-- SCIPIO: 3.0.0: Unhardcoded FTL -->
+        <if-empty field="createSimpleTextDataResource.dataTemplateTypeId">
+            <!-- SCIPIO: FIXME: In reality the default here should probably be NONE in most cases, but this could affect legacy code -->
+            <set value="FTL" field="createSimpleTextDataResource.dataTemplateTypeId"/>
+        </if-empty>
         <call-service service-name="createDataResource" in-map-name="createSimpleTextDataResource">
             <result-to-field result-name="dataResourceId" field="createSimpleText.dataResourceId"/>
             <result-to-field result-name="dataResourceId" field="createSimpleTextContent.dataResourceId"/>

@@ -198,6 +198,7 @@
     <service name="createSimpleTextContent" engine="simple" location="component://content/script/org/ofbiz/content/content/ContentServices.xml" invoke="createSimpleTextContent">
         <permission-service service-name="contentManagerPermission" main-action="CREATE"/>
         <auto-attributes mode="IN" entity-name="Content" optional="true"/>
+        <auto-attributes mode="IN" entity-name="DataResource" prefix="dr" optional="true"/><!-- SCIPIO: 3.0.0: Added -->
         <attribute name="text" type="String" mode="IN" optional="false" allow-html="any">
             <type-validate>
                 <fail-property resource="ContentErrorUiLabels" property="ContentRequiredFieldMissingText"/>

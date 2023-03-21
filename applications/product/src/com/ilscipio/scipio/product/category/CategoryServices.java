@@ -155,23 +155,23 @@ public abstract class CategoryServices {
                     }
                 }
 
-                Map<String, Object> updateContentCtx = ctx.makeValidInContext("createUpdateSimpleTextContentForAlternateLocale");
+                Map<String, Object> updateContentCtx = ctx.makeValidContext("createUpdateSimpleTextContentForAlternateLocale", "IN");
                 if (mainContentId != null) {
                     updateContentCtx.put("mainContentId", mainContentId);
                 }
                 Map<String, Object> updateContentResult = ctx.dispatcher().runSync("createUpdateSimpleTextContentForAlternateLocale", updateContentCtx);
                 if (!ServiceUtil.isSuccess(updateContentResult)) {
-                    return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateContentResult)));
+                    return populateResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateContentResult)));
                 }
                 mainContentId = (String) updateContentResult.get("mainContentId");
                 if (UtilValidate.isEmpty(mainContentId)) {
-                    return populateServiceResult(ServiceUtil.returnError("No mainContentId available"));
+                    return populateResult(ServiceUtil.returnError("No mainContentId available"));
                 }
                 contentId = (String) updateContentResult.get("contentId");
 
                 // re-lookup (minimize concurrency issues)
                 prodCatContentFields.put("contentId", mainContentId);
-                prodCatContent = ctx.delegator().from("ProductContent").where(prodCatContentFields).filterByDate(filterByDate).queryFirst();
+                prodCatContent = ctx.delegator().from("ProductCategoryContent").where(prodCatContentFields).filterByDate(filterByDate).queryFirst();
                 if (prodCatContent == null) {
                     prodCatContentFromDate = UtilDateTime.nowTimestamp();
                     prodCatContent = ctx.delegator().makeValue("ProductCategoryContent",
@@ -186,13 +186,13 @@ public abstract class CategoryServices {
                     }
                 }
 
-                return populateServiceResult(ServiceUtil.returnSuccess());
+                return populateResult(ServiceUtil.returnSuccess());
             } catch (GeneralException e) {
-                return populateServiceResult(ServiceUtil.returnError(e.toString()));
+                return populateResult(ServiceUtil.returnError(e.toString()));
             }
         }
 
-        protected Map<String, Object> populateServiceResult(Map<String, Object> result) {
+        protected Map<String, Object> populateResult(Map<String, Object> result) {
             result.put("prodCatContentFromDate", prodCatContentFromDate);
             result.put("mainContentId", mainContentId);
             result.put("contentId", contentId);

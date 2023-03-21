@@ -77,7 +77,7 @@ public abstract class ProductServices {
         return ServiceUtil.returnSuccess();
     }
 
-    public static class PrecacheProductContentWrapper extends ServiceHandler.Local {
+    public static class PrecacheProductContentWrapper extends ServiceHandler.LocalExec {
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
         protected Collection<String> productContentTypeIdList;
@@ -111,6 +111,7 @@ public abstract class ProductServices {
             localeList = newLocaleList;
         }
 
+        @Override
         public Map<String, Object> exec() throws ServiceValidationException {
             try(EntityListIterator eli = ctx.delegator().from("Product").queryIterator()) {
                 GenericValue product;
@@ -182,17 +183,17 @@ public abstract class ProductServices {
                     }
                 }
 
-                Map<String, Object> updateContentCtx = ctx.makeValidInContext("createUpdateSimpleTextContentForAlternateLocale");
+                Map<String, Object> updateContentCtx = ctx.makeValidContext("createUpdateSimpleTextContentForAlternateLocale", "IN");
                 if (mainContentId != null) {
                     updateContentCtx.put("mainContentId", mainContentId);
                 }
                 Map<String, Object> updateContentResult = ctx.dispatcher().runSync("createUpdateSimpleTextContentForAlternateLocale", updateContentCtx);
                 if (!ServiceUtil.isSuccess(updateContentResult)) {
-                    return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateContentResult)));
+                    return populateResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateContentResult)));
                 }
                 mainContentId = UtilValidate.nullIfEmpty(updateContentResult.get("mainContentId"));
                 if (mainContentId == null) {
-                    return populateServiceResult(ServiceUtil.returnError("No mainContentId available"));
+                    return populateResult(ServiceUtil.returnError("No mainContentId available"));
                 }
                 contentId = (String) updateContentResult.get("contentId");
 
@@ -213,13 +214,13 @@ public abstract class ProductServices {
                     }
                 }
 
-                return populateServiceResult(ServiceUtil.returnSuccess());
+                return populateResult(ServiceUtil.returnSuccess());
             } catch (GeneralException e) {
-                return populateServiceResult(ServiceUtil.returnError(e.toString()));
+                return populateResult(ServiceUtil.returnError(e.toString()));
             }
         }
 
-        protected Map<String, Object> populateServiceResult(Map<String, Object> result) {
+        protected Map<String, Object> populateResult(Map<String, Object> result) {
             result.put("productContentFromDate", productContentFromDate);
             result.put("mainContentId", mainContentId);
             result.put("contentId", contentId);

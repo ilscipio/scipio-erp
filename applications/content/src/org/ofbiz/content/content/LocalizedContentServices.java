@@ -104,11 +104,11 @@ public abstract class LocalizedContentServices {
         }
     }
 
-    public static class CreateSimpleTextContentForAlternateLocale extends ServiceHandler.Local implements ServiceHandler.Exec {
+    public static class CreateSimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
         @Override
         public Map<String, Object> exec() throws GeneralException {
             try {
-                Map<String, Object> createTextCtx = ctx.makeValidInContext("createSimpleTextContent");
+                Map<String, Object> createTextCtx = ctx.makeValidContext("createSimpleTextContent", "IN");
                 Map<String, Object> createTextResult = ctx.dispatcher().runSync("createSimpleTextContent", createTextCtx);
                 if (!ServiceUtil.isSuccess(createTextResult)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(createTextResult));
@@ -131,7 +131,7 @@ public abstract class LocalizedContentServices {
         }
     }
 
-    public static class UpdateSimpleTextContentForAlternateLocale extends ServiceHandler.Local implements ServiceHandler.Exec {
+    public static class UpdateSimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
         @Override
         public Map<String, Object> exec() throws GeneralException {
             try {
@@ -152,7 +152,7 @@ public abstract class LocalizedContentServices {
                 content.setNonPKFields(ctx.context(), true); // true because containsKey() logic is used (not null/empty)
                 content.store();
 
-                Map<String, Object> updateCtx = ctx.makeValidInContext("updateSimpleTextContent");
+                Map<String, Object> updateCtx = ctx.makeValidContext("updateSimpleTextContent", "IN");
                 updateCtx.put("textDataResourceId", content.get("dataResourceId"));
                 Map<String, Object> updateResult = ctx.dispatcher().runSync("updateSimpleTextContent", updateCtx);
                 if (!ServiceUtil.isSuccess(updateResult)) {
@@ -165,7 +165,7 @@ public abstract class LocalizedContentServices {
         }
     }
 
-    public static class DeleteSimpleTextContentForAlternateLocale extends ServiceHandler.Local implements ServiceHandler.Exec {
+    public static class DeleteSimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
         @Override
         public Map<String, Object> exec() throws GeneralException {
             try {
@@ -177,7 +177,7 @@ public abstract class LocalizedContentServices {
                     return ServiceUtil.returnError(errMsg);
                 }
 
-                Map<String, Object> removeCtx = ctx.makeValidInContext("removeContentAndRelated");
+                Map<String, Object> removeCtx = ctx.makeValidContext("removeContentAndRelated", "IN");
                 Map<String, Object> removeResult = ctx.dispatcher().runSync("removeContentAndRelated", removeCtx);
                 if (!ServiceUtil.isSuccess(removeResult)) {
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(removeResult));
@@ -189,7 +189,7 @@ public abstract class LocalizedContentServices {
         }
     }
 
-    public static class CreateUpdateSimpleTextContentForAlternateLocale extends ServiceHandler.Local implements ServiceHandler.Exec {
+    public static class CreateUpdateSimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
         protected String mainContentId;
         protected boolean createMainContent;
         protected String contentId;
@@ -207,31 +207,31 @@ public abstract class LocalizedContentServices {
         public Map<String, Object> exec() throws GeneralException {
             try {
                 if (UtilValidate.isNotEmpty(contentId)) {
-                    Map<String, Object> updateCtx = ctx.makeValidInContext("updateSimpleTextContentForAlternateLocale");
+                    Map<String, Object> updateCtx = ctx.makeValidContext("updateSimpleTextContentForAlternateLocale", "IN");
                     Map<String, Object> updateResult = ctx.dispatcher().runSync("updateSimpleTextContentForAlternateLocale", updateCtx);
                     if (!ServiceUtil.isSuccess(updateResult)) {
-                        return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateResult)));
+                        return populateResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateResult)));
                     }
-                    return populateServiceResult(ServiceUtil.returnSuccess());
+                    return populateResult(ServiceUtil.returnSuccess());
                 } else {
                     GenericValue mainContent = (mainContentId != null) ? ctx.delegator().from("Content").where("contentId", mainContentId).queryOne() : null;
                     if (mainContent == null) {
                         if (!createMainContent) {
                             String errMsg = UtilProperties.getMessage("ContentUiLabels", "ContentNoContentFound",
                                     UtilMisc.toMap("contentId", mainContentId), ctx.locale());
-                            return populateServiceResult(ServiceUtil.returnError(errMsg));
+                            return populateResult(ServiceUtil.returnError(errMsg));
                         }
-                        Map<String, Object> createMainContentCtx = ctx.makeValidInContext("createSimpleTextContent");
+                        Map<String, Object> createMainContentCtx = ctx.makeValidContext("createSimpleTextContent", "IN");
                         Map<String, Object> createMainContentResult = ctx.dispatcher().runSync("createSimpleTextContent", createMainContentCtx);
                         mainContentId = (String) createMainContentResult.get("contentId");
                         if (!ServiceUtil.isSuccess(createMainContentResult) || UtilValidate.isEmpty(mainContentId)) {
-                            return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(createMainContentResult)));
+                            return populateResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(createMainContentResult)));
                         }
                         mainContent = ctx.delegator().from("Content").where("contentId", mainContentId).queryOne();
                         if (mainContent == null) {
                             String errMsg = UtilProperties.getMessage("ContentUiLabels", "ContentNoContentFound",
                                     UtilMisc.toMap("contentId", mainContentId), ctx.locale());
-                            return populateServiceResult(ServiceUtil.returnError(errMsg));
+                            return populateResult(ServiceUtil.returnError(errMsg));
                         }
                     }
 
@@ -242,9 +242,9 @@ public abstract class LocalizedContentServices {
                         updateCtx.put("textDataResourceId", mainContent.get("dataResourceId"));
                         Map<String, Object> updateResult = ctx.dispatcher().runSync("updateSimpleTextContent", updateCtx);
                         if (!ServiceUtil.isSuccess(updateResult)) {
-                            return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateResult)));
+                            return populateResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateResult)));
                         }
-                        return populateServiceResult(ServiceUtil.returnSuccess());
+                        return populateResult(ServiceUtil.returnSuccess());
                     } else {
                         List<GenericValue> contentAssocList = ctx.delegator().from("ContentAssoc").where("contentId", mainContentId,
                                 "contentAssocTypeId", "ALTERNATE_LOCALE").filterByDate().queryList();
@@ -263,7 +263,7 @@ public abstract class LocalizedContentServices {
                                     updateTextCtx.put("textDataResourceId", toContent.get("dataResourceId"));
                                     Map<String, Object> updateTextResult = ctx.dispatcher().runSync("updateSimpleTextContent", updateTextCtx);
                                     if (!ServiceUtil.isSuccess(updateTextResult)) {
-                                        return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateTextResult)));
+                                        return populateResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(updateTextResult)));
                                     }
                                     break;
                                 }
@@ -271,23 +271,23 @@ public abstract class LocalizedContentServices {
                         }
 
                         if (!localeFound) {
-                            Map<String, Object> createCtx = ctx.makeValidInContext("createSimpleTextContentForAlternateLocale");
+                            Map<String, Object> createCtx = ctx.makeValidContext("createSimpleTextContentForAlternateLocale", "IN");
                             Map<String, Object> createResult = ctx.dispatcher().runSync("createSimpleTextContentForAlternateLocale", createCtx);
                             if (!ServiceUtil.isSuccess(createResult)) {
-                                return populateServiceResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(createResult)));
+                                return populateResult(ServiceUtil.returnError(ServiceUtil.getErrorMessage(createResult)));
                             }
                             contentId = (String) createResult.get("contentId");
-                            return populateServiceResult(ServiceUtil.returnSuccess());
+                            return populateResult(ServiceUtil.returnSuccess());
                         }
-                        return populateServiceResult(ServiceUtil.returnSuccess());
+                        return populateResult(ServiceUtil.returnSuccess());
                     }
                 }
             } catch (GeneralException e) {
-                return populateServiceResult(ServiceUtil.returnError(e.toString()));
+                return populateResult(ServiceUtil.returnError(e.toString()));
             }
         }
 
-        protected Map<String, Object> populateServiceResult(Map<String, Object> result, Object... keyValuePairs) {
+        protected Map<String, Object> populateResult(Map<String, Object> result, Object... keyValuePairs) {
             result.put("mainContentId", mainContentId);
             result.put("contentId", contentId);
             return UtilMisc.put(result, keyValuePairs);

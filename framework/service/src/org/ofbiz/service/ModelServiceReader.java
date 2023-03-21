@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,13 +37,18 @@ import javax.xml.parsers.ParserConfigurationException;
 import com.ilscipio.scipio.ce.base.component.ComponentReflectInfo;
 import com.ilscipio.scipio.ce.base.metrics.def.Metric;
 import com.ilscipio.scipio.service.def.Attribute;
+import com.ilscipio.scipio.service.def.AttributeList;
 import com.ilscipio.scipio.service.def.EntityAttributes;
+import com.ilscipio.scipio.service.def.EntityAttributesList;
 import com.ilscipio.scipio.service.def.Implements;
 import com.ilscipio.scipio.service.def.OverrideAttribute;
+import com.ilscipio.scipio.service.def.OverrideAttributeList;
 import com.ilscipio.scipio.service.def.Permission;
 import com.ilscipio.scipio.service.def.PermissionService;
 import com.ilscipio.scipio.service.def.Permissions;
+import com.ilscipio.scipio.service.def.PermissionsList;
 import com.ilscipio.scipio.service.def.Property;
+import com.ilscipio.scipio.service.def.PropertyList;
 import com.ilscipio.scipio.service.def.Service;
 import com.ilscipio.scipio.service.def.TypeValidate;
 import org.ofbiz.base.config.GenericConfigException;
@@ -571,9 +577,15 @@ public class ModelServiceReader implements Serializable {
         this.createOverrideDefs(serviceClass, serviceMethod, serviceDef, service);
         this.createDeprecated(serviceClass, serviceMethod, serviceDef, service);
         this.createProperties(serviceClass, serviceMethod, serviceDef, service); // SCIPIO: 2018-11-23
+
         // Get metrics.
         if (serviceDef.metrics().length > 0) {
             service.metrics = MetricsFactory.getInstance(serviceDef.metrics()[0]);
+        } else {
+            Metric metric = (serviceMethod != null) ? serviceMethod.getAnnotation(Metric.class) : serviceClass.getAnnotation(Metric.class);
+            if (metric != null) {
+                service.metrics = MetricsFactory.getInstance(metric);
+            }
         }
 
         // SCIPIO
@@ -707,13 +719,16 @@ public class ModelServiceReader implements Serializable {
     }
 
     private void createPermission(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService model) {
+        PermissionService permissionService = (serviceMethod != null) ? serviceMethod.getAnnotation(PermissionService.class) : serviceClass.getAnnotation(PermissionService.class);
         if (serviceDef.permissionService().length > 0) {
             if (serviceDef.permissionService().length > 1) {
                 Debug.logError("Annotated @Service [" + model.name + "] has more than one permissionService() " +
                                 "element; using first one only; please use permissions() (@Permissions) annotations " +
                                 "with appropriate joinType() instead", module);
             }
-            PermissionService permissionService = serviceDef.permissionService()[0];
+            permissionService = serviceDef.permissionService()[0];
+        }
+        if (permissionService != null) {
             model.permissionServiceName = permissionService.service();
             model.permissionMainAction = permissionService.mainAction();
             model.permissionResourceDesc = permissionService.resourceDescription();
@@ -731,10 +746,25 @@ public class ModelServiceReader implements Serializable {
     }
 
     private void createPermGroups(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService model) {
-        for (Permissions permissionsDef : serviceDef.permissions()) {
+        List<Permissions> permissions = new ArrayList<>(Arrays.asList(serviceDef.permissions()));
+        // Add in the defined attributes (override the above defaults if specified)
+        PermissionsList permissionsList = (serviceMethod != null) ? serviceMethod.getAnnotation(PermissionsList.class) : serviceClass.getAnnotation(PermissionsList.class);
+        if (permissionsList != null) {
+            permissions.addAll(Arrays.asList(permissionsList.value()));
+        }
+        for (Permissions permissionsDef : permissions) {
             ModelPermGroup group = new ModelPermGroup();
             group.joinType = permissionsDef.joinType();
             createGroupPermissions(serviceClass, serviceMethod, serviceDef, permissionsDef, group, model);
+            model.permissionGroups.add(group);
+        }
+
+        // TODO: PermissionList (doesn't exist because PermissionServiceList also does not yet work and joinType becomes too implicit)
+        Permission singlePermission = (serviceMethod != null) ? serviceMethod.getAnnotation(Permission.class) : serviceClass.getAnnotation(Permission.class);
+        if (singlePermission != null) {
+            ModelPermGroup group = new ModelPermGroup();
+            group.joinType = "";
+            createSimpleGroupPermissions(serviceClass, serviceMethod, serviceDef, singlePermission, group, model);
             model.permissionGroups.add(group);
         }
     }
@@ -775,6 +805,25 @@ public class ModelServiceReader implements Serializable {
                 group.permissions.add(perm);
             }
         }
+        if (group.permissions instanceof ArrayList) { // SCIPIO
+            ((ArrayList<ModelPermission>) group.permissions).trimToSize();
+        }
+    }
+
+    private void createSimpleGroupPermissions(Class<?> serviceClass, Method serviceMethod, Service serviceDef, Permission permissionDef,
+                                        ModelPermGroup group, ModelService service) {
+        // create the simple permissions
+        ModelPermission perm = new ModelPermission();
+        perm.nameOrRole = permissionDef.permission();
+        perm.action = permissionDef.action();
+        if (UtilValidate.isNotEmpty(perm.action)) {
+            perm.permissionType = ModelPermission.ENTITY_PERMISSION;
+        } else {
+            perm.permissionType = ModelPermission.PERMISSION;
+        }
+        perm.serviceModel = service;
+        group.permissions.add(perm);
+
         if (group.permissions instanceof ArrayList) { // SCIPIO
             ((ArrayList<ModelPermission>) group.permissions).trimToSize();
         }
@@ -868,7 +917,13 @@ public class ModelServiceReader implements Serializable {
     }
 
     private void createAutoAttrDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
-        for (EntityAttributes entityAttributesDef : serviceDef.entityAttributes()) {
+        List<EntityAttributes> entityAttributes = new ArrayList<>(Arrays.asList(serviceDef.entityAttributes()));
+        // Add in the defined attributes (override the above defaults if specified)
+        EntityAttributesList entityAttributesList = (serviceMethod != null) ? serviceMethod.getAnnotation(EntityAttributesList.class) : serviceClass.getAnnotation(EntityAttributesList.class);
+        if (entityAttributesList != null) {
+            entityAttributes.addAll(Arrays.asList(entityAttributesList.value()));
+        }
+        for (EntityAttributes entityAttributesDef : entityAttributes) {
             createAutoAttrDef(serviceClass, serviceMethod, serviceDef, entityAttributesDef, service);
         }
     }
@@ -1099,8 +1154,13 @@ public class ModelServiceReader implements Serializable {
     }
 
     private void createAttrDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
+        List<Attribute> attributes = new ArrayList<>(Arrays.asList(serviceDef.attributes()));
         // Add in the defined attributes (override the above defaults if specified)
-        for (Attribute attributeDef : serviceDef.attributes()) {
+        AttributeList attributeList = (serviceMethod != null) ? serviceMethod.getAnnotation(AttributeList.class) : serviceClass.getAnnotation(AttributeList.class);
+        if (attributeList != null) {
+            attributes.addAll(Arrays.asList(attributeList.value()));
+        }
+        for (Attribute attributeDef : attributes) {
             ModelParam param = new ModelParam();
 
             param.name = attributeDef.name();
@@ -1337,7 +1397,13 @@ public class ModelServiceReader implements Serializable {
     }
 
     private void createOverrideDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
-        for (OverrideAttribute overrideAttributeDef : serviceDef.overrideAttributes()) {
+        List<OverrideAttribute> overrideAttributes = new ArrayList<>(Arrays.asList(serviceDef.overrideAttributes()));
+        // Add in the defined attributes (override the above defaults if specified)
+        OverrideAttributeList overrideAttributeList = (serviceMethod != null) ? serviceMethod.getAnnotation(OverrideAttributeList.class) : serviceClass.getAnnotation(OverrideAttributeList.class);
+        if (overrideAttributeList != null) {
+            overrideAttributes.addAll(Arrays.asList(overrideAttributeList.value()));
+        }
+        for (OverrideAttribute overrideAttributeDef : overrideAttributes) {
             String name = UtilXml.checkEmpty(overrideAttributeDef.name());
             ModelParam param = service.getParam(name);
             boolean directToParams = true;
@@ -1461,9 +1527,15 @@ public class ModelServiceReader implements Serializable {
     }
 
     private void createProperties(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
-        if (serviceDef.properties().length > 0) {
+        List<Property> propertiesAll = new ArrayList<>(Arrays.asList(serviceDef.properties()));
+        // Add in the defined attributes (override the above defaults if specified)
+        PropertyList propertyList = (serviceMethod != null) ? serviceMethod.getAnnotation(PropertyList.class) : serviceClass.getAnnotation(PropertyList.class);
+        if (propertyList != null) {
+            propertiesAll.addAll(Arrays.asList(propertyList.value()));
+        }
+        if (propertiesAll.size() > 0) {
             Map<String, Object> properties = new LinkedHashMap<>();
-            for(Property propertyDef : serviceDef.properties()) {
+            for (Property propertyDef : propertiesAll) {
                 String name = propertyDef.name();
                 String type = propertyDef.type();
                 String valueStr = propertyDef.value();

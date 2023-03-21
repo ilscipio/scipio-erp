@@ -38,13 +38,13 @@ public abstract class ServiceTestServices {
         return result;
     }
 
-    @Service(
-            attributes = {
-                    @Attribute(name = "param1", type = "String", mode = "IN", defaultValue = "test value 1", optional = "true"),
-                    @Attribute(name = "param2", type = "String", mode = "IN", defaultValue = "test value 2", optional = "true"),
-                    @Attribute(name = "result1", type = "String", mode = "OUT", optional = "true")
-            }
-    )
+    // Shorthand version
+    @Service
+    @Attribute(name = "param1", type = "String", mode = "IN", defaultValue = "test value 1", optional = "true")
+    @Attribute(name = "param2", type = "String", mode = "IN", defaultValue = "test value 2", optional = "true")
+    @Attribute(name = "result1", type = "String", mode = "OUT", optional = "true")
+    @PermissionService(service = "commonGenericPermission", mainAction = "UPDATE")
+    @Permission(permission = "ENTITYMAINT")
     public static class ServiceAnnotationsTest2 extends ServiceHandler.LocalExec {
         @Override
         public Map<String, Object> exec() {
@@ -66,6 +66,21 @@ public abstract class ServiceTestServices {
     )
     public static Map<String, Object> serviceAnnotationsTest3(ServiceContext ctx) {
         Debug.logInfo("serviceAnnotationsTest3: input: " + ctx.context(), module);
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        result.put("result1", "test result value 1");
+        return result;
+    }
+
+    // NOTE: @Permissions is required when you need to specify a joinType or multiple services
+    @Service(auth = "true")
+    @Implements(service = "serviceAnnotationsTest1")
+    @Attribute(name = "param2b", type = "String", mode = "IN", defaultValue = "test value 2b", optional = "true")
+    @Permissions(joinType = "AND",
+            permissions = { @Permission(permission = "OFBTOOLS", action = "_VIEW"),
+                            @Permission(permission = "ENTITY_MAINT") },
+            services = { @PermissionService(service = "commonGenericPermission", mainAction = "UPDATE") })
+    public static Map<String, Object> serviceAnnotationsTest3b(ServiceContext ctx) {
+        Debug.logInfo("serviceAnnotationsTest3b: input: " + ctx.context(), module);
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("result1", "test result value 1");
         return result;

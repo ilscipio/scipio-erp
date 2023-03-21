@@ -45,21 +45,29 @@ public @interface Service {
 
     /**
      * Implemented service interfaces.
+     *
+     * <p>May also be specified by repeatable {@link Implements} annotations on @Service.</p>
      */
     Implements[] implemented() default {};
 
     /**
      * Service auto-attributes from entity fields.
+     *
+     * <p>May also be specified by repeatable {@link EntityAttributes} annotations on @Service.</p>
      */
     EntityAttributes[] entityAttributes() default {};
 
     /**
      * Service attributes.
+     *
+     * <p>May also be specified by repeatable {@link Attribute} annotations on @Service.</p>
      */
     Attribute[] attributes() default {};
 
     /**
      * Override attributes.
+     *
+     * <p>May also be specified by repeatable {@link OverrideAttribute} annotations on @Service.</p>
      */
     OverrideAttribute[] overrideAttributes() default {};
 
@@ -69,22 +77,38 @@ public @interface Service {
      */
     String auth() default "false";
 
+    // TODO?: Needed to support multiple @Permission/@PermissionService elements, for now problematic
+//    /**
+//     * Default permission join-type used for the implicit {@link Permissions} permission-group
+//     * when repeated {@link Permission} and {@link PermissionService} annotations are used instead of
+//     * {@link #permissions()} list or single explicit {@link Permissions} element; "AND" or "OR", default "OR".
+//     */
+//    String permJoinType() default "";
+
     /**
      * Single permissions service (legacy/convenience).
      *
-     * <p>NOTE: If more than one passed, an exception will be thrown. For enhanced control, use {@link #permissions()}.</p>
+     * <p>NOTE: If more than one passed, an exception will be thrown. For enhanced control, use {@link #permissions()}
+     * or {@link Permissions}.</p>
+     *
+     * <p>May also be specified by a single {@link PermissionService} annotation on @Service.</p>
      */
     PermissionService[] permissionService() default {};
 
     /**
      * Single permission (legacy/convenience).
      *
-     * <p>NOTE: If more than one passed, an exception will be thrown. For enhanced control, use {@link #permissions()}.</p>
+     * <p>NOTE: If more than one passed, an exception will be thrown. For enhanced control, use {@link #permissions()}
+     * or {@link Permissions}.</p>
+     *
+     * <p>May also be specified by a single {@link Permission} annotation on @Service.</p>
      */
     Permission[] permission() default {};
 
     /**
      * Required permissions, with operator support.
+     *
+     * <p>May also be specified by repeatable {@link Permissions} annotations on @Service.</p>
      */
     Permissions[] permissions() default {};
 
@@ -252,8 +276,18 @@ public @interface Service {
 
     String namespacePrefix() default "";
 
+    /**
+     * Metrics.
+     *
+     * <p>May also be specified by a single {@link Metric} annotation on @Service.</p>
+     */
     Metric[] metrics() default {};
 
+    /**
+     * Static service properties.
+     *
+     * <p>May also be specified by repeatable {@link Property} annotations on @Service.</p>
+     */
     Property[] properties() default {};
 
 }

@@ -1,5 +1,8 @@
 package com.ilscipio.scipio.ce.base.metrics.def;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * Metric configuration.
  * <p>Calculate and maintain a moving average response time for a Request or Event. Request Metrics can be used for
@@ -8,6 +11,7 @@ package com.ilscipio.scipio.ce.base.metrics.def;
  * <p>The metric works by gathering statistics until a configurable maximum is reached (number of requests or elapsed
  * time), then the average is calculated. A smoothing factor is used to smooth differences between calculations.</p>
  */
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Metric {
 
     /**

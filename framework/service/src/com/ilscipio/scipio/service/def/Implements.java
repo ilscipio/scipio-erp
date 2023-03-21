@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.service.def;
 
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -9,6 +10,7 @@ import java.lang.annotation.RetentionPolicy;
  * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
  */
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(ImplementsList.class)
 public @interface Implements {
 
     /**

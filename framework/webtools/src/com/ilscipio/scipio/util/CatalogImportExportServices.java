@@ -1,16 +1,25 @@
 package com.ilscipio.scipio.util;
 
+
+import org.apache.commons.text.StringSubstitutor;
+import org.apache.http.util.EntityUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.ofbiz.base.util.*;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.common.preferences.PreferenceWorker;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityFieldValue;
+import org.ofbiz.entity.jdbc.DatabaseUtil;
 import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelFieldType;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.*;
 import org.apache.poi.ss.usermodel.*;
 
@@ -197,6 +206,12 @@ public class CatalogImportExportServices {
                                         //fetch existing entity value
                                         if (UtilValidate.isNotEmpty(entityName)) {
 
+                                            //enrich context with all column values
+                                            headerInfo.forEach((index,hip) -> {
+                                                Object value = row.getCell(index);
+                                                entityProps.put((String) hip.get("name"),value);
+                                            });
+
                                             serviceContext.forEach((key, value) -> {
                                                 if (UtilValidate.isNotEmpty(value)) {
                                                     entityProps.put(key, value);
@@ -204,8 +219,19 @@ public class CatalogImportExportServices {
                                             });
 
                                             Map<String, Object> targetEntityFields = entityFields; // final field kludge
+                                            ModelEntity myLookupModel = delegator.getModelEntity(entityName);
                                             entityParameters.forEach((key, value) -> {
-                                                targetEntityFields.put(key, substituteVariables(value, entityProps));
+                                                if(myLookupModel!=null && myLookupModel.getField(key)!=null){
+                                                    try {
+                                                        String fieldType = myLookupModel.getField(key).getType();
+                                                        ModelFieldType modelFieldType = delegator.getEntityFieldType(myLookupModel,fieldType);
+                                                        Object substitutedValue = substituteVariables(value, entityProps);
+                                                        Object typeCastObject = ObjectType.simpleTypeConvert(substitutedValue, modelFieldType.getJavaType(), null, locale);
+                                                        targetEntityFields.put(key, typeCastObject);
+                                                    }catch (Exception e){
+                                                        Debug.logWarning("Error while typecasting field "+ key,module);
+                                                    }
+                                                }
                                             });
 
                                             String serviceName = updateService;
@@ -219,7 +245,7 @@ public class CatalogImportExportServices {
                                                         EntityCondition.makeCondition(entityFields)
                                                 );
 
-                                                ModelEntity myLookupModel = delegator.getModelEntity(entityName);
+
 
                                                 if (myLookupModel.getField("thruDate") != null) {
                                                     condition = EntityCondition.append(condition, EntityUtil.getFilterByDateExpr());
@@ -329,11 +355,10 @@ public class CatalogImportExportServices {
                                                             entityName + "." + fieldName + "]", module);
                                                 }
                                                 try {
-                                                    GenericValue origEntry = results.get(0);
-                                                    if (!origEntry.get(fieldName).equals(cellValue)) {
-                                                        origEntry.set(fieldName, cellValue);
-                                                        origEntry.createOrStore();
-                                                    }
+                                                    targetEntityFields.put(fieldName, cellValue);
+                                                    GenericValue rec = delegator.makeValidValue(entityName, targetEntityFields, new GenericEntity.SetOptions().typeConvert(true));
+                                                    rec.createOrStore();
+
                                                 } catch (GenericEntityException e) {
                                                     throw new GenericEntityException("Could not create or store entity value for fieldName [" + fieldName + "]: " + e.getMessage(), e);
                                                 }

@@ -623,7 +623,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
         }
 
         public Boolean simpleTypeConvert() {
-            return stringConvert;
+            return simpleTypeConvert;
         }
 
         /**

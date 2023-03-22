@@ -664,14 +664,19 @@ public class GenericDelegator implements Delegator {
      * @see org.ofbiz.entity.Delegator#makeValidValue(java.lang.String, java.util.Map)
      */
     @Override
-    public GenericValue makeValidValue(String entityName, Map<String, ? extends Object> fields) {
+    public GenericValue makeValidValue(String entityName, Map<String, ?> fields) {
+        return makeValidValue(entityName, fields, null);
+    }
+
+    @Override
+    public GenericValue makeValidValue(String entityName, Map<String, ?> fields, GenericEntity.SetOptions options) { // SCIPIO: 3.0.0: Added overload
         ModelEntity entity = this.getModelEntity(entityName);
         if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.makeValidValue] could not find entity for entityName: " + entityName);
         }
         GenericValue value = GenericValue.create(entity);
         value.setDelegator(this);
-        value.setAllFields(fields, true, null, null);
+        value.setAllFields(fields, true, null, null, options);
         return value;
     }
 

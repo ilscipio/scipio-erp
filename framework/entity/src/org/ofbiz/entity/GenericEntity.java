@@ -66,6 +66,13 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
     public static final GenericEntity NULL_ENTITY = new NullGenericEntity();
     public static final NullField NULL_FIELD = new NullField();
 
+    /**
+     * Singleton used internally when returning void/no-set/cancel.
+     *
+     * <p>SCIPIO: 3.0.0: Added for {@link #setString}.</p>
+     */
+    protected static final NullField NO_VALUE = new NullField();
+
     // Do not restore observers during deserialization. Instead, client code must add observers.
     private transient Observable observable = new Observable();
 
@@ -124,7 +131,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
     }
 
     /** Creates new GenericEntity from existing Map */
-    public static GenericEntity createGenericEntity(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fields) {
+    public static GenericEntity createGenericEntity(Delegator delegator, ModelEntity modelEntity, Map<String, ?> fields) {
         if (modelEntity == null) {
             throw new IllegalArgumentException("Cannot create a GenericEntity with a null modelEntity parameter");
         }
@@ -178,7 +185,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
     }
 
     /** Creates new GenericEntity from existing Map */
-    protected void init(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fields, Object fieldNames) {
+    protected void init(Delegator delegator, ModelEntity modelEntity, Map<String, ?> fields, Object fieldNames) {
         assertIsMutable();
         if (modelEntity == null) {
             throw new IllegalArgumentException("Cannot create a GenericEntity with a null modelEntity parameter");
@@ -227,7 +234,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
     }
 
     /** Creates new GenericEntity from existing Map */
-    protected void init(Delegator delegator, ModelEntity modelEntity, Map<String, ? extends Object> fields) {
+    protected void init(Delegator delegator, ModelEntity modelEntity, Map<String, ?> fields) {
         init(delegator, modelEntity, fields, null); // SCIPIO: delegating
     }
 
@@ -550,6 +557,102 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
         return getShortPk();
     }
 
+    /**
+     * Options for {@link #set}, {@link #setAllFields}, {@link #setNonPKFields}, {@link #setPKFields}.
+     *
+     * <p>SCIPIO: 3.0.0: Added for enhanced API.</p>
+     */
+    public static class SetOptions implements Serializable {
+        public static final SetOptions DEFAULT = new SetOptions(); // read-only
+        public static final SetOptions TYPE_CONVERT = new SetOptions().typeConvert(true); // read-only
+
+        protected Boolean setIfNull;
+        protected Boolean setIfEmpty;
+        protected Boolean typeConvert;
+        protected Boolean stringConvert;
+        protected Boolean simpleTypeConvert;
+        protected Locale locale;
+        protected TimeZone timeZone;
+
+        public Boolean setIfNull() {
+            return setIfNull;
+        }
+
+        /**
+         * Set-if-null logic, default true.
+         */
+        public SetOptions setIfNull(Boolean setIfNull) {
+            this.setIfNull = setIfNull;
+            return this;
+        }
+
+        public Boolean setIfEmpty() {
+            return setIfEmpty;
+        }
+
+        /**
+         * Set-if-empty logic, default true (becomes null).
+         */
+        public SetOptions setIfEmpty(Boolean setIfEmpty) {
+            this.setIfEmpty = setIfEmpty;
+            return this;
+        }
+
+        public Boolean typeConvert() {
+            return typeConvert;
+        }
+
+        /**
+         * Use {@link #setString(String, String)} or {@link ObjectType#simpleTypeConvert} logic, as appropriate.
+         */
+        public SetOptions typeConvert(Boolean typeConvert) {
+            this.typeConvert = typeConvert;
+            return this;
+        }
+
+        public Boolean stringConvert() {
+            return stringConvert;
+        }
+
+        /**
+         * Use {@link #setString(String, String)} logic - only - non-strings are ignored and expected to be in the right type.
+         */
+        public SetOptions stringConvert(Boolean stringConvert) {
+            this.stringConvert = stringConvert;
+            return this;
+        }
+
+        public Boolean simpleTypeConvert() {
+            return stringConvert;
+        }
+
+        /**
+         * Use {@link #setString(String, String)} logic - only - non-strings are ignored and expected to be in the right type.
+         */
+        public SetOptions simpleTypeConvert(Boolean simpleTypeConvert) {
+            this.simpleTypeConvert = simpleTypeConvert;
+            return this;
+        }
+
+        public Locale locale() {
+            return locale;
+        }
+
+        public SetOptions locale(Locale locale) {
+            this.locale = locale;
+            return this;
+        }
+
+        public TimeZone timeZone() {
+            return timeZone;
+        }
+
+        public SetOptions timeZone(TimeZone timeZone) {
+            this.timeZone = timeZone;
+            return this;
+        }
+    }
+
     /** Sets the named field to the passed value, even if the value is null
      * @param name The field name to set
      * @param value The value to set
@@ -558,33 +661,90 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
         set(name, value, true);
     }
 
-    /** Sets the named field to the passed value. If value is null, it is only
-     *  set if the setIfNull parameter is true. This is useful because an update
-     *  will only set values that are included in the HashMap and will store null
-     *  values in the HashMap to the datastore. If a value is not in the HashMap,
-     *  it will be left unmodified in the datastore.
+    /**
+     * Sets the named field to the passed value. If value is null, it is only
+     * set if the setIfNull parameter is true. This is useful because an update
+     * will only set values that are included in the HashMap and will store null
+     * values in the HashMap to the datastore. If a value is not in the HashMap,
+     * it will be left unmodified in the datastore.
+     *
      * @param name The field name to set
      * @param value The value to set
      * @param setIfNull Specifies whether or not to set the value if it is null
      */
     public Object set(String name, Object value, boolean setIfNull) {
+        return set(name, value, setIfNull, null);
+    }
+
+    /**
+     * Sets the named field to the passed value. If value is null, it is only
+     * set if the setIfNull parameter is true. This is useful because an update
+     * will only set values that are included in the HashMap and will store null
+     * values in the HashMap to the datastore. If a value is not in the HashMap,
+     * it will be left unmodified in the datastore.
+     *
+     * <p>SCIPIO: 3.0.0: Now supports {@link SetOptions}.</p>
+     *
+     * @param name The field name to set
+     * @param value The value to set
+     * @param options {@link SetOptions}: set-if-null, type conversion, locale+timeZone
+     */
+    public Object set(String name, Object value, SetOptions options) {
+        return set(name, value, null, options);
+    }
+
+    /**
+     * Sets the named field to the passed value. If value is null, it is only
+     * set if the setIfNull parameter is true. This is useful because an update
+     * will only set values that are included in the HashMap and will store null
+     * values in the HashMap to the datastore. If a value is not in the HashMap,
+     * it will be left unmodified in the datastore.
+     *
+     * <p>SCIPIO: 3.0.0: Now supports {@link SetOptions}.</p>
+     *
+     * @param name The field name to set
+     * @param value The value to set
+     * @param setIfNull Specifies whether or not to set the value if it is null (default: true)
+     * @param options {@link SetOptions}: type conversion, locale+timeZone
+     */
+    public Object set(String name, Object value, Boolean setIfNull, SetOptions options) {
         assertIsMutable();
         clearJsonCache(name); // SCIPIO: 2.1.0: Added
-        ModelField modelField = getModelEntity().getField(name);
-        if (modelField == null) {
+        ModelField field = getModelEntity().getField(name);
+        if (field == null) {
             // SCIPIO: 2018-09-29: Throw more helpful EntityFieldNotFoundException instead
             //throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", must be one of: " + getModelEntity().fieldNameString());
             throw new EntityFieldNotFoundException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", must be one of: " + getModelEntity().fieldNameString());
         }
-        if (value != null || setIfNull) {
+        if (options == null) {
+            options = SetOptions.DEFAULT;
+        }
+        Boolean setIfEmpty = options.setIfEmpty();
+        if (options.setIfNull() != null) {
+            setIfNull = options.setIfNull();
+        } else if (setIfNull == null) {
+            if (setIfEmpty != null) {
+                setIfNull = setIfEmpty;
+            } else {
+                setIfNull = true;
+            }
+        }
+        if (setIfEmpty == null) {
+            setIfEmpty = true;
+        }
+        if (setIfNull && !setIfEmpty) {
+            throw new IllegalArgumentException("makeValid: Illegal argument combination: [setIfNull=" + setIfNull + ", setIfEmpty=" + setIfEmpty + "]");
+        }
+
+        if ((value != null || setIfNull) && (setIfEmpty || (!(value instanceof String) || ((String) value).length() > 0))) {
             ModelFieldType type = null;
             try {
-                type = getDelegator().getEntityFieldType(getModelEntity(), modelField.getType());
+                type = getDelegator().getEntityFieldType(getModelEntity(), field.getType());
             } catch (IllegalStateException | GenericEntityException e) {
                 Debug.logWarning(e, module);
             }
             if (type == null) {
-                throw new IllegalArgumentException("Type " + modelField.getType() + " not found for entity [" + this.getEntityName() + "]; probably because there is no datasource (helper) setup for the entity group that this entity is in: [" + this.getDelegator().getEntityGroupName(this.getEntityName()) + "]");
+                throw new IllegalArgumentException("Type " + field.getType() + " not found for entity [" + this.getEntityName() + "]; probably because there is no datasource (helper) setup for the entity group that this entity is in: [" + this.getDelegator().getEntityGroupName(this.getEntityName()) + "]");
             }
 
             if (value instanceof Boolean) {
@@ -598,6 +758,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
                     throw new IllegalArgumentException(e.getMessage());
                 }
             } else if (value != null && !(value instanceof NULL)) {
+                Boolean sameType = null;
                 // make sure the type matches the field Java type
                 if (value instanceof TimeDuration) {
                     try {
@@ -608,11 +769,40 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
                 } else if ((value instanceof String) && "byte[]".equals(type.getJavaType())) {
                     value = ((String) value).getBytes(UtilIO.getUtf8());
                 }
+
                 if (!ObjectType.instanceOf(value, type.getJavaType())) {
-                    if (!("java.sql.Blob".equals(type.getJavaType()) && (value instanceof byte[] || ObjectType.instanceOf(value, ByteBuffer.class)))) {
-                        String errMsg = "In entity field [" + this.getEntityName() + "." + name + "] set the value passed in [" + value.getClass().getName() + "] is not compatible with the Java type of the field [" + type.getJavaType() + "]";
-                        // eventually we should do this, but for now we'll do a "soft" failure: throw new IllegalArgumentException(errMsg);
-                        Debug.logWarning(new Exception("Location of database type warning"), "=-=-=-=-=-=-=-=-= Database type warning GenericEntity.set =-=-=-=-=-=-=-=-= " + errMsg, module);
+                    // SCIPIO: 3.0.0: Support type conversion
+                    // TODO: REVIEW: For now, the default typeConvert() will use setString logic when String,
+                    //  but this is debatable and maybe someday should be switched to same as simpleTypeConvert() (standardize)
+                    boolean loggedTypeError = false;
+                    if (value instanceof String &&
+                            (Boolean.TRUE.equals(options.typeConvert()) || Boolean.TRUE.equals(options.stringConvert()))) {
+                        Object convValue = stringToValue(field, type, (String) value);
+                        if (convValue != NO_VALUE) {
+                            value = convValue;
+                        }
+                    } else if (Boolean.TRUE.equals(options.typeConvert()) || Boolean.TRUE.equals(options.simpleTypeConvert())) {
+                        // makeValid-style conversion, if it works
+                        try {
+                            // no need to fail on type conversion; the validator will catch this
+                            value = ObjectType.simpleTypeConvert(value, type.getJavaType(), null, options.timeZone(), options.locale(), false);
+                        } catch (GeneralException e) {
+                            // TODO: REVIEW: Just like below in theory this should have been an exception, but
+                            //  this case is also problematic because it did previously not nullify the field
+                            String errMsg = "In entity field [" + this.getEntityName() + "." + name + "] set the value passed in [" + value.getClass().getName() +
+                                    "] is not compatible with the Java type of the field [" + type.getJavaType() + "]: " + e.toString();
+                            Debug.logWarning(errMsg, module);
+                            loggedTypeError = true;
+                        }
+                    }
+                    if (!ObjectType.instanceOf(value, type.getJavaType())) {
+                        if (!("java.sql.Blob".equals(type.getJavaType()) && (value instanceof byte[] || ObjectType.instanceOf(value, ByteBuffer.class)))) {
+                            if (!loggedTypeError) {
+                                String errMsg = "In entity field [" + this.getEntityName() + "." + name + "] set the value passed in [" + value.getClass().getName() + "] is not compatible with the Java type of the field [" + type.getJavaType() + "]";
+                                // eventually we should do this, but for now we'll do a "soft" failure: throw new IllegalArgumentException(errMsg);
+                                Debug.logWarning(new Exception("Location of database type warning"), "=-=-=-=-=-=-=-=-= Database type warning GenericEntity.set =-=-=-=-=-=-=-=-= " + errMsg, module);
+                            }
+                        }
                     }
                 }
             }
@@ -654,12 +844,6 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
             return;
         }
 
-        boolean isNullString = false;
-        if ("null".equals(value) || "[null-field]".equals(value)) { // keep [null-field] but it'not used now
-            // count this as a null too, but only for numbers and stuff, not for Strings
-            isNullString = true;
-        }
-
         ModelField field = getModelEntity().getField(name);
         if (field == null)
          {
@@ -677,72 +861,65 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
         if (type == null) {
             throw new IllegalArgumentException("Type " + field.getType() + " not found");
         }
-        String fieldType = type.getJavaType();
 
+        Object targetValue = stringToValue(field, type, value);
+        if (targetValue != NO_VALUE) {
+            set(name, targetValue);
+        }
+    }
+
+    /**
+     * Uses legacy {@link #setString} logic to set field from String (specifically).
+     *
+     * <p>SCIPIO: 3.0.0: Refactored from {@link #setString(String, String)}.</p>
+     */
+    protected Object stringToValue(ModelField field, ModelFieldType type, String value) {
+        boolean isNullString = false;
+        if ("null".equals(value) || "[null-field]".equals(value)) { // keep [null-field] but it'not used now
+            // count this as a null too, but only for numbers and stuff, not for Strings
+            isNullString = true;
+        }
+
+        String fieldType = type.getJavaType();
         try {
             switch (SqlJdbcUtil.getType(fieldType)) {
-            case 1:
-                set(name, value);
-                break;
-
-            case 2:
-                set(name, isNullString ? null : java.sql.Timestamp.valueOf(value));
-                break;
-
-            case 3:
-                set(name, isNullString ? null : java.sql.Time.valueOf(value));
-                break;
-
-            case 4:
-                set(name, isNullString ? null : java.sql.Date.valueOf(value));
-                break;
-
-            case 5:
-                set(name, isNullString ? null : Integer.valueOf(value));
-                break;
-
-            case 6:
-                set(name, isNullString ? null : Long.valueOf(value));
-                break;
-
-            case 7:
-                set(name, isNullString ? null : Float.valueOf(value));
-                break;
-
-            case 8:
-                set(name, isNullString ? null : Double.valueOf(value));
-                break;
-
-            case 9: // BigDecimal
-                set(name, isNullString ? null : new BigDecimal(value));
-                break;
-
-            case 10:
-                set(name, isNullString ? null : Boolean.valueOf(value));
-                break;
-
-            case 11: // Object
-                set(name, value);
-                break;
-
-            case 12: // java.sql.Blob
-                // TODO: any better way to handle Blob from String?
-                set(name, value);
-                break;
-
-            case 13: // java.sql.Clob
-                // TODO: any better way to handle Clob from String?
-                set(name, value);
-                break;
-
-            case 14: // java.util.Date
-                set(name, UtilDateTime.toDate(value));
-                break;
-
-            case 15: // java.util.Collection
-                // TODO: how to convert from String to Collection? ie what should the default behavior be?
-                set(name, value);
-                break;
+                case 1:
+                    return value;
+                case 2:
+                    return isNullString ? null : java.sql.Timestamp.valueOf(value);
+                case 3:
+                    return isNullString ? null : java.sql.Time.valueOf(value);
+                case 4:
+                    return isNullString ? null : java.sql.Date.valueOf(value);
+                case 5:
+                    return isNullString ? null : Integer.valueOf(value);
+                case 6:
+                    return isNullString ? null : Long.valueOf(value);
+                case 7:
+                    return isNullString ? null : Float.valueOf(value);
+                case 8:
+                    return isNullString ? null : Double.valueOf(value);
+                case 9: // BigDecimal
+                    return isNullString ? null : new BigDecimal(value);
+                case 10:
+                    return isNullString ? null : Boolean.valueOf(value);
+                case 11: // Object
+                    return value;
+                case 12: // java.sql.Blob
+                    // TODO: any better way to handle Blob from String?
+                    return value;
+                case 13: // java.sql.Clob
+                    // TODO: any better way to handle Clob from String?
+                    return value;
+                case 14: // java.util.Date
+                    return UtilDateTime.toDate(value);
+                case 15: // java.util.Collection
+                    // TODO: how to convert from String to Collection? ie what should the default behavior be?
+                    return value;
+                default:
+                    return NO_VALUE;
+                    // TODO: REVIEW: Legacy code simply did no set() call here, so just return NO_VALUE
+                    //throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
             }
         } catch (GenericNotImplementedException ex) {
             throw new IllegalArgumentException(ex.getMessage());
@@ -1439,14 +1616,32 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
     /**
      * Go through the pks and for each one see if there is an entry in fields to set.
      */
-    public void setPKFields(Map<? extends Object, ?> fields) {
+    public void setPKFields(Map<?, ?> fields) {
         setAllFields(fields, true, null, Boolean.TRUE);
     }
 
     /**
      * Go through the pks and for each one see if there is an entry in fields to set.
+     *
+     * <p>SCIPIO: 3.0.0: Added {@link SetOptions} overload.</p>
      */
-    public void setPKFields(Map<? extends Object, ?> fields, boolean setIfEmpty) {
+    public void setPKFields(Map<?, ?> fields, SetOptions options) {
+        setAllFields(fields, null, null, Boolean.TRUE, options);
+    }
+
+    /**
+     * Go through the pks and for each one see if there is an entry in fields to set.
+     *
+     * <p>SCIPIO: 3.0.0: Added namePrefix, {@link SetOptions} overload.</p>
+     */
+    public void setPKFields(Map<?, ?> fields, String namePrefix, SetOptions options) {
+        setAllFields(fields, null, namePrefix, Boolean.TRUE, options);
+    }
+
+    /**
+     * Go through the pks and for each one see if there is an entry in fields to set.
+     */
+    public void setPKFields(Map<?, ?> fields, boolean setIfEmpty) {
         setAllFields(fields, setIfEmpty, null, Boolean.TRUE);
     }
 
@@ -1455,21 +1650,39 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
      *
      * <p>SCIPIO: 3.0.0: Added namePrefix overload.</p>
      */
-    public void setPKFields(Map<? extends Object, ?> fields, boolean setIfEmpty, String namePrefix) {
+    public void setPKFields(Map<?, ?> fields, boolean setIfEmpty, String namePrefix) {
         setAllFields(fields, setIfEmpty, namePrefix, Boolean.TRUE);
     }
 
     /**
      * Go through the non-pks and for each one see if there is an entry in fields to set.
      */
-    public void setNonPKFields(Map<? extends Object, ?> fields) {
+    public void setNonPKFields(Map<?, ?> fields) {
         setAllFields(fields, true, null, Boolean.FALSE);
     }
 
     /**
      * Go through the non-pks and for each one see if there is an entry in fields to set.
+     *
+     * <p>SCIPIO: 3.0.0: Added {@link SetOptions} overload.</p>
      */
-    public void setNonPKFields(Map<? extends Object, ?> fields, boolean setIfEmpty) {
+    public void setNonPKFields(Map<?, ?> fields, SetOptions options) {
+        setAllFields(fields, null, null, Boolean.FALSE, options);
+    }
+
+    /**
+     * Go through the non-pks and for each one see if there is an entry in fields to set.
+     *
+     * <p>SCIPIO: 3.0.0: Added namePrefix, {@link SetOptions} overload.</p>
+     */
+    public void setNonPKFields(Map<?, ?> fields, String namePrefix, SetOptions options) {
+        setAllFields(fields, null, namePrefix, Boolean.FALSE, options);
+    }
+
+    /**
+     * Go through the non-pks and for each one see if there is an entry in fields to set.
+     */
+    public void setNonPKFields(Map<?, ?> fields, boolean setIfEmpty) {
         setAllFields(fields, setIfEmpty, null, Boolean.FALSE);
     }
 
@@ -1478,17 +1691,35 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
      *
      * <p>SCIPIO: 3.0.0: Added namePrefix overload.</p>
      */
-    public void setNonPKFields(Map<? extends Object, ?> fields, boolean setIfEmpty, String namePrefix) {
+    public void setNonPKFields(Map<?, ?> fields, boolean setIfEmpty, String namePrefix) {
         setAllFields(fields, setIfEmpty, namePrefix, Boolean.FALSE);
     }
 
     /** Intelligently sets fields on this entity from the Map of fields passed in (SCIPIO). */
-    public void setAllFields(Map<? extends Object, ?> fields) {
+    public void setAllFields(Map<?, ?> fields) {
         setAllFields(fields, true, null, null);
     }
 
+    /**
+     * Intelligently sets fields on this entity from the Map of fields passed in.
+     *
+     * <p>SCIPIO: 3.0.0: Added {@link SetOptions} overload.</p>
+     */
+    public void setAllFields(Map<?, ?> fields, SetOptions options) {
+        setAllFields(fields, null, null, null, options);
+    }
+
+    /**
+     * Intelligently sets fields on this entity from the Map of fields passed in.
+     *
+     * <p>SCIPIO: 3.0.0: Added {@link SetOptions} overload.</p>
+     */
+    public void setAllFields(Map<?, ?> fields, String namePrefix, SetOptions options) {
+        setAllFields(fields, null, namePrefix, null, options);
+    }
+
     /** Intelligently sets fields on this entity from the Map of fields passed in (SCIPIO). */
-    public void setAllFields(Map<? extends Object, ?> fields, boolean setIfEmpty) {
+    public void setAllFields(Map<?, ?> fields, boolean setIfEmpty) {
         setAllFields(fields, setIfEmpty, null, null);
     }
 
@@ -1501,7 +1732,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
      * @param setIfEmpty Used to specify whether empty/null values in the field Map should over-write non-empty values in this entity
      * @param namePrefix If not null or empty will be pre-pended to each field name (upper-casing the first letter of the field name first), and that will be used as the fields Map lookup name instead of the field-name
      */
-    public void setAllFields(Map<? extends Object, ?> fields, boolean setIfEmpty, String namePrefix) {
+    public void setAllFields(Map<?, ?> fields, boolean setIfEmpty, String namePrefix) {
         setAllFields(fields, setIfEmpty, namePrefix, null);
     }
 
@@ -1513,7 +1744,22 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
      * @param namePrefix If not null or empty will be pre-pended to each field name (upper-casing the first letter of the field name first), and that will be used as the fields Map lookup name instead of the field-name
      * @param pks If null, set all values, if TRUE just set PKs, if FALSE just set non-PKs
      */
-    public void setAllFields(Map<? extends Object, ? extends Object> fields, boolean setIfEmpty, String namePrefix, Boolean pks) {
+    public void setAllFields(Map<?, ?> fields, boolean setIfEmpty, String namePrefix, Boolean pks) {
+        setAllFields(fields, setIfEmpty, namePrefix, pks, null);
+    }
+
+    /**
+     * Intelligently sets fields on this entity from the Map of fields passed in.
+     *
+     * <p>SCIPIO: 3.0.0: Added {@link SetOptions}.</p>
+     *
+     * @param fields The fields Map to get the values from
+     * @param setIfEmpty Used to specify whether empty/null values in the field Map should over-write non-empty values in this entity
+     * @param namePrefix If not null or empty will be pre-pended to each field name (upper-casing the first letter of the field name first), and that will be used as the fields Map lookup name instead of the field-name
+     * @param pks If null, set all values, if TRUE just set PKs, if FALSE just set non-PKs
+     * @param options {@link SetOptions} type conversion; locale and timeZone
+     */
+    public void setAllFields(Map<?, ?> fields, Boolean setIfEmpty, String namePrefix, Boolean pks, SetOptions options) {
         if (fields == null) {
             return;
         }
@@ -1526,6 +1772,12 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
             }
         } else {
             iter = this.getModelEntity().getFieldsIterator();
+        }
+
+        if (options != null && options.setIfEmpty() != null) { // SCIPIO: 3.0.0: Added override
+            setIfEmpty = options.setIfEmpty();
+        } else if (setIfEmpty == null) {
+            setIfEmpty = true;
         }
 
         while (iter != null && iter.hasNext()) {
@@ -1543,10 +1795,10 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
                 if (setIfEmpty) {
                     // if empty string, set to null
-                    if (field != null && field instanceof String && ((String) field).length() == 0) {
-                        this.set(curField.getName(), null);
+                    if (field instanceof String && ((String) field).length() == 0) {
+                        this.set(curField.getName(), null, options);
                     } else {
-                        this.set(curField.getName(), field);
+                        this.set(curField.getName(), field, options);
                     }
                 } else {
                     // okay, only set if not empty...
@@ -1556,10 +1808,10 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
                             String fieldStr = (String) field;
 
                             if (fieldStr.length() > 0) {
-                                this.set(curField.getName(), fieldStr);
+                                this.set(curField.getName(), fieldStr, options);
                             }
                         } else {
-                            this.set(curField.getName(), field);
+                            this.set(curField.getName(), field, options);
                         }
                     }
                 }

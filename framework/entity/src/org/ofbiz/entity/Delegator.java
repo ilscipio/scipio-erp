@@ -842,7 +842,15 @@ public interface Delegator {
      * Creates a Entity in the form of a GenericValue without persisting it;
      * only valid fields will be pulled from the fields Map
      */
-    GenericValue makeValidValue(String entityName, Map<String, ? extends Object> fields);
+    GenericValue makeValidValue(String entityName, Map<String, ?> fields);
+
+    /**
+     * Creates a Entity in the form of a GenericValue without persisting it;
+     * only valid fields will be pulled from the fields Map.
+     *
+     * <p>SCIPIO: 3.0.0: Added overload having {@link GenericEntity.SetOptions}.</p>
+     */
+    GenericValue makeValidValue(String entityName, Map<String, ?> fields, GenericEntity.SetOptions options);
 
     /**
      * Creates a Entity in the form of a GenericValue without persisting it;

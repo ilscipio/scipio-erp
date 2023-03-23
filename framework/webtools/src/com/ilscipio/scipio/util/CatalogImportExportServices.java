@@ -210,6 +210,7 @@ public class CatalogImportExportServices {
                                             headerInfo.forEach((index,hip) -> {
                                                 Object value = row.getCell(index);
                                                 entityProps.put((String) hip.get("name"),value);
+                                                serviceContext.put((String) hip.get("name"),value);
                                             });
 
                                             serviceContext.forEach((key, value) -> {

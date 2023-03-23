@@ -33,6 +33,8 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityUtilProperties;
@@ -233,11 +235,14 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
 
     public static class SingleEntityEcaCondition extends EntityEcaCondition { // TODO: split up into subclasses (inefficient)
         protected String lhsValueName = null;
-        protected String rhsValueName = null;
+        protected FlexibleMapAccessor<Object> lhsContextValueNameExdr = null; // SCIPIO: 3.0.0: Added
+        protected String rhsValue = null;
+        protected FlexibleMapAccessor<Object> rhsValueNameExdr = null; // SCIPIO: 3.0.0: Added
+        protected FlexibleStringExpander rhsValueExdr = null; // SCIPIO: 3.0.0: Added
         protected String operator = null;
         protected String compareType = null;
         protected String format = null;
-        protected boolean constant = false;
+        protected boolean isValue = false;
         protected boolean isService = false;
         protected String conditionService = null;
         protected boolean property = false; // SCIPIO
@@ -245,18 +250,41 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
         protected Set<String> scopes = null; // SCIPIO
         protected String scopeString = null; // SCIPIO
 
-        public SingleEntityEcaCondition(Element condition, boolean constant, boolean isService, boolean property) { // SCIPIO: added property
+        public SingleEntityEcaCondition(Element condition, boolean isValue, boolean isService, boolean property) { // SCIPIO: added property
             if (isService) {
                 this.isService = isService;
                 this.conditionService = condition.getAttribute("service-name");
             } else {
                 this.lhsValueName = condition.getAttribute("field-name");
-                this.constant = constant;
-                if (constant) {
-                    this.rhsValueName = condition.getAttribute("value");
-                } else {
-                    this.rhsValueName = condition.getAttribute("to-field-name");
+                String contextField = condition.getAttribute("context-field");
+                if (UtilValidate.isNotEmpty(contextField)) {
+                    this.lhsContextValueNameExdr = FlexibleMapAccessor.getInstance(contextField);
                 }
+
+                // SCIPIO: 3.0.0: This seems to be pointless; just use present of value vs to-field-name to determine
+                //this.constant = constant;
+                //if (constant) {
+                //    this.rhsValueName = condition.getAttribute("value");
+                //} else {
+                //    this.rhsValueName = condition.getAttribute("to-field-name");
+                //}
+
+                String rhsValue = condition.getAttribute("to-field-name");
+                if (UtilValidate.isNotEmpty(rhsValue)) {
+                    isValue = false;
+                    if (rhsValue.contains(FlexibleStringExpander.openBracket)) {
+                        this.rhsValueNameExdr = FlexibleMapAccessor.getInstance(this.rhsValue);
+                    }
+                } else {
+                    isValue = true;
+                    rhsValue = condition.getAttribute("value");
+                    if (rhsValue.contains(FlexibleStringExpander.openBracket)) {
+                        this.rhsValueExdr = FlexibleStringExpander.getInstance(this.rhsValue);
+                    }
+                }
+                this.isValue = isValue;
+                this.rhsValue = rhsValue;
+
                 this.operator = condition.getAttribute("operator");
                 this.compareType = condition.getAttribute("type");
                 this.format = condition.getAttribute("format");
@@ -280,8 +308,8 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
             }
         }
 
-        public SingleEntityEcaCondition(Element condition, boolean constant, boolean isService) {
-            this(condition, constant, isService, false);
+        public SingleEntityEcaCondition(Element condition, boolean isValue, boolean isService) {
+            this(condition, isValue, isService, false);
         }
 
         @Override
@@ -337,14 +365,26 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
                     }
                 }
             } else {
-                lhsValue = value.get(lhsValueName);
+                if (lhsContextValueNameExdr != null) {
+                    lhsValue = lhsContextValueNameExdr.get(context);
+                } else {
+                    lhsValue = value.get(lhsValueName);
+                }
             }
 
             Object rhsValue;
-            if (constant) {
-                rhsValue = rhsValueName;
+            if (isValue) {
+                if (this.rhsValueExdr != null) {
+                    rhsValue = this.rhsValueExdr.expand(context);
+                } else {
+                    rhsValue = this.rhsValue;
+                }
             } else {
-                rhsValue = value.get(rhsValueName);
+                if (this.rhsValueNameExdr != null) {
+                    rhsValue = this.rhsValueNameExdr.get(context);
+                } else {
+                    rhsValue = value.get(this.rhsValue);
+                }
             }
 
             if (Debug.verboseOn())
@@ -352,7 +392,7 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
 
             // evaluate the condition & invoke the action(s)
             List<Object> messages = new ArrayList<Object>(); // SCIPIO: ArrayList
-            Boolean cond = ObjectType.doRealCompare(lhsValue, rhsValue, operator, compareType, format, messages, null, dctx.getClassLoader(), constant);
+            Boolean cond = ObjectType.doRealCompare(lhsValue, rhsValue, operator, compareType, format, messages, null, dctx.getClassLoader(), isValue);
 
             // if any messages were returned send them out
             if (messages.size() > 0) {
@@ -372,10 +412,10 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
         }
 
         public String getRValue() {
-            if (constant && !rhsValueName.isEmpty()) {
-                return "\"".concat(this.rhsValueName).concat("\"");
+            if (isValue && !rhsValue.isEmpty()) {
+                return "\"".concat(this.rhsValue).concat("\"");
             }
-            return this.rhsValueName;
+            return this.rhsValue;
         }
 
         public String getOperator() {
@@ -389,8 +429,8 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
             if (UtilValidate.isNotEmpty(propertyResource)) buf.append("[").append(propertyResource).append("]");
             if (UtilValidate.isNotEmpty(lhsValueName)) buf.append("[").append(lhsValueName).append("]");
             if (UtilValidate.isNotEmpty(operator)) buf.append("[").append(operator).append("]");
-            if (UtilValidate.isNotEmpty(rhsValueName)) buf.append("[").append(rhsValueName).append("]");
-            if (UtilValidate.isNotEmpty(constant)) buf.append("[").append(constant).append("]");
+            if (UtilValidate.isNotEmpty(rhsValue)) buf.append("[").append(rhsValue).append("]");
+            if (UtilValidate.isNotEmpty(isValue)) buf.append("[").append(isValue).append("]");
             if (UtilValidate.isNotEmpty(compareType)) buf.append("[").append(compareType).append("]");
             if (UtilValidate.isNotEmpty(format)) buf.append("[").append(format).append("]");
             if (UtilValidate.isNotEmpty(scopeString)) buf.append("[").append(scopeString).append("]"); // SCIPIO
@@ -403,8 +443,8 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
             int result = 1;
             result = prime * result + ((lhsValueName == null) ? 0 : lhsValueName.hashCode());
             result = prime * result + ((operator == null) ? 0 : operator.hashCode());
-            result = prime * result + ((rhsValueName == null) ? 0 : rhsValueName.hashCode());
-            result = prime * result + (constant ? 1231 : 1237);
+            result = prime * result + ((rhsValue == null) ? 0 : rhsValue.hashCode());
+            result = prime * result + (isValue ? 1231 : 1237);
             result = prime * result + ((compareType == null) ? 0 : compareType.hashCode());
             result = prime * result + ((format == null) ? 0 : format.hashCode());
             result = prime * result + ((scopeString == null) ? 0 : scopeString.hashCode());
@@ -419,11 +459,11 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
 
                 if (!UtilValidate.areEqual(this.conditionService, other.conditionService)) return false;
                 if (!UtilValidate.areEqual(this.lhsValueName, other.lhsValueName)) return false;
-                if (!UtilValidate.areEqual(this.rhsValueName, other.rhsValueName)) return false;
+                if (!UtilValidate.areEqual(this.rhsValue, other.rhsValue)) return false;
                 if (!UtilValidate.areEqual(this.operator, other.operator)) return false;
                 if (!UtilValidate.areEqual(this.compareType, other.compareType)) return false;
                 if (!UtilValidate.areEqual(this.format, other.format)) return false;
-                if (this.constant != other.constant) return false;
+                if (this.isValue != other.isValue) return false;
                 if (this.isService != other.isService) return false;
                 if (this.property != other.property) return false; // SCIPIO
                 if (!UtilValidate.areEqual(this.propertyResource, other.propertyResource)) return false; // SCIPIO
@@ -444,8 +484,8 @@ public abstract class EntityEcaCondition implements java.io.Serializable {
             if (UtilValidate.isNotEmpty(lhsValueName)) {
                 fieldNameList.add(lhsValueName);
             }
-            if (!constant && UtilValidate.isNotEmpty(rhsValueName)) {
-                fieldNameList.add(rhsValueName);
+            if (!isValue && UtilValidate.isNotEmpty(rhsValue)) {
+                fieldNameList.add(rhsValue);
             }
             return fieldNameList;
         }

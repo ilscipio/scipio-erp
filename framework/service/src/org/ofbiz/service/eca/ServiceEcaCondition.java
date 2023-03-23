@@ -34,6 +34,8 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.util.EntityUtilProperties;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -232,35 +234,63 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
     public static class SingleServiceEcaCondition extends ServiceEcaCondition {
         protected String conditionService = null;
         protected String lhsValueName = null;
-        protected String rhsValueName = null;
+        protected FlexibleMapAccessor<Object> lhsValueNameExdr = null; // SCIPIO: 3.0.0: Added
+        protected String rhsValue = null;
+        protected FlexibleMapAccessor<Object> rhsValueNameExdr = null; // SCIPIO: 3.0.0: Added
+        protected FlexibleStringExpander rhsValueExdr = null; // SCIPIO: 3.0.0: Added
         protected String lhsMapName = null;
         protected String rhsMapName = null;
         protected String operator = null;
         protected String compareType = null;
         protected String format = null;
-        protected boolean isConstant = false;
+        protected boolean isValue = false;
         protected boolean isService = false;
         protected boolean property = false; // SCIPIO
         protected String propertyResource = null;
         protected Set<String> scopes = null; // SCIPIO
         protected String scopeString = null; // SCIPIO
 
-        public SingleServiceEcaCondition(Element condition, boolean isConstant, boolean isService, boolean property) { // SCIPIO: added property
+        public SingleServiceEcaCondition(Element condition, boolean isValue, boolean isService, boolean property) { // SCIPIO: added property
             if (isService) {
                 this.isService = isService;
                 this.conditionService = condition.getAttribute("service-name");
             } else {
-                this.lhsValueName = condition.getAttribute("field-name");
+                String lhsValueName = condition.getAttribute("field"); // SCIPIO: 3.0.0: Added better alias
+                if (UtilValidate.isEmpty(lhsValueName)) {
+                    lhsValueName = condition.getAttribute("field-name");
+                }
+                this.lhsValueName = lhsValueName;
+                if (lhsValueName.contains(FlexibleStringExpander.openBracket)) {
+                    this.lhsValueNameExdr = FlexibleMapAccessor.getInstance(lhsValueName);
+                }
                 this.lhsMapName = condition.getAttribute("map-name");
 
-                this.isConstant = isConstant;
-                if (isConstant) {
-                    this.rhsValueName = condition.getAttribute("value");
-                    this.rhsMapName = null;
+                // SCIPIO: 3.0.0: This seems to be pointless; just use present of value vs to-field-name to determine
+                //this.isValue = isValue;
+                //if (isValue) {
+                //    this.rhsValueName = condition.getAttribute("value");
+                //    this.rhsMapName = null;
+                //} else {
+                //    this.rhsValueName = condition.getAttribute("to-field-name");
+                //    this.rhsMapName = condition.getAttribute("to-map-name");
+                //}
+
+                String rhsValue = condition.getAttribute("to-field-name");
+                if (UtilValidate.isNotEmpty(rhsValue)) {
+                    isValue = false;
+                    if (rhsValue.contains(FlexibleStringExpander.openBracket)) {
+                        this.rhsValueNameExdr = FlexibleMapAccessor.getInstance(this.rhsValue);
+                    }
                 } else {
-                    this.rhsValueName = condition.getAttribute("to-field-name");
-                    this.rhsMapName = condition.getAttribute("to-map-name");
+                    isValue = true;
+                    rhsValue = condition.getAttribute("value");
+                    if (rhsValue.contains(FlexibleStringExpander.openBracket)) {
+                        this.rhsValueExdr = FlexibleStringExpander.getInstance(this.rhsValue);
+                    }
                 }
+                this.isValue = isValue;
+                this.rhsValue = rhsValue;
+                this.rhsMapName = condition.getAttribute("to-map-name");
 
                 this.operator = condition.getAttribute("operator");
                 this.compareType = condition.getAttribute("type");
@@ -285,8 +315,8 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
             }
         }
 
-        public SingleServiceEcaCondition(Element condition, boolean isConstant, boolean isService) { // SCIPIO: added property
-            this(condition, isConstant, isService, false);
+        public SingleServiceEcaCondition(Element condition, boolean isValue, boolean isService) { // SCIPIO: added property
+            this(condition, isValue, isService, false);
         }
 
         @Override
@@ -300,7 +330,7 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
                 buf.append(lhsValueName);
                 buf.append(":").append(operator).append(":");
                 if (UtilValidate.isNotEmpty(rhsMapName)) buf.append(rhsMapName).append(".");
-                buf.append(rhsValueName);
+                buf.append(rhsValue);
 
                 if (moreDetail) {
                     if (UtilValidate.isNotEmpty(compareType)) {
@@ -388,13 +418,21 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
                 }
             }
 
-            if (isConstant) {
-                rhsValue = rhsValueName;
+            if (isValue) {
+                if (this.rhsValueExdr != null) {
+                    rhsValue = this.rhsValueExdr.expand(context);
+                } else {
+                    rhsValue = this.rhsValue;
+                }
             } else if (UtilValidate.isNotEmpty(rhsMapName)) {
                 try {
                     if (context.containsKey(rhsMapName)) {
                         Map<String, ? extends Object> envMap = UtilGenerics.checkMap(context.get(rhsMapName));
-                        rhsValue = envMap.get(rhsValueName);
+                        if (this.rhsValueNameExdr != null) {
+                            rhsValue = this.rhsValueNameExdr.get(envMap);
+                        } else {
+                            rhsValue = envMap.get(this.rhsValue);
+                        }
                     } else {
                         Debug.logInfo("To Map (" + rhsMapName + ") not found in context for " + serviceName + ", defaulting to null.", module);
                     }
@@ -402,10 +440,14 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
                     throw new GenericServiceException("To Map field [" + rhsMapName + "] is not a Map.", e);
                 }
             } else {
-                if (context.containsKey(rhsValueName)) {
-                    rhsValue = context.get(rhsValueName);
+                if (this.rhsValueNameExdr != null) {
+                    rhsValue = this.rhsValueNameExdr.get(context);
                 } else {
-                    Debug.logInfo("To Field (" + rhsValueName + ") is not found in context for " + serviceName + ", defaulting to null.", module);
+                    if (context.containsKey(this.rhsValue)) {
+                        rhsValue = context.get(this.rhsValue);
+                    } else {
+                        Debug.logInfo("To Field (" + this.rhsValue + ") is not found in context for " + serviceName + ", defaulting to null.", module);
+                    }
                 }
             }
 
@@ -414,7 +456,7 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
 
             // evaluate the condition & invoke the action(s)
             List<Object> messages = new ArrayList<>(); // SCIPIO: switched to ArrayList
-            Boolean cond = ObjectType.doRealCompare(lhsValue, rhsValue, operator, compareType, format, messages, null, dctx.getClassLoader(), isConstant);
+            Boolean cond = ObjectType.doRealCompare(lhsValue, rhsValue, operator, compareType, format, messages, null, dctx.getClassLoader(), isValue);
 
             // if any messages were returned send them out
             if (messages.size() > 0 && Debug.warningOn()) {
@@ -440,8 +482,8 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
             if (UtilValidate.isNotEmpty(lhsValueName)) buf.append("[").append(lhsValueName).append("]");
             if (UtilValidate.isNotEmpty(operator)) buf.append("[").append(operator).append("]");
             if (UtilValidate.isNotEmpty(rhsMapName)) buf.append("[").append(rhsMapName).append("]");
-            if (UtilValidate.isNotEmpty(rhsValueName)) buf.append("[").append(rhsValueName).append("]");
-            if (UtilValidate.isNotEmpty(isConstant)) buf.append("[").append(isConstant).append("]");
+            if (UtilValidate.isNotEmpty(rhsValue)) buf.append("[").append(rhsValue).append("]");
+            if (UtilValidate.isNotEmpty(isValue)) buf.append("[").append(isValue).append("]");
             if (UtilValidate.isNotEmpty(compareType)) buf.append("[").append(compareType).append("]");
             if (UtilValidate.isNotEmpty(format)) buf.append("[").append(format).append("]");
             if (UtilValidate.isNotEmpty(scopeString)) buf.append("[").append(scopeString).append("]");
@@ -456,13 +498,13 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
             result = prime * result + ((compareType == null) ? 0 : compareType.hashCode());
             result = prime * result + ((conditionService == null) ? 0 : conditionService.hashCode());
             result = prime * result + ((format == null) ? 0 : format.hashCode());
-            result = prime * result + (isConstant ? 1231 : 1237);
+            result = prime * result + (isValue ? 1231 : 1237);
             result = prime * result + (isService ? 1231 : 1237);
             result = prime * result + ((lhsMapName == null) ? 0 : lhsMapName.hashCode());
             result = prime * result + ((lhsValueName == null) ? 0 : lhsValueName.hashCode());
             result = prime * result + ((operator == null) ? 0 : operator.hashCode());
             result = prime * result + ((rhsMapName == null) ? 0 : rhsMapName.hashCode());
-            result = prime * result + ((rhsValueName == null) ? 0 : rhsValueName.hashCode());
+            result = prime * result + ((rhsValue == null) ? 0 : rhsValue.hashCode());
             result = prime * result + ((scopeString == null) ? 0 : scopeString.hashCode());
             return result;
         }
@@ -474,14 +516,14 @@ public abstract class ServiceEcaCondition implements java.io.Serializable {
 
                 if (!UtilValidate.areEqual(this.conditionService, other.conditionService)) return false;
                 if (!UtilValidate.areEqual(this.lhsValueName, other.lhsValueName)) return false;
-                if (!UtilValidate.areEqual(this.rhsValueName, other.rhsValueName)) return false;
+                if (!UtilValidate.areEqual(this.rhsValue, other.rhsValue)) return false;
                 if (!UtilValidate.areEqual(this.lhsMapName, other.lhsMapName)) return false;
                 if (!UtilValidate.areEqual(this.rhsMapName, other.rhsMapName)) return false;
                 if (!UtilValidate.areEqual(this.operator, other.operator)) return false;
                 if (!UtilValidate.areEqual(this.compareType, other.compareType)) return false;
                 if (!UtilValidate.areEqual(this.format, other.format)) return false;
 
-                if (this.isConstant != other.isConstant) return false;
+                if (this.isValue != other.isValue) return false;
                 if (this.isService != other.isService) return false;
 
                 if (!UtilValidate.areEqual(this.scopeString, other.scopeString)) return false; // SCIPIO: FIXME: inaccurate

@@ -104,7 +104,18 @@ under the License.
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.condition">
-        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="field-name">
+            <xs:annotation><xs:documentation>
+                Entity field name (static - no expressions).
+            </xs:documentation></xs:annotation>
+        </xs:attribute>
+        <xs:attribute type="xs:string" name="context-field">
+            <xs:annotation><xs:documentation>
+                Context Field name or flexible expression (for nested fields such as userLogin.partyId).
+
+                SCIPIO: 3.0.0: Added.
+            </xs:documentation></xs:annotation>
+        </xs:attribute>
         <xs:attribute name="operator" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">

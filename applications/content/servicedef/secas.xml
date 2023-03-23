@@ -33,6 +33,7 @@ code package.
         <condition field-name="partyId" operator="is-empty"/>
         <condition field-name="roleTypeId" operator="is-empty"/>
         <condition field-name="userLogin" operator="is-not-empty"/>
+        <condition field="userLogin.partyId" operator="is-not-empty"/><!-- SCIPIO: 3.0.0: Added to prevent admin creation errors, now support expressions -->
         <set field-name="partyId" env-name="${userLogin.partyId}"/>
         <set field-name="roleTypeId" value="OWNER"/>
         <action service="createDataResourceRole" mode="sync" run-as-user="system"/>
@@ -114,6 +115,7 @@ code package.
         <condition field-name="partyId" operator="is-empty"/>
         <condition field-name="roleTypeId" operator="is-empty"/>
         <condition field-name="userLogin" operator="is-not-empty"/>
+        <condition field="userLogin.partyId" operator="is-not-empty"/><!-- SCIPIO: 3.0.0: Added to prevent null userLogin.partyId from errors -->
         <set field-name="partyId" env-name="${userLogin.partyId}"/>
         <set field-name="roleTypeId" value="OWNER"/>
         <action service="createContentRole" mode="sync" run-as-user="system"/>

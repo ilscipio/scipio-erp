@@ -966,8 +966,8 @@ public class ModelServiceReader implements Serializable {
                         }
                         ModelParam param = new ModelParam();
                         param.entityName = entityName;
-                        param.fieldName = StringUtil.prefixFieldNameCamelCase(field.getName(), prefix);
-                        param.name = field.getName();
+                        param.fieldName = field.getName();
+                        param.name = StringUtil.prefixFieldNameCamelCase(field.getName(), prefix);
                         param.type = fieldType.getJavaType();
                         // this is a special case where we use something different in the service layer than we do in the entity/data layer
                         if ("java.sql.Blob".equals(param.type)) {
@@ -1049,8 +1049,8 @@ public class ModelServiceReader implements Serializable {
                         }
                         ModelParam param = new ModelParam();
                         param.entityName = entityName;
-                        param.fieldName = StringUtil.prefixFieldNameCamelCase(field.getName(), prefix);
-                        param.name = field.getName();
+                        param.fieldName = field.getName();
+                        param.name = StringUtil.prefixFieldNameCamelCase(field.getName(), prefix);
                         param.type = fieldType.getJavaType();
                         // this is a special case where we use something different in the service layer than we do in the entity/data layer
                         if ("java.sql.Blob".equals(param.type)) {

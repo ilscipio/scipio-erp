@@ -175,6 +175,16 @@ public class UtilMisc {
     }
 
     /**
+     * Create a map from passed nameX, valueX parameters, as ordered map (currently LinkedHashMap).
+     * @deprecated SCIPIO: 3.0.0: Use {@link #orderedMap(Object...)}.
+     */
+    @Deprecated
+    @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> toOrderedMap(Object... keyValuePairs) {
+        return orderedMap(keyValuePairs);
+    }
+
+    /**
      * Create a map from passed nameX, valueX parameters, as fast random order map (currently HashMap).
      *
      * <p>SCIPIO: 3.0.0: Added.</p>

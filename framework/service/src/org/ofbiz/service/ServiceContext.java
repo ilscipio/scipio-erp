@@ -305,20 +305,29 @@ public class ServiceContext extends MapWrapper.Abstract<String, Object> implemen
         if (model == null) {
             model = service();
         }
-        // Instead of a Map, make a ServiceContext
-        ServiceContext targetCtx = fromServiceMode(model, mode);
+        // Instead of a HashMap, make a ServiceContext
+        ServiceContext targetCtx;
+        if (options != null && options.targetContext() != null) {
+            if (options.targetContext() instanceof ServiceContext) {
+                targetCtx = (ServiceContext) options.targetContext();
+            } else {
+                targetCtx = fromServiceMode(model, mode, options.targetContext());
+            }
+        } else {
+            targetCtx = fromServiceMode(model, mode, new HashMap<>());
+        }
         options = (options != null) ? options.copy() : new MakeValidOptions();
         options.targetContext(targetCtx.context());
         dctx().makeValidContext(model, mode, context, options);
         return UtilGenerics.cast(targetCtx);
     }
 
-    protected ServiceContext fromServiceMode(ModelService model, String mode) {
+    protected ServiceContext fromServiceMode(ModelService model, String mode, Map<String, Object> context) {
         String io = ModelService.getParamModeIO(mode);
         if (ModelService.OUT_PARAM.equals(io)) {
-            return result(new HashMap<>());
+            return result(context);
         } else {
-            return from(model, new HashMap<>());
+            return from(model, context);
         }
     }
 

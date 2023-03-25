@@ -371,7 +371,7 @@ public class CatalogImportExportServices {
                             } catch (Throwable t) { // Per-row transaction and atomic error handling
                                 transactionEx = t;
                                 String msg = "Could not create or update entity [" + entityName + "] [" + entityFields + "]";
-                                Debug.logWarning(workbookName + " [" + cellAddr + "]: " + msg + ": " + t.getMessage(), module);
+                                Debug.logWarning(t, workbookName + " [" + cellAddr + "]: " + msg + ": " + t.getMessage(), module);
                                 errorList.add("[" + cellAddr + "]: " + msg + ": " + t.getMessage());
                             } finally { // finally required to ensure transaction rollback or commit happens (binary)
                                 if (transactionEx != null) {

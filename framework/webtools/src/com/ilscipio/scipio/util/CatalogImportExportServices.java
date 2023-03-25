@@ -208,7 +208,7 @@ public class CatalogImportExportServices {
 
                                             //enrich context with all column values
                                             headerInfo.forEach((index,hip) -> {
-                                                Object value = row.getCell(index);
+                                                Object value = getCellValue(row.getCell(index));
                                                 entityProps.put((String) hip.get("name"),value);
                                                 serviceContext.put((String) hip.get("name"),value);
                                             });
@@ -430,5 +430,21 @@ public class CatalogImportExportServices {
             return null;
         }
         return str;
+    }
+
+    protected static Object getCellValue(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+        CellType type = cell.getCellType();
+        if (type == CellType.STRING || type == CellType.BLANK) {
+            return UtilValidate.nullIfEmpty(cell.getStringCellValue());
+        } else if (type == CellType.BOOLEAN) {
+            return cell.getBooleanCellValue();
+        } else if (type == CellType.NUMERIC) {
+            return cell.getNumericCellValue();
+        } else {
+            return null;
+        }
     }
 }

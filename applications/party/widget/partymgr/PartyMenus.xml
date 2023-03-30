@@ -40,7 +40,15 @@
         always-expand-selected-or-ancestor="true">
         <include-elements menu-name="PartyAppBar" recursive="full" />
         <menu-item name="find">
-            <sub-menu name="Profile" include="ProfileSideBar"/>
+            <sub-menu name="Profile" include="ProfileSideBar">
+                <!-- SCIPIO: 3.0.0: For now, let this expand due to possible non-specific sub-menu items
+                <condition>
+                    <and>
+                        <not><if-false field="currentMenuRenderState.activeItem.specific"/></not>
+                        <not><if-empty field="party"/></not>
+                    </and>
+                </condition>-->
+            </sub-menu>
         </menu-item>
         <menu-item name="comm">
             <sub-menu name="CommEvent" include="CommEventSideBar"/>
@@ -66,7 +74,7 @@
                 </and>
             </condition-to-field>
         </actions>
-        <menu-item-alias name="findparty" for="PARENT-NOSUB"/>
+        <menu-item-alias name="findparty" for="PARENT-WITHSUB"/>
         <menu-item-alias name="newperson" for="PARENT-NOSUB"/>
         <menu-item-alias name="newpartygroup" for="PARENT-NOSUB"/>
         <menu-item-alias name="newcustomer" for="PARENT-NOSUB"/>

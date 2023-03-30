@@ -58,23 +58,49 @@
 
     <menu name="ProfileTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="viewprofile">
+        <actions>
+            <condition-to-field field="specificPartyItems" type="Boolean">
+                <and>
+                    <not><if-false field="currentMenuRenderState.activeItem.specific"/></not>
+                    <not><if-empty field="party"/></not>
+                </and>
+            </condition-to-field>
+        </actions>
+        <menu-item-alias name="findparty" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="newperson" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newpartygroup" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newcustomer" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newprospect" for="PARENT-NOSUB"/>
+        <menu-item-alias name="newemployee" for="PARENT-NOSUB"/>
         <menu-item name="viewprofile" title="${uiLabelMap.PartyProfile}" sort-mode="off">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="viewprofile">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <!-- 
         <menu-item name="preferences" title="${uiLabelMap.CommonPreferences}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="Preferences">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>--> 
         <menu-item name="viewroles" title="${uiLabelMap.PartyRoles}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="viewroles">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <menu-item name="viewidentifications" title="${uiLabelMap.PartyPartyIdentifications}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="viewidentifications">
                 <parameter param-name="partyId"/>
             </link>
@@ -82,49 +108,76 @@
         
        <!--
         <menu-item name="linkparty" title="${uiLabelMap.PartyLink}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="linkparty">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>-->
          
         <menu-item name="EditPartyRelationships" title="${uiLabelMap.PartyRelationships}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="EditPartyRelationships">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         
         <menu-item name="viewvendor" title="${uiLabelMap.PartyVendor}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="viewvendor">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <menu-item name="EditPartyTaxAuthInfos" title="${uiLabelMap.PartyTaxAuthInfos}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="EditPartyTaxAuthInfos">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <menu-item name="EditPartyRates" title="${uiLabelMap.CommonRates}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="EditPartyRates">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <menu-item name="editShoppingList" title="${uiLabelMap.PartyShoppingLists}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="editShoppingList">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <!-- 
         <menu-item name="ViewSegmentRoles" title="${uiLabelMap.PartySegments}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="ViewSegmentRoles">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <menu-item name="EditPartyClassifications" title="${uiLabelMap.PartyClassifications}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="EditPartyClassifications">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item> -->
         <menu-item name="PartyContents" title="${uiLabelMap.PartyContent}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="EditPartyContents">
                 <parameter param-name="partyId"/>
             </link>
@@ -132,11 +185,17 @@
         
         <!-- 
         <menu-item name="EditPartySkills" title="${uiLabelMap.CommonPartySkills}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="EditPartySkills">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <menu-item name="EditPartyResumes" title="${uiLabelMap.HumanResPartyResume}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="EditPartyResumes">
                 <parameter param-name="partyId"/>
             </link>
@@ -144,6 +203,9 @@
          -->
         <!-- 
         <menu-item name="EditEmploymentApps" title="${uiLabelMap.HumanResEmploymentApp}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="EditEmploymentApps">
                 <parameter param-name="partyId"/>
                 <parameter param-name="referredByPartyId" from-field="partyId"/>
@@ -151,19 +213,28 @@
         </menu-item> -->
         <menu-item name="FinancialHistory" title="${uiLabelMap.PartyFinancialHistory}">
             <condition>
-                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                <and>
+                    <if-true field="specificPartyItems"/>
+                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                </and>
             </condition>
             <link target="PartyFinancialHistory">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <menu-item name="PartyGeoLocation" title="${uiLabelMap.CommonGeoLocation}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="PartyGeoLocation">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
         <!-- 
         <menu-item name="productStoreRoles" title="${uiLabelMap.ProductProductStoreRoles}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="ViewProductStoreRoles">
                 <parameter param-name="partyId"/>
             </link>
@@ -179,20 +250,29 @@
         <!-- 
         <menu-item name="finAccounts" title="${uiLabelMap.AccountingFinAccounts}">
             <condition>
-                <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                <and>
+                    <if-true field="specificPartyItems"/>
+                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
+                </and>
             </condition>
             <link target="/accounting/control/FindFinAccount" url-mode="inter-app">
                 <parameter param-name="ownerPartyId" from-field="partyId"/>
             </link>
         </menu-item> -->
-        <menu-item name="PartyCommEvents" title="${uiLabelMap.PartyCommunications}" >
+        <menu-item name="PartyCommEvents" title="${uiLabelMap.PartyCommunications}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="ListPartyCommEvents">
                 <parameter param-name="partyId"/>
             </link>
         </menu-item>
-        <menu-item name="findRequest" title="${uiLabelMap.PartyPartyRequests}" >
+        <menu-item name="findRequest" title="${uiLabelMap.PartyPartyRequests}">
             <condition>
-                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                <and>
+                    <if-true field="specificPartyItems"/>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                </and>
             </condition>
             <link target="/ordermgr/control/FindRequest" url-mode="inter-app">
                 <parameter param-name="lookupFlag" value="Y"/>
@@ -202,7 +282,10 @@
         </menu-item>
         <menu-item name="findQuote" title="${uiLabelMap.OrderOrderQuotes}" >
             <condition>
-                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                <and>
+                    <if-true field="specificPartyItems"/>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                </and>
             </condition>
             <link target="/ordermgr/control/FindQuote" url-mode="inter-app">
                 <parameter param-name="partyId"/>
@@ -211,7 +294,10 @@
         </menu-item>
         <menu-item name="searchOrder" title="${uiLabelMap.OrderOrders}" >
             <condition>
-                <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                <and>
+                    <if-true field="specificPartyItems"/>
+                    <if-has-permission permission="ORDERMGR" action="_VIEW"/>
+                </and>
             </condition>
             <link target="/ordermgr/control/searchorders" url-mode="inter-app" link-type="hidden-form">
                 <parameter param-name="lookupFlag" value="Y"/>
@@ -225,6 +311,9 @@
         <!-- SCIPIO: TODO: REVIEW: ContactList is originally under CommEvent menu in stock but uses find/party decorator,
             so for now... put it under both (but this is primary) -->
         <menu-item name="ContactList" title="${uiLabelMap.PartyContactLists}">
+            <condition>
+                <if-true field="specificPartyItems"/>
+            </condition>
             <link target="ListPartyContactLists">
                 <parameter param-name="partyId"/>
             </link>
@@ -233,12 +322,6 @@
     <menu name="ProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="viewprofile" menu-container-style="+scipio-nav-actions-menu">
         <include-elements menu-name="ProfileTabBar" recursive="includes-only" />
-        <menu-item-alias name="findparty" for="PARENT-NOSUB"/>
-        <menu-item-alias name="newperson" for="PARENT-NOSUB"/>
-        <menu-item-alias name="newpartygroup" for="PARENT-NOSUB"/>
-        <menu-item-alias name="newcustomer" for="PARENT-NOSUB"/>
-        <menu-item-alias name="newprospect" for="PARENT-NOSUB"/>
-        <menu-item-alias name="newemployee" for="PARENT-NOSUB"/>
     </menu>
     
     <menu name="ProfileSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

@@ -66,7 +66,7 @@
                 </and>
             </condition-to-field>
         </actions>
-        <menu-item-alias name="findparty" for="PARENT-WITHSUB"/>
+        <menu-item-alias name="findparty" for="PARENT-NOSUB"/>
         <menu-item-alias name="newperson" for="PARENT-NOSUB"/>
         <menu-item-alias name="newpartygroup" for="PARENT-NOSUB"/>
         <menu-item-alias name="newcustomer" for="PARENT-NOSUB"/>

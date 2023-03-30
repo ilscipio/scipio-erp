@@ -1,12 +1,14 @@
 package org.ofbiz.widget.renderer;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.collections.CompositeReadOnlyMap;
 import org.ofbiz.widget.model.ModelMenu;
 import org.ofbiz.widget.model.ModelMenu.MenuAndItem;
 import org.ofbiz.widget.model.ModelMenu.SeparateMenuConfig;
+import org.ofbiz.widget.model.ModelMenuCommon;
 import org.ofbiz.widget.model.ModelMenuItem;
 import org.ofbiz.widget.model.ModelSubMenu;
 
@@ -28,7 +30,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     private String subMenuFilter;
     private transient boolean noSubMenus;
     private transient boolean currentSubMenusOnly;
-    private transient MenuAndItem selectedMenuAndItem;
+    private transient ModelMenu.MenuAndItemLookup selectedMenuAndItem;
     // TODO: REVIEW: this cache for flagged nodes ended up unused, but unclear
     // if this was by design or omission...
     //private transient ModelMenu.FlaggedMenuNodes flaggedMenuNodes;
@@ -38,6 +40,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     private transient ModelSubMenu separateMenu; // 2017-04-25: tracks the best separate menu candidate
     private transient final SeparateMenuConfig separateMenuConfig; // ensures don't re-evaluate expressions after begin render
     private Boolean inlineEntries = null;
+    private transient ActiveItem activeItem;
 
     protected MenuRenderState(Map<String, Object> context, ModelMenu modelMenu) {
         this.modelMenu = modelMenu;
@@ -190,6 +193,98 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         // TODO: REVIEW
         //this.flaggedMenuNodes = ModelMenu.FlaggedMenuNodes.resolve(context, modelMenu.getManualSelectedNodes(),
         //        modelMenu.getManualExpandedNodes(), this.selectedMenuAndItem);
+    }
+
+    public Object getCurrentMenuInfo() {
+        // NOTE: Return type subject to change; everything currently contained in ActiveItem
+        return activeItem;
+    }
+
+    public void setCurrentMenuInfo(Object currentMenuInfo) {
+        setActiveItem((ActiveItem) currentMenuInfo);
+    }
+
+    public ActiveItem getActiveItem() {
+        return activeItem;
+    }
+
+    public void setActiveItem(ActiveItem activeItem) {
+        this.activeItem = activeItem;
+        setInternal("activeItem", activeItem);
+    }
+
+    public ActiveItem updateCurrentMenu(ModelMenuCommon menu, Map<String, Object> context) {
+        ModelMenu.MenuAndItemLookup lookupItem = (ModelMenu.MenuAndItemLookup) getSelectedMenuAndItem(context);
+        // Only set a menu item if it matches the current menu
+        if (lookupItem != null && lookupItem.hasMenuItem() &&
+                ((lookupItem.getOrigLookupSubMenu() != null && lookupItem.getOrigLookupSubMenu().isSame(menu)) ||
+                (lookupItem.getOrigLookupSubMenu() == null && menu instanceof ModelMenu))) {
+            activeItem = new ActiveItem(lookupItem.isSubMenu() ? lookupItem.getSubMenu() : modelMenu, lookupItem.getMenuItem(),
+                    lookupItem.getOrigLookupSubMenu() != null ? lookupItem.getOrigLookupSubMenu() : modelMenu, lookupItem.getOrigLookupMenuItemName());
+        }
+        setCurrentMenuInfo(activeItem);
+        return activeItem;
+    }
+
+    public List<String> getItemNamesAliasedTo(String forName) {
+        return getActiveItem().getMappedMenu().getItemNamesAliasedTo(forName);
+    }
+
+    public class ActiveItem extends CompositeReadOnlyMap<String, Object> implements Serializable {
+        protected final ModelMenuCommon mappedMenu;
+        protected final ModelMenuItem mappedItem;
+        protected final String mappedItemName;
+        protected final ModelMenuCommon origMenu;
+        protected final String origItemName;
+        // convenience fields (for screens)
+        protected final boolean specific; // any non-aliased or non-parent alias
+
+        protected ActiveItem(ModelMenuCommon mappedMenu, ModelMenuItem mappedItem, ModelMenuCommon origMenu, String origItemName) {
+            this.mappedMenu = mappedMenu;
+            this.mappedItem = mappedItem;
+            this.mappedItemName = (mappedItem != null) ? mappedItem.getName() : null;
+            this.origMenu = origMenu;
+            this.origItemName = origItemName;
+            String itemNameAliasFor = origMenu.getMenuItemNameAliasMap().get(origItemName);
+            this.specific = (itemNameAliasFor == null) || !ModelMenuItem.PARENT_MENU_ITEM_NAMES.contains(itemNameAliasFor);
+            setInternal("mappedMenu", this.mappedMenu);
+            setInternal("mappedItem", this.mappedItem);
+            setInternal("mappedItemName", this.mappedItemName);
+            setInternal("origMenu", this.origMenu);
+            setInternal("origItemName", this.origItemName);
+            setInternal("specific", this.specific);
+        }
+
+        public ModelMenuCommon getMappedMenu() {
+            return mappedMenu;
+        }
+
+        public ModelMenuItem getMappedItem() {
+            return mappedItem;
+        }
+
+        public String getMappedItemName() {
+            return mappedItemName;
+        }
+
+        public ModelMenuCommon getOrigMenu() {
+            return origMenu;
+        }
+
+        public String getOrigItemName() {
+            return origItemName;
+        }
+
+        /**
+         * True if aliasForName is not a PARENT* menu-item-alias.
+         */
+        public boolean isSpecific() {
+            return specific;
+        }
+
+        protected Object setInternal(String key, Object value) {
+            return internalMap.put(key, value);
+        }
     }
 
     public ModelSubMenu getSeparateMenu() {

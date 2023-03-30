@@ -81,7 +81,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     public static final String PARENT_MENU_ITEM_NAME = "PARENT";
     public static final String PARENT_WITHSUB_MENU_ITEM_NAME = "PARENT-WITHSUB";
     public static final String PARENT_NOSUB_MENU_ITEM_NAME = "PARENT-NOSUB";
-    static final Set<String> parentMenuItemNames = UtilMisc.toHashSet(
+    public static final List<String> PARENT_MENU_ITEM_NAMES = List.of(
             PARENT_MENU_ITEM_NAME, PARENT_WITHSUB_MENU_ITEM_NAME, PARENT_NOSUB_MENU_ITEM_NAME);
 
     private final List<ModelAction> actions;

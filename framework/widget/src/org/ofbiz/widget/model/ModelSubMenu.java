@@ -38,6 +38,7 @@ import org.ofbiz.widget.model.ModelMenu.CurrentMenuDefBuildArgs;
 import org.ofbiz.widget.model.ModelMenu.GeneralBuildArgs;
 import org.ofbiz.widget.model.ModelMenu.MenuAndItemLookup;
 import org.ofbiz.widget.model.ModelMenuItem.ModelMenuItemAlias;
+import org.ofbiz.widget.renderer.MenuRenderState;
 import org.ofbiz.widget.renderer.MenuStringRenderer;
 import org.w3c.dom.Element;
 
@@ -539,8 +540,10 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
             UtilGenerics.<MapStack<String>>cast(context).push();
         }
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        Object lastMenuInfo = renderState.getCurrentMenuInfo();
         try { // SCIPIO: Added try/finally block
-            // NOTE: there is no stack push/pop here!
+            renderState.updateCurrentMenu(this, context);
             AbstractModelAction.runSubActions(actions, context);
 
             // render menu open
@@ -554,6 +557,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             // render menu close
             menuStringRenderer.renderSubMenuClose(writer, context, this);
         } finally {
+            renderState.setCurrentMenuInfo(lastMenuInfo);
             if (protectScope) {
                 UtilGenerics.<MapStack<String>>cast(context).pop();
             }
@@ -563,8 +567,8 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
     /**
      * SCIPIO: NOTE: only valid if the sub-menus were part of the same ModelMenu instance.
      */
-    public boolean isSame(ModelSubMenu subMenu) {
-        return (this == subMenu); // SCIPIO: NOTE: this works because we know how the ModelMenu was built
+    public boolean isSame(ModelMenuCommon menu) {
+        return (this == menu); // SCIPIO: NOTE: this works because we know how the ModelMenu was built
     }
 
     public boolean isParentOf(ModelMenuItem menuItem) {
@@ -597,8 +601,14 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         }
     }
 
+    @Override
     public Map<String, ModelMenuItemAlias> getMenuItemAliasMap() { // SCIPIO: new
         return menuItemAliasMap;
+    }
+
+    @Override
+    public Map<String, String> getMenuItemNameAliasMap() { // SCIPIO: new
+        return menuItemNameAliasMap;
     }
 
     public String getMappedMenuItemName(String menuItemName) {

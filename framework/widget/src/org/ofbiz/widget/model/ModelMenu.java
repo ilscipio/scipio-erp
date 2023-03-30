@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import org.ofbiz.base.location.FlexibleLocation;
@@ -1557,33 +1558,36 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
                 menuItem = getMenuItemByName(mappedMenuItemName);
             }
 
-            return new MenuAndItemLookup(null, menuItem, subMenuName, mappedMenuItemName);
+            return new MenuAndItemLookup(null, menuItem, subMenuName, mappedMenuItemName, menuItemName, null);
         } else {
             String mappedMenuItemName = mapNames ? subMenu.getMappedMenuItemName(menuItemName) : menuItemName;
-            if (ModelMenuItem.parentMenuItemNames.contains(mappedMenuItemName)) {
+            if (ModelMenuItem.PARENT_MENU_ITEM_NAMES.contains(mappedMenuItemName)) {
                 if (ModelMenuItem.PARENT_NOSUB_MENU_ITEM_NAME.equals(mappedMenuItemName)) {
                     // here we ditch our sub-menu
-                    return new MenuAndItemLookup(subMenu.getParentMenuItem().getParentSubMenu(), subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName);
+                    return new MenuAndItemLookup(subMenu.getParentMenuItem().getParentSubMenu(), subMenu.getParentMenuItem(),
+                            subMenuName, mappedMenuItemName, menuItemName, subMenu);
                 } else {
-                    return new MenuAndItemLookup(subMenu, subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName);
+                    return new MenuAndItemLookup(subMenu, subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName, menuItemName, subMenu);
                 }
             } else {
                 ModelMenuItem menuItem = subMenu.getMenuItemByName(mappedMenuItemName);
 
                 if (menuItem == null && UtilValidate.isNotEmpty(subMenu.getDefaultMenuItemName())) {
                     mappedMenuItemName = subMenu.getDefaultMenuItemName();
-                    if (ModelMenuItem.parentMenuItemNames.contains(mappedMenuItemName)) {
+                    if (ModelMenuItem.PARENT_MENU_ITEM_NAMES.contains(mappedMenuItemName)) {
                         if (ModelMenuItem.PARENT_NOSUB_MENU_ITEM_NAME.equals(mappedMenuItemName)) {
                             // here we ditch our sub-menu
-                            return new MenuAndItemLookup(subMenu.getParentMenuItem().getParentSubMenu(), subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName);
+                            return new MenuAndItemLookup(subMenu.getParentMenuItem().getParentSubMenu(), subMenu.getParentMenuItem(),
+                                    subMenuName, mappedMenuItemName, menuItemName, subMenu);
                         } else {
-                            return new MenuAndItemLookup(subMenu, subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName);
+                            return new MenuAndItemLookup(subMenu, subMenu.getParentMenuItem(), subMenuName, mappedMenuItemName,
+                                    menuItemName, subMenu);
                         }
                     } else {
                         menuItem = subMenu.getMenuItemByName(mappedMenuItemName);
                     }
                 }
-                return new MenuAndItemLookup(subMenu, menuItem, subMenuName, mappedMenuItemName);
+                return new MenuAndItemLookup(subMenu, menuItem, subMenuName, mappedMenuItemName, menuItemName, subMenu);
             }
         }
     }
@@ -1725,7 +1729,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
     /**
      * SCIPIO: Returns selected menu and item.
      */
-    public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context, boolean logWarnings) {
+    public MenuAndItemLookup getSelectedMenuAndItem(Map<String, Object> context, boolean logWarnings) {
         String fullSelItemName = getSelectedMenuItemContextFieldName(context);
 
         String selItemName;
@@ -1746,23 +1750,25 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
         return getSelectedMenuAndItem(selItemName, selMenuName, logWarnings);
     }
 
-    public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context) {
+    public MenuAndItemLookup getSelectedMenuAndItem(Map<String, Object> context) {
         return getSelectedMenuAndItem(context, true);
     }
 
     /**
-     * SCIPIO: Returns selected menu and item. The item will be either a child of
+     * Returns selected menu and item. The item will be either a child of
      * the (sub-)menu, the parent item of the sub-menu, or null, but the calling code should guard
      * against strange cases.
-     * <p>
-     * The (sub-)menu name supports special value "TOP". The item name supports
+     *
+     * <p>The (sub-)menu name supports special value "TOP". The item name supports
      * special values "NONE" (same as null except prevent default-menu-item-name fallback),
-     * "PARENT-WITHSUB"/"PARENT", and "PARENT-NOSUB".
-     * <p>
-     * Note the default menu item fallback (default-menu-item-name) is ONLY used if the queried selItemName
+     * "PARENT-WITHSUB"/"PARENT", and "PARENT-NOSUB".</p>
+     *
+     * <p>Note the default menu item fallback (default-menu-item-name) is ONLY used if the queried selItemName
      * is empty, but NOT if it's the value NONE nor if the lookup fails. NONE bypasses it, while
      * failed lookups are handled by displaying the menu or sub-menu as selected but without any item selected,
-     * as visual debugging help.
+     * as visual debugging help.</p>
+     *
+     * <p>SCIPIO: 1.x.x: Added.</p>
      */
     public MenuAndItemLookup getSelectedMenuAndItem(String selItemName, String selMenuName, boolean logWarnings) {
         boolean menuNameTopMenu = isMenuNameTopMenu(selMenuName);
@@ -1809,8 +1815,14 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
         return getSelectedMenuAndItem(selItemName, selMenuName, true);
     }
 
+    @Override
     public Map<String, ModelMenuItemAlias> getMenuItemAliasMap() { // SCIPIO: new
         return menuItemAliasMap;
+    }
+
+    @Override
+    public Map<String, String> getMenuItemNameAliasMap() { // SCIPIO: new
+        return menuItemNameAliasMap;
     }
 
     public static List<String> readMenuItemNamesList(String namesStr) {
@@ -1840,7 +1852,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
         menuItemName = ModelMenuItem.getNoneMenuItemNameAsConstant(menuItemName);
         String res = this.menuItemNameAliasMap.get(menuItemName);
         if (UtilValidate.isNotEmpty(res)) {
-            if (ModelMenuItem.parentMenuItemNames.contains(res)) { // don't support PARENT-XX in top menu
+            if (ModelMenuItem.PARENT_MENU_ITEM_NAMES.contains(res)) { // don't support PARENT-XX in top menu
                 return menuItemName;
             } else {
                 return res;
@@ -1848,6 +1860,16 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
         } else {
             return menuItemName;
         }
+    }
+
+    public List<String> getItemNamesAliasedTo(String forName) {
+        List<String> names = new ArrayList<>();
+        for (ModelMenuItemAlias itemAlias : menuItemAliasMap.values()) {
+            if (Objects.equals(forName, itemAlias.getForName())) {
+                names.add(itemAlias.getName());
+            }
+        }
+        return names;
     }
 
     /**
@@ -2035,14 +2057,21 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
      */
     public void renderMenuString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)
             throws IOException {
-        AbstractModelAction.runSubActions(this.actions, context);
         // SCIPIO: do this now so nothing can mess with the selection
-        MenuRenderState.retrieve(context).updateSelectedMenuAndItem(context);
-        if ("simple".equals(this.type)) {
-            this.renderSimpleMenuString(writer, context, menuStringRenderer);
-        } else {
-            throw new IllegalArgumentException("The type " + this.getType() + " is not supported for menu with name "
-                    + this.getName());
+        MenuRenderState renderState = MenuRenderState.retrieve(context);
+        renderState.updateSelectedMenuAndItem(context);
+        Object lastMenuInfo = renderState.getCurrentMenuInfo();
+        try {
+            renderState.updateCurrentMenu(this, context);
+            AbstractModelAction.runSubActions(this.actions, context);
+            if ("simple".equals(this.type)) {
+                this.renderSimpleMenuString(writer, context, menuStringRenderer);
+            } else {
+                throw new IllegalArgumentException("The type " + this.getType() + " is not supported for menu with name "
+                        + this.getName());
+            }
+        } finally {
+            renderState.setCurrentMenuInfo(lastMenuInfo);
         }
     }
 
@@ -2200,29 +2229,40 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
 
         protected final String lookupSubMenuName;
         protected final String lookupMenuItemName;
+        protected final String origLookupMenuItemName; // may be unmapped alias name
+        protected final ModelSubMenu origLookupSubMenu;
 
-        public MenuAndItemLookup(ModelSubMenu subMenu, ModelMenuItem menuItem, String lookupSubMenuName, String lookupMenuItemName) {
+        public MenuAndItemLookup(ModelSubMenu subMenu, ModelMenuItem menuItem,
+                                 String lookupSubMenuName, String lookupMenuItemName,
+                                 String origLookupMenuItemName, ModelSubMenu origLookupSubMenu) {
             super(subMenu, menuItem);
             this.lookupSubMenuName = lookupSubMenuName;
             this.lookupMenuItemName = lookupMenuItemName;
+            this.origLookupMenuItemName = origLookupMenuItemName;
+            this.origLookupSubMenu = origLookupSubMenu;
         }
 
         public MenuAndItemLookup(ModelSubMenu subMenu, ModelMenuItem menuItem) {
             super(subMenu, menuItem);
             this.lookupSubMenuName = null;
             this.lookupMenuItemName = null;
+            this.origLookupMenuItemName = null;
+            this.origLookupSubMenu = null;
         }
 
         public MenuAndItemLookup(ModelMenuItem menuItem) {
             super(menuItem);
             this.lookupSubMenuName = null;
             this.lookupMenuItemName = null;
+            this.origLookupMenuItemName = null;
+            this.origLookupSubMenu = null;
         }
 
         public MenuAndItemLookup() {
-            super();
             this.lookupSubMenuName = null;
             this.lookupMenuItemName = null;
+            this.origLookupMenuItemName = null;
+            this.origLookupSubMenu = null;
         }
 
         public MenuAndItem toMenuAndItem() {
@@ -2235,6 +2275,14 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
 
         public String getLookupMenuItemName() {
             return lookupMenuItemName;
+        }
+
+        public String getOrigLookupMenuItemName() {
+            return origLookupMenuItemName;
+        }
+
+        public ModelSubMenu getOrigLookupSubMenu() {
+            return origLookupSubMenu;
         }
     }
 

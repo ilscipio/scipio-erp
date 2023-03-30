@@ -51,10 +51,10 @@ public final class ModelMenuCondition implements Serializable {
     private final FlexibleStringExpander failStyleExdr;
     private final ModelCondition condition;
 
-    public ModelMenuCondition(ModelMenuItem modelMenuItem, Element conditionElement) {
+    public ModelMenuCondition(ModelWidget modelWidget, Element conditionElement) { // SCIPIO: 3.0.0: Switched to ModelWidget (generalized)
         this.passStyleExdr = FlexibleStringExpander.getInstance(conditionElement.getAttribute("pass-style"));
         this.failStyleExdr = FlexibleStringExpander.getInstance(conditionElement.getAttribute("disabled-style"));
-        this.condition = AbstractModelCondition.DEFAULT_CONDITION_FACTORY.newInstance(modelMenuItem, conditionElement);
+        this.condition = AbstractModelCondition.DEFAULT_CONDITION_FACTORY.newInstance(modelWidget, conditionElement);
     }
 
     public ModelCondition getCondition() {

@@ -865,6 +865,21 @@ under the License.
         </xs:annotation>
         <xs:complexType>
             <xs:sequence>
+                <xs:element name="condition" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>
+                            Sub menu presence condition.
+
+                            SCIPIO: 3.0.0: Added.
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="ConditionRootType">
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
                 <xs:element minOccurs="0" maxOccurs="unbounded" name="include-elements" type="menu-elements-include"/>
                 <xs:element minOccurs="0" maxOccurs="unbounded" name="include-actions" type="menu-actions-include" />
                 <xs:element minOccurs="0" ref="actions" />

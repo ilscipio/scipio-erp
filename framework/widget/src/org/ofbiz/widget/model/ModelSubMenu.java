@@ -30,6 +30,7 @@ import java.util.Set;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.collections.RenderMapStack;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -81,6 +82,7 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
     private final Map<String, String> menuItemNameAliasMap; // for optimized simple-hidden item alias lookups
 
     private transient Set<String> simpleStyleNames = null;
+    private final ModelMenuCondition condition;
 
     public ModelSubMenu(Element subMenuElement, String currResource, ModelMenuItem parentMenuItem, BuildArgs buildArgs) {
         super(subMenuElement);
@@ -221,6 +223,14 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
         this.expanded = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("expanded"));
         this.selected = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("selected"));
         this.disabled = FlexibleStringExpander.getInstance(subMenuElement.getAttribute("disabled"));
+
+        Element conditionElement = UtilXml.firstChildElement(subMenuElement, "condition");
+        if (conditionElement != null) {
+            conditionElement = UtilXml.firstChildElement(conditionElement);
+            this.condition = new ModelMenuCondition(this, conditionElement);
+        } else {
+            this.condition = null;
+        }
     }
 
     // SCIPIO: copy constructor
@@ -272,6 +282,8 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
                 new ModelMenuItem.BuildArgs(buildArgs));
         this.menuItemAliasMap = Collections.unmodifiableMap(menuItemAliasMap);
         this.menuItemNameAliasMap = ModelMenu.makeMenuItemNameAliasMap(menuItemAliasMap);
+
+        this.condition = existing.condition;
     }
 
     public static Map<String, String> makeSpecialMenuItemNameMap(Set<String> menuItemNamesAsParent, Set<String> menuItemNamesAsParentNoSub) {
@@ -534,34 +546,48 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
 
     public void renderSubMenuString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)
             throws IOException {
-
-        boolean protectScope = !shareScope(context);
-        if (protectScope) {
-            context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
-            UtilGenerics.<MapStack<String>>cast(context).push();
-        }
         MenuRenderState renderState = MenuRenderState.retrieve(context);
-        Object lastMenuInfo = renderState.getCurrentMenuInfo();
-        try { // SCIPIO: Added try/finally block
-            renderState.updateCurrentMenu(this, context);
-            AbstractModelAction.runSubActions(actions, context);
 
-            // render menu open
-            menuStringRenderer.renderSubMenuOpen(writer, context, this);
-
-            // render each menuItem row, except hidden & ignored rows
-            for (ModelMenuItem item : this.getOrderedMenuItemList(context)) {
-                item.renderMenuItemString(writer, context, menuStringRenderer);
-            }
-
-            // render menu close
-            menuStringRenderer.renderSubMenuClose(writer, context, this);
-        } finally {
-            renderState.setCurrentMenuInfo(lastMenuInfo);
+        if (shouldBeRendered(context, renderState)) { // SCIPIO: renderState
+            boolean protectScope = !shareScope(context);
             if (protectScope) {
-                UtilGenerics.<MapStack<String>>cast(context).pop();
+                context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
+                UtilGenerics.<MapStack<String>>cast(context).push();
+            }
+            Object lastMenuInfo = renderState.getCurrentMenuInfo();
+            try { // SCIPIO: Added try/finally block
+                renderState.updateCurrentMenu(this, context);
+                AbstractModelAction.runSubActions(actions, context);
+
+                // render menu open
+                menuStringRenderer.renderSubMenuOpen(writer, context, this);
+
+                // render each menuItem row, except hidden & ignored rows
+                for (ModelMenuItem item : this.getOrderedMenuItemList(context)) {
+                    item.renderMenuItemString(writer, context, menuStringRenderer);
+                }
+
+                // render menu close
+                menuStringRenderer.renderSubMenuClose(writer, context, this);
+            } finally {
+                renderState.setCurrentMenuInfo(lastMenuInfo);
+                if (protectScope) {
+                    UtilGenerics.<MapStack<String>>cast(context).pop();
+                }
             }
         }
+    }
+
+    public boolean shouldBeRendered(Map<String, Object> context, MenuRenderState renderState) {
+        if (this.condition != null) {
+            // SCIPIO: only assign this if always-expand not set, but always store the result.
+            return this.condition.getCondition().eval(context);
+        }
+        return true;
+    }
+
+    public ModelMenuCondition getCondition() {
+        return condition;
     }
 
     /**

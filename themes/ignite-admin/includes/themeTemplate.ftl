@@ -486,6 +486,7 @@ jsOptions="" origArgs={} passArgs={} catchArgs...>
           <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
           <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>
           <#nested>
+          <#if htmlwrap?has_content></${htmlwrap}></#if>
           </div>
       </div>
   <#else>

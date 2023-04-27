@@ -29,11 +29,13 @@ import org.ofbiz.content.content.CommonContentWrapper;
 import org.ofbiz.content.content.ContentLangUtil;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelUtil;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.webapp.view.ViewHandlerException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -96,6 +98,30 @@ public class CategoryContentWrapper extends CommonContentWrapper {
      */
     public static String getProductCategoryContentAsText(GenericValue productCategory, String prodCatContentTypeId, Locale locale, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, null, null, dispatcher, useCache, encoderType);
+    }
+
+    /**
+     * SCIPIO: Looks up productCategory and gets content
+     */
+    public static String getProductCategoryContentAsText(String productCategoryId, String prodCatContentTypeId, HttpServletRequest request, String encoderType) {
+        try{
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            GenericValue productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache(true).queryOne();
+            return getProductCategoryContentAsText(productCategory,prodCatContentTypeId,request,encoderType);
+        }catch (Exception e){
+            Debug.logError("ProductCategory or content not found for id "+productCategoryId+" and contentType "+prodCatContentTypeId,module);
+        }
+        return null;
+    }
+
+    public static String getProductCategoryContentAsText(String productCategoryId, String prodCatContentTypeId, Locale locale, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
+        try{
+            GenericValue productCategory = EntityQuery.use(delegator).from("ProductCategory").where("productCategoryId", productCategoryId).cache(true).queryOne();
+            return getProductCategoryContentAsText(productCategory, prodCatContentTypeId, locale, dispatcher, true, encoderType);
+        }catch (Exception e){
+            Debug.logError("ProductCategory or content not found for id "+productCategoryId+" and contentType "+prodCatContentTypeId,module);
+        }
+        return null;
     }
 
     /**

@@ -99,6 +99,30 @@ public class ProductContentWrapper extends CommonContentWrapper {
     }
 
     /**
+     * SCIPIO: Looks up productCategory and gets content
+     */
+    public static String getProductContentAsText(String productId, String prodCatContentTypeId, HttpServletRequest request, String encoderType) {
+        try{
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache(true).queryOne();
+            return getProductContentAsText(product,prodCatContentTypeId,request,encoderType);
+        }catch (Exception e){
+            Debug.logError("ProductCategory or content not found for id "+productId+" and contentType "+prodCatContentTypeId,module);
+        }
+        return null;
+    }
+
+    public static String getProductContentAsText(String productId, String prodCatContentTypeId, Locale locale, Delegator delegator, LocalDispatcher dispatcher, String encoderType) {
+        try{
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).cache(true).queryOne();
+            return getProductContentAsText(product, prodCatContentTypeId, locale, dispatcher, true, encoderType);
+        }catch (Exception e){
+            Debug.logError("Product or content not found for id "+productId+" and contentType "+prodCatContentTypeId,module);
+        }
+        return null;
+    }
+
+    /**
      * Gets content as text, with option to bypass wrapper cache.
      * <p>SCIPIO: 2.x.x: Added.</p>
      */

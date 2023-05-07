@@ -44,6 +44,33 @@ abstract class AbstractSitemapUrlRenderer<T extends WebSitemapUrl> implements IS
 		if (additionalData != null) {
 			sb.append(additionalData);
 		}
+		if (url.getAltLinks() != null && !url.getAltLinks().isEmpty()) { // SCIPIO: 3.0.0: Added
+			for (AltLink altLink : url.getAltLinks()) {
+				String ns = altLink.namespace;
+				if (ns == null || ns.isEmpty()) {
+					ns = "xhtml";
+				}
+				sb.append("    <");
+				sb.append(ns);
+				sb.append(":link");
+				if (altLink.rel != null) {
+					sb.append(" rel=\"");
+					sb.append(UrlUtils.escapeXml(altLink.rel));
+					sb.append("\"");
+				}
+				if (altLink.lang != null) {
+					sb.append(" hreflang=\"");
+					sb.append(UrlUtils.escapeXml(altLink.lang));
+					sb.append("\"");
+				}
+				if (altLink.url != null) {
+					sb.append(" href=\"");
+					sb.append(UrlUtils.escapeXml(altLink.url));
+					sb.append("\"");
+				}
+				sb.append("/>\n");
+			}
+		}
 		sb.append("  </url>\n");
 	}
 

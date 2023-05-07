@@ -22,6 +22,7 @@ package com.redfin.sitemapgenerator;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * Generates a regular old sitemap (USE THIS CLASS FIRST).  To configure options, use {@link #builder(URL, File)}
@@ -31,7 +32,7 @@ import java.net.URL;
 public class WebSitemapGenerator extends SitemapGenerator<WebSitemapUrl,WebSitemapGenerator> {
 	
 	WebSitemapGenerator(AbstractSitemapGeneratorOptions<?> options) {
-		super(options, new Renderer());
+		super(options, new Renderer(options));
 	}
 	
 	/** Configures a builder so you can specify sitemap generator options
@@ -95,6 +96,28 @@ public class WebSitemapGenerator extends SitemapGenerator<WebSitemapUrl,WebSitem
 	}
 	
 	private static class Renderer extends AbstractSitemapUrlRenderer<WebSitemapUrl> implements ISitemapUrlRenderer<WebSitemapUrl> {
+
+		private final String namespaces; // SCIPIO: 3.0.0: Added
+
+		public Renderer(AbstractSitemapGeneratorOptions<?> options) { // SCIPIO: 3.0.0: Added
+			String namespaces = null;
+			if (options.namespaces != null && !options.namespaces.isEmpty()) {
+				String ns = "";
+				for (Map.Entry<String, String> entry : options.namespaces.entrySet()) {
+					String name = entry.getKey();
+					String value = entry.getValue();
+					if (!name.contains(":")) {
+						name = "xmlns:" + name;
+					}
+					if (!ns.isEmpty()) {
+						ns += " ";
+					}
+					ns += name + "=\"" + value + "\"";
+				}
+				namespaces = ns;
+			}
+			this.namespaces = namespaces;
+		}
 
 		public Class<WebSitemapUrl> getUrlClass() {
 			return WebSitemapUrl.class;

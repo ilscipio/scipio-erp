@@ -22,7 +22,9 @@ package com.redfin.sitemapgenerator;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /** Container for optional URL parameters */
 //that weird thing with generics is so sub-classed objects will return themselves
@@ -33,6 +35,7 @@ abstract class AbstractSitemapUrlOptions<U extends WebSitemapUrl, THIS extends A
 	Double priority;
 	URL url;
 	Class<U> clazz;
+	List<AltLink> altLinks; // SCIPIO: 3.0.0: Added
 	
 	public AbstractSitemapUrlOptions(String url, Class<U> clazz) throws MalformedURLException {
 		this(new URL(url), clazz);
@@ -113,7 +116,20 @@ abstract class AbstractSitemapUrlOptions<U extends WebSitemapUrl, THIS extends A
 		this.priority = priority;
 		return getThis();
 	}
-	
+
+	public AbstractSitemapUrlOptions<U, THIS> altLinks(List<AltLink> altLinks) {
+		this.altLinks = altLinks;
+		return this;
+	}
+
+	public AbstractSitemapUrlOptions<U, THIS> addAltLink(AltLink altLink) {
+		if (altLinks == null) {
+			altLinks = new ArrayList<>();
+		}
+		altLinks.add(altLink);
+		return this;
+	}
+
 	@SuppressWarnings("unchecked")
 	THIS getThis() {
 		return (THIS)this;
@@ -127,5 +143,5 @@ abstract class AbstractSitemapUrlOptions<U extends WebSitemapUrl, THIS extends A
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 }

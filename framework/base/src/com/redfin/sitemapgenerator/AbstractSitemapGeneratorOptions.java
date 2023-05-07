@@ -21,6 +21,7 @@ package com.redfin.sitemapgenerator;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Map;
 
 // that weird thing with generics is so sub-classed objects will return themselves
 // It makes sense, I swear! http://madbean.com/2004/mb2004-3/
@@ -35,7 +36,8 @@ abstract class AbstractSitemapGeneratorOptions<THIS extends AbstractSitemapGener
 	int maxUrls = SitemapGenerator.MAX_URLS_PER_SITEMAP;
 	boolean autoValidate = false;
 	boolean gzip = false;
-	
+	Map<String, String> namespaces; // SCIPIO: 3.0.0: Added
+
 	public AbstractSitemapGeneratorOptions(URL baseUrl, File baseDir) {
 		if (baseUrl == null) throw new NullPointerException("baseUrl may not be null");
 		this.baseDir = baseDir;
@@ -103,7 +105,19 @@ abstract class AbstractSitemapGeneratorOptions<THIS extends AbstractSitemapGener
 		this.gzip = gzip;
 		return getThis();
 	}
-	
+
+	/**
+	 * Extra namespaces.
+	 *
+	 * <p>Entries automatically prefixed with "xmlns:" if not already namespaced.</p>
+	 *
+	 * <p>SCIPIO: 3.0.0: Added.</p>
+	 */
+	public THIS namespaces(Map<String, String> namespaces) {
+		this.namespaces = namespaces;
+		return getThis();
+	}
+
 	@SuppressWarnings("unchecked")
 	THIS getThis() {
 		return (THIS)this;

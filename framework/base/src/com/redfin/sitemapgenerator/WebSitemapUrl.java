@@ -22,6 +22,7 @@ package com.redfin.sitemapgenerator;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Encapsulates a single URL to be inserted into a Web sitemap (as opposed to a Geo sitemap, a Mobile sitemap, a Video sitemap, etc which are Google specific).
@@ -36,6 +37,7 @@ public class WebSitemapUrl implements ISitemapUrl {
 	private final Date lastMod;
 	private final ChangeFreq changeFreq;
 	private final Double priority;
+	private final List<AltLink> altLinks; // SCIPIO: 3.0.0: Added
 	
 	/** Encapsulates a single simple URL */
 	public WebSitemapUrl(String url) throws MalformedURLException {
@@ -48,6 +50,7 @@ public class WebSitemapUrl implements ISitemapUrl {
 		this.lastMod = null;
 		this.changeFreq = null;
 		this.priority = null;
+		this.altLinks = null;
 	}
 	
 	/** Creates an URL with configured options */
@@ -60,6 +63,7 @@ public class WebSitemapUrl implements ISitemapUrl {
 		this.lastMod = options.lastMod;
 		this.changeFreq = options.changeFreq;
 		this.priority = options.priority;
+		this.altLinks = options.altLinks;
 	}
 	
 	/** Retrieves the {@link Options#lastMod(Date)} */
@@ -70,7 +74,16 @@ public class WebSitemapUrl implements ISitemapUrl {
 	public Double getPriority() { return priority; }
 	/** Retrieves the url */
 	public URL getUrl() { return url; }
-	
+
+	/**
+	 * Retrieves the alt links (xhtml:link).
+	 *
+	 * <p>SCIPIO: 3.0.0: Added.</p>
+	 */
+	public List<AltLink> getAltLinks() {
+		return altLinks;
+	}
+
 	/** Options to configure web sitemap URLs */
 	public static class Options extends AbstractSitemapUrlOptions<WebSitemapUrl, Options> {
 

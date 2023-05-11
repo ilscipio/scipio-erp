@@ -87,6 +87,7 @@ public class SitemapConfig implements Serializable {
     private final String compress;
 
     private final List<Locale> locales;
+    private final Map<Locale, LocaleConfig> localeConfigs;
 
     private final Set<String> prodCatalogIds;
     private final Set<String> prodCatalogCategoryTypeIds;
@@ -160,6 +161,12 @@ public class SitemapConfig implements Serializable {
         this.compress = asNormString(map.get("compress"), "gzip");
 
         this.locales = Collections.unmodifiableList(parseLocales(asNormString(map.get("locales"))));
+
+        Map<Locale, LocaleConfig> localeConfigs = new LinkedHashMap<>();
+        for (Locale locale : this.locales) {
+            localeConfigs.put(locale, new LocaleConfig(locale, map, "locales." + locale.toString() + "."));
+        }
+        this.localeConfigs = Collections.unmodifiableMap(localeConfigs);
 
         this.prodCatalogIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("prodCatalogIds")));
         this.prodCatalogCategoryTypeIds = splitTokensToUnmodifiableSetOrNull(asNormString(map.get("prodCatalogCategoryTypeIds")));
@@ -461,6 +468,14 @@ public class SitemapConfig implements Serializable {
         return locales.isEmpty() ? UtilMisc.toList(getDefaultLocale(webSite, productStore)) : locales;
     }
 
+    public Map<Locale, LocaleConfig> getLocaleConfigs() {
+        return localeConfigs;
+    }
+
+    public LocaleConfig getLocaleConfig(Locale locale) {
+        return getLocaleConfigs().get(locale);
+    }
+
     public Locale getDefaultLocale(GenericValue webSite, GenericValue productStore) {
         if (locales.size() > 0) return locales.get(0);
         else if (productStore != null) {
@@ -564,7 +579,6 @@ public class SitemapConfig implements Serializable {
         return webAppInfo.getContextRoot();
     }
 
-
     /**
      * Concats paths while handling bad input (to an extent).
      * TODO: central util and remove this (WARN: special null/empty check).
@@ -572,9 +586,11 @@ public class SitemapConfig implements Serializable {
     static String concatPaths(String... parts) {
         StringBuilder sb = new StringBuilder();
         for(String part : parts) {
-            if (part == null || part.isEmpty()) continue;
-            else if (sb.length() == 0) sb.append(part);
-            else {
+            if (part == null || part.isEmpty()) {
+                continue;
+            } else if (sb.length() == 0) {
+                sb.append(part);
+            } else {
                 if (sb.charAt(sb.length() - 1) == '/') {
                     if (part.startsWith("/")) {
                         sb.append(part.substring(1));
@@ -630,4 +646,51 @@ public class SitemapConfig implements Serializable {
         return set.isEmpty() ? null : Collections.unmodifiableSet(set);
     }
 
+    public static class LocaleConfig implements Serializable {
+        private final Locale locale;
+        private final String urlConfPath;
+        private final String urlConfMode;
+        private final String webSiteId;
+        private final String baseUrl;
+        private final String webappPathPrefix;
+        private final String contextPath;
+
+        protected LocaleConfig(Locale locale, Map<String, Object> map, String prefix) {
+            this.locale = locale;
+            this.urlConfPath = asNormString(map.get(prefix + "urlConfPath"));
+            this.urlConfMode = asNormString(map.get(prefix + "urlConfMode"));
+            this.webSiteId = asNormString(map.get(prefix + "webSiteId"));
+            this.baseUrl = asNormString(map.get(prefix + "baseUrl"));
+            this.webappPathPrefix = asNormString(map.get(prefix + "webappPathPrefix"));
+            this.contextPath = asNormString(map.get(prefix + "contextPath"));
+        }
+
+        public Locale getLocale() {
+            return locale;
+        }
+
+        public String getUrlConfPath() {
+            return urlConfPath;
+        }
+
+        public String getUrlConfMode() {
+            return urlConfMode;
+        }
+
+        public String getWebSiteId() {
+            return webSiteId;
+        }
+
+        public String getBaseUrl() {
+            return baseUrl;
+        }
+
+        public String getWebappPathPrefix() {
+            return webappPathPrefix;
+        }
+
+        public String getContextPath() {
+            return contextPath;
+        }
+    }
 }

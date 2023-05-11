@@ -1049,9 +1049,9 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
      * Returns active URIs normalized from webapp context root.
      * TODO?: locale is currently ignored. might be involved in future.
      */
-    public static List<String> getWebsiteActiveIndexableUris(Delegator delegator, String webSiteId, Locale contentLocale, boolean useCache) {
+    public static List<Map<Locale, String>> getWebsiteActiveIndexableUris(Delegator delegator, String webSiteId, Locale defaultLocale, boolean useCache) {
         List<CmsProcessMapping> mappingList = CmsProcessMapping.getWorker().findByWebSiteId(delegator, webSiteId, useCache);
-        List<String> uriList = new ArrayList<>(mappingList.size());
+        List<Map<Locale, String>> uriList = new ArrayList<>(mappingList.size());
 
         CmsWebSiteConfig webSiteConfig = CmsWebSiteInfo.getWebSiteConfigOrDefault(webSiteId);
 
@@ -1059,14 +1059,16 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         String defaultSourceServletPath = webSiteConfig.getDefaultSourceServletPath();
         boolean defaultIsIndexable = webSiteConfig.getMappingsIndexableDefault();
 
-        for(CmsProcessMapping mapping : mappingList) {
+        for (CmsProcessMapping mapping : mappingList) {
             if (!mapping.isActiveLogical()) continue;
             if (!mapping.isIndexableLogical(defaultIsIndexable)) continue;
             String uri = mapping.getSourcePathExpanded(defaultSourceServletPath, defaultSourceFromContextRoot);
             if (uri != null) {
-                uriList.add(uri);
+                // TODO: Localization
+                uriList.add(UtilMisc.orderedMap(defaultLocale, uri));
             }
         }
+
         return uriList;
     }
 

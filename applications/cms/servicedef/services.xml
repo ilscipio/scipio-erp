@@ -1026,9 +1026,14 @@
         <description>Returns a list of active indexable process mapping (page) URIs for the website, normalized from the webapp context root (not including the webapp context root)</description>
         <permission-service service-name="cmsGenericPermission" main-action="VIEW"/>
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="contentLocale" type="Locale" mode="IN" optional="true"/>
+        <attribute name="defaultLocale" type="Locale" mode="IN" optional="true"/>
+        <attribute name="contentLocale" type="Locale" mode="IN" optional="true">
+            <description>DEPRECATED</description>
+        </attribute>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false"/>
-        <attribute name="uriList" type="List" mode="OUT" optional="true"/>
+        <attribute name="uriList" type="List" mode="OUT" optional="true">
+            <description>List of maps, one per URI, that maps a Locale to a URI</description>
+        </attribute>
     </service>
 
     <!-- ========================================================= -->

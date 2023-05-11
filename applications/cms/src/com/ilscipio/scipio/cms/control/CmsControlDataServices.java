@@ -362,11 +362,11 @@ public abstract class CmsControlDataServices {
     public static Map<String, Object> getWebsiteIndexableProcessMappingUris(DispatchContext dctx, Map<String, Object> context) {
         Delegator delegator = dctx.getDelegator();
         String webSiteId = (String) context.get("webSiteId");
-        Locale contentLocale = (Locale) context.get("contentLocale");
+        Locale defaultLocale = (Locale) context.get("defaultLocale");
         boolean useCache = Boolean.TRUE.equals(context.get("useCache"));
 
         try {
-            List<String> uriList = CmsProcessMapping.getWebsiteActiveIndexableUris(delegator, webSiteId, contentLocale, useCache);
+            List<Map<Locale, String>> uriList = CmsProcessMapping.getWebsiteActiveIndexableUris(delegator, webSiteId, defaultLocale, useCache);
             Map<String, Object> result = ServiceUtil.returnSuccess();
             result.put("uriList", uriList);
             return result;

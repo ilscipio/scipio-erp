@@ -124,7 +124,7 @@ public class WebSitemapGenerator extends SitemapGenerator<WebSitemapUrl,WebSitem
 		}
 		
 		public String getXmlNamespaces() {
-			return null;
+			return namespaces;
 		}
 
 		public void render(WebSitemapUrl url, StringBuilder sb, W3CDateFormat dateFormat) {

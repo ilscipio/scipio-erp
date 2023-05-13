@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.transaction.Transaction;
@@ -31,6 +32,7 @@ import javax.transaction.Transaction;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralRuntimeException;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilTimer;
@@ -313,6 +315,7 @@ public class ServiceDispatcher {
             }
             // check the locale
             Locale locale = this.checkLocale(context);
+            TimeZone timeZone = this.checkTimeZone(context);
 
             // set up the running service log
             rs = this.logService(localName, modelService, GenericEngine.SYNC_MODE);
@@ -352,7 +355,7 @@ public class ServiceDispatcher {
 
             try {
                 // SCIPIO: Performs auto type conversions for fields marked type-convert="true" (failures caught by validator afterward)
-                modelService.applyTypeConvert(context, ModelService.IN_PARAM, locale, null, null);
+                modelService.applyTypeConvert(context, ModelService.IN_PARAM, locale, timeZone, null);
 
                 int lockRetriesRemaining = LOCK_RETRIES;
                 boolean needsLockRetry = false;
@@ -726,6 +729,7 @@ public class ServiceDispatcher {
 
         // check the locale
         Locale locale = this.checkLocale(context);
+        TimeZone timeZone = this.checkTimeZone(context);
 
         // setup the engine and context
         DispatchContext dctx = localContext.get(localName);
@@ -761,7 +765,7 @@ public class ServiceDispatcher {
 
             try {
                 // SCIPIO: Performs auto type conversions for fields marked type-convert="true" (failures caught by validator afterward)
-                service.applyTypeConvert(context, ModelService.IN_PARAM, locale, null, null);
+                service.applyTypeConvert(context, ModelService.IN_PARAM, locale, timeZone, null);
 
                 // get eventMap once for all calls for speed, don't do event calls if it is null
                 Map<String, List<ServiceEcaRule>> eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
@@ -1098,6 +1102,26 @@ public class ServiceDispatcher {
         }
         context.put("locale", newLocale);
         return newLocale;
+    }
+
+    private TimeZone checkTimeZone(Map<String, Object> context) {
+        Object timeZone = context.get("timeZone");
+        TimeZone newTimeZone = null;
+
+        if (timeZone != null) {
+            if (timeZone instanceof TimeZone) {
+                return (TimeZone) timeZone;
+            } else if (timeZone instanceof String) {
+                // en_US = lang_COUNTRY
+                newTimeZone = UtilDateTime.toTimeZone((String) timeZone);
+            }
+        }
+
+        if (newTimeZone == null) {
+            newTimeZone = TimeZone.getDefault();
+        }
+        context.put("timeZone", newTimeZone);
+        return newTimeZone;
     }
 
     // run startup services

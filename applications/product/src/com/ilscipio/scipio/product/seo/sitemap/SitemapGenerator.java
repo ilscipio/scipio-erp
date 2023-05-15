@@ -209,13 +209,14 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
                 List<Locale> locales = sitemapConfig.getLocalesOrDefault(webSite, productStore);
 
+                String webSiteId = webSite.getString("webSiteId");
                 Map<String, Object> urlRewriterCtx = new HashMap<>();
                 urlRewriterCtx.put("globalContext", new HashMap<String, Object>());
                 urlRewriterCtx.put("delegator", delegator);
                 urlRewriterCtx.put("dispatcher", dispatcher);
                 //urlRewriterCtx.put("security", security); // FIXME: missing
                 urlRewriterCtx.put("locale", locales.get(0));
-                urlRewriterCtx.put("webSiteId", webSite.getString("webSiteId"));
+                urlRewriterCtx.put("webSiteId", webSiteId);
                 ScipioUrlRewriter urlRewriterConf = null;
                 if (sitemapConfig.getUrlConfPath() != null) {
                     urlRewriterConf = ScipioUrlRewriter.getForContext(
@@ -224,19 +225,21 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 }
 
                 Map<Locale, LocaleInfo> localeInfos = new LinkedHashMap<>();
-                for (Locale locale : locales.subList(1, locales.size())) {
+                for (Locale locale : locales) {
                     Map<String, Object> locUrlRewriterCtx = new HashMap<>(urlRewriterCtx);
                     locUrlRewriterCtx.put("globalContext", new HashMap<String, Object>());
                     SitemapConfig.LocaleConfig localeConfig = sitemapConfig.getLocaleConfig(locale);
-                    String locWebSiteId = localeConfig.getWebSiteId();
                     locUrlRewriterCtx.put("locale", locale);
+                    String locWebSiteId = localeConfig.getWebSiteId();
+                    if (locWebSiteId == null) {
+                        locWebSiteId = webSiteId;
+                    }
                     locUrlRewriterCtx.put("webSiteId", locWebSiteId);
 
                     FullWebappInfo locWebappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(locWebSiteId), delegator, null);
                     ScipioUrlRewriter locUrlRewriterConf = null;
                     if (localeConfig.getUrlConfPath() != null) {
-                        locUrlRewriterConf = ScipioUrlRewriter.getForContext(locWebappInfo,
-                                localeConfig.getUrlConfPath(), locUrlRewriterCtx);
+                        locUrlRewriterConf = ScipioUrlRewriter.getForContext(locWebappInfo, localeConfig.getUrlConfPath(), locUrlRewriterCtx);
                     }
                     localeInfos.put(locale, new LocaleInfo(locale, localeConfig, locUrlRewriterConf, locUrlRewriterCtx, locWebappInfo));
                 }

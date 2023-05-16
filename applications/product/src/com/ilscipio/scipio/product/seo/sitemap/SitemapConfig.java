@@ -654,6 +654,8 @@ public class SitemapConfig implements Serializable {
         private final String baseUrl;
         private final String webappPathPrefix;
         private final String contextPath;
+        private final String sitemapWebappPathPrefix;
+        private final String sitemapContextPath;
 
         protected LocaleConfig(Locale locale, Map<String, Object> map, String prefix) {
             this.locale = locale;
@@ -663,6 +665,8 @@ public class SitemapConfig implements Serializable {
             this.baseUrl = asNormString(map.get(prefix + "baseUrl"));
             this.webappPathPrefix = asNormString(map.get(prefix + "webappPathPrefix"));
             this.contextPath = asNormString(map.get(prefix + "contextPath"));
+            this.sitemapWebappPathPrefix = asNormString(map.get(prefix + "sitemapWebappPathPrefix"));
+            this.sitemapContextPath = asNormString(map.get(prefix + "sitemapContextPath"));
         }
 
         public Locale getLocale() {
@@ -691,6 +695,14 @@ public class SitemapConfig implements Serializable {
 
         public String getContextPath() {
             return contextPath;
+        }
+
+        public String getSitemapWebappPathPrefix() {
+            return sitemapWebappPathPrefix;
+        }
+
+        public String getSitemapContextPath() {
+            return sitemapContextPath;
         }
     }
 }

@@ -421,43 +421,52 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return state.getTrailCategories();
     }
 
-    protected String getSitemapWebappPathPrefix() {
+    protected String getSitemapWebappPathPrefix(Locale locale) {
+        if (locale != null) {
+            LocaleInfo localeInfo = getLocaleInfo(locale);
+            if (localeInfo != null && localeInfo.getSitemapWebappPathPrefix() != null) {
+                return localeInfo.getSitemapWebappPathPrefix();
+            }
+        }
         return sitemapWebappPathPrefix;
     }
 
-    protected String getSitemapContextPath() {
+    protected String getSitemapContextPath(Locale locale) {
+        if (locale != null) {
+            LocaleInfo localeInfo = getLocaleInfo(locale);
+            if (localeInfo != null && localeInfo.getSitemapContextPath() != null) {
+                return localeInfo.getSitemapContextPath();
+            }
+        }
         return sitemapContextPath;
     }
 
     protected String getWebappPathPrefix(Locale locale) {
-        if (locale == null) {
-            locale = getDefaultLocale();
-        }
-        LocaleInfo localeInfo = getLocaleInfo(locale);
-        if (localeInfo != null && localeInfo.getWebappPathPrefix() != null) {
-            return localeInfo.getWebappPathPrefix();
+        if (locale != null) {
+            LocaleInfo localeInfo = getLocaleInfo(locale);
+            if (localeInfo != null && localeInfo.getWebappPathPrefix() != null) {
+                return localeInfo.getWebappPathPrefix();
+            }
         }
         return webappPathPrefix;
     }
 
     protected String getContextPath(Locale locale) {
-        if (locale == null) {
-            locale = getDefaultLocale();
-        }
-        LocaleInfo localeInfo = getLocaleInfo(locale);
-        if (localeInfo != null && localeInfo.getContextPath() != null) {
-            return localeInfo.getContextPath();
+        if (locale != null) {
+            LocaleInfo localeInfo = getLocaleInfo(locale);
+            if (localeInfo != null && localeInfo.getContextPath() != null) {
+                return localeInfo.getContextPath();
+            }
         }
         return contextPath;
     }
 
     protected String getBaseUrl(Locale locale) {
-        if (locale == null) {
-            locale = getDefaultLocale();
-        }
-        LocaleInfo localeInfo = getLocaleInfo(locale);
-        if (localeInfo != null && localeInfo.getBaseUrl() != null) {
-            return localeInfo.getBaseUrl();
+        if (locale != null) {
+            LocaleInfo localeInfo = getLocaleInfo(locale);
+            if (localeInfo != null && localeInfo.getBaseUrl() != null) {
+                return localeInfo.getBaseUrl();
+            }
         }
         return (baseUrl != null ? baseUrl : "");
     }
@@ -512,7 +521,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected WebSitemapGenerator getSitemapGenerator(String filePrefix) throws IOException {
         File myDir = getSitemapDirFile();
         myDir.mkdirs();
-        return WebSitemapGenerator.builder(getBaseUrl(null), myDir)
+        return WebSitemapGenerator.builder(getBaseUrl(getDefaultLocale()), myDir)
                 .fileNamePrefix(filePrefix)
                 .dateFormat(sitemapConfig.getDateFormat())
                 .gzip(sitemapConfig.isGzip())
@@ -1033,7 +1042,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             // ignore if file already exists
         }
 
-        SitemapIndexGenerator sig = new SitemapIndexGenerator(getBaseUrl(null), myFile);
+        SitemapIndexGenerator sig = new SitemapIndexGenerator(getBaseUrl(getDefaultLocale()), myFile);
         for(String url : sitemapFilenames){
             sig.addUrl(getSitemapFileLink(url));
         }
@@ -1042,12 +1051,20 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         Debug.logInfo(getLogMsgPrefix()+"Done writing index '" + sitemapConfig.getSitemapIndexFile() + "'", module);
     }
 
+    public String getSitemapFileLink(String filename, Locale locale) {
+        return postprocessSiteMapFileLink(concatPaths(getSitemapContextPath(locale), sitemapConfig.getSitemapDirPath(), filename), locale);
+    }
+
     public String getSitemapFileLink(String filename) {
-        return postprocessSiteMapFileLink(concatPaths(getSitemapContextPath(), sitemapConfig.getSitemapDirPath(), filename));
+        return getSitemapFileLink(filename, null);
+    }
+
+    public String getSitemapIndexFileLink(Locale locale) {
+        return getSitemapFileLink(sitemapConfig.getSitemapIndexFile(), locale);
     }
 
     public String getSitemapIndexFileLink() {
-        return getSitemapFileLink(sitemapConfig.getSitemapIndexFile());
+        return getSitemapIndexFileLink(null);
     }
 
     public FullWebappInfo getWebappInfo() {
@@ -1108,8 +1125,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return postprocessLink(getWebappPathPrefix(locale), url, locale);
     }
 
-    protected String postprocessSiteMapFileLink(String url) {
-        return postprocessLink(getSitemapWebappPathPrefix(), url, null);
+    protected String postprocessSiteMapFileLink(String url, Locale locale) {
+        return postprocessLink(getSitemapWebappPathPrefix(locale), url, locale);
     }
 
     @Override
@@ -1224,6 +1241,14 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
         public String getContextPath() {
             return getLocaleConfig().getContextPath();
+        }
+
+        public String getSitemapWebappPathPrefix() {
+            return getLocaleConfig().getSitemapWebappPathPrefix();
+        }
+
+        public String getSitemapContextPath() {
+            return getLocaleConfig().getSitemapContextPath();
         }
 
         public ScipioUrlRewriter getUrlRewriterConf() {

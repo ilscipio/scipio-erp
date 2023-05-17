@@ -471,6 +471,10 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return (baseUrl != null ? baseUrl : "");
     }
 
+    protected boolean isLocalized() {
+        return (locales.size() > 1) || isDefaultAltLink();
+    }
+
     protected List<Locale> getLocales() {
         return locales;
     }
@@ -716,33 +720,35 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 }
 
                 List<AltLink> altLinks = null;
-                if (isDefaultAltLink()) {
-                    altLinks = new ArrayList<>(getLocales().size());
-                    altLinks.add(new AltLink(processedUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
-                }
-
-                // SCIPIO: 3.0.0: Multi-locale support
-                List<Locale> altLocales = getAltLocales();
-                if (!altLocales.isEmpty()) {
-                    if (altLinks == null) {
-                        altLinks = new ArrayList<>(altLocales.size());
+                if (isLocalized()) {
+                    if (isDefaultAltLink()) {
+                        altLinks = new ArrayList<>(getLocales().size());
+                        altLinks.add(new AltLink(processedUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
                     }
-                    for (Locale altLocale : altLocales) {
-                        locale = altLocale;
-                        String altUrl;
-                        if (getSitemapConfig().isPreProcessTrail()) {
-                            List<String> trail = trailNames.get(locale);
-                            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetCategory(productCategory)
-                                    .setLast(true).setNameIndex(trail.size() - 1).setTotalNames(trail.size());
-                            altUrl = getUrlWorker().makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
-                        } else {
-                            altUrl = getUrlWorker().makeCategoryUrlCore(getDelegator(), getDispatcher(), locale, productCategory, null, null, trailEntities,
-                                    getWebappInfo(), isUseCache()).toString();
+
+                    // SCIPIO: 3.0.0: Multi-locale support
+                    List<Locale> altLocales = getAltLocales();
+                    if (!altLocales.isEmpty()) {
+                        if (altLinks == null) {
+                            altLinks = new ArrayList<>(altLocales.size());
                         }
-                        if (altUrl != null && !altUrl.isEmpty()) {
-                            String processedAltUrl = postprocessElementLink(altUrl, locale);
-                            if (processedAltUrl != null && !processedAltUrl.isEmpty()) {
-                                altLinks.add(new AltLink(processedAltUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
+                        for (Locale altLocale : altLocales) {
+                            locale = altLocale;
+                            String altUrl;
+                            if (getSitemapConfig().isPreProcessTrail()) {
+                                List<String> trail = trailNames.get(locale);
+                                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetCategory(productCategory)
+                                        .setLast(true).setNameIndex(trail.size() - 1).setTotalNames(trail.size());
+                                altUrl = getUrlWorker().makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
+                            } else {
+                                altUrl = getUrlWorker().makeCategoryUrlCore(getDelegator(), getDispatcher(), locale, productCategory, null, null, trailEntities,
+                                        getWebappInfo(), isUseCache()).toString();
+                            }
+                            if (altUrl != null && !altUrl.isEmpty()) {
+                                String processedAltUrl = postprocessElementLink(altUrl, locale);
+                                if (processedAltUrl != null && !processedAltUrl.isEmpty()) {
+                                    altLinks.add(new AltLink(processedAltUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
+                                }
                             }
                         }
                     }
@@ -782,33 +788,35 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 }
 
                 List<AltLink> altLinks = null;
-                if (isDefaultAltLink()) {
-                    altLinks = new ArrayList<>(getLocales().size());
-                    altLinks.add(new AltLink(processedUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
-                }
-
-                // SCIPIO: 3.0.0: Multi-locale support
-                List<Locale> altLocales = getAltLocales();
-                if (!altLocales.isEmpty()) {
-                    if (altLinks == null) {
-                        altLinks = new ArrayList<>(altLocales.size());
+                if (isLocalized()) {
+                    if (isDefaultAltLink()) {
+                        altLinks = new ArrayList<>(getLocales().size());
+                        altLinks.add(new AltLink(processedUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
                     }
-                    for (Locale altLocale : altLocales) {
-                        locale = altLocale;
-                        String altUrl;
-                        if (getSitemapConfig().isPreProcessTrail()) {
-                            List<String> trail = trailNames.get(locale);
-                            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetProduct(product)
-                                    .setLast(true).setNameIndex(trail.size()).setTotalNames(trail.size() + 1);
-                            altUrl = getUrlWorker().makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
-                        } else {
-                            altUrl = getUrlWorker().makeProductUrlCore(getDelegator(), getDispatcher(), locale, product, null, null, trailEntities,
-                                    getWebappInfo(), isUseCache()).toString();
+
+                    // SCIPIO: 3.0.0: Multi-locale support
+                    List<Locale> altLocales = getAltLocales();
+                    if (!altLocales.isEmpty()) {
+                        if (altLinks == null) {
+                            altLinks = new ArrayList<>(altLocales.size());
                         }
-                        if (altUrl != null && !altUrl.isEmpty()) {
-                            String processedAltUrl = postprocessElementLink(altUrl, locale);
-                            if (processedAltUrl != null && !processedAltUrl.isEmpty()) {
-                                altLinks.add(new AltLink(processedAltUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
+                        for (Locale altLocale : altLocales) {
+                            locale = altLocale;
+                            String altUrl;
+                            if (getSitemapConfig().isPreProcessTrail()) {
+                                List<String> trail = trailNames.get(locale);
+                                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetProduct(product)
+                                        .setLast(true).setNameIndex(trail.size()).setTotalNames(trail.size() + 1);
+                                altUrl = getUrlWorker().makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
+                            } else {
+                                altUrl = getUrlWorker().makeProductUrlCore(getDelegator(), getDispatcher(), locale, product, null, null, trailEntities,
+                                        getWebappInfo(), isUseCache()).toString();
+                            }
+                            if (altUrl != null && !altUrl.isEmpty()) {
+                                String processedAltUrl = postprocessElementLink(altUrl, locale);
+                                if (processedAltUrl != null && !processedAltUrl.isEmpty()) {
+                                    altLinks.add(new AltLink(processedAltUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
+                                }
                             }
                         }
                     }
@@ -841,25 +849,27 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             }
 
             List<AltLink> altLinks = null;
-            if (isDefaultAltLink()) {
-                altLinks = new ArrayList<>(getLocales().size());
-                altLinks.add(new AltLink(url).namespace("xhtml").rel("alternate").lang(locale.toString()));
-            }
-
-            // SCIPIO: 3.0.0: Multi-locale suppport
-            List<Locale> altLocales = getAltLocales();
-            if (!altLocales.isEmpty()) {
-                if (altLinks == null) {
-                    altLinks = new ArrayList<>(altLocales.size());
+            if (isLocalized()) {
+                if (isDefaultAltLink()) {
+                    altLinks = new ArrayList<>(getLocales().size());
+                    altLinks.add(new AltLink(url).namespace("xhtml").rel("alternate").lang(locale.toString()));
                 }
-                for (Locale altLocale : altLocales) {
-                    locale = altLocale;
-                    String altUri = uri.get(locale);
-                    if (altUri != null) {
-                        altUri = PathUtil.concatPaths(getContextPath(locale), altUri);
-                        String altUrl = postprocessElementLink(altUri, locale);
-                        if (altUrl != null && !altUrl.isEmpty()) {
-                            altLinks.add(new AltLink(altUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
+
+                // SCIPIO: 3.0.0: Multi-locale suppport
+                List<Locale> altLocales = getAltLocales();
+                if (!altLocales.isEmpty()) {
+                    if (altLinks == null) {
+                        altLinks = new ArrayList<>(altLocales.size());
+                    }
+                    for (Locale altLocale : altLocales) {
+                        locale = altLocale;
+                        String altUri = uri.get(locale);
+                        if (altUri != null) {
+                            altUri = PathUtil.concatPaths(getContextPath(locale), altUri);
+                            String altUrl = postprocessElementLink(altUri, locale);
+                            if (altUrl != null && !altUrl.isEmpty()) {
+                                altLinks.add(new AltLink(altUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
+                            }
                         }
                     }
                 }

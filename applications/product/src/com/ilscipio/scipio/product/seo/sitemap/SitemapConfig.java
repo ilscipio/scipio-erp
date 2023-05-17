@@ -163,7 +163,7 @@ public class SitemapConfig implements Serializable {
 
         this.locales = Collections.unmodifiableList(parseLocales(asNormString(map.get("locales"))));
 
-        this.defaultAltLink = asBoolean(map.get("defaultAltLink"), false);
+        this.defaultAltLink = asBoolean(map.get("defaultAltLink"), true);
 
         Map<Locale, LocaleConfig> localeConfigs = new LinkedHashMap<>();
         for (Locale locale : this.locales) {
@@ -484,12 +484,9 @@ public class SitemapConfig implements Serializable {
     }
 
     public Locale getDefaultLocale(GenericValue webSite, GenericValue productStore) {
-        if (locales.size() > 0) return locales.get(0);
-        else if (productStore != null) {
-            // TODO?: future? there is no defaultLocaleString on WebSite yet, but it makes so much
-            // sense I thought I had already done it!
-//            Locale locale = UtilMisc.parseLocale(webSite.getString("defaultLocaleString"));
-//            if (locale != null) return locale;
+        if (locales.size() > 0) {
+            return locales.get(0);
+        } else if (productStore != null) {
             Locale locale = UtilMisc.parseLocale(productStore.getString("defaultLocaleString"));
             return locale != null ? locale : Locale.getDefault();
         } else {

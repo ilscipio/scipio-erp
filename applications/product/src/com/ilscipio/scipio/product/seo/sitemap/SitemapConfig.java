@@ -87,6 +87,7 @@ public class SitemapConfig implements Serializable {
     private final String compress;
 
     private final List<Locale> locales;
+    private final boolean defaultAltLink;
     private final Map<Locale, LocaleConfig> localeConfigs;
 
     private final Set<String> prodCatalogIds;
@@ -161,6 +162,8 @@ public class SitemapConfig implements Serializable {
         this.compress = asNormString(map.get("compress"), "gzip");
 
         this.locales = Collections.unmodifiableList(parseLocales(asNormString(map.get("locales"))));
+
+        this.defaultAltLink = asBoolean(map.get("defaultAltLink"), false);
 
         Map<Locale, LocaleConfig> localeConfigs = new LinkedHashMap<>();
         for (Locale locale : this.locales) {
@@ -466,6 +469,10 @@ public class SitemapConfig implements Serializable {
 
     public List<Locale> getLocalesOrDefault(GenericValue webSite, GenericValue productStore) {
         return locales.isEmpty() ? UtilMisc.toList(getDefaultLocale(webSite, productStore)) : locales;
+    }
+
+    public boolean isDefaultAltLink() {
+        return defaultAltLink;
     }
 
     public Map<Locale, LocaleConfig> getLocaleConfigs() {

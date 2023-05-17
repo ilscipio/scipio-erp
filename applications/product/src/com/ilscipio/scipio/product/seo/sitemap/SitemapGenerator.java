@@ -479,6 +479,10 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return altLocales;
     }
 
+    protected boolean isDefaultAltLink() {
+        return getSitemapConfig().isDefaultAltLink();
+    }
+
     protected Map<Locale, LocaleInfo> getLocaleInfos() {
         return localeInfos;
     }
@@ -711,11 +715,18 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                     Debug.logVerbose(getLogMsgPrefix() + "Adding category url: " + processedUrl, module);
                 }
 
-                // SCIPIO: 3.0.0: Multi-locale support
                 List<AltLink> altLinks = null;
+                if (isDefaultAltLink()) {
+                    altLinks = new ArrayList<>(getLocales().size());
+                    altLinks.add(new AltLink(processedUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
+                }
+
+                // SCIPIO: 3.0.0: Multi-locale support
                 List<Locale> altLocales = getAltLocales();
                 if (!altLocales.isEmpty()) {
-                    altLinks = new ArrayList<>(altLocales.size());
+                    if (altLinks == null) {
+                        altLinks = new ArrayList<>(altLocales.size());
+                    }
                     for (Locale altLocale : altLocales) {
                         locale = altLocale;
                         String altUrl;
@@ -770,11 +781,18 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                     Debug.logVerbose(getLogMsgPrefix() + "Adding product url: " + processedUrl, module);
                 }
 
-                // SCIPIO: 3.0.0: Multi-locale support
                 List<AltLink> altLinks = null;
+                if (isDefaultAltLink()) {
+                    altLinks = new ArrayList<>(getLocales().size());
+                    altLinks.add(new AltLink(processedUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
+                }
+
+                // SCIPIO: 3.0.0: Multi-locale support
                 List<Locale> altLocales = getAltLocales();
                 if (!altLocales.isEmpty()) {
-                    altLinks = new ArrayList<>(altLocales.size());
+                    if (altLinks == null) {
+                        altLinks = new ArrayList<>(altLocales.size());
+                    }
                     for (Locale altLocale : altLocales) {
                         locale = altLocale;
                         String altUrl;
@@ -822,11 +840,18 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 Debug.logVerbose(getLogMsgPrefix()+"Processing CMS page url: " + url, module);
             }
 
+            List<AltLink> altLinks = null;
+            if (isDefaultAltLink()) {
+                altLinks = new ArrayList<>(getLocales().size());
+                altLinks.add(new AltLink(url).namespace("xhtml").rel("alternate").lang(locale.toString()));
+            }
+
             // SCIPIO: 3.0.0: Multi-locale suppport
             List<Locale> altLocales = getAltLocales();
-            List<AltLink> altLinks = null;
             if (!altLocales.isEmpty()) {
-                altLinks = new ArrayList<>(altLocales.size());
+                if (altLinks == null) {
+                    altLinks = new ArrayList<>(altLocales.size());
+                }
                 for (Locale altLocale : altLocales) {
                     locale = altLocale;
                     String altUri = uri.get(locale);

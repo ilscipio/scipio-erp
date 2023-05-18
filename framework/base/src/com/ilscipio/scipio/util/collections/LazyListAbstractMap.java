@@ -9,9 +9,11 @@ import java.util.Set;
 /**
  * Simplification of AbstractMap for read-only implementations (mostly).
  *
+ * <p>Useful when a bean/other class needs to implement Map interface and avoid recreating map representations (typically read-only).</p>
+ *
  * <p>SCIPIO: 3.0.0: Added.</p>
  */
-public abstract class BufferedListBasedAbstractMap<K, V> extends AbstractMap<K, V> {
+public abstract class LazyListAbstractMap<K, V> extends AbstractMap<K, V> {
 
     protected Set<Entry<K, V>> entrySet;
     protected List<Entry<K, V>> entryList;
@@ -31,7 +33,7 @@ public abstract class BufferedListBasedAbstractMap<K, V> extends AbstractMap<K, 
     public Set<Entry<K, V>> entrySet() {
         Set<Entry<K, V>> entrySet = this.entrySet;
         if (entrySet == null) {
-            entrySet = new AbstractSet<>() {
+            entrySet = new AbstractSet<Entry<K, V>>() {
                 private final List<Entry<K, V>> entryList = entryList();
                 @Override
                 public Iterator<Entry<K, V>> iterator() {

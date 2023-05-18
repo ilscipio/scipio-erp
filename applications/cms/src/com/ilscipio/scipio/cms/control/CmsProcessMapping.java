@@ -2,7 +2,6 @@ package com.ilscipio.scipio.cms.control;
 
 import java.io.Serializable;
 import java.util.AbstractMap;
-import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import com.ilscipio.scipio.ce.util.SafeOptional;
-import com.ilscipio.scipio.util.collections.BufferedListBasedAbstractMap;
+import com.ilscipio.scipio.util.collections.LazyListAbstractMap;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -1082,7 +1081,7 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
      *
      * <p>NOTE: Implements Map to get around cyclical dependency issues.</p>
      */
-    public static class UriInfo extends BufferedListBasedAbstractMap<String, Object> implements Serializable {
+    public static class UriInfo extends LazyListAbstractMap<String, Object> implements Serializable {
         protected final CmsProcessMapping processMapping;
         protected final Map<Locale, String> localeUriMap;
 
@@ -1094,10 +1093,10 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
         protected List<Entry<String, Object>> makeEntryList() {
             // TODO: REVIEW: content is included here mainly for SitemapGenerator cyclical dependency issue
             return List.of(
-                    new AbstractMap.SimpleEntry<>("processMapping", getProcessMapping()),
-                    new AbstractMap.SimpleEntry<>("primaryForPageId", getPrimaryForPageId()),
-                    new AbstractMap.SimpleEntry<>("localeUriMap", getLocaleUriMap()),
-                    new AbstractMap.SimpleEntry<>("content", getContent())
+                    Map.entry("processMapping", getProcessMapping()),
+                    Map.entry("primaryForPageId", getPrimaryForPageId()),
+                    Map.entry("localeUriMap", getLocaleUriMap()),
+                    Map.entry("content", getContent())
             );
         }
 

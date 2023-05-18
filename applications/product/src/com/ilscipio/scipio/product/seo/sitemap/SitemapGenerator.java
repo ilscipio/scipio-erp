@@ -29,6 +29,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
@@ -225,10 +226,11 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 }
 
                 Map<Locale, LocaleInfo> localeInfos = new LinkedHashMap<>();
+                //if ((locales.size() > 1) || sitemapConfig.isDefaultAltLink()) {
                 for (Locale locale : locales) {
                     Map<String, Object> locUrlRewriterCtx = new HashMap<>(urlRewriterCtx);
                     locUrlRewriterCtx.put("globalContext", new HashMap<String, Object>());
-                    SitemapConfig.LocaleConfig localeConfig = sitemapConfig.getLocaleConfig(locale);
+                    SitemapConfig.LocaleConfig localeConfig = sitemapConfig.getLocaleConfigOrDefault(locale);
                     locUrlRewriterCtx.put("locale", locale);
                     String locWebSiteId = localeConfig.getWebSiteId();
                     if (locWebSiteId == null) {
@@ -243,6 +245,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                     }
                     localeInfos.put(locale, new LocaleInfo(locale, localeConfig, locUrlRewriterConf, locUrlRewriterCtx, locWebappInfo));
                 }
+                //}
 
                 SeoCatalogUrlWorker urlWorker = SeoCatalogUrlWorker.getInstance(delegator, webSite.getString("webSiteId"));
 
@@ -472,7 +475,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     }
 
     protected boolean isLocalized() {
-        return (locales.size() > 1) || isDefaultAltLink();
+        return (locales.size() > 1) || Boolean.TRUE.equals(getSitemapConfig().getDefaultAltLink());
     }
 
     protected List<Locale> getLocales() {
@@ -484,7 +487,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     }
 
     protected boolean isDefaultAltLink() {
-        return getSitemapConfig().isDefaultAltLink();
+        Boolean defaultAltLink = getSitemapConfig().getDefaultAltLink();
+        return (defaultAltLink != null) ? defaultAltLink : (locales.size() > 1);
     }
 
     protected Map<Locale, LocaleInfo> getLocaleInfos() {
@@ -509,6 +513,25 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     protected Map<String, Object> getUrlRewriterCtx() {
         return urlRewriterCtx;
+    }
+
+    protected FlexibleStringExpander getCmsPageUrlAttr(Locale locale) {
+        FlexibleStringExpander attr = null;
+        if (locale != null) {
+            LocaleInfo localeInfo = getLocaleInfo(locale);
+            if (localeInfo != null && localeInfo.getCmsPageUrlAttr() != null) {
+                attr = localeInfo.getCmsPageUrlAttr();
+            }
+        }
+        if (attr == null) {
+            attr = getSitemapConfig().getCmsPageUrlAttr();
+        }
+        if ("none".equals(attr.getOriginal())) {
+            attr = null;
+        } else if (attr.getOriginal().isEmpty()) {
+            attr = SitemapConfig.DEFAULT_CMS_PAGE_URL_ATTR;
+        }
+        return attr;
     }
 
     public String getFullSitemapDir() {
@@ -584,13 +607,13 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             return;
         }
 
-        List<Map<Locale, String>> uriList = getCmsUriList(getDefaultLocale());
+        List<Map<String, Object>> uriList = getCmsUriList(getDefaultLocale());
         if (uriList == null || uriList.size() == 0) {
             return;
         }
 
-        for (Map<Locale, String> uri : uriList) {
-            buildSitemapCmsPageLink(uri);
+        for (Map<String, Object> uriInfo : uriList) {
+            buildSitemapCmsPageLink(uriInfo);
         }
     }
 
@@ -837,12 +860,21 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         }
     }
 
-    protected void buildSitemapCmsPageLink(Map<Locale, String> uri) {
+    protected void buildSitemapCmsPageLink(Map<String, Object> uriInfo) {
+        String pageId = (String) uriInfo.get("primaryForPageId");
         try {
-            Locale locale = getDefaultLocale();
-            String defaultUri = uri.get(locale);
+            Map<Locale, String> localeUriMap = UtilGenerics.cast(uriInfo.get("localeUriMap"));
 
-            defaultUri = PathUtil.concatPaths(getContextPath(locale), defaultUri);
+            Locale locale = getDefaultLocale();
+            FlexibleStringExpander cmsPageUrlAttr = getCmsPageUrlAttr(locale);
+            String defaultUri = null;
+            if (cmsPageUrlAttr != null) {
+                defaultUri = getCmsPageAttrValue(uriInfo, cmsPageUrlAttr, locale);
+            }
+            if (defaultUri == null || defaultUri.isEmpty()) {
+                defaultUri = PathUtil.concatPaths(getContextPath(locale), localeUriMap.get(locale));
+            }
+
             String url = postprocessElementLink(defaultUri, locale);
             if (Debug.verboseOn()) {
                 Debug.logVerbose(getLogMsgPrefix()+"Processing CMS page url: " + url, module);
@@ -863,9 +895,19 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                     }
                     for (Locale altLocale : altLocales) {
                         locale = altLocale;
-                        String altUri = uri.get(locale);
+                        cmsPageUrlAttr = getCmsPageUrlAttr(locale);
+                        String altUri = null;
+                        if (cmsPageUrlAttr != null) {
+                            altUri = getCmsPageAttrValue(uriInfo, cmsPageUrlAttr, locale);
+                        }
+                        if (altUri == null || altUri.isEmpty()) {
+                            altUri = localeUriMap.get(locale);
+                            if (altUri != null) {
+                                altUri = PathUtil.concatPaths(getContextPath(locale), altUri);
+                            }
+                        }
+
                         if (altUri != null) {
-                            altUri = PathUtil.concatPaths(getContextPath(locale), altUri);
                             String altUrl = postprocessElementLink(altUri, locale);
                             if (altUrl != null && !altUrl.isEmpty()) {
                                 altLinks.add(new AltLink(altUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
@@ -879,8 +921,21 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             getContentElemHandler().addUrl(libUrl);
         } catch(Exception e) {
             getStats().contentError++;
-            Debug.logError(getLogErrorPrefix()+"Error processing cms page URI: " + uri + ": " + e.getMessage(), module);
+            Debug.logError(getLogErrorPrefix()+"Error processing CMS page [" + pageId + "]: " + e.getMessage(), module);
         }
+    }
+
+    protected String getCmsPageAttrValue(Map<String, Object> uriInfo, FlexibleStringExpander attr, Locale locale) {
+        Map<String, Object> attrCtx = UtilMisc.toMap("localeVar", locale.toString().replace("-", "_"));
+        String attrName = attr.expandString(attrCtx);
+        if (attrName == null || attrName.isEmpty()) {
+            return null;
+        }
+        // FIXME: This is the unparsed attribute assumed to be string to simplify for now; missing
+        //  logic from com.ilscipio.scipio.cms.template.CmsRenderTemplate.TemplateRenderer.populateAttributeOrOvrd for now
+        Map<String, ?> content = UtilGenerics.cast(uriInfo.get("content"));
+        Object value = (content != null) ? content.get(attrName) : null;
+        return (value != null) ? value.toString() : null;
     }
 
     protected void resetElemHandlers() {
@@ -1152,7 +1207,12 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     protected String postprocessLink(String webappPathPrefix, String url, Locale locale) {
         // 2018-07-27: we should apply the rules on the whole URL to properly emulate the @pageUrl, even if it's slower
         //return concatPaths(getBaseUrl(), webappPathPrefix, applyUrlRewriteRules(url));
-        String fullUrl = concatPaths(getBaseUrl(locale), webappPathPrefix, url);
+        String fullUrl;
+        if (!url.contains("//")) { // SCIPIO: 3.0.0: Don't concat if url contains protocol
+            fullUrl = concatPaths(getBaseUrl(locale), webappPathPrefix, url);
+        } else {
+            fullUrl = url;
+        }
         return applyUrlRewriteRules(fullUrl, locale);
     }
 
@@ -1174,7 +1234,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return logPrefix+"Error generating sitemap for website '" + webSiteId + "': ";
     }
 
-    protected List<Map<Locale, String>> getCmsUriList(Locale defaultLocale) throws GeneralException {
+    // FIXME: dependency issue: List<CmsProcessMapping.UriInfo>; implements Map also for now
+    protected List<Map<String, Object>> getCmsUriList(Locale defaultLocale) throws GeneralException {
         Map<String, Object> servCtx = getDispatcher().getDispatchContext()
                 .makeValidContext("cmsGetWebsiteIndexableProcessMappingUris", ModelService.IN_PARAM, getServCtxOpts());
         servCtx.put("webSiteId", sitemapConfig.getWebSiteId());
@@ -1296,6 +1357,10 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
         public FullWebappInfo getWebappInfo() {
             return webappInfo;
+        }
+
+        public FlexibleStringExpander getCmsPageUrlAttr() {
+            return getLocaleConfig().getCmsPageUrlAttr();
         }
     }
 

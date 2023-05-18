@@ -1,5 +1,8 @@
 package com.ilscipio.scipio.cms.control;
 
+import java.io.Serializable;
+import java.util.AbstractMap;
+import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 
 import com.ilscipio.scipio.ce.util.SafeOptional;
+import com.ilscipio.scipio.util.collections.BufferedListBasedAbstractMap;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -1049,9 +1053,9 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
      * Returns active URIs normalized from webapp context root.
      * TODO?: locale is currently ignored. might be involved in future.
      */
-    public static List<Map<Locale, String>> getWebsiteActiveIndexableUris(Delegator delegator, String webSiteId, Locale defaultLocale, boolean useCache) {
+    public static List<UriInfo> getWebsiteActiveIndexableUris(Delegator delegator, String webSiteId, Locale defaultLocale, boolean useCache) {
         List<CmsProcessMapping> mappingList = CmsProcessMapping.getWorker().findByWebSiteId(delegator, webSiteId, useCache);
-        List<Map<Locale, String>> uriList = new ArrayList<>(mappingList.size());
+        List<UriInfo> uriList = new ArrayList<>(mappingList.size());
 
         CmsWebSiteConfig webSiteConfig = CmsWebSiteInfo.getWebSiteConfigOrDefault(webSiteId);
 
@@ -1065,11 +1069,57 @@ public class CmsProcessMapping extends CmsControlDataObject implements CmsMajorO
             String uri = mapping.getSourcePathExpanded(defaultSourceServletPath, defaultSourceFromContextRoot);
             if (uri != null) {
                 // TODO: Localization
-                uriList.add(UtilMisc.orderedMap(defaultLocale, uri));
+                UriInfo uriInfo = new UriInfo(mapping, UtilMisc.orderedMap(defaultLocale, uri));
+                uriList.add(uriInfo);
             }
         }
 
         return uriList;
+    }
+
+    /**
+     * Localized URI map and process mapping info.
+     *
+     * <p>NOTE: Implements Map to get around cyclical dependency issues.</p>
+     */
+    public static class UriInfo extends BufferedListBasedAbstractMap<String, Object> implements Serializable {
+        protected final CmsProcessMapping processMapping;
+        protected final Map<Locale, String> localeUriMap;
+
+        public UriInfo(CmsProcessMapping processMapping, Map<Locale, String> localeUriMap) {
+            this.processMapping = processMapping;
+            this.localeUriMap = localeUriMap;
+        }
+
+        protected List<Entry<String, Object>> makeEntryList() {
+            // TODO: REVIEW: content is included here mainly for SitemapGenerator cyclical dependency issue
+            return List.of(
+                    new AbstractMap.SimpleEntry<>("processMapping", getProcessMapping()),
+                    new AbstractMap.SimpleEntry<>("primaryForPageId", getPrimaryForPageId()),
+                    new AbstractMap.SimpleEntry<>("localeUriMap", getLocaleUriMap()),
+                    new AbstractMap.SimpleEntry<>("content", getContent())
+            );
+        }
+
+        public CmsProcessMapping getProcessMapping() {
+            return processMapping;
+        }
+
+        public String getPrimaryForPageId() {
+            return getProcessMapping().getPrimaryForPageId();
+        }
+
+        public Map<Locale, String> getLocaleUriMap() {
+            return localeUriMap;
+        }
+
+        public String getUri(Locale locale) {
+            return localeUriMap.get(locale);
+        }
+
+        public Map<String, ?> getContent() {
+            return getProcessMapping().getPrimaryForPage().getContent();
+        }
     }
 
     public static List<CmsProcessMapping> sortProcessMappingsByActive(List<CmsProcessMapping> mappings) {

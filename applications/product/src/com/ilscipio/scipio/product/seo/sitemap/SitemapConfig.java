@@ -15,6 +15,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -36,6 +37,8 @@ public class SitemapConfig implements Serializable {
 
     public static final int DEFAULT_SITEMAP_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.sitemapsize", 50000);
     public static final int DEFAULT_INDEX_SIZE = UtilProperties.getPropertyAsInteger(SITEMAPCOMMON_RESOURCE, "sitemap.default.indexsize", 50000);
+
+    public static final FlexibleStringExpander DEFAULT_CMS_PAGE_URL_ATTR = FlexibleStringExpander.getInstance("currentUrl_${localeVar}");
 
     private static final List<CatalogFilter> DEFAULT_CATALOG_FILTERS = Collections.unmodifiableList(UtilMisc.toList(
             CatalogFilters.ViewAllowCategoryProductFilter.getInstance()
@@ -87,7 +90,7 @@ public class SitemapConfig implements Serializable {
     private final String compress;
 
     private final List<Locale> locales;
-    private final boolean defaultAltLink;
+    private final Boolean defaultAltLink;
     private final Map<Locale, LocaleConfig> localeConfigs;
 
     private final Set<String> prodCatalogIds;
@@ -106,6 +109,8 @@ public class SitemapConfig implements Serializable {
     private final String productTraversalMode;
 
     private final Map<String, Object> settingsMap; // copy of the settings map, for print/reference/other
+
+    private final FlexibleStringExpander cmsPageUrlAttr;
 
     public SitemapConfig(Map<String, Object> map, String webSiteId) {
         this.settingsMap = Collections.unmodifiableMap(new HashMap<>(map));
@@ -163,7 +168,7 @@ public class SitemapConfig implements Serializable {
 
         this.locales = Collections.unmodifiableList(parseLocales(asNormString(map.get("locales"))));
 
-        this.defaultAltLink = asBoolean(map.get("defaultAltLink"), true);
+        this.defaultAltLink = asBoolean(map.get("defaultAltLink"), null);
 
         Map<Locale, LocaleConfig> localeConfigs = new LinkedHashMap<>();
         for (Locale locale : this.locales) {
@@ -197,6 +202,8 @@ public class SitemapConfig implements Serializable {
 
         this.categoryTraversalMode = asNormString(map.get("categoryTraversalMode"), "depth-first");
         this.productTraversalMode = asNormString(map.get("productTraversalMode"), "depth-first");
+
+        this.cmsPageUrlAttr = FlexibleStringExpander.getInstance(asNormString(map.get("cmsPageUrlAttr")));
     }
 
     private static List<CatalogFilter> readCatalogFilters(Object catalogFiltersObj) {
@@ -324,7 +331,8 @@ public class SitemapConfig implements Serializable {
     }
 
     protected static Boolean asBoolean(Object obj, Boolean defaultValue) {
-        return UtilMisc.booleanValueVersatile(obj, defaultValue);
+        Boolean value = UtilMisc.booleanValueVersatile(obj);
+        return (value != null) ? value : defaultValue;
     }
 
     protected static Integer asInteger(Object obj, Integer defaultValue) {
@@ -471,7 +479,7 @@ public class SitemapConfig implements Serializable {
         return locales.isEmpty() ? UtilMisc.toList(getDefaultLocale(webSite, productStore)) : locales;
     }
 
-    public boolean isDefaultAltLink() {
+    public Boolean getDefaultAltLink() {
         return defaultAltLink;
     }
 
@@ -481,6 +489,11 @@ public class SitemapConfig implements Serializable {
 
     public LocaleConfig getLocaleConfig(Locale locale) {
         return getLocaleConfigs().get(locale);
+    }
+
+    public LocaleConfig getLocaleConfigOrDefault(Locale locale) {
+        LocaleConfig localeConfig = getLocaleConfig(locale);
+        return (localeConfig != null) ? localeConfig : new LocaleConfig(locale, Map.of(), "locales." + locale.toString() + ".");
     }
 
     public Locale getDefaultLocale(GenericValue webSite, GenericValue productStore) {
@@ -583,6 +596,10 @@ public class SitemapConfig implements Serializable {
         return webAppInfo.getContextRoot();
     }
 
+    public FlexibleStringExpander getCmsPageUrlAttr() {
+        return cmsPageUrlAttr;
+    }
+
     /**
      * Concats paths while handling bad input (to an extent).
      * TODO: central util and remove this (WARN: special null/empty check).
@@ -660,6 +677,7 @@ public class SitemapConfig implements Serializable {
         private final String contextPath;
         private final String sitemapWebappPathPrefix;
         private final String sitemapContextPath;
+        private final FlexibleStringExpander cmsPageUrlAttr;
 
         protected LocaleConfig(Locale locale, Map<String, Object> map, String prefix) {
             this.locale = locale;
@@ -671,6 +689,7 @@ public class SitemapConfig implements Serializable {
             this.contextPath = asNormString(map.get(prefix + "contextPath"));
             this.sitemapWebappPathPrefix = asNormString(map.get(prefix + "sitemapWebappPathPrefix"));
             this.sitemapContextPath = asNormString(map.get(prefix + "sitemapContextPath"));
+            this.cmsPageUrlAttr = FlexibleStringExpander.getInstance(asNormString(map.get(prefix + "cmsPageUrlAttr")));
         }
 
         public Locale getLocale() {
@@ -707,6 +726,10 @@ public class SitemapConfig implements Serializable {
 
         public String getSitemapContextPath() {
             return sitemapContextPath;
+        }
+
+        public FlexibleStringExpander getCmsPageUrlAttr() {
+            return cmsPageUrlAttr;
         }
     }
 }

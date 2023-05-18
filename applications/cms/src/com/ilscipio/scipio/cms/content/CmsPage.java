@@ -480,11 +480,9 @@ public class CmsPage extends CmsDataObject implements CmsMajorObject, CmsVersion
     @SuppressWarnings("unchecked")
     public Map<String, ?> getContent() {
         Map<String, ?> content = null;
-        try {
-            CmsPageVersion activeVersion = getActiveVersion();
-            content = (Map<String, ?>) JSON.from(activeVersion.getEntity()).toObject(Map.class);
-        } catch (IOException e) {
-            Debug.logError(e, "Unable to read JSON-formatted content from cms page '" + getId() + "'", module);
+        CmsPageVersion activeVersion = getActiveVersion();
+        if (activeVersion != null) {
+            content = activeVersion.getContent();
         }
         return content != null ? content : new HashMap<>();
     }

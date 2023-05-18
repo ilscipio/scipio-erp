@@ -1032,7 +1032,7 @@
         </attribute>
         <attribute name="useCache" type="Boolean" mode="IN" optional="true" default-value="false"/>
         <attribute name="uriList" type="List" mode="OUT" optional="true">
-            <description>List of maps, one per URI, that maps a Locale to a URI</description>
+            <description>List of com.ilscipio.scipio.cms.control.CmsProcessMapping.UriInfo</description>
         </attribute>
     </service>
 

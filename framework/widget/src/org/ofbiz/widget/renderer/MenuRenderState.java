@@ -179,7 +179,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     /**
      * Gets selected submenu/item pair from model menu from cache.
      */
-    public MenuAndItem getSelectedMenuAndItem(Map<String, Object> context) {
+    public ModelMenu.MenuAndItemLookup getSelectedMenuAndItem(Map<String, Object> context) {
         if (this.selectedMenuAndItem == null) {
             this.selectedMenuAndItem = modelMenu.getSelectedMenuAndItem(context);
         }
@@ -214,7 +214,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     }
 
     public ActiveItem updateCurrentMenu(ModelMenuCommon menu, Map<String, Object> context) {
-        ModelMenu.MenuAndItemLookup lookupItem = (ModelMenu.MenuAndItemLookup) getSelectedMenuAndItem(context);
+        ModelMenu.MenuAndItemLookup lookupItem = getSelectedMenuAndItem(context);
         // Only set a menu item if it matches the current menu
         if (lookupItem != null && lookupItem.hasMenuItem() &&
                 ((lookupItem.getOrigLookupSubMenu() != null && lookupItem.getOrigLookupSubMenu().isSame(menu)) ||

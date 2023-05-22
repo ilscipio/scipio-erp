@@ -63,6 +63,18 @@ public class MacroMenuRenderer implements MenuStringRenderer {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
+    // SCIPIO: 3.0.0: This was not implemented yet due to other needs, being an incomplete workaround,
+    //  and PARENT-NOSUB being translated too early for use here, but kept for reference
+//    /**
+//     * When menu expansion is "all" and this is true, PARENT-NOSUB menu-item-alias will be expanded instead of respected;
+//     * if false, PARENT-NOSUB entries are not expanded even if "all" is used.
+//     *
+//     * <p>This refers to bulma, ignite, etc. themes.</p>
+//     *
+//     * <p>SCIPIO: 3.0.0: Added.</p>
+//     */
+//    private static final boolean EXPAND_ALL_INCLUDES_PARENT_NOSUB = false;
+
     /**
      * SCIPIO: NOTE: This should always be true. Scipio no longer supports the old rendering method.
      */
@@ -440,7 +452,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
 
         // SCIPIO: tell macro which selected and disabled
         MenuRenderState renderState = MenuRenderState.retrieve(context);
-        MenuAndItem selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
+        ModelMenu.MenuAndItemLookup selectedMenuAndItem = renderState.getSelectedMenuAndItem(context);
         //ModelMenuItem selectedMenuItem = selectedMenuAndItem.getMenuItem();
         ModelSubMenu selectedSubMenu = selectedMenuAndItem.getSubMenu();
         MenuItemState menuItemState = renderState.getItemState();
@@ -574,6 +586,9 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                     // need functionality from org.ofbiz.widget.model.ModelMenu.FlaggedMenuNodes (see MenuRenderState.flaggedMenuNodes)
                     if (!Boolean.FALSE.equals(expandOvrd)) { // false expandOvrd prevents expand, true guarantees expand
                         if (!(renderState != null && renderState.isCurrentSubMenusOnly()) || childSubMenu.isSameOrAncestorOf(selectedSubMenu) || Boolean.TRUE.equals(expandOvrd)) {
+                        // SCIPIO: 3.0.0: This was not workable due to PARENT-NOSUB already being translated (unavailable here) but kept as reference
+                        //if ((EXPAND_ALL_INCLUDES_PARENT_NOSUB || !("all".equals(renderState.getSubMenuFilter()) && childSubMenu.isSame(selectedMenuAndItem.getOrigLookupSubMenu()) && ModelMenuItem.PARENT_NOSUB.equals(selectedMenuAndItem.getLookupMenuItemName()))) &&
+                        //        (!(renderState != null && renderState.isCurrentSubMenusOnly()) || childSubMenu.isSameOrAncestorOf(selectedSubMenu) || Boolean.TRUE.equals(expandOvrd))) {
                             // 2017-04-25: if this is the separate sub-menu match, we have to render it to a different output
                             if (renderState != null && renderState.checkUpdateSeparateMenuTargetSelected(context, childSubMenu)) {
                                 // SPECIAL: to extract the sub-menu definition, we put a marker, output, and copy the output

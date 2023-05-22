@@ -27,7 +27,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
@@ -77,12 +76,12 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     // SCIPIO: special/keyword menu and item names
-    public static final String NONE_MENU_ITEM_NAME = "NONE";
-    public static final String PARENT_MENU_ITEM_NAME = "PARENT";
-    public static final String PARENT_WITHSUB_MENU_ITEM_NAME = "PARENT-WITHSUB";
-    public static final String PARENT_NOSUB_MENU_ITEM_NAME = "PARENT-NOSUB";
+    public static final String NONE = "NONE";
+    public static final String PARENT = "PARENT";
+    public static final String PARENT_WITHSUB = "PARENT-WITHSUB";
+    public static final String PARENT_NOSUB = "PARENT-NOSUB";
     public static final List<String> PARENT_MENU_ITEM_NAMES = List.of(
-            PARENT_MENU_ITEM_NAME, PARENT_WITHSUB_MENU_ITEM_NAME, PARENT_NOSUB_MENU_ITEM_NAME);
+            PARENT, PARENT_WITHSUB, PARENT_NOSUB);
 
     private final List<ModelAction> actions;
     private final String align;
@@ -1080,11 +1079,11 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
     }
 
     public static boolean isNoneMenuItemName(String menuItemName) { // SCIPIO
-        return (menuItemName == null || menuItemName.isEmpty() || NONE_MENU_ITEM_NAME.equals(menuItemName));
+        return (menuItemName == null || menuItemName.isEmpty() || NONE.equals(menuItemName));
     }
 
     public static String getNoneMenuItemNameAsNull(String menuItemName) { // SCIPIO
-        if (menuItemName == null || menuItemName.isEmpty() || NONE_MENU_ITEM_NAME.equals(menuItemName)) {
+        if (menuItemName == null || menuItemName.isEmpty() || NONE.equals(menuItemName)) {
             return null;
         } else {
             return menuItemName;
@@ -1093,7 +1092,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
 
     public static String getNoneMenuItemNameAsConstant(String menuItemName) { // SCIPIO
         if (menuItemName == null || menuItemName.isEmpty()) { // || NONE_MENU_ITEM_NAME.equals(menuItemName)
-            return NONE_MENU_ITEM_NAME;
+            return NONE;
         } else {
             return menuItemName;
         }

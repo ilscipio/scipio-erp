@@ -1562,7 +1562,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
         } else {
             String mappedMenuItemName = mapNames ? subMenu.getMappedMenuItemName(menuItemName) : menuItemName;
             if (ModelMenuItem.PARENT_MENU_ITEM_NAMES.contains(mappedMenuItemName)) {
-                if (ModelMenuItem.PARENT_NOSUB_MENU_ITEM_NAME.equals(mappedMenuItemName)) {
+                if (ModelMenuItem.PARENT_NOSUB.equals(mappedMenuItemName)) {
                     // here we ditch our sub-menu
                     return new MenuAndItemLookup(subMenu.getParentMenuItem().getParentSubMenu(), subMenu.getParentMenuItem(),
                             subMenuName, mappedMenuItemName, menuItemName, subMenu);
@@ -1575,7 +1575,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
                 if (menuItem == null && UtilValidate.isNotEmpty(subMenu.getDefaultMenuItemName())) {
                     mappedMenuItemName = subMenu.getDefaultMenuItemName();
                     if (ModelMenuItem.PARENT_MENU_ITEM_NAMES.contains(mappedMenuItemName)) {
-                        if (ModelMenuItem.PARENT_NOSUB_MENU_ITEM_NAME.equals(mappedMenuItemName)) {
+                        if (ModelMenuItem.PARENT_NOSUB.equals(mappedMenuItemName)) {
                             // here we ditch our sub-menu
                             return new MenuAndItemLookup(subMenu.getParentMenuItem().getParentSubMenu(), subMenu.getParentMenuItem(),
                                     subMenuName, mappedMenuItemName, menuItemName, subMenu);
@@ -1785,7 +1785,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
                 // and it's the top level of the menu; otherwise there will simply be too many warnings all the time,
                 // coming from non-complex menus like tab bars
                 if (UtilValidate.isNotEmpty(selItemName) || subMenu != null) {
-                    if (!ModelMenuItem.NONE_MENU_ITEM_NAME.equals(lookup.getLookupMenuItemName()) && logWarnings) {
+                    if (!ModelMenuItem.NONE.equals(lookup.getLookupMenuItemName()) && logWarnings) {
                         if (menuNameTopMenu) {
                             Debug.logWarning("Menu-item name [" + lookup.getLookupMenuItemName() + "] (mapped from [" + selItemName +
                                     "]) was not found under top level of complex menu [" + this.getFullLocationAndName() + "]", module);

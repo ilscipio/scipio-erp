@@ -677,11 +677,18 @@ public class LoginWorker {
         // language settings. Unfortunately it seems to be changed some where
         // else. ShopSetup.groovy is used as a fallback, although it won't be
         // taken into account until the next time the user do something.
-        if (request.getLocale() != null && userLogin.getString("lastLocale") != null
-                && !request.getLocale().getLanguage().equals(userLogin.getString("lastLocale"))) {
-            Debug.logInfo("Found locale [" + request.getLocale().getLanguage() + "] but user preference is [" + userLogin.getString("lastLocale")
-                    + "]. Setting locale accordignly to user's preference.", module);
-            UtilHttp.setLocale(request, userLogin.getString("lastLocale"));
+        ServletContext servletContext = request.getServletContext();
+        Boolean resetSessionLocaleOnLogin = UtilMisc.booleanValue(servletContext.getAttribute("resetUserSessionLocaleOnLogin"));
+        if (resetSessionLocaleOnLogin == null) {
+            resetSessionLocaleOnLogin = UtilMisc.booleanValue(servletContext.getInitParameter("resetUserSessionLocaleOnLogin"));
+        }
+        if (!Boolean.FALSE.equals(resetSessionLocaleOnLogin)) {
+            if (request.getLocale() != null && userLogin.getString("lastLocale") != null
+                    && !request.getLocale().getLanguage().equals(userLogin.getString("lastLocale"))) {
+                Debug.logInfo("Found locale [" + request.getLocale().getLanguage() + "] but user preference is [" + userLogin.getString("lastLocale")
+                        + "]. Setting locale accordignly to user's preference.", module);
+                UtilHttp.setLocale(request, userLogin.getString("lastLocale"));
+            }
         }
 
         String javaScriptEnabled = null;

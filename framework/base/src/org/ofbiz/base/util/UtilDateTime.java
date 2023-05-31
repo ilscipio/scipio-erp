@@ -1181,6 +1181,29 @@ public final class UtilDateTime {
         return TimeZone.getTimeZone(tzId);
     }
 
+    /**
+     * Returns a TimeZone object based upon a time zone ID, if not already one.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @see java.util.TimeZone
+     */
+    public static TimeZone asTimeZone(Object tzId) {
+        if (tzId instanceof TimeZone) {
+            return (TimeZone) tzId;
+        } else if (tzId instanceof String) {
+            String tzIdStr = (String) tzId;
+            if (tzIdStr.isEmpty()) {
+                return null;
+            }
+            return TimeZone.getTimeZone(tzIdStr);
+        } else if (tzId == null) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Invalid time zone object: " + tzId.getClass().getName());
+        }
+    }
+
     /** Returns a TimeZone object based upon an hour offset from GMT.
      * @see java.util.TimeZone
      */

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -40,21 +41,76 @@ public class WebSiteWorker {
 
     /**
      * Gets the webSiteId for the current webapp, from the web.xml configuration.
-     * <p>
-     * SCIPIO: 2018-07-31: This is now safe to use from early filters.
+     *
+     * <p>SCIPIO: 2018-07-31: This is now safe to use from early filters since session is now skipped (servlet 3.0 API).</p>
      */
     public static String getWebSiteId(ServletRequest request) {
-        ServletContext application = request.getServletContext(); // SCIPIO: get context using servlet API 3.0
-        return application.getInitParameter("webSiteId");
+        return request.getServletContext().getInitParameter("webSiteId");
     }
 
+    /**
+     * Gets the webSiteId for the current webapp, from the web.xml configuration.
+     *
+     * <p>NOTE: When request available, always use {@link #getWebSiteId(ServletRequest)} instead.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for support for websocket backends where only session available.</p>
+     */
+    public static String getWebSiteId(HttpSession session) {
+        return session.getServletContext().getInitParameter("webSiteId");
+    }
+
+    /**
+     * Gets the webSiteId for the current webapp, from the web.xml configuration.
+     *
+     * <p>NOTE: When request available, always use {@link #getWebSiteId(ServletRequest)} instead.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getWebSiteId(ServletContext servletContext) {
+        return servletContext.getInitParameter("webSiteId");
+    }
+
+    /**
+     * Gets the WebSite for the current webapp, from the web.xml configuration.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
     public static GenericValue getWebSite(ServletRequest request) {
         String webSiteId = getWebSiteId(request);
         if (webSiteId == null) {
             return null;
         }
+        return findWebSite(Delegator.from(request), webSiteId, true);
+    }
 
-        return findWebSite((Delegator) request.getAttribute("delegator"), webSiteId, true);
+    /**
+     * Gets the WebSite for the current webapp, from the web.xml configuration.
+     *
+     * <p>NOTE: When request available, always use {@link #getWebSite(ServletRequest)} instead.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for support for websocket backends where only session available.</p>
+     */
+    public static GenericValue getWebSite(HttpSession session) {
+        String webSiteId = getWebSiteId(session);
+        if (webSiteId == null) {
+            return null;
+        }
+        return findWebSite(Delegator.from(session), webSiteId, true);
+    }
+
+    /**
+     * Gets the WebSite for the current webapp, from the web.xml configuration.
+     *
+     * <p>NOTE: When request available, always use {@link #getWebSite(ServletRequest)} instead.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static GenericValue getWebSite(ServletContext servletContext) {
+        String webSiteId = getWebSiteId(servletContext);
+        if (webSiteId == null) {
+            return null;
+        }
+        return findWebSite(Delegator.from(servletContext), webSiteId, true);
     }
 
     /**
@@ -132,7 +188,7 @@ public class WebSiteWorker {
             return null;
         }
 
-        return findWebSite((Delegator) context.get("delegator"), webSiteId);
+        return findWebSite(Delegator.from(context), webSiteId);
     }
 
     /**

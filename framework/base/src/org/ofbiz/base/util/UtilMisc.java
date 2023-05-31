@@ -49,8 +49,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import com.ilscipio.scipio.ce.util.collections.ScipioMap;
 import org.apache.commons.collections4.iterators.EnumerationIterator;
 import org.ofbiz.base.util.collections.MapComparator;
 
@@ -1007,19 +1007,133 @@ public class UtilMisc {
         return parseLocales(Arrays.asList(localeString.split("\\s*,\\s*")));
     }
 
+    /**
+     * Return the object converted to a Locale per framework conversion rules.
+     *
+     * <p>The input can be a String, Locale, or even null and a valid Locale will always be returned; if nothing else works, returns the default locale.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @param localeObject An Object representing the locale
+     */
+    public static Locale asLocale(Object localeObject) {
+        if (localeObject instanceof Locale) {
+            return (Locale) localeObject;
+        } else if (localeObject instanceof String) {
+            Locale locale = parseLocale((String) localeObject);
+            if (locale != null)  {
+                return locale;
+            } else {
+                return null;
+            }
+        } else if (localeObject == null) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Invalid locale type: " + localeObject.getClass().getName());
+        }
+    }
+
+    /**
+     * Return the object converted to a Locale per framework conversion rules.
+     *
+     * <p>The input can be a String, Locale, or even null and a valid Locale will always be returned; if nothing else works, returns the default locale.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @param localeObject An Object representing the locale
+     * @param defaultLocaleObject Object representing the default locale to use
+     */
+    public static Locale asLocale(Object localeObject, Object defaultLocaleObject) {
+        Locale locale = asLocale(localeObject);
+        return (locale != null) ? locale : asLocale(defaultLocaleObject);
+    }
+
     /** The input can be a String, Locale, or even null and a valid Locale will always be returned; if nothing else works, returns the default locale.
      * @param localeObject An Object representing the locale
      */
     public static Locale ensureLocale(Object localeObject) {
-        if (localeObject instanceof String) {
-            Locale locale = parseLocale((String) localeObject);
-            if (locale != null)  {
-                return locale;
-            }
-        } else if (localeObject instanceof Locale) {
-            return (Locale) localeObject;
+        try {
+            Locale locale = asLocale(localeObject);
+            return (locale != null) ? locale : Locale.getDefault();
+        } catch (IllegalArgumentException e) {
+            Debug.logWarning("ensureLocale: " + e.toString(), module);
+            return null;
         }
-        return Locale.getDefault();
+    }
+
+    /**
+     * Returns matching locale candidate to available locales filter or null if no
+     * candidate matching criteria; if availableLocales is empty itself, the (first) locale from localeObject is returned.
+     *
+     * <p>availableAllString may be set to true as optimization.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added to filter UserLogin.lastLocale and client request accept headers.</p>
+     */
+    public static Locale getCandidateLocale(Object localeObject, List<?> availableLocales, Boolean availableAllString, Boolean exact) {
+        Collection<?> locales = null;
+        if (localeObject instanceof Collection) {
+            locales = (Collection<?>) localeObject;
+            if (locales.isEmpty()) {
+                return null;
+            }
+        }
+        Locale locale = asLocale(locales != null ? firstSafe(locales) : localeObject);
+        if (locale == null) {
+            return null;
+        }
+        if (locales != null && locales.size() == 1) {
+            locales = null;
+        }
+        if (UtilValidate.isEmpty(availableLocales)) {
+            return locale;
+        }
+
+        if (!Boolean.TRUE.equals(availableAllString)) {
+            availableLocales = availableLocales.stream().map(Object::toString).collect(Collectors.toList());
+        }
+
+        // Here check either a single locale with or without its candidates, or the full passed list without candidates (as requested)
+        if (locales == null) {
+            if (exact) {
+                if (availableLocales.contains(locale.toString())) {
+                    return locale;
+                }
+            } else {
+                for (Locale candidateLocale : UtilProperties.localeToCandidateList(locale)) {
+                    if (availableLocales.contains(candidateLocale.toString())) {
+                        return candidateLocale;
+                    }
+                }
+            }
+        } else {
+            for (Object currentLocaleObject : locales) {
+                if (currentLocaleObject instanceof String) {
+                    if (availableLocales.contains(currentLocaleObject)) {
+                        return asLocale(currentLocaleObject);
+                    }
+                } else {
+                    Locale candidateLocale = asLocale(currentLocaleObject);
+                    if (availableLocales.contains(candidateLocale.toString())) {
+                        return candidateLocale;
+                    }
+                }
+            }
+        }
+
+        // If the client passed a list as localeObject, do a second pass with candidate locales of each (excluding the first of each, already checked)
+        if (!exact && locales != null) {
+            for (Object candidateLocaleObject : locales) {
+                Locale candidateLocale = asLocale(candidateLocaleObject);
+                List<Locale> secondCandidateLocales = UtilProperties.localeToCandidateList(candidateLocale);
+                for (Locale secondCandidateLocale : secondCandidateLocales.subList(1, secondCandidateLocales.size())) {
+                    if (availableLocales.contains(candidateLocale.toString())) {
+                        return secondCandidateLocale;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     // Private lazy-initializer class
@@ -1371,7 +1485,9 @@ public class UtilMisc {
     }
 
     /**
-     * SCIPIO: Returns the first non-null value, or null if none.
+     * Returns the first non-null value, or null if none.
+     *
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
     @SafeVarargs
     public static <T> T firstNonNull(T... values) {
@@ -1379,52 +1495,202 @@ public class UtilMisc {
     }
 
     /**
-     * SCIPIO: Returns the first non-null value, or null.
+     * Returns the first non-null value, or null.
+     *
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
     public static <T> T firstNonNull(Collection<?> values) {
         return UtilObject.firstNonNull(values);
     }
 
     /**
-     * SCIPIO: Returns the first element of collection or list using get() if possible.
+     * Returns the first element of collection or list using get() if possible.
+     *
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
     public static <T> T first(Collection<?> values) {
         return (values instanceof List) ? UtilGenerics.<List<T>>cast(values).get(0) : UtilGenerics.cast(values.iterator().next());
     }
 
     /**
-     * SCIPIO: Returns the first element of collection or list using get() if possible, or null if empty.
+     * Returns the first element of collection or list using get() if possible, or null if empty.
+     *
+     * <p>SCIPIO: 2.x.x: Added.</p>
      */
     public static <T> T firstSafe(Collection<?> values) {
         return UtilValidate.isNotEmpty(values) ? first(values) : null;
     }
 
     /**
-     * SCIPIO: Returns the first element of map.
-     * Map must not be empty.
+     * Returns the first value in a collection, array, or the value itself, throwing
+     * an exception if collections are empty.
+     *
+     * <p>NOTE: This method does not handle maps (too poorly defined - entry vs value).</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @see #firstSafe(Object)
+     * @see #firstValue(Object)
      */
+    public static <T> T first(Object values) throws IllegalArgumentException {
+        if (values instanceof Collection) {
+            return UtilMisc.first(UtilGenerics.<Collection<String>>cast(values));
+        } else if (values != null && values.getClass().isArray()) {
+            return firstInArray(values);
+        } else {
+            return UtilGenerics.cast(values);
+        }
+    }
+
+    /**
+     * Returns the first value in a collection, array, or the value itself, or null if empty collection.
+     *
+     * <p>NOTE: This method does not handle maps (too poorly defined - entry vs value).</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     *
+     * @see #firstSafe(Object)
+     * @see #firstValueSafe(Object)
+     */
+    public static <T> T firstSafe(Object values) throws IllegalArgumentException {
+        if (values instanceof Collection) {
+            return UtilMisc.firstSafe(UtilGenerics.<Collection<String>>cast(values));
+        } else if (values != null && values.getClass().isArray()) {
+            return firstInArraySafe(values);
+        } else {
+            return UtilGenerics.cast(values);
+        }
+    }
+
+    /**
+     * Returns the first value (as opposed to entry) of non-empty map.
+     *
+     * <p>NOTE: If map is unordered or greater than size 1, result may be arbitrary.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added to replace ambiguous first(Map).</p>
+     */
+    public static <T> T firstValue(Map<?, ?> values) {
+        return UtilGenerics.cast(values.entrySet().iterator().next().getValue());
+    }
+
+    /**
+     * Returns the first value of map (as opposed to entry), or null if empty map.
+     *
+     * <p>NOTE: If map is unordered or greater than size 1, result may be arbitrary.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added to replace ambiguous firstSafe(Map).</p>
+     */
+    public static <T> T firstValueSafe(Map<?, ?> values) {
+        return UtilValidate.isNotEmpty(values) ? firstValue(values) : null;
+    }
+
+    /**
+     * Returns the first value of map (as opposed to entry) or collection, or the value itself.
+     *
+     * <p>NOTE: If map is unordered or greater than size 1, result may be arbitrary.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added to replace ambiguous firstOrSelfSafe(Object).</p>
+     */
+    public static <T> T firstValue(Object value) {
+        if (value instanceof Map) {
+            return UtilMisc.firstValue(UtilGenerics.<Map<String, ?>>cast(value));
+        } else {
+            return UtilMisc.first(value);
+        }
+    }
+
+    /**
+     * Returns the first value (as opposed to entry) of map, or null if empty collection or map.
+     *
+     * <p>NOTE: If map is unordered or greater than size 1, result may be arbitrary.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added to replace ambiguous firstOrSelfSafe(Object).</p>
+     */
+    public static <T> T firstValueSafe(Object value) {
+        if (value instanceof Map) {
+            return UtilMisc.firstValueSafe(UtilGenerics.<Map<String, ?>>cast(value));
+        } else {
+            return UtilMisc.firstSafe(value);
+        }
+    }
+
+    private static <T> T firstInArray(Object values) {
+        Object value;
+        if (values instanceof Object[]) {
+            value = ((Object[]) values)[0];
+        } else if (values instanceof boolean[]) {
+            value = ((boolean[]) values)[0];
+        } else if (values instanceof byte[]) {
+            value = ((byte[]) values)[0];
+        } else if (values instanceof short[]) {
+            value = ((short[]) values)[0];
+        } else if (values instanceof char[]) {
+            value = ((char[]) values)[0];
+        } else if (values instanceof int[]) {
+            value = ((int[]) values)[0];
+        } else if (values instanceof long[]) {
+            value = ((long[]) values)[0];
+        } else if (values instanceof float[]) {
+            value = ((float[]) values)[0];
+        } else if (values instanceof double[]) {
+            value = ((double[]) values)[0];
+        } else {
+            throw new IllegalArgumentException("Unknown array type: " + values.getClass().getName());
+        }
+        return UtilGenerics.cast(value);
+    }
+
+    private static <T> T firstInArraySafe(Object values) {
+        Object value;
+        if (values instanceof Object[]) {
+            value = (((Object[]) values).length > 0) ? ((Object[]) values)[0] : null;
+        } else if (values instanceof boolean[]) {
+            value = (((boolean[]) values).length > 0) ? ((boolean[]) values)[0] : null;
+        } else if (values instanceof byte[]) {
+            value = (((byte[]) values).length > 0) ? ((byte[]) values)[0] : null;
+        } else if (values instanceof short[]) {
+            value = (((short[]) values).length > 0) ? ((short[]) values)[0] : null;
+        } else if (values instanceof char[]) {
+            value = (((char[]) values).length > 0) ? ((char[]) values)[0] : null;
+        } else if (values instanceof int[]) {
+            value = (((int[]) values).length > 0) ? ((int[]) values)[0] : null;
+        } else if (values instanceof long[]) {
+            value = (((long[]) values).length > 0) ? ((long[]) values)[0] : null;
+        } else if (values instanceof float[]) {
+            value = (((float[]) values).length > 0) ? ((float[]) values)[0] : null;
+        } else if (values instanceof double[]) {
+            value = (((double[]) values).length > 0) ? ((double[]) values)[0] : null;
+        } else {
+            throw new IllegalArgumentException("Unknown array type: " + values.getClass().getName());
+        }
+        return UtilGenerics.cast(value);
+    }
+
+    /**
+     * SCIPIO: Returns the first element of non-empty map.
+     * @deprecated SCIPIO: 3.0.0: Use {@link #firstValueSafe(Map)}, too ambiguous - TODO: REMOVE
+     */
+    @Deprecated
     public static <T> T first(Map<?, ?> values) {
         return UtilGenerics.cast(values.entrySet().iterator().next().getValue());
     }
 
     /**
      * SCIPIO: Returns the first element of map, with empty map check.
+     * @deprecated SCIPIO: 3.0.0: Use {@link #firstValueSafe(Map)}, too ambiguous - TODO: REMOVE
      */
+    @Deprecated
     public static <T> T firstSafe(Map<?, ?> values) {
         return UtilValidate.isNotEmpty(values) ? first(values) : null;
     }
 
     /**
      * SCIPIO: Returns the first element of map or collection, or other the value itself.
+     * @deprecated SCIPIO: 3.0.0: Use {@link #firstValueSafe(Object)} - TODO: REMOVE
      */
-    public static <T> T firstOrSelfSafe(Object value) {
-        if (value instanceof Map) {
-            return UtilMisc.firstSafe(UtilGenerics.<Map<String, ?>>cast(value));
-        } else if (value instanceof Collection) {
-            return UtilMisc.firstSafe(UtilGenerics.<Collection<String>>cast(value));
-        } else {
-            return UtilGenerics.cast(value);
-        }
+    @Deprecated
+    public static <T> T firstOrSelfSafe(Object values) {
+        return firstValueSafe(values);
     }
 
     /**

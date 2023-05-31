@@ -25,10 +25,12 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.cache.Cache;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.datasource.GenericHelper;
@@ -59,29 +61,33 @@ public interface Delegator {
     enum OperationType {INSERT, UPDATE, DELETE}
 
     /**
-     * Returns the named delegator from central factory.
-     * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
-     */
-    static Delegator delegator(String delegatorName) {
-        return DelegatorFactory.getDelegator(delegatorName);
-    }
-
-    /**
      * Returns the default delegator from central factory.
+     *
      * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
      */
-    static Delegator defaultDelegator() {
+    static Delegator getDefault() {
         return DelegatorFactory.getDefaultDelegator();
     }
 
     /**
+     * Returns the named delegator from central factory.
+     *
+     * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
+     */
+    static Delegator fromName(String delegatorName) {
+        return DelegatorFactory.getDelegator(delegatorName);
+    }
+
+    /**
      * Returns the delegator from map context, or the default delegator.
+     *
      * <p>NOTE: This explicitly does not check the "request" key for HttpServletRequest because in every case
      * "request" is set, "delegator" should always be set by the system, otherwise it is considered a (system) error.
      * This is an abstracted accessor method.</p>
+     *
      * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
      */
-    static Delegator delegator(Map<String, ?> context) {
+    static Delegator from(Map<String, ?> context) {
         Delegator delegator;
         if (context != null) {
             delegator = (Delegator) context.get("delegator");
@@ -89,55 +95,63 @@ public interface Delegator {
                 return delegator;
             }
         }
-        return getDefaultDelegator();
+        return getDefault();
     }
 
     /**
-     * Returns the most specific delegator from request attributes, session attributes, servlet context attributes
-     * or the default delegator.
+     * Returns the most specific delegator from request attributes, session attributes, servlet context attributes or the default delegator.
+     *
+     * <p>Requires ContextFilter setup. If called before ContextFilter in a request, tenant delegator may not have been initialized.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Enhanced.</p>
      * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
      */
-    static Delegator delegator(HttpServletRequest request) {
-        Delegator delegator;
-        if (request != null) {
-            delegator = (Delegator) request.getAttribute("delegator");
-            if (delegator != null) {
-                return delegator;
-            }
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                delegator = (Delegator) session.getAttribute("delegator");
-                if (delegator != null) {
-                    return delegator;
-                }
-            }
-            ServletContext servletContext = request.getServletContext();
-            delegator = (Delegator) servletContext.getAttribute("delegator");
-            if (delegator != null) {
-                return delegator;
-            }
-        }
-        return getDefaultDelegator();
+    static Delegator from(ServletRequest request) {
+        return Impl.from(request, null, null);
+    }
+
+    /**
+     * Returns the most specific delegator from session attributes, servlet context attributes or the default delegator.
+     *
+     * <p>Requires ContextFilter setup. If called before ContextFilter in a request, tenant delegator may not have been initialized.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Enhanced.</p>
+     * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
+     */
+    static Delegator from(HttpSession session) {
+        return Impl.from(null, session, null);
+    }
+
+    /**
+     * Returns the most specific delegator from servlet context attributes or the default delegator.
+     *
+     * <p>Requires ContextFilter setup. If called before ContextFilter in a request, tenant delegator may not have been initialized.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Enhanced.</p>
+     * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
+     */
+    static Delegator from(ServletContext servletContext) {
+        return Impl.from(null, null, servletContext);
     }
 
     /**
      * Returns the named delegator from central factory.
-     * @deprecated Use {@link #delegator(String)}
+     * @deprecated Use {@link #fromName(String)}
      * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
      */
     @Deprecated
     static Delegator getDelegator(String delegatorName) {
-        return delegator(delegatorName);
+        return fromName(delegatorName);
     }
 
     /**
      * Returns the default delegator from central factory.
-     * @deprecated Use {@link #defaultDelegator()}
+     * @deprecated Use {@link #getDefault()}
      * <p>SCIPIO: 2.1.0: Added convenience facade method.</p>
      */
     @Deprecated
     static Delegator getDefaultDelegator() {
-        return defaultDelegator();
+        return getDefault();
     }
 
 
@@ -1127,6 +1141,8 @@ public interface Delegator {
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to query the specified entity,
      * equivalent to: <code>EntityQuery(Safe).use(delegator).from(entityName)</code>; this is an alias for {@link #fromUnsafe} for
      * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #fromSafe} is invoked instead.
+     *
+     * <p>TODO: REVIEW: Due to naming patterns, this should have been query(String)</p>
      */
     default EntityQuery from(String entityName) {
         return query().from(entityName);
@@ -1136,6 +1152,8 @@ public interface Delegator {
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery}(Safe) for this delegator, set up to query the specified entity,
      * equivalent to: <code>EntityQuery(Safe).use(delegator).from(dynamicViewEntity)</code>; this is an alias for {@link #fromUnsafe} for
      * most languages, <strong>except</strong> for FreeMarker templates* (*.ftl) for which {@link #fromSafe} is invoked instead.
+     *
+     * <p>TODO: REVIEW: Due to naming patterns, this should have been query(DynamicViewEntity)</p>
      */
     default EntityQuery from(DynamicViewEntity dynamicViewEntity) {
         return query().from(dynamicViewEntity);
@@ -1162,6 +1180,8 @@ public interface Delegator {
     /**
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to query the specified entity,
      * equivalent to: <code>EntityQuery.use(delegator).from(entityName)</code>, whose query methods may throw GenericEntityException.
+     *
+     * <p>TODO: REVIEW: Due to naming patterns, this should have been queryUnsafe(String)</p>
      */
     default EntityQuery fromUnsafe(String entityName) {
         return queryUnsafe().from(entityName);
@@ -1170,6 +1190,8 @@ public interface Delegator {
     /**
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuery} for this delegator, set up to query the specified entity,
      * equivalent to: <code>EntityQuery.use(delegator).from(dynamicViewEntity)</code>, whose query methods may throw GenericEntityException.
+     *
+     * <p>TODO: REVIEW: Due to naming patterns, this should have been queryUnsafe(DynamicViewEntity)</p>
      */
     default EntityQuery fromUnsafe(DynamicViewEntity dynamicViewEntity) {
         return queryUnsafe().from(dynamicViewEntity);
@@ -1194,6 +1216,8 @@ public interface Delegator {
     /**
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to query the specified entity,
      * equivalent to: <code>EntityQuerySafe.use(delegator).from(entityName)</code>, whose query methods do not throw GenericEntityException.
+     *
+     * <p>TODO: REVIEW: Due to naming patterns, this should have been querySafe(String)</p>
      */
     default EntityQuery fromSafe(String entityName) {
         return querySafe().from(entityName);
@@ -1202,6 +1226,8 @@ public interface Delegator {
     /**
      * SCIPIO: Returns a new {@link org.ofbiz.entity.util.EntityQuerySafe} for this delegator, set up to query the specified entity,
      * equivalent to: <code>EntityQuerySafe.use(delegator).from(dynamicViewEntity)</code>, whose query methods do not throw GenericEntityException.
+     *
+     * <p>TODO: REVIEW: Due to naming patterns, this should have been querySafe(DynamicViewEntity)</p>
      */
     default EntityQuery fromSafe(DynamicViewEntity dynamicViewEntity) {
         return querySafe().from(dynamicViewEntity);
@@ -1222,4 +1248,65 @@ public interface Delegator {
     default EntityQuery selectSafe(String... fieldsToSelect) {
         return querySafe().select(fieldsToSelect);
     }
+
+    abstract class Impl {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+        /**
+         * Returns the most specific delegator from request attributes, session attributes, servlet context attributes or the default delegator.
+         *
+         * <p>Requires ContextFilter setup. If called before ContextFilter in a request, tenant delegator may not have been initialized.</p>
+         *
+         * <p>SCIPIO: 3.0.0: Enhanced.</p>
+         */
+        protected static Delegator from(ServletRequest request, HttpSession session, ServletContext servletContext) {
+            Delegator delegator;
+
+            if (request != null) {
+                delegator = (Delegator) request.getAttribute("delegator");
+                if (delegator != null) {
+                    return delegator;
+                }
+                if (session == null && request instanceof HttpServletRequest) {
+                    session = ((HttpServletRequest) request).getSession(false);
+                }
+            }
+
+            if (session != null) {
+                delegator = (Delegator) session.getAttribute("delegator");
+                if (delegator != null) {
+                    return delegator;
+                }
+                String delegatorName = (String) session.getAttribute("delegatorName");
+                if (delegatorName != null) {
+                    delegator = Delegator.fromName(delegatorName);
+                    if (delegator != null) {
+                        return delegator;
+                    } else {
+                        Debug.logError("ERROR: delegator factory returned null for delegatorName \""
+                                + delegatorName + "\" from session attributes", module);
+                    }
+                }
+            }
+
+            if (servletContext == null) {
+                servletContext = (request != null) ? request.getServletContext() : (session != null ? session.getServletContext() : null);
+            }
+            if (servletContext != null) {
+                // Setup by: org.ofbiz.webapp.control.ContextFilter#getDelegator
+                delegator = (Delegator) servletContext.getAttribute("delegator");
+                if (delegator != null) {
+                    return delegator;
+                } else {
+                    // NOTE: this means the web.xml is not properly configured, because servlet context
+                    // delegator should have been made available by ContextFilter.init.
+                    Debug.logError("ERROR: delegator not found in servlet context; please make sure the webapp's"
+                            + " web.xml file is properly configured to load ContextFilter and specify entityDelegatorName", module);
+                }
+            }
+
+            return getDefault();
+        }
+    }
+
 }

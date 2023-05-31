@@ -90,8 +90,8 @@ public class CmsMediaServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // SPECIAL: getDelegator/getDispatcher methods required so tenant db doesn't break (or breaks less)
-        Delegator delegator = WebAppUtil.getDelegatorFilterSafe(request);
-        LocalDispatcher dispatcher = WebAppUtil.getDispatcherFilterSafe(request, delegator);
+        Delegator delegator = Delegator.from(request);
+        LocalDispatcher dispatcher = LocalDispatcher.from(request);
         Locale locale = UtilHttp.getLocale(request);
         GenericValue userLogin = WebAppUtil.getUserLogin(request);
 

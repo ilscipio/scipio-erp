@@ -653,7 +653,7 @@ public class EntityIndexer implements Runnable {
     }
 
     protected static Object extractFirstIdField(Object idField, Map<String, ?> map) { // TODO: remove in future
-        return UtilMisc.firstOrSelfSafe(extractIdField(idField, map));
+        return UtilMisc.firstValueSafe(extractIdField(idField, map));
     }
 
     public Action extractEntryAction(Delegator delegator, Map<String, Object> context) {

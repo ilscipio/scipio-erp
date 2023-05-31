@@ -144,7 +144,7 @@ public class CmsPageContext {
             delegator = (request != null) ? (Delegator) request.getAttribute("delegator") : null;
             if (delegator == null) {
                 Debug.logWarning("null delegator in page context", module);
-                delegator = Delegator.defaultDelegator();
+                delegator = Delegator.getDefault();
             }
         }
         return delegator;

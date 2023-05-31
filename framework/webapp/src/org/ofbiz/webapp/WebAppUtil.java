@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 
 import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -519,99 +520,57 @@ public final class WebAppUtil {
     }
 
     /**
-     * SCIPIO: Obtains the delegator from current request in a read-only (does not create session
+     * Obtains the delegator from current request in a read-only (does not create session
      * or populate any attributes), best-effort fashion.
-     * <p>
-     * WARN: TODO: REVIEW: For tenant delegators, this may be one request late
-     * in returning the tenant delegator, during the tenant login; implications unclear.
-     * DEV NOTE: If this is fixed in the future, it may need to do redundant tenant
-     * delegator preparation.
-     * <p>
-     * Added 2018-07-31.
+     *
+     * <p>TODO: Deprecate</p>
+     *
+     * <p>SCIPIO: 2018-07-31: Added.</p>
+     * @see Delegator#from(ServletRequest)
      */
     public static Delegator getDelegatorReadOnly(HttpServletRequest request) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
-        if (delegator != null) {
-            return delegator;
-        }
-        HttpSession session = request.getSession(false); // do not create session
-        if (session != null) {
-            delegator = (Delegator) session.getAttribute("delegator");
-            if (delegator != null) {
-                return delegator;
-            }
-            String delegatorName = (String) session.getAttribute("delegatorName");
-            if (delegatorName != null) {
-                delegator = DelegatorFactory.getDelegator(delegatorName);
-                if (delegator != null) {
-                    return delegator;
-                } else {
-                    Debug.logError("ERROR: delegator factory returned null for delegatorName \""
-                            + delegatorName + "\" from session attributes", module);
-                }
-            }
-        }
-        delegator = (Delegator) request.getServletContext().getAttribute("delegator");
-        if (delegator == null) {
-            // NOTE: this means the web.xml is not properly configured, because servlet context
-            // delegator should have been made available by ContextFilter.init.
-            Debug.logError("ERROR: delegator not found in servlet context; please make sure the webapp's"
-                    + " web.xml file is properly configured to load ContextFilter and specify entityDelegatorName", module);
-        }
-        return delegator;
+        return Delegator.from(request);
     }
 
     /**
-     * SCIPIO: Obtains the delegator from current request in a read-only (does not create session
+     * Obtains the delegator from current request in a read-only (does not create session
      * or populate any attributes), best-effort fashion, safe for calling from early filters.
-     * <p>
-     * WARN: TODO: REVIEW: For tenant delegators, this may be one request late
-     * in returning the tenant delegator, during the tenant login; implications unclear.
-     * DEV NOTE: If this is fixed in the future, it may need to do redundant tenant
-     * delegator preparation.
-     * <p>
-     * Added 2018-07-31.
+     *
+     * <p>TODO: Deprecate</p>
+     *
+     * <p>SCIPIO: 2018-07-31: Added.</p>
+     * @see Delegator#from(ServletRequest)
      */
     public static Delegator getDelegatorFilterSafe(HttpServletRequest request) {
-        return getDelegatorReadOnly(request);
+        return Delegator.from(request);
     }
 
     /**
-     * SCIPIO: Obtains the dispatcher from current request in a read-only (does not create session
+     * Obtains the dispatcher from current request in a read-only (does not create session
      * or populate any attributes), best-effort fashion.
-     * <p>
-     * Added 2018-07-31.
+     *
+     * <p>TODO: Deprecate</p>
+     *
+     * <p>SCIPIO: 2018-07-31: Added.</p>
+     *
+     * @see LocalDispatcher#from(ServletContext)
      */
     public static LocalDispatcher getDispatcherReadOnly(HttpServletRequest request, Delegator delegator) {
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        if (dispatcher != null) {
-            return dispatcher;
-        }
-        HttpSession session = request.getSession(false); // do not create session
-        if (session != null) {
-            dispatcher = (LocalDispatcher) session.getAttribute("dispatcher");
-            if (dispatcher != null) {
-                return dispatcher;
-            }
-        }
-        dispatcher = (LocalDispatcher) request.getServletContext().getAttribute("dispatcher");
-        if (delegator == null) {
-            // NOTE: this means the web.xml is not properly configured, because servlet context
-            // dispatcher should have been made available by ContextFilter.init.
-            Debug.logError("ERROR: dispatcher not found in servlet context; please make sure the webapp's"
-                    + " web.xml file is properly configured to load ContextFilter and specify localDispatcherName", module);
-        }
-        return dispatcher;
+        return LocalDispatcher.from(request);
     }
 
     /**
-     * SCIPIO: Obtains the dispatcher from current request in a read-only (does not create session
+     * Obtains the dispatcher from current request in a read-only (does not create session
      * or populate any attributes), best-effort fashion, safe for calling from early filters.
-     * <p>
-     * Added 2018-07-31.
+     *
+     * <p>TODO: Deprecate (NOTE: delegator previously did nothing here anyway)</p>
+     *
+     * <p>SCIPIO: 2018-07-31: Added.</p>
+     *
+     * @see LocalDispatcher#from(ServletContext)
      */
     public static LocalDispatcher getDispatcherFilterSafe(HttpServletRequest request, Delegator delegator) {
-        return getDispatcherReadOnly(request, delegator);
+        return LocalDispatcher.from(request);
     }
 
     /**

@@ -20,10 +20,17 @@ package org.ofbiz.service;
 
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.jms.JmsListenerFactory;
 import org.ofbiz.service.job.JobManager;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * A local service dispatcher. This is the main API for the service engine.
@@ -36,6 +43,78 @@ import org.ofbiz.service.job.JobManager;
  * <p>SCIPIO: 3.0.0: {@link LocalDispatcher#runSync} methods now return {@link ServiceResult}; various enhancements.</p>
  */
 public interface LocalDispatcher {
+
+    /**
+     * Returns the default dispatcher from central factory.
+     *
+     * <p>SCIPIO: 3.0.0: Added convenience facade method.</p>
+     */
+    static LocalDispatcher getDefault() {
+        Delegator delegator = DelegatorFactory.getDefaultDelegator();
+        return fromName(delegator.getDelegatorName(), delegator);
+    }
+
+    /**
+     * Returns the named delegator from central factory.
+     *
+     * <p>SCIPIO: 3.0.0: Added convenience facade method.</p>
+     */
+    static LocalDispatcher fromName(String dispatcherName, Delegator delegator) {
+        return ServiceContainer.getLocalDispatcher(dispatcherName, delegator);
+    }
+
+    /**
+     * Returns the delegator from map context, or the default delegator.
+     *
+     * <p>NOTE: This explicitly does not check the "request" key for HttpServletRequest because in every case
+     * "request" is set, "delegator" should always be set by the system, otherwise it is considered a (system) error.
+     * This is an abstracted accessor method.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added convenience facade method.</p>
+     */
+    static LocalDispatcher from(Map<String, ?> context) {
+        LocalDispatcher dispatcher;
+        if (context != null) {
+            dispatcher = (LocalDispatcher) context.get("dispatcher");
+            if (dispatcher != null) {
+                return dispatcher;
+            }
+        }
+        return getDefault();
+    }
+
+    /**
+     * Returns the most specific delegator from request attributes, session attributes, servlet context attributes or the default delegator.
+     *
+     * <p>Requires ContextFilter setup. If called before ContextFilter in a request, tenant delegator may not have been initialized.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    static LocalDispatcher from(ServletRequest request) {
+        return Impl.from(request, null, null);
+    }
+
+    /**
+     * Returns the most specific delegator from session attributes, servlet context attributes or the default delegator.
+     *
+     * <p>Requires ContextFilter setup. If called before ContextFilter in a request, tenant delegator may not have been initialized.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    static LocalDispatcher from(HttpSession session) {
+        return Impl.from(null, session, null);
+    }
+
+    /**
+     * Returns the most specific delegator from servlet context attributes or the default delegator.
+     *
+     * <p>Requires ContextFilter setup. If called before ContextFilter in a request, tenant delegator may not have been initialized.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    static LocalDispatcher from(ServletContext servletContext) {
+        return Impl.from(null, null, servletContext);
+    }
 
     /**
      * Disables running of Service Engine Condition Actions (SECAs).  Intended to be turned off temporarily.
@@ -587,6 +666,59 @@ public interface LocalDispatcher {
         // SCIPIO: NOTE: For unknown reasons, this method is static on DispatchContext, but this is not suitable
         // for LocalDispatcher and even counterproductive.
         return getDispatchContext().makeValidContext(model, mode, context, null);
+    }
+
+    abstract class Impl {
+        private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+        /**
+         * Returns the most specific dispatcher from request attributes, session attributes, servlet context attributes or the default delegator.
+         *
+         * <p>Requires ContextFilter setup. If called before ContextFilter in a request, tenant delegator may not have been initialized.</p>
+         *
+         * <p>SCIPIO: 3.0.0: Added.</p>
+         */
+        protected static LocalDispatcher from(ServletRequest request, HttpSession session, ServletContext servletContext) {
+            LocalDispatcher dispatcher;
+
+            if (request != null) {
+                dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+                if (dispatcher != null) {
+                    return dispatcher;
+                }
+                if (session == null && request instanceof HttpServletRequest) {
+                    session = ((HttpServletRequest) request).getSession(false);
+                }
+            }
+
+            if (session != null) {
+                dispatcher = (LocalDispatcher) session.getAttribute("dispatcher");
+                if (dispatcher != null) {
+                    return dispatcher;
+                }
+            }
+
+            if (servletContext == null) {
+                servletContext = (request != null) ? request.getServletContext() : (session != null ? session.getServletContext() : null);
+            }
+            if (servletContext != null) {
+                // Setup by: org.ofbiz.webapp.control.ContextFilter#getDelegator
+                dispatcher = (LocalDispatcher) servletContext.getAttribute("dispatcher");
+                if (dispatcher != null) {
+                    return dispatcher;
+                } else {
+                    // NOTE: this means the web.xml is not properly configured, because servlet context
+                    // dispatcher should have been made available by ContextFilter.init.
+                    Debug.logError("ERROR: dispatcher not found in servlet context; please make sure the webapp's"
+                            + " web.xml file is properly configured to load ContextFilter and specify localDispatcherName", module);
+                }
+            }
+
+            // Probably unneeded since both delegator and dispatcher are usually set together on any attribute set
+            //Delegator delegator = Delegator.Impl.delegator(request, session, servletContext);
+            //return dispatcher(delegator.getDelegatorName(), delegator);
+            return getDefault();
+        }
     }
 
 }

@@ -2574,7 +2574,7 @@ public class RequestHandler {
                 delegator = (Delegator) request.getAttribute("delegator");
             }
             if (delegator == null) {
-                delegator = Delegator.defaultDelegator();
+                delegator = Delegator.getDefault();
             }
         }
         Integer logLevel = null;

@@ -2110,5 +2110,9 @@ public final class ComponentConfig {
                     + ", server=" + server
                     + "]";
         }
+
+        public String toServerContextKey() { // SCIPIO: 3.0.0: Added
+            return getServer() + "::" + getContextRoot();
+        }
     }
 }

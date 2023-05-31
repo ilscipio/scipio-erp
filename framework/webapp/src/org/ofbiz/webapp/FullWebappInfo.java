@@ -496,6 +496,10 @@ public class FullWebappInfo {
         return "[contextPath=" + getContextPath() + ", webSiteId=" + getWebSiteId() + "]";
     }
 
+    public String toServerContextKey() { // SCIPIO: 3.0.0: Added
+        return getWebappInfo().toServerContextKey();
+    }
+
     /*
      * ******************************************************
      * ExtWebappInfo-delegated methods

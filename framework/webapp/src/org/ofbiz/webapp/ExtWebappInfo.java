@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import com.ilscipio.scipio.ce.util.SafeOptional;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
@@ -290,6 +291,13 @@ public class ExtWebappInfo implements Serializable {
      */
     public static ExtWebappInfo fromRequest(HttpServletRequest request) throws IllegalArgumentException {
         return fromContextPath(WebAppUtil.getServerId(request), request.getContextPath());
+    }
+
+    /**
+     * Returns the server webapp for the session's servlet context.
+     */
+    public static ExtWebappInfo fromSession(HttpSession session) throws IllegalArgumentException {
+        return fromServletContext(session.getServletContext());
     }
 
     /**
@@ -583,6 +591,10 @@ public class ExtWebappInfo implements Serializable {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
         return isSameServerWebapp((ExtWebappInfo) obj);   
+    }
+
+    public String toServerContextKey() { // SCIPIO: 3.0.0: Added
+        return webappInfo.toServerContextKey();
     }
 
     /**

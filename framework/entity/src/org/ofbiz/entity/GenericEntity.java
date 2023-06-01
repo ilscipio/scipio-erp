@@ -281,7 +281,9 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
         }
         this.delegatorName = value.delegatorName;
         this.internalDelegator = value.internalDelegator;
-        this.observable = newValue ? new Observable() : new Observable(value.observable);
+        // SCIPIO: 3.0.0: This causes a persistent session post-deserialization issue in setSessionLocale
+        //this.observable = newValue ? new Observable() : new Observable(value.observable);
+        this.observable = (newValue || value.observable == null) ? new Observable() : new Observable(value.observable);
     }
 
     /** Copy Constructor: Creates new GenericEntity from existing GenericEntity. */

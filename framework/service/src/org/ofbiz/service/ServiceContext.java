@@ -12,6 +12,7 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
@@ -47,7 +48,7 @@ import java.util.function.Function;
  *  deprecated makeValid(In|Out|InOut) variants (too many).</p>
  * <p>SCIPIO: 2.1.0: Added.</p>
  */
-public class ServiceContext extends MapWrapper.Abstract<String, Object> implements AttrMap, ServiceResultFactory {
+public class ServiceContext extends MapWrapper.Abstract<String, Object> implements AttrMap, ServiceResultFactory, Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 

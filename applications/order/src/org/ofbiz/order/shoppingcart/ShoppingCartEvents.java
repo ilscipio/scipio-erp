@@ -1057,15 +1057,24 @@ public class ShoppingCartEvents {
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         if (userLogin != null && "anonymous".equals(userLogin.get("userLoginId"))) {
-            Locale locale = UtilHttp.getLocale(session);
+            // SCIPIO: 3.0.0: Improved getLocale and added getTimeZone and getCurrencyUom
+            Locale locale = UtilHttp.getLocale(request);
+            TimeZone timeZone = UtilHttp.getTimeZone(request);
+            String currencyUom = UtilHttp.getCurrencyUom(request);
 
             // here we want to do a full logout, but not using the normal logout stuff because it saves things in the UserLogin record that we don't want changed for the anonymous user
             session.invalidate();
             removeCartObject(request, RequestVarScopes.REQUEST); // SCIPIO: 2018-12-03: Ensure cart request attribute is removed
 
             session = request.getSession(true);
-            if (null != locale) {
+            if (locale != null) {
                 UtilHttp.setLocale(session, locale);
+            }
+            if (timeZone != null) {
+                UtilHttp.setTimeZone(session, timeZone);
+            }
+            if (currencyUom != null) {
+                UtilHttp.setCurrencyUom(session, currencyUom);
             }
 
             // to allow the display of the order confirmation page put the userLogin in the request, but leave it out of the session

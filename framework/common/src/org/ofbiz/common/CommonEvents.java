@@ -36,11 +36,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ilscipio.scipio.base.util.AttrHandler;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.lang.JSON;
@@ -188,7 +188,15 @@ public class CommonEvents {
     public static String setSessionLocale(HttpServletRequest request, HttpServletResponse response) {
         String localeString = request.getParameter("newLocale");
         if (UtilValidate.isNotEmpty(localeString)) {
-            UtilHttp.setLocale(request, localeString);
+            // SCIPIO: 3.0.0: ProductStore.localeStrings restriction (indirectly invoked through ProductStoreAttrHandler)
+            Locale locale = AttrHandler.resolver(request).filterLocale(localeString, true);
+            if (locale == null) {
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("CommonLanguageNotAvailable", UtilHttp.getLocale(request)));
+                return "error";
+            }
+            localeString = locale.toString();
+
+            UtilHttp.setLocale(request, locale);
 
             // update the UserLogin object
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");

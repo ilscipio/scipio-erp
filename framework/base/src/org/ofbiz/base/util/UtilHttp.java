@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,6 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
@@ -57,6 +57,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 
+import com.ilscipio.scipio.base.util.AttrHandler;
+import com.ilscipio.scipio.base.util.AttrAccessOp;
 import com.ilscipio.scipio.ce.util.servlet.FieldFilter;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
@@ -74,6 +76,8 @@ import com.ibm.icu.util.Calendar;
 
 /**
  * HttpUtil - Misc HTTP Utility Functions
+ *
+ * <p>SCIPIO: 3.0.0: Rewrote {@link #getLocale}, {@link #getTimeZone}, {@link #getCurrencyUom} to use {@link AttrHandler}; misc.</p>
  */
 public final class UtilHttp {
 
@@ -107,8 +111,6 @@ public final class UtilHttp {
      * should not be persisted. Should be accessed using {@link #getServletContextSyncObject(HttpServletRequest)}.
      */
     public static final String SESSION_NOPERSIST_ATTRLIST = "scpSessAttrNoPersist";
-
-    private static final String SESSION_KEY_TIMEZONE = "timeZone";
 
     private static final UtilHttp INSTANCE = new UtilHttp(); // SCIPIO: This is for FreeMarkerWorker (only!)
 
@@ -1137,144 +1139,261 @@ public final class UtilHttp {
         return requestUrl.toString();
     }
 
-    public static Locale getLocale(HttpServletRequest request, HttpSession session, Object appDefaultLocale) {
-        // check session first, should override all if anything set there
-        Object localeObject = session != null ? session.getAttribute("locale") : null;
-
-        // next see if the userLogin has a value
-        if (localeObject == null && session != null) { // SCIPIO: 2018-07-30: added null session check
-            Map<?, ?> userLogin = (Map<?, ?>) session.getAttribute("userLogin");
-            if (userLogin == null) {
-                userLogin = (Map<?,?>) session.getAttribute("autoUserLogin");
-            }
-
-            if (userLogin != null) {
-                localeObject = userLogin.get("lastLocale");
-            }
-        }
-
-        // no user locale? before global default try appDefaultLocale if specified
-        if (localeObject == null && UtilValidate.isNotEmpty(appDefaultLocale)) {
-            localeObject = appDefaultLocale;
-        }
-
-        // finally request (w/ a fall back to default)
-        if (localeObject == null) {
-            localeObject = request != null ? request.getLocale() : null;
-        }
-
-        return UtilMisc.ensureLocale(localeObject);
-    }
-
     /**
-     * Get the Locale object from a session variable; if not found use the browser's default
-     * @param request HttpServletRequest object to use for lookup
-     * @return Locale The current Locale to use
+     * <p>Returns (guarantees) locale object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>NOTE: This method may use accept headers from browser (or not, as configured).</p>
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
      */
     public static Locale getLocale(HttpServletRequest request) {
-        if (request == null) {
-            return Locale.getDefault();
-        }
-        return getLocale(request, request.getSession(), null);
+        return AttrHandler.from(request).getSessionLocale(request, null);
     }
 
     /**
-     * Get the Locale object from a session variable; if not found use the system's default.
-     * NOTE: This method is not recommended because it ignores the Locale from the browser not having the request object.
-     * @param session HttpSession object to use for lookup
-     * @return Locale The current Locale to use
+     * <p>Returns (guarantees) locale object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>NOTE: This method may use accept headers from browser (or not, as configured).</p>
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
+     */
+    public static Locale getLocale(HttpServletRequest request, AttrAccessOp accessOp) {
+        return AttrHandler.from(request).getSessionLocale(request, accessOp);
+    }
+
+    /**
+     * <p>Returns (guarantees) locale object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>WARN: When request is available, always use {@link #getLocale(HttpServletRequest)} instead.</p>
+     *
+     * <p>NOTE: Unless already cached in session, this method may not use accept headers from browser.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
      */
     public static Locale getLocale(HttpSession session) {
-        if (session == null) {
-            return Locale.getDefault();
-        }
-        return getLocale(null, session, null);
+        return AttrHandler.from(session).getSessionLocale(session, null);
     }
 
     /**
-     * SCIPIO: Get the Locale object from a session variable; if not found use the browser's default;
+     * <p>Returns (guarantees) locale object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>WARN: When request is available, always use {@link #getLocale(HttpServletRequest)} instead.</p>
+     *
+     * <p>NOTE: Unless already cached in session, this method may not use accept headers from browser.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
+     */
+    public static Locale getLocale(HttpSession session, AttrAccessOp accessOp) {
+        return AttrHandler.from(session).getSessionLocale(session, accessOp);
+    }
+
+    /**
+     * @deprecated SCIPIO: 3.0.0: appDefaultLocale must be coded into the applications using {@link AttrHandler}
+     */
+    @Deprecated
+    public static Locale getLocale(HttpServletRequest request, HttpSession session, Object appDefaultLocale) {
+        Debug.logWarning("DEPRECATED: getLocale called with appDefaultLocale; unused", module);
+        return (request != null) ? getLocale(request) : getLocale(session);
+    }
+
+    /**
+     * Returns the servlet request content accepted locales, minus the default locale server via heuristic if possible.
+     *
+     * <p>NOTE: This is needed because the servlet API returns Locale.getDefault() as part of the results
+     * and it typically has to be filtered out to use the default product store locale instead, which this method
+     * attempts to do via heuristic.</p>
+     *
+     * <p>If excludeDefault false, it doesn't guarantee that it is included (see {@link ServletRequest#getLocales()}).</p>
+     *
+     * <p>FIXME: Because we sometimes need to include a different default than the server default locale (Locale.getDefault()),
+     *     and instead use the product store defaultLocaleString as default, the servlet API makes it impossible for the
+     *     client to request the single server default locale as a request, and in that case will be ignored; however,
+     *     in most cases the browser will send en_US,en as two locales so the default case will usually be avoided.
+     *     This is a servlet API limitation.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static List<Locale> getClientRequestLocales(HttpServletRequest request, boolean excludeDefault) {
+        List<Locale> locales = Collections.list(request.getLocales());
+        return (!excludeDefault || locales.size() != 1 || !Objects.equals(locales.get(0), Locale.getDefault())) ?
+                locales : Collections.emptyList();
+    }
+
+    /**
+     * Get the Locale object from a session variable; if not found use the browser's default;
      * if the session does not exist, does NOT create it (unlike {@link #getLocale(HttpServletRequest)}).
-     * Added 2018-07-30.
+     *
+     * <p>SCIPIO: 2018-07-30: Added.</p>
+     *
      * @param request HttpServletRequest object to use for lookup
      * @return Locale The current Locale to use
      */
     public static Locale getLocaleExistingSession(HttpServletRequest request) {
-        if (request == null) return Locale.getDefault();
-        return getLocale(request, request.getSession(false), null);
+        return getLocale(request, AttrAccessOp.GET);
     }
 
+    /**
+     * Sets session locale.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static void setLocale(HttpServletRequest request, Locale locale) {
+        setLocale(request.getSession(), locale);
+    }
+
+    /**
+     * Sets session locale.
+     */
     public static void setLocale(HttpServletRequest request, String localeString) {
-        setLocale(request.getSession(), UtilMisc.parseLocale(localeString));
+        setLocale(request.getSession(), localeString);
     }
 
+    /**
+     * Sets session locale.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
     public static void setLocale(HttpSession session, Locale locale) {
-        session.setAttribute("locale", locale);
+        if (session != null) {
+            session.setAttribute("locale", locale);
+        }
     }
 
-    public static void setLocaleIfNone(HttpSession session, String localeString) {
-        if (UtilValidate.isNotEmpty(localeString) && session.getAttribute("locale") == null) {
+    /**
+     * Sets session locale.
+     */
+    public static void setLocale(HttpSession session, String localeString) {
+        if (session != null) {
             setLocale(session, UtilMisc.parseLocale(localeString));
         }
     }
 
+    /**
+     * Sets session locale, only if none set.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static void setLocaleIfNone(HttpServletRequest request, Locale locale) {
+        setLocaleIfNone(request.getSession(), locale);
+    }
+
+    /**
+     * Sets session locale, only if none set.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static void setLocaleIfNone(HttpServletRequest request, String localeString) {
+        setLocaleIfNone(request.getSession(), localeString);
+    }
+
+    /**
+     * Sets session locale, only if none set.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static void setLocaleIfNone(HttpSession session, Locale locale) {
+        if (locale != null && session != null && session.getAttribute("locale") == null) {
+            setLocale(session, locale);
+        }
+    }
+
+    /**
+     * Sets session locale, only if none set.
+     *
+     * <p>SCIPIO: 1.x.x: Added.</p>
+     */
+    public static void setLocaleIfNone(HttpSession session, String localeString) {
+        if (UtilValidate.isNotEmpty(localeString) && session != null && session.getAttribute("locale") == null) {
+            setLocale(session, UtilMisc.parseLocale(localeString));
+        }
+    }
+
+    public static void setTimeZone(HttpServletRequest request, TimeZone timeZone) {
+        setTimeZone(request.getSession(), timeZone);
+    }
+
     public static void setTimeZone(HttpServletRequest request, String tzId) {
-        setTimeZone(request.getSession(), UtilDateTime.toTimeZone(tzId));
+        setTimeZone(request.getSession(), tzId);
     }
 
     public static void setTimeZone(HttpSession session, TimeZone timeZone) {
-        session.setAttribute(SESSION_KEY_TIMEZONE, timeZone);
+        if (session != null) {
+            session.setAttribute("timeZone", timeZone);
+        }
+    }
+
+    public static void setTimeZone(HttpSession session, String tzId) {
+        if (session != null) {
+            session.setAttribute("timeZone", UtilDateTime.toTimeZone(tzId));
+        }
+    }
+
+    public static void setTimeZoneIfNone(HttpServletRequest request, TimeZone timeZone) {
+        setTimeZoneIfNone(request.getSession(), timeZone);
+    }
+
+    public static void setTimeZoneIfNone(HttpServletRequest request, String timeZoneString) {
+        setTimeZoneIfNone(request.getSession(), timeZoneString);
+    }
+
+    public static void setTimeZoneIfNone(HttpSession session, TimeZone timeZone) {
+        if (timeZone != null && session != null && session.getAttribute("timeZone") == null) {
+            UtilHttp.setTimeZone(session, timeZone);
+        }
     }
 
     public static void setTimeZoneIfNone(HttpSession session, String timeZoneString) {
-        if (UtilValidate.isNotEmpty(timeZoneString) && session.getAttribute(SESSION_KEY_TIMEZONE) == null) {
+        if (UtilValidate.isNotEmpty(timeZoneString) && session != null && session.getAttribute("timeZone") == null) {
             UtilHttp.setTimeZone(session, UtilDateTime.toTimeZone(timeZoneString));
         }
     }
 
+    /**
+     * <p>Returns (guarantees) time zone object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
+     */
     public static TimeZone getTimeZone(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        TimeZone timeZone = (TimeZone) session.getAttribute(SESSION_KEY_TIMEZONE);
-        Map<String, String> userLogin = UtilGenerics.cast(session.getAttribute("userLogin"));
-        if (userLogin != null) {
-            String tzId = userLogin.get("lastTimeZone");
-            if (tzId != null) {
-                timeZone = TimeZone.getTimeZone(tzId);
-            }
-        }
-        if (timeZone == null) {
-            timeZone = TimeZone.getDefault();
-        }
-        session.setAttribute(SESSION_KEY_TIMEZONE, timeZone);
-        return timeZone;
+        return AttrHandler.from(request).getSessionTimeZone(request, null);
     }
 
+    /**
+     * <p>Returns (guarantees) time zone object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
+     */
+    public static TimeZone getTimeZone(HttpServletRequest request, AttrAccessOp accessOp) {
+        return AttrHandler.from(request).getSessionTimeZone(request, accessOp);
+    }
+
+    /**
+     * <p>Returns (guarantees) time zone object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>WARN: When request is available, always use {@link #getTimeZone(HttpServletRequest)} instead.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
+     */
+    public static TimeZone getTimeZone(HttpSession session) {
+        return AttrHandler.from(session).getSessionTimeZone(session, null);
+    }
+
+    /**
+     * <p>Returns (guarantees) time zone object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>WARN: When request is available, always use {@link #getTimeZone(HttpServletRequest)} instead.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
+     */
+    public static TimeZone getTimeZone(HttpSession session, AttrAccessOp accessOp) {
+        return AttrHandler.from(session).getSessionTimeZone(session, accessOp);
+    }
+
+    /**
+     * @deprecated SCIPIO: 3.0.0: appDefaultLocale must be coded into the applications using {@link AttrHandler}
+     */
+    @Deprecated
     public static TimeZone getTimeZone(HttpServletRequest request, HttpSession session, String appDefaultTimeZoneString) {
-        // check session first, should override all if anything set there
-        TimeZone timeZone = session != null ? (TimeZone) session.getAttribute(SESSION_KEY_TIMEZONE) : null;
-
-        // next see if the userLogin has a value
-        if (timeZone == null) {
-            Map<String, Object> userLogin = UtilGenerics.checkMap(session.getAttribute("userLogin"), String.class, Object.class);
-            if (userLogin == null) {
-                userLogin = UtilGenerics.checkMap(session.getAttribute("autoUserLogin"), String.class, Object.class);
-            }
-
-            if ((userLogin != null) && (UtilValidate.isNotEmpty(userLogin.get("lastTimeZone")))) {
-                timeZone = UtilDateTime.toTimeZone((String) userLogin.get("lastTimeZone"));
-            }
-        }
-
-        // if there is no user TimeZone, we will got the application default time zone (if provided)
-        if ((timeZone == null) && (UtilValidate.isNotEmpty(appDefaultTimeZoneString))) {
-            timeZone = UtilDateTime.toTimeZone(appDefaultTimeZoneString);
-        }
-
-        // finally request (w/ a fall back to default)
-        if (timeZone == null) {
-            timeZone = TimeZone.getDefault();
-        }
-
-        return timeZone;
+        return (request != null) ? getTimeZone(request) : getTimeZone(session);
     }
 
     /**
@@ -1353,66 +1472,87 @@ public final class UtilHttp {
     }
 
     /**
-     * Get the currency string from the session.
-     * @param session HttpSession object to use for lookup
-     * @return String The ISO currency code
+     * <p>Returns (guarantees) time zone object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
      */
-    public static String getCurrencyUom(HttpSession session, String appDefaultCurrencyUom) {
-        // session, should override all if set there
-        String iso = (String) session.getAttribute("currencyUom");
-
-        // check userLogin next, ie if nothing to override in the session
-        if (iso == null) {
-            Map<String, ?> userLogin = UtilGenerics.cast(session.getAttribute("userLogin"));
-            if (userLogin == null) {
-                userLogin = UtilGenerics.cast(session.getAttribute("autoUserLogin"));
-            }
-
-            if (userLogin != null) {
-                iso = (String) userLogin.get("lastCurrencyUom");
-            }
-        }
-
-        // no user currency? before global default try appDefaultCurrencyUom if specified
-        if (iso == null && UtilValidate.isNotEmpty(appDefaultCurrencyUom)) {
-            iso = appDefaultCurrencyUom;
-        }
-
-        // if none is set we will use the configured default
-        if (iso == null) {
-            try {
-                iso = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD");
-            } catch (Exception e) {
-                Debug.logWarning("Error getting the general:currency.uom.id.default value: " + e.toString(), module);
-            }
-        }
-
-
-        // if still none we will use the default for whatever currency we can get...
-        if (iso == null) {
-            Currency cur = Currency.getInstance(getLocale(session));
-            iso = cur.getCurrencyCode();
-        }
-
-        return iso;
+    public static String getCurrencyUom(HttpServletRequest request) {
+        return AttrHandler.from(request).getSessionCurrencyUom(request, null);
     }
 
     /**
-     * Get the currency string from the session.
-     * @param request HttpServletRequest object to use for lookup
-     * @return String The ISO currency code
+     * <p>Returns (guarantees) time zone object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
      */
-    public static String getCurrencyUom(HttpServletRequest request) {
-        return getCurrencyUom(request.getSession(), null);
+    public static String getCurrencyUom(HttpServletRequest request, AttrAccessOp accessOp) {
+        return AttrHandler.from(request).getSessionCurrencyUom(request, accessOp);
     }
 
-    /** Simple event to set the users per-session currency uom value */
+    /**
+     * <p>Returns (guarantees) time zone object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>WARN: When request is available, always use {@link #getCurrencyUom(HttpServletRequest)} instead.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
+     */
+    public static String getCurrencyUom(HttpSession session) {
+        return AttrHandler.from(session).getSessionCurrencyUom(session, null);
+    }
+
+    /**
+     * <p>Returns (guarantees) time zone object from session (cache) or resolution via {@link AttrHandler}.
+     *
+     * <p>WARN: When request is available, always use {@link #getCurrencyUom(HttpServletRequest)} instead.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Rewritten for {@link AttrHandler}.</p>
+     */
+    public static String getCurrencyUom(HttpSession session, AttrAccessOp accessOp) {
+        return AttrHandler.from(session).getSessionCurrencyUom(session, accessOp);
+    }
+
+    /**
+     * @deprecated SCIPIO: 3.0.0: appDefaultLocale must be coded into the applications using {@link AttrHandler}
+     */
+    @Deprecated
+    public static String getCurrencyUom(HttpSession session, String appDefaultCurrencyUom) {
+        return getCurrencyUom(session);
+    }
+
+    /**
+     * Set the user's per-session currency uom value.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static void setCurrencyUom(HttpServletRequest request, String currencyUom) {
+        setCurrencyUom(request.getSession(), currencyUom);
+    }
+
+    /**
+     * Set the user's per-session currency uom value.
+     */
     public static void setCurrencyUom(HttpSession session, String currencyUom) {
-        session.setAttribute("currencyUom", currencyUom);
+        if (session != null) {
+            session.setAttribute("currencyUom", currencyUom);
+        }
     }
 
+    /**
+     * Set the user's per-session currency uom value if not already set.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static void setCurrencyUomIfNone(HttpServletRequest request, String currencyUom) {
+        setCurrencyUomIfNone(request.getSession(), currencyUom);
+    }
+
+    /**
+     * Set the user's per-session currency uom value if not already set.
+     *
+     * <p>SCIPIO: 1.x.x: Added.</p>
+     */
     public static void setCurrencyUomIfNone(HttpSession session, String currencyUom) {
-        if (UtilValidate.isNotEmpty(currencyUom) && session.getAttribute("currencyUom") == null) {
+        if (UtilValidate.isNotEmpty(currencyUom) && session != null && session.getAttribute("currencyUom") == null) {
             session.setAttribute("currencyUom", currencyUom);
         }
     }
@@ -2679,4 +2819,31 @@ public final class UtilHttp {
             Debug.log(logLevel, "checkSerializable: [" + keyDesc + "] value is non-serializable [" + value.getClass().getName() + "]", module);
         }
     }
+
+    /**
+     * Returns ServletContext from request, session or servlet context.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static ServletContext getServletContext(Object servletObject) {
+        if (servletObject instanceof ServletContext) {
+            return (ServletContext) servletObject;
+        } else if (servletObject instanceof ServletRequest) {
+            return ((ServletRequest) servletObject).getServletContext();
+        } else if (servletObject instanceof HttpSession) {
+            return ((HttpSession) servletObject).getServletContext();
+        } else {
+            throw new IllegalArgumentException("Cannot get ServletContext from type: " + (servletObject != null ? servletObject.getClass().getName() : "null"));
+        }
+    }
+
+    /**
+     * Returns ServletContext from request, session or servlet context, or null if already null.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static ServletContext getServletContextSafe(Object servletObject) {
+        return (servletObject != null) ? getServletContext(servletObject) : null;
+    }
+
 }

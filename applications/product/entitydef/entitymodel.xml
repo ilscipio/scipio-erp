@@ -4169,7 +4169,9 @@ code package.
       <field name="requirementMethodEnumId" type="id"></field>
       <field name="orderNumberPrefix" type="id-long"></field>
       <field name="defaultLocaleString" type="very-short"></field>
+      <field name="localeStrings" type="very-long"><description>JSON list of locales supported by this store, used to filter input and UserLogin.lastLocale (SCIPIO)</description></field>
       <field name="defaultCurrencyUomId" type="id"></field>
+      <field name="currencyUomIds" type="very-long"><description>JSON list of currency UOMs supported by this store, used to filter input and UserLogin.lastCurrencyUom (SCIPIO)</description></field>
       <field name="defaultTimeZoneString" type="id-long"></field>
       <field name="defaultSalesChannelEnumId" type="id"></field>
       <field name="allowPassword" type="indicator"></field>

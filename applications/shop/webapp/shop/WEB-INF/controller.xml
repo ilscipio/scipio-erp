@@ -40,6 +40,9 @@ code package.
     </postprocessor>
 
     <after-login>
+        <!-- SCIPIO: 3.0.0: This is now being done on doBasicLogin() via StoreAttrHandler; to use this event,
+            set attrHandler.events.basicLogin to false in web.xml and uncomment here; currently redundant
+        <event name="setDefaultUserSettings" type="java" path="org.ofbiz.product.product.ProductEvents" invoke="setDefaultUserSettings"/>-->
         <event name="updateAssociatedDistributor" type="java" path="com.ilscipio.scipio.shop.misc.ThirdPartyEvents" invoke="updateAssociatedDistributor"/>
         <event name="keepCartUpdated" type="java" path="org.ofbiz.order.shoppingcart.ShoppingCartEvents" invoke="keepCartUpdated"/>
         <!-- after login, get everything from the auto-save list -->
@@ -2071,7 +2074,7 @@ code package.
     <view-map name="showShoppingList" type="screen" page="component://shop/widget/ShoppingListScreens.xml#showShoppingList"/>
     
     <!-- SCIPIO: dedicated locales screen for anon users -->
-    <view-map name="ListLocales" type="screen" page="component://common/widget/CommonScreens.xml#ListLocalesCompact"/>
+    <view-map name="ListLocales" type="screen" page="component://shop/widget/CommonScreens.xml#ListLocalesCompact"/>
 
     <!-- End of View Mappings -->
 </site-conf>

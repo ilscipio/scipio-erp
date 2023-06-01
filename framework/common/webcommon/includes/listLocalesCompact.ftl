@@ -18,7 +18,7 @@ code package.
 <@fields type="default-nolabelarea">
   <@field type="select" name="newLocale">
     <#assign altRow = true>
-    <#assign availableLocales = UtilMisc.availableLocales()/>
+    <#assign availableLocales = availableLocales!UtilMisc.availableLocales()/>
     
     <#list availableLocales as availableLocale>
         <#assign altRow = !altRow>

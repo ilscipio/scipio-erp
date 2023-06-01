@@ -19,6 +19,7 @@
 package org.ofbiz.product.store;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -27,12 +28,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.ilscipio.scipio.base.util.AttrHandler;
+import com.ilscipio.scipio.product.store.StoreAttrHandler;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -111,12 +116,33 @@ public final class ProductStoreWorker {
         return productStore;
     }
 
+    /**
+     * Gets product store from session.
+     *
+     * <p>SCIPIO: 3.0.0: Patched for delegator access.</p>
+     */
     public static GenericValue getProductStore(ServletRequest request) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Delegator delegator = Delegator.from(request);
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
         return ProductStoreWorker.getProductStore(productStoreId, delegator);
     }
 
+    /**
+     * Gets product store from session.
+     *
+     * <p>NOTE: When request available, always use {@link #getProductStore(ServletRequest)} instead.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for support for websocket backends where only session available.</p>
+     */
+    public static GenericValue getProductStore(HttpSession session) {
+        Delegator delegator = Delegator.from(session);
+        String productStoreId = ProductStoreWorker.getProductStoreId(session);
+        return ProductStoreWorker.getProductStore(productStoreId, delegator);
+    }
+
+    /**
+     * Gets productStoreId from session.
+     */
     public static String getProductStoreId(ServletRequest request) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpSession session = httpRequest.getSession(false);
@@ -127,7 +153,7 @@ public final class ProductStoreWorker {
                 return productStoreId;
             }
         }
-        GenericValue webSite = WebSiteWorker.getWebSite(httpRequest);
+        GenericValue webSite = WebSiteWorker.getWebSite(request);
         if (webSite != null) {
             String productStoreId = webSite.getString("productStoreId");
             // might be nice to do this, but not needed and has a problem with dependencies: setSessionProductStore(productStoreId, httpRequest);
@@ -136,33 +162,137 @@ public final class ProductStoreWorker {
         return null;
     }
 
+    /**
+     * Gets productStoreId from session.
+     *
+     * <p>NOTE: When request available, always use {@link #getProductStore(ServletRequest)} instead.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for support for websocket backends where only session available.</p>
+     */
+    public static String getProductStoreId(HttpSession session) {
+        if (session == null) {
+            return null;
+        }
+        // SCIPIO: refactored to prevent multiple accesss
+        String productStoreId = (String) session.getAttribute("productStoreId");
+        if (productStoreId != null) {
+            return productStoreId;
+        }
+        GenericValue webSite = WebSiteWorker.getWebSite(session);
+        if (webSite != null) {
+            productStoreId = webSite.getString("productStoreId");
+            // might be nice to do this, but not needed and has a problem with dependencies: setSessionProductStore(productStoreId, httpRequest);
+            return productStoreId;
+        }
+        return null;
+    }
+
     public static String getStoreCurrencyUomId(HttpServletRequest request) {
+        return UtilHttp.getCurrencyUom(request); // SCIPIO: 3.0.0: Automatically handled by UtilHttp/AttrHandler
+    }
+
+    public static String getStoreDefaultCurrencyUomId(HttpServletRequest request) {
         GenericValue productStore = getProductStore(request);
         if (UtilValidate.isEmpty(productStore)) {
-            Debug.logError("No product store found in request, cannot set CurrencyUomId!", module);
+            //Debug.logError("No product store found in request, cannot set CurrencyUomId", module);
             return null;
         } else {
-            return UtilHttp.getCurrencyUom(request.getSession(), productStore.getString("defaultCurrencyUomId"));
+            return productStore.getString("defaultCurrencyUomId");
         }
+    }
+
+    public static List<String> getStoreCurrencyUomIds(HttpServletRequest request) {
+        GenericValue productStore = getProductStore(request);
+        return (productStore != null) ? productStore.getJsonList("currencyUomIds") : null;
+    }
+
+    /**
+     * Returns matching locale candidate to ProductStore.localeStrings filter (if configured for store) or null if no
+     * candidate matching criteria.
+     */
+    public static String getStoreCandidateCurrencyUom(GenericValue productStore, Object currencyUomObject, Boolean exact) {
+        // TODO: REVIEW: Probably no need to support list of currency Uoms or candidates for now (like locales), just take the first one
+        String currencyUom = (currencyUomObject instanceof Collection) ? UtilMisc.firstSafe((Collection<?>) currencyUomObject) : (String) currencyUomObject;
+        List<String> currencyUomIds = productStore.getJsonList("currencyUomIds");
+        if (UtilValidate.isNotEmpty(currencyUomIds) && !currencyUomIds.contains(currencyUom)) {
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("getStoreCandidateCurrencyUom: Filtered out currency uom " + currencyUomObject +
+                        " for store [" + productStore.get("productStoreId") + " (available: " + currencyUomIds + ")", module);
+            }
+            return null;
+        }
+        return currencyUom;
     }
 
     public static Locale getStoreLocale(HttpServletRequest request) {
+        return UtilHttp.getLocale(request); // SCIPIO: 3.0.0: Automatically handled by UtilHttp/AttrHandler
+    }
+
+    public static Locale getStoreDefaultLocale(HttpServletRequest request) {
         GenericValue productStore = getProductStore(request);
         if (UtilValidate.isEmpty(productStore)) {
-            Debug.logError("No product store found in request, cannot set locale!", module);
+            //Debug.logError("No product store found in request, cannot set locale", module);
             return null;
         } else {
-            return UtilHttp.getLocale(request, request.getSession(), productStore.getString("defaultLocaleString"));
+            return UtilMisc.asLocale(productStore.get("defaultLocaleString"));
         }
     }
 
-    public static TimeZone getStoreTimeZone(HttpServletRequest request) {
+    public static List<String> getStoreLocaleStrings(HttpServletRequest request) {
         GenericValue productStore = getProductStore(request);
-        if (UtilValidate.isEmpty(productStore)) {
-            Debug.logError("No product store found in request, cannot set timezone!", module);
+        return (productStore != null) ? productStore.getJsonList("localeStrings") : null;
+    }
+
+    public static List<Locale> getStoreLocales(HttpServletRequest request) {
+        GenericValue productStore = getProductStore(request);
+        return (productStore != null) ? getStoreLocales(productStore) : null;
+    }
+
+    public static List<Locale> getStoreLocales(GenericValue productStore) {
+        return productStore.<String>getJsonList("localeStrings").stream().map(UtilMisc::parseLocale).collect(Collectors.toList());
+    }
+
+    /**
+     * Returns matching locale candidate to ProductStore.localeStrings filter (if configured for store) or null if no
+     * candidate matching criteria.
+     */
+    public static Locale getStoreCandidateLocale(HttpServletRequest request, Object localeObject, Boolean exact) {
+        GenericValue productStore = getProductStore(request);
+        if (productStore == null) {
+            //Debug.logError("No product store found in request, cannot set locale", module);
             return null;
         } else {
-            return UtilHttp.getTimeZone(request, request.getSession(), productStore.getString("defaultTimeZoneString"));
+            return getStoreCandidateLocale(productStore, localeObject, exact);
+        }
+    }
+
+    /**
+     * Returns matching locale candidate to ProductStore.localeStrings filter (if configured for store) or null if no
+     * candidate matching criteria.
+     */
+    public static Locale getStoreCandidateLocale(GenericValue productStore, Object localeObject, Boolean exact) {
+        Locale locale = UtilMisc.getCandidateLocale(localeObject, productStore.getJsonList("localeStrings"), true, exact);
+        if (locale == null) {
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("getStoreCandidateLocaleString: Filtered out locale(s) " + localeObject +
+                        " for store [" + productStore.get("productStoreId") + " (available: " +
+                        productStore.getJsonList("localeStrings") + ")", module);
+            }
+        }
+        return locale;
+    }
+
+    public static TimeZone getStoreTimeZone(HttpServletRequest request) {
+        return UtilHttp.getTimeZone(request); // SCIPIO: 3.0.0: Automatically handled by UtilHttp/AttrHandler
+    }
+
+    public static TimeZone getStoreDefaultTimeZone(HttpServletRequest request) {
+        GenericValue productStore = getProductStore(request);
+        if (UtilValidate.isEmpty(productStore)) {
+            //Debug.logError("No product store found in request, cannot set timezone", module);
+            return null;
+        } else {
+            return UtilDateTime.asTimeZone(productStore.get("defaultTimeZoneString"));
         }
     }
 
@@ -206,7 +336,7 @@ public final class ProductStoreWorker {
     }
 
     public static String getProductStorePaymentProperties(ServletRequest request, String paymentMethodTypeId, String paymentServiceTypeEnumId, boolean anyServiceType) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Delegator delegator = Delegator.from(request);
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
         return ProductStoreWorker.getProductStorePaymentProperties(delegator, productStoreId, paymentMethodTypeId, paymentServiceTypeEnumId, anyServiceType);
     }
@@ -582,7 +712,7 @@ public final class ProductStoreWorker {
 
     /** Returns the number of responses for this survey by party */
     public static int checkSurveyResponse(HttpServletRequest request, String surveyId) {
-        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Delegator delegator = Delegator.from(request);
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String productStoreId = getProductStoreId(request);
         if (userLogin == null) {

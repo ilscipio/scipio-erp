@@ -97,6 +97,18 @@ code package.
         <param-value>false</param-value>
     </context-param>
 
+    <context-param>
+        <description>SCIPIO: Webapp-specific session attribute handler and resolver for locale, timeZone and currencyUom, usually needed for stores</description>
+        <param-name>attrHandler.class</param-name>
+        <param-value>com.ilscipio.scipio.product.store.StoreAttrHandler$Factory</param-value>
+    </context-param>
+
+    <context-param>
+        <description>SCIPIO: If true (default), LoginWorker.doBasicLogin will reset user settings at every login</description>
+        <param-name>attrHandler.events.basicLogin</param-name>
+        <param-value></param-value>
+    </context-param>
+
     <!-- SCIPIO: UrlRewriteFilter - processes urlrewrite.xml
         NOTE: 2017-11-01: SimpleRedirectFilter is replaced by UrlRewriteFilter. -->
     <filter>

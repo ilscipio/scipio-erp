@@ -47,6 +47,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 import javax.transaction.Transaction;
 
+import com.ilscipio.scipio.base.util.AttrHandler;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -673,23 +674,8 @@ public class LoginWorker {
         HttpSession session = request.getSession();
         session.setAttribute("userLogin", userLogin);
 
-        // SCIPIO: This forces the language to be set accordingly to the user's
-        // language settings. Unfortunately it seems to be changed some where
-        // else. ShopSetup.groovy is used as a fallback, although it won't be
-        // taken into account until the next time the user do something.
-        ServletContext servletContext = request.getServletContext();
-        Boolean resetSessionLocaleOnLogin = UtilMisc.booleanValue(servletContext.getAttribute("resetUserSessionLocaleOnLogin"));
-        if (resetSessionLocaleOnLogin == null) {
-            resetSessionLocaleOnLogin = UtilMisc.booleanValue(servletContext.getInitParameter("resetUserSessionLocaleOnLogin"));
-        }
-        if (!Boolean.FALSE.equals(resetSessionLocaleOnLogin)) {
-            if (request.getLocale() != null && userLogin.getString("lastLocale") != null
-                    && !request.getLocale().getLanguage().equals(userLogin.getString("lastLocale"))) {
-                Debug.logInfo("Found locale [" + request.getLocale().getLanguage() + "] but user preference is [" + userLogin.getString("lastLocale")
-                        + "]. Setting locale accordignly to user's preference.", module);
-                UtilHttp.setLocale(request, userLogin.getString("lastLocale"));
-            }
-        }
+        // SCIPIO: 3.0.0:
+        AttrHandler.resolver(request).runBasicLoginEvents();
 
         String javaScriptEnabled = null;
         try {
@@ -928,7 +914,7 @@ public class LoginWorker {
         }
         // SCIPIO: 2.1.0: Value must be URL-encoded to support UTF-8
         if (UtilValidate.isNotEmpty(autoUserLoginId)) {
-            Delegator delegator = Delegator.delegator(request);
+            Delegator delegator = Delegator.from(request);
             if (delegator != null) {
                 String decodedId = null;
                 try {

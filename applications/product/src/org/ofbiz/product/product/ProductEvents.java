@@ -26,8 +26,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +37,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.ilscipio.scipio.base.util.AttrHandler;
+import com.ilscipio.scipio.product.store.StoreAttrHandler;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilDateTime;
@@ -895,44 +899,29 @@ public class ProductEvents {
         return "success";
     }
 
-    /** Simple event to set the users initial locale and currency Uom based on website product store */
+    /**
+     * Simple event to set the user's initial locale and currency Uom based on website product store.
+     *
+     * <p>SCIPIO: 3.0.0: Modified to delegate most calls to ProductStoreAttrHandler.</p>
+     */
     public static String setDefaultStoreSettings(HttpServletRequest request, HttpServletResponse response) {
-        GenericValue productStore = ProductStoreWorker.getProductStore(request);
-        if (productStore != null) {
-            String currencyStr = null;
-            String localeStr = null;
-            String timeZoneStr = null;
+        // NOTE: Because this event may be run from ordermgr or other and attrHandler may not be configured in web.xml there,
+        //  pass/force StoreAttrHandler type here (cast below is in case this changes)
+        AttrHandler.Resolver attrResolver = AttrHandler.resolver(request, StoreAttrHandler.class);
+        attrResolver.setDefaultSessionSettings();
+        return "success";
+    }
 
-            HttpSession session = request.getSession();
-            GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-            if (userLogin != null) {
-                // user login currency
-                currencyStr = userLogin.getString("lastCurrencyUom");
-                // user login locale
-                localeStr = userLogin.getString("lastLocale");
-                // user login timezone
-                timeZoneStr = userLogin.getString("lastTimeZone");
-            }
-
-            // if currency is not set, the store's default currency is used
-            if (currencyStr == null && productStore.get("defaultCurrencyUomId") != null) {
-                currencyStr = productStore.getString("defaultCurrencyUomId");
-            }
-
-            // if locale is not set, the store's default locale is used
-            if (localeStr == null && productStore.get("defaultLocaleString") != null) {
-                localeStr = productStore.getString("defaultLocaleString");
-            }
-
-            // if timezone is not set, the store's default timezone is used
-            if (timeZoneStr == null && productStore.get("defaultTimeZoneString") != null) {
-                timeZoneStr = productStore.getString("defaultTimeZoneString");
-            }
-
-            UtilHttp.setCurrencyUom(session, currencyStr);
-            UtilHttp.setLocale(request, localeStr);
-            UtilHttp.setTimeZone(request, timeZoneStr);
-        }
+    /**
+     * Simple event to set the user's locale, after-login.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String setDefaultUserSettings(HttpServletRequest request, HttpServletResponse response) {
+        // NOTE: Because this event may be run from ordermgr or other and attrHandler may not be configured in web.xml there,
+        //  pass/force StoreAttrHandler type here (cast below is in case this changes)
+        AttrHandler.Resolver attrResolver = AttrHandler.resolver(request, StoreAttrHandler.class);
+        attrResolver.setDefaultUserSettings();
         return "success";
     }
 

@@ -521,7 +521,28 @@ code package.
             </widgets>
         </section>
     </screen>
-    
+
+    <screen name="ListLocalesCompact">
+        <section>
+            <actions>
+                <set field="title" value="${uiLabelMap.CommonChooseLanguage}"/>
+                <script lang="groovy"><![CDATA[
+                    storeLocales = org.ofbiz.product.store.ProductStoreWorker.getStoreLocales(request);
+                    if (storeLocales) {
+                        context.availableLocales = storeLocales;
+                    }
+                ]]></script>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <include-screen name="listLocalesCompact" location="component://common/widget/CommonScreens.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
     <!-- SCIPIO: Widget implementation -->
     <screen name="ScipioDashboardImage">
         <section>

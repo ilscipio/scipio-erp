@@ -6386,6 +6386,10 @@
         <value xml:lang="zh-CN">六月</value>
         <value xml:lang="zh-TW">六月</value>
     </property>
+    <property key="CommonLanguageNotAvailable">
+        <value xml:lang="de">Sprache nicht verfügbar</value>
+        <value xml:lang="en">Language not available</value>
+    </property>
     <property key="CommonLanguageTitle">
         <value xml:lang="ar">اللغة</value>
         <value xml:lang="cs">Jazyk</value>

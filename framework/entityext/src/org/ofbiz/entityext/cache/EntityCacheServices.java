@@ -240,10 +240,10 @@ public class EntityCacheServices implements DistributedCacheClear {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
 
         try {
-            Collection<String> excludeNames = UtilMisc.asCollectionNonNull(context.get("excludeNames"));
+            Collection<String> excludeNames = UtilMisc.toCollection(context.get("excludeNames"));
             Collection<Pattern> excludePatterns = UtilMisc.getPatterns(context.get("excludePatterns"));
             Collection<String> excludeTypes = !"none".equals(context.get("excludeTypes")) ?
-                    UtilMisc.asCollectionNonNull(context.get("excludeTypes")) : null;
+                    UtilMisc.toCollection(context.get("excludeTypes")) : null;
             if (excludeTypes != null) {
                 excludeNames = (excludeNames != null) ? new ArrayList<>(excludeNames) : new ArrayList<>();
                 for(String excludeType : excludeTypes) {

@@ -3019,11 +3019,14 @@ public class UtilMisc {
     }
 
     /**
-     * SCIPIO: Returns the given parameter as a collection if it already is, otherwise puts it in the collection;
+     * Returns the given parameter as a collection if it already is, otherwise puts it in a new collection;
      * if null, returns null.
+     *
      * <p>WARN: If param is wrong type, collection type may be violated.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Renamed.</p>
      */
-    public static <T> Collection<T> asCollectionNonNull(Object param, Supplier<? extends Collection<? extends T>> containerFactory) {
+    public static <T, C extends Collection<T>> C toCollection(Object param, Supplier<? extends Collection<? extends T>> containerFactory) {
         if (param == null) {
             return null;
         } else if (param instanceof Collection) {
@@ -3036,12 +3039,43 @@ public class UtilMisc {
     }
 
     /**
-     * SCIPIO: Returns the given parameter as a collection if it already is, otherwise puts it in the collection;
+     * Returns the given parameter as a collection if it already is, otherwise puts it in a new collection;
      * if null, returns null.
+     *
      * <p>WARN: If param is wrong type, collection type may be violated.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Renamed.</p>
      */
+    public static <T, C extends Collection<T>> C toCollection(Object param) {
+        return toCollection(param, ArrayList::new);
+    }
+
+    /**
+     * Returns the given parameter as a collection if it already is, otherwise puts it in a new collection;
+     * if null, returns null.
+     * @deprecated SCIPIO: 3.0.0: Use {@link #toCollection(Object, Supplier)}
+     *
+     * <p>WARN: If param is wrong type, collection type may be violated.</p>
+     *
+     * <p>SCIPIO: 2.x.x: Added.</p>
+     */
+    @Deprecated
+    public static <T> Collection<T> asCollectionNonNull(Object param, Supplier<? extends Collection<? extends T>> containerFactory) {
+        return toCollection(param, containerFactory);
+    }
+
+    /**
+     * SCIPIO: Returns the given parameter as a collection if it already is, otherwise puts it in a new collection;
+     * if null, returns null.
+     * @deprecated SCIPIO: 3.0.0: Use {@link #toCollection(Object)}
+     *
+     * <p>WARN: If param is wrong type, collection type may be violated.</p>
+     *
+     * <p>SCIPIO: 2.x.x: Added.</p>
+     */
+    @Deprecated
     public static <T> Collection<T> asCollectionNonNull(Object param) {
-        return asCollectionNonNull(param, ArrayList::new);
+        return toCollection(param);
     }
 
     public static <C extends Collection<Pattern>> C getPatterns(Object collectionOrPat, Supplier<C> containerFactory) {

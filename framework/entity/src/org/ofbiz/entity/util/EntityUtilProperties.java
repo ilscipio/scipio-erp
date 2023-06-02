@@ -135,8 +135,11 @@ public final class EntityUtilProperties implements Serializable {
                 //results.put("isExistInDb", "Y");
                 //results.put("value", (systemProperty.getString("systemPropertyValue") != null) ? systemProperty.getString("systemPropertyValue") : "");
 
-                String value = systemProperty.getString("systemPropertyValue");
-                if (value == null) value = "";
+                GenericValue systemPropertyEnc = checkEncryptedSystemProperty(delegator, systemProperty);
+                String value = (systemPropertyEnc != null) ? systemPropertyEnc.getString("systemPropertyValue") : systemProperty.getString("systemPropertyValue");
+                if (value == null) {
+                    value = "";
+                }
                 if (value.isEmpty() && !Boolean.TRUE.equals(systemProperty.getBoolean("useEmpty"))) {
                     // keep isExistInDb "N" and value "" (above)
                 } else {
@@ -147,6 +150,26 @@ public final class EntityUtilProperties implements Serializable {
             Debug.logError("Could not get a system property for " + name + " : " + e.getMessage(), module);
         }
         return results;
+    }
+
+    private static GenericValue checkEncryptedSystemProperty(Delegator delegator, GenericValue systemProperty) throws GenericEntityException {
+        Object encrypt = systemProperty.get("encrypt");
+        boolean encryptCache = "true".equals(encrypt);
+        boolean encryptNoCache = !encryptCache && "true-nocache".equals(encrypt);
+        if (encryptCache || encryptNoCache) {
+            GenericValue systemPropertyEnc = EntityQuery.use(delegator)
+                    .from("SystemPropertyEnc")
+                    .where("systemResourceId", systemProperty.get("systemResourceId"), "systemPropertyId", systemProperty.get("systemPropertyId"))
+                    .cache(encryptCache)
+                    .queryOne();
+            if (systemPropertyEnc == null) {
+                Debug.logError("Misconfigured encrypted system property SystemPropertyEnc systemResourceId [" + systemProperty.get("systemResourceId") +
+                        "] systemPropertyId [" + systemProperty.get("systemPropertyId") + "]; needs both SystemProperty and SystemPropertyEnc records (for fast caching)", module);
+                return null;
+            }
+            return systemPropertyEnc;
+        }
+        return null;
     }
 
     public static boolean propertyValueEquals(String resource, String name, String compareString) {
@@ -327,6 +350,10 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static Properties getProperties(Delegator delegator, String resourceName) {
+        return getProperties(delegator, resourceName, false);
+    }
+
+    public static Properties getProperties(Delegator delegator, String resourceName, boolean includeEncrypted) {
         Properties properties = UtilProperties.getProperties(resourceName);
         List<GenericValue> gvList;
         try {
@@ -337,8 +364,10 @@ public final class EntityUtilProperties implements Serializable {
             if (UtilValidate.isNotEmpty(gvList)) {
                 for (Iterator<GenericValue> i = gvList.iterator(); i.hasNext();) {
                     GenericValue gv = i.next();
-                    if (UtilValidate.isNotEmpty(gv.getString("systemPropertyValue"))) {
-                        properties.setProperty(gv.getString("systemPropertyId"), gv.getString("systemPropertyValue"));
+                    GenericValue systemPropertyEnc = includeEncrypted ? checkEncryptedSystemProperty(delegator, gv) : null;
+                    String value = (systemPropertyEnc != null) ? systemPropertyEnc.getString("systemPropertyValue") : gv.getString("systemPropertyValue");
+                    if (UtilValidate.isNotEmpty(value)) {
+                        properties.setProperty(gv.getString("systemPropertyId"), value);
                     }
                 }
             }
@@ -376,15 +405,26 @@ public final class EntityUtilProperties implements Serializable {
         return UtilProperties.getSplitPropertyValue(url, name);
     }
 
-     public static void setPropertyValue(String resource, String name, String value) {
-         UtilProperties.setPropertyValue(resource, name, value);
-     }
+    public static void setPropertyValue(String resource, String name, String value) {
+        UtilProperties.setPropertyValue(resource, name, value);
+    }
 
-      public static void setPropertyValueInMemory(String resource, String name, String value) {
-          UtilProperties.setPropertyValueInMemory(resource, name, value);
-      }
+    public static void setPropertyValueInMemory(String resource, String name, String value) {
+        UtilProperties.setPropertyValueInMemory(resource, name, value);
+    }
 
     public static String setPropertyValue(Delegator delegator, String resourceName, String name, String value) {
+        return setPropertyValue(delegator, resourceName, name, value, null);
+    }
+
+    public static String setPropertyValue(Delegator delegator, String resourceName, String name, String value, Boolean useEmpty) {
+        return setPropertyValue(delegator, resourceName, name, value, useEmpty, null);
+    }
+
+    public static String setPropertyValue(Delegator delegator, String resourceName, String name, String value, Boolean useEmpty, String encrypt) {
+        if (encrypt != null) {
+            throw new UnsupportedOperationException(); // TODO: secondary record creation
+        }
         GenericValue gv = null;
         String prevValue = null;
         try {
@@ -395,10 +435,17 @@ public final class EntityUtilProperties implements Serializable {
             if (gv != null) {
                 prevValue = gv.getString("systemPropertyValue");
                 gv.set("systemPropertyValue", value);
+                if (useEmpty != null) {
+                    gv.set("useEmpty", useEmpty ? "Y" : "N");
+                }
+                gv.store();
             } else {
                 gv = delegator.makeValue("SystemProperty", UtilMisc.toMap("systemResourceId", resourceName, "systemPropertyId", name, "systemPropertyValue", value, "description", null));
+                if (useEmpty != null) {
+                    gv.set("useEmpty", useEmpty ? "Y" : "N");
+                }
+                gv = gv.create();
             }
-            gv.store();
         } catch (GenericEntityException e) {
             Debug.logError(String.format("tenantId=%s, exception=%s, message=%s", delegator.getDelegatorTenantId(), e.getClass().getName(), e.getMessage()), module);
         }

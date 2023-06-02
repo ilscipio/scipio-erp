@@ -1,18 +1,24 @@
 package org.ofbiz.product.store;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ServiceContext;
+import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.ServiceValidationException;
 
 /**
  * ProductStoreServices.
@@ -60,6 +66,36 @@ public class ProductStoreServices {
             return ServiceUtil.returnError(e.toString());
         }
         return ServiceUtil.returnSuccess();
+    }
+
+    public static class SetProductStoreLocaleStringsToDefault extends ServiceHandler.LocalExec {
+        protected Collection<String> productStoreIds;
+
+        @Override
+        public void init(ServiceContext ctx) {
+            super.init(ctx);
+            productStoreIds = UtilMisc.toCollection(ctx.attr("productStoreId"));
+        }
+
+        @Override
+        public Map<String, Object> exec() throws GeneralException {
+            if (UtilValidate.isEmpty(productStoreIds)) {
+                throw new ServiceValidationException("Missing productStoreId(s)", ctx.service());
+            }
+            for (String productStoreId : productStoreIds) {
+                GenericValue productStore = ctx.delegator().from("ProductStore").where("productStoreId", productStoreId).queryOne();
+                if (productStore == null) {
+                    return ctx.error("ProductStore [" + productStoreId + "] not found");
+                }
+                String defaultLocaleString = productStore.getString("defaultLocaleString");
+                if (defaultLocaleString == null) {
+                    return ctx.error("ProductStore [" + productStoreId + "] missing defaultLocaleString");
+                }
+                productStore.setJson("localeStrings", List.of(defaultLocaleString));
+                productStore.store();
+            }
+            return ctx.success();
+        }
     }
 
 }

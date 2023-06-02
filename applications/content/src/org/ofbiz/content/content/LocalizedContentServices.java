@@ -19,8 +19,8 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.LocalService;
 import org.ofbiz.service.ServiceContext;
-import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceUtil;
 
 /**
@@ -104,7 +104,7 @@ public abstract class LocalizedContentServices {
         }
     }
 
-    public static class CreateSimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
+    public static class CreateSimpleTextContentForAlternateLocale extends LocalService {
         @Override
         public Map<String, Object> exec() throws GeneralException {
             try {
@@ -131,7 +131,7 @@ public abstract class LocalizedContentServices {
         }
     }
 
-    public static class UpdateSimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
+    public static class UpdateSimpleTextContentForAlternateLocale extends LocalService {
         @Override
         public Map<String, Object> exec() throws GeneralException {
             try {
@@ -165,7 +165,7 @@ public abstract class LocalizedContentServices {
         }
     }
 
-    public static class DeleteSimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
+    public static class DeleteSimpleTextContentForAlternateLocale extends LocalService {
         @Override
         public Map<String, Object> exec() throws GeneralException {
             try {
@@ -189,13 +189,14 @@ public abstract class LocalizedContentServices {
         }
     }
 
-    public static class CreateUpdateSimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
+    public static class CreateUpdateSimpleTextContentForAlternateLocale extends LocalService {
         protected String mainContentId;
         protected boolean createMainContent;
         protected String contentId;
         protected String localeString;
 
-        public void init(ServiceContext ctx) {
+        @Override
+        public void init(ServiceContext ctx) throws GeneralException {
             super.init(ctx);
             mainContentId = ctx.attrNonEmpty("mainContentId");
             createMainContent = ctx.attr("createMainContent", true);

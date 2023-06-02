@@ -15,8 +15,8 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.LocalService;
 import org.ofbiz.service.ServiceContext;
-import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceValidationException;
 
@@ -68,11 +68,11 @@ public class ProductStoreServices {
         return ServiceUtil.returnSuccess();
     }
 
-    public static class SetProductStoreLocaleStringsToDefault extends ServiceHandler.LocalExec {
+    public static class SetProductStoreLocaleStringsToDefault extends LocalService {
         protected Collection<String> productStoreIds;
 
         @Override
-        public void init(ServiceContext ctx) {
+        public void init(ServiceContext ctx) throws GeneralException {
             super.init(ctx);
             productStoreIds = UtilMisc.toCollection(ctx.attr("productStoreId"));
         }

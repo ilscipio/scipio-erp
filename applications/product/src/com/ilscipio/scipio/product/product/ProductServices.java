@@ -77,7 +77,7 @@ public abstract class ProductServices {
         return ServiceUtil.returnSuccess();
     }
 
-    public static class PrecacheProductContentWrapper extends ServiceHandler.LocalExec {
+    public static class PrecacheProductContentWrapper extends LocalService {
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
         protected Collection<String> productContentTypeIdList;
@@ -89,8 +89,8 @@ public abstract class ProductServices {
 
         protected int productCount = 0;
 
-        public PrecacheProductContentWrapper(ServiceContext ctx) {
-            super(ctx);
+        public void init(ServiceContext ctx) throws GeneralException {
+            super.init(ctx);
             productContentTypeIdList = ctx.attr("productContentTypeIdList", Collections::emptyList);
             partyIdList = ctx.attr("partyIdList", () -> UtilMisc.toList((String) null));
             roleTypeIdList = ctx.attr("roleTypeIdList", () -> UtilMisc.toList((String) null));
@@ -142,7 +142,7 @@ public abstract class ProductServices {
         }
     }
 
-    public static class CreateUpdateProductSimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
+    public static class CreateUpdateProductSimpleTextContentForAlternateLocale extends LocalService {
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
         protected String productId;
@@ -151,7 +151,8 @@ public abstract class ProductServices {
         protected String mainContentId;
         protected String contentId;
 
-        public void init(ServiceContext ctx) {
+        @Override
+        public void init(ServiceContext ctx) throws GeneralException {
             super.init(ctx);
             productId = ctx.attrNonEmpty("productId");
             productContentTypeId = ctx.attrNonEmpty("productContentTypeId");

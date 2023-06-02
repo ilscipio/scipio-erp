@@ -66,8 +66,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceContext;
+import org.ofbiz.service.LocalService;
 import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceSynchronization;
 import org.ofbiz.service.ServiceUtil;
@@ -245,7 +244,7 @@ public class CommonServices {
      * <p>This service does not have required parameters and does not validate.</p>
      * <p>SCIPIO: 2.1.0: Refactored for tests.</p>
      */
-    public static class EchoService extends ServiceHandler.LocalExec {
+    public static class EchoService extends LocalService {
         @Override
         public Map<String, Object> exec() {
             Map<String, Object> result = new LinkedHashMap<>(ServiceUtil.returnSuccessReadOnly());
@@ -266,7 +265,7 @@ public class CommonServices {
      * Log all service; logs all passed parameters.
      * <p>SCIPIO: 2.1.0: Refactored for tests.</p>
      */
-    public static class LogAllService extends ServiceHandler.LocalExec {
+    public static class LogAllService extends LocalService {
         @Override
         public Map<String, Object> exec() {
             StringBuilder sb = new StringBuilder("Received " + ctx.size() + " arguments:");

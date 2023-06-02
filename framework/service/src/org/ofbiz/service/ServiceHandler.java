@@ -58,9 +58,11 @@ public interface ServiceHandler {
 
     /**
      * A service handler created once and reused for many service calls.
+     *
      * <p>The service engine automatically creates singleton instances of these handlers.</p>
      */
     abstract class Shared implements ServiceHandler {
+
         /**
          * Standard static handler constructor; usually called once globally (except cache clears).
          */
@@ -74,10 +76,12 @@ public interface ServiceHandler {
 
     /**
      * A service handler created and invoked at every service call.
+     *
      * <p>Designed to hold a {@link ServiceContext} exposed as {@link #ctx} to service implementations, with
      * support for legacy {@link #dctx} and {@link #context} variables for legacy code.</p>
+     *
      * <p>Typically an implementation will provided either a default constructor or a constructor taking a
-     * {@link ServiceContext}; the default constructor causes a delayed call to {@link Dynamic#init(ServiceContext)} whereas
+     * {@link ServiceContext}; the default constructor causes a delayed call to {@link Local#init(ServiceContext)} whereas
      * the service context constructor does not.</p>
      */
     abstract class Local implements ServiceHandler {
@@ -89,20 +93,15 @@ public interface ServiceHandler {
         protected Map<String, Object> context; // legacy code support
 
         /**
-         * Standard dynamic handler constructor; sets {@link #ctx} and legacy {@link #dctx} and {@link #context}.
-         * <p>If this is the only constructor supplied by the subclass and no alternative accessor is supplied,
-         * it will be invoked on every service call and {@link #init(ServiceContext)} will not be called.</p>
-         */
-        public Local(ServiceContext ctx) {
-            this.ctx = ctx;
-            this.dctx = ctx.dctx();
-            this.context = ctx.context();
-        }
-
-        /**
-         * Delayed-init dynamic handler constructor; leaves all fields null.
-         * <p>If this is the only constructor supplied by the subclass and no alternative accessor is supplied,
+         * Standard delayed-init dynamic handler constructor that relies on {@link #init(ServiceContext)} to initialize fields.
+         *
+         * <p>This is often the preferred form as {@link #init(ServiceContext)} allows subclasses to completely
+         * override parameter-setting behavior of extended classes if needed, and when no extra parameters are needed
+         * both the constructor and init methods can be omitted.</p>
+         *
+         * <p>If this is the only constructor supplied by the subclass and no alternative constructor is supplied,
          * the {@link #init(ServiceContext)} will be called.</p>
+         *
          * <p>This form allows implementation to avoid defining constructors if not necessary and thread safety is not
          * needed.</p>
          */
@@ -110,9 +109,26 @@ public interface ServiceHandler {
         }
 
         /**
-         * Called by service engine invocations for subclasses that rely on {@link #Local()}.
+         * Standard dynamic handler constructor; sets {@link #ctx} and legacy {@link #dctx} and {@link #context}.
+         *
+         * <p>If this is the only constructor supplied by the subclass and no alternative accessor is supplied,
+         * it will be invoked on every service call and {@link #init(ServiceContext)} will not be called.</p>
          */
-        public void init(ServiceContext ctx) {
+        public Local(ServiceContext ctx) throws GeneralException {
+            this.ctx = ctx;
+            this.dctx = ctx.dctx();
+            this.context = ctx.context();
+        }
+
+        /**
+         * Called by service engine invocations to set members from service parameters, for subclasses that rely on {@link #Local()}.
+         *
+         * <p>This is often the preferred form as {@link #init(ServiceContext)} allows subclasses to completely
+         * override parameter-setting behavior of extended classes if needed.</p>
+         *
+         * <p>NOTE: super.init must be called to initialize the service context members.</p>
+         */
+        public void init(ServiceContext ctx) throws GeneralException {
             setServiceContext(ctx);
         }
 
@@ -166,12 +182,34 @@ public interface ServiceHandler {
      * the service context constructor does not.</p>
      */
     abstract class LocalExec extends Local implements Exec {
-        public LocalExec(ServiceContext ctx) {
+
+        /**
+         * Standard delayed-init dynamic handler constructor that relies on {@link #init(ServiceContext)} to initialize fields.
+         *
+         * <p>This is often the preferred form as {@link #init(ServiceContext)} allows subclasses to completely
+         * override parameter-setting behavior of extended classes if needed, and when no extra parameters are needed
+         * both the constructor and init methods can be omitted, and members can still be initialized from parameters from
+         * {@link #exec()} for traditional code migration.</p>
+         *
+         * <p>If this is the only constructor supplied by the subclass and no alternative constructor is supplied,
+         * the {@link #init(ServiceContext)} will be called.</p>
+         *
+         * <p>This form allows implementation to avoid defining constructors if not necessary and thread safety is not
+         * needed.</p>
+         */
+        public LocalExec() {
+        }
+
+        /**
+         * Standard dynamic handler constructor; sets {@link #ctx} and legacy {@link #dctx} and {@link #context}.
+         *
+         * <p>If this is the only constructor supplied by the subclass and no alternative accessor is supplied,
+         * it will be invoked on every service call and {@link #init(ServiceContext)} will not be called.</p>
+         */
+        public LocalExec(ServiceContext ctx) throws GeneralException {
             super(ctx);
         }
 
-        public LocalExec() {
-        }
     }
 
     interface Accessor {

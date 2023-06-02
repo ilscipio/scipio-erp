@@ -19,8 +19,8 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.LocalService;
 import org.ofbiz.service.ServiceContext;
-import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceUtil;
 
 import com.ilscipio.scipio.product.category.CategoryWorker.TreeBuildOptions;
@@ -114,7 +114,7 @@ public abstract class CategoryServices {
         return result;
     }
 
-    public static class CreateUpdateProductCategorySimpleTextContentForAlternateLocale extends ServiceHandler.LocalExec {
+    public static class CreateUpdateProductCategorySimpleTextContentForAlternateLocale extends LocalService {
         private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
         protected String productCategoryId;
@@ -123,7 +123,8 @@ public abstract class CategoryServices {
         protected String mainContentId;
         protected String contentId;
 
-        public void init(ServiceContext ctx) {
+        @Override
+        public void init(ServiceContext ctx) throws GeneralException {
             super.init(ctx);
             productCategoryId = ctx.attrNonEmpty("productCategoryId");
             prodCatContentTypeId = ctx.attrNonEmpty("prodCatContentTypeId");

@@ -9,9 +9,8 @@ import com.ilscipio.scipio.service.def.PermissionService;
 import com.ilscipio.scipio.service.def.Permissions;
 import com.ilscipio.scipio.service.def.Service;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.service.LocalService;
 import org.ofbiz.service.ServiceContext;
-import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceUtil;
 
 import java.util.Map;
@@ -45,7 +44,7 @@ public abstract class ServiceTestServices {
     @Attribute(name = "result1", type = "String", mode = "OUT", optional = "true")
     @PermissionService(service = "commonGenericPermission", mainAction = "UPDATE")
     @Permission(permission = "ENTITYMAINT")
-    public static class ServiceAnnotationsTest2 extends ServiceHandler.LocalExec {
+    public static class ServiceAnnotationsTest2 extends LocalService {
         @Override
         public Map<String, Object> exec() {
             Debug.logInfo("serviceAnnotationsTest2: input: " + ctx.context(), module);

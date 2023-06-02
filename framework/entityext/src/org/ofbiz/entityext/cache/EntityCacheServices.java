@@ -331,7 +331,7 @@ public class EntityCacheServices implements DistributedCacheClear {
         }
     }
 
-    public static abstract class UtilCacheFilterOp extends ServiceHandler.LocalExec {
+    public static abstract class UtilCacheFilterOp extends LocalService {
     }
 
     /**

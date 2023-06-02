@@ -9,8 +9,8 @@ import org.ofbiz.entity.model.DynamicViewEntity;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.product.product.ProductWorker;
+import org.ofbiz.service.LocalService;
 import org.ofbiz.service.ServiceContext;
-import org.ofbiz.service.ServiceHandler;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceValidationException;
 
@@ -30,7 +30,7 @@ public abstract class OrderServices {
     /**
      * Implements populateBestSellingCategory service; service overrides can override any protected methods.
      */
-    public static class PopulateBestSellingCategory extends ServiceHandler.LocalExec {
+    public static class PopulateBestSellingCategory extends LocalService {
         protected static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
         protected String productCategoryId;
@@ -52,9 +52,9 @@ public abstract class OrderServices {
         protected boolean createNew = "create".equals(ctx.attr("updateMode"));
         protected boolean filterSalesDiscDate = ctx.attr("filterSalesDiscDate", true);
         protected Integer logEvery;
-
-        public PopulateBestSellingCategory(ServiceContext ctx) throws GeneralException {
-            super(ctx);
+        @Override
+        public void init(ServiceContext ctx) throws GeneralException {
+            super.init(ctx);
             this.productCategoryId = ctx.attr("productCategoryId");
             Collection<String> productStoreIds = ctx.attr("productStoreIdList");
             String productStoreId = ctx.getStringNonEmpty("productStoreIds");

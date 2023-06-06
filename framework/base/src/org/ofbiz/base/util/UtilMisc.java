@@ -142,7 +142,13 @@ public class UtilMisc {
      */
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> asMap(Object map) {
-        return (map != null) ? (Map<K, V>) map : null;
+        if (map instanceof Map) {
+            return  (Map<K, V>) map;
+        } else if (map == null) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("asList: Not a map-compatible type: " + map.getClass().getName());
+        }
     }
 
     /**
@@ -502,14 +508,15 @@ public class UtilMisc {
      * <p>SCIPIO: 3.0.0: Added.</p>
      */
     public static <T> Set<T> asSet(Object collection) {
-        if (collection == null) {
-            return null;
-        } else if (collection instanceof Set) {
+        if (collection instanceof Set) {
             return cast(collection);
         } else if (collection instanceof Collection) {
             return new LinkedHashSet<>(UtilMisc.<Collection<T>>cast(collection));
+        } else if (collection == null) {
+            return null;
+            // TODO: arrays
         } else {
-            throw new IllegalArgumentException("Not a collection: " + collection.getClass().getName());
+            throw new IllegalArgumentException("asSet: Not a collection-compatible type: " + collection.getClass().getName());
         }
     }
 
@@ -637,7 +644,16 @@ public class UtilMisc {
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> asList(Object collection) {
-        return (collection != null) ? (collection instanceof List ? (List<T>) collection : new ArrayList<>((Collection<T>) collection)) : null;
+        if (collection instanceof List) {
+            return (List<T>) collection;
+        } else if (collection instanceof Collection) {
+            return new ArrayList<>((Collection<T>) collection);
+            // TODO: arrays
+        } else if (collection == null) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("asList: Not a collection-compatible type: " + collection.getClass().getName());
+        }
     }
 
     /**

@@ -53,6 +53,13 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.w3c.dom.Element;
 
+import javax.servlet.ServletContext;
+
+/**
+ * Entity-based property lookups based on SystemProperty entity.
+ *
+ * <p>SCIPIO: 3.0.0: Added {@link #getWebappPropertyValue}.</p>
+ */
 @SuppressWarnings("serial")
 public final class EntityUtilProperties implements Serializable {
 
@@ -67,12 +74,11 @@ public final class EntityUtilProperties implements Serializable {
      * Added 2018-07-27.
      */
     public static String getEntityPropertyValueOrNull(String resource, String name, Delegator delegator) {
-        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
-        return propMap.isPresent() ? propMap.get() : null;
+        return getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
     }
 
     /**
-     * SCIPIO: Returns the value for the given SystemProperty, or null if missing.
+     * SCIPIO: Returns the value for the given SystemProperty, empty string if set and significant, or null if missing or treated as such.
      * If the SystemProperty exists, the result even if no value is an empty string;
      * if it does not exist, the result is null.
      * @deprecated Use {@link #getEntityPropertyValueOrNull}, which does the same thing.
@@ -84,22 +90,21 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     /**
-     * Gets the given SystemPropertyValue, or an empty Optional if does not exist or interpreted
-     * to not exist.
-     * <p>
-     * SCIPIO: 2018-08-17: modified to use Optional instead of inappropriate Map.
+     * Gets the given SystemPropertyValue, empty string if set and significant, or null if missing or treated as such.
+     *
+     * <p>SCIPIO: 3.0.0: Got rid of Optional and use null vs empty string instead.</p>
+     * <p>SCIPIO: 2018-08-17: Modified to use null vs "" instead of inappropriate Map.</p>
      */
-    private static Optional<String> getEntityPropertyValue(String resource, String name, Delegator delegator) { // SCIPIO: Renamed from: getSystemPropertyValue
-        Optional<String> results = Optional.empty(); // SCIPIO: Optional
-
+    private static String getEntityPropertyValue(String resource, String name, Delegator delegator) { // SCIPIO: Renamed from: getSystemPropertyValue
+        String result = null;
         if (UtilValidate.isEmpty(resource) || UtilValidate.isEmpty(name)) {
-            return results;
+            return null;
         }
 
         if (delegator == null) { // SCIPIO: 2019-01: Although should rarely happen, there is no reason to crash here
             Debug.logWarning("Missing delegator when querying for entity property [" + resource + "#" + name
                     + "]; treating as not set in database", module);
-            return results;
+            return null;
         }
 
         // SCIPIO: Bad, only replace at end of string
@@ -136,20 +141,19 @@ public final class EntityUtilProperties implements Serializable {
                 //results.put("value", (systemProperty.getString("systemPropertyValue") != null) ? systemProperty.getString("systemPropertyValue") : "");
 
                 GenericValue systemPropertyEnc = checkEncryptedSystemProperty(delegator, systemProperty);
-                String value = (systemPropertyEnc != null) ? systemPropertyEnc.getString("systemPropertyValue") : systemProperty.getString("systemPropertyValue");
-                if (value == null) {
-                    value = "";
-                }
-                if (value.isEmpty() && !Boolean.TRUE.equals(systemProperty.getBoolean("useEmpty"))) {
-                    // keep isExistInDb "N" and value "" (above)
-                } else {
-                    results = Optional.ofNullable(value);
+                GenericValue effProperty = (systemPropertyEnc != null) ? systemPropertyEnc : systemProperty;
+
+                if (effProperty.containsKey("systemPropertyValue")) {
+                    String value = effProperty.getStringOrEmpty("systemPropertyValue");
+                    if (!value.isEmpty() || Boolean.TRUE.equals(systemProperty.getBoolean("useEmpty"))) {
+                        result = value;
+                    }
                 }
             }
         } catch (GenericEntityException e) {
             Debug.logError("Could not get a system property for " + name + " : " + e.getMessage(), module);
         }
-        return results;
+        return result;
     }
 
     private static GenericValue checkEncryptedSystemProperty(Delegator delegator, GenericValue systemProperty) throws GenericEntityException {
@@ -177,23 +181,58 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static boolean propertyValueEqualsIgnoreCase(String resource, String name, String compareString, Delegator delegator) {
-        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
-        if (propMap.isPresent()) {
+        String s = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (s != null) {
             compareString = (compareString == null) ? "" : compareString;
-            return propMap.get().equalsIgnoreCase(compareString);
+            return s.equalsIgnoreCase(compareString);
         } else {
             return UtilProperties.propertyValueEqualsIgnoreCase(resource, name, compareString);
         }
     }
 
     public static String getPropertyValue(String resource, String name, String defaultValue, Delegator delegator) {
-        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
-        if (propMap.isPresent()) {
-            String s = propMap.get();
+        String s = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (s != null) {
             return (UtilValidate.isEmpty(s)) ? defaultValue : s;
         } else {
             return UtilProperties.getPropertyValue(resource, name, defaultValue);
         }
+    }
+
+    /**
+     * Returns the given servlet attribute or init parameter named resource.name, or if not defined/null, the given entity property value.
+     *
+     * <p>NOTE: If the name already starts with resource., it is not appended (offsets inconsistency in property settings).</p>
+     *
+     * <p>NOTE: It is recommended to cache the result of this lookup in a class (by delegator name + webapp context key) since it heavier.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getWebappPropertyValue(String resource, String name, String defaultValue, Delegator delegator, ServletContext servletContext) {
+        if (servletContext != null) {
+            if (resource.endsWith(".properties")) {
+                resource = resource.substring(0, resource.length() - ".properties".length());
+            }
+            String attrName = (name.startsWith(resource + ".")) ? name : resource + "." + name;
+            Object attrValue = servletContext.getAttribute(attrName);
+            if (attrValue != null) {
+                return attrValue.toString();
+            }
+            attrValue = servletContext.getInitParameter(attrName);
+            if (attrValue != null) {
+                return attrValue.toString();
+            }
+        }
+        return getPropertyValue(resource, name, defaultValue, delegator);
+    }
+
+    /**
+     * Returns the given servlet attribute or init parameter named resource.name, or if not defined/null, the given entity property value.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getWebappPropertyValue(String resource, String name, Delegator delegator, ServletContext servletContext) {
+        return getWebappPropertyValue(resource, name, null, delegator, servletContext);
     }
 
     public static String getPropertyValueFromDelegatorName(String resource, String name, String defaultValue, String delegatorName) {
@@ -208,9 +247,8 @@ public final class EntityUtilProperties implements Serializable {
                 Debug.logError("Could not get a system property for " + name + ". Reason: the delegator is null", module);
             }
         }
-        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
-        if (propMap.isPresent()) {
-            String s = propMap.get();
+        String s = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (s != null) {
             return (UtilValidate.isEmpty(s)) ? defaultValue : s;
         } else {
             return UtilProperties.getPropertyValue(resource, name, defaultValue);
@@ -313,9 +351,9 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static String getPropertyValue(String resource, String name, Delegator delegator) {
-        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
-        if (propMap.isPresent()) {
-            return propMap.get();
+        String s = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (s != null) {
+            return s;
         } else {
             return UtilProperties.getPropertyValue(resource, name);
         }
@@ -333,9 +371,9 @@ public final class EntityUtilProperties implements Serializable {
                 Debug.logError("Could not get a system property for " + name + ". Reason: the delegator is null", module);
             }
         }
-        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
-        if (propMap.isPresent()) {
-            return propMap.get();
+        String s = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (s != null) {
+            return s;
         } else {
             return UtilProperties.getPropertyValue(resource, name);
         }
@@ -453,9 +491,9 @@ public final class EntityUtilProperties implements Serializable {
     }
 
     public static String getMessage(String resource, String name, Locale locale, Delegator delegator) {
-        Optional<String> propMap = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
-        if (propMap.isPresent()) {
-            return propMap.get();
+        String s = getEntityPropertyValue(resource, name, delegator); // SCIPIO: Optional
+        if (s != null) {
+            return s;
         } else {
             return UtilProperties.getMessage(resource, name, locale);
         }

@@ -1082,6 +1082,40 @@ public final class UtilHttp {
         return appName.replaceAll("/", "_");
     }
 
+    /**
+     * Given a request, returns the application name or "root" if deployed on root
+     *
+     * <p>SCIPIO: 3.0.0: Added version that works using {@link ServletContext} alone using primary context path.</p>
+     *
+     * @param servletContext A ServletContext to get the name info from
+     * @return String
+     */
+    public static String getApplicationName(ServletContext servletContext) {
+        String appName = "root";
+        if (servletContext.getContextPath().length() > 1) {
+            appName = servletContext.getContextPath().substring(1);
+        }
+        // SCIPIO: Prevent slashes in "application name", only bad things can come of them (see also LoginWorker)
+        //return appName
+        return appName.replaceAll("/", "_");
+    }
+
+    /**
+     * Given a request, returns the application name or "root" if deployed on root
+     *
+     * <p>SCIPIO: 3.0.0: Added version that works using any of the 3 servlet objects.</p>
+     *
+     * @param servletObject A servlet API object (request, session, servlet context) to get the name info from
+     * @return String
+     */
+    public static String getApplicationName(Object servletObject) {
+        if (servletObject instanceof HttpServletRequest) {
+            return getApplicationName((HttpServletRequest) servletObject);
+        } else {
+            return getApplicationName(getServletContext(servletObject));
+        }
+    }
+
     public static void setInitialRequestInfo(HttpServletRequest request) {
         HttpSession session = request.getSession();
         if (UtilValidate.isNotEmpty(session.getAttribute("_WEBAPP_NAME_"))) {
@@ -2821,7 +2855,7 @@ public final class UtilHttp {
     }
 
     /**
-     * Returns ServletContext from request, session or servlet context.
+     * Returns ServletContext from request, session or servlet context, or null if null.
      *
      * <p>SCIPIO: 3.0.0: Added.</p>
      */
@@ -2832,18 +2866,171 @@ public final class UtilHttp {
             return ((ServletRequest) servletObject).getServletContext();
         } else if (servletObject instanceof HttpSession) {
             return ((HttpSession) servletObject).getServletContext();
+        } else if (servletObject == null) {
+            return null;
         } else {
             throw new IllegalArgumentException("Cannot get ServletContext from type: " + (servletObject != null ? servletObject.getClass().getName() : "null"));
         }
     }
 
     /**
-     * Returns ServletContext from request, session or servlet context, or null if already null.
+     * Returns ServletContext from request, session or servlet context, or null otherwise.
      *
      * <p>SCIPIO: 3.0.0: Added.</p>
      */
     public static ServletContext getServletContextSafe(Object servletObject) {
-        return (servletObject != null) ? getServletContext(servletObject) : null;
+        if (servletObject instanceof ServletContext) {
+            return (ServletContext) servletObject;
+        } else if (servletObject instanceof ServletRequest) {
+            return ((ServletRequest) servletObject).getServletContext();
+        } else if (servletObject instanceof HttpSession) {
+            return ((HttpSession) servletObject).getServletContext();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns HttpSession from request or session, or null if already null or if servlet context.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static HttpSession getSession(Object servletObject, boolean create) {
+        if (servletObject instanceof HttpSession) {
+            return ((HttpSession) servletObject);
+        } else if (servletObject instanceof HttpServletRequest) {
+            return ((HttpServletRequest) servletObject).getSession(create);
+        } else if (servletObject == null || servletObject instanceof ServletContext) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Cannot get HttpSession from type: " + (servletObject != null ? servletObject.getClass().getName() : "null"));
+        }
+    }
+
+    /**
+     * Returns ServletContext from request or session, or null otherwise.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static HttpSession getSessionSafe(Object servletObject, boolean create) {
+        if (servletObject instanceof HttpSession) {
+            return ((HttpSession) servletObject);
+        } else if (servletObject instanceof HttpServletRequest) {
+            return ((HttpServletRequest) servletObject).getSession(create);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Casts to HttpServletRequest, or returns null if null, session or servlet context.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static HttpServletRequest getRequest(Object servletObject) {
+        if (servletObject instanceof HttpServletRequest) {
+            return ((HttpServletRequest) servletObject);
+        } else if (servletObject == null || servletObject instanceof HttpSession || servletObject instanceof ServletContext) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Cannot get HttpServletRequest from type: " + (servletObject != null ? servletObject.getClass().getName() : "null"));
+        }
+    }
+
+    /**
+     * Casts to HttpServletRequest and returns null otherwise
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static HttpServletRequest getRequestSafe(Object servletObject) {
+        if (servletObject instanceof HttpServletRequest) {
+            return ((HttpServletRequest) servletObject);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns {@link HttpServletRequest#getContextPath()} or {@link ServletContext#getContextPath()} depending on the
+     * passed servlet object type.
+     *
+     * <p>WARN: This method may return a different result depending on whether request or session/servletcontext are
+     * passed due to {@link HttpServletRequest#getContextPath()} differing from {@link ServletContext#getContextPath()};
+     * sometimes this is significant, sometimes not.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     * @see #getPrimaryContextPath(Object)
+     */
+    public static String getContextPath(Object servletObject) {
+        if (servletObject instanceof HttpServletRequest) {
+            return ((HttpServletRequest) servletObject).getContextPath();
+        } else {
+            return getPrimaryContextPath(servletObject);
+        }
+    }
+
+    /**
+     * Returns {@link ServletContext#getContextPath()}.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getPrimaryContextPath(Object servletObject) {
+        return getServletContext(servletObject).getContextPath();
+    }
+
+    /**
+     * Returns a cache key containing webapp (web.xml) identifier.
+     *
+     * <p>NOTE/WARN: This uses {@link HttpServletRequest#getContextPath}, which is not always wanted for configuration purposes,
+     * in place of {@link ServletContext#getContextPath}.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getWebappContextCacheKey(HttpServletRequest request) {
+        return request.getServletContext().getAttribute("_serverId") + "::" + request.getContextPath();
+    }
+
+    /**
+     * Returns a cache key containing webapp (web.xml) identifier.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getWebappContextCacheKey(HttpSession session) {
+        return getWebappContextCacheKey(session.getServletContext());
+    }
+
+    /**
+     * Returns a cache key containing webapp (web.xml) identifier.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getWebappContextCacheKey(ServletContext servletContext) {
+        return servletContext.getAttribute("_serverId") + "::" + servletContext.getContextPath();
+    }
+
+    /**
+     * Returns a cache key containing webapp (web.xml) identifier.
+     *
+     * <p>WARN: This method may return a different result depending on whether request or session/servletcontext are
+     * passed due to {@link HttpServletRequest#getContextPath()} differing from {@link ServletContext#getContextPath()};
+     * sometimes this is significant, sometimes not.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getWebappContextCacheKey(Object servletObject) {
+        ServletContext servletContext = getServletContext(servletObject);
+        return servletContext.getAttribute("_serverId") + "::" +
+                (servletObject instanceof HttpServletRequest ? ((HttpServletRequest) servletObject).getContextPath() : servletContext.getContextPath());
+    }
+
+    /**
+     * Returns a cache key containing webapp (web.xml) identifier using primary context only (ServletContext).
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String getWebappPrimaryContextCacheKey(Object servletObject) {
+        ServletContext servletContext = getServletContext(servletObject);
+        return servletContext.getAttribute("_serverId") + "::" + servletContext.getContextPath();
     }
 
 }

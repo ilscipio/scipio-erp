@@ -7,7 +7,9 @@ code package.
 <#assign username = ""/>
 <#if requestParameters.USERNAME?has_content>
   <#assign username = requestParameters.USERNAME/>
-<#elseif autoUserLogin?has_content>
+<#elseif userLogin??>
+    <#assign username = userLogin.userLoginId/>
+<#elseif autoUserLogin??>
   <#assign username = autoUserLogin.userLoginId/>
 </#if>
 
@@ -19,9 +21,9 @@ code package.
       <input type="hidden" name="USERNAME" value="${username}"/>
       <@field type="display" label=uiLabelMap.CommonUsername value=username />
 
-      <#if autoUserLogin?has_content>
+      <#if userLogin?? || autoUserLogin???>
           <div>
-              (${uiLabelMap.CommonNot}&nbsp;${autoUserLogin.userLoginId}?&nbsp;<a href="<@pageUrl>${autoLogoutUrl}</@pageUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)
+              (${uiLabelMap.CommonNot}&nbsp;${(userLogin.userLoginId)!(autoUserLogin.userLoginId)!}?&nbsp;<a href="<@pageUrl>${autoLogoutUrl}</@pageUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonClickHere}</a>)
           </div>
       </#if>
 

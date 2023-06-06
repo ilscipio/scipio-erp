@@ -20,7 +20,7 @@ under the License.
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
 <#assign logo><img src="<@ofbizContentUrl escapeAs='html'>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
-<#assign username = requestParameters.USERNAME!(sessionAttributes.autoUserLogin.userLoginId)!"">
+<#assign username = requestParameters.USERNAME!(userLogin.userLoginId)!(autoUserLogin.userLoginId)!"">
 <#if username != "">
   <#assign focusName = false>
 <#else>

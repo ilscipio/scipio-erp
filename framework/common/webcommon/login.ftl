@@ -13,7 +13,7 @@ code package.
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 <#assign useMultitenant = getPropertyValue("general", "multitenant")!"">
 <#assign logo><img src="<@contentUrl escapeAs='html'><#if headerImageUrl?has_content>${raw(headerImageUrl)}<#else>/images/scipio/scipio-logo-small.png</#if></@contentUrl>" style="height:32px;"/></#assign>
-<#assign username = requestParameters.USERNAME!(autoUserLogin.userLoginId)!""><#-- SCIPIO: Don't use sessionAttributes here -->
+<#assign username = requestParameters.USERNAME!(userLogin.userLoginId)!(autoUserLogin.userLoginId)!"">
 <#if username != "">
   <#assign focusName = false>
 <#else>

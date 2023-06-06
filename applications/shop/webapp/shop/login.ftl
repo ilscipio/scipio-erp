@@ -44,9 +44,9 @@ code package.
         
                       <form method="post" action="<@pageUrl>login</@pageUrl>" name="loginform" class="horizontal">              
                             <label for="userName">${uiLabelMap.CommonUsername}</label>
-                            <input type="text" id="userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>                          
-                              <#if autoUserLogin?has_content>
-                                <p>(${uiLabelMap.CommonNot} ${autoUserLogin.userLoginId}? <a href="<@pageUrl>${autoLogoutUrl}</@pageUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
+                            <input type="text" id="userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif userLogin??>${userLogin.userLoginId}<#elseif autoUserLogin??>${autoUserLogin.userLoginId}</#if>"/>
+                              <#if userLogin?? || autoUserLogin??>
+                                <p>(${uiLabelMap.CommonNot} ${(userLogin.userLoginId)!(autoUserLogin.userLoginId)!}? <a href="<@pageUrl>${autoLogoutUrl}</@pageUrl>">${uiLabelMap.CommonClickHere}</a>)</p>
                               </#if>
                             <label for="password">${uiLabelMap.CommonPassword}:</label>
                             <input type="password" id="password" name="PASSWORD" value=""/>

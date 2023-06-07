@@ -135,7 +135,7 @@
         <dependency org="org.apache.logging.log4j" name="log4j-slf4j-impl" rev="2.20.0" conf="base,sources"/>
         <dependency org="org.apache.xmlbeans" name="xmlbeans" rev="4.0.0" conf="base,sources"/><!-- FIXME: Last version supported by axis2 -->
         <dependency org="org.slf4j" name="slf4j-api" rev="2.0.6" conf="base,sources"/><!-- 1.8 required by log4j 2.11+ (https://www.slf4j.org/faq.html#changesInVersion18) -->
-        <dependency org="io.sentry" name="sentry-log4j2" rev="1.7.30" conf="base,sources"/><!-- Error reporting: https://sentry.io -->
+        <dependency org="io.sentry" name="sentry-log4j2" rev="6.21.0" conf="base,sources"/><!-- Error reporting: https://sentry.io -->
         <dependency org="com.sun.mail" name="jakarta.mail" rev="1.6.7" conf="base,sources"/>
         <dependency org="xerces" name="xercesImpl" rev="2.12.2" conf="base,sources"/>
         <dependency org="xml-apis" name="xml-apis" rev="2.0.2" conf="base,sources"/>

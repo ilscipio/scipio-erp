@@ -33,7 +33,7 @@ public class AutoUserLoginInfo {
     protected AutoUserLoginInfo(LoginConfig config, Delegator delegator, String userLoginId, String appId, String authToken) throws GeneralException {
         this.config = config;
         this.delegator = delegator;
-        this.userLoginId = userLoginId; // non-empty
+        this.userLoginId = UtilValidate.nullIfEmpty((userLoginId != null) ? userLoginId.trim() : null); // FIXME: Extra space should be prevented at creation time, less here
         this.appId = UtilValidate.nullIfEmpty(appId);
         this.authToken = UtilValidate.nullIfEmpty(authToken);
     }
@@ -41,7 +41,7 @@ public class AutoUserLoginInfo {
     protected AutoUserLoginInfo(LoginConfig config, Delegator delegator, GenericValue userLogin, String appId) throws GeneralException {
         this.config = config;
         this.delegator = delegator;
-        this.userLoginId = userLogin.getString("userLoginId").trim(); // FIXME: This should be prevented at creation time
+        this.userLoginId = userLogin.getString("userLoginId").trim(); // FIXME: Extra space should be prevented at creation time, less here
         this.appId = UtilValidate.nullIfEmpty(appId);
         this.authToken = null;
         this.userLogin = userLogin;
@@ -63,17 +63,26 @@ public class AutoUserLoginInfo {
             } else {
                 userLoginId = value;
             }
-            userLoginId = userLoginId.trim(); // FIXME: This should be prevented at creation time
         }
         Delegator delegator = Delegator.from(request);
-        return UtilValidate.isNotEmpty(userLoginId) ? new AutoUserLoginInfo(config != null ? config : LoginConfig.from(delegator, request),
-                delegator, userLoginId, UtilHttp.getApplicationName(request), authToken) : null;
+        return new AutoUserLoginInfo(config != null ? config : LoginConfig.from(delegator, request),
+                delegator, userLoginId, UtilHttp.getApplicationName(request), authToken);
     }
 
     public LoginConfig getConfig() {
         return config;
     }
 
+    /**
+     * Only returns false if cookie value turned out to be empty; otherwise userLoginId will be set and this returns true.
+     */
+    public boolean hasValue() {
+        return (getUserLoginId() != null);
+    }
+
+    /**
+     * Returns the userLoginId, only valid if {@link #authTokenValid()} was called, and usually non-null unless missing cookie value.
+     */
     public String getUserLoginId() {
         return userLoginId;
     }
@@ -102,17 +111,22 @@ public class AutoUserLoginInfo {
         return null;
     }
 
+    /**
+     * Validates that 1) the cookie value matched a real UserLogin.userLoginId and
+     * 2) the auth token matches non-expired UserLoginAppInfo.autoLoginAuthToken.
+     */
     public boolean authTokenValid() throws GeneralException {
         Boolean authTokenValid = this.authTokenValid;
         if (authTokenValid == null) {
             GenericValue userLoginAppInfo = getUserLoginAppInfo();
             if (userLoginAppInfo == null) {
-                return false;
+                authTokenValid = false;
+            } else {
+                String authToken = getAuthToken(false);
+                String storedAuthToken = userLoginAppInfo.getString("autoLoginAuthToken");
+                Timestamp storedAuthTokenDate = userLoginAppInfo.getTimestamp("autoLoginAuthDate");
+                authTokenValid = (authTokenTimeValid(storedAuthTokenDate) && UtilValidate.isNotEmpty(authToken) && authToken.equals(storedAuthToken));
             }
-            String authToken = getAuthToken(false);
-            String storedAuthToken = userLoginAppInfo.getString("autoLoginAuthToken");
-            Timestamp storedAuthTokenDate = userLoginAppInfo.getTimestamp("autoLoginAuthDate");
-            authTokenValid = (authTokenTimeValid(storedAuthTokenDate) && UtilValidate.isNotEmpty(authToken) && authToken.equals(storedAuthToken));
             this.authTokenValid = authTokenValid;
         }
         return authTokenValid;
@@ -130,7 +144,10 @@ public class AutoUserLoginInfo {
     public GenericValue getUserLogin() throws GeneralException {
         GenericValue userLogin = this.userLogin;
         if (userLogin == null) {
-            userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", getUserLoginId()).queryOne();
+            String userLoginId = getUserLoginId();
+            if (userLoginId != null) {
+                userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", userLoginId).queryOne();
+            }
             this.userLogin = userLogin;
         }
         return userLogin;
@@ -139,8 +156,12 @@ public class AutoUserLoginInfo {
     public GenericValue getUserLoginAppInfo() throws GeneralException {
         GenericValue userLoginAppInfo = this.userLoginAppInfo;
         if (userLoginAppInfo == null) {
-            userLoginAppInfo = delegator.query().from("UserLoginAppInfo")
-                    .where("userLoginId", getUserLoginId(), "appId", getAppId()).queryOne();
+            String userLoginId = getUserLoginId();
+            String appId = getAppId();
+            if (userLoginId != null && appId != null) {
+                userLoginAppInfo = delegator.query().from("UserLoginAppInfo")
+                        .where("userLoginId", userLoginId, "appId", appId).queryOne();
+            }
             this.userLoginAppInfo = userLoginAppInfo;
         }
         return userLoginAppInfo;
@@ -193,7 +214,7 @@ public class AutoUserLoginInfo {
         if (cookieValue == null) {
             String userLoginId = getUserLoginId();
             String authToken = getAuthToken(true);
-            if (authToken == null) {
+            if (userLoginId == null || authToken == null) {
                 throw new IllegalStateException("autoUserLogin missing auth token (internal error)"); // should not happen
             }
             cookieValue = userLoginId + "::" + authToken;
@@ -202,7 +223,7 @@ public class AutoUserLoginInfo {
         return cookieValue;
     }
 
-    public String toCookieRemovalValue() throws GeneralException {
+    public String toCookieRemovalValue() {
         return getUserLoginId();
     }
 

@@ -38,7 +38,6 @@ public class LoginConfig extends WebappConfig {
     protected final int autoUserLoginAuthTokenExpireTime;
     protected final String autoUserLoginCookieNameExpr;
     protected final String autoUserLoginCookieName;
-    protected final boolean autoUserLoginCookieAllowPlainValue;
     protected final int autoUserLoginCookieMaxAge;
 
     // TODO: migrate more of
@@ -50,7 +49,6 @@ public class LoginConfig extends WebappConfig {
         autoUserLoginAuthTokenExpireTime = UtilProperties.asInteger(EntityUtilProperties.getWebappPropertyValue("security", "autoUserLogin.authToken.expireTime", delegator, servletContext), 60*60*24*7);
         autoUserLoginCookieNameExpr = EntityUtilProperties.getWebappPropertyValue("security", "autoUserLogin.cookie.name", "${appName}.autoUserLoginId", delegator, servletContext);
         autoUserLoginCookieName = (request != null) ? LoginWorker.expandCookieName(request, autoUserLoginCookieNameExpr) : null;
-        autoUserLoginCookieAllowPlainValue = UtilProperties.asBoolean(EntityUtilProperties.getWebappPropertyValue("security", "autoUserLogin.cookie.allowPlainValue", delegator, servletContext), true);
         autoUserLoginCookieMaxAge = UtilProperties.asInteger(EntityUtilProperties.getWebappPropertyValue("security", "autoUserLogin.cookie.maxAge", delegator, servletContext), 60*60*24*30);
     }
 
@@ -92,10 +90,6 @@ public class LoginConfig extends WebappConfig {
         return autoUserLoginAuthTokenExpireTime;
     }
 
-    public boolean isAutoUserLoginCookieAllowPlainValue() {
-        return autoUserLoginCookieAllowPlainValue;
-    }
-
     public int getAutoUserLoginCookieMaxAge() {
         return autoUserLoginCookieMaxAge;
     }
@@ -119,7 +113,6 @@ public class LoginConfig extends WebappConfig {
                 ", autoUserLoginAuthTokenExpireTime=" + autoUserLoginAuthTokenExpireTime +
                 ", autoUserLoginCookieNameExpr='" + autoUserLoginCookieNameExpr + '\'' +
                 ", autoUserLoginCookieName='" + autoUserLoginCookieName + '\'' +
-                ", autoUserLoginCookieAllowPlainValue=" + autoUserLoginCookieAllowPlainValue +
                 ", autoUserLoginCookieMaxAge=" + autoUserLoginCookieMaxAge +
                 '}';
     }

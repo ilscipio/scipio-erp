@@ -2924,12 +2924,12 @@ public class ShoppingCartEvents {
             Debug.logError(e.getMessage(), module);
         }
 
-        AutoUserLoginInfo autoUserLoginInfo = LoginWorker.getAutoUserLoginInfo(request);
+        AutoUserLoginInfo autoUserLoginInfo = LoginWorker.getAutoUserLoginInfo(request, false); // ok to not validate; handled by autoLoginCheck here
         if (autoUserLoginInfo != null && UtilValidate.isNotEmpty(userLogin)
-            && autoUserLoginInfo.getUserLoginId().equals(userLogin.getString("userLoginId"))) {
+            && Objects.equals(autoUserLoginInfo.getUserLoginId(), userLogin.getString("userLoginId"))) {
             LoginWorker.autoLoginCheck(request, response, autoUserLoginInfo);
             GenericValue autoUserLogin = (GenericValue) session.getAttribute("autoUserLogin");
-            if (UtilValidate.isNotEmpty(autoUserLogin)) {
+            if (autoUserLogin != null) {
                 isUserInSession = true;
             }
         }

@@ -858,48 +858,64 @@ public class LoginWorker {
         return EntityUtilProperties.getPropertyAsInteger("security", "security.userName.cookie.maxAge", 60*60*24*365, (Delegator) request.getAttribute("delegator"));
     }
 
-    public static AutoUserLoginInfo getAutoUserLoginInfo(HttpServletRequest request) {
+    /**
+     * Returns the autoUserLogin userLoginId from cookie.
+     *
+     * <p>SCIPIO: 3.0.0: This method now returns null if auth token didn't validate; use {@link #getAutoUserLoginInfo} for detailed use.</p>
+     */
+    public static String getAutoUserLoginId(HttpServletRequest request) {
+        AutoUserLoginInfo autoUserLoginInfo = getAutoUserLoginInfo(request, true);
+        return (autoUserLoginInfo != null) ? autoUserLoginInfo.getUserLoginId() : null;
+    }
+
+    /**
+     * Gets autoUserLogin info from cookie; will always return an instance if the Cookie existed (to indicate it was found) except if validateOrNull is passed.
+     *
+     * <p>WARN: validateOrNull false is insecure and should only be passed if the returned user login is not used as-is but is
+     * simply passed to {@link #autoLoginCheck}, cookie removal, or {@link AutoUserLoginInfo#authTokenValid()} is called manually;
+     * in other cases true should be passed.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static AutoUserLoginInfo getAutoUserLoginInfo(HttpServletRequest request, boolean validateOrNull) {
         LoginConfig config = LoginConfig.from(request);
         if (!config.isAutoUserLoginEnabled()) {
             return null;
         }
-        String cookieValue = null;
         Cookie[] cookies = request.getCookies();
         if (Debug.verboseOn()) {
             Debug.logVerbose("Cookies: " + Arrays.toString(cookies), module); // SCIPIO: Fixed array print
         }
         String autoLoginCookieName = config.getAutoUserLoginCookieName();
+        Cookie autoLoginCookie = null;
         if (cookies != null) {
             for (Cookie cookie: cookies) {
                 if (cookie.getName().equals(autoLoginCookieName)) {
-                    cookieValue = cookie.getValue();
+                    autoLoginCookie = cookie;
                     break;
                 }
             }
         }
-        // SCIPIO: 2.1.0: Value must be URL-encoded to support UTF-8
-        if (UtilValidate.isNotEmpty(cookieValue)) {
+        if (autoLoginCookie != null) {
             try {
+                String cookieValue = autoLoginCookie.getValue();
                 String decodedCookieValue = null;
-                try {
-                    decodedCookieValue = UtilCodec.getUrlDecoder().decode(cookieValue);
-                } catch(Exception e) {
-                }
-                AutoUserLoginInfo decodedInfo = AutoUserLoginInfo.parse(config, request, decodedCookieValue);
-                if (decodedInfo != null) {
-                    return decodedInfo;
-                }
-                if (config.isAutoUserLoginCookieAllowPlainValue()) {
-                    // For compatibility with old cookies, support a slower compatibility mode
-                    AutoUserLoginInfo plainInfo = AutoUserLoginInfo.parse(config, request, cookieValue);
-                    if (plainInfo != null && plainInfo.getUserLogin() != null) {
-                        if (Debug.verboseOn()) {
-                            Debug.logVerbose("getAutoUserLoginInfo: using legacy non-URL-encoded value for cookie [" +
-                                    autoLoginCookieName + "], userLoginId [" + plainInfo.getUserLoginId() + "]", module);
-                        }
-                        return plainInfo;
+                if (UtilValidate.isNotEmpty(cookieValue)) {
+                    try { // SCIPIO: 2.1.0: Value must be URL-encoded to support UTF-8
+                        decodedCookieValue = UtilCodec.getUrlDecoder().decode(cookieValue);
+                    } catch (Exception e) {
                     }
                 }
+                AutoUserLoginInfo autoUserLoginInfo = AutoUserLoginInfo.parse(config, request, decodedCookieValue);
+                if (autoUserLoginInfo != null) {
+                    if (validateOrNull && !autoUserLoginInfo.authTokenValid()) {
+                        return null;
+                    }
+                    return autoUserLoginInfo;
+                }
+                // DEV NOTE: Here there was previously a "plain" check for cookie values not conforming to the new
+                //  URL-encoding, but since authToken was added there's no longer a point to having it and the cookies
+                //  will simply be re-issued at next login, making this moot as a one-time upgrade per user
             } catch (GeneralException e) {
                 Debug.logError("getAutoUserLoginInfo: " + e, module);
             }
@@ -910,7 +926,7 @@ public class LoginWorker {
     public static String autoLoginCheck(HttpServletRequest request, HttpServletResponse response) {
         Delegator delegator = Delegator.from(request);
         HttpSession session = request.getSession();
-        return autoLoginCheck(LoginConfig.from(delegator, request), request, response, delegator, session, getAutoUserLoginInfo(request));
+        return autoLoginCheck(LoginConfig.from(delegator, request), request, response, delegator, session, getAutoUserLoginInfo(request, false));
     }
 
     public static String autoLoginCheck(HttpServletRequest request, HttpServletResponse response, AutoUserLoginInfo autoUserLoginInfo) {
@@ -928,9 +944,9 @@ public class LoginWorker {
                 GenericValue autoUserLogin = autoUserLoginInfo.getUserLogin();
                 GenericValue person = null;
                 GenericValue group = null;
-                if (autoUserLogin != null) {
-                    // SCIPIO: 3.0.0: Ensure we validate auth token before we ever try to set the session attribute (most important)
-                    if (autoUserLoginInfo.authTokenValid()) {
+                // SCIPIO: 3.0.0: Ensure we validate auth token before we ever try to set the session attribute (most important)
+                if (autoUserLoginInfo.authTokenValid()) {
+                    if (autoUserLogin != null) {
                         session.setAttribute("autoUserLogin", autoUserLogin);
 
                         ModelEntity modelUserLogin = autoUserLogin.getModelEntity();
@@ -938,17 +954,17 @@ public class LoginWorker {
                             person = EntityQuery.use(delegator).from("Person").where("partyId", autoUserLogin.getString("partyId")).queryOne();
                             group = EntityQuery.use(delegator).from("PartyGroup").where("partyId", autoUserLogin.getString("partyId")).queryOne();
                         }
-                    } else {
-                        Debug.logWarning("autoLoginCheck: Invalid or expired autoUserLogin auth token for userLoginId [" +
-                                autoUserLoginInfo.getUserLoginId() + "]; not setting session attribute", module);
-                        // WARN: Here we'll just clear the cookie so the browser doesn't send another attempt
-                        setAutoLoginRemoveResponse(config, request, response, autoUserLoginInfo);
                     }
-                }
-                if (person != null) {
-                    session.setAttribute("autoName", person.getString("firstName") + " " + person.getString("lastName"));
-                } else if (group != null) {
-                    session.setAttribute("autoName", group.getString("groupName"));
+                    if (person != null) {
+                        session.setAttribute("autoName", person.getString("firstName") + " " + person.getString("lastName"));
+                    } else if (group != null) {
+                        session.setAttribute("autoName", group.getString("groupName"));
+                    }
+                } else {
+                    Debug.logWarning("autoLoginCheck: Invalid or expired autoUserLogin auth token for userLoginId [" +
+                            autoUserLoginInfo.getUserLoginId() + "]; not setting session attribute", module);
+                    // WARN: Here we'll just clear the cookie so the browser doesn't send another attempt
+                    setAutoLoginRemoveResponse(config, request, response, autoUserLoginInfo);
                 }
             } catch (GeneralException e) {
                 Debug.logError(e, "Cannot get autoUserLogin information: " + e.getMessage(), module);
@@ -972,9 +988,11 @@ public class LoginWorker {
             if (userLogin != null) {
                 autoUserLoginInfo = AutoUserLoginInfo.from(config, request, userLogin);
             } else {
-                autoUserLoginInfo = getAutoUserLoginInfo(request);
+                autoUserLoginInfo = getAutoUserLoginInfo(request, false);
             }
-            setAutoLoginRemoveResponse(config, request, response, autoUserLoginInfo);
+            if (autoUserLoginInfo != null) { // SCIPIO: NOTE: This null check is optional, could be removed to force the remove cookie response in all cases...
+                setAutoLoginRemoveResponse(config, request, response, autoUserLoginInfo);
+            }
         } catch (GeneralException e) {
             Debug.logError(e, "autoLoginRemove: Error removing autoUserLogin cookie: " + e, module);
         }
@@ -989,12 +1007,14 @@ public class LoginWorker {
         return "success";
     }
 
-    private static void setAutoLoginRemoveResponse(LoginConfig config, HttpServletRequest request, HttpServletResponse response, AutoUserLoginInfo autoUserLoginInfo) throws GeneralException {
-        if (autoUserLoginInfo == null) {
-            return;
-        }
+    public static void setAutoLoginRemoveResponse(HttpServletRequest request, HttpServletResponse response, AutoUserLoginInfo autoUserLoginInfo) {
+        setAutoLoginRemoveResponse(LoginConfig.from(request), request, response, autoUserLoginInfo);
+    }
+
+    public static void setAutoLoginRemoveResponse(LoginConfig config, HttpServletRequest request, HttpServletResponse response, AutoUserLoginInfo autoUserLoginInfo) {
         // SCIPIO: 2.1.0: Value must be URL-encoded to support UTF-8
-        Cookie autoLoginCookie = new Cookie(config.getAutoUserLoginCookieName(), UtilCodec.getUrlEncoder().encode(autoUserLoginInfo.toCookieRemovalValue()));
+        Cookie autoLoginCookie = new Cookie(config.getAutoUserLoginCookieName(),
+                UtilCodec.getUrlEncoder().encode(autoUserLoginInfo != null ? autoUserLoginInfo.toCookieRemovalValue() : "default"));
         autoLoginCookie.setMaxAge(0);
         autoLoginCookie.setPath("/");
         response.addCookie(autoLoginCookie);

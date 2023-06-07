@@ -68,6 +68,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.webapp.control.AutoUserLoginInfo;
 import org.ofbiz.webapp.control.LoginWorker;
 import org.ofbiz.webapp.control.RequestAttrPolicy.RequestAttrNamePolicy;
 import org.ofbiz.webapp.control.RequestAttrPolicy.RequestSavingAttrPolicy;
@@ -2923,10 +2924,10 @@ public class ShoppingCartEvents {
             Debug.logError(e.getMessage(), module);
         }
 
-        String autoUserLoginId = LoginWorker.getAutoUserLoginId(request);
-        if (UtilValidate.isNotEmpty(autoUserLoginId) && UtilValidate.isNotEmpty(userLogin)
-            && autoUserLoginId.equals(userLogin.getString("userLoginId"))) {
-            LoginWorker.autoLoginCheck(request, response);
+        AutoUserLoginInfo autoUserLoginInfo = LoginWorker.getAutoUserLoginInfo(request);
+        if (autoUserLoginInfo != null && UtilValidate.isNotEmpty(userLogin)
+            && autoUserLoginInfo.getUserLoginId().equals(userLogin.getString("userLoginId"))) {
+            LoginWorker.autoLoginCheck(request, response, autoUserLoginInfo);
             GenericValue autoUserLogin = (GenericValue) session.getAttribute("autoUserLogin");
             if (UtilValidate.isNotEmpty(autoUserLogin)) {
                 isUserInSession = true;

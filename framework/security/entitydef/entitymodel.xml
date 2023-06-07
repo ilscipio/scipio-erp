@@ -119,6 +119,20 @@ code package.
         <key-map field-name="userLoginId"/>
       </relation>
     </entity>
+    <entity entity-name="UserLoginAppInfo"
+            package-name="org.ofbiz.security.login"
+            never-cache="true"
+            title="User Login Per-App Info"><!-- SCIPIO: 3.0.0: Added for auth token -->
+      <field name="userLoginId" type="id-vlong-ne"></field>
+      <field name="appId" type="id-vlong-ne"></field>
+      <field name="autoLoginAuthToken" type="very-long"></field>
+      <field name="autoLoginAuthDate" type="date-time"></field>
+      <prim-key field="userLoginId"/>
+      <prim-key field="appId"/>
+      <relation type="one" fk-name="USER_APP_INFO_USER" rel-entity-name="UserLogin">
+        <key-map field-name="userLoginId"/>
+      </relation>
+    </entity>
     
   <!-- ========================================================= -->
   <!-- org.ofbiz.security.securitygroup -->

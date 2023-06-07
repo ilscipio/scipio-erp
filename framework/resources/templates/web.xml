@@ -47,8 +47,8 @@
         <param-value>false</param-value>
     </context-param>
     <context-param>
-        <description>SCIPIO: Set this to false to disable the autoUserLogin cookie/session attribute (default: true) (added 2018-07-11)</description>
-        <param-name>autoUserLoginOn</param-name>
+        <description>SCIPIO: Set this to false to disable the autoUserLogin cookie/session attribute (default: true) (renamed 3.0.0)</description>
+        <param-name>security.autoUserLogin.enabled</param-name>
         <param-value></param-value>
     </context-param>
 

@@ -1503,16 +1503,45 @@ public final class UtilProperties implements Serializable {
      * @return A list of candidate locales.
      */
     public static List<Locale> localeToCandidateList(Locale locale) {
-        List<Locale> localeList = new ArrayList<>(); // SCIPIO: ArrayList
-        localeList.add(locale);
+        return localeToCandidateList(locale, true, new ArrayList<>());
+    }
+
+    /**
+     * Converts a Locale instance to a candidate Locale list. The list
+     * is ordered most-specific to least-specific. Example:
+     * <code>localeToCandidateList(Locale.US)</code> would return
+     * a list containing <code>en_US</code> and <code>en</code>.
+     *
+     * <p>SCIPIO: 3.0.0: Added overload.</p>
+     *
+     * @return A list of candidate locales.
+     */
+    public static List<Locale> localeToCandidateList(Locale locale, boolean includeSelf) {
+        return localeToCandidateList(locale, includeSelf, new ArrayList<>());
+    }
+
+    /**
+     * Converts a Locale instance to a candidate Locale list. The list
+     * is ordered most-specific to least-specific. Example:
+     * <code>localeToCandidateList(Locale.US)</code> would return
+     * a list containing <code>en_US</code> and <code>en</code>.
+     *
+     * <p>SCIPIO: 3.0.0: Added overload.</p>
+     *
+     * @return A list of candidate locales.
+     */
+    public static List<Locale> localeToCandidateList(Locale locale, boolean includeSelf, List<Locale> outList) {
+        if (includeSelf) {
+            outList.add(locale);
+        }
         String localeString = locale.toString();
-        int pos = localeString.lastIndexOf("_", localeString.length());
+        int pos = localeString.lastIndexOf("_");
         while (pos != -1) {
             localeString = localeString.substring(0, pos);
-            localeList.add(new Locale(localeString));
-            pos = localeString.lastIndexOf("_", localeString.length());
+            outList.add(new Locale(localeString));
+            pos = localeString.lastIndexOf("_");
         }
-        return localeList;
+        return outList;
     }
 
     // Private lazy-initializer class

@@ -1036,12 +1036,7 @@ public class UtilMisc {
         if (localeObject instanceof Locale) {
             return (Locale) localeObject;
         } else if (localeObject instanceof String) {
-            Locale locale = parseLocale((String) localeObject);
-            if (locale != null)  {
-                return locale;
-            } else {
-                return null;
-            }
+            return parseLocale((String) localeObject);
         } else if (localeObject == null) {
             return null;
         } else {
@@ -1078,78 +1073,126 @@ public class UtilMisc {
     }
 
     /**
-     * Returns matching locale candidate to available locales filter or null if no
+     * Returns matching locale candidate to filter locales or null if no
      * candidate matching criteria; if availableLocales is empty itself, the (first) locale from localeObject is returned.
      *
-     * <p>availableAllString may be set to true as optimization.</p>
+     * <p>filterLocalesAllString may be set to true as optimization.</p>
      *
      * <p>SCIPIO: 3.0.0: Added to filter UserLogin.lastLocale and client request accept headers.</p>
+     *
+     * @param exact If true, performs simple candidate locale matching between input and filter locales
      */
-    public static Locale getCandidateLocale(Object localeObject, List<?> availableLocales, Boolean availableAllString, Boolean exact) {
-        Collection<?> locales = null;
+    public static Locale getCandidateLocale(Object localeObject, List<?> filterLocales, Boolean filterLocalesAllString, Boolean exact) {
+        if (localeObject == null) {
+            return null;
+        }
+        Collection<?> locales;
         if (localeObject instanceof Collection) {
             locales = (Collection<?>) localeObject;
             if (locales.isEmpty()) {
                 return null;
             }
-        }
-        Locale locale = asLocale(locales != null ? firstSafe(locales) : localeObject);
-        if (locale == null) {
-            return null;
-        }
-        if (locales != null && locales.size() == 1) {
-            locales = null;
-        }
-        if (UtilValidate.isEmpty(availableLocales)) {
-            return locale;
+            if (UtilValidate.isEmpty(filterLocales)) {
+                return asLocale(first(locales));
+            }
+        } else {
+            if (UtilValidate.isEmpty(filterLocales)) {
+                return asLocale(localeObject);
+            }
+            locales = List.of(localeObject);
         }
 
-        if (!Boolean.TRUE.equals(availableAllString)) {
-            availableLocales = availableLocales.stream().map(Object::toString).collect(Collectors.toList());
+        if (exact == null) {
+            exact = true;
         }
 
-        // Here check either a single locale with or without its candidates, or the full passed list without candidates (as requested)
-        if (locales == null) {
-            if (exact) {
-                if (availableLocales.contains(locale.toString())) {
-                    return locale;
+        List<String> filterLocaleStrings;
+        if (!Boolean.TRUE.equals(filterLocalesAllString)) {
+            filterLocaleStrings = filterLocales.stream().map(Object::toString).collect(Collectors.toList());
+        } else {
+            filterLocaleStrings = UtilGenerics.cast(filterLocales);
+        }
+
+        // TODO: REVIEW: Locales may sometimes come from servlet container and it might be a good idea
+        //  to pass them through parseLocale(locale.toString()) to make sure they match framework specs
+
+        // Match one of the requested locales to exact filter locale, if possible
+        for (Object currentLocaleObject : locales) {
+            if (currentLocaleObject instanceof String) {
+                if (filterLocaleStrings.contains(currentLocaleObject)) {
+                    return asLocale(currentLocaleObject);
                 }
             } else {
-                for (Locale candidateLocale : UtilProperties.localeToCandidateList(locale)) {
-                    if (availableLocales.contains(candidateLocale.toString())) {
-                        return candidateLocale;
+                Locale currentLocale = asLocale(currentLocaleObject);
+                if (currentLocale != null && filterLocaleStrings.contains(currentLocale.toString())) {
+                    return currentLocale;
+                }
+            }
+        }
+
+        if (!exact) {
+            // Use candidate locales of both requested and filter locales
+
+            // If the client passed a list as localeObject, do a second pass with candidate locales of each (excluding the first of each, already checked);
+            // this will usually only work if the filter locales are in simplified general language form: "en", "de", etc.
+            List<Object> localesAndCandidates = new ArrayList<>(locales); // put exact locales first, for next section
+            for (Object currentLocaleObject : locales) {
+                Locale currentLocale = asLocale(currentLocaleObject);
+                if (currentLocale != null) {
+                    List<Locale> currentCandidateLocales = UtilProperties.localeToCandidateList(currentLocale, false);
+                    for (Locale currentCandidateLocale : currentCandidateLocales) {
+                        if (filterLocaleStrings.contains(currentLocale.toString())) {
+                            return currentCandidateLocale;
+                        }
+                    }
+                    localesAndCandidates.addAll(currentCandidateLocales);
+                }
+            }
+
+            // Try to match the client locale against the candidate locales of the filter locales;
+            // this will usually only work if the filter locales are in precise mode: "en_US", "de_DE", etc.
+            // NOTE: We have to match back to the more precise locale to respect the filter locales
+            Map<Locale, Locale> candidateFilterLocalesMap = makeReverseCandidateLocaleMap(filterLocales, false, new LinkedHashMap<>());
+            for (Object currentCandidateLocaleObj : localesAndCandidates) {
+                Locale origFilterLocale = candidateFilterLocalesMap.get(asLocale(currentCandidateLocaleObj));
+                if (origFilterLocale != null) {
+                    return origFilterLocale;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Map<Locale, Locale> makeReverseCandidateLocaleMap(List<?> locales, boolean includeSelf, Map<Locale, Locale> outMap) {
+        if (includeSelf) {
+            List<Locale> convertedLocales = new ArrayList<>(locales.size());
+            for (Object localeObj : locales) { // Put the locales themselves for order preservation (pass LinkedHashMap for this)
+                Locale locale = UtilMisc.asLocale(localeObj);
+                if (locale != null) {
+                    outMap.put(locale, locale);
+                    convertedLocales.add(locale);
+                }
+            }
+            for (Locale locale : convertedLocales) {
+                for (Locale candidateLocale : UtilProperties.localeToCandidateList(locale, false)) {
+                    if (!outMap.containsKey(candidateLocale)) {
+                        outMap.put(candidateLocale, locale);
                     }
                 }
             }
         } else {
-            for (Object currentLocaleObject : locales) {
-                if (currentLocaleObject instanceof String) {
-                    if (availableLocales.contains(currentLocaleObject)) {
-                        return asLocale(currentLocaleObject);
-                    }
-                } else {
-                    Locale candidateLocale = asLocale(currentLocaleObject);
-                    if (availableLocales.contains(candidateLocale.toString())) {
-                        return candidateLocale;
+            for (Object localeObj : locales) {
+                Locale locale = UtilMisc.asLocale(localeObj);
+                if (locale != null) {
+                    for (Locale candidateLocale : UtilProperties.localeToCandidateList(locale, false)) {
+                        if (!outMap.containsKey(candidateLocale)) {
+                            outMap.put(candidateLocale, locale);
+                        }
                     }
                 }
             }
         }
-
-        // If the client passed a list as localeObject, do a second pass with candidate locales of each (excluding the first of each, already checked)
-        if (!exact && locales != null) {
-            for (Object candidateLocaleObject : locales) {
-                Locale candidateLocale = asLocale(candidateLocaleObject);
-                List<Locale> secondCandidateLocales = UtilProperties.localeToCandidateList(candidateLocale);
-                for (Locale secondCandidateLocale : secondCandidateLocales.subList(1, secondCandidateLocales.size())) {
-                    if (availableLocales.contains(candidateLocale.toString())) {
-                        return secondCandidateLocale;
-                    }
-                }
-            }
-        }
-
-        return null;
+        return outMap;
     }
 
     // Private lazy-initializer class

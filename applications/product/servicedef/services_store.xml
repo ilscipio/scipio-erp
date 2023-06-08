@@ -412,8 +412,7 @@ code package.
              location="org.ofbiz.product.store.ProductStoreServices$SetProductStoreLocaleStringsToDefault" invoke="exec" auth="true">
         <description>Force the given ProductStores' localeStrings filters to their values of defaultLocaleString (to act as override)</description>
         <permission-service service-name="productStoreGenericPermission" main-action="UPDATE"/>
-        <attribute name="productStoreId" type="Object" mode="IN" optional="false">
-            <description>Single store ID or list</description>
-        </attribute>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <attribute name="productStoreIdList" type="List" mode="IN" optional="true"/>
     </service>
 </services>

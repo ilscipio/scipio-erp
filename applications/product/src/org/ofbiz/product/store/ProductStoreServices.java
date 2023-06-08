@@ -1,5 +1,6 @@
 package org.ofbiz.product.store;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -74,14 +75,19 @@ public class ProductStoreServices {
         @Override
         public void init(ServiceContext ctx) throws GeneralException {
             super.init(ctx);
-            productStoreIds = UtilMisc.toCollection(ctx.attr("productStoreId"));
+            productStoreIds = ctx.attr("productStoreIdList");
+            if (UtilValidate.isEmpty(productStoreIds)) {
+                String productStoreId = ctx.attr("productStoreId");
+                if (UtilValidate.isNotEmpty(productStoreId)) {
+                    productStoreIds = List.of(productStoreId);
+                } else {
+                    throw new ServiceValidationException("Missing productStoreId(s)", ctx.service());
+                }
+            }
         }
 
         @Override
         public Map<String, Object> exec() throws GeneralException {
-            if (UtilValidate.isEmpty(productStoreIds)) {
-                throw new ServiceValidationException("Missing productStoreId(s)", ctx.service());
-            }
             for (String productStoreId : productStoreIds) {
                 GenericValue productStore = ctx.delegator().from("ProductStore").where("productStoreId", productStoreId).queryOne();
                 if (productStore == null) {
@@ -94,7 +100,7 @@ public class ProductStoreServices {
                 productStore.setJson("localeStrings", List.of(defaultLocaleString));
                 productStore.store();
             }
-            return ctx.success();
+            return ctx.success("Updated ProductStore localeStrings for: " + productStoreIds);
         }
     }
 

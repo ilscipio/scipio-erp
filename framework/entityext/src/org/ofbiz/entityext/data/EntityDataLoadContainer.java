@@ -24,7 +24,6 @@ import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -65,7 +64,7 @@ public class EntityDataLoadContainer implements Container {
     protected String configFile = null;
     protected String readers = null;
     protected String directory = null;
-    protected List<String> files = new LinkedList<String>();
+    protected List<String> files = new ArrayList<>();
     protected String component = null;
     protected boolean useDummyFks = false;
     protected boolean maintainTxs = false;
@@ -229,7 +228,7 @@ public class EntityDataLoadContainer implements Container {
             if (delegator == null) {
                 throw new ContainerException("Invalid delegator name!");
             }
-            List<EntityExpr> expr = new LinkedList<EntityExpr>();
+            List<EntityExpr> expr = new ArrayList<>();
             expr.add(EntityCondition.makeCondition("disabled", EntityOperator.EQUALS, "N"));
             expr.add(EntityCondition.makeCondition("disabled", EntityOperator.EQUALS, null));
             List<GenericValue> tenantList;
@@ -271,7 +270,7 @@ public class EntityDataLoadContainer implements Container {
         List<String> readerNames = null;
         if (this.readers != null && !"none".equalsIgnoreCase(this.readers)) {
             if (this.readers.indexOf(",") == -1) {
-                readerNames = new LinkedList<String>();
+                readerNames = new ArrayList<>();
                 readerNames.add(this.readers);
             } else {
                 readerNames = StringUtil.split(this.readers, ",");
@@ -358,7 +357,7 @@ public class EntityDataLoadContainer implements Container {
         }
         // check for drop index/fks
         if (dropConstraints) {
-            List<String> messages = new LinkedList<String>();
+            List<String> messages = new ArrayList<>();
 
             Debug.logImportant("Dropping foreign key indcies...", module);
             for (String entityName : modelEntityNames) {
@@ -395,7 +394,7 @@ public class EntityDataLoadContainer implements Container {
 
         // drop pks
         if (dropPks) {
-            List<String> messages = new LinkedList<String>();
+            List<String> messages = new ArrayList<>();
             Debug.logImportant("Dropping primary keys...", module);
             for (String entityName : modelEntityNames) {
                 ModelEntity modelEntity = modelEntities.get(entityName);
@@ -415,11 +414,11 @@ public class EntityDataLoadContainer implements Container {
 
         // repair columns
         if (repairColumns) {
-            List<String> fieldsToRepair = new LinkedList<String>();
-            List<String> messages = new LinkedList<String>();
+            List<String> fieldsToRepair = new ArrayList<>();
+            List<String> messages = new ArrayList<>();
             dbUtil.checkDb(modelEntities, fieldsToRepair, messages, false, false, false, false);
             if (fieldsToRepair.size() > 0) {
-                messages = new LinkedList<String>();
+                messages = new ArrayList<>();
                 dbUtil.repairColumnSizeChanges(modelEntities, fieldsToRepair, messages);
                 if (messages.size() > 0) {
                     if (Debug.infoOn()) {
@@ -448,7 +447,7 @@ public class EntityDataLoadContainer implements Container {
         }
         // need a list if it is empty
         if (urlList == null) {
-            urlList = new LinkedList<URL>();
+            urlList = new ArrayList<>();
         }
 
         // add in the defined extra files
@@ -456,6 +455,9 @@ public class EntityDataLoadContainer implements Container {
             URL fileUrl = UtilURL.fromResource(fileName);
             if (fileUrl != null) {
                 urlList.add(fileUrl);
+            } else {
+                // SCIPIO: 3.0.0: Missing warning
+                Debug.logWarning("Unable to load file (" + fileName + "); not found; skipping", module);
             }
         }
 
@@ -475,6 +477,9 @@ public class EntityDataLoadContainer implements Container {
                         }
                     }
                 }
+            } else {
+                // SCIPIO: 3.0.0: Missing warning
+                Debug.logWarning("Unable to load directory (" + this.directory + "); not found or invalid; skipping", module);
             }
         }
 
@@ -483,8 +488,8 @@ public class EntityDataLoadContainer implements Container {
         changedFormat.setMinimumIntegerDigits(5);
         changedFormat.setGroupingUsed(false);
 
-        List<Object> errorMessages = new LinkedList<Object>();
-        List<String> infoMessages = new LinkedList<String>();
+        List<Object> errorMessages = new ArrayList<>();
+        List<String> infoMessages = new ArrayList<>();
         int totalRowsChanged = 0;
         if (UtilValidate.isNotEmpty(urlList)) {
             Debug.logImportant("=-=-=-=-=-=-= Doing a data load using delegator '" + delegator.getDelegatorName() + "' with the following files:", module);
@@ -525,7 +530,7 @@ public class EntityDataLoadContainer implements Container {
 
         // create primary keys
         if (createPks) {
-            List<String> messages = new LinkedList<String>();
+            List<String> messages = new ArrayList<>();
 
             Debug.logImportant("Creating primary keys...", module);
             for (String entityName : modelEntityNames) {
@@ -545,7 +550,7 @@ public class EntityDataLoadContainer implements Container {
 
         // create constraints
         if (createConstraints) {
-            List<String> messages = new LinkedList<String>();
+            List<String> messages = new ArrayList<>();
 
             Debug.logImportant("Creating foreign keys...", module);
             for (String entityName : modelEntityNames) {

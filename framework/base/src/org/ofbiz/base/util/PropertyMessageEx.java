@@ -14,6 +14,7 @@ import java.util.Locale;
  * If the exception needs to pass a list of more "exception-like" error messages,
  * it should manage a separate list of such messages.</p>
  *
+ * <p>SCIPIO: 3.0.0: {@link CommonException} has been added, which should usually be used as the common interface instead of this.</p>
  * <p>SCIPIO: 2.x.x: Added.</p>
  */
 public interface PropertyMessageEx {

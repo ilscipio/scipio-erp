@@ -28,14 +28,22 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Base OFBiz Runtime Exception, provides nested exceptions, etc
+ * Base Scipio Runtime Exception, provides nested exceptions, etc
+ *
+ * <p>This supports a main property message ({@link PropertyMessageEx#getPropertyMessage()}) or traditional superclass
+ * detail message (the main property message overrides the superclass detail message in {@link Throwable#getMessage()}),
+ * plus an additional list of property messages ({@link PropertyMessageEx#getPropertyMessageList()}). The additional
+ * property message list is not included in {@link Throwable#getMessage()} and may be used either in a service-like
+ * manner (as is errorMessageList) or as a public-facing localized messages in addition to the internal (english/log)
+ * main detail message, depending on point of use. In addition, arbitrary properties can be passed using
+ * {@link GeneralRuntimeException#setProperties}.</p>
  *
  * <p>SCIPIO: 3.x.x: Modified to implement PropertyMessageEx and support a localized main detail
  * message in addition to a separate message list (DEV NOTE: derived from exception enhancements used in cms).
  * This allows localization to be done by callers, at the correct place and time, and where otherwise impossible.</p>
  */
 @SuppressWarnings("serial")
-public class GeneralRuntimeException extends RuntimeException implements PropertyMessageEx.SettablePropertyMessageEx {
+public class GeneralRuntimeException extends RuntimeException implements CommonException {
 
     /**
      * A PropertyMessage version of the main exception message, which overrides the detail message in {@link #getMessage()}.
@@ -224,6 +232,7 @@ public class GeneralRuntimeException extends RuntimeException implements Propert
      *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
+    @Override
     public GeneralRuntimeException setProperties(Map<String, ?> properties) {
         this.properties = UtilGenerics.cast(properties);
         return this;
@@ -237,6 +246,7 @@ public class GeneralRuntimeException extends RuntimeException implements Propert
      *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
+    @Override
     public GeneralRuntimeException setProperties(Object... properties) {
         return setProperties(UtilMisc.orderedMap(properties));
     }
@@ -249,6 +259,7 @@ public class GeneralRuntimeException extends RuntimeException implements Propert
      *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
+    @Override
     public GeneralRuntimeException addProperties(Map<String, ?> properties) {
         if (UtilValidate.isEmpty(properties)) {
             return this;
@@ -274,6 +285,7 @@ public class GeneralRuntimeException extends RuntimeException implements Propert
      *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
+    @Override
     public GeneralRuntimeException addProperties(Object... properties) {
         return addProperties(UtilMisc.orderedMap(properties));
     }
@@ -286,6 +298,7 @@ public class GeneralRuntimeException extends RuntimeException implements Propert
      *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
+    @Override
     public Map<String, Object> makeProperties(Map<String, ?> sourceProperties) {
         return UtilValidate.isNotEmpty(sourceProperties) ? new LinkedHashMap<>(sourceProperties) : new LinkedHashMap<>();
     }
@@ -298,6 +311,7 @@ public class GeneralRuntimeException extends RuntimeException implements Propert
      *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
+    @Override
     public GeneralRuntimeException clearProperties() {
         this.properties = null;
         return this;
@@ -348,6 +362,7 @@ public class GeneralRuntimeException extends RuntimeException implements Propert
      *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
+    @Override
     public Map<String, Object> getProperties() {
         Map<String, Object> properties = this.properties;
         return UtilValidate.isNotEmpty(properties) ? Collections.unmodifiableMap(properties) : Collections.emptyMap();

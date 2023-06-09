@@ -46,6 +46,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -197,7 +198,7 @@ public class PayPalServices {
         inMap.put("address2", paramMap.get("SHIPTOSTREET2"));
         inMap.put("city", paramMap.get("SHIPTOCITY"));
         String countryGeoCode = (String) paramMap.get("SHIPTOCOUNTRY");
-        String countryGeoId = PayPalServices.getCountryGeoIdFromGeoCode(countryGeoCode, delegator);
+        String countryGeoId = GeoWorker.getCountryGeoIdFromGeoCode(countryGeoCode, delegator);
         if (countryGeoId == null) {
             return ServiceUtil.returnSuccess();
         }
@@ -526,7 +527,7 @@ public class PayPalServices {
         postalMap.put("address1", decoder.get("SHIPTOSTREET"));
         postalMap.put("address2", decoder.get("SHIPTOSTREET2"));
         postalMap.put("city", decoder.get("SHIPTOCITY"));
-        String countryGeoId = PayPalServices.getCountryGeoIdFromGeoCode(decoder.get("SHIPTOCOUNTRYCODE"), delegator);
+        String countryGeoId = GeoWorker.getCountryGeoIdFromGeoCode(decoder.get("SHIPTOCOUNTRYCODE"), delegator);
         postalMap.put("countryGeoId", countryGeoId);
         postalMap.put("stateProvinceGeoId", parseStateProvinceGeoId(decoder.get("SHIPTOSTATE"), countryGeoId, delegator));
         postalMap.put("postalCode", decoder.get("SHIPTOZIP"));
@@ -1019,20 +1020,6 @@ public class PayPalServices {
         }
 
         return decoder;
-    }
-
-    private static String getCountryGeoIdFromGeoCode(String geoCode, Delegator delegator) {
-        String geoId = null;
-        try {
-            GenericValue countryGeo = EntityQuery.use(delegator).from("Geo")
-                    .where("geoTypeId", "COUNTRY", "geoCode", geoCode).cache().queryFirst();
-            if (countryGeo != null) {
-                geoId = countryGeo.getString("geoId");
-            }
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-        }
-        return geoId;
     }
 
     private static String parseStateProvinceGeoId(String payPalShipToState, String countryGeoId, Delegator delegator) {

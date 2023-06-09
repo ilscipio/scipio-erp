@@ -146,4 +146,18 @@ public final class GeoWorker {
         }
         return null;
     }
+
+    public static String getCountryGeoIdFromGeoCode(String geoCode, Delegator delegator) {
+        String geoId = null;
+        try {
+            GenericValue countryGeo = EntityQuery.use(delegator).from("Geo")
+                    .where("geoTypeId", "COUNTRY", "geoCode", geoCode).cache().queryFirst();
+            if (countryGeo != null) {
+                geoId = countryGeo.getString("geoId");
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+        return geoId;
+    }
 }

@@ -1040,12 +1040,45 @@ public abstract class CmsEntityVisit {
 
     @SuppressWarnings("serial")
     public static class VisitException extends CmsException {
-        public VisitException(PropertyMessage propMsg, Throwable e) { super(propMsg, e); }
-        public VisitException(PropertyMessage propMsg) { super(propMsg); }
-        public VisitException(String msg, PropertyMessage propMsg, Throwable e) { super(msg, propMsg, e); }
-        public VisitException(String msg, PropertyMessage propMsg) { super(msg, propMsg); }
-        public VisitException(String msg, Throwable e) { super(msg, e); }
-        public VisitException(String msg) { super(msg); }
-        public VisitException(Throwable e) { super(e); }
+
+        public VisitException() {
+        }
+
+        public VisitException(String msg) {
+            super(msg);
+        }
+
+        public VisitException(String msg, Throwable nested) {
+            super(msg, nested);
+        }
+
+        public VisitException(Throwable nested) {
+            super(nested);
+        }
+
+        public VisitException(String msg, Collection<?> messageList) {
+            super(msg, messageList);
+        }
+
+        public VisitException(String msg, Collection<?> messageList, Throwable nested) {
+            super(msg, messageList, nested);
+        }
+
+        public VisitException(Collection<?> messageList, Throwable nested) {
+            super(messageList, nested);
+        }
+
+        public VisitException(Collection<?> messageList) {
+            super(messageList);
+        }
+
+        public VisitException(PropertyMessage propMsg) {
+            super(propMsg);
+        }
+
+        public VisitException(PropertyMessage propMsg, Throwable nested) {
+            super(propMsg, nested);
+        }
+
     }
 }

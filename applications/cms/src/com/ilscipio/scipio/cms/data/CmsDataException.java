@@ -4,40 +4,52 @@ import org.ofbiz.base.util.PropertyMessage;
 
 import com.ilscipio.scipio.cms.CmsException;
 
+import java.util.Collection;
+
 /**
  * CMS data exception.
  */
 @SuppressWarnings("serial")
 public class CmsDataException extends CmsException {
 
-    public CmsDataException(PropertyMessage propMsg, Throwable e) {
-        super(propMsg, e);
-    }
-
-    public CmsDataException(PropertyMessage propMsg) {
-        super(propMsg);
-    }
-
-    public CmsDataException(String msg, PropertyMessage propMsg, Throwable e) {
-        super(msg, propMsg, e);
-    }
-
-    public CmsDataException(String msg, PropertyMessage propMsg) {
-        super(msg, propMsg);
-    }
-
-    public CmsDataException(String msg, Throwable e) {
-        super(msg, e);
+    public CmsDataException() {
     }
 
     public CmsDataException(String msg) {
         super(msg);
     }
 
-    public CmsDataException(Throwable e) {
-        super(e);
+    public CmsDataException(String msg, Throwable nested) {
+        super(msg, nested);
     }
 
+    public CmsDataException(Throwable nested) {
+        super(nested);
+    }
+
+    public CmsDataException(String msg, Collection<?> messageList) {
+        super(msg, messageList);
+    }
+
+    public CmsDataException(String msg, Collection<?> messageList, Throwable nested) {
+        super(msg, messageList, nested);
+    }
+
+    public CmsDataException(Collection<?> messageList, Throwable nested) {
+        super(messageList, nested);
+    }
+
+    public CmsDataException(Collection<?> messageList) {
+        super(messageList);
+    }
+
+    public CmsDataException(PropertyMessage propMsg) {
+        super(propMsg);
+    }
+
+    public CmsDataException(PropertyMessage propMsg, Throwable nested) {
+        super(propMsg, nested);
+    }
 
     /**
      * Thrown when candidate keys clash which are not enforced otherwise in schema.
@@ -46,33 +58,43 @@ public class CmsDataException extends CmsException {
 
         private static final long serialVersionUID = 4868713020052920312L;
 
-        public CmsUniqueDataException(PropertyMessage propMsg, Throwable e) {
-            super(propMsg, e);
-        }
-
-        public CmsUniqueDataException(PropertyMessage propMsg) {
-            super(propMsg);
-        }
-
-        public CmsUniqueDataException(String msg, PropertyMessage propMsg, Throwable e) {
-            super(msg, propMsg, e);
-        }
-
-        public CmsUniqueDataException(String msg, PropertyMessage propMsg) {
-            super(msg, propMsg);
-        }
-
-        public CmsUniqueDataException(String msg, Throwable e) {
-            super(msg, e);
+        public CmsUniqueDataException() {
         }
 
         public CmsUniqueDataException(String msg) {
             super(msg);
         }
 
-        public CmsUniqueDataException(Throwable e) {
-            super(e);
+        public CmsUniqueDataException(String msg, Throwable nested) {
+            super(msg, nested);
         }
 
+        public CmsUniqueDataException(Throwable nested) {
+            super(nested);
+        }
+
+        public CmsUniqueDataException(String msg, Collection<?> messageList) {
+            super(msg, messageList);
+        }
+
+        public CmsUniqueDataException(String msg, Collection<?> messageList, Throwable nested) {
+            super(msg, messageList, nested);
+        }
+
+        public CmsUniqueDataException(Collection<?> messageList, Throwable nested) {
+            super(messageList, nested);
+        }
+
+        public CmsUniqueDataException(Collection<?> messageList) {
+            super(messageList);
+        }
+
+        public CmsUniqueDataException(PropertyMessage propMsg) {
+            super(propMsg);
+        }
+
+        public CmsUniqueDataException(PropertyMessage propMsg, Throwable nested) {
+            super(propMsg, nested);
+        }
     }
 }

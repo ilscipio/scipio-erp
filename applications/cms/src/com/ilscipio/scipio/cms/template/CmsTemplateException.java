@@ -1,5 +1,6 @@
 package com.ilscipio.scipio.cms.template;
 
+import java.util.Collection;
 import java.util.Locale;
 
 import org.ofbiz.base.util.PropertyMessage;
@@ -15,32 +16,43 @@ public class CmsTemplateException extends CmsException implements UtilRender.Ren
     private PropertyMessage friendlyMsg;
     private RenderExceptionMode renderExceptionMode = null;
 
-    public CmsTemplateException(String msg, Throwable e) {
-        super(msg, e);
+    public CmsTemplateException() {
     }
 
     public CmsTemplateException(String msg) {
         super(msg);
     }
 
-    public CmsTemplateException(Throwable e) {
-        super(e);
+    public CmsTemplateException(String msg, Throwable nested) {
+        super(msg, nested);
     }
 
-    public CmsTemplateException(String msg, PropertyMessage propMsg, Throwable e) {
-        super(msg, propMsg, e);
+    public CmsTemplateException(Throwable nested) {
+        super(nested);
     }
 
-    public CmsTemplateException(String msg, PropertyMessage propMsg) {
-        super(msg, propMsg);
+    public CmsTemplateException(String msg, Collection<?> messageList) {
+        super(msg, messageList);
     }
 
-    public CmsTemplateException(PropertyMessage propMsg, Throwable e) {
-        super(propMsg, e);
+    public CmsTemplateException(String msg, Collection<?> messageList, Throwable nested) {
+        super(msg, messageList, nested);
+    }
+
+    public CmsTemplateException(Collection<?> messageList, Throwable nested) {
+        super(messageList, nested);
+    }
+
+    public CmsTemplateException(Collection<?> messageList) {
+        super(messageList);
     }
 
     public CmsTemplateException(PropertyMessage propMsg) {
         super(propMsg);
+    }
+
+    public CmsTemplateException(PropertyMessage propMsg, Throwable nested) {
+        super(propMsg, nested);
     }
 
     public static CmsTemplateException getFromExceptionOrCauseDeep(Throwable t) {
@@ -101,4 +113,5 @@ public class CmsTemplateException extends CmsException implements UtilRender.Ren
     public void setRenderExceptionMode(RenderExceptionMode renderExMode) {
         this.renderExceptionMode = renderExMode;
     }
+
 }

@@ -70,6 +70,47 @@ public abstract class PropertyMessageExUtil {
     }
 
     /**
+     * Returns the localized property exception message list, or null if none.
+     */
+    public static String getCombinedExceptionMessageList(Throwable t, Locale locale) {
+        return combineMessages(getExceptionMessageList(t, locale));
+
+    }
+
+    /**
+     * Returns the localized property exception message list, or null if none.
+     */
+    public static String getCombinedExceptionMessageList(Throwable t, Map<String, ?> context) {
+        return combineMessages(getExceptionMessageList(t, context));
+    }
+
+    /**
+     * Returns the localized property exception message list, or the default or main localized property message if none.
+     */
+    public static String getCombinedExceptionMessageListOrDetailMessage(Throwable t, Locale locale) {
+        String message = getCombinedExceptionMessageList(t, locale);
+        return (message != null) ? message : getExceptionMessage(t, locale);
+    }
+
+    /**
+     * Returns the localized property exception message list, or the default or main localized property message if none.
+     */
+    public static String getCombinedExceptionMessageListOrDetailMessage(Throwable t, Map<String, ?> context) {
+        String message =  getCombinedExceptionMessageList(t, context);
+        return (message != null) ? message : getExceptionMessage(t, context);
+    }
+
+    public static String combineMessages(Collection<String> messages) {
+        if (messages == null || messages.isEmpty()) {
+            return null;
+        } else if (messages.size() == 1) {
+            return UtilMisc.firstSafe(messages);
+        } else {
+            return String.join("; ", messages);
+        }
+    }
+
+    /**
      * Returns the property exception message in log locale (english), or fallback on non-localized detail message.
      * NOTE: Depending on the exception implementation, this may be redundant, and in some cases
      * it can be better to simply call {@code t.getMessage()} instead of this.

@@ -270,15 +270,25 @@ public class ControlServlet extends HttpServlet {
                 if (Debug.warningOn()) Debug.logWarning(e, "Communication error with the client while processing the request: " + request.getAttribute("_CONTROL_PATH_") + request.getPathInfo(), module);
                 if (Debug.verboseOn()) Debug.logVerbose(throwable, module);
             } else {
-                Debug.logError(throwable, "Error in request handler: ", module);
+                // SCIPIO: 3.0.0: Some of these are very common and the exception gives little extra useful information most of the time
+                if (throwable instanceof InvalidRequestException || throwable instanceof RequestDeniedException) {
+                    if (Debug.verboseOn()) {
+                        Debug.logError(throwable, "Error in request handler", module);
+                    } else {
+                        // These are triggered by public requests, typically, so keep this to a minimum
+                        Debug.logError("Error in request handler: " + throwable, module);
+                    }
+                } else {
+                    Debug.logError(throwable, "Error in request handler", module);
+                }
                 request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, throwable)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
                 errorPage = requestHandler.getDefaultErrorPage(request);
             }
         } catch (RequestHandlerExceptionAllowExternalRequests e) {
             errorPage = requestHandler.getDefaultErrorPage(request);
-            Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
+            //Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
         } catch (Exception e) {
-            Debug.logError(e, "Error in request handler: ", module);
+            Debug.logError(e, "Error in request handler", module);
             request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
             errorPage = requestHandler.getDefaultErrorPage(request);
         }
@@ -288,7 +298,8 @@ public class ControlServlet extends HttpServlet {
         // if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
 
         if (errorPage != null) {
-            Debug.logError("An error occurred, going to the errorPage: " + errorPage, module);
+            // SCIPIO: 3.0.0: This is redundant/unwanted in all of the above cases now, and already below (only need once)
+            //Debug.logError("An error occurred, going to the errorPage: " + errorPage, module);
 
             RequestDispatcher rd = request.getRequestDispatcher(errorPage);
 
@@ -301,7 +312,9 @@ public class ControlServlet extends HttpServlet {
                 }
 
                 request.setAttribute("_ERROR_OCCURRED_", Boolean.TRUE);
-                Debug.logError("Including errorPage: " + errorPage, module);
+                // SCIPIO: 3.0.0: This is redundant/unwanted in all of the above cases now
+                Debug.logInfo("Including errorPage: " + errorPage, module);
+                //Debug.logError("Including errorPage: " + errorPage, module);
 
                 // NOTE DEJ20070727 after having trouble with all of these, try to get the page out and as a last resort just send something back
                 try {

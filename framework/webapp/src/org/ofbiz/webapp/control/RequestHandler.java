@@ -47,6 +47,7 @@ import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.SSLUtil;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
@@ -316,7 +317,8 @@ public class RequestHandler {
             overrideViewUri = RequestHandler.getOverrideViewUri(request.getPathInfo());
         }
 
-        String requestMissingErrorMessage = "Unknown request [" + defaultRequestUri + "]; this request does not exist or cannot be called directly.";
+        // SCIPIO: 3.0.0: Localized and made same as ContextFilter message
+        String invalidRequestUri = defaultRequestUri;
         ConfigXMLReader.RequestMap requestMap = null;
         if (defaultRequestUri != null) {
             requestMap = requestMapMap.get(defaultRequestUri);
@@ -352,8 +354,8 @@ public class RequestHandler {
                     viewAccess = controllerConfig.getDefaultViewAccess();
                 }
                 if (viewAccess != null && !"public".equals(viewAccess)) {
-                    // use the same message as if it was missing for security reasons, ie so can't tell if it is missing or direct request is not allowed
-                    throw new RequestHandlerException(requestMissingErrorMessage);
+                    throw new RequestDeniedException("Denied access to non-public view [" + (viewMap != null ? viewMap.name : "(undefined)") + "] reached from request [" + invalidRequestUri + "]",
+                            List.of(getInvalidRequestErrorPropertyMessage(request, response, invalidRequestUri)));
                 }
             } catch (WebAppConfigurationException e) {
                 Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
@@ -364,8 +366,12 @@ public class RequestHandler {
         // if no matching request is found in the controller, depending on throwRequestHandlerExceptionOnMissingLocalRequest
         //  we throw a RequestHandlerException or RequestHandlerExceptionAllowExternalRequests
         if (requestMap == null) {
-            if (throwRequestHandlerExceptionOnMissingLocalRequest) throw new RequestHandlerException(requestMissingErrorMessage);
-            else throw new RequestHandlerExceptionAllowExternalRequests();
+            if (throwRequestHandlerExceptionOnMissingLocalRequest) {
+                throw new InvalidRequestException("Unknown request [" + invalidRequestUri + "]; this request does not exist or cannot be called directly",
+                        List.of(getInvalidRequestErrorPropertyMessage(request, response, invalidRequestUri)));
+            } else {
+                throw new RequestHandlerExceptionAllowExternalRequests();
+            }
         }
 
         String eventReturn = null;
@@ -402,7 +408,8 @@ public class RequestHandler {
                             }
                             if (viewAccess != null && !"public".equals(viewAccess)) {
                                 // use the same message as if it was missing for security reasons, ie so can't tell if it is missing or direct request is not allowed
-                                throw new RequestHandlerException(requestMissingErrorMessage);
+                                throw new RequestDeniedException("Denied access to non-public view [" + (viewMap != null ? viewMap.name : "(undefined)") + "] reached from request [" + invalidRequestUri + "]",
+                                        List.of(getInvalidRequestErrorPropertyMessage(request, response, invalidRequestUri)));
                             }
                         } catch (WebAppConfigurationException e) {
                             Debug.logError(e, "Exception thrown while parsing controller.xml file: ", module);
@@ -420,7 +427,8 @@ public class RequestHandler {
         } else {
             // Check if X509 is required and we are not secure; throw exception
             if (!request.isSecure() && requestMap.securityCert) {
-                throw new RequestHandlerException(requestMissingErrorMessage);
+                throw new RequestDeniedException("Denied insecure request for [" + invalidRequestUri + "]; security cert required",
+                        List.of(getInvalidRequestErrorPropertyMessage(request, response, invalidRequestUri)));
             }
 
             // Check to make sure we are allowed to access this request directly. (Also checks if this request is defined.)
@@ -435,7 +443,8 @@ public class RequestHandler {
                 }
                 if (defaultRequest == null || !requestMapMap.get(defaultRequest).securityDirectRequest) {
                     // use the same message as if it was missing for security reasons, ie so can't tell if it is missing or direct request is not allowed
-                    throw new RequestHandlerException(requestMissingErrorMessage);
+                    throw new InvalidRequestException("Denied external direct request to internal-only request [" + invalidRequestUri + "] (direct-request false)",
+                            List.of(getInvalidRequestErrorPropertyMessage(request, response, invalidRequestUri)));
                 } else {
                     requestMap = requestMapMap.get(defaultRequest);
                 }
@@ -496,7 +505,8 @@ public class RequestHandler {
                 boolean foundTrustedCert = false;
 
                 if (clientCerts == null) {
-                    throw new RequestHandlerException(requestMissingErrorMessage);
+                    throw new RequestDeniedException("Denied insecure request to request [" + invalidRequestUri + "]; missing client security certificates",
+                            List.of(getInvalidRequestErrorPropertyMessage(request, response, invalidRequestUri)));
                 } else {
                     if (Debug.infoOn()) {
                         for (int i = 0; i < clientCerts.length; i++) {
@@ -511,8 +521,9 @@ public class RequestHandler {
                 }
 
                 if (!foundTrustedCert) {
-                    Debug.logWarning(requestMissingErrorMessage, module);
-                    throw new RequestHandlerException(requestMissingErrorMessage);
+                    //Debug.logWarning(requestMissingErrorMessage, module);
+                    throw new RequestDeniedException("Denied insecure request to request [" + invalidRequestUri + "]; no trusted client security certificate",
+                            List.of(getInvalidRequestErrorPropertyMessage(request, response, invalidRequestUri)));
                 }
             }
 
@@ -3458,4 +3469,15 @@ public class RequestHandler {
             return null;
         }
     }
+
+    /**
+     * Returns the same missing-request message used by ContextFilter, used as public localized message for any invalid or insecure request errors.
+     *
+     * <p>SCIPIO: 3.0.0: Replaces the hardcoded missing-request message and makes it the same as the ContextFilter one.</p>
+     */
+    protected PropertyMessage getInvalidRequestErrorPropertyMessage(HttpServletRequest request, HttpServletResponse response, String requestUri) {
+        return PropertyMessage.make("CommonErrorUiLabels", "CommonServerRequestUrlNotFound",
+                UtilMisc.toMap("requestUrl", requestUri));
+    }
+
 }

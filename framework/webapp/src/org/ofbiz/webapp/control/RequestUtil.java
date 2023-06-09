@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ofbiz.base.util.PropertyMessageExUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilProperties;
@@ -30,11 +31,19 @@ public abstract class RequestUtil {
      */
     @Deprecated
     public static String getEncodedSecureErrorMessage(HttpServletRequest request, Throwable t) {
-        return encodeErrorMessage(request, getSecureErrorMessage(request, t.toString()));
+        return encodeErrorMessage(request, getSecureErrorMessage(request, t));
     }
 
+    /**
+     * Returns a sanitized (if applicable error message).
+     *
+     * <p>SCIPIO: 3.0.0: This now uses {@link Throwable#getMessage()} instead of {@link Throwable#toString()} because
+     * the exceptions internally should be more specific than the publicly-displayed messages, even when this is
+     * not configured to be fully sanitized (instead they are printed in the logs).</p>
+     */
     public static String getSecureErrorMessage(HttpServletRequest request, Throwable t) {
-        return getSecureErrorMessage(request, t.toString());
+        return getSecureErrorMessage(request, PropertyMessageExUtil.getCombinedExceptionMessageListOrDetailMessage(t, UtilHttp.getLocale(request)));
+        //return getSecureErrorMessage(request, t.toString());
     }
 
     /**

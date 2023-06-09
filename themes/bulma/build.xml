@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="SCIPIO ERP - BulmaTheme Component" default="build" basedir=".">
+<project name="SCIPIO ERP - Bulma Theme" default="build" basedir=".">
 
     <!-- SCIPIO: NOTE: Default target ("build", above) currently controls compilation behavior (may improve in future);
         for source compilation you must create a "src" folder and change above to default="jar" -->
@@ -12,7 +12,7 @@
     <!-- ================================================================== -->
 
     <property environment="env"/>
-    <property name="desc" value="BulmaTheme Theme"/>
+    <property name="desc" value="Bulma Theme"/>
     <property name="name" value="bulma-theme"/>
 
 
@@ -21,7 +21,7 @@
     </filelist>
 
     <target name="build" depends="check-lib-update">
-        <!-- echo message="[build] ========== Building BulmaTheme Theme ==========" />
-        <echo message="[build] ========== Done Building BulmaTheme Theme ==========" /-->
+        <!-- echo message="[build] ========== Building Bulma Theme ==========" />
+        <echo message="[build] ========== Done Building Bulma Theme ==========" /-->
     </target>
 </project>

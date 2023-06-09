@@ -10,11 +10,11 @@
 
 					https://www.scipioerp.com
 					
-					BulmaTheme Theme
+					Bulma Theme
 
 **************************************************************************
 ```
-# BulmaTheme Theme
+# Bulma Theme
 ## Description
 This is a placeholder text
 

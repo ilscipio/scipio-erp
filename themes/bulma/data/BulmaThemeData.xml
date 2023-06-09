@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-    <VisualTheme visualThemeId="BULMATHEME" visualThemeSetId="BACKOFFICE" description="BulmaTheme Theme"/>
+    <VisualTheme visualThemeId="BULMATHEME" visualThemeSetId="BACKOFFICE" description="Bulma Theme"/>
     <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="BulmaThemeData.xml" sequenceId="01"/>
     
     <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_NAME" resourceValue="BULMATHEME" sequenceId="01"/>

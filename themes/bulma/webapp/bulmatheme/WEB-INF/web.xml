@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.0">
     <display-name>SCIPIO ERP - BulmaTheme Component</display-name>
-    <description>BulmaTheme Theme of the SCIPIO ERP Project</description>
+    <description>Bulma Theme of the SCIPIO ERP Project</description>
 
     <session-config>
         <session-timeout>1</session-timeout>

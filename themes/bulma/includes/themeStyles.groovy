@@ -1,5 +1,5 @@
 /**
- * Master HTML templating variables include for BulmaTheme theme.
+ * Master HTML templating variables include for Bulma theme.
  *
  * Overrides the default SCIPIO styles located in
  * htmlVariables.groovy - ofbiz_foundation/framework/common/webcommon/includes/scipio/lib/standard/

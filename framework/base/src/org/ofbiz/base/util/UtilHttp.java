@@ -1247,8 +1247,16 @@ public final class UtilHttp {
      *
      * <p>SCIPIO: 3.0.0: Added.</p>
      */
-    public static List<Locale> getClientRequestLocales(HttpServletRequest request, boolean excludeDefault) {
-        List<Locale> locales = Collections.list(request.getLocales());
+    public static List<Locale> getClientRequestLocales(HttpServletRequest request, boolean excludeDefault, boolean excludeWild) {
+        List<Locale> locales = new ArrayList<>();
+        Enumeration<Locale> localesEnum = request.getLocales();
+        while (localesEnum.hasMoreElements()) {
+            Locale locale = localesEnum.nextElement();
+            // NOTE: The servlet container sometimes returns ""
+            if (locale != null && (!excludeWild || !locale.toString().isEmpty())) {
+                locales.add(locale);
+            }
+        }
         return (!excludeDefault || locales.size() != 1 || !Objects.equals(locales.get(0), Locale.getDefault())) ?
                 locales : Collections.emptyList();
     }

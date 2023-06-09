@@ -446,7 +446,7 @@ public class AttrHandler {
             if (!checkClientRequest || request == null) {
                 return null;
             }
-            List<Locale> clientLocales = UtilHttp.getClientRequestLocales(request, true);
+            List<Locale> clientLocales = UtilHttp.getClientRequestLocales(request, true, true);
             return UtilValidate.isNotEmpty(clientLocales) ? filterLocale(clientLocales, false) : null;
         }
 

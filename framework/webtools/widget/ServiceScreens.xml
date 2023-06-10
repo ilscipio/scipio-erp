@@ -188,7 +188,8 @@ code package.
                     if (!context.serviceNames) {
                         context.serviceNames = dispatcher.getDispatchContext().getAllServiceNames();
                     }
-                    context.serviceNamesMatchMode = context.serviceNamesMatchMode ?: "starts-with";
+                    context.serviceNamesMatchMode = context.serviceNamesMatchMode ?: "best";
+                    context.serviceNamesMaxMatch = context.serviceNamesMaxMatch ?: -1;
                 ]]></script>
             </actions>
             <widgets>
@@ -197,12 +198,36 @@ code package.
                         <@script>
                           $(function() {
                             var serviceNames = <@objectAsScript object=(serviceNames![]) lang="js"/>;
+
+                            var matchBestName = function(sourceList, term, mode, maxCount) {
+                                var i = 0, t = term, tlc = t.toLowerCase(), sw = [], swci = [], cnt = [], cntci = [];
+                                var c = 0;
+                                for (i = 0; (i < serviceNames.length && (maxCount <= 0 || c < maxCount)); i++) {
+                                    var s = serviceNames[i];
+                                    if (s.startsWith(t)) {
+                                        sw.push(s);
+                                        c++;
+                                    } else {
+                                        var slc = s.toLowerCase();
+                                        if (slc.startsWith(tlc)) {
+                                            swci.push(s);
+                                            c++;
+                                        } else if (s.includes(t)) {
+                                            cnt.push(s);
+                                            c++;
+                                        } else if (slc.includes(tlc)) {
+                                            cntci.push(s);
+                                            c++;
+                                        }
+                                    }
+                                }
+                                return sw.concat(swci).concat(cnt).concat(cntci);
+                            };
+
                             $("${raw(serviceNameInputIdExpr)}").autocomplete({
-                              <#if serviceNamesMatchMode == "starts-with">
+                              <#if serviceNamesMatchMode == "best">
                                 source: function(request, response) {
-                                    response($.map(serviceNames, function(serviceName) {
-                                        return serviceName.startsWith(request.term) ? serviceName : null;
-                                    }));
+                                    response(matchBestName(serviceNames, request.term, "best", ${serviceNamesMaxMatch!-1}));
                                 }
                               <#else><#--<#elseif serviceNamesMatchMode == "contains">-->
                                 source: serviceNames

@@ -139,6 +139,14 @@ code package.
                         <include-screen name="JobManagerLockEnable"/>-->
                         <screenlet title="${uiLabelMap.WebtoolsStep1ServiceAndRecurrenceInfo}">
                             <include-form name="scheduleJob" location="component://webtools/widget/ServiceForms.xml"/>
+                            <section>
+                                <actions>
+                                    <set field="serviceNameInputIdExpr" value="#scheduleJob input[name=SERVICE_NAME]"/>
+                                </actions>
+                                <widgets>
+                                    <include-screen name="serviceNameAutocomplete"/>
+                                </widgets>
+                            </section>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -158,9 +166,52 @@ code package.
                     <decorator-section name="body">
                         <screenlet>
                             <include-form name="runService" location="component://webtools/widget/ServiceForms.xml"/>
+                            <section>
+                                <actions>
+                                    <set field="serviceNameInputIdExpr" value="#runService input[name=SERVICE_NAME]"/>
+                                </actions>
+                                <widgets>
+                                    <include-screen name="serviceNameAutocomplete"/>
+                                </widgets>
+                            </section>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+    <screen name="serviceNameAutocomplete">
+        <section>
+            <actions>
+                <script lang="groovy"><![CDATA[
+                    if (!context.serviceNames) {
+                        context.serviceNames = dispatcher.getDispatchContext().getAllServiceNames();
+                    }
+                    context.serviceNamesMatchMode = context.serviceNamesMatchMode ?: "starts-with";
+                ]]></script>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template lang="ftl"><![CDATA[
+                        <@script>
+                          $(function() {
+                            var serviceNames = <@objectAsScript object=(serviceNames![]) lang="js"/>;
+                            $("${raw(serviceNameInputIdExpr)}").autocomplete({
+                              <#if serviceNamesMatchMode == "starts-with">
+                                source: function(request, response) {
+                                    response($.map(serviceNames, function(serviceName) {
+                                        return serviceName.startsWith(request.term) ? serviceName : null;
+                                    }));
+                                }
+                              <#else><#--<#elseif serviceNamesMatchMode == "contains">-->
+                                source: serviceNames
+                              </#if>
+                            });
+                          });
+                        </@script>
+                    ]]></html-template></html>
+                </platform-specific>
             </widgets>
         </section>
     </screen>

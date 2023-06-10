@@ -1132,7 +1132,7 @@ title="" tooltip="" inlineLabel=false inlinePostfix=false origLabel=origLabel re
     </@script>
   </#if>
         <#if size?has_content && size=="0">
-          <input type="hidden"<#if name?has_content> name="${escapeVal(name, 'html')}"/></#if>
+          <input type="hidden"<#if name?has_content> name="${escapeVal(name, 'html')}"</#if>/>
         <#else>
           <div class="field has-addons">
             <div class="control is-expanded">

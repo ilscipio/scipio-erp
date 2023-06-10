@@ -800,7 +800,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
   </#if>
   <div class="field-lookup">
     <#if size?has_content && size=="0">
-      <input type="hidden"<#if name?has_content> name="${escapeVal(name, 'html')}"/></#if>
+      <input type="hidden"<#if name?has_content> name="${escapeVal(name, 'html')}"</#if>/>
     <#else>
     <div class="${styles.grid_row!} ${styles.collapse!} lookup">
         <div class="${styles.grid_small!}<#if !inlinePostfix>11<#else>12</#if><#if inlinePostfix> ${styles.grid_postfix_container}</#if> ${styles.grid_cell!}">

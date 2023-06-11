@@ -1183,7 +1183,7 @@ title="" tooltip="" inlineLabel=false inlinePostfix=false origLabel=origLabel re
                         dialogTarget : document['${escapeVal(formName, 'js')}']['${escapeVal(name, 'js')}'],
                         dialogOptionalTarget : <#if descriptionFieldName?has_content>document['${escapeVal(formName, 'js')}']['${escapeVal(descriptionFieldName, 'js')}']<#else>null</#if>,
                         formName : "${escapeVal(formName, 'js')}",
-                        lookupId: '${escapeVal(id, 'html')}',
+                        lookupId: '${escapeVal(id, 'js')}',
                         width : "${width}",
                         height : "${height}",
                         position : "topright",

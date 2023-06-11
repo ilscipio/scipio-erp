@@ -849,7 +849,7 @@ NOTE (2016-08-30): The special token values {{{_EMPTY_VALUE_}}} and {{{_NO_VALUE
                     dialogTarget : document['${escapeVal(formName, 'js')}']['${escapeVal(name, 'js')}'],
                     dialogOptionalTarget : <#if descriptionFieldName?has_content>document['${escapeVal(formName, 'js')}']['${escapeVal(descriptionFieldName, 'js')}']<#else>null</#if>,
                     formName : "${escapeVal(formName, 'js')}",
-                    lookupId: '${escapeVal(id, 'html')}',
+                    lookupId: '${escapeVal(id, 'js')}',
                     width : "${width}",
                     height : "${height}",
                     position : "topright",

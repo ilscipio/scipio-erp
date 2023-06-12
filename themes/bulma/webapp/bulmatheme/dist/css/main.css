@@ -12678,3 +12678,7 @@ pre.scrollable {
 /*Tooltip*/
 [data-tooltip]:not(.is-disabled)::before, [data-tooltip]:not(.is-loading)::before, [data-tooltip]:not([disabled])::before {
   content: attr(title); }
+
+/* admin: entity/service index lists (alphabetical) - moved here from _scipio.scss */
+.nav-tabs dd {
+  display: inline-block; }

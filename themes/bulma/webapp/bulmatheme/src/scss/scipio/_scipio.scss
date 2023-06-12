@@ -111,6 +111,12 @@ table{
     border-bottom:0px;
 }
 
+// Moved to backoffice.scss for now, not applied from here
+//// admin: entity/service index lists (alphabetical)
+//.nav-tabs dd {
+//  display: inline-block;
+//}
+
 #pre-content-section {
     display:block;
 }

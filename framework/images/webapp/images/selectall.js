@@ -508,7 +508,7 @@ function ajaxAutoCompleter(areaCsvString, showDescription, defaultMinLength, def
         else
             var url = initUrl + "?" + areaArray[i + 2];
         var div = areaArray[i];
-        // create a separated div where the result JSON Opbject will be placed
+        // create a separated div where the result JSON Object will be placed
         if ((jQuery("#" + div + "_auto")).length < 1) {
             jQuery("<div id='" + div + "_auto'></div>").insertBefore("#" + areaArray[i]);
         }

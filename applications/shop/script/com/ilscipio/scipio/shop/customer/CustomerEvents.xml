@@ -399,7 +399,7 @@ code package.
         <!-- SCIPIO: If the store supports the default anon list, convert it now -->
         <if-not-empty field="createdUserLogin">
             <script lang="groovy"><![CDATA[
-                context.convertListResult = org.ofbiz.order.shoppinglist.ShoppingListEvents.convertAnonShoppingListsToRegisteredForStore(request, response, context.createdUserLogin);
+                context.convertListResult = org.ofbiz.order.shoppinglist.ShoppingListEvents.convertAnonShoppingListsToRegisteredForStore(request, response, context.createdUserLogin, context.systemUserLogin);
             ]]></script>
             <if-compare field="convertListResult" operator="not-equals" value="success">
                 <add-error><fail-property resource="OrderErrorUiLabels" property="shoppinglistevents.error_converting_wishlist_contact_support"/></add-error>

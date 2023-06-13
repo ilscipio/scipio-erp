@@ -1088,11 +1088,20 @@ public class ShoppingListEvents {
     /**
      * SCIPIO: See applications/shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml#createCustomer for usage.
      */
-    public static String convertAnonShoppingListsToRegisteredForStore(HttpServletRequest request, HttpServletResponse response, GenericValue userLogin) { // SCIPIO
+    public static String convertAnonShoppingListsToRegisteredForStore(HttpServletRequest request, HttpServletResponse response,
+                                                                      GenericValue targetUserLogin) {
+        return convertAnonShoppingListsToRegisteredForStore(request, response, targetUserLogin, null);
+    }
+
+    /**
+     * SCIPIO: See applications/shop/script/com/ilscipio/scipio/shop/customer/CustomerEvents.xml#createCustomer for usage.
+     */
+    public static String convertAnonShoppingListsToRegisteredForStore(HttpServletRequest request, HttpServletResponse response,
+                                                                      GenericValue targetUserLogin, GenericValue userLogin) {
         if (!ShoppingListWorker.useAnonShoppingList(request)) {
             return "success";
         }
-        GenericValue shoppingList = ShoppingListWorker.getAnonUserDefaultWishList(request, userLogin, false);
+        GenericValue shoppingList = ShoppingListWorker.getAnonUserDefaultWishList(request, targetUserLogin, false);
         if (shoppingList == null) {
             return "success";
         }
@@ -1101,12 +1110,16 @@ public class ShoppingListEvents {
 
         // Cannot be anon to do this
         Map<String, Object> servCtx = new HashMap<>();
+        if (userLogin == null) {
+            userLogin = UtilHttp.getSessionUserLogin(request);
+        }
         servCtx.put("userLogin", userLogin);
+        servCtx.put("targetUserLogin", targetUserLogin);
         servCtx.put("locale", locale);
         servCtx.put("shoppingListId", shoppingList.get("shoppingListId"));
         servCtx.put("shoppingListAuthToken", shoppingList.get("shoppingListAuthToken")); // NOTE: In most cases you should not do this!! But here the returned list was already validated.
 
-        Map<String, Object> servResult = null;
+        Map<String, Object> servResult;
         try {
             servResult = dispatcher.runSync("convertAnonShoppingListToRegistered", servCtx);
         } catch (GenericServiceException e) {

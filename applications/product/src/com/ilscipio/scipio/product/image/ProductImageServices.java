@@ -224,13 +224,16 @@ public class ProductImageServices {
         if (Boolean.TRUE.equals(ctx.attr("clearCaches"))) {
             try {
                 Map<String, Object> clearCachesCtx = ctx.makeValidContext("productImageVariantsClearCaches", "IN", ctx.context());
+                if (clearCachesCtx.get("userLogin") == null) {
+                    clearCachesCtx.put("userLogin", ctx.delegator().query().from("UserLogin").where("userLoginId", "system").queryOne());
+                }
                 clearCachesCtx.put("productId", productId);
                 clearCachesCtx.put("distribute", true);
                 Map<String, Object> clearCachesResult = ctx.dispatcher().runSync("productImageVariantsClearCaches", clearCachesCtx);
                 if (!ServiceUtil.isSuccess(clearCachesResult)) {
                     Debug.logWarning("productImageRescaleImage: product [" + productId + "]: error clearing caches: " + ServiceUtil.getErrorMessage(clearCachesResult), module);
                 }
-            } catch (GenericServiceException e) {
+            } catch (GeneralException e) {
                 Debug.logWarning(e, "productImageRescaleImage: product [" + productId + "]: error clearing caches: " + e.toString(), module);
             }
         }

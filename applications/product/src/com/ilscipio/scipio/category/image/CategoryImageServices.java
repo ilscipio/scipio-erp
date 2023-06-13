@@ -213,13 +213,16 @@ public class CategoryImageServices {
         if (Boolean.TRUE.equals(ctx.attr("clearCaches"))) {
             try {
                 Map<String, Object> clearCachesCtx = ctx.makeValidContext("categoryImageVariantsClearCaches", "IN", ctx.context());
+                if (clearCachesCtx.get("userLogin") == null) {
+                    clearCachesCtx.put("userLogin", ctx.delegator().query().from("UserLogin").where("userLoginId", "system").queryOne());
+                }
                 clearCachesCtx.put("productCategoryId", productCategoryId);
                 clearCachesCtx.put("distribute", true);
                 Map<String, Object> clearCachesResult = ctx.dispatcher().runSync("categoryImageVariantsClearCaches", clearCachesCtx);
                 if (!ServiceUtil.isSuccess(clearCachesResult)) {
                     Debug.logWarning("categoryImageRescaleImage: category [" + productCategoryId + "]: error clearing caches: " + ServiceUtil.getErrorMessage(clearCachesResult), module);
                 }
-            } catch (GenericServiceException e) {
+            } catch (GeneralException e) {
                 Debug.logWarning(e, "categoryImageRescaleImage: category [" + productCategoryId + "]: error clearing caches: " + e.toString(), module);
             }
         }

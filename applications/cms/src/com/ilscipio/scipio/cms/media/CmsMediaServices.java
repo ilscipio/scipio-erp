@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import org.ofbiz.base.conversion.ConversionException;
 import org.ofbiz.base.conversion.NumberConverters.StringToInteger;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ProcessSignals;
 import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.UtilDateTime;
@@ -316,8 +317,12 @@ public abstract class CmsMediaServices {
 
         if (ServiceUtil.isSuccess(result)) {
             try {
-                dispatcher.runSync("contentImageVariantsClearCaches", UtilMisc.toMap("userLogin", context.get("userLogin"), "distribute", true));
-            } catch (GenericServiceException e) {
+                GenericValue userLogin = (GenericValue) context.get("userLogin");
+                if (userLogin == null) {
+                    userLogin = delegator.query().from("UserLogin").where("userLoginId", "system").queryOne();
+                }
+                dispatcher.runSync("contentImageVariantsClearCaches", UtilMisc.toMap("userLogin", userLogin, "distribute", true));
+            } catch (GeneralException e) {
                 Debug.logError(e, module);
             }
         }
@@ -656,8 +661,12 @@ public abstract class CmsMediaServices {
 
         if (ServiceUtil.isSuccess(result)) {
             try {
-                dctx.getDispatcher().runSync("contentImageVariantsClearCaches", UtilMisc.toMap("userLogin", context.get("userLogin"), "distribute", true));
-            } catch (GenericServiceException e) {
+                GenericValue userLogin = (GenericValue) context.get("userLogin");
+                if (userLogin == null) {
+                    userLogin = delegator.query().from("UserLogin").where("userLoginId", "system").queryOne();
+                }
+                dctx.getDispatcher().runSync("contentImageVariantsClearCaches", UtilMisc.toMap("userLogin", userLogin, "distribute", true));
+            } catch (GeneralException e) {
                 Debug.logError(e, module);
             }
         }

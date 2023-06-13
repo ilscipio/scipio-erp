@@ -1127,6 +1127,7 @@ public class ShoppingListEvents {
             return "error";
         }
         if (!ServiceUtil.isSuccess(servResult)) {
+            Debug.logError("convertAnonShoppingListsToRegisteredForStore: " + ServiceUtil.getErrorMessage(servResult), module);
             return "error";
         }
         return "success";

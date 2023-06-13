@@ -29,10 +29,18 @@ import java.util.Map;
 
 /**
  * Distributed Cache Clear interface definition
+ *
+ * <p>SCIPIO: 3.0.0: Instances may now support thread-friendly constructor using same arguments as {@link #setDelegator(Delegator, String)}.</p>
  */
 public interface DistributedCacheClear {
 
-    public void setDelegator(Delegator delegator, String userLoginId);
+    /**
+     * Initialization function.
+     *
+     * <p>SCIPIO: 3.0.0: Usage is now discouraged/optional; constructors now support this same interface instead, for thread safety.</p>
+     */
+    default void setDelegator(Delegator delegator, String userLoginId) {
+    }
 
     public void distributedClearCacheLine(GenericValue value);
 

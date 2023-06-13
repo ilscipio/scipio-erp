@@ -40,6 +40,8 @@ import org.ofbiz.service.*;
 
 /**
  * Entity Engine Cache Services
+ *
+ * <p>SCIPIO: 3.0.0: Upgraded constructor for thread safety.</p>
  */
 public class EntityCacheServices implements DistributedCacheClear {
 
@@ -54,13 +56,11 @@ public class EntityCacheServices implements DistributedCacheClear {
     private static final Map<String, List<Pattern>> CACHING_EXCLUDE_NAMES_PATTERNS = Collections.unmodifiableMap(UtilMisc.toMap(
     ));
 
-    protected Delegator delegator = null;
-    protected LocalDispatcher dispatcher = null;
-    protected String userLoginId = null;
+    protected final Delegator delegator;
+    protected final LocalDispatcher dispatcher;
+    protected final String userLoginId;
 
-    public EntityCacheServices() {}
-
-    public void setDelegator(Delegator delegator, String userLoginId) {
+    public EntityCacheServices(Delegator delegator, String userLoginId) {
         this.delegator = delegator;
         this.dispatcher = EntityServiceFactory.getLocalDispatcher(delegator);
         this.userLoginId = userLoginId;

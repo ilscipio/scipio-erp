@@ -2671,8 +2671,16 @@ public class GenericDelegator implements Delegator {
 
             try {
                 Class<?> dccClass = loader.loadClass(distributedCacheClearClassName);
-                DistributedCacheClear distributedCacheClear = UtilGenerics.cast(dccClass.getConstructor().newInstance());
-                distributedCacheClear.setDelegator(this, this.delegatorInfo.getDistributedCacheClearUserLoginId());
+                DistributedCacheClear distributedCacheClear;
+                String userLoginId = this.delegatorInfo.getDistributedCacheClearUserLoginId();
+                try {
+                    distributedCacheClear = UtilGenerics.cast(dccClass
+                            .getConstructor(Delegator.class, String.class)
+                            .newInstance(this, userLoginId));
+                } catch (NoSuchMethodException e) {
+                    distributedCacheClear = UtilGenerics.cast(dccClass.getConstructor().newInstance());
+                }
+                distributedCacheClear.setDelegator(this, userLoginId);
                 return distributedCacheClear;
             } catch (ClassNotFoundException e) {
                 Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " was not found, distributed cache clearing will be disabled", module);

@@ -111,7 +111,9 @@ public class GeneralRuntimeException extends RuntimeException implements CommonE
      * @param nested the nested exception.
      */
     public GeneralRuntimeException(Throwable nested) {
-        super(nested);
+        super(null, nested);
+        // Let our getMessage() handle it
+        //super(nested);
     }
 
     /**
@@ -150,7 +152,9 @@ public class GeneralRuntimeException extends RuntimeException implements CommonE
      * @param nested the nested exception.
      */
     public GeneralRuntimeException(Collection<?> messageList, Throwable nested) {
-        super(nested);
+        super(null, nested);
+        // Let our getMessage() handle it
+        //super(nested);
         this.propertyMessageList = PropertyMessageExUtil.makePropertyMessageList(messageList); // SCIPIO: make property messages
     }
 
@@ -173,7 +177,8 @@ public class GeneralRuntimeException extends RuntimeException implements CommonE
      * @param propMsg the property and detail message.
      */
     public GeneralRuntimeException(PropertyMessage propMsg) {
-        super(propMsg.getDefExLocaleMessage());
+        // Let our getMessage() handle it
+        //super(propMsg != null ? propMsg.getDefExLocaleMessage() : null);
         this.propertyMessage = propMsg;
     }
 
@@ -186,7 +191,9 @@ public class GeneralRuntimeException extends RuntimeException implements CommonE
      * @param nested the nested exception.
      */
     public GeneralRuntimeException(PropertyMessage propMsg, Throwable nested) {
-        super(propMsg.getDefExLocaleMessage(), nested);
+        super(null, nested);
+        // Let our getMessage() handle it
+        //super(propMsg != null ? propMsg.getDefExLocaleMessage() : null, nested);
         this.propertyMessage = propMsg;
     }
 

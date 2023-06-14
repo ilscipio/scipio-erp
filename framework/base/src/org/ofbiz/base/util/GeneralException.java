@@ -106,7 +106,9 @@ public class GeneralException extends Exception implements CommonException {
      * @param nested the nested exception.
      */
     public GeneralException(Throwable nested) {
-        super(nested);
+        super(null, nested);
+        // Let our getMessage() handle it
+        //super(nested);
     }
 
     /**
@@ -145,7 +147,9 @@ public class GeneralException extends Exception implements CommonException {
      * @param nested the nested exception.
      */
     public GeneralException(Collection<?> messageList, Throwable nested) {
-        super(nested);
+        super(null, nested);
+        // Let our getMessage() handle it
+        //super(nested);
         this.propertyMessageList = PropertyMessageExUtil.makePropertyMessageList(messageList); // SCIPIO: make property messages
     }
 
@@ -168,7 +172,8 @@ public class GeneralException extends Exception implements CommonException {
      * @param propMsg the property and detail message.
      */
     public GeneralException(PropertyMessage propMsg) {
-        super(propMsg.getDefExLocaleMessage());
+        // Let our getMessage() handle it
+        //super((propMsg != null) ? propMsg.getDefExLocaleMessage() : null);
         this.propertyMessage = propMsg;
     }
 
@@ -181,7 +186,9 @@ public class GeneralException extends Exception implements CommonException {
      * @param nested the nested exception.
      */
     public GeneralException(PropertyMessage propMsg, Throwable nested) {
-        super(propMsg.getDefExLocaleMessage(), nested);
+        super(null, nested);
+        // Let our getMessage() handle it
+        //super((propMsg != null) ? propMsg.getDefExLocaleMessage() : null, nested);
         this.propertyMessage = propMsg;
     }
 

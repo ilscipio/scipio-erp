@@ -18,25 +18,54 @@
  *******************************************************************************/
 package org.ofbiz.webapp.view;
 
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.PropertyMessage;
+
+import java.util.Collection;
+
 /**
  * ViewHandlerException - View Handler Exception
  */
 @SuppressWarnings("serial")
-public class ViewHandlerException extends org.ofbiz.base.util.GeneralException {
+public class ViewHandlerException extends GeneralException {
 
     public ViewHandlerException() {
-        super();
     }
 
     public ViewHandlerException(String msg) {
         super(msg);
     }
 
-    public ViewHandlerException(Throwable t) {
-        super(t);
+    public ViewHandlerException(String msg, Throwable nested) {
+        super(msg, nested);
     }
 
-    public ViewHandlerException(String msg, Throwable t) {
-        super(msg, t);
+    public ViewHandlerException(Throwable nested) {
+        super(nested);
     }
+
+    public ViewHandlerException(String msg, Collection<?> messageList) {
+        super(msg, messageList);
+    }
+
+    public ViewHandlerException(String msg, Collection<?> messageList, Throwable nested) {
+        super(msg, messageList, nested);
+    }
+
+    public ViewHandlerException(Collection<?> messageList, Throwable nested) {
+        super(messageList, nested);
+    }
+
+    public ViewHandlerException(Collection<?> messageList) {
+        super(messageList);
+    }
+
+    public ViewHandlerException(PropertyMessage propMsg) {
+        super(propMsg);
+    }
+
+    public ViewHandlerException(PropertyMessage propMsg, Throwable nested) {
+        super(propMsg, nested);
+    }
+
 }

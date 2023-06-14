@@ -5,6 +5,7 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -14,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.UtilRender;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
@@ -444,50 +446,34 @@ public class CmsScreenViewHandler extends MacroScreenViewHandler implements View
         return true;
     }
 
+    /**
+     * Handles exceptions by rethrowing as {@link ViewHandlerException}.
+     *
+     * <p>SCIPIO: 3.0.0: When non-preview or debug, now uses GeneralException propertyMessageList to set safe public
+     *  message so we can still propagate the private detailed main exception message internally and not lose debugging info;
+     *  note that ControlServlet also applies the same message if secure mode enabled but we do it independently here
+     *  to honor CMS-specific settings (TODO: REVIEW: need?).</p>
+     */
     protected void handleException(HttpServletRequest request, HttpServletResponse response, Exception ex, CmsCallType renderMode) throws ViewHandlerException {
-        // 2017-03-24: only report detailed error if preview/debug mode
-        if (renderMode == CmsCallType.OFBIZ_PREVIEW) {
-            rethrowViewHandlerExceptionDetailed(request, ex);
-        } else {
-            if (UtilRender.RenderExceptionMode.isDebug(CmsRenderUtil.getLiveExceptionMode(request.getServletContext()))) {
-                rethrowViewHandlerExceptionDetailed(request, ex);
-            } else {
-                // OLD CODE: this was secure, but prevented controller from handling the error...
-                // instead, rethrow an error with a generic message
-//                try {
-//                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-//                } catch (IOException e1) {
-//                    Debug.logError(e1, "Cms: Error sending server error response" + CmsControlUtil.getReqLogIdDelimStr(request), module);
-//                }
-                rethrowViewHandlerExceptionGeneric(request, ex);
-            }
-        }
-    }
-
-    protected void rethrowViewHandlerExceptionDetailed(HttpServletRequest request, Exception ex) throws ViewHandlerException {
         // EMULATION of MacroScreenViewHandler behavior - these throws would in stock be handled by ControlServlet and printed
+        List<PropertyMessage> publicMsg = null;
+        if (renderMode != CmsCallType.OFBIZ_PREVIEW && !UtilRender.RenderExceptionMode.isDebug(CmsRenderUtil.getLiveExceptionMode(request.getServletContext()))) {
+            publicMsg = List.of(RequestUtil.getGenericErrorPropertyMessage(request));
+        }
         try {
             throw ex;
         } catch (TemplateException e) {
             Debug.logError(e, "Error initializing screen renderer", module);
-            throw new ViewHandlerException(e.getMessage());
+            throw new ViewHandlerException(e.getMessage(), publicMsg);
         } catch (IOException e) {
-            throw new ViewHandlerException("Error in the response writer/output stream: " + e.toString(), e);
-        } catch (SAXException e) {
-            throw new ViewHandlerException("XML Error rendering page: " + e.toString(), e);
-        } catch (ParserConfigurationException e) {
-            throw new ViewHandlerException("XML Error rendering page: " + e.toString(), e);
+            throw new ViewHandlerException("Error in the response writer/output stream: " + e, publicMsg, e);
+        } catch (SAXException | ParserConfigurationException e) {
+            throw new ViewHandlerException("XML Error rendering page: " + e, publicMsg, e);
         } catch (GeneralException e) {
-            throw new ViewHandlerException("Lower level error rendering page: " + e.toString(), e);
+            throw new ViewHandlerException("Lower level error rendering page: " + e, publicMsg, e);
         } catch (Exception e) {
-            throw new ViewHandlerException("General error rendering page: " + e.toString(), e);
+            throw new ViewHandlerException("General error rendering page: " + e, publicMsg, e);
         }
-    }
-
-    // generic exception to avoid divulging information in live render, for security; does NOT propagate the original error (already logged)
-    protected void rethrowViewHandlerExceptionGeneric(HttpServletRequest request, Exception ex) throws ViewHandlerException {
-        final String msg = RequestUtil.getGenericErrorMessage(request);
-        throw new ViewHandlerException(msg, new Exception(msg));
     }
 
     /**

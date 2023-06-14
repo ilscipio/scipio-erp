@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.ofbiz.base.util.PropertyMessage;
 import org.ofbiz.base.util.PropertyMessageExUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilHttp;
@@ -100,6 +101,10 @@ public abstract class RequestUtil {
             msg = GENERICERRMSG_EN_FALLBACK;
         }
         return msg;
+    }
+
+    public static PropertyMessage getGenericErrorPropertyMessage(HttpServletRequest request) {
+        return PropertyMessage.make("CommonErrorUiLabels", "CommonErrorOccurredContactSupport");
     }
 
     public static String getGenericErrorMessage() {

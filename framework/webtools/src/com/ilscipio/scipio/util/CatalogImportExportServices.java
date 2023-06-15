@@ -158,25 +158,9 @@ public class CatalogImportExportServices {
                                     entityFields = new LinkedHashMap<>();
 
                                     //read value
-                                    Object cellValue = null;
-                                    switch (cell.getCellType()) {
-                                        case STRING:
-                                            cellValue = cell.getStringCellValue();
-                                            break;
-                                        case BLANK:
-                                            cellValue = null;
-                                            break;
-                                        case NUMERIC:
-                                            cellValue = new BigDecimal(cell.getNumericCellValue());
-                                            break;
-                                        case BOOLEAN:
-                                            cellValue = cell.getBooleanCellValue();
-                                            break;
-                                        default:
-                                            break;
-                                    }
+                                    Object cellValue = getCellValue(cell);
 
-                                    if (headerInfo.get(cell.getColumnIndex()) != null) {
+                                    if (UtilValidate.isNotEmpty(headerInfo.get(cell.getColumnIndex())) && UtilValidate.isNotEmpty(cellValue)) {
                                         Map<String, Object> serviceContext = new HashMap<>();
                                         serviceContext.put("cellValue", cellValue);
                                         serviceContext.put("userLogin", userLogin);
@@ -438,7 +422,7 @@ public class CatalogImportExportServices {
         }
         CellType type = cell.getCellType();
         if (type == CellType.STRING || type == CellType.BLANK) {
-            return UtilValidate.nullIfEmpty(cell.getStringCellValue());
+            return UtilValidate.nullIfEmpty(cell.getStringCellValue().trim());
         } else if (type == CellType.BOOLEAN) {
             return cell.getBooleanCellValue();
         } else if (type == CellType.NUMERIC) {

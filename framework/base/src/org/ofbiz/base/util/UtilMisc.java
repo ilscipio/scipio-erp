@@ -334,6 +334,48 @@ public class UtilMisc {
         return putKeys(map, inMap, Arrays.asList(keys), preserveNull);
     }
 
+    /**
+     * Sets all specified keys to null.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static <M extends Map<K, V>, K, V> M putNull(M map, Collection<? extends K> keys) {
+        for (K key : keys) {
+            map.put(key, null);
+        }
+        return map;
+    }
+
+    /**
+     * Sets all specified keys to null.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static <M extends Map<K, V>, K, V> M putNull(M map, K... keys) {
+        return putNull(map, Arrays.asList(keys));
+    }
+
+    /**
+     * Removes all specified keys.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static <M extends Map<K, V>, K, V> M removeKeys(M map, Collection<? extends K> keys) {
+        for (K key : keys) {
+            map.remove(key);
+        }
+        return map;
+    }
+
+    /**
+     * Removes all specified keys.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static <M extends Map<K, V>, K, V> M removeKeys(M map, K... keys) {
+        return removeKeys(map, Arrays.asList(keys));
+    }
+
     public static <K, V> String printMap(Map<? extends K, ? extends V> theMap) {
         StringBuilder theBuf = new StringBuilder();
         for (Map.Entry<? extends K, ? extends V> entry: theMap.entrySet()) {

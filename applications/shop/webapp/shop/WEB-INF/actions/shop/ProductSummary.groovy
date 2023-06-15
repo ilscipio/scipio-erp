@@ -32,7 +32,8 @@ import org.ofbiz.product.config.ProductConfigWorker;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.store.*;
 import org.ofbiz.service.*;
-import com.ilscipio.scipio.solr.*;
+import com.ilscipio.scipio.solr.*
+import org.ofbiz.webapp.website.WebSiteWorker;
 
 // SCIPIO: NOTE: This script is responsible for checking whether solr is applicable (if no check, implies the shop assumes solr is always enabled).
 final module = "ProductSummary.groovy";
@@ -49,36 +50,56 @@ context.searchDataSrc = searchDataSrc;
 avoidEntityData = (searchDataSrc == "solr");
 context.avoidEntityData = avoidEntityData;
 
-//either optProduct, optProductId or productId must be specified
-product = request.getAttribute("optProduct");
-optProductId = request.getAttribute("optProductId");
-productId = product?.productId ?: optProductId ?: request.getAttribute("productId");
-solrProduct = request.getAttribute("solrProduct");
+// Either optProduct, optProductId or productId must be specified
+// SCIPIO: NOTE: optProduct(Id) must always be checked before context/request product(Id) because the latter
+//  may be referencing an object in the parent screen lingering in context/request in that case;
+//  likewise, optProductId must have precedence over "product" and "solrProduct" (backward-compat)
+product = request.getAttribute("optProduct")
+optProductId = request.getAttribute("optProductId")
+productId = product?.productId ?: optProductId ?: context.productId ?: request.getAttribute("productId");
+if (!productId) {
+    Debug.logError("Missing productId", module);
+}
+solrProduct = context.solrProduct;
+if (solrProduct == null) {
+    solrProduct = request.getAttribute("solrProduct")
+}
+// NOTE: solrProduct could be an artifact from parent screen, so make sure productId is good
+if (solrProduct != null && (solrProduct.productId != productId || !productId)) {
+    solrProduct = null;
+}
 solrProducts = context.solrProducts;
+if (solrProduct == null && solrProducts && productId) {
+    for (sp in solrProducts) {
+        if (sp.productId == productId) {
+            solrProduct = sp;
+            break;
+        }
+    }
+}
+
 categoryId = null;
 reviews = null;
 sizeProductFeatureAndAppls = null;
 autoUserLogin = context.autoUserLogin; // SCIPIO: use context login instead: session.getAttribute("autoUserLogin");
 userLogin = context.userLogin; // SCIPIO: use context login instead: session.getAttribute("userLogin");
-webSiteId = CatalogWorker.getWebSiteId(request);
+webSiteId = WebSiteWorker.getWebSiteId(request);
 catalogId = CatalogWorker.getCurrentCatalogId(request);
 cart = ShoppingCartEvents.getCartObject(request);
-productStore = null;
-productStoreId = null;
+
+productStore = context.productStore;
+if (productStore == null) {
+    productStore = ProductStoreWorker.getProductStore(request)
+}
+productStoreId = productStore?.productStoreId;
+context.productStoreId = productStoreId;
 facilityId = null;
 if (cart.isSalesOrder()) {
-    productStore = ProductStoreWorker.getProductStore(request);
-    productStoreId = productStore.productStoreId;
-    context.productStoreId = productStoreId;
     facilityId = productStore.inventoryFacilityId;
-}
-
-if (!solrProduct && solrProducts && productId) {
-    // FIXME: inefficient
-    for(sp in solrProducts) {
-        if (sp.productId == productId) {
-            solrProduct = sp;
-            break;
+    if (!avoidEntityData && !facilityId) {
+        productStoreFacility = from("ProductStoreFacility").select("facilityId").where("productStoreId", productStoreId).filterByDate().cache().queryFirst();
+        if (productStoreFacility != null) {
+            facilityId = productStoreFacility.facilityId;
         }
     }
 }
@@ -99,73 +120,56 @@ def toBigDecimalCurrency(priceVal) { // SCIPIO
  * Creates a unique product cachekey
  * */
 getProductCacheKey = {
-    if (userLogin) {
-        return delegator.getDelegatorName()+"::"+productId+"::"+webSiteId+"::"+catalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+userLogin.partyId;
-    } else {
-        return delegator.getDelegatorName()+"::"+productId+"::"+webSiteId+"::"+catalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+"_NA_";
-    }
+    return delegator.getDelegatorName()+"::"+productId+"::"+webSiteId+"::"+catalogId+"::"+productStoreId+"::"+cart.getCurrency()+"::"+(userLogin?.partyId ?: "_NA_");
 }
+List<String> cacheFields = [
+        "averageRating",
+        "categoryId",
+        "daysToShip",
+        "description",
+        "hasProduct",
+        "longDescription",
+        "mainProducts",
+        "numRatings",
+        "price",
+        "product",
+        "productId",
+        "productReviews",
+        "requireAmount",
+        "sizeProductFeatureAndAppls",
+        "solrProduct",
+        "solrTitle",
+        "title",
+        "totalPrice",
+        "variantPriceList",
+        "virtualJavaScript"
+]
 
+// Reset context vars with explicit null, including product and productId (essential for check below to work)
 // IMPORTANT: These cannot be removed with context.remove due to MapStack; you must set them to explicit null
-context.daysToShip = null;
-context.averageRating = null;
-context.numRatings = null;
-context.totalPrice = null;
-
-//context.product = null;
-context.productId = null;
-context.hasProduct = null;
-context.price = null;
-context.requireAmount = null;
-context.solrProduct = null;
-context.categoryId = null;
-context.productReviews = null;
-context.sizeProductFeatureAndAppls = null;
-context.numRatings = null;
-context.averageRating = null;
-context.mainProducts = null;
-context.virtualJavaScript = null;
-context.variantPriceList = null;
-context.daysToShip = null;
-context.solrTitle = null;
-context.title = null;
-context.description = null;
-context.longdescription = null;
+// (Cast helps IDEA compiler infer context var type)
+UtilMisc.putNull((Map<String, Object>) context, cacheFields);
 
 // get the product entity
-String cacheKey = getProductCacheKey();
+String cacheKey = null;
+Map cachedCtx = null;
 if (useCache) {
-    Map cachedValue = productCache.get(cacheKey);
-    if (cachedValue != null) {
-        product = context.product;
-        context.product = cachedValue.product;
-        context.productId = cachedValue.productId;
-        context.hasProduct = cachedValue.hasProduct;
-        context.price = cachedValue.price;
-        context.requireAmount = cachedValue.requireAmount;
-        context.solrProduct = cachedValue.solrProduct;
-        context.categoryId = cachedValue.categoryId;
-        context.productReviews = cachedValue.productReviews;
-        context.sizeProductFeatureAndAppls = cachedValue.sizeProductFeatureAndAppls;
-        context.numRatings = cachedValue.numRatings;
-        context.averageRating = cachedValue.averageRating;
-        context.mainProducts = cachedValue.mainProducts;
-        context.virtualJavaScript = cachedValue.virtualJavaScript;
-        context.variantPriceList = cachedValue.variantPriceList;
-        context.daysToShip = cachedValue.daysToShip;
-        context.solrTitle = cachedValue.solrTitle;
-        context.title = cachedValue.title;
-        context.description = cachedValue.description;
-        context.longdescription = cachedValue.longdescription;
+    cacheKey = getProductCacheKey();
+    cachedCtx = productCache.get(cacheKey);
+    if (cachedCtx != null) {
+        product = cachedCtx.product;
+        UtilMisc.putKeys(context, cachedCtx, cacheFields);
     }
 }
 
-if(!context.product){
-    if (!avoidEntityData && !product && productId) {
-        product = from("Product").where("productId", productId).cache().queryOne();
-    }
+// Always look this up here because Product is too important to miss even if solrProduct is set; used to be done further below
+if (product == null && productId) {
+    product = from("Product").where("productId", productId).cache().queryOne();
+    context.product = product;
+}
 
-    if (product) {
+if (cachedCtx == null && productId) {
+    if (product != null) {
 
         /***********
          Entity Product
@@ -220,22 +224,20 @@ if(!context.product){
         reviews = product.getRelated("ProductReview", null, ["-postedDateTime"], false);
         sizeProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", [productId : productId, productFeatureTypeId : "SIZE"], ["sequenceNum", "defaultSequenceNum"], true);
 
-    } else if (solrProduct) {
+    } else if (solrProduct != null) {
 
         /***********
          SOLR Product
          **********/
 
-        solrCurrency = com.ilscipio.scipio.solr.SolrProductUtil.getConfiguredDefaultCurrency(delegator,
-                org.ofbiz.product.store.ProductStoreWorker.getProductStore(request)); // SCIPIO
+        solrCurrency = SolrProductUtil.getConfiguredDefaultCurrency(delegator, productStore); // SCIPIO
 
-        solrProductWorker = SolrValueWorker.getWorker(solrProduct, context.locale, productStore ?: ProductStoreWorker.getProductStore(request));
+        solrProductWorker = SolrValueWorker.getWorker(solrProduct, context.locale, productStore);
 
         context.solrTitle = solrProductWorker.getFieldValueI18nForDisplay("title");
         context.title = context.solrTitle;
         context.description = solrProductWorker.getFieldValueI18nForDisplay("description");
-        context.longdescription = solrProductWorker.getFieldValueI18nForDisplay("longdescription");
-        context.longDescription = context.longdescription;
+        context.longDescription = solrProductWorker.getFieldValueI18nForDisplay("longdescription");
 
         categoryId = parameters.category_id ?: request.getAttribute("productCategoryId");
         // get the product price
@@ -303,48 +305,25 @@ if(!context.product){
     context.sizeProductFeatureAndAppls = sizeProductFeatureAndAppls;
 
     // cache
-    prodMap = [:];
-    prodMap.product = context.product;
-    prodMap.productId = context.productId;
-    prodMap.hasProduct = context.hasProduct;
-    prodMap.requireAmount = context.requireAmount;
-    prodMap.price = context.price;
-    prodMap.solrProduct = context.solrProduct;
-    prodMap.categoryId = context.categoryId;
-    prodMap.productReviews = context.productReviews;
-    prodMap.sizeProductFeatureAndAppls = context.sizeProductFeatureAndAppls;
-    prodMap.numRatings = context.numRatings;
-    prodMap.averageRating = context.averageRating;
-    prodMap.mainProducts = context.mainProducts;
-    prodMap.virtualJavaScript = context.virtualJavaScript;
-    prodMap.variantPriceList = context.variantPriceList;
-    prodMap.daysToShip = context.daysToShip;
-    prodMap.solrTitle = context.solrTitle
-    prodMap.title = context.title
-    prodMap.description = context.description
-    prodMap.longdescription = context.longdescription
-    productCache.put(cacheKey,prodMap);
+    cachedCtx = UtilMisc.putKeys([:], context, cacheFields);
+    if (cacheKey == null) {
+        cacheKey = getProductCacheKey();
+    }
+    productCache.put(cacheKey, cachedCtx);
 }
 
-if(context.product) {
+context.longdescription = context.longDescription; // compatibility
+
+if (product != null) {
     // get aggregated product totalPrice
-    if ("AGGREGATED".equals(context.product.productTypeId)) {
+    if ("AGGREGATED".equals(product.productTypeId)) {
         configWrapper = ProductConfigWorker.getProductConfigWrapper(productId, cart.getCurrency(), request);
-        if (configWrapper) {
+        if (configWrapper != null) {
             configWrapper.setDefaultConfig();
             context.totalPrice = configWrapper.getTotalPrice();
         }
     }
-} else {
-    if (productId) {
-        if(solrProduct){
-            context.product = from("Product").where("productId", productId).cache().queryOne();
-        }else{// SCIPIO: report this, could be due to inefficient caching or solr setup
-            Debug.logWarning("Shop: Product '" + productId + "' not found in DB (caching/solr sync?)", module);
-        }
-
-    }
 }
-// make the productContentWrapper
-productContentWrapper = new ProductContentWrapper(context.product, request);
+
+productContentWrapper = (product != null) ? new ProductContentWrapper(product, request) : null;
 context.productContentWrapper = productContentWrapper;

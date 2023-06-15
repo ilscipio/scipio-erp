@@ -51,12 +51,11 @@ if (cart.isSalesOrder()) {
     productStoreId = productStore.productStoreId;
     context.productStoreId = productStoreId;
     facilityId = productStore.inventoryFacilityId;
-}
-
-if (!facilityId) {
-    productStoreFacility = EntityQuery.use(delegator).select("facilityId").from("ProductStoreFacility").where("productStoreId", productStoreId).queryFirst();
-    if (productStoreFacility) {
-        facilityId = productStoreFacility.facilityId;
+    if (!facilityId) {
+        productStoreFacility = select("facilityId").from("ProductStoreFacility").where("productStoreId", productStoreId).filterByDate().cache().queryFirst();
+        if (productStoreFacility) {
+            facilityId = productStoreFacility.facilityId;
+        }
     }
 }
 
@@ -173,7 +172,7 @@ if (product) {
         variantPriceList = [];
         numberFormat = NumberFormat.getCurrencyInstance(locale);
         
-        if(virtualVariants){
+        if (virtualVariants) {
             amt = new StringBuffer();
             // Create the javascript to return the price for each variant
             variantPriceJS = new StringBuffer();

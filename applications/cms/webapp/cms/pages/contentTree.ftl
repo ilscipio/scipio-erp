@@ -212,7 +212,11 @@ DEV NOTE: MOST OF OUR CODE CURRENTLY ASSUMES primaryPathFromContextRoot(Default)
                                     <#-- Add requests and pages -->
                                     <#list currWebsite.pages?sort_by("text") as item>
                                         <#if ((item.data.type)!"")=="page">
-                                            <@treeitem attribs=item a_attr=itemPath icon="${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o"/>
+                                           <#if item.data.isPublished!true>
+                                                <@treeitem attribs=item a_attr=itemPath icon="${styles.text_color_primary} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o"/>
+                                           <#else>
+                                               <@treeitem attribs=item a_attr=itemPath icon="${styles.text_color_info} ${styles.icon!} ${styles.icon_prefix!}page ${styles.icon_prefix!}file-o"/>
+                                           </#if>
                                         <#elseif ((item.data.type)!"")=="request">
                                             <@treeitem attribs=item a_attr=itemPath icon="${styles.text_color_info} ${styles.icon!} ${styles.icon_prefix!}link"/>
                                         <#else>

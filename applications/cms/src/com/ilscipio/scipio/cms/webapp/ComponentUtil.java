@@ -8,12 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ilscipio.scipio.cms.content.CmsPage;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.component.ComponentConfig.WebappInfo;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.webapp.WebAppUtil;
 import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.ConfigXMLReader.RequestMap;
@@ -219,6 +222,8 @@ public class ComponentUtil {
      */
     public static void generateMapFromRequestUri(String pageId, String path, String type, List<Map<String, Object>> pages, Map<String, Object> state, String icon,
             String parent, String webSiteId) {
+        Delegator delegator = DelegatorFactory.getDelegator("default");
+
         if (path == null) { // sanity checks
             throw new IllegalArgumentException("generateMapFromRequestUri: received null path");
         } else if (UtilValidate.isEmpty(webSiteId)) {
@@ -241,6 +246,7 @@ public class ComponentUtil {
         for (String item : items) {
             if (item.length() > 0 && items.length > 1) {
                 /*
+                /*
                  * if(itemMap!=null){ itemMap.put("icon", "jstree-folder"); }
                  */
                 String parentPath = subPath.toString();
@@ -252,10 +258,17 @@ public class ComponentUtil {
                 String id = webSiteId + idPath;
 
                 boolean isTargetPath = subPathStr.equals(path);
+                boolean isPublished = false;
+                if(pageId!=null){
+                    CmsPage page = CmsPage.getWorker().findById(delegator,pageId,true);
+                    if(page!=null){
+                        isPublished = page.getActiveVersionId(false)!=null;
+                    }
+                }
 
                 // determine if node is parent and add appropriate folder
                 dataMap = UtilMisc.toMap("type", type, "parentPath", parentPath,
-                        "path", subPathStr, "websiteid", webSiteId, "isTargetPath", isTargetPath);
+                        "path", subPathStr, "websiteid", webSiteId, "isTargetPath", isTargetPath,"isPublished",isPublished);
                 itemMap = UtilMisc.toMap("text", item, "a_attr", subPathStr, 
                         "id", id, "state", state, "parent", parent, "data", dataMap);
                 parent = id;

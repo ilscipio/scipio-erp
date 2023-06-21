@@ -1169,7 +1169,7 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         public String getParentCategoryId() {
             List<String> trailCategoryIds = getTrailCategoryIds();
-            return (trailCategoryIds.size() > 0) ? trailCategoryIds.get(trailCategoryIds.size() - 1) : null;
+            return (UtilValidate.isNotEmpty(trailCategoryIds) && trailCategoryIds.size() > 0) ? trailCategoryIds.get(trailCategoryIds.size() - 1) : null;
         }
 
         public boolean hasTargetProduct() {

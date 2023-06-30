@@ -21,6 +21,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
@@ -41,6 +42,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateModelIterator;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
+import org.ofbiz.webapp.website.WebSiteWorker;
 
 /**
  * SCIPIO: Theme- and styling-framework-agnostic templating utilities.
@@ -698,15 +700,25 @@ public abstract class TemplateFtlUtil {
 
         if(UtilValidate.isNotEmpty(request.getAttribute("webSiteId"))){
             unhashedKey.append(UtilCache.SEPARATOR+request.getAttribute("webSiteId"));
+        }else{
+            GenericValue webSite = WebSiteWorker.getWebSite(request);
+            if (webSite != null) {
+                unhashedKey.append(UtilCache.SEPARATOR+webSite.getString("webSiteId"));
+            }
         }
 
         if(UtilValidate.isNotEmpty(request.getAttribute("productStoreId"))){
             unhashedKey.append(UtilCache.SEPARATOR+request.getAttribute("productStoreId"));
+        }else{
+            String productStoreId = ProductStoreWorker.getProductStoreId(request);
+            unhashedKey.append(UtilCache.SEPARATOR+productStoreId);
         }
 
         if(UtilValidate.isNotEmpty(request.getAttribute("locale"))){
             Locale locale = (Locale) request.getAttribute("locale");
             unhashedKey.append(UtilCache.SEPARATOR+locale.toString());
+        }else{
+            unhashedKey.append(UtilCache.SEPARATOR+UtilHttp.getLocale(request).toString());
         }
 
         if(UtilValidate.isNotEmpty(request.getAttribute("_CURRENT_VIEW_"))){

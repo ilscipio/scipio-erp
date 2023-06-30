@@ -21,7 +21,9 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
@@ -704,20 +706,26 @@ public abstract class TemplateFtlUtil {
             unhashedKey.append(UtilCache.SEPARATOR+webSite.getString("webSiteId"));
         }
 
-        if(UtilValidate.isNotEmpty(request.getAttribute("productStoreId"))){
-            unhashedKey.append(UtilCache.SEPARATOR+request.getAttribute("productStoreId"));
-        }else{
-            String productStoreId = null;
-            if (session != null) {
-                productStoreId = (String) session.getAttribute("productStoreId");
+
+        String productStoreId = null;
+        if (session != null) {
+            productStoreId = (String) session.getAttribute("productStoreId");
+        }
+        if(UtilValidate.isEmpty(productStoreId)){
+            if (webSite != null) {
+                productStoreId = webSite.getString("productStoreId");
             }
-            if(UtilValidate.isEmpty(productStoreId)){
-                if (webSite != null) {
-                    productStoreId = webSite.getString("productStoreId");
-                }
+        }
+        if(UtilValidate.isNotEmpty(productStoreId)){
+            unhashedKey.append(UtilCache.SEPARATOR+productStoreId);
+            GenericValue productStore = null;
+            try {
+                productStore = EntityQuery.use(delegator).from("ProductStore").where("productStoreId", productStoreId).cache().queryOne();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problem getting ProductStore entity", module);
             }
-            if(UtilValidate.isNotEmpty(productStoreId)){
-                unhashedKey.append(UtilCache.SEPARATOR+productStoreId);
+            if(UtilValidate.isNotEmpty(productStore)){
+                unhashedKey.append(UtilCache.SEPARATOR+productStore.getString("defaultLocaleString"));
             }
         }
 

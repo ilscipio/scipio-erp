@@ -5507,7 +5507,7 @@ Generates a unique element cache key from request object and additional paramete
 -->
 <#function getCacheKey prependString="" hashableString="">
   <#if request?has_content>
-    <#local reqUrl = Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].generateDefaultKey(prependString,hashableString)>
+    <#local reqUrl = Static["com.ilscipio.scipio.ce.webapp.ftl.template.TemplateFtlUtil"].generateDefaultKey(request,prependString,hashableString)>
     <#if reqUrl?has_content>
       <#return raw(reqUrl)>
     </#if>

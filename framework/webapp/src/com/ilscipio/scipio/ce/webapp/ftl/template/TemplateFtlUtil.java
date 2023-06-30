@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.ilscipio.scipio.ce.util.SeoStringUtil;
 import com.ilscipio.scipio.ce.webapp.ftl.context.TransformUtil;
@@ -21,7 +22,6 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.RequestLinkUtil;
 
@@ -692,26 +692,33 @@ public abstract class TemplateFtlUtil {
         StringBuffer url = request.getRequestURL();
         StringBuffer unhashedKey = url;
 
-        Delegator delegator = (Delegator)request.getAttribute("delegator");
+        Delegator delegator = Delegator.from(request);
+        HttpSession session = request.getSession(false);
 
         if(UtilValidate.isNotEmpty(delegator)){
             unhashedKey.append(UtilCache.SEPARATOR+delegator.getDelegatorName());
         }
 
-        if(UtilValidate.isNotEmpty(request.getAttribute("webSiteId"))){
-            unhashedKey.append(UtilCache.SEPARATOR+request.getAttribute("webSiteId"));
-        }else{
-            GenericValue webSite = WebSiteWorker.getWebSite(request);
-            if (webSite != null) {
-                unhashedKey.append(UtilCache.SEPARATOR+webSite.getString("webSiteId"));
-            }
+        GenericValue webSite = WebSiteWorker.getWebSite(request);
+        if(UtilValidate.isNotEmpty(webSite)){
+            unhashedKey.append(UtilCache.SEPARATOR+webSite.getString("webSiteId"));
         }
 
         if(UtilValidate.isNotEmpty(request.getAttribute("productStoreId"))){
             unhashedKey.append(UtilCache.SEPARATOR+request.getAttribute("productStoreId"));
         }else{
-            String productStoreId = ProductStoreWorker.getProductStoreId(request);
-            unhashedKey.append(UtilCache.SEPARATOR+productStoreId);
+            String productStoreId = null;
+            if (session != null) {
+                productStoreId = (String) session.getAttribute("productStoreId");
+            }
+            if(UtilValidate.isEmpty(productStoreId)){
+                if (webSite != null) {
+                    productStoreId = webSite.getString("productStoreId");
+                }
+            }
+            if(UtilValidate.isNotEmpty(productStoreId)){
+                unhashedKey.append(UtilCache.SEPARATOR+productStoreId);
+            }
         }
 
         if(UtilValidate.isNotEmpty(request.getAttribute("locale"))){

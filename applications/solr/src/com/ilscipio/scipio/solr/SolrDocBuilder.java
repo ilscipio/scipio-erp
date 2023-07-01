@@ -1561,7 +1561,7 @@ public class SolrDocBuilder {
             Map<String, Object> stdPriceMap = this.stdPriceMap;
             if (stdPriceMap == null && !isConfigurableProduct()) {
                 stdPriceMap = getProductData().getProductStandardPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
-                        getProductStore(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache(), getStdPriceMapOvrdFields());
+                        getProductStore(), getCatalogId(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache(), getStdPriceMapOvrdFields());
                 if (!ServiceUtil.isSuccess(stdPriceMap)) {
                     Debug.logError("getProductStandardPrices: failed to get product prices for product '"
                             + getProduct().get("productId") + "': " + ServiceUtil.getErrorMessage(stdPriceMap), module);
@@ -1580,11 +1580,28 @@ public class SolrDocBuilder {
         public ProductConfigWrapper getCfgPriceWrapper() throws GeneralException {
             ProductConfigWrapper cfgPriceWrapper = this.cfgPriceWrapper;
             if (cfgPriceWrapper == null && isConfigurableProduct()) {
-                cfgPriceWrapper = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
-                        getProductStore(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
+                //cfgPriceWrapper = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
+                //        getProductStore(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
+                Map<String, Object> ovrdFields = getCfgPriceWrapperOvrdFields();
+                String productStoreId = (ovrdFields != null) ? (String) ovrdFields.get("productStoreId") : null;
+                if (productStoreId == null) {
+                    productStoreId = getProductStoreId();
+                }
+                String prodCatalogId = (ovrdFields != null) ? (String) ovrdFields.get("prodCatalogId") : null;
+                if (prodCatalogId == null) {
+                    prodCatalogId = getCatalogId();
+                }
+                cfgPriceWrapper = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(), getUserLogin(), getProductId(),
+                        productStoreId, prodCatalogId, getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
                 this.cfgPriceWrapper = cfgPriceWrapper;
             }
             return cfgPriceWrapper;
+        }
+
+        public Map<String, Object> getCfgPriceWrapperOvrdFields() throws GeneralException {
+            // TODO: REVIEW: Promo prices generally require store and catalog, so for now we simply pass the determined
+            //  defaults for the product, even though these are not always appropriate - they are currently mainly used for sorting
+            return UtilMisc.toMap("productStoreId", getProductStoreId(), "prodCatalogId", getCatalogId());
         }
 
         public Map<String, Map<String, Object>> getStorePriceFields() throws GeneralException {
@@ -1613,7 +1630,7 @@ public class SolrDocBuilder {
                 for(Map.Entry<String, Map<String, Object>> entry : getStorePriceFields().entrySet()) {
                     GenericValue productStore = getProductStore(entry.getKey());
                     Map<String, Object> priceMap = getProductData().getProductStandardPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
-                            productStore, getStoreCurrencyUomId(productStore), getDefaultLocale(), isUseEntityCache(), entry.getValue());
+                            productStore, (String) entry.getValue().get("prodCatalogId"), getStoreCurrencyUomId(productStore), getDefaultLocale(), isUseEntityCache(), entry.getValue());
                     if (!ServiceUtil.isSuccess(priceMap)) {
                         Debug.logError("getStoreStdPriceMaps: failed to get product prices for product ["
                                 + getProduct().get("productId") + "] store [" + entry.getKey() + "]: " + ServiceUtil.getErrorMessage(priceMap), module);

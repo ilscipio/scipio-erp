@@ -194,24 +194,25 @@ public class ProductDataReader {
         return ProductWorker.getAssocCategoryIdsForProduct(ordered ? new LinkedHashSet<>() : new HashSet<>(), getDelegator(dctx), productId, null, assocToVariant, moment, ordered, useCache);
     }
 
-    public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache, Map<String, ?> ovrdFields) throws GeneralException {
+    public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String prodCatalogId, String currencyUomId, Locale priceLocale, boolean useCache, Map<String, ?> ovrdFields) throws GeneralException {
         Map<String, Object> priceContext = UtilMisc.toMap("product", product);
         priceContext.put("currencyUomId", currencyUomId);
         priceContext.put("useCache", useCache);
-        // TODO: REVIEW: Doing this here may currently bias results unwantedly toward a specific store that don't apply to other stores, so for now override using ovrdFields
-        //if (productStore != null) {
-        //    priceContext.put("productStoreId", productStore.get("productStoreId"));
-        //}
+        if (productStore != null) {
+            priceContext.put("productStoreId", productStore.get("productStoreId"));
+        }
+        if (prodCatalogId != null) {
+            priceContext.put("prodCatalogId", prodCatalogId);
+        }
         copyStdServiceFieldsNotSet(context, priceContext);
         if (ovrdFields != null) {
             priceContext.putAll(ovrdFields);
         }
-        Map<String, Object> priceMap = getDispatcher(dctx).runSync("calculateProductPrice", priceContext);
-        return priceMap;
+        return getDispatcher(dctx).runSync("calculateProductPrice", priceContext);
     }
 
-    public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws GeneralException {
-        return getProductStandardPrices(dctx, context, userLogin, product, productStore, currencyUomId, priceLocale, useCache, null);
+    public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String prodCatalogId, String currencyUomId, Locale priceLocale, boolean useCache) throws GeneralException {
+        return getProductStandardPrices(dctx, context, userLogin, product, productStore, prodCatalogId, currencyUomId, priceLocale, useCache, null);
     }
 
     public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String currencyUomId, Locale priceLocale, boolean useCache) throws GeneralException {

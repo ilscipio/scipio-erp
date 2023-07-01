@@ -278,7 +278,7 @@ public class PriceServices {
                     List<GenericValue> variantProductPrices = new LinkedList<>();
                     for (GenericValue variantAssoc: variantAssocList) {
                         String curVariantProductId = variantAssoc.getString("productIdTo");
-                        List<GenericValue> curVariantPriceList = EntityQuery.use(delegator).from("ProductPrice").where("productId", curVariantProductId).orderBy("-fromDate").cache(useCache).filterByDate(nowTimestamp).queryList();
+                        List<GenericValue> curVariantPriceList = EntityQuery.use(delegator).from("ProductPrice").where("productId", curVariantProductId,"currencyUomId", currencyDefaultUomId).orderBy("-fromDate").cache(useCache).filterByDate(nowTimestamp).queryList();
                         List<GenericValue> tempDefaultPriceList = EntityUtil.filterByAnd(curVariantPriceList, UtilMisc.toMap("productPriceTypeId", "DEFAULT_PRICE"));
                         GenericValue curDefaultPriceValue = EntityUtil.getFirst(tempDefaultPriceList);
                         if (curDefaultPriceValue != null) {

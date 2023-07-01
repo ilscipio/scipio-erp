@@ -66,8 +66,63 @@ public class StdPrice implements Serializable {
         return from(splitPrice, -1);
     }
 
+    /**
+     * Makes a new price instance from amount and currencyUomId, with explicit scaling.
+     * @param scaling A scale value for rounding amount decimals, -1 to auto-determine defaults or null for no scaling
+     */
+    public static StdPrice fromEx(BigDecimal amount, String currencyUomId, Integer scaling) throws IllegalArgumentException {
+        if (scaling != null) {
+            amount = amount.setScale(scaling >= 0 ? scaling : DEFAULT_SCALE, DEFAULT_ROUNDING);
+        }
+        return new StdPrice(amount, currencyUomId);
+    }
+
+    /**
+     * Makes a new price instance from amount and currencyUomId, with default scaling.
+     */
+    public static StdPrice fromEx(BigDecimal amount, String currencyUomId) throws IllegalArgumentException {
+        return fromEx(amount, currencyUomId, -1);
+    }
+
+    /**
+     * Splits an amount and currency price value in the form "1.23,USD" based on the Solr currency format to a price.
+     * @param splitPrice A split price string in the form "1.23,USD", or "[amount],[currencyUomId]
+     * @param scaling A scale value for rounding amount decimals, -1 for defaults (auto-determine) or null for no scaling
+     */
+    public static StdPrice fromEx(String splitPrice, Integer scaling) throws IllegalArgumentException {
+        int commaIndex = splitPrice.indexOf(',');
+        if (commaIndex < 0) {
+            throw new IllegalArgumentException("Invalid split price (missing comma): " + splitPrice);
+        }
+        BigDecimal amount = new BigDecimal(splitPrice.substring(0, commaIndex));
+        if (scaling != null) {
+            amount = amount.setScale(scaling >= 0 ? scaling : DEFAULT_SCALE, DEFAULT_ROUNDING);
+        }
+        return new StdPrice(amount, splitPrice.substring(commaIndex + 1));
+    }
+
+    /**
+     * Splits an amount and currency price value in the form "1.23,USD" based on the Solr currency format to a price.
+     * @param splitPrice A split price string in the form "1.23,USD", or "[amount],[currencyUomId]
+     */
+    public static StdPrice fromEx(String splitPrice) throws IllegalArgumentException {
+        return fromEx(splitPrice, -1);
+    }
+
     public BigDecimal getAmount() {
         return amount;
+    }
+
+    public Double getDoubleAmount() {
+        return (amount != null) ? amount.doubleValue() : null;
+    }
+
+    public Float getFloatAmount() {
+        return (amount != null) ? amount.floatValue() : null;
+    }
+
+    public String getStringAmount() {
+        return (amount != null) ? amount.toPlainString() : null;
     }
 
     public String getCurrencyUomId() {

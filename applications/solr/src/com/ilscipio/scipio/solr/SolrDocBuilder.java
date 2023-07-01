@@ -179,6 +179,11 @@ public class SolrDocBuilder {
         return SolrProductUtil.getConfiguredDefaultCurrency(getDelegator(), productStore);
     }
 
+    public Locale getBuilderLocale() {
+        Locale locale = (Locale) getContext().get("locale");
+        return (locale != null) ? locale : Locale.getDefault();
+    }
+
     protected BigDecimal scaleCurrency(Object amount) {
         if (amount == null) {
             return null;
@@ -1568,7 +1573,7 @@ public class SolrDocBuilder {
                 String prodCatalogId = getCatalogId();
                 Map<String, Object> ovrdFields = addStoreStdPriceMapOvrdFields(new HashMap<>(getStdPriceMapOvrdFields()), getProductStoreId(), prodCatalogId, true);
                 stdPriceMap = getProductData().getProductStandardPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
-                        productStore, prodCatalogId, getCurrencyUomId(), getDefaultLocale(), isUseEntityCache(), ovrdFields);
+                        productStore, prodCatalogId, getCurrencyUomId(), getBuilderLocale(), isUseEntityCache(), ovrdFields);
                 if (!ServiceUtil.isSuccess(stdPriceMap)) {
                     Debug.logError("getProductStandardPrices: failed to get product prices for product '"
                             + getProduct().get("productId") + "': " + ServiceUtil.getErrorMessage(stdPriceMap), module);
@@ -1604,7 +1609,7 @@ public class SolrDocBuilder {
                     prodCatalogId = (String) ovrdFields.get("prodCatalogId");
                 }
                 cfgPriceWrapper = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(), getUserLogin(), getProductId(),
-                        productStoreId, prodCatalogId, getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
+                        productStoreId, prodCatalogId, getCurrencyUomId(), getBuilderLocale(), isUseEntityCache());
                 this.cfgPriceWrapper = cfgPriceWrapper;
             }
             return cfgPriceWrapper;
@@ -1652,7 +1657,7 @@ public class SolrDocBuilder {
                     GenericValue productStore = getProductStore(productStoreId);
                     Map<String, Object> ovrdFields = addStoreStdPriceMapOvrdFields(new HashMap<>(), productStoreId, prodCatalogId, false);
                     Map<String, Object> priceMap = getProductData().getProductStandardPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
-                            productStore, prodCatalogId, getStoreCurrencyUomId(productStore), getDefaultLocale(), isUseEntityCache(), ovrdFields);
+                            productStore, prodCatalogId, getStoreCurrencyUomId(productStore), getBuilderLocale(), isUseEntityCache(), ovrdFields);
                     if (!ServiceUtil.isSuccess(priceMap)) {
                         Debug.logError("getStoreStdPriceMaps: failed to get product prices for product ["
                                 + getProduct().get("productId") + "] store [" + entry.getKey() + "]: " + ServiceUtil.getErrorMessage(priceMap), module);
@@ -1676,7 +1681,7 @@ public class SolrDocBuilder {
                     Map<String, Object> ovrdFields = addStoreCfgPriceWrapperOvrdFields(new HashMap<>(), productStoreId, prodCatalogId, false);
                     ProductConfigWrapper pcw = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(),
                             getUserLogin(), getProductId(), productStoreId, prodCatalogId, getStoreCurrencyUomId(productStoreId),
-                            getDefaultLocale(), isUseEntityCache());
+                            getBuilderLocale(), isUseEntityCache());
                     if (pcw == null) {
                         Debug.logError("getStoreCfgPriceWrappers: failed to get configurable prices for product ["
                                 + getProduct().get("productId") + "] store [" + entry.getKey() + "]", module);

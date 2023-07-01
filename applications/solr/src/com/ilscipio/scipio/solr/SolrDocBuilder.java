@@ -1007,10 +1007,24 @@ public class SolrDocBuilder {
             }
         }
 
+        protected void setMainPriceField(Map<String, Object> doc, String baseName, String fieldGroup, Object value) {
+            String fieldName = getMainPriceFieldName(baseName, fieldGroup);
+            if (fieldName != null) {
+                doc.put(fieldName, value);
+            }
+        }
+
         protected void setFloatPriceField(Map<String, Object> doc, String baseName, String fieldGroup, BigDecimal value, String currencyUomId) {
             String fieldName = getFloatPriceFieldName(baseName, fieldGroup);
             if (fieldName != null) {
                 doc.put(fieldName, value.toString());
+            }
+        }
+
+        protected void setFloatPriceField(Map<String, Object> doc, String baseName, String fieldGroup, Object value) {
+            String fieldName = getFloatPriceFieldName(baseName, fieldGroup);
+            if (fieldName != null) {
+                doc.put(fieldName, value instanceof String ? value : value.toString());
             }
         }
 

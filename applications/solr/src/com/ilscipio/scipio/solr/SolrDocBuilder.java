@@ -1557,11 +1557,18 @@ public class SolrDocBuilder {
             return getDefaultCurrency(productStore);
         }
 
+        protected boolean isGetMinimumVariantPrice() {
+            return true;
+        }
+
         public Map<String, Object> getStdPriceMap() throws GeneralException {
             Map<String, Object> stdPriceMap = this.stdPriceMap;
             if (stdPriceMap == null && !isConfigurableProduct()) {
+                GenericValue productStore = getProductStore();
+                String prodCatalogId = getCatalogId();
+                Map<String, Object> ovrdFields = addStoreStdPriceMapOvrdFields(new HashMap<>(getStdPriceMapOvrdFields()), getProductStoreId(), prodCatalogId, true);
                 stdPriceMap = getProductData().getProductStandardPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
-                        getProductStore(), getCatalogId(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache(), getStdPriceMapOvrdFields());
+                        productStore, prodCatalogId, getCurrencyUomId(), getDefaultLocale(), isUseEntityCache(), ovrdFields);
                 if (!ServiceUtil.isSuccess(stdPriceMap)) {
                     Debug.logError("getProductStandardPrices: failed to get product prices for product '"
                             + getProduct().get("productId") + "': " + ServiceUtil.getErrorMessage(stdPriceMap), module);
@@ -1571,25 +1578,30 @@ public class SolrDocBuilder {
             return stdPriceMap;
         }
 
+        /**
+         * @deprecated SCIPIO: 3.0.0: Only applies to default store
+         */
+        @Deprecated
         public Map<String, Object> getStdPriceMapOvrdFields() throws GeneralException {
-            // TODO: REVIEW: Promo prices generally require store and catalog, so for now we simply pass the determined
-            //  defaults for the product, even though these are not always appropriate - they are currently mainly used for sorting
-            return UtilMisc.toMap("productStoreId", getProductStoreId(), "prodCatalogId", getCatalogId());
+            return Map.of();
+        }
+
+        protected Map<String, Object> addStoreStdPriceMapOvrdFields(Map<String, Object> context, String productStoreId, String prodCatalogId, boolean rootStore) throws GeneralException {
+            context.put("getMinimumVariantPrice", isGetMinimumVariantPrice());
+            return context;
         }
 
         public ProductConfigWrapper getCfgPriceWrapper() throws GeneralException {
             ProductConfigWrapper cfgPriceWrapper = this.cfgPriceWrapper;
             if (cfgPriceWrapper == null && isConfigurableProduct()) {
-                //cfgPriceWrapper = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
-                //        getProductStore(), getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
-                Map<String, Object> ovrdFields = getCfgPriceWrapperOvrdFields();
-                String productStoreId = (ovrdFields != null) ? (String) ovrdFields.get("productStoreId") : null;
-                if (productStoreId == null) {
-                    productStoreId = getProductStoreId();
+                String productStoreId = getProductStoreId();
+                String prodCatalogId = getCatalogId();
+                Map<String, Object> ovrdFields = addStoreCfgPriceWrapperOvrdFields(new HashMap<>(getCfgPriceWrapperOvrdFields()), productStoreId, prodCatalogId, true);
+                if (ovrdFields.get("productStoreId") != null) { // NOTE: Deprecated/unnecessary most of the time
+                    productStoreId = (String) ovrdFields.get("productStoreId");
                 }
-                String prodCatalogId = (ovrdFields != null) ? (String) ovrdFields.get("prodCatalogId") : null;
-                if (prodCatalogId == null) {
-                    prodCatalogId = getCatalogId();
+                if (ovrdFields.get("prodCatalogId") != null) { // NOTE: Deprecated/unnecessary most of the time
+                    prodCatalogId = (String) ovrdFields.get("prodCatalogId");
                 }
                 cfgPriceWrapper = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(), getUserLogin(), getProductId(),
                         productStoreId, prodCatalogId, getCurrencyUomId(), getDefaultLocale(), isUseEntityCache());
@@ -1598,10 +1610,17 @@ public class SolrDocBuilder {
             return cfgPriceWrapper;
         }
 
+        /**
+         * @deprecated SCIPIO: 3.0.0: Only applies to default store
+         */
+        @Deprecated
         public Map<String, Object> getCfgPriceWrapperOvrdFields() throws GeneralException {
-            // TODO: REVIEW: Promo prices generally require store and catalog, so for now we simply pass the determined
-            //  defaults for the product, even though these are not always appropriate - they are currently mainly used for sorting
-            return UtilMisc.toMap("productStoreId", getProductStoreId(), "prodCatalogId", getCatalogId());
+            return Map.of();
+        }
+
+        protected Map<String, Object> addStoreCfgPriceWrapperOvrdFields(Map<String, Object> context, String productStoreId, String prodCatalogId, boolean rootStore) throws GeneralException {
+            context.put("getMinimumVariantPrice", isGetMinimumVariantPrice()); // NOTE: currently ignored; for future use
+            return context;
         }
 
         public Map<String, Map<String, Object>> getStorePriceFields() throws GeneralException {
@@ -1628,9 +1647,12 @@ public class SolrDocBuilder {
             if (storeStdPriceMaps == null && !isConfigurableProduct()) {
                 storeStdPriceMaps = new LinkedHashMap<>();
                 for(Map.Entry<String, Map<String, Object>> entry : getStorePriceFields().entrySet()) {
-                    GenericValue productStore = getProductStore(entry.getKey());
+                    String productStoreId = entry.getKey();
+                    String prodCatalogId = (String) entry.getValue().get("prodCatalogId");
+                    GenericValue productStore = getProductStore(productStoreId);
+                    Map<String, Object> ovrdFields = addStoreStdPriceMapOvrdFields(new HashMap<>(), productStoreId, prodCatalogId, false);
                     Map<String, Object> priceMap = getProductData().getProductStandardPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
-                            productStore, (String) entry.getValue().get("prodCatalogId"), getStoreCurrencyUomId(productStore), getDefaultLocale(), isUseEntityCache(), entry.getValue());
+                            productStore, prodCatalogId, getStoreCurrencyUomId(productStore), getDefaultLocale(), isUseEntityCache(), ovrdFields);
                     if (!ServiceUtil.isSuccess(priceMap)) {
                         Debug.logError("getStoreStdPriceMaps: failed to get product prices for product ["
                                 + getProduct().get("productId") + "] store [" + entry.getKey() + "]: " + ServiceUtil.getErrorMessage(priceMap), module);
@@ -1648,9 +1670,12 @@ public class SolrDocBuilder {
             if (storeCfgPriceWrappers == null && isConfigurableProduct()) {
                 storeCfgPriceWrappers = new LinkedHashMap<>();
                 for(Map.Entry<String, Map<String, Object>> entry : getStorePriceFields().entrySet()) {
+                    String productStoreId = entry.getKey();
+                    String prodCatalogId = (String) entry.getValue().get("prodCatalogId");
+                    //GenericValue productStore = getProductStore(productStoreId);
+                    Map<String, Object> ovrdFields = addStoreCfgPriceWrapperOvrdFields(new HashMap<>(), productStoreId, prodCatalogId, false);
                     ProductConfigWrapper pcw = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(),
-                            getUserLogin(), getProductId(), (String) entry.getValue().get("productStoreId"),
-                            (String) entry.getValue().get("prodCatalogId"), getStoreCurrencyUomId((String) entry.getValue().get("productStoreId")),
+                            getUserLogin(), getProductId(), productStoreId, prodCatalogId, getStoreCurrencyUomId(productStoreId),
                             getDefaultLocale(), isUseEntityCache());
                     if (pcw == null) {
                         Debug.logError("getStoreCfgPriceWrappers: failed to get configurable prices for product ["

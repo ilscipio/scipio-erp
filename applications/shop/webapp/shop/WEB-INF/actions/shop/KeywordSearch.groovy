@@ -407,7 +407,7 @@ try {
         
         ResultSortOrder sortOrder = kwsParams.getResultSortOrder();
         if (!kwsArgs.sortBy && sortOrder != null) {
-            kwsArgs.sortBy = SolrProductUtil.getSearchSortByExpr(sortOrder, kwsArgs.priceSortField, productStore, delegator, locale)
+            kwsArgs.sortBy = SolrProductUtil.getSearchSortByExpr(sortOrder, kwsArgs.priceSortField, productStore, delegator, locale, userSearchCfg)
             kwsArgs.sortByReverse = (kwsArgs.sortBy) ? !sortOrder.isAscending() : null;
             kwsArgs.searchSortOrderString = (kwsArgs.sortBy || sortOrder instanceof SortKeywordRelevancy) ? sortOrder.prettyPrintSortOrder(false, locale) : null;
         }

@@ -83,13 +83,23 @@ code package.
         </view-link>
     </view-entity>
 
-    <view-entity entity-name="ProductStoreGroupRollupAndChild" package-name="org.ofbiz.product.store" title="ProductStoreGroupRollup And ProductStoreGroup View Entiry">
+    <view-entity entity-name="ProductStoreGroupRollupAndChild" package-name="org.ofbiz.product.store" title="ProductStoreGroupRollup And ProductStoreGroup View Entity">
         <member-entity entity-alias="PSGR" entity-name="ProductStoreGroupRollup"/>
         <member-entity entity-alias="PSG" entity-name="ProductStoreGroup"/>
         <alias-all entity-alias="PSG"/>
         <alias-all entity-alias="PSGR"/>
         <view-link entity-alias="PSG" rel-entity-alias="PSGR">
             <key-map field-name="productStoreGroupId"/>
+        </view-link>
+    </view-entity>
+
+    <view-entity entity-name="ProductStoreAndCatalogAssoc" package-name="org.ofbiz.product.store" title="ProductStore and ProductStoreCatalog View Entity">
+        <member-entity entity-alias="PS" entity-name="ProductStore"/>
+        <member-entity entity-alias="PSC" entity-name="ProductStoreCatalog"/>
+        <alias-all entity-alias="PS"/>
+        <alias-all entity-alias="PSC"/>
+        <view-link entity-alias="PS" rel-entity-alias="PSC">
+            <key-map field-name="productStoreId"/>
         </view-link>
     </view-entity>
 </entitymodel>

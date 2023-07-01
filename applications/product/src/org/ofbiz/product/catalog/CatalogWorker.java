@@ -99,10 +99,14 @@ public final class CatalogWorker {
     }
 
     public static List<GenericValue> getStoreCatalogs(Delegator delegator, String productStoreId) {
+        return getStoreCatalogs(delegator, productStoreId, true);
+    }
+
+    public static List<GenericValue> getStoreCatalogs(Delegator delegator, String productStoreId, boolean useCache) { // SCIPIO: 2.1.0: useCache overload
         try {
-            return EntityQuery.use(delegator).from("ProductStoreCatalog").where("productStoreId", productStoreId).orderBy("sequenceNum", "prodCatalogId").cache(true).filterByDate().queryList();
+            return EntityQuery.use(delegator).from("ProductStoreCatalog").where("productStoreId", productStoreId).orderBy("sequenceNum", "prodCatalogId").cache(useCache).filterByDate().queryList();
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up store catalogs for store with id " + productStoreId, module);
+            Debug.logError(e, "Error looking up store catalogs for store [" + productStoreId + "]", module);
         }
         return null;
     }
@@ -568,6 +572,16 @@ public final class CatalogWorker {
                     .filterByDate(moment).orderBy(ordered ? UtilMisc.toList("sequenceNum") : null).cache(useCache).queryList();
         } catch(Exception e) {
             Debug.logError(e, "Error looking up ProductStoreCatalog for catalogId: " + catalogId, module);
+            return Collections.emptyList();
+        }
+    }
+
+    public static List<GenericValue> getProductStoreAndCatalogAssocForCatalogId(Delegator delegator, String catalogId, Timestamp moment, boolean ordered, boolean useCache) {
+        try {
+            return EntityQuery.use(delegator).from("ProductStoreAndCatalogAssoc").where("prodCatalogId", catalogId)
+                    .filterByDate(moment).orderBy(ordered ? UtilMisc.toList("defaultPriority", "sequenceNum") : null).cache(useCache).queryList();
+        } catch(Exception e) {
+            Debug.logError(e, "Error looking up ProductStoreCatalogAndStore for catalogId: " + catalogId, module);
             return Collections.emptyList();
         }
     }

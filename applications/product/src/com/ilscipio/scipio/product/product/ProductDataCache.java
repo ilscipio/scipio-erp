@@ -312,6 +312,7 @@ public class ProductDataCache extends ProductDataReader {
         protected final String prodCatalogId;
         protected GenericValue prodCatalog;
         protected List<GenericValue> productStoreCatalogs;
+        protected List<GenericValue> productStoreCatalogAndStores;
 
         public CatalogData(String prodCatalogId) {
             this.prodCatalogId = prodCatalogId;
@@ -333,6 +334,23 @@ public class ProductDataCache extends ProductDataReader {
 
     protected List<GenericValue> getProductStoreCatalogsForCatalogIdSrc(DispatchContext dctx, String catalogId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
         return super.getProductStoreCatalogsForCatalogId(dctx, catalogId, moment, ordered, useCache);
+    }
+
+    @Override
+    public List<GenericValue> getProductStoreAndCatalogAssocForCatalogId(DispatchContext dctx, String catalogId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        CatalogData data = getCatalogData(catalogId);
+        if (data.productStoreCatalogAndStores != null) {
+            return data.productStoreCatalogAndStores;
+        }
+        ordered = true; // force for caching correctness purposes
+        List<GenericValue> productStoreCatalogAndStores = getProductStoreAndCatalogAssocForCatalogIdSrc(dctx, catalogId, moment, ordered, useCache);
+        data.productStoreCatalogAndStores = Collections.unmodifiableList(productStoreCatalogAndStores);
+        updateCache(catalogCache, catalogId, data, maxCacheCatalogs);
+        return productStoreCatalogAndStores;
+    }
+
+    protected List<GenericValue> getProductStoreAndCatalogAssocForCatalogIdSrc(DispatchContext dctx, String catalogId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        return super.getProductStoreAndCatalogAssocForCatalogId(dctx, catalogId, moment, ordered, useCache);
     }
 
     @Override

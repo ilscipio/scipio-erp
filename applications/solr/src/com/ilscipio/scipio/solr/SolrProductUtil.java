@@ -112,6 +112,7 @@ public abstract class SolrProductUtil {
 
     private static final String configuredFallbackDefaultCurrency = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.content.currency.default.fallback", null);
     private static final String configuredForceDefaultCurrency = UtilProperties.getPropertyValue(SolrUtil.solrConfigName, "solr.content.currency.default.force", null);
+    private static final boolean storePriceSortDefault = UtilProperties.getPropertyAsBoolean(SolrUtil.solrConfigName, "solr.search.storePriceSort", true);
 
     public static String getConfiguredDefaultCurrency(Delegator delegator, GenericValue productStore) {
         if (configuredForceDefaultCurrency != null) return configuredForceDefaultCurrency;
@@ -461,14 +462,33 @@ public abstract class SolrProductUtil {
             return "inStock:[1 TO *]";
         }
     }
-    
+
+    @Deprecated
     public static String getSearchSortByExpr(ProductSearch.ResultSortOrder sortOrder, String priceSortField, GenericValue productStore, Delegator delegator, Locale locale) {
+        return getSearchSortByExpr(sortOrder, priceSortField, productStore, delegator, locale, null);
+    }
+
+    public static String getSearchSortByExpr(ProductSearch.ResultSortOrder sortOrder, String priceSortField, GenericValue productStore, Delegator delegator, Locale locale, Map<String, Object> config) {
         String sortBy = null;
         if (sortOrder instanceof ProductSearch.SortProductPrice) {
             ProductSearch.SortProductPrice so = (ProductSearch.SortProductPrice) sortOrder;
             sortBy = SolrProductUtil.getProductSolrPriceFieldNameFromEntityPriceType(so.getProductPriceTypeId(), 
                 locale, "Keyword search: ");
-            if (!"defaultPrice".equals(sortBy)) {
+            if ("defaultPrice".equals(sortBy)) {
+                if (isStorePriceSort(productStore, config)) {
+                    String normStoreId = SolrExprUtil.escapeFieldNamePart(productStore.getString("productStoreId"));
+                    sortBy = sortBy + "_" + normStoreId + "_pf";
+                }
+            } else {
+                String mainPriceField = sortBy;
+                String fallbackPriceField = "defaultPrice";
+                // FIXME: Store-specific schema type support to be checked here
+                //if (isStorePriceSort(productStore, config) && !SolrUtil.isStoreSchemaType(productStore)) {
+                if (isStorePriceSort(productStore, config)) {
+                    String normStoreId = SolrExprUtil.escapeFieldNamePart(productStore.getString("productStoreId"));
+                    mainPriceField = mainPriceField + "_" + normStoreId + "_pf";
+                    fallbackPriceField = fallbackPriceField + "_" + normStoreId + "_pf";
+                }
                 // SPECIAL price search fallback - allows listPrice search to still work reasonably for products that don't have listPrice
                 // TODO?: REVIEW: query would be faster without function, but unclear if want to create
                 // a physical sortPrice or sortListPrice in the solr product schema
@@ -477,11 +497,11 @@ public abstract class SolrProductUtil {
                 //    ",sortPrice=if(exists(" + kwsArgs.sortBy + ")," + kwsArgs.sortBy + ",defaultPrice)";
                 //kwsArgs.sortBy = "sortPrice";
                 if ("min".equals(priceSortField)) {
-                    sortBy = "if(exists(" + sortBy + "),min(" + sortBy + "," + "defaultPrice),defaultPrice)";
+                    sortBy = "if(exists(" + mainPriceField + "),min(" + mainPriceField + "," + fallbackPriceField + ")," + fallbackPriceField + ")";
                 } else if ("exists".equals(priceSortField)) {
-                    sortBy = "if(exists(" + sortBy + ")," + sortBy + ",defaultPrice)";
+                    sortBy = "if(exists(" + mainPriceField + ")," + mainPriceField + "," + fallbackPriceField + ")";
                 } else { // if ("exact".equals(priceSortField)) {
-                    //sortBy = sortBy; // redundant
+                    sortBy = mainPriceField;
                 }
             }
         //} else if (sortOrder instanceof ProductSearch.SortProductFeature) {
@@ -514,5 +534,18 @@ public abstract class SolrProductUtil {
             }
         }
         return sortBy;
+    }
+
+    public static boolean isStorePriceSort(GenericValue productStore, Map<String, Object> config) {
+        if (productStore == null) {
+            return false;
+        }
+        if (config != null) {
+            Boolean enabled = UtilMisc.booleanValueVersatile(config.get("storePriceSort"));
+            if (enabled != null) {
+                return enabled;
+            }
+        }
+        return storePriceSortDefault;
     }
 }

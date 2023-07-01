@@ -115,6 +115,7 @@ try {
         else if (sortOrder && !sortOrder.startsWith("Sort")) sortOrder = "Sort" + sortOrder;
         sortAscending = resultSortOrder.isAscending();
 
+        // FIXME: pass userSearchCfg here
         sortByExpr = SolrProductUtil.getSearchSortByExpr(resultSortOrder, catArgs.priceSortField, productStore, delegator, locale);
         if (sortByExpr) {
             sortByExpr += resultSortOrder.isAscending() ? " asc" : " desc";

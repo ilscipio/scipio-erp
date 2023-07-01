@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -178,8 +179,12 @@ public class SolrDocBuilder {
         return SolrProductUtil.getConfiguredDefaultCurrency(getDelegator(), productStore);
     }
 
-    protected BigDecimal scaleCurrency(BigDecimal amount) {
-        return (amount != null) ? amount.setScale(2, RoundingMode.HALF_UP) : null;
+    protected BigDecimal scaleCurrency(Object amount) {
+        if (amount == null) {
+            return null;
+        }
+        BigDecimal bdamount = (amount instanceof BigDecimal) ? (BigDecimal) amount : new BigDecimal(amount.toString());
+        return bdamount.setScale(2, RoundingMode.HALF_UP);
     }
 
     protected void addLocalizedContentStringMapToDoc(Map<String, Object> doc, String keyPrefix, String defaultKey, Map<String, String> contentMap,
@@ -796,6 +801,7 @@ public class SolrDocBuilder {
 
         protected Set<String> catalogIds;
         protected List<GenericValue> productStores;
+        protected Map<String, GenericValue> productStoreAndCatalogAssoc;
         protected Set<String> productStoreIds;
         protected GenericValue productStore;
         protected boolean productStoreChecked = false;
@@ -815,6 +821,9 @@ public class SolrDocBuilder {
         protected String currencyUomId;
         protected Map<String, Object> stdPriceMap;
         protected ProductConfigWrapper cfgPriceWrapper;
+        protected Map<String, Map<String, Object>> storeStdPriceMaps;
+        protected Map<String, ProductConfigWrapper> storeCfgPriceWrappers;
+        protected Map<String, Map<String, Object>> storePriceFields;
 
         protected Boolean useVariantStockCalcForTotal;
         protected Map<String, BigDecimal> productStoreInventories;
@@ -930,48 +939,76 @@ public class SolrDocBuilder {
         }
 
         public void populateDocPriceStandard(Map<String, Object> doc) throws GeneralException {
-            Map<String, Object> priceMap = getStdPriceMap();
+            populateDocPriceStandardField(doc, getStdPriceMap(), getCurrencyUomId(), "");
+            for(Map.Entry<String, Map<String, Object>> entry : getStoreStdPriceMaps().entrySet()) {
+                populateDocPriceStandardField(doc, entry.getValue(), getStoreCurrencyUomId(entry.getKey()), entry.getKey());
+            }
+        }
 
-            BigDecimal defaultPrice = scaleCurrency((BigDecimal) priceMap.get("defaultPrice"));
+        protected void populateDocPriceStandardField(Map<String, Object> doc, Map<String, Object> priceMap,
+                                                     String currencyUomId, String fieldGroup) throws GeneralException {
+            String fieldSep = UtilValidate.isNotEmpty(fieldGroup) ? "_" + fieldGroup : "";
+
+            BigDecimal defaultPrice = scaleCurrency(priceMap.get("defaultPrice"));
             if (defaultPrice != null) {
-                doc.put("defaultPrice_c", defaultPrice + "," + getCurrencyUomId());
-                doc.put("defaultPrice", defaultPrice.toString()); // Legacy field
+                doc.put("defaultPrice" + fieldSep + "_c", defaultPrice + "," + currencyUomId);
+                if (!fieldSep.isEmpty()) {
+                    doc.put("defaultPrice" + fieldSep + "_pf", defaultPrice.toString()); // Legacy field
+                } else {
+                    doc.put("defaultPrice", defaultPrice.toString()); // Legacy field
+                }
             }
 
-            BigDecimal listPrice = scaleCurrency((BigDecimal) priceMap.get("listPrice"));
+            BigDecimal listPrice = scaleCurrency(priceMap.get("listPrice"));
             if (listPrice != null) {
-                doc.put("listPrice_c", listPrice + "," + getCurrencyUomId());
-                doc.put("listPrice", listPrice.toString()); // Legacy field
+                doc.put("listPrice" + fieldSep + "_c", listPrice + "," + currencyUomId);
+                if (!fieldSep.isEmpty()) {
+                    doc.put("listPrice" + fieldSep + "_pf", listPrice.toString()); // Legacy field
+                } else {
+                    doc.put("listPrice", defaultPrice.toString()); // Legacy field
+                }
             }
 
-            BigDecimal promoPrice = scaleCurrency((BigDecimal) priceMap.get("promoPrice"));
+            BigDecimal promoPrice = scaleCurrency(priceMap.get("promoPrice"));
             if (promoPrice != null) {
-                doc.put("promoPrice_c", promoPrice + "," + getCurrencyUomId());
+                doc.put("promoPrice" + fieldSep + "_c", promoPrice + "," + currencyUomId);
             }
 
-            BigDecimal competitivePrice = scaleCurrency((BigDecimal) priceMap.get("promoPrice"));
+            BigDecimal competitivePrice = scaleCurrency(priceMap.get("promoPrice"));
             if (competitivePrice != null) {
-                doc.put("competitivePrice_c", competitivePrice + "," + getCurrencyUomId());
+                doc.put("competitivePrice" + fieldSep + "_c", competitivePrice + "," + currencyUomId);
             }
 
-            BigDecimal basePrice = scaleCurrency((BigDecimal) priceMap.get("basePrice"));
+            BigDecimal basePrice = scaleCurrency(priceMap.get("basePrice"));
             if (promoPrice != null) {
-                doc.put("basePrice_c", basePrice + "," + getCurrencyUomId());
+                doc.put("basePrice" + fieldSep + "_c", basePrice + "," + currencyUomId);
             }
 
-            BigDecimal price = scaleCurrency((BigDecimal) priceMap.get("price"));
+            BigDecimal price = scaleCurrency(priceMap.get("price"));
             if (price != null) {
-                doc.put("price_c", price + "," + getCurrencyUomId());
+                doc.put("price" + fieldSep + "_c", price + "," + currencyUomId);
             }
         }
 
         public void populateDocPriceConfigurable(Map<String, Object> doc) throws GeneralException {
-            ProductConfigWrapper pcw = getCfgPriceWrapper();
+            populateDocPriceConfigurableField(doc, getCfgPriceWrapper(), getCurrencyUomId(), "");
+            for(Map.Entry<String, ProductConfigWrapper> entry : getStoreCfgPriceWrappers().entrySet()) {
+                populateDocPriceConfigurableField(doc, entry.getValue(), getStoreCurrencyUomId(entry.getKey()), entry.getKey());
+            }
+        }
+
+        protected void populateDocPriceConfigurableField(Map<String, Object> doc, ProductConfigWrapper pcw,
+                                                         String currencyUomId, String fieldGroup) throws GeneralException {
+            String fieldSep = UtilValidate.isNotEmpty(fieldGroup) ? "_" + fieldGroup : "";
 
             BigDecimal defaultPrice = scaleCurrency(pcw.getTotalPrice());
             if (defaultPrice != null) {
-                doc.put("defaultPrice_c", defaultPrice + "," + getCurrencyUomId());
-                doc.put("defaultPrice", defaultPrice.toString()); // Legacy field
+                doc.put("defaultPrice" + fieldSep + "_c", defaultPrice + "," + currencyUomId);
+                if (!fieldSep.isEmpty()) {
+                    doc.put("defaultPrice" + fieldSep + "_pf", defaultPrice.toString()); // Legacy field
+                } else {
+                    doc.put("defaultPrice", defaultPrice.toString()); // Legacy field
+                }
             }
 
             BigDecimal listPrice = scaleCurrency(pcw.getTotalListPrice());
@@ -979,8 +1016,12 @@ public class SolrDocBuilder {
             // this creates 0$ list prices we can't validate in queries; this logic requires an extra check + ofbiz patch
             //if (listPrice != null) {
             if (listPrice != null && ((listPrice.compareTo(BigDecimal.ZERO) != 0) || pcw.hasOriginalListPrice())) {
-                doc.put("listPrice_c", listPrice + "," + getCurrencyUomId());
-                doc.put("listPrice", listPrice.toString()); // Legacy field
+                doc.put("listPrice" + fieldSep + "_c", listPrice + "," + currencyUomId);
+                if (!fieldSep.isEmpty()) {
+                    doc.put("listPrice" + fieldSep + "_pf", listPrice.toString()); // Legacy field
+                } else {
+                    doc.put("listPrice", listPrice.toString()); // Legacy field
+                }
             }
         }
 
@@ -1275,16 +1316,39 @@ public class SolrDocBuilder {
         public List<GenericValue> getProductStores() throws GeneralException {
             List<GenericValue> productStores = this.productStores;
             if (productStores == null) {
-                Collection<String> catalogs = getCatalogIds();
-                if (!catalogs.isEmpty()) {
-                    productStores = EntityUtil.orderBy(getProductData().getProductStoresForCatalogIds(getDctx(), catalogs, getMoment(), true, isUseEntityCache()),
-                            UtilMisc.toList("defaultPriority"));
-                } else {
-                    productStores = Collections.emptyList();
+                Map<String, GenericValue> productStoreAndCatalogAssocMap = getProductStoreAndCatalogAssoc();
+                productStores = new ArrayList<>(productStoreAndCatalogAssocMap.size());
+                Set<String> storeIds = new HashSet<>();
+                for (GenericValue storeAndAssoc : productStoreAndCatalogAssocMap.values()) {
+                    String storeId = storeAndAssoc.getString("productStoreId");
+                    if (!storeIds.contains(storeId)) {
+                        GenericValue productStore = getProductData().getProductStore(getDctx(), storeId, isUseEntityCache());
+                        productStores.add(productStore);
+                        //productStores.add(storeAndAssoc);
+                        storeIds.add(storeId);
+                    }
                 }
                 this.productStores = productStores;
             }
             return productStores;
+        }
+
+        public Map<String, GenericValue> getProductStoreAndCatalogAssoc() throws GeneralException {
+            Map<String, GenericValue> productStoreAndCatalogAssoc = this.productStoreAndCatalogAssoc;
+            if (productStoreAndCatalogAssoc == null) {
+                Collection<String> catalogs = getCatalogIds();
+                if (!catalogs.isEmpty()) {
+                    productStoreAndCatalogAssoc = new LinkedHashMap<>();
+                    for (GenericValue psca : getProductData().getProductStoreAndCatalogAssocForCatalogIds(getDctx(),
+                            catalogs, getMoment(), true, isUseEntityCache())) {
+                        productStoreAndCatalogAssoc.put(psca.getString("productStoreId"), psca);
+                    }
+                } else {
+                    productStoreAndCatalogAssoc = Collections.emptyMap();
+                }
+                this.productStoreAndCatalogAssoc = UtilGenerics.cast(productStoreAndCatalogAssoc);
+            }
+            return productStoreAndCatalogAssoc;
         }
 
         public Collection<String> getProductStoreIds() throws GeneralException {
@@ -1313,10 +1377,14 @@ public class SolrDocBuilder {
             return (productStore != null) ? productStore.getString("productStoreId") : null;
         }
 
-        public GenericValue getProductStore(List<GenericValue> productStores) {
+        public GenericValue getProductStore(List<GenericValue> productStores) throws GeneralException {
             return ProductStoreWorker.getContentReferenceStoreOrFirst(productStores,
                     (SolrLocaleUtil.getConfiguredForceDefaultLocale(getDelegator()) == null || SolrProductUtil.getConfiguredForceDefaultCurrency(getDelegator()) == null)
                             ? ("product '" + getProductId() + "'") : null);
+        }
+
+        public GenericValue getProductStore(String productStoreId) throws GeneralException {
+            return getProductStoreAndCatalogAssoc().get(productStoreId);
         }
 
         public Collection<String> getOwnCategoryTrails() throws GeneralException {
@@ -1407,6 +1475,14 @@ public class SolrDocBuilder {
             return currencyUomId;
         }
 
+        public String getStoreCurrencyUomId(String productStoreId) throws GeneralException {
+            return getStoreCurrencyUomId(getProductStore(productStoreId));
+        }
+
+        public String getStoreCurrencyUomId(GenericValue productStore) throws GeneralException {
+            return getDefaultCurrency(productStore);
+        }
+
         public Map<String, Object> getStdPriceMap() throws GeneralException {
             Map<String, Object> stdPriceMap = this.stdPriceMap;
             if (stdPriceMap == null && !isConfigurableProduct()) {
@@ -1435,6 +1511,66 @@ public class SolrDocBuilder {
                 this.cfgPriceWrapper = cfgPriceWrapper;
             }
             return cfgPriceWrapper;
+        }
+
+        public Map<String, Map<String, Object>> getStorePriceFields() throws GeneralException {
+            Map<String, Map<String, Object>> storePriceFields = this.storePriceFields;
+            if (storePriceFields == null) {
+                storePriceFields = new LinkedHashMap<>();
+                Set<String> storeIds = new HashSet<>();
+                // FIXME: This collects the first prodCatalogId for each store, meaning highest ProductStoreCatalog.sequenceNum
+                //  Ideally this should do one for all prodCatalogId, but most parameters are by productStoreId
+                for(GenericValue psc : getProductStoreAndCatalogAssoc().values()) {
+                    String productStoreId = psc.getString("productStoreId");
+                    if (!storeIds.contains(productStoreId)) {
+                        storePriceFields.put(productStoreId, UtilMisc.toMap("productStoreId", productStoreId, "prodCatalogId", psc.get("prodCatalogId")));
+                        storeIds.add(productStoreId);
+                    }
+                }
+                this.storePriceFields = storePriceFields;
+            }
+            return storePriceFields;
+        }
+
+        public Map<String, Map<String, Object>> getStoreStdPriceMaps() throws GeneralException {
+            Map<String, Map<String, Object>> storeStdPriceMaps = this.storeStdPriceMaps;
+            if (storeStdPriceMaps == null && !isConfigurableProduct()) {
+                storeStdPriceMaps = new LinkedHashMap<>();
+                for(Map.Entry<String, Map<String, Object>> entry : getStorePriceFields().entrySet()) {
+                    GenericValue productStore = getProductStore(entry.getKey());
+                    Map<String, Object> priceMap = getProductData().getProductStandardPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
+                            productStore, getStoreCurrencyUomId(productStore), getDefaultLocale(), isUseEntityCache(), entry.getValue());
+                    if (!ServiceUtil.isSuccess(priceMap)) {
+                        Debug.logError("getStoreStdPriceMaps: failed to get product prices for product ["
+                                + getProduct().get("productId") + "] store [" + entry.getKey() + "]: " + ServiceUtil.getErrorMessage(priceMap), module);
+                    } else {
+                        storeStdPriceMaps.put(entry.getKey(), priceMap);
+                    }
+                }
+                this.storeStdPriceMaps = storeStdPriceMaps;
+            }
+            return storeStdPriceMaps;
+        }
+
+        public Map<String, ProductConfigWrapper> getStoreCfgPriceWrappers() throws GeneralException {
+            Map<String, ProductConfigWrapper> storeCfgPriceWrappers = this.storeCfgPriceWrappers;
+            if (storeCfgPriceWrappers == null && isConfigurableProduct()) {
+                storeCfgPriceWrappers = new LinkedHashMap<>();
+                for(Map.Entry<String, Map<String, Object>> entry : getStorePriceFields().entrySet()) {
+                    ProductConfigWrapper pcw = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(),
+                            getUserLogin(), getProductId(), (String) entry.getValue().get("productStoreId"),
+                            (String) entry.getValue().get("prodCatalogId"), getStoreCurrencyUomId((String) entry.getValue().get("productStoreId")),
+                            getDefaultLocale(), isUseEntityCache());
+                    if (pcw == null) {
+                        Debug.logError("getStoreCfgPriceWrappers: failed to get configurable prices for product ["
+                                + getProduct().get("productId") + "] store [" + entry.getKey() + "]", module);
+                    } else {
+                        storeCfgPriceWrappers.put(entry.getKey(), pcw);
+                    }
+                }
+                this.storeCfgPriceWrappers = storeCfgPriceWrappers;
+            }
+            return storeCfgPriceWrappers;
         }
 
         public Set<String> getFeatureSet() throws GeneralException {

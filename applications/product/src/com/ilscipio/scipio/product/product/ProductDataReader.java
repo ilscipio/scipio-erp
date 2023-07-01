@@ -227,6 +227,19 @@ public class ProductDataReader {
         return pcw;
     }
 
+    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, String productId, String productStoreId, String prodCatalogId, String currencyUomId, Locale priceLocale, boolean useCache) throws GeneralException {
+        // TODO: REVIEW: do we need to pass a specific catalog or webSiteId here?
+        ProductConfigWrapper pcw = null;
+        try {
+            pcw = ProductConfigFactory.createProductConfigWrapper(getDelegator(dctx), getDispatcher(dctx), productId,
+                    productStoreId, prodCatalogId, null, currencyUomId, priceLocale, userLogin);
+        } catch (Exception e) {
+            throw new GeneralException(e);
+        }
+        pcw.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero
+        return pcw;
+    }
+
     public <C extends Collection<String>> C getProductKeywords(C outKeywords, Delegator delegator, boolean useCache, String... productIds) throws GeneralException {
         List<EntityCondition> condList = new ArrayList<>();
 
@@ -406,6 +419,10 @@ public class ProductDataReader {
         return CategoryWorker.getCategoryRollupTrails(getDelegator(dctx), productCategoryId, moment, ordered, useCache);
     }
 
+    /**
+     * @deprecated This actually returns ProductStoreCatalog, use another overload.
+     */
+    @Deprecated
     public List<GenericValue> getProductStoresForCatalogIds(DispatchContext dctx, Collection<String> catalogIds, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
         // FIXME: duplication
         //return CatalogWorker.getProductStoresForCatalogIds(delegator, catalogIds, moment, ordered, useCache);
@@ -428,8 +445,32 @@ public class ProductDataReader {
         return stores;
     }
 
+    public List<GenericValue> getProductStoreCatalogsForCatalogIds(DispatchContext dctx, Collection<String> catalogIds, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        // FIXME: duplication
+        //return CatalogWorker.getProductStoresForCatalogIds(delegator, catalogIds, moment, ordered, useCache);
+        List<GenericValue> stores = new ArrayList<>();
+        for(String catalogId : catalogIds) {
+            stores.addAll(getProductStoreCatalogsForCatalogId(dctx, catalogId, moment, ordered, useCache));
+        }
+        return stores;
+    }
+
     public List<GenericValue> getProductStoreCatalogsForCatalogId(DispatchContext dctx, String catalogId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
         return CatalogWorker.getProductStoreCatalogsForCatalogId(getDelegator(dctx), catalogId, moment, ordered, useCache);
+    }
+
+    public List<GenericValue> getProductStoreAndCatalogAssocForCatalogIds(DispatchContext dctx, Collection<String> catalogIds, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        // FIXME: duplication
+        //return CatalogWorker.getProductStoresForCatalogIds(delegator, catalogIds, moment, ordered, useCache);
+        List<GenericValue> stores = new ArrayList<>();
+        for(String catalogId : catalogIds) {
+            stores.addAll(getProductStoreAndCatalogAssocForCatalogId(dctx, catalogId, moment, ordered, useCache));
+        }
+        return stores;
+    }
+
+    public List<GenericValue> getProductStoreAndCatalogAssocForCatalogId(DispatchContext dctx, String catalogId, Timestamp moment, boolean ordered, boolean useCache) throws GeneralException {
+        return CatalogWorker.getProductStoreAndCatalogAssocForCatalogId(getDelegator(dctx), catalogId, moment, ordered, useCache);
     }
 
     public GenericValue getProductStore(DispatchContext dctx, String productStoreId, boolean useCache) throws GenericEntityException {

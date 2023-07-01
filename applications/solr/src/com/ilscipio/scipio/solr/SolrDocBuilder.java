@@ -825,7 +825,11 @@ public class SolrDocBuilder {
 
         protected String currencyUomId;
         protected Map<String, Object> stdPriceMap;
+        protected String stdPriceMapProductStoreId; // compatibility
+        protected String stdPriceMapCurrencyUomId; // compatibility
         protected ProductConfigWrapper cfgPriceWrapper;
+        protected String cfgPriceWrapperProductStoreId; // compatibility
+        protected String cfgPriceWrapperCurrencyUomId; // compatibility
         protected Map<String, Map<String, Object>> storeStdPriceMaps;
         protected Map<String, ProductConfigWrapper> storeCfgPriceWrappers;
         protected Map<String, Map<String, Object>> storePriceFields;
@@ -945,7 +949,7 @@ public class SolrDocBuilder {
         }
 
         public void populateDocPriceStandard(Map<String, Object> doc) throws GeneralException {
-            populateDocPriceStandardField(doc, getStdPriceMap(), getCurrencyUomId(), "");
+            populateDocPriceStandardField(doc, getStdPriceMap(), getStdPriceMapCurrencyUomId(), "");
             for(Map.Entry<String, Map<String, Object>> entry : getStoreStdPriceMaps().entrySet()) {
                 populateDocPriceStandardField(doc, entry.getValue(), getStoreCurrencyUomId(entry.getKey()), entry.getKey());
             }
@@ -1082,7 +1086,7 @@ public class SolrDocBuilder {
         }
 
         public void populateDocPriceConfigurable(Map<String, Object> doc) throws GeneralException {
-            populateDocPriceConfigurableField(doc, getCfgPriceWrapper(), getCurrencyUomId(), "");
+            populateDocPriceConfigurableField(doc, getCfgPriceWrapper(), getCfgPriceWrapperCurrencyUomId(), "");
             for(Map.Entry<String, ProductConfigWrapper> entry : getStoreCfgPriceWrappers().entrySet()) {
                 populateDocPriceConfigurableField(doc, entry.getValue(), getStoreCurrencyUomId(entry.getKey()), entry.getKey());
             }
@@ -1569,11 +1573,18 @@ public class SolrDocBuilder {
         public Map<String, Object> getStdPriceMap() throws GeneralException {
             Map<String, Object> stdPriceMap = this.stdPriceMap;
             if (stdPriceMap == null && !isConfigurableProduct()) {
-                GenericValue productStore = getProductStore();
+                String productStoreId = getProductStoreId();
                 String prodCatalogId = getCatalogId();
-                Map<String, Object> ovrdFields = addStoreStdPriceMapOvrdFields(new HashMap<>(getStdPriceMapOvrdFields()), getProductStoreId(), prodCatalogId, true);
+                Map<String, Object> ovrdFields = addStoreStdPriceMapOvrdFields(new HashMap<>(getStdPriceMapOvrdFields()), productStoreId, prodCatalogId, true);
+                if (ovrdFields.get("productStoreId") != null) { // compatibility
+                    productStoreId = (String) ovrdFields.get("productStoreId"); // Support legacy client override here
+                }
+                this.stdPriceMapProductStoreId = productStoreId;
+                GenericValue productStore = (productStoreId != null) ? getProductStore(productStoreId) : null;
+                String currencyUomId = getStoreCurrencyUomId(productStore);
+                this.stdPriceMapCurrencyUomId = currencyUomId;
                 stdPriceMap = getProductData().getProductStandardPrices(getDctx(), getContext(), getUserLogin(), getProduct(),
-                        productStore, prodCatalogId, getCurrencyUomId(), getBuilderLocale(), isUseEntityCache(), ovrdFields);
+                        productStore, prodCatalogId, currencyUomId, getBuilderLocale(), isUseEntityCache(), ovrdFields);
                 if (!ServiceUtil.isSuccess(stdPriceMap)) {
                     Debug.logError("getProductStandardPrices: failed to get product prices for product '"
                             + getProduct().get("productId") + "': " + ServiceUtil.getErrorMessage(stdPriceMap), module);
@@ -1581,6 +1592,16 @@ public class SolrDocBuilder {
                 this.stdPriceMap = stdPriceMap;
             }
             return stdPriceMap;
+        }
+
+        protected String getStdPriceMapProductStoreId() throws GeneralException { // compatibility
+            getStdPriceMap();
+            return stdPriceMapProductStoreId;
+        }
+
+        protected String getStdPriceMapCurrencyUomId() throws GeneralException { // compatibility
+            getStdPriceMap();
+            return stdPriceMapCurrencyUomId;
         }
 
         /**
@@ -1608,11 +1629,25 @@ public class SolrDocBuilder {
                 if (ovrdFields.get("prodCatalogId") != null) { // NOTE: Deprecated/unnecessary most of the time
                     prodCatalogId = (String) ovrdFields.get("prodCatalogId");
                 }
+                this.cfgPriceWrapperProductStoreId = productStoreId;
+                GenericValue productStore = (productStoreId != null) ? getProductStore(productStoreId) : null;
+                String currencyUomId = getStoreCurrencyUomId(productStore);
+                this.cfgPriceWrapperCurrencyUomId = currencyUomId;
                 cfgPriceWrapper = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(), getUserLogin(), getProductId(),
-                        productStoreId, prodCatalogId, getCurrencyUomId(), getBuilderLocale(), isUseEntityCache());
+                        productStoreId, prodCatalogId, currencyUomId, getBuilderLocale(), isUseEntityCache());
                 this.cfgPriceWrapper = cfgPriceWrapper;
             }
             return cfgPriceWrapper;
+        }
+
+        protected String getCfgPriceWrapperProductStoreId() throws GeneralException { // compatibility
+            getCfgPriceWrapper();
+            return cfgPriceWrapperProductStoreId;
+        }
+
+        protected String getCfgPriceWrapperCurrencyUomId() throws GeneralException { // compatibility
+            getCfgPriceWrapper();
+            return cfgPriceWrapperCurrencyUomId;
         }
 
         /**

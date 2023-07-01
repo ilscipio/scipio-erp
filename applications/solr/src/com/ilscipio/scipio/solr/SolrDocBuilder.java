@@ -837,6 +837,7 @@ public class SolrDocBuilder {
         protected Map<String, String> descriptionLocaleMap;
         protected Map<String, String> longDescriptionLocaleMap;
         protected Set<String> keywords;
+        protected List<String> legacyPriceFieldNames;
 
         protected ProductDocBuilder(String productId, GenericValue product, Timestamp moment) {
             this.productId = (productId != null) ? productId : product.getString("productId");
@@ -945,48 +946,119 @@ public class SolrDocBuilder {
             }
         }
 
+        protected String getMainPriceFieldName(String baseName, String fieldGroup) {
+            if (UtilValidate.isNotEmpty(fieldGroup)) {
+                return baseName + "_" + fieldGroup + "_c";
+            } else {
+                return baseName + "_c";
+            }
+        }
+
+        protected String getFloatPriceFieldName(String baseName, String fieldGroup) {
+            if (UtilValidate.isNotEmpty(fieldGroup)) {
+                return baseName + "_" + fieldGroup + "_pf";
+            } else if (isLegacyPriceField(baseName)) {
+                return baseName;
+            } else if (isSharedFloatPriceField(baseName)) {
+                return baseName + "_pf";
+            } else {
+                return null;
+            }
+        }
+
+        protected boolean isLegacyPriceField(String baseName) {
+            return getLegacyPriceFieldNames().contains(baseName);
+        }
+
+        public List<String> getLegacyPriceFieldNames() {
+            List<String> staticPriceFieldNames = this.legacyPriceFieldNames;
+            if (staticPriceFieldNames == null) {
+                staticPriceFieldNames = determineLegacyPriceFieldNames();
+                this.legacyPriceFieldNames = staticPriceFieldNames;
+            }
+            return staticPriceFieldNames;
+        }
+
+        protected List<String> determineLegacyPriceFieldNames() {
+            return List.of("defaultPrice", "listPrice");
+        }
+
+        /**
+         * Currently returns false; handled by legacy price fields, but may be overridden easily.
+         */
+        protected boolean isSharedFloatPriceField(String baseName) {
+            return false; // TODO: REVIEW: these are disabled by default for now, but may want them (see above)
+        }
+
+        protected <T> T getMainPriceField(Map<String, Object> doc, String baseName, String fieldGroup) {
+            String fieldName = getMainPriceFieldName(baseName, fieldGroup);
+            return (fieldName != null) ? UtilGenerics.cast(doc.get(fieldName)) : null;
+        }
+
+        protected <T> T getFloatPriceField(Map<String, Object> doc, String baseName, String fieldGroup) {
+            String fieldName = getFloatPriceFieldName(baseName, fieldGroup);
+            return (fieldName != null) ? UtilGenerics.cast(doc.get(fieldName)) : null;
+        }
+
+        protected void setMainPriceField(Map<String, Object> doc, String baseName, String fieldGroup, BigDecimal value, String currencyUomId) {
+            String fieldName = getMainPriceFieldName(baseName, fieldGroup);
+            if (fieldName != null) {
+                doc.put(fieldName, value + "," + currencyUomId);
+            }
+        }
+
+        protected void setFloatPriceField(Map<String, Object> doc, String baseName, String fieldGroup, BigDecimal value, String currencyUomId) {
+            String fieldName = getFloatPriceFieldName(baseName, fieldGroup);
+            if (fieldName != null) {
+                doc.put(fieldName, value.toString());
+            }
+        }
+
+        protected void setPriceFields(Map<String, Object> doc, String baseName, String fieldGroup, BigDecimal value, String currencyUomId) {
+            setMainPriceField(doc, baseName, fieldGroup, value, currencyUomId);
+            setFloatPriceField(doc, baseName, fieldGroup, value, currencyUomId);
+        }
+
         protected void populateDocPriceStandardField(Map<String, Object> doc, Map<String, Object> priceMap,
                                                      String currencyUomId, String fieldGroup) throws GeneralException {
-            String fieldSep = UtilValidate.isNotEmpty(fieldGroup) ? "_" + fieldGroup : "";
-
             BigDecimal defaultPrice = scaleCurrency(priceMap.get("defaultPrice"));
             if (defaultPrice != null) {
-                doc.put("defaultPrice" + fieldSep + "_c", defaultPrice + "," + currencyUomId);
-                if (!fieldSep.isEmpty()) {
-                    doc.put("defaultPrice" + fieldSep + "_pf", defaultPrice.toString()); // Legacy field
-                } else {
-                    doc.put("defaultPrice", defaultPrice.toString()); // Legacy field
-                }
+                setPriceFields(doc, "defaultPrice", fieldGroup, defaultPrice, currencyUomId);
             }
 
             BigDecimal listPrice = scaleCurrency(priceMap.get("listPrice"));
             if (listPrice != null) {
-                doc.put("listPrice" + fieldSep + "_c", listPrice + "," + currencyUomId);
-                if (!fieldSep.isEmpty()) {
-                    doc.put("listPrice" + fieldSep + "_pf", listPrice.toString()); // Legacy field
-                } else {
-                    doc.put("listPrice", defaultPrice.toString()); // Legacy field
-                }
+                setPriceFields(doc, "listPrice", fieldGroup, listPrice, currencyUomId);
             }
 
             BigDecimal promoPrice = scaleCurrency(priceMap.get("promoPrice"));
             if (promoPrice != null) {
-                doc.put("promoPrice" + fieldSep + "_c", promoPrice + "," + currencyUomId);
+                setPriceFields(doc, "promoPrice", fieldGroup, promoPrice, currencyUomId);
             }
 
-            BigDecimal competitivePrice = scaleCurrency(priceMap.get("promoPrice"));
+            BigDecimal specialPromoPrice = scaleCurrency(priceMap.get("specialPromoPrice"));
+            if (specialPromoPrice != null) {
+                setPriceFields(doc, "specialPromoPrice", fieldGroup, specialPromoPrice, currencyUomId);
+            }
+
+            BigDecimal competitivePrice = scaleCurrency(priceMap.get("competitivePrice"));
             if (competitivePrice != null) {
-                doc.put("competitivePrice" + fieldSep + "_c", competitivePrice + "," + currencyUomId);
+                setPriceFields(doc, "competitivePrice", fieldGroup, competitivePrice, currencyUomId);
+            }
+
+            BigDecimal averageCost = scaleCurrency(priceMap.get("averageCost"));
+            if (averageCost != null) {
+                setPriceFields(doc, "averageCost", fieldGroup, averageCost, currencyUomId);
             }
 
             BigDecimal basePrice = scaleCurrency(priceMap.get("basePrice"));
-            if (promoPrice != null) {
-                doc.put("basePrice" + fieldSep + "_c", basePrice + "," + currencyUomId);
+            if (basePrice != null) {
+                setPriceFields(doc, "basePrice", fieldGroup, basePrice, currencyUomId);
             }
 
             BigDecimal price = scaleCurrency(priceMap.get("price"));
             if (price != null) {
-                doc.put("price" + fieldSep + "_c", price + "," + currencyUomId);
+                setPriceFields(doc, "price", fieldGroup, price, currencyUomId);
             }
         }
 
@@ -999,16 +1071,9 @@ public class SolrDocBuilder {
 
         protected void populateDocPriceConfigurableField(Map<String, Object> doc, ProductConfigWrapper pcw,
                                                          String currencyUomId, String fieldGroup) throws GeneralException {
-            String fieldSep = UtilValidate.isNotEmpty(fieldGroup) ? "_" + fieldGroup : "";
-
             BigDecimal defaultPrice = scaleCurrency(pcw.getTotalPrice());
             if (defaultPrice != null) {
-                doc.put("defaultPrice" + fieldSep + "_c", defaultPrice + "," + currencyUomId);
-                if (!fieldSep.isEmpty()) {
-                    doc.put("defaultPrice" + fieldSep + "_pf", defaultPrice.toString()); // Legacy field
-                } else {
-                    doc.put("defaultPrice", defaultPrice.toString()); // Legacy field
-                }
+                setPriceFields(doc, "defaultPrice", fieldGroup, defaultPrice, currencyUomId);
             }
 
             BigDecimal listPrice = scaleCurrency(pcw.getTotalListPrice());
@@ -1016,12 +1081,7 @@ public class SolrDocBuilder {
             // this creates 0$ list prices we can't validate in queries; this logic requires an extra check + ofbiz patch
             //if (listPrice != null) {
             if (listPrice != null && ((listPrice.compareTo(BigDecimal.ZERO) != 0) || pcw.hasOriginalListPrice())) {
-                doc.put("listPrice" + fieldSep + "_c", listPrice + "," + currencyUomId);
-                if (!fieldSep.isEmpty()) {
-                    doc.put("listPrice" + fieldSep + "_pf", listPrice.toString()); // Legacy field
-                } else {
-                    doc.put("listPrice", listPrice.toString()); // Legacy field
-                }
+                setPriceFields(doc, "listPrice", fieldGroup, listPrice, currencyUomId);
             }
         }
 

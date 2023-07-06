@@ -1,13 +1,16 @@
 package com.ilscipio.scipio.product.category;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.service.LocalDispatcher;
 
 public abstract class CatalogAltUrlSanitizer {
 
@@ -29,7 +32,14 @@ public abstract class CatalogAltUrlSanitizer {
     public Map<String, String> convertNamesToDbAltUrls(Map<String, String> map, CatalogUrlType entityType, SanitizeContext ctxInfo) {
         Map<String, String> newMap = new HashMap<>();
         for(Map.Entry<String, String> entry : map.entrySet()) {
-            newMap.put(entry.getKey(), convertNameToDbAltUrl(entry.getValue(), parseLocale(entry.getKey()), entityType, ctxInfo));
+            Locale prevLocale = ctxInfo.getLocale();
+            Locale locale = parseLocale(entry.getKey());
+            try {
+                ctxInfo.setLocale(locale);
+                newMap.put(entry.getKey(), convertNameToDbAltUrl(entry.getValue(), locale, entityType, ctxInfo));
+            } finally {
+                ctxInfo.setLocale(prevLocale);
+            }
         }
         return newMap;
     }
@@ -106,42 +116,151 @@ public abstract class CatalogAltUrlSanitizer {
         return new SanitizeContext();
     }
 
+    public SanitizeContext makeSanitizeContext(Delegator delegator, LocalDispatcher dispatcher, Locale locale, Boolean useCache) {
+        return new SanitizeContext().setDelegator(delegator).setDispatcher(dispatcher).setLocale(locale).setUseCache(useCache);
+    }
+
+    public SanitizeContext makeSanitizeContext(SanitizeContext other) {
+        return new SanitizeContext(other);
+    }
+
+
     /**
      * Class to pass arguments to methods above, needed to prevent compatibility breakage.
      * NOTE: Unless otherwise specified, all fields may be null.
      */
     public static class SanitizeContext implements Serializable {
+
+        private Delegator delegator;
+        private LocalDispatcher dispatcher;
+        private Locale locale;
+        private Boolean useCache;
+        private Map<String, Object> properties;
+
         private Boolean last;
         private Integer nameIndex;
         private Integer totalNames;
         private GenericValue targetProduct;
         private GenericValue targetCategory;
-        private Boolean useCache;
 
+        protected SanitizeContext() {
+        }
+
+        protected SanitizeContext(SanitizeContext other) {
+            this.delegator = other.delegator;
+            this.dispatcher = other.dispatcher;
+            this.locale = other.locale;
+            this.useCache = other.useCache;
+            this.properties = other.properties;
+
+            this.last = other.last;
+            this.nameIndex = other.nameIndex;
+            this.totalNames = other.totalNames;
+            this.targetProduct = other.targetProduct;
+            this.targetCategory = other.targetCategory;
+        }
+
+        @Deprecated
         protected SanitizeContext(Boolean last, Integer nameIndex, Integer totalNames) { // NOTE: avoid using this
             this.last = last;
             this.nameIndex = nameIndex;
             this.totalNames = totalNames;
         }
 
-        public SanitizeContext() {
-        }
-
+        @Deprecated
         public static SanitizeContext undefined() {
             return ReadOnlySanitizeContext.UNDEFINED;
         }
 
+        @Deprecated
         public static SanitizeContext lastElem(boolean last) {
             return last ? ReadOnlySanitizeContext.LAST : ReadOnlySanitizeContext.NON_LAST;
         }
 
+        @Deprecated
         public static SanitizeContext lastElem() {
             return ReadOnlySanitizeContext.LAST;
         }
 
+        @Deprecated
         public static SanitizeContext nonLastElem() {
             return ReadOnlySanitizeContext.NON_LAST;
         }
+
+        public Delegator getDelegator() {
+            return delegator;
+        }
+
+        public SanitizeContext setDelegator(Delegator delegator) {
+            this.delegator = delegator;
+            return this;
+        }
+
+        public LocalDispatcher getDispatcher() {
+            return dispatcher;
+        }
+
+        public SanitizeContext setDispatcher(LocalDispatcher dispatcher) {
+            this.dispatcher = dispatcher;
+            return this;
+        }
+
+        public Locale getLocale() {
+            return locale;
+        }
+
+        public SanitizeContext setLocale(Locale locale) {
+            this.locale = locale;
+            return this;
+        }
+
+        public Boolean getUseCache() {
+            return useCache;
+        }
+
+        public boolean isUseCache(boolean defaultValue) {
+            Boolean useCache = this.useCache;
+            return (useCache != null) ? useCache : defaultValue;
+        }
+
+        public SanitizeContext setUseCache(Boolean useCache) {
+            this.useCache = useCache;
+            return this;
+        }
+
+        public Map<String, Object> getProperties() {
+            return properties;
+        }
+
+        public Map<String, Object> getPropertiesOrEmpty() {
+            Map<String, Object> properties = this.properties;
+            return (properties != null) ? properties : Collections.emptyMap();
+        }
+
+        public Map<String, Object> getPropertiesOrInit() {
+            Map<String, Object> properties = this.properties;
+            if (properties == null) {
+                properties = new HashMap<>();
+                this.properties = properties;
+            }
+            return properties;
+        }
+
+        public SanitizeContext setProperties(Map<String, Object> properties) {
+            this.properties = properties;
+            return this;
+        }
+
+        public SanitizeContext addProperties(Map<String, Object> properties) {
+            getPropertiesOrInit().putAll(properties);
+            return this;
+        }
+
+        public SanitizeContext addProperties(Object... keyValuePairs) {
+            UtilMisc.put(getPropertiesOrInit(), keyValuePairs);
+            return this;
+        }
+
 
         public Boolean getLast() {
             return last;
@@ -198,15 +317,7 @@ public abstract class CatalogAltUrlSanitizer {
             this.targetCategory = targetCategory; return this;
         }
 
-        public Boolean getUseCache() {
-            return useCache;
-        }
-
-        public SanitizeContext setUseCache(Boolean useCache) {
-            this.useCache = useCache;
-            return this;
-        }
-
+        @Deprecated
         public static class ReadOnlySanitizeContext extends SanitizeContext {
             private static final SanitizeContext UNDEFINED = new ReadOnlySanitizeContext(null, null, null);
             private static final SanitizeContext LAST = new ReadOnlySanitizeContext(true, null, null);

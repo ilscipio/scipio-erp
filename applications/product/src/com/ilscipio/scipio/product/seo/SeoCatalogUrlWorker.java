@@ -270,6 +270,13 @@ public class SeoCatalogUrlWorker implements Serializable {
         return config;
     }
 
+    /**
+     * NOTE: This can return null.
+     */
+    public String getWebSiteId() {
+        return getConfig().getWebSiteId();
+    }
+
     @Deprecated
     protected Locale getDefaultLocale() {
         return Locale.getDefault();
@@ -526,12 +533,14 @@ public class SeoCatalogUrlWorker implements Serializable {
         if (trailEntities == null || trailEntities.isEmpty()) return newPathList();
         List<String> catNames = newPathList(trailEntities.size());
         ListIterator<GenericValue> trailIt = trailEntities.listIterator();
-        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext();
-        if (targetSanitizeCtx != null) {
-            sanitizeCtx.setTargetProduct(targetSanitizeCtx.getTargetProduct());
-            sanitizeCtx.setTargetCategory(targetSanitizeCtx.getTargetCategory());
-            sanitizeCtx.setTotalNames(targetSanitizeCtx.getTotalNames());
-        }
+        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext(targetSanitizeCtx);
+        // TODO: REVIEW: Just copy it and override for now; previously there was no copy-constructor
+        //CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext(delegator, dispatcher, locale, useCache);
+        //if (targetSanitizeCtx != null) {
+        //    sanitizeCtx.setTargetProduct(targetSanitizeCtx.getTargetProduct());
+        //    sanitizeCtx.setTargetCategory(targetSanitizeCtx.getTargetCategory());
+        //    sanitizeCtx.setTotalNames(targetSanitizeCtx.getTotalNames());
+        //}
         sanitizeCtx.setNameIndex(0);
         sanitizeCtx.setLast(false);
         String targetCategoryId = (targetCategory != null) ? targetCategory.getString("productCategoryId") : null;
@@ -754,8 +763,8 @@ public class SeoCatalogUrlWorker implements Serializable {
             trailEntities = new ArrayList<>(1);
             trailEntities.add(lastElem);
         }
-        CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext()
-                .setTargetCategory(productCategory).setLast(true).setNameIndex(trailEntities.size() - 1).setTotalNames(trailEntities.size()).setUseCache(useCache);
+        CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext(delegator, dispatcher, locale, useCache)
+                .setTargetCategory(productCategory).setLast(true).setNameIndex(trailEntities.size() - 1).setTotalNames(trailEntities.size());
         List<String> trailNames = getCategoryTrailPathSegments(delegator, dispatcher, locale, trailEntities,
                 productCategory, getConfig().getCategoryUrlTrailFormat(), SeoConfig.TrailFormat.NAME, CatalogUrlType.CATEGORY, targetSanitizeCtx, useCache);
         trailNames = getCatalogAltUrlSanitizer().adjustCategoryLiveAltUrlTrail(trailNames, locale, targetSanitizeCtx);
@@ -788,8 +797,8 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         if (productCategory != null) {
             if (sanitizeCtx == null) {
-                sanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetCategory(productCategory)
-                        .setLast(true).setNameIndex(trailNames.size()).setTotalNames(trailNames.size() + 1).setUseCache(useCache);
+                sanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext(delegator, dispatcher, locale, useCache).setTargetCategory(productCategory)
+                        .setLast(true).setNameIndex(trailNames.size()).setTotalNames(trailNames.size() + 1);
             }
             String catTrailName = getCategoryPathSegment(delegator, dispatcher, locale, productCategory, null, sanitizeCtx, useCache);
             if (catTrailName != null) {
@@ -947,7 +956,8 @@ public class SeoCatalogUrlWorker implements Serializable {
      */
     public StringBuilder makeProductUrlCore(Delegator delegator, LocalDispatcher dispatcher, Locale locale, GenericValue product,
                                             String currentCatalogId, String previousCategoryId, List<GenericValue> trailEntities, FullWebappInfo targetWebappInfo, boolean useCache) {
-        CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext().setLast(true).setNameIndex(trailEntities.size()).setTotalNames(trailEntities.size() + 1).setUseCache(useCache);
+        CatalogAltUrlSanitizer.SanitizeContext targetSanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext(delegator, dispatcher, locale, useCache)
+                .setLast(true).setNameIndex(trailEntities.size()).setTotalNames(trailEntities.size() + 1);
         List<String> trailNames = Collections.emptyList();
         if (UtilValidate.isNotEmpty(trailEntities) && getConfig().isCategoryNameEnabled() && getConfig().getProductUrlTrailFormat().isOn()) {
             trailNames = getCategoryTrailPathSegments(delegator, dispatcher, locale, trailEntities,
@@ -1000,7 +1010,7 @@ public class SeoCatalogUrlWorker implements Serializable {
             //}
 
             if (sanitizeCtx == null) {
-                sanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetProduct(product).setUseCache(useCache);
+                sanitizeCtx = getCatalogAltUrlSanitizer().makeSanitizeContext(delegator, dispatcher, locale, useCache).setTargetProduct(product);
             }
             urlBuilder.append(getProductPathSegment(delegator, dispatcher, locale, product, sanitizeCtx, useCache));
         }

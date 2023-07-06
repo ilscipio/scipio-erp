@@ -230,7 +230,7 @@ public abstract class SeoCatalogServices {
 
             // make seo names for assoc records
             CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
-            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = sanitizer.makeSanitizeContext().setTargetProduct(product);
+            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = sanitizer.makeSanitizeContext(delegator, dispatcher, null, useCache).setTargetProduct(product);
             Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.PRODUCT,
                     sanitizeCtx) : Collections.<String, String>emptyMap();
 
@@ -395,7 +395,7 @@ public abstract class SeoCatalogServices {
 
         // make seo names for assoc records
         CatalogAltUrlSanitizer sanitizer = getCatalogAltUrlSanitizer(dctx, context);
-        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = sanitizer.makeSanitizeContext().setTargetCategory(productCategory);
+        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = sanitizer.makeSanitizeContext(delegator, dispatcher, null, useCache).setTargetCategory(productCategory);
         Map<String, String> localeUrlMap = (localeTextMap != null) ? sanitizer.convertNamesToDbAltUrls(localeTextMap, CatalogUrlType.CATEGORY,
                 sanitizeCtx) : Collections.emptyMap();
 

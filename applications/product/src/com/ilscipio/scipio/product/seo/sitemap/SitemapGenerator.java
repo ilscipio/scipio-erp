@@ -682,13 +682,14 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     @Override
     public void pushCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
-        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setNameIndex(state.getPhysicalDepth());
+        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
+                .makeSanitizeContext(getDelegator(), getDispatcher(), null, isUseCache()).setNameIndex(state.getPhysicalDepth());
         Map<Locale, List<String>> trailNames = getTrailNames(state);
         if (getSitemapConfig().isPreProcessTrail()) {
             for (Locale locale : locales) {
                 // NOTE: this is non-last - cannot reuse the one determined in previous call
                 SeoConfig.TrailFormat trailFormat = getSeoConfig().getCategoryUrlTrailFormat(); // FIXME?: this is flawed and may violate configuration; we're forced to ignore product-url-trail-format
-                String trailName = getUrlWorker().getCategoryPathSegment(getDelegator(), getDispatcher(), locale, productCategory, trailFormat, sanitizeCtx, isUseCache());
+                String trailName = getUrlWorker().getCategoryPathSegment(getDelegator(), getDispatcher(), locale, productCategory, trailFormat, sanitizeCtx.setLocale(locale), isUseCache());
                 trailNames.get(locale).add(trailName); // no need copy, just remove after
             }
         } else {
@@ -725,7 +726,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             String url;
             if (getSitemapConfig().isPreProcessTrail()) {
                 List<String> trail = trailNames.get(locale);
-                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetCategory(productCategory)
+                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
+                        .makeSanitizeContext(getDelegator(), getDispatcher(), locale, isUseCache()).setTargetCategory(productCategory)
                         .setLast(true).setNameIndex(trail.size() - 1).setTotalNames(trail.size());
                 url = getUrlWorker().makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
             } else {
@@ -760,7 +762,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                             String altUrl;
                             if (getSitemapConfig().isPreProcessTrail()) {
                                 List<String> trail = trailNames.get(locale);
-                                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetCategory(productCategory)
+                                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
+                                        .makeSanitizeContext(getDelegator(), getDispatcher(), locale, isUseCache()).setTargetCategory(productCategory)
                                         .setLast(true).setNameIndex(trail.size() - 1).setTotalNames(trail.size());
                                 altUrl = getUrlWorker().makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
                             } else {
@@ -793,7 +796,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             String url;
             if (getSitemapConfig().isPreProcessTrail()) {
                 List<String> trail = trailNames.get(locale);
-                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetProduct(product)
+                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
+                        .makeSanitizeContext(getDelegator(), getDispatcher(), locale, isUseCache()).setTargetProduct(product)
                         .setLast(true).setNameIndex(trail.size()).setTotalNames(trail.size() + 1);
                 url = getUrlWorker().makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
             } else {
@@ -828,7 +832,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                             String altUrl;
                             if (getSitemapConfig().isPreProcessTrail()) {
                                 List<String> trail = trailNames.get(locale);
-                                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer().makeSanitizeContext().setTargetProduct(product)
+                                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
+                                        .makeSanitizeContext(getDelegator(), getDispatcher(), locale, isUseCache()).setTargetProduct(product)
                                         .setLast(true).setNameIndex(trail.size()).setTotalNames(trail.size() + 1);
                                 altUrl = getUrlWorker().makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
                             } else {

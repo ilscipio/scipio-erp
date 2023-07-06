@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ilscipio.scipio.ce.util.SeoStringUtil;
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilGenerics;
@@ -185,10 +186,14 @@ public class SeoConfig {
                             config = readConfig(seoConfigLoc, delegator, webSiteId);
                         }
                         if (config == null) {
-                            config = getConfig(delegator, (String) null); // get the common one (reuse from cache)
+                            config = readConfig(SEO_CONFIG_FILENAME, delegator, webSiteId);
+                            // SCIPIO: 3.0.0: Don't do this; re-read so we store the webSiteId with it
+                            //config = getConfig(delegator, (String) null); // get the common one (reuse from cache)
                         }
                     } else if (delegator != null && !"default".equals(delegator.getDelegatorName())) {
-                        config = getConfig(null, (String) null); // get the common one (reuse from cache)
+                        config = readConfig(SEO_CONFIG_FILENAME, delegator, webSiteId);
+                        // SCIPIO: 3.0.0: Don't do this; re-read so we store the webSiteId with it
+                        //config = getConfig(null, (String) null); // get the common one (reuse from cache)
                     } else {
                         config = readConfig(SEO_CONFIG_FILENAME, delegator, webSiteId); // the default/common config (physical read)
                     }
@@ -675,7 +680,12 @@ public class SeoConfig {
     private static SeoConfig readConfig(String configFile, Delegator delegator, String webSiteId) {
         SeoConfig config = null;
         try {
-            URL seoConfigFilename = UtilURL.fromResource(configFile);
+            URL seoConfigFilename;
+            if (configFile.startsWith("component://") || configFile.startsWith("file:/")) {
+                seoConfigFilename = FlexibleLocation.resolveLocation(configFile);
+            } else {
+                seoConfigFilename = UtilURL.fromResource(configFile);
+            }
             Document configDoc = UtilXml.readXmlDocument(seoConfigFilename, false);
             if (configDoc != null) {
                 Element rootElement = configDoc.getDocumentElement();

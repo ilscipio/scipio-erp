@@ -688,7 +688,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             for (Locale locale : locales) {
                 // NOTE: this is non-last - cannot reuse the one determined in previous call
                 SeoConfig.TrailFormat trailFormat = getSeoConfig().getCategoryUrlTrailFormat(); // FIXME?: this is flawed and may violate configuration; we're forced to ignore product-url-trail-format
-                String trailName = getUrlWorker().getCategoryPathPart(getDelegator(), getDispatcher(), locale, productCategory, trailFormat, sanitizeCtx, isUseCache());
+                String trailName = getUrlWorker().getCategoryPathSegment(getDelegator(), getDispatcher(), locale, productCategory, trailFormat, sanitizeCtx, isUseCache());
                 trailNames.get(locale).add(trailName); // no need copy, just remove after
             }
         } else {

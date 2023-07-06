@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Selects a best trail based on a current hint trail (breadcrumbs).
  * MAINLY for new URL generation - currently not used for the filter incoming URL matching
- * (which is stricter - see {@link SeoCatalogUrlWorker#findBestTrailForUrlPathElems}.
+ * (which is stricter - see {@link SeoCatalogUrlWorker#findBestTrailForPathSegments}.
  * <p>
  * This is the core algo that makes browsing complex category rollups (with multiple paths to root)
  * in the frontend possible (e.g. top cat vs best-sell browsing).

@@ -1115,6 +1115,109 @@ public class UtilMisc {
     }
 
     /**
+     * Converts a Locale instance to a candidate Locale list. The list
+     * is ordered most-specific to least-specific. Example:
+     * <code>localeToCandidateList(Locale.US)</code> would return
+     * a list containing <code>en_US</code> and <code>en</code>.
+     *
+     * <p>SCIPIO: 3.0.0: Added, previously as {@link UtilProperties#localeToCandidateList}.</p>
+     *
+     * @return A list of candidate locales.
+     */
+    public static List<Locale> makeLocaleCandidateList(Locale locale) {
+        return makeLocaleCandidateList(locale, true, new ArrayList<>());
+    }
+
+    /**
+     * Converts a Locale instance to a candidate Locale list. The list
+     * is ordered most-specific to least-specific. Example:
+     * <code>localeToCandidateList(Locale.US)</code> would return
+     * a list containing <code>en_US</code> and <code>en</code>.
+     *
+     * <p>SCIPIO: 3.0.0: Added, previously as {@link UtilProperties#localeToCandidateList}.</p>
+     *
+     * @return A list of candidate locales.
+     */
+    public static List<Locale> makeLocaleCandidateList(Locale locale, boolean includeSelf) {
+        return makeLocaleCandidateList(locale, includeSelf, new ArrayList<>());
+    }
+
+    /**
+     * Converts a Locale instance to a candidate Locale list. The list
+     * is ordered most-specific to least-specific. Example:
+     * <code>localeToCandidateList(Locale.US)</code> would return
+     * a list containing <code>en_US</code> and <code>en</code>.
+     *
+     * <p>SCIPIO: 3.0.0: Added, previously as {@link UtilProperties#localeToCandidateList}.</p>
+     *
+     * @return A list of candidate locales.
+     */
+    public static List<Locale> makeLocaleCandidateList(Locale locale, boolean includeSelf, List<Locale> outList) {
+        if (includeSelf) {
+            outList.add(locale);
+        }
+        String localeString = locale.toString();
+        int pos = localeString.lastIndexOf("_");
+        while (pos != -1) {
+            localeString = localeString.substring(0, pos);
+            outList.add(new Locale(localeString));
+            pos = localeString.lastIndexOf("_");
+        }
+        return outList;
+    }
+
+    /**
+     * Converts a Locale instance to a candidate Locale list. The list
+     * is ordered most-specific to least-specific. Example:
+     * <code>localeToCandidateList(Locale.US)</code> would return
+     * a list containing <code>en_US</code> and <code>en</code>.
+     *
+     * <p>SCIPIO: 3.0.0: Added, previously as {@link UtilProperties#localeToCandidateList}.</p>
+     *
+     * @return A list of candidate locales.
+     */
+    public static List<String> makeLocaleCandidateStringList(String localeString) {
+        return makeLocaleCandidateStringList(localeString, true, new ArrayList<>());
+    }
+
+    /**
+     * Converts a Locale instance to a candidate Locale list. The list
+     * is ordered most-specific to least-specific. Example:
+     * <code>localeToCandidateList(Locale.US)</code> would return
+     * a list containing <code>en_US</code> and <code>en</code>.
+     *
+     * <p>SCIPIO: 3.0.0: Added, previously as {@link UtilProperties#localeToCandidateList}.</p>
+     *
+     * @return A list of candidate locales.
+     */
+    public static List<String> makeLocaleCandidateStringList(String localeString, boolean includeSelf) {
+        return makeLocaleCandidateStringList(localeString, includeSelf, new ArrayList<>());
+    }
+
+    /**
+     * Converts a Locale instance to a candidate Locale list. The list
+     * is ordered most-specific to least-specific. Example:
+     * <code>localeToCandidateList(Locale.US)</code> would return
+     * a list containing <code>en_US</code> and <code>en</code>.
+     *
+     * <p>SCIPIO: 3.0.0: Added, previously as {@link UtilProperties#localeToCandidateList}.</p>
+     *
+     * @return A list of candidate locales.
+     */
+    public static List<String> makeLocaleCandidateStringList(String localeString, boolean includeSelf, List<String> outList) {
+        if (includeSelf) {
+            outList.add(localeString);
+        }
+        int pos = localeString.lastIndexOf("_");
+        while (pos != -1) {
+            localeString = localeString.substring(0, pos);
+            outList.add(localeString);
+            pos = localeString.lastIndexOf("_");
+        }
+        return outList;
+    }
+
+    /**
      * Returns matching locale candidate to filter locales or null if no
      * candidate matching criteria; if availableLocales is empty itself, the (first) locale from localeObject is returned.
      *

@@ -1503,7 +1503,7 @@ public final class UtilProperties implements Serializable {
      * @return A list of candidate locales.
      */
     public static List<Locale> localeToCandidateList(Locale locale) {
-        return localeToCandidateList(locale, true, new ArrayList<>());
+        return UtilMisc.makeLocaleCandidateList(locale); // SCIPIO: 3.0.0: Delegated to UtilMisc
     }
 
     /**
@@ -1517,7 +1517,7 @@ public final class UtilProperties implements Serializable {
      * @return A list of candidate locales.
      */
     public static List<Locale> localeToCandidateList(Locale locale, boolean includeSelf) {
-        return localeToCandidateList(locale, includeSelf, new ArrayList<>());
+        return UtilMisc.makeLocaleCandidateList(locale, includeSelf); // SCIPIO: 3.0.0: Delegated to UtilMisc
     }
 
     /**
@@ -1531,17 +1531,7 @@ public final class UtilProperties implements Serializable {
      * @return A list of candidate locales.
      */
     public static List<Locale> localeToCandidateList(Locale locale, boolean includeSelf, List<Locale> outList) {
-        if (includeSelf) {
-            outList.add(locale);
-        }
-        String localeString = locale.toString();
-        int pos = localeString.lastIndexOf("_");
-        while (pos != -1) {
-            localeString = localeString.substring(0, pos);
-            outList.add(new Locale(localeString));
-            pos = localeString.lastIndexOf("_");
-        }
-        return outList;
+        return UtilMisc.makeLocaleCandidateList(locale, includeSelf, outList); // SCIPIO: 3.0.0: Delegated to UtilMisc
     }
 
     // Private lazy-initializer class

@@ -286,6 +286,18 @@ public final class UtilValidate {
     }
 
     /**
+     * If the value is non-empty, returns it as-is; otherwise (if empty or null) returns null.
+     * In other words, this makes the empty string case return null, as a convenience, to simplify code.
+     *
+     * <p>Acts as a convenient filter to minimize the number of intermediate variables and repeated container accesses.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static <C extends Collection<V>, V> C nullIfEmpty(C value) {
+        return isEmpty(value) ? null : value;
+    }
+
+    /**
      * If the value is non-null, returns it as-is; otherwise (if empty or null) returns empty string.
      * <p>Acts as a convenient filter to minimize the number of intermediate variables and repeated container accesses.</p>
      * <p>SCIPIO: 2.0.0: Added.</p>

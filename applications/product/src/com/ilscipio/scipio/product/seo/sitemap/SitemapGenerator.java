@@ -730,9 +730,12 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     protected void buildSitemapCategoryLink(GenericValue productCategory, Map<Locale, List<String>> trailNames, List<GenericValue> trailEntities) throws GeneralException {
         String productCategoryId = productCategory.getString("productCategoryId");
+        String url = null;
+        Locale defaultLocale = getDefaultLocale();
+        List<AltLink> altLinks = null;
         try {
             Locale locale = getDefaultLocale();
-            String url;
+
             if (getSitemapConfig().isPreProcessTrail()) {
                 List<String> trail = trailNames.get(locale);
                 CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
@@ -746,10 +749,9 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
             String processedUrl = postprocessElementLink(url, locale);
             if (processedUrl == null || processedUrl.isEmpty() || matchesUrlFilter(processedUrl)) {
-                Debug.logInfo(getLogMsgPrefix() + "Filtered category url [" + productCategoryId + "]: " + (processedUrl != null ? processedUrl : url), module);
+                Debug.logInfo(getLogMsgPrefix() + "category [" + productCategoryId + "]: filtered url [" + defaultLocale + "=" + (processedUrl != null ? processedUrl : url) + "]", module);
                 getStats().categoryFiltered++;
             } else {
-                List<AltLink> altLinks = null;
                 if (isLocalized()) {
                     if (isDefaultAltLink()) {
                         altLinks = new ArrayList<>(getLocales().size());
@@ -786,25 +788,27 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 }
 
                 if (verboseOn()) {
-                    Debug.logInfo(getLogMsgPrefix() + "Adding category url [" + productCategoryId + "] (" + getDefaultLocale() + "): " + processedUrl +
-                            (altLinks != null && !altLinks.isEmpty() ? "; alt links: " +
-                                    altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
+                    Debug.logInfo(getLogMsgPrefix() + "category [" + productCategoryId + "]: adding url [" + defaultLocale + "=" + processedUrl + "]" +
+                            (altLinks != null && !altLinks.isEmpty() ? " alternate " + altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
                 }
 
                 WebSitemapUrl libUrl = buildSitemapLibUrl(processedUrl, null, altLinks);
                 getCategoryElemHandler().addUrl(libUrl);
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             getStats().categoryError++;
-            Debug.logError(getLogErrorPrefix() + "Cannot build URL for category [" + productCategoryId + "]: " + e.getMessage(), module);
+            Debug.logError(getLogErrorPrefix() + "category [" + productCategoryId + "]: failed url [" + defaultLocale + "=" + url + "]: " + e +
+                    (altLinks != null && !altLinks.isEmpty() ? " alternate " + altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
         }
     }
 
     protected void buildSitemapProductLink(GenericValue product, Map<Locale, List<String>> trailNames, List<GenericValue> trailEntities) throws GeneralException {
         String productId = product.getString("productId");
+        String url = null;
+        Locale defaultLocale = getDefaultLocale();
+        List<AltLink> altLinks = null;
         try {
-            Locale locale = getDefaultLocale();
-            String url;
+            Locale locale = defaultLocale;
             if (getSitemapConfig().isPreProcessTrail()) {
                 List<String> trail = trailNames.get(locale);
                 CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
@@ -818,10 +822,9 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
             String processedUrl = postprocessElementLink(url, locale);
             if (processedUrl == null || processedUrl.isEmpty() || matchesUrlFilter(processedUrl)) {
-                Debug.logInfo(getLogMsgPrefix() + "Filtered product url [" + productId + "]: " + (processedUrl != null ? processedUrl : url), module);
+                Debug.logInfo(getLogMsgPrefix() + "product [" + productId + "]: filtered url [" + defaultLocale + "=" + (processedUrl != null ? processedUrl : url) + "]", module);
                 getStats().productFiltered++;
             } else {
-                List<AltLink> altLinks = null;
                 if (isLocalized()) {
                     if (isDefaultAltLink()) {
                         altLinks = new ArrayList<>(getLocales().size());
@@ -858,9 +861,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 }
 
                 if (verboseOn()) {
-                    Debug.logInfo(getLogMsgPrefix() + "Adding product url [" + productId + "] (" + getDefaultLocale() + "): " + processedUrl +
-                            (altLinks != null && !altLinks.isEmpty() ? "; alt links: " +
-                                    altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
+                    Debug.logInfo(getLogMsgPrefix() + "product [" + productId + "]: adding url [" + defaultLocale + "=" + processedUrl + "]" +
+                            (altLinks != null && !altLinks.isEmpty() ? " alternate " + altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
                 }
 
                 WebSitemapUrl libUrl = buildSitemapLibUrl(processedUrl,
@@ -872,18 +874,22 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 //if (config.doChildProduct) {
                 //}
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             getStats().productError++;
-            Debug.logError(getLogErrorPrefix() + "Cannot build URL for product [" + productId + "]: " + e.getMessage(), module);
+            Debug.logError(getLogErrorPrefix() + "product [" + productId + "]: failed url [" + defaultLocale + "=" + url + "]: " + e +
+                    (altLinks != null && !altLinks.isEmpty() ? " alternate " + altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
         }
     }
 
     protected void buildSitemapCmsPageLink(Map<String, Object> uriInfo) {
         String pageId = (String) uriInfo.get("primaryForPageId");
+        String url = null;
+        Locale defaultLocale = getDefaultLocale();
+        List<AltLink> altLinks = null;
         try {
             Map<Locale, String> localeUriMap = UtilGenerics.cast(uriInfo.get("localeUriMap"));
 
-            Locale locale = getDefaultLocale();
+            Locale locale = defaultLocale;
             FlexibleStringExpander cmsPageUrlAttr = getCmsPageUrlAttr(locale);
             String defaultUri = null;
             if (cmsPageUrlAttr != null) {
@@ -893,9 +899,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 defaultUri = PathUtil.concatPaths(getContextPath(locale), localeUriMap.get(locale));
             }
 
-            String url = postprocessElementLink(defaultUri, locale);
+            url = postprocessElementLink(defaultUri, locale);
 
-            List<AltLink> altLinks = null;
             if (isLocalized()) {
                 if (isDefaultAltLink()) {
                     altLinks = new ArrayList<>(getLocales().size());
@@ -933,16 +938,16 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             }
 
             if (verboseOn()) {
-                Debug.logInfo(getLogMsgPrefix() + "Adding content url [" + pageId + "] (" + getDefaultLocale() + "): " + url +
-                        (altLinks != null && !altLinks.isEmpty() ? "; alt links: " +
-                                altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
+                Debug.logInfo(getLogMsgPrefix() + "page [" + pageId + "]: adding url [" + defaultLocale + "=" + url + "]" +
+                        (altLinks != null && !altLinks.isEmpty() ? " alternate " + altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
             }
 
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, null, altLinks);
             getContentElemHandler().addUrl(libUrl);
-        } catch(Exception e) {
+        } catch (Exception e) {
             getStats().contentError++;
-            Debug.logError(getLogErrorPrefix()+"Error processing CMS page [" + pageId + "]: " + e.getMessage(), module);
+            Debug.logError(getLogErrorPrefix() + "page [" + pageId + "]: failed url [" + defaultLocale + "=" + url + "]" +
+                    (altLinks != null && !altLinks.isEmpty() ? " alternate " + altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
         }
     }
 
@@ -1149,7 +1154,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         try {
             myFile.createNewFile();
         } catch (IOException e) {
-            Debug.logInfo(getLogMsgPrefix()+"Index file '" + myFile.toString() + "' may already exist; replacing", module);
+            Debug.logInfo(getLogMsgPrefix() + "Index file [" + myFile + "] may already exist; replacing", module);
             // ignore if file already exists
         }
 
@@ -1159,7 +1164,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         }
         sig.write();
 
-        Debug.logInfo(getLogMsgPrefix()+"Done writing index '" + sitemapConfig.getSitemapIndexFile() + "'", module);
+        Debug.logInfo(getLogMsgPrefix() + "Done writing index [" + sitemapConfig.getSitemapIndexFile() + "]", module);
     }
 
     public String getSitemapFileLink(String filename, Locale locale) {

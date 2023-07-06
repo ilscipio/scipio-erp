@@ -20,10 +20,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.ilscipio.scipio.base.util.WildPattern;
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogFilters;
 import com.ilscipio.scipio.product.seo.SeoConfig;
 import com.redfin.sitemapgenerator.AltLink;
+import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -977,11 +979,20 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                 return "";
             }
             if (localeVar.length() == 2) {
-                for (Map.Entry<String, ?> entry : content.entrySet()) {
-                    String key = entry.getKey();
-                    if (key.startsWith(attrName + "_")) {
-                        value = entry.getValue();
-                        return (value != null) ? value.toString() : "";
+                Map<String, Object> wildAttrCtx = UtilMisc.toMap("localeVar", localeVar + "_*");
+                String wildAttrName = attr.expandString(wildAttrCtx);
+                if (wildAttrName != null && !wildAttrName.isEmpty()) {
+                    try {
+                        WildPattern wildPat = WildPattern.compile(wildAttrName, '*');
+                        for (Map.Entry<String, ?> entry : content.entrySet()) {
+                            if (wildPat.matches(entry.getKey())) {
+                                value = entry.getValue();
+                                return (value != null) ? value.toString() : "";
+                            }
+                        }
+                    } catch (UnsupportedOperationException e) {
+                        Debug.logError("Error compiling wildcard pattern for currentUrl CMS page attribute, " +
+                                "may be broken propery configuration [" + attr.getOriginal() + "]: " + e, module);
                     }
                 }
             }

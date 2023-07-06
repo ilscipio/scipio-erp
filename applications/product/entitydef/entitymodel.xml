@@ -400,6 +400,7 @@ code package.
         <alias entity-alias="CA" name="caFromDate" field="fromDate" />
         <alias entity-alias="CA" name="caThruDate" field="thruDate" />
         <alias entity-alias="TOCO" name="localeString" />
+        <alias entity-alias="TOCO" name="dataResourceId" />
         <alias entity-alias="EL" name="textData" />
       <view-link entity-alias="PCC" rel-entity-alias="CA">
         <key-map field-name="contentId"/>
@@ -3440,6 +3441,7 @@ code package.
         <alias entity-alias="CA" name="caFromDate" field="fromDate" />
         <alias entity-alias="CA" name="caThruDate" field="thruDate" />
         <alias entity-alias="TOCO" name="localeString" />
+        <alias entity-alias="TOCO" name="dataResourceId" />
         <alias entity-alias="EL" name="textData" />
         <alias entity-alias="CA" name="contentIdStart" field="contentId"/>
         <view-link entity-alias="PC" rel-entity-alias="CA">

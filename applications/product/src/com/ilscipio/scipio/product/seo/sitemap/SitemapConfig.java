@@ -40,6 +40,9 @@ public class SitemapConfig implements Serializable {
 
     public static final FlexibleStringExpander DEFAULT_CMS_PAGE_URL_ATTR = FlexibleStringExpander.getInstance("currentUrl_${localeVar}");
 
+    private static final int DEFAULT_LOG_LEVEL = Debug.getLevelFromString(UtilProperties.getPropertyValue(SITEMAPCOMMON_RESOURCE,
+            "sitemap.default.logLevel"), Debug.INFO);
+
     private static final List<CatalogFilter> DEFAULT_CATALOG_FILTERS = Collections.unmodifiableList(UtilMisc.toList(
             CatalogFilters.ViewAllowCategoryProductFilter.getInstance()
     ));
@@ -111,6 +114,8 @@ public class SitemapConfig implements Serializable {
     private final Map<String, Object> settingsMap; // copy of the settings map, for print/reference/other
 
     private final FlexibleStringExpander cmsPageUrlAttr;
+
+    private final int logLevel;
 
     public SitemapConfig(Map<String, Object> map, String webSiteId) {
         this.settingsMap = Collections.unmodifiableMap(new HashMap<>(map));
@@ -204,6 +209,13 @@ public class SitemapConfig implements Serializable {
         this.productTraversalMode = asNormString(map.get("productTraversalMode"), "depth-first");
 
         this.cmsPageUrlAttr = FlexibleStringExpander.getInstance(asNormString(map.get("cmsPageUrlAttr")));
+
+        Object logLevelObj = map.get("logLevel");
+        if (logLevelObj instanceof Integer) {
+            this.logLevel = (Integer) logLevelObj;
+        } else {
+            this.logLevel = Debug.getLevelFromString((String) map.get("logLevel"), DEFAULT_LOG_LEVEL);
+        }
     }
 
     private static List<CatalogFilter> readCatalogFilters(Object catalogFiltersObj) {
@@ -598,6 +610,10 @@ public class SitemapConfig implements Serializable {
 
     public FlexibleStringExpander getCmsPageUrlAttr() {
         return cmsPageUrlAttr;
+    }
+
+    public int getLogLevel() {
+        return logLevel;
     }
 
     /**

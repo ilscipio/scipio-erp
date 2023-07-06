@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogFilters;
@@ -386,6 +387,14 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return sitemapConfig;
     }
 
+    protected int getLogLevel() {
+        return getSitemapConfig().getLogLevel();
+    }
+
+    protected boolean verboseOn() {
+        return (getLogLevel() <= Debug.VERBOSE || Debug.verboseOn());
+    }
+
     public SeoCatalogUrlWorker getUrlWorker() { return urlWorker; }
 
     public SeoConfig getSeoConfig() { return getUrlWorker().getConfig(); }
@@ -737,13 +746,9 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
             String processedUrl = postprocessElementLink(url, locale);
             if (processedUrl == null || processedUrl.isEmpty() || matchesUrlFilter(processedUrl)) {
-                Debug.logInfo("Filtered category url: " + (processedUrl != null ? processedUrl : url), module);
+                Debug.logInfo(getLogMsgPrefix() + "Filtered category url [" + productCategoryId + "]: " + (processedUrl != null ? processedUrl : url), module);
                 getStats().categoryFiltered++;
             } else {
-                if (Debug.verboseOn()) {
-                    Debug.logVerbose(getLogMsgPrefix() + "Adding category url: " + processedUrl, module);
-                }
-
                 List<AltLink> altLinks = null;
                 if (isLocalized()) {
                     if (isDefaultAltLink()) {
@@ -780,12 +785,18 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                     }
                 }
 
+                if (verboseOn()) {
+                    Debug.logInfo(getLogMsgPrefix() + "Adding category url [" + productCategoryId + "] (" + getDefaultLocale() + "): " + processedUrl +
+                            (altLinks != null && !altLinks.isEmpty() ? "; alt links: " +
+                                    altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
+                }
+
                 WebSitemapUrl libUrl = buildSitemapLibUrl(processedUrl, null, altLinks);
                 getCategoryElemHandler().addUrl(libUrl);
             }
         } catch(Exception e) {
             getStats().categoryError++;
-            Debug.logError(getLogErrorPrefix() + "Cannot build URL for category '" + productCategoryId + "': " + e.getMessage(), module);
+            Debug.logError(getLogErrorPrefix() + "Cannot build URL for category [" + productCategoryId + "]: " + e.getMessage(), module);
         }
     }
 
@@ -807,13 +818,9 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
             String processedUrl = postprocessElementLink(url, locale);
             if (processedUrl == null || processedUrl.isEmpty() || matchesUrlFilter(processedUrl)) {
-                Debug.logInfo("Filtered product url: " + (processedUrl != null ? processedUrl : url), module);
+                Debug.logInfo(getLogMsgPrefix() + "Filtered product url [" + productId + "]: " + (processedUrl != null ? processedUrl : url), module);
                 getStats().productFiltered++;
             } else {
-                if (Debug.verboseOn()) {
-                    Debug.logVerbose(getLogMsgPrefix() + "Adding product url: " + processedUrl, module);
-                }
-
                 List<AltLink> altLinks = null;
                 if (isLocalized()) {
                     if (isDefaultAltLink()) {
@@ -850,6 +857,12 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                     }
                 }
 
+                if (verboseOn()) {
+                    Debug.logInfo(getLogMsgPrefix() + "Adding product url [" + productId + "] (" + getDefaultLocale() + "): " + processedUrl +
+                            (altLinks != null && !altLinks.isEmpty() ? "; alt links: " +
+                                    altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
+                }
+
                 WebSitemapUrl libUrl = buildSitemapLibUrl(processedUrl,
                         sitemapConfig.isUseProductLastModDate() ? product.getTimestamp("lastModifiedDate") : null,
                         altLinks);
@@ -861,7 +874,7 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             }
         } catch(Exception e) {
             getStats().productError++;
-            Debug.logError(getLogErrorPrefix() + "Cannot build URL for product '" + productId + "': " + e.getMessage(), module);
+            Debug.logError(getLogErrorPrefix() + "Cannot build URL for product [" + productId + "]: " + e.getMessage(), module);
         }
     }
 
@@ -881,9 +894,6 @@ public class SitemapGenerator extends SeoCatalogTraverser {
             }
 
             String url = postprocessElementLink(defaultUri, locale);
-            if (Debug.verboseOn()) {
-                Debug.logVerbose(getLogMsgPrefix()+"Processing CMS page url: " + url, module);
-            }
 
             List<AltLink> altLinks = null;
             if (isLocalized()) {
@@ -920,6 +930,12 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                         }
                     }
                 }
+            }
+
+            if (verboseOn()) {
+                Debug.logInfo(getLogMsgPrefix() + "Adding content url [" + pageId + "] (" + getDefaultLocale() + "): " + url +
+                        (altLinks != null && !altLinks.isEmpty() ? "; alt links: " +
+                                altLinks.stream().map(AltLink::toLangUrlString).collect(Collectors.toList()) : ""), module);
             }
 
             WebSitemapUrl libUrl = buildSitemapLibUrl(url, null, altLinks);
@@ -1231,12 +1247,12 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     @Override
     protected String getLogMsgPrefix() {
-        return logPrefix+"Website '" + webSiteId + "': ";
+        return logPrefix + "WebSite [" + webSiteId + "]: ";
     }
 
     @Override
     protected String getLogErrorPrefix() {
-        return logPrefix+"Error generating sitemap for website '" + webSiteId + "': ";
+        return getLogMsgPrefix() + "Error generating sitemap: ";
     }
 
     // FIXME: dependency issue: List<CmsProcessMapping.UriInfo>; implements Map also for now

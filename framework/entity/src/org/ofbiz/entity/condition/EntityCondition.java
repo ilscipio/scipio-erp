@@ -21,6 +21,7 @@ package org.ofbiz.entity.condition;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +56,28 @@ public abstract class EntityCondition extends EntityConditionBase implements IsE
 
     public static <R> EntityExpr makeCondition(String fieldName, R value) {
         return new EntityExpr(fieldName, EntityOperator.EQUALS, value);
+    }
+
+    /**
+     * Helper to make an OR condition for all the possible values of a field.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static EntityCondition makeFieldCondition(String fieldName, Collection<?> values) {
+        List<EntityCondition> condList = new ArrayList<>(values.size());
+        for (Object value : values) {
+            condList.add(makeCondition(fieldName, value));
+        }
+        return makeCondition(condList, EntityOperator.OR);
+    }
+
+    /**
+     * Helper to make an OR condition for all the possible values of a field.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static EntityCondition makeFieldCondition(String fieldName, Object... values) {
+        return makeFieldCondition(fieldName, Arrays.asList(values));
     }
 
     public static EntityExpr makeCondition(EntityCondition lhs, EntityJoinOperator operator, EntityCondition rhs) {

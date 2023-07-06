@@ -35,6 +35,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -68,18 +69,21 @@ import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogUrlType;
 
 /**
- * SCIPIO: SEO url building functions and callbacks.
- * <p>
- * Some parts adapted from the original <code>org.ofbiz.product.category.ftl.CatalogUrlSeoTransform</code>;
- * others re-done based on {@link org.ofbiz.product.category.CatalogUrlFilter}.
- * <p>
- * <strong>WARN:</strong> Do not call makeXxxUrl methods from this class from client code!
- * Client code that need java methods should use (which these plug into):
+ * SEO url building functions and callbacks.
+ *
+ * <p>Some parts adapted from the original <code>org.ofbiz.product.category.ftl.CatalogUrlSeoTransform</code>;
+ * others re-done based on {@link org.ofbiz.product.category.CatalogUrlFilter}.</p>
+ *
+ * <p><strong>WARN:</strong> Do not call makeXxxUrl methods from this class from client code!
+ * Client code that need java methods should use (which these plug into):</p>
  * <ul>
  * <li>{@link org.ofbiz.product.category.CatalogUrlFilter#makeCatalogAltLink}</li>
  * <li>{@link org.ofbiz.product.category.CatalogUrlServlet#makeCatalogLink}</li>
  * </ul>
- * FIXME: makeXxxUrlPath methods do not respect useCache flag
+ *
+ * <p>FIXME: makeXxxUrlPath methods do not respect useCache flag</p>
+ *
+ * <p>SCIPIO: 3.0.0: Enhanced inbound URL matching logic, lookups and heuristic.</p>
  */
 @SuppressWarnings("serial")
 public class SeoCatalogUrlWorker implements Serializable {
@@ -101,6 +105,15 @@ public class SeoCatalogUrlWorker implements Serializable {
     private static final UtilCache<String, TrailCacheEntry> productTrailCache = UtilCache.createUtilCache("seo.filter.product.trails", true);
     private static final UtilCache<String, String> categoryUrlCache = UtilCache.createUtilCache("seo.filter.category.url", true);
     private static final UtilCache<String, TrailCacheEntry> categoryTrailCache = UtilCache.createUtilCache("seo.filter.category.trails", true);
+
+    private static final EntityCondition productContentTypeIdAltUrlCond = EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL");
+    private static final EntityCondition contentAssocTypeIdAltLocaleCond = EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE");
+    private static final Set<String> productContentAndElecTextShortMinimalSelectFields = UtilMisc.toSet("productId", "textData", "localeString", "contentId", "dataResourceId", "fromDate", "thruDate");
+    private static final Set<String> productContentAssocAndElecTextShortMinimalSelectFields = UtilMisc.toSet("productId", "textData", "localeString", "contentId", "dataResourceId", "fromDate", "thruDate", "caFromDate", "caThruDate");
+
+    private static final EntityCondition prodCatContentTypeIdAltUrlCond = EntityCondition.makeCondition("prodCatContentTypeId", "ALTERNATIVE_URL");
+    private static final Set<String> productCategoryContentAndElecTextShortMinimalSelectFields = UtilMisc.toSet("productCategoryId", "textData", "localeString", "contentId", "dataResourceId", "fromDate", "thruDate");
+    private static final Set<String> productCategoryContentAssocAndElecTextShortMinimalSelectFields = UtilMisc.toSet("productCategoryId", "textData", "localeString", "contentId", "dataResourceId", "fromDate", "thruDate", "caFromDate", "caThruDate");
 
     protected static class TrailCacheEntry implements Serializable {
         protected final Set<String> topCategoryIds;
@@ -361,13 +374,10 @@ public class SeoCatalogUrlWorker implements Serializable {
      */
 
     /**
-     * Re-generates a link from PathMatch info.
+     * Re-generates a link from PathMatch info (TODO).
      */
     public String makeCatalogLink(Delegator delegator, PathMatch urlInfo, Locale locale) {
-
-        // TODO: 2017
-
-        return "";
+        throw new UnsupportedOperationException("makeCatalogLink for PathMatch not yet implemented");
     }
 
     /*
@@ -1329,48 +1339,77 @@ public class SeoCatalogUrlWorker implements Serializable {
         List<String> allPathSegments = new ArrayList<>(pathSegments);
         Timestamp moment = UtilDateTime.nowTimestamp();
         if (UtilValidate.isNotEmpty(lastPathSegment) && !urlSuffixFail) {
-            pathSegments.remove(pathSegments.size() - 1);
-            String firstPathElem = (pathSegments.size() > 0) ? pathSegments.get(0) : lastPathSegment;
+            String firstPathSegment = (pathSegments.size() > 0) ? pathSegments.get(0) : null;
             try {
                 if (explicitProductRequest) {
                     // EXPLICIT PRODUCT
-                    PathSegmentEntities productMatches = null;
-                    if (getConfig().isProductSimpleIdLookup() && UtilValidate.isNotEmpty(firstPathElem)) {
-                        productMatches = matchPathSegmentProductCached(delegator, firstPathElem, PathSegmentMatchOptions.ID_ONLY, moment);
+                    // NOTE: Either the first path segment, last, or both may refer to a product, depending on configuration; simply try to handle all cases
+                    //  since we have to isolate the category trail and support all configs
+                    // TODO: Support config options to constrain this behavior for optimization purposes
+                    PathSegmentEntities firstSegmentProducts = null;
+                    PathSegmentEntities lastSegmentProducts = null;
+                    if (getConfig().isProductSimpleIdLookup() && UtilValidate.isNotEmpty(firstPathSegment)) {
+                        firstSegmentProducts = UtilValidate.nullIfEmpty(matchPathSegmentProductCached(delegator, firstPathSegment, PathSegmentMatchOptions.ID_ONLY, moment));
                     }
-                    if (productMatches == null || productMatches.isEmpty()) {
-                        productMatches = matchPathSegmentProductCached(delegator, lastPathSegment, PathSegmentMatchOptions.ANY, moment);
+                    if ((firstSegmentProducts == null || firstSegmentProducts.isEmpty() || pathSegments.size() >= 2) && UtilValidate.isNotEmpty(lastPathSegment)) {
+                        // Always check this even if the first one matched
+                        lastSegmentProducts = UtilValidate.nullIfEmpty(matchPathSegmentProductCached(delegator, lastPathSegment, PathSegmentMatchOptions.ANY, moment));
                     }
-                    if (productMatches.size() > 0) {
-                        pathEntity = matchBestProductAndTrail(delegator, productMatches, pathSegments, currentCatalogId, webSiteId, moment);
+                    PathSegmentEntities targetProducts = null;
+                    if (firstSegmentProducts != null) {
+                        targetProducts = firstSegmentProducts;
+                        pathSegments.remove(0);
+                        if (lastSegmentProducts != null) {
+                            pathSegments.remove(pathSegments.size() - 1);
+                        }
+                    } else if (lastSegmentProducts != null) {
+                        targetProducts = lastSegmentProducts;
+                        pathSegments.remove(pathSegments.size() - 1);
+                    }
+                    if (targetProducts != null) {
+                        pathEntity = matchBestProductAndTrail(delegator, targetProducts, lastSegmentProducts, pathSegments, currentCatalogId, webSiteId, explicitLocale, moment);
                     }
                 } else if (explicitCategoryRequest) {
                     // EXPLICIT CATEGORY
-                    PathSegmentEntities categoryMatches = null;
-                    if (getConfig().isCategorySimpleIdLookup() && UtilValidate.isNotEmpty(firstPathElem)) {
-                        categoryMatches = matchPathSegmentCategoryCached(delegator, firstPathElem, PathSegmentMatchOptions.ID_ONLY, moment);
+                    PathSegmentEntities firstPathCategories = null;
+                    PathSegmentEntities lastPathCategories = null;
+                    if (getConfig().isCategorySimpleIdLookup() && UtilValidate.isNotEmpty(firstPathSegment)) {
+                        firstPathCategories = UtilValidate.nullIfEmpty(matchPathSegmentCategoryCached(delegator, firstPathSegment, PathSegmentMatchOptions.ID_ONLY, moment));
                     }
-                    if (categoryMatches == null || categoryMatches.isEmpty()) {
-                        categoryMatches = matchPathSegmentCategoryCached(delegator, lastPathSegment, PathSegmentMatchOptions.ANY, moment);
+                    if ((firstPathCategories == null || firstPathCategories.isEmpty() || pathSegments.size() >= 2) && UtilValidate.isNotEmpty(lastPathSegment)) {
+                        lastPathCategories = UtilValidate.nullIfEmpty(matchPathSegmentCategoryCached(delegator, lastPathSegment, PathSegmentMatchOptions.ANY, moment));
                     }
-                    if (categoryMatches.size() > 0) {
-                        pathEntity = matchBestCategoryAndTrail(delegator, categoryMatches, pathSegments, currentCatalogId, webSiteId, moment);
+                    PathSegmentEntities targetCategories = null;
+                    if (firstPathCategories != null) {
+                        targetCategories = firstPathCategories;
+                        pathSegments.remove(0);
+                        if (lastPathCategories != null) {
+                            pathSegments.remove(pathSegments.size() - 1);
+                        }
+                    } else if (lastPathCategories != null) {
+                        targetCategories = lastPathCategories;
+                        pathSegments.remove(pathSegments.size() - 1);
+                    }
+                    if (targetCategories != null) {
+                        pathEntity = matchBestCategoryAndTrail(delegator, targetCategories, lastPathCategories, pathSegments, currentCatalogId, webSiteId, explicitLocale, moment);
                     }
                 } else {
                     // IMPLICIT REQUEST
                     // WARN: best-effort, ambiguous - it is up to SeoConfig.xml to decide how risky this will be
                     PathSegmentMatchOptions matchOptions = config.isImplicitRequestNameMatchesOnly() ? PathSegmentMatchOptions.REQUIRE_NAME : PathSegmentMatchOptions.ANY;
-                    PathSegmentEntities productMatches = matchPathSegmentProductCached(delegator, lastPathSegment, matchOptions, moment);
-                    if (productMatches.size() > 0) {
-                        pathEntity = matchBestProductAndTrail(delegator, productMatches, pathSegments, currentCatalogId, webSiteId, moment);
+                    PathSegmentEntities targetProducts = matchPathSegmentProductCached(delegator, lastPathSegment, matchOptions, moment);
+                    if (targetProducts.size() > 0) {
+                        pathSegments.remove(pathSegments.size() - 1);
+                        pathEntity = matchBestProductAndTrail(delegator, targetProducts, targetProducts, pathSegments, currentCatalogId, webSiteId, null, moment);
                     } else {
-                        PathSegmentEntities categoryMatches = matchPathSegmentCategoryCached(delegator, lastPathSegment, matchOptions, moment);
-                        if (categoryMatches.size() > 0) {
-                            pathEntity = matchBestCategoryAndTrail(delegator, categoryMatches, pathSegments, currentCatalogId, webSiteId, moment);
+                        PathSegmentEntities targetCategories = matchPathSegmentCategoryCached(delegator, lastPathSegment, matchOptions, moment);
+                        if (targetCategories.size() > 0) {
+                            pathSegments.remove(pathSegments.size() - 1);
+                            pathEntity = matchBestCategoryAndTrail(delegator, targetCategories, targetCategories, pathSegments, currentCatalogId, webSiteId, null, moment);
                         }
                     }
                 }
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Debug.logError(e, "Seo: matchInboundSeoCatalogUrl: Error parsing catalog URL " + path + ": " + e.getMessage(), module);
                 return null;
             }
@@ -1419,15 +1458,19 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         protected final TrailMatchType trailMatchType;
         protected final PathSegmentEntity targetEntity;
+        protected final PathSegmentEntities lastSegmentEntities;
+        protected transient PathSegmentEntities lastSegmentTargetEntities;
         protected final List<PathSegmentEntity> trailEntities;
         protected final List<String> trailCategoryIds;
         protected transient List<String> fullTrailCategoryIds;
         protected final List<PathSegmentEntities> requestedTrailEntities;
+        protected transient List<PathSegmentEntities> fullRequestedTrailEntities;
 
-        protected PathEntity(TrailMatchType trailMatchType, PathSegmentEntity targetEntity, List<PathSegmentEntity> trailEntities,
+        protected PathEntity(TrailMatchType trailMatchType, PathSegmentEntity targetEntity, PathSegmentEntities lastSegmentEntities, List<PathSegmentEntity> trailEntities,
                              List<String> pathCategoryIds, List<PathSegmentEntities> requestedTrailEntities) {
             this.trailMatchType = trailMatchType;
             this.targetEntity = targetEntity;
+            this.lastSegmentEntities = lastSegmentEntities;
             this.trailEntities = trailEntities;
             this.trailCategoryIds = pathCategoryIds;
             this.requestedTrailEntities = requestedTrailEntities;
@@ -1439,6 +1482,34 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         public PathSegmentEntity getTargetEntity() {
             return targetEntity;
+        }
+
+        public String getId() {
+            PathSegmentEntity targetEntity = getTargetEntity();
+            return (targetEntity != null) ? targetEntity.getId() : null;
+        }
+
+        /**
+         * Last segment (target) entities; normally contains {@link #getTargetEntity()} by ID but not guaranteed.
+         */
+        public PathSegmentEntities getLastSegmentEntities() {
+            return lastSegmentEntities;
+        }
+
+        /**
+         * Sometimes, the {@link #getLastSegmentTargetEntities()} entity was not the last path segment; this gets the first matching in the last path segment.
+         */
+        public PathSegmentEntities getLastSegmentTargetEntities() {
+            PathSegmentEntities lastSegmentTargetEntities = this.lastSegmentTargetEntities;
+            if (lastSegmentTargetEntities == null) {
+                PathSegmentEntity targetEntity = getTargetEntity();
+                PathSegmentEntities lastSegmentEntities = getLastSegmentEntities();
+                if (targetEntity != null && lastSegmentEntities != null) {
+                    lastSegmentTargetEntities = lastSegmentEntities.getAllForId(targetEntity.getId());
+                    this.lastSegmentTargetEntities = lastSegmentTargetEntities;
+                }
+            }
+            return lastSegmentTargetEntities;
         }
 
         public CatalogUrlType getTargetEntityType() {
@@ -1505,27 +1576,55 @@ public class SeoCatalogUrlWorker implements Serializable {
         }
 
         /**
-         * Returns the originally requested trail entities; these may be wrong length (different than {@link #getTrailCategoryIds()}) or not match the chosen trail entities/categories.
+         * Returns the originally requested trail entities, excluding the entry for the target entity; these may be wrong length (different than {@link #getTrailCategoryIds()}) or not match the chosen trail entities/categories.
          */
         public List<PathSegmentEntities> getRequestedTrailEntities() {
             return requestedTrailEntities;
         }
+
+        /**
+         * Returns the originally requested trail entities, including the entries for the target entity or extra entities; these may be wrong length (different than {@link #getFullTrailCategoryIds()}) or not match the chosen trail entities/categories.
+         */
+        public List<PathSegmentEntities> getFullRequestedTrailEntities() {
+            List<PathSegmentEntities> fullRequestedTrailEntities = this.fullRequestedTrailEntities;
+            if (fullRequestedTrailEntities == null) {
+                if (getTargetEntityType() == CatalogUrlType.PRODUCT) {
+                    fullRequestedTrailEntities = requestedTrailEntities;
+                } else {
+                    PathSegmentEntities lastEntities = (this.lastSegmentEntities != null && this.lastSegmentEntities.size() > 0) ?
+                            this.lastSegmentEntities : targetEntity.asEntitiesResult();
+                    if (UtilValidate.isNotEmpty(requestedTrailEntities)) {
+                        fullRequestedTrailEntities = new ArrayList<>(requestedTrailEntities.size() + 1);
+                        fullRequestedTrailEntities.addAll(requestedTrailEntities);
+                        fullRequestedTrailEntities.add(lastEntities);
+                    } else {
+                        fullRequestedTrailEntities = List.of(lastEntities);
+                    }
+                }
+                this.fullRequestedTrailEntities = fullRequestedTrailEntities;
+            }
+            return fullRequestedTrailEntities;
+        }
+
     }
 
-    protected PathEntity matchBestProductAndTrail(Delegator delegator, PathSegmentEntities products, List<String> pathSegments, String currentCatalogId, String webSiteId, Timestamp moment) throws GenericEntityException {
-        return matchBestEntityAndTrail(delegator, products, pathSegments, currentCatalogId, webSiteId, moment);
+    protected PathEntity matchBestProductAndTrail(Delegator delegator, PathSegmentEntities products, PathSegmentEntities lastSegmentProducts, List<String> pathSegments, String currentCatalogId, String webSiteId, Locale expectedLocale, Timestamp moment) throws GenericEntityException {
+        return matchBestEntityAndTrail(delegator, products, lastSegmentProducts, pathSegments, currentCatalogId, webSiteId, expectedLocale, moment);
     }
 
-    protected PathEntity matchBestCategoryAndTrail(Delegator delegator, PathSegmentEntities categories, List<String> pathSegments, String currentCatalogId, String webSiteId, Timestamp moment) throws GenericEntityException {
-        return matchBestEntityAndTrail(delegator, categories, pathSegments, currentCatalogId, webSiteId, moment);
+    protected PathEntity matchBestCategoryAndTrail(Delegator delegator, PathSegmentEntities categories, PathSegmentEntities lastSegmentCategories, List<String> pathSegments, String currentCatalogId, String webSiteId, Locale expectedLocale, Timestamp moment) throws GenericEntityException {
+        return matchBestEntityAndTrail(delegator, categories, lastSegmentCategories, pathSegments, currentCatalogId, webSiteId, expectedLocale, moment);
     }
 
     /**
      * Uses heuristic category trail matching to determine best entity and trail for a set of target entities against category rollup trails.
      *
      * <p>NOTE: This assumes the targetEntities are all product or all categories.</p>
+     *
+     * <p>TODO: This should use expectedLocale when non-null to bias targetEntities and trail selection.</p>
      */
-    protected PathEntity matchBestEntityAndTrail(Delegator delegator, PathSegmentEntities targetEntities, List<String> pathSegments, String currentCatalogId, String webSiteId, Timestamp moment) throws GenericEntityException {
+    protected PathEntity matchBestEntityAndTrail(Delegator delegator, PathSegmentEntities targetEntities, PathSegmentEntities lastSegmentEntities,
+                                                 List<String> pathSegments, String currentCatalogId, String webSiteId, Locale expectedLocale, Timestamp moment) throws GenericEntityException {
         PathSegmentMatchOptions matchOptions = PathSegmentMatchOptions.ANY; // TODO: Configurable
         List<PathSegmentEntities> requestedTrailEntities = matchPathSegmentCategoriesCached(delegator, pathSegments, matchOptions, moment);
 
@@ -1562,7 +1661,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                         requestedTrailEntities.add(targetEntities);
                     }
                     try {
-                        trail = findBestTrailForPathSegments(delegator, trails, requestedTrailEntities);
+                        trail = findBestTrailForPathSegments(delegator, trails, requestedTrailEntities, expectedLocale);
                     } finally {
                         if (isCategoryEntity) {
                             requestedTrailEntities.remove(requestedTrailEntities.size() - 1);
@@ -1661,7 +1760,7 @@ public class SeoCatalogUrlWorker implements Serializable {
             }
         }
 
-        return (bestEntity != null) ? new PathEntity(bestTrailMatchType, bestEntity, bestTrailEntities, bestTrail, requestedTrailEntities) : null;
+        return (bestEntity != null) ? new PathEntity(bestTrailMatchType, bestEntity, lastSegmentEntities, bestTrailEntities, bestTrail, requestedTrailEntities) : null;
     }
 
     /**
@@ -1719,8 +1818,10 @@ public class SeoCatalogUrlWorker implements Serializable {
      *
      * <p>For a trail to be selected, it must "end with" the pathElems; after that, the best trail is one that
      * has smallest length.</p>
+     *
+     * <p>TODO: This should use expectedLocale when non-null to bias targetEntities and trail selection.</p>
      */
-    protected List<String> findBestTrailForPathSegments(Delegator delegator, List<List<String>> possibleTrails, List<PathSegmentEntities> pathSegments) throws GenericEntityException {
+    protected List<String> findBestTrailForPathSegments(Delegator delegator, List<List<String>> possibleTrails, List<PathSegmentEntities> pathSegments, Locale expectedLocale) throws GenericEntityException {
         if (pathSegments.isEmpty()) {
             return null;
         }
@@ -1876,8 +1977,29 @@ public class SeoCatalogUrlWorker implements Serializable {
             return null;
         }
 
+        public PathSegmentEntities getAllForId(String id) {
+            List<PathSegmentEntity> targetEntities = getEntities().stream().filter(e -> id.equals(e.getId())).collect(Collectors.toList());
+            return new PathSegmentEntities(this.entityType, this.pathSegment, targetEntities, this.moment);
+        }
+
+        public List<String> getIdList() {
+            return getEntities().stream().map(PathSegmentEntity::getId).collect(Collectors.toList());
+        }
+
         public boolean isExpired(Timestamp moment, long expireTimeMs) {
             return moment.before(UtilDateTime.addMillisecondsToTimestamp(this.moment, (int) expireTimeMs));
+        }
+
+        public boolean sameEntities(PathSegmentEntities other) {
+            if (entities.size() != other.entities.size()) {
+                return false;
+            }
+            for (PathSegmentEntity entity : other.entities) {
+                if (this.getForId(entity.getId()) == null) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /**
@@ -2022,7 +2144,7 @@ public class SeoCatalogUrlWorker implements Serializable {
     }
 
     public PathSegmentEntity makePathSegmentEntity(Delegator delegator, CatalogUrlType entityType, String id, String pathSegment, PathSegmentMatchOptions matchOptions, Timestamp moment, PathSegmentMatchType matchType, String name, String localeString, GenericValue record) {
-        return new PathSegmentEntity(entityType, id, pathSegment, matchOptions, moment, matchType, name, localeString, record);
+        return new PathSegmentEntity(delegator, entityType, id, pathSegment, matchOptions, moment, matchType, name, localeString, record);
     }
 
     protected PathSegmentEntity addPathSegmentEntity(Map<String, PathSegmentEntity> results, Delegator delegator, CatalogUrlType entityType, String id, String pathSegment, PathSegmentMatchOptions matchOptions, Timestamp moment, PathSegmentMatchType matchType, String name, String localeString, GenericValue record) {
@@ -2044,7 +2166,10 @@ public class SeoCatalogUrlWorker implements Serializable {
         protected final String id;
         protected final String pathSegment;
         protected final PathSegmentMatchOptions matchOptions;
-        //protected final Timestamp moment; // Not good - this gets cached
+        protected final Timestamp moment; // NOTE: This is only for internal query use - this gets cached so client code may not want to reuse
+
+        protected final String delegatorName;
+        protected transient Delegator delegator;
 
         /**
          * Individual record/name matches, most precise first.
@@ -2053,11 +2178,26 @@ public class SeoCatalogUrlWorker implements Serializable {
          */
         protected List<RecordMatch> recordMatches; // Not needed: volatile
 
-        protected PathSegmentEntity(CatalogUrlType entityType, String id, String pathSegment, PathSegmentMatchOptions matchOptions, Timestamp moment, PathSegmentMatchType matchType, String name, String localeString, GenericValue record)  {
+        /**
+         * Caches all ALTERNATIVE_URL shortened record values for this ID (not just matched textData or locale).
+         */
+        protected List<GenericValue> mainContentAltUrlValues;
+
+        /**
+         * Caches all ALTERNATIVE_URL ALTERNATE_LOCALE shortened record values for this ID (not just matched textData or locale).
+         */
+        protected List<GenericValue> altLocaleContentAltUrlValues;
+
+        protected Map<String, GenericValue> localeContentAltUrlValueMap;
+
+        protected PathSegmentEntity(Delegator delegator, CatalogUrlType entityType, String id, String pathSegment, PathSegmentMatchOptions matchOptions, Timestamp moment, PathSegmentMatchType matchType, String name, String localeString, GenericValue record)  {
             this.entityType = entityType;
             this.id = UtilValidate.nullIfEmpty(id);
             this.pathSegment = pathSegment;
             this.matchOptions = matchOptions;
+            this.moment = moment;
+            this.delegatorName = delegator.getDelegatorName();
+            this.delegator = delegator;
             List<RecordMatch> recordMatches = new ArrayList<>(1);
             recordMatches.add(makeRecordMatch(matchType, name, localeString, record));
             this.recordMatches = recordMatches;
@@ -2068,6 +2208,9 @@ public class SeoCatalogUrlWorker implements Serializable {
             this.id = other.id;
             this.pathSegment = other.pathSegment;
             this.matchOptions = (matchOptions != null) ? matchOptions : other.matchOptions;
+            this.moment = other.moment;
+            this.delegatorName = other.delegatorName;
+            this.delegator = other.delegator;
             if (preserveRecordMatches) {
                 List<RecordMatch> recordMatches = new ArrayList<>(other.recordMatches.size());
                 for (RecordMatch recordMatch : other.getRecordMatches()) {
@@ -2115,6 +2258,15 @@ public class SeoCatalogUrlWorker implements Serializable {
             if (recordMatches instanceof ArrayList) {
                 recordMatches = List.copyOf(recordMatches);
             }
+        }
+
+        protected Delegator getDelegator() {
+            Delegator delegator = this.delegator;
+            if (delegator == null) {
+                delegator = Delegator.fromName(delegatorName);
+                this.delegator = delegator;
+            }
+            return delegator;
         }
 
         public boolean isValid() {
@@ -2175,6 +2327,112 @@ public class SeoCatalogUrlWorker implements Serializable {
 
         public int comparePrecisionTo(PathSegmentEntity other) {
             return this.getBestMatchType().comparePrecisionTo(other.getBestMatchType());
+        }
+
+        public PathSegmentEntities asEntitiesResult() {
+            return new PathSegmentEntities(this, moment);
+        }
+
+        /**
+         * Returns all ALTERNATIVE_URL shortened record values for this ID (not just matched textData or locale).
+         */
+        public List<GenericValue> getMainContentAltUrlValues() {
+            return getMainContentAltUrlValues(null);
+        }
+
+        /**
+         * Returns all ALTERNATIVE_URL shortened record values for this ID (not just matched textData or locale).
+         */
+        public List<GenericValue> getMainContentAltUrlValues(Boolean minimalSelect) {
+            List<GenericValue> mainContentAltUrlValues = this.mainContentAltUrlValues;
+            if (mainContentAltUrlValues == null ||
+                    (Boolean.FALSE.equals(minimalSelect) && mainContentAltUrlValues.size() > 0 && !mainContentAltUrlValues.get(0).containsKey("ownerContentId"))) {
+                try {
+                    if (getEntityType() == CatalogUrlType.PRODUCT) {
+                        mainContentAltUrlValues = findProductContentAltUrlValues(getDelegator(),
+                                EntityCondition.makeCondition("productId", getId()), moment, minimalSelect != null ? minimalSelect : true);
+                    } else {
+                        mainContentAltUrlValues = findProductCategoryContentAltUrlValues(getDelegator(),
+                                EntityCondition.makeCondition("productCategoryId", getId()), moment, minimalSelect != null ? minimalSelect : true);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    this.mainContentAltUrlValues = List.of();
+                    return null;
+                }
+                this.mainContentAltUrlValues = mainContentAltUrlValues;
+            }
+            return mainContentAltUrlValues;
+        }
+
+        /**
+         * Returns all ALTERNATIVE_URL ALTERNATE_LOCALE shortened record values for this ID (not just matched textData or locale).
+         */
+        public List<GenericValue> getAltLocaleContentAltUrlValues() {
+            return getAltLocaleContentAltUrlValues(null);
+        }
+
+        /**
+         * Returns all ALTERNATIVE_URL ALTERNATE_LOCALE shortened record values for this ID (not just matched textData or locale).
+         */
+        public List<GenericValue> getAltLocaleContentAltUrlValues(Boolean minimalSelect) {
+            List<GenericValue> altLocaleContentAltUrlValues = this.altLocaleContentAltUrlValues;
+            if (altLocaleContentAltUrlValues == null ||
+                    (Boolean.FALSE.equals(minimalSelect) && altLocaleContentAltUrlValues.size() > 0 && !altLocaleContentAltUrlValues.get(0).containsKey("ownerContentId"))) {
+                try {
+                    if (getEntityType() == CatalogUrlType.PRODUCT) {
+                        altLocaleContentAltUrlValues = findProductContentAltUrlLocalizedValues(getDelegator(),
+                                EntityCondition.makeCondition("productId", getId()), moment, minimalSelect != null ? minimalSelect : true);
+                    } else {
+                        altLocaleContentAltUrlValues = findProductCategoryContentAltUrlLocalizedValues(getDelegator(),
+                                EntityCondition.makeCondition("productCategoryId", getId()), moment, minimalSelect != null ? minimalSelect : true);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    this.altLocaleContentAltUrlValues = List.of();
+                    return null;
+                }
+                this.altLocaleContentAltUrlValues = altLocaleContentAltUrlValues;
+            }
+            return altLocaleContentAltUrlValues;
+        }
+
+        /**
+         * Returns an insertion-ordered map of locale strings to content values; empty string is supported and typically the default and first entry.
+         */
+        public Map<String, GenericValue> getLocaleContentAltUrlValueMap() {
+            return getLocaleContentAltUrlValueMap(null);
+        }
+
+        /**
+         * Returns an insertion-ordered map of locale strings to content values; empty string is supported and typically the default and first entry.
+         */
+        public Map<String, GenericValue> getLocaleContentAltUrlValueMap(Boolean minimalSelect) {
+            Map<String, GenericValue> localeContentAltUrlValueMap = this.localeContentAltUrlValueMap;
+            if (localeContentAltUrlValueMap == null ||
+                    (Boolean.FALSE.equals(minimalSelect) && localeContentAltUrlValueMap.size() > 0 &&
+                            !localeContentAltUrlValueMap.values().iterator().next().containsKey("ownerContentId"))) {
+                localeContentAltUrlValueMap = new LinkedHashMap<>();
+                for (GenericValue value : getMainContentAltUrlValues(minimalSelect)) {
+                    String localeString = value.getString("localeString");
+                    if (!localeContentAltUrlValueMap.containsKey(localeString)) {
+                        localeContentAltUrlValueMap.put(localeString != null ? localeString : "", value);
+                    }
+                }
+                for (GenericValue value : getAltLocaleContentAltUrlValues(minimalSelect)) {
+                    String localeString = value.getString("localeString");
+                    if (localeString != null) {
+                        if (!localeContentAltUrlValueMap.containsKey(localeString)) {
+                            localeContentAltUrlValueMap.put(localeString, value);
+                        }
+                    } else {
+                        Debug.logWarning("Unexpected empty localeString on ALTERNATE_LOCALE content; ignoring: " + value, module);
+                    }
+                }
+                localeContentAltUrlValueMap = Map.copyOf(localeContentAltUrlValueMap);
+                this.localeContentAltUrlValueMap = localeContentAltUrlValueMap;
+            }
+            return localeContentAltUrlValueMap;
         }
 
         /**
@@ -2278,6 +2536,7 @@ public class SeoCatalogUrlWorker implements Serializable {
                 return this.getMatchType().comparePrecisionTo(other.getMatchType());
             }
         }
+
     }
 
     public enum PathSegmentMatchType {
@@ -2376,31 +2635,49 @@ public class SeoCatalogUrlWorker implements Serializable {
     protected void matchPathSegmentProductByAltUrl(Delegator delegator, String pathSegment, PathSegmentMatchOptions matchOptions, Timestamp moment, Map<String, PathSegmentEntity> results) throws GenericEntityException {
         // SCIPIO: this is a new filter that narrows down results from DB, which otherwise may be huge.
         EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(pathSegment, "productId", "textData", matchOptions.isRequireId());
-        EntityCondition contentTypeIdCond = EntityCondition.makeCondition("productContentTypeId", "ALTERNATIVE_URL");
-        List<EntityCondition> condList;
-        List<GenericValue> productContentInfos;
 
         // Search for non-localized alt urls
-        condList = new ArrayList<>();
-        condList.add(contentTypeIdCond);
-        condList.add(matchTextIdCond);
-        productContentInfos = EntityQuery.use(delegator).from("ProductContentAndElecTextShort")
-                .where(condList).select("productId", "textData", "localeString", "contentId", "dataResourceId")
-                .filterByDate(moment) // NOTE: When cache==true, this is applied by EntityQuery in-memory after the DB query (important here)
-                .orderBy("-fromDate").cache(true).queryList();
+        List<GenericValue> productContentInfos = findProductContentAltUrlValues(delegator, matchTextIdCond, moment, true);
         matchPathSegmentAltUrl(delegator, pathSegment, productContentInfos, "productId", CatalogUrlType.PRODUCT, matchOptions, moment, results);
 
         // Search for localized alt urls
-        condList = new ArrayList<>();
-        condList.add(contentTypeIdCond);
-        condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
-        condList.add(matchTextIdCond);
-        productContentInfos = EntityQuery.use(delegator).from("ProductContentAssocAndElecTextShort")
-                .where(condList).select("productId", "textData", "localeString", "contentId", "dataResourceId")
-                .filterByDate(moment) // cannot do this, only one filter at a time (bug): .filterByDate(moment, "caFromDate", "caThruDate")
+        List<GenericValue> productContentAssocInfos = findProductContentAltUrlLocalizedValues(delegator, matchTextIdCond, moment, true);
+        matchPathSegmentAltUrl(delegator, pathSegment, productContentAssocInfos, "productId", CatalogUrlType.PRODUCT, matchOptions, moment, results);
+    }
+
+    public static List<GenericValue> findProductContentAltUrlValues(Delegator delegator, EntityCondition filterCondition, Timestamp moment, boolean minimalSelect) throws GenericEntityException {
+        List<GenericValue> values = delegator.query().from("ProductContentAndElecTextShort")
+                .where(productContentTypeIdAltUrlCond, filterCondition)
+                .select(minimalSelect ? productContentAndElecTextShortMinimalSelectFields : null)
+                .filterByDate(moment) // NOTE: When cache==true, this is applied by EntityQuery in-memory after the DB query (important here)
+                .orderBy("-fromDate").cache(true).queryList();
+        return filterProductContentAltUrlValuesByDate(delegator, values, moment);
+    }
+
+    public static List<GenericValue> filterProductContentAltUrlValuesByDate(Delegator delegator, List<GenericValue> values, Timestamp moment) throws GenericEntityException {
+        if (moment == null) {
+            return values;
+        }
+        return EntityUtil.filterByDate(values, moment, "fromDate", "thruDate", true);
+    }
+
+    public static List<GenericValue> findProductContentAltUrlLocalizedValues(Delegator delegator, EntityCondition filterCondition, Timestamp moment, boolean minimalSelect) throws GenericEntityException {
+        List<GenericValue> values = EntityQuery.use(delegator).from("ProductContentAssocAndElecTextShort")
+                .where(productContentTypeIdAltUrlCond, contentAssocTypeIdAltLocaleCond, filterCondition)
+                .select(minimalSelect ? productContentAssocAndElecTextShortMinimalSelectFields : null)
                 .orderBy("-fromDate", "-caFromDate").cache(true).queryList();
-        productContentInfos = EntityUtil.filterByDate(productContentInfos, moment, "caFromDate", "caThruDate", true);
-        matchPathSegmentAltUrl(delegator, pathSegment, productContentInfos, "productId", CatalogUrlType.PRODUCT, matchOptions, moment, results);
+        return filterProductContentAltUrlLocalizedValuesByDate(delegator, values, moment);
+    }
+
+    public static List<GenericValue> filterProductContentAltUrlLocalizedValuesByDate(Delegator delegator, List<GenericValue> values, Timestamp moment) throws GenericEntityException {
+        if (moment == null) {
+            return values;
+        }
+        return EntityUtil.filterByCondition(values,
+                EntityCondition.makeCondition(
+                        EntityUtil.getFilterByDateExpr(moment, "fromDate", "thruDate"),
+                        EntityUtil.getFilterByDateExpr(moment, "caFromDate", "caThruDate")
+                ));
     }
 
     /**
@@ -2486,31 +2763,48 @@ public class SeoCatalogUrlWorker implements Serializable {
     protected void matchPathSegmentCategoryByAltUrl(Delegator delegator, String pathSegment, PathSegmentMatchOptions matchOptions, Timestamp moment, Map<String, PathSegmentEntity> results) throws GenericEntityException {
         // SCIPIO: this is a new filter that narrows down results from DB, which otherwise may be huge.
         EntityCondition matchTextIdCond = makeAltUrlTextIdMatchCombinations(pathSegment, "productCategoryId", "textData", matchOptions.isRequireId());
-        EntityCondition contentTypeIdCond = EntityCondition.makeCondition("prodCatContentTypeId", "ALTERNATIVE_URL");
-        List<EntityCondition> condList;
-        List<GenericValue> productCategoryContentInfos;
 
         // Search for non-localized alt urls
-        condList = new ArrayList<>();
-        condList.add(contentTypeIdCond);
-        condList.add(matchTextIdCond);
-        productCategoryContentInfos = EntityQuery.use(delegator).from("ProductCategoryContentAndElecTextShort")
-                .where(condList).select("productCategoryId", "textData", "localeString", "contentId", "dataResourceId")
-                .filterByDate(moment) // NOTE: When cache==true, this is applied by EntityQuery in-memory after the DB query (important here)
-                .orderBy("-fromDate").cache(true).queryList();
+        List<GenericValue> productCategoryContentInfos = findProductCategoryContentAltUrlValues(delegator, matchTextIdCond, moment, true);
         matchPathSegmentAltUrl(delegator, pathSegment, productCategoryContentInfos, "productCategoryId", CatalogUrlType.CATEGORY, matchOptions, moment, results);
 
         // Search for localized alt urls
-        condList = new ArrayList<>();
-        condList.add(contentTypeIdCond);
-        condList.add(EntityCondition.makeCondition("contentAssocTypeId", "ALTERNATE_LOCALE"));
-        condList.add(matchTextIdCond);
-        productCategoryContentInfos = EntityQuery.use(delegator).from("ProductCategoryContentAssocAndElecTextShort")
-                .where(condList).select("productCategoryId", "textData", "localeString", "contentId", "dataResourceId")
-                .filterByDate(moment) // cannot do this, only one filter at a time (bug): .filterByDate(moment, "caFromDate", "caThruDate")
+        List<GenericValue> productCategoryContentAssocInfos = findProductCategoryContentAltUrlLocalizedValues(delegator, matchTextIdCond, moment, true);
+        matchPathSegmentAltUrl(delegator, pathSegment, productCategoryContentAssocInfos, "productCategoryId", CatalogUrlType.CATEGORY, matchOptions, moment, results);
+    }
+
+    public static List<GenericValue> findProductCategoryContentAltUrlValues(Delegator delegator, EntityCondition filterCondition, Timestamp moment, boolean minimalSelect) throws GenericEntityException {
+        List<GenericValue> values = delegator.query().from("ProductCategoryContentAndElecTextShort")
+                .where(prodCatContentTypeIdAltUrlCond, filterCondition)
+                .select(minimalSelect ? productCategoryContentAndElecTextShortMinimalSelectFields : null)
+                .orderBy("-fromDate").cache(true).queryList();
+        return filterProductCategoryContentAltUrlValuesByDate(delegator, values, moment);
+    }
+
+    public static List<GenericValue> filterProductCategoryContentAltUrlValuesByDate(Delegator delegator, List<GenericValue> values, Timestamp moment) throws GenericEntityException {
+        if (moment == null) {
+            return values;
+        }
+        return EntityUtil.filterByDate(values, moment, "fromDate", "thruDate", true);
+    }
+
+    public static List<GenericValue> findProductCategoryContentAltUrlLocalizedValues(Delegator delegator, EntityCondition filterCondition, Timestamp moment, boolean minimalSelect) throws GenericEntityException {
+        List<GenericValue> values = delegator.query().from("ProductCategoryContentAssocAndElecTextShort")
+                .where(prodCatContentTypeIdAltUrlCond, contentAssocTypeIdAltLocaleCond, filterCondition)
+                .select(minimalSelect ? productCategoryContentAssocAndElecTextShortMinimalSelectFields : null)
                 .orderBy("-fromDate", "-caFromDate").cache(true).queryList();
-        productCategoryContentInfos = EntityUtil.filterByDate(productCategoryContentInfos, moment, "caFromDate", "caThruDate", true);
-        matchPathSegmentAltUrl(delegator, pathSegment, productCategoryContentInfos, "productCategoryId", CatalogUrlType.CATEGORY, matchOptions, moment, results);
+        return filterProductCategoryContentAltUrlLocalizedValuesByDate(delegator, values, moment);
+    }
+
+    public static List<GenericValue> filterProductCategoryContentAltUrlLocalizedValuesByDate(Delegator delegator, List<GenericValue> values, Timestamp moment) throws GenericEntityException {
+        if (moment == null) {
+            return values;
+        }
+        return EntityUtil.filterByCondition(values,
+                EntityCondition.makeCondition(
+                        EntityUtil.getFilterByDateExpr(moment, "fromDate", "thruDate"),
+                        EntityUtil.getFilterByDateExpr(moment, "caFromDate", "caThruDate")
+                ));
     }
 
     /**

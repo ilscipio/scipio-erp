@@ -920,14 +920,18 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                         if (cmsPageUrlAttr != null) {
                             altUri = getCmsPageAttrValue(uriInfo, cmsPageUrlAttr, locale);
                         }
-                        if (altUri == null || altUri.isEmpty()) {
-                            altUri = localeUriMap.get(locale);
-                            if (altUri != null) {
-                                altUri = PathUtil.concatPaths(getContextPath(locale), altUri);
+                        if (altUri == null || altUri.isEmpty()) { // If language detected but no value, figure out default; otherwise don't print out
+                            // TODO: candidate locale expansion; for now CMS doesn't return much in localeUriMap anyway so defaultLocale gets used
+                            String altCmsUri = localeUriMap.get(locale);
+                            if (altCmsUri != null) {
+                                altUri = PathUtil.concatPaths(getContextPath(locale), altCmsUri);
+                            } else {
+                                // Do not print default unless value was non-empty because it will effectively be the wrong language; bad default
+                                //altUri = defaultUri;
                             }
                         }
 
-                        if (altUri != null) {
+                        if (altUri != null && !altUri.isEmpty()) {
                             String altUrl = postprocessElementLink(altUri, locale);
                             if (altUrl != null && !altUrl.isEmpty()) {
                                 altLinks.add(new AltLink(altUrl).namespace("xhtml").rel("alternate").lang(locale.toString()));
@@ -951,8 +955,12 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         }
     }
 
+    /**
+     * Returns a currentUrl_${localeVar} attribute, empty string if attribute specified but no value and null if not set on the page content for the uriInfo object.
+     */
     protected String getCmsPageAttrValue(Map<String, Object> uriInfo, FlexibleStringExpander attr, Locale locale) {
-        Map<String, Object> attrCtx = UtilMisc.toMap("localeVar", locale.toString().replace("-", "_"));
+        String localeVar = locale.toString().replace("-", "_");
+        Map<String, Object> attrCtx = UtilMisc.toMap("localeVar", localeVar);
         String attrName = attr.expandString(attrCtx);
         if (attrName == null || attrName.isEmpty()) {
             return null;
@@ -960,8 +968,25 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         // FIXME: This is the unparsed attribute assumed to be string to simplify for now; missing
         //  logic from com.ilscipio.scipio.cms.template.CmsRenderTemplate.TemplateRenderer.populateAttributeOrOvrd for now
         Map<String, ?> content = UtilGenerics.cast(uriInfo.get("content"));
-        Object value = (content != null) ? content.get(attrName) : null;
-        return (value != null) ? value.toString() : null;
+        Object value;
+        if (content != null) {
+            value = content.get(attrName);
+            if (value != null) {
+                return value.toString();
+            } else if (content.containsKey(attrName)) {
+                return "";
+            }
+            if (localeVar.length() == 2) {
+                for (Map.Entry<String, ?> entry : content.entrySet()) {
+                    String key = entry.getKey();
+                    if (key.startsWith(attrName + "_")) {
+                        value = entry.getValue();
+                        return (value != null) ? value.toString() : "";
+                    }
+                }
+            }
+        }
+        return null; // Not set
     }
 
     protected void resetElemHandlers() {

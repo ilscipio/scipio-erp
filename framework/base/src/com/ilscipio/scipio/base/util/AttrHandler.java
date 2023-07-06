@@ -218,7 +218,7 @@ public class AttrHandler {
             }
         }
         if (accessOp.doResolve()) {
-            locale = (resolver != null ? resolver : resolver()).resolveLocale();
+            locale = (resolver != null ? resolver : resolver(request, session)).resolveLocale();
         }
         if (accessOp.doSetCache() && (accessOp.doClearCache() || locale != null)) {
             UtilHttp.setLocale(session, locale);
@@ -257,7 +257,7 @@ public class AttrHandler {
             }
         }
         if (accessOp.doResolve()) {
-            timeZone = (resolver != null ? resolver : resolver()).resolveTimeZone();
+            timeZone = (resolver != null ? resolver : resolver(request, session)).resolveTimeZone();
         }
         if (accessOp.doSetCache() && (accessOp.doClearCache() || timeZone != null)) {
             UtilHttp.setTimeZone(session, timeZone);
@@ -296,7 +296,7 @@ public class AttrHandler {
             }
         }
         if (accessOp.doResolve()) {
-            currencyUom = (resolver != null ? resolver : resolver()).resolveCurrencyUom();
+            currencyUom = (resolver != null ? resolver : resolver(request, session)).resolveCurrencyUom();
         }
         if (accessOp.doSetCache() && (accessOp.doClearCache() || currencyUom != null)) {
             UtilHttp.setCurrencyUom(session, currencyUom);

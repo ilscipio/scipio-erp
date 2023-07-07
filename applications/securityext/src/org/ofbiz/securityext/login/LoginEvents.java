@@ -486,6 +486,9 @@ public class LoginEvents {
         if (!"success".equals(responseString)) {
             return responseString;
         }
+        // TODO: REVIEW: Not in stock; appropriate?
+        //String errMsg = UtilProperties.getMessage(resource, "loginevents.login_successful", UtilHttp.getLocale(request));
+        //request.setAttribute("_EVENT_MESSAGE_", errMsg);
         if ("Y".equals(request.getParameter("rememberMe"))) {
             setUsername(request, response);
         }

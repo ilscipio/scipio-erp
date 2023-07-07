@@ -194,15 +194,18 @@ public class ProductDataReader {
         return ProductWorker.getAssocCategoryIdsForProduct(ordered ? new LinkedHashSet<>() : new HashSet<>(), getDelegator(dctx), productId, null, assocToVariant, moment, ordered, useCache);
     }
 
-    public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String prodCatalogId, String currencyUomId, Locale locale, boolean useCache, Map<String, ?> ovrdFields) throws GeneralException {
+    public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, String productStoreId, String webSiteId, String prodCatalogId, String currencyUomId, Locale locale, boolean useCache, Map<String, ?> ovrdFields) throws GeneralException {
         Map<String, Object> priceContext = UtilMisc.toMap("product", product);
         priceContext.put("currencyUomId", currencyUomId);
         priceContext.put("useCache", useCache);
-        if (productStore != null) {
-            priceContext.put("productStoreId", productStore.get("productStoreId"));
+        if (productStoreId != null) {
+            priceContext.put("productStoreId", productStoreId);
         }
         if (prodCatalogId != null) {
             priceContext.put("prodCatalogId", prodCatalogId);
+        }
+        if (webSiteId != null) {
+            priceContext.put("webSiteId", webSiteId);
         }
         if (context != null) {
             copyStdServiceFieldsNotSet(context, priceContext);
@@ -219,34 +222,26 @@ public class ProductDataReader {
         return getDispatcher(dctx).runSync("calculateProductPrice", priceContext);
     }
 
+    public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String prodCatalogId, String currencyUomId, Locale locale, boolean useCache, Map<String, ?> ovrdFields) throws GeneralException {
+        return getProductStandardPrices(dctx, context, userLogin, product, (productStore != null) ? productStore.getString("productStoreId") : null, null, prodCatalogId, currencyUomId, locale, useCache, ovrdFields);
+    }
+
     public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String prodCatalogId, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
-        return getProductStandardPrices(dctx, context, userLogin, product, productStore, prodCatalogId, currencyUomId, locale, useCache, null);
+        return getProductStandardPrices(dctx, context, userLogin, product, (productStore != null) ? productStore.getString("productStoreId") : null, null, prodCatalogId, currencyUomId, locale, useCache, null);
     }
 
-    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
-        // TODO: REVIEW: do we need to pass a specific catalog or webSiteId here?
-        ProductConfigWrapper pcw = null;
-        try {
-            if (context != null) {
-                if (locale == null) {
-                    locale = (Locale) context.get("locale");
-                }
-                if (userLogin == null) {
-                    userLogin = (GenericValue) context.get("userLogin");
-                }
-            }
-            pcw = ProductConfigFactory.createProductConfigWrapper(getDelegator(dctx), getDispatcher(dctx), product.getString("productId"),
-                    (productStore != null) ? productStore.getString("productStoreId") : null, null, null, currencyUomId, locale, userLogin);
-        } catch (Exception e) {
-            throw new GeneralException(e);
-        }
-        pcw.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero
-        return pcw;
+    @Deprecated
+    public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String currencyUomId, Locale locale, boolean useCache, Map<String, ?> ovrdFields) throws GeneralException {
+        return getProductStandardPrices(dctx, context, userLogin, product, (productStore != null) ? productStore.getString("productStoreId") : null, null, null, currencyUomId, locale, useCache, null);
     }
 
-    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, String productId, String productStoreId, String prodCatalogId, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
-        // TODO: REVIEW: do we need to pass a specific catalog or webSiteId here?
-        ProductConfigWrapper pcw = null;
+    @Deprecated
+    public Map<String, Object> getProductStandardPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
+        return getProductStandardPrices(dctx, context, userLogin, product, (productStore != null) ? productStore.getString("productStoreId") : null, null, null, currencyUomId, locale, useCache, null);
+    }
+
+    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, String productId, String productStoreId, String webSiteId, String prodCatalogId, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
+        ProductConfigWrapper pcw;
         try {
             if (context != null) {
                 if (locale == null) {
@@ -257,12 +252,38 @@ public class ProductDataReader {
                 }
             }
             pcw = ProductConfigFactory.createProductConfigWrapper(getDelegator(dctx), getDispatcher(dctx), productId,
-                    productStoreId, prodCatalogId, null, currencyUomId, locale, userLogin);
+                    productStoreId, prodCatalogId, webSiteId, currencyUomId, locale, userLogin);
         } catch (Exception e) {
             throw new GeneralException(e);
         }
         pcw.setDefaultConfig(); // 2017-08-22: if this is not done, the price will always be zero
         return pcw;
+    }
+
+    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, String productStoreId, String webSiteId, String prodCatalogId, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
+        return getConfigurableProductStartingPrices(dctx, context, userLogin, product.getString("productId"), productStoreId, webSiteId, prodCatalogId, currencyUomId, locale, useCache);
+    }
+
+    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, String productId, String productStoreId, String prodCatalogId, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
+        return getConfigurableProductStartingPrices(dctx, context, userLogin, productId, productStoreId, null, prodCatalogId, currencyUomId, locale, useCache);
+    }
+
+    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String webSiteId, String prodCatalogId, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
+        return getConfigurableProductStartingPrices(dctx, context, userLogin, product.getString("productId"), (productStore != null) ? productStore.getString("productStoreId") : null, webSiteId, prodCatalogId, currencyUomId, locale, useCache);
+    }
+
+    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String prodCatalogId, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
+        return getConfigurableProductStartingPrices(dctx, context, userLogin, product.getString("productId"), (productStore != null) ? productStore.getString("productStoreId") : null, null, prodCatalogId, currencyUomId, locale, useCache);
+    }
+
+    @Deprecated
+    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, String productId, String productStoreId, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
+        return getConfigurableProductStartingPrices(dctx, context, userLogin, productId, productStoreId, null, null, currencyUomId, locale, useCache);
+    }
+
+    @Deprecated
+    public ProductConfigWrapper getConfigurableProductStartingPrices(DispatchContext dctx, Map<String, Object> context, GenericValue userLogin, GenericValue product, GenericValue productStore, String currencyUomId, Locale locale, boolean useCache) throws GeneralException {
+        return getConfigurableProductStartingPrices(dctx, context, userLogin, product, productStore, null, null, currencyUomId, locale, useCache);
     }
 
     public <C extends Collection<String>> C getProductKeywords(C outKeywords, Delegator delegator, boolean useCache, String... productIds) throws GeneralException {

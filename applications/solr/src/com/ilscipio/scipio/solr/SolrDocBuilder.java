@@ -1713,7 +1713,8 @@ public class SolrDocBuilder {
                     String productStoreId = entry.getKey();
                     String prodCatalogId = (String) entry.getValue().get("prodCatalogId");
                     //GenericValue productStore = getProductStore(productStoreId);
-                    Map<String, Object> ovrdFields = addStoreCfgPriceWrapperOvrdFields(new HashMap<>(), productStoreId, prodCatalogId, false);
+                    // ovrdFields unused here for now
+                    //Map<String, Object> ovrdFields = addStoreCfgPriceWrapperOvrdFields(new HashMap<>(), productStoreId, prodCatalogId, false);
                     ProductConfigWrapper pcw = getProductData().getConfigurableProductStartingPrices(getDctx(), getContext(),
                             getUserLogin(), getProductId(), productStoreId, prodCatalogId, getStoreCurrencyUomId(productStoreId),
                             getBuilderLocale(), isUseEntityCache());

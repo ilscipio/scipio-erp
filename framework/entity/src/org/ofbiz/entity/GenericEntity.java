@@ -26,9 +26,7 @@ import java.nio.ByteBuffer;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ilscipio.scipio.ce.util.collections.ScipioMap;
 import org.ofbiz.base.crypto.HashCrypt;
 import org.ofbiz.base.lang.JSON;
@@ -749,71 +747,86 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
                 throw new IllegalArgumentException("Type " + field.getType() + " not found for entity [" + this.getEntityName() + "]; probably because there is no datasource (helper) setup for the entity group that this entity is in: [" + this.getDelegator().getEntityGroupName(this.getEntityName()) + "]");
             }
 
-            if (value instanceof Boolean) {
-                // if this is a Boolean check to see if we should convert from an indicator or just leave as is
-                try {
-                    int fieldType = SqlJdbcUtil.getType(type.getJavaType());
-                    if (fieldType != 10) {
-                        value = (Boolean) value ? "Y" : "N";
-                    }
-                } catch (GenericNotImplementedException e) {
-                    throw new IllegalArgumentException(e.getMessage());
+            // SCIPIO: 3.0.0: Handle JSON
+            boolean typeOk = true;
+            if (type.isJson() && (value != null) && (!(value instanceof String))) {
+                value = jsonToString(name, value);
+                // TODO: REVIEW: Should setIfEmpty logic apply to incoming Map/List? The following will likely have
+                //  no effect since an empty list or map are "[]" and "{}", respectively, but keep it here for consistency
+                if ((value != null || setIfNull) && (setIfEmpty || ((String) value).length() > 0)) {
+                    ; // ok
+                } else {
+                    typeOk = false;
                 }
-            } else if (value != null && !(value instanceof NULL)) {
-                Boolean sameType = null;
-                // make sure the type matches the field Java type
-                if (value instanceof TimeDuration) {
-                    try {
-                        value = ObjectType.simpleTypeConvert(value, type.getJavaType(), null, null);
-                    } catch (GeneralException e) {
-                        Debug.logError(e, module);
-                    }
-                } else if ((value instanceof String) && "byte[]".equals(type.getJavaType())) {
-                    value = ((String) value).getBytes(UtilIO.getUtf8());
-                }
+            }
 
-                if (!ObjectType.instanceOf(value, type.getJavaType())) {
-                    // SCIPIO: 3.0.0: Support type conversion
-                    // TODO: REVIEW: For now, the default typeConvert() will use setString logic when String,
-                    //  but this is debatable and maybe someday should be switched to same as simpleTypeConvert() (standardize)
-                    boolean loggedTypeError = false;
-                    if (value instanceof String &&
-                            (Boolean.TRUE.equals(options.typeConvert()) || Boolean.TRUE.equals(options.stringConvert()))) {
-                        Object convValue = stringToValue(field, type, (String) value);
-                        if (convValue != NO_VALUE) {
-                            value = convValue;
+            if (typeOk) {
+                if (value instanceof Boolean) {
+                    // if this is a Boolean check to see if we should convert from an indicator or just leave as is
+                    try {
+                        int fieldType = SqlJdbcUtil.getType(type.getJavaType());
+                        if (fieldType != 10) {
+                            value = (Boolean) value ? "Y" : "N";
                         }
-                    } else if (Boolean.TRUE.equals(options.typeConvert()) || Boolean.TRUE.equals(options.simpleTypeConvert())) {
-                        // makeValid-style conversion, if it works
-                        try {
-                            // no need to fail on type conversion; the validator will catch this
-                            value = ObjectType.simpleTypeConvert(value, type.getJavaType(), null, options.timeZone(), options.locale(), false);
-                        } catch (GeneralException e) {
-                            // TODO: REVIEW: Just like below in theory this should have been an exception, but
-                            //  this case is also problematic because it did previously not nullify the field
-                            String errMsg = "In entity field [" + this.getEntityName() + "." + name + "] set the value passed in [" + value.getClass().getName() +
-                                    "] is not compatible with the Java type of the field [" + type.getJavaType() + "]: " + e.toString();
-                            Debug.logWarning(errMsg, module);
-                            loggedTypeError = true;
-                        }
+                    } catch (GenericNotImplementedException e) {
+                        throw new IllegalArgumentException(e.getMessage());
                     }
+                } else if (value != null && !(value instanceof NULL)) {
+                    Boolean sameType = null;
+                    // make sure the type matches the field Java type
+                    if (value instanceof TimeDuration) {
+                        try {
+                            value = ObjectType.simpleTypeConvert(value, type.getJavaType(), null, null);
+                        } catch (GeneralException e) {
+                            Debug.logError(e, module);
+                        }
+                    } else if ((value instanceof String) && "byte[]".equals(type.getJavaType())) {
+                        value = ((String) value).getBytes(UtilIO.getUtf8());
+                    }
+
                     if (!ObjectType.instanceOf(value, type.getJavaType())) {
-                        if (!("java.sql.Blob".equals(type.getJavaType()) && (value instanceof byte[] || ObjectType.instanceOf(value, ByteBuffer.class)))) {
-                            if (!loggedTypeError) {
-                                String errMsg = "In entity field [" + this.getEntityName() + "." + name + "] set the value passed in [" + value.getClass().getName() + "] is not compatible with the Java type of the field [" + type.getJavaType() + "]";
-                                // eventually we should do this, but for now we'll do a "soft" failure: throw new IllegalArgumentException(errMsg);
-                                Debug.logWarning(new Exception("Location of database type warning"), "=-=-=-=-=-=-=-=-= Database type warning GenericEntity.set =-=-=-=-=-=-=-=-= " + errMsg, module);
+                        // SCIPIO: 3.0.0: Support type conversion
+                        // TODO: REVIEW: For now, the default typeConvert() will use setString logic when String,
+                        //  but this is debatable and maybe someday should be switched to same as simpleTypeConvert() (standardize)
+                        boolean loggedTypeError = false;
+                        if (value instanceof String &&
+                                (Boolean.TRUE.equals(options.typeConvert()) || Boolean.TRUE.equals(options.stringConvert()))) {
+                            Object convValue = stringToValue(field, type, (String) value);
+                            if (convValue != NO_VALUE) {
+                                value = convValue;
+                            }
+                        } else if (Boolean.TRUE.equals(options.typeConvert()) || Boolean.TRUE.equals(options.simpleTypeConvert())) {
+                            // makeValid-style conversion, if it works
+                            try {
+                                // no need to fail on type conversion; the validator will catch this
+                                value = ObjectType.simpleTypeConvert(value, type.getJavaType(), null, options.timeZone(), options.locale(), false);
+                            } catch (GeneralException e) {
+                                // TODO: REVIEW: Just like below in theory this should have been an exception, but
+                                //  this case is also problematic because it did previously not nullify the field
+                                String errMsg = "In entity field [" + this.getEntityName() + "." + name + "] set the value passed in [" + value.getClass().getName() +
+                                        "] is not compatible with the Java type of the field [" + type.getJavaType() + "]: " + e.toString();
+                                Debug.logWarning(errMsg, module);
+                                loggedTypeError = true;
+                            }
+                        }
+                        if (!ObjectType.instanceOf(value, type.getJavaType())) {
+                            if (!("java.sql.Blob".equals(type.getJavaType()) && (value instanceof byte[] || ObjectType.instanceOf(value, ByteBuffer.class)))) {
+                                if (!loggedTypeError) {
+                                    String errMsg = "In entity field [" + this.getEntityName() + "." + name + "] set the value passed in [" + value.getClass().getName() + "] is not compatible with the Java type of the field [" + type.getJavaType() + "]";
+                                    // eventually we should do this, but for now we'll do a "soft" failure: throw new IllegalArgumentException(errMsg);
+                                    Debug.logWarning(new Exception("Location of database type warning"), "=-=-=-=-=-=-=-=-= Database type warning GenericEntity.set =-=-=-=-=-=-=-=-= " + errMsg, module);
+                                }
                             }
                         }
                     }
                 }
-            }
-            Object old = fields.put(name, value);
+                Object old = fields.put(name, value);
 
-            generateHashCode = true;
-            this.setChanged();
-            this.notifyObservers(name);
-            return old;
+                generateHashCode = true;
+                this.setChanged();
+                this.notifyObservers(name);
+                return old;
+            }
         }
         return fields.get(name);
     }
@@ -1105,44 +1118,55 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Interprets the given field as a JSON object, or null if the field is null/empty.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
-    public JSON getJson(String name) {
+    public JSON getJsonWrapper(String name) {
         String jsonString = getString(name);
         return (jsonString != null) ? JSON.from(jsonString) : null;
     }
 
     /**
      * Converts the given Java object or JSON wrapper to a JSON string and writes it to the field.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public void setJson(String name, Object object) {
-        if (object instanceof String) {
-            ;
-        } else if (object instanceof JSON) {
-            object = object.toString();
-        } else if (object != null) {
+        if (object != null && (!(object instanceof String))) {
+            object = jsonToString(name, object);
+        }
+        set(name, object);
+    }
+
+    protected String jsonToString(String name, Object object) {
+        //if (object instanceof String || object == null) {
+        //    return (String) object;
+        //} else if (object instanceof JSON) {
+        if (object instanceof JSON) {
+            return object.toString();
+        } else {
             try {
-                object = JSON.toString(object);
+                return JSON.toString(object);
             } catch(Exception e) {
                 throw new IllegalArgumentException("Could not convert field [" + name + "] of entity " +
                         getEntityName() + " from Java type [" + object.getClass() + "] to JSON string", e);
             }
         }
-        set(name, object);
     }
 
     /**
      * Interprets the named field as a JSON object and evaluates it to a Java type, or null if the field is null/empty,
      * with support for caching of parsed json to/from {@link #jsonCache} for read-only objects.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param name the field name
      * @param targetType the target type, either <code>Map.class</code> or <code>List.class</code>
      * @param returnDefault if true, when result is null, either a new collection (when useJsonCache false) or empty
      *                      collection returned (when useJsonCache true); if false returns null
      * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
      */
-    public <T> T getJsonObject(String name, Class<?> targetType, boolean returnDefault, boolean useJsonCache) {
+    public <T> T getJson(String name, Class<?> targetType, boolean returnDefault, boolean useJsonCache) {
         T jsonObject = null;
         Map<String, Object> jsonCache = null;
         if (useJsonCache) {
@@ -1178,7 +1202,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
         } else {
             if (jsonObject == null) {
                 if (returnDefault) {
-                    jsonObject = makeJsonObject(targetType);
+                    jsonObject = makeJsonContainer(targetType);
                 }
             }
         }
@@ -1186,10 +1210,11 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
     }
 
     /**
-     * Creates an empty json collection, normally <code>Map.class</code> or <code>List.class</code>.
+     * Creates an empty collection compatible with those normally returned by JSON parsing, normally <code>Map.class</code> or <code>List.class</code>.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
-    public <T> T makeJsonObject(Class<?> targetType, Object initialValues) {
+    public <T> T makeJsonContainer(Class<?> targetType, Object initialValues) {
         if (Map.class.isAssignableFrom(targetType)) {
             return UtilGenerics.cast(makeJsonMap(UtilGenerics.cast(initialValues)));
         } else if (List.class.isAssignableFrom(targetType)) {
@@ -1204,28 +1229,33 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
     }
 
     /**
-     * Creates an empty json collection, normally <code>Map.class</code> or <code>List.class</code>.
+     * Creates an empty collection compatible with those normally returned by JSON parsing, normally <code>Map.class</code> or <code>List.class</code>.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
-    public <T> T makeJsonObject(Class<?> targetType) {
-        return makeJsonObject(targetType, null);
+    public <T> T makeJsonContainer(Class<?> targetType) {
+        return makeJsonContainer(targetType, null);
     }
 
     /**
      * Interprets the named json field as a read-only map.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param name the field name
      * @param returnDefault if true, when result is null, either a new collection (when useJsonCache false) or empty
      *                      collection returned (when useJsonCache true); if false returns null
      * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
      */
     public <K, V> Map<K, V> getJsonMap(String name, boolean returnDefault, boolean useJsonCache) {
-        return getJsonObject(name, Map.class, returnDefault, useJsonCache);
+        return getJson(name, Map.class, returnDefault, useJsonCache);
     }
 
     /**
      * Interprets the named json field as a read-only map, or empty map if null, with local json caching.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param name the field name
      */
     public <K, V> Map<K, V> getJsonMap(String name) {
@@ -1234,7 +1264,9 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Interprets the named json field as a map copy, or new map if null, with no caching.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param name the field name
      * @param returnDefault if true, when result is null, returns a new collection; if false returns null
      */
@@ -1244,6 +1276,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Returns a new json map.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public <K, V> Map<K, V> makeJsonMap(Map<? extends K, ? extends V> initialValues) {
@@ -1252,6 +1285,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Returns a new json map.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public <K, V> Map<K, V> makeJsonMap() {
@@ -1260,19 +1294,23 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Interprets the named json field as a read-only list.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param name the field name
      * @param returnDefault if true, when result is null, either a new collection (when useJsonCache false) or empty
      *                      collection returned (when useJsonCache true); if false returns null
      * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
      */
     public <T> List<T> getJsonList(String name, boolean returnDefault, boolean useJsonCache) {
-        return getJsonObject(name, List.class, returnDefault, useJsonCache);
+        return getJson(name, List.class, returnDefault, useJsonCache);
     }
 
     /**
      * Interprets the named json field as a read-only list, or empty list if null, with local json caching.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param name the field name
      */
     public <T> List<T> getJsonList(String name) {
@@ -1281,7 +1319,9 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Interprets the named json field as a list copy, or new list if null, with no caching.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param name the field name
      * @param returnDefault if true, when result is null, returns a new collection; if false returns null
      */
@@ -1291,6 +1331,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Returns a new json list.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public <E> List<E> makeJsonList(Collection<? extends E> initialValues) {
@@ -1299,6 +1340,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Returns a new json list.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public <E> List<E> makeJsonList() {
@@ -1307,19 +1349,23 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Interprets the named json field as a read-only set.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param name the field name
      * @param returnDefault if true, when result is null, either a new collection (when useJsonCache false) or empty
      *                      collection returned (when useJsonCache true); if false returns null
      * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
      */
     public <T> Set<T> getJsonSet(String name, boolean returnDefault, boolean useJsonCache) {
-        return getJsonObject(name, Set.class, returnDefault, useJsonCache);
+        return getJson(name, Set.class, returnDefault, useJsonCache);
     }
 
     /**
      * Interprets the named json field as a read-only set, or empty set if null, with local json caching.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param name the field name
      */
     public <T> Set<T> getJsonSet(String name) {
@@ -1328,7 +1374,9 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Interprets the named json field as a set copy, or new set if null, with no caching.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param name the field name
      * @param returnDefault if true, when result is null, returns a new collection; if false returns null
      */
@@ -1338,6 +1386,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Returns a new json set.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public <E> Set<E> makeJsonSet(Collection<? extends E> initialValues) {
@@ -1346,6 +1395,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Returns a new json set.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public <E> Set<E> makeJsonSet() {
@@ -1354,7 +1404,9 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Interprets the standard entityJson field as a read-only map.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param returnDefault if true, when result is null, either a new collection (when useJsonCache false) or empty
      *                      collection returned (when useJsonCache true); if false returns null
      * @param useJsonCache when true, caches and returns read-only objects; when false, returns original modifiable full copies
@@ -1373,7 +1425,9 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Interprets the standard entityJson field as a map copy, or new map if null, with no caching.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
+     *
      * @param returnDefault if true, when result is null, returns a new collection; if false returns null
      */
     public <K, V> Map<K, V> getEntityJsonMapCopy(boolean returnDefault) {
@@ -1382,6 +1436,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Converts the given map to JSON string and writes it to the standard entityJson field.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public void setEntityJsonMap(Map<String, ?> jsonMap) {
@@ -1390,6 +1445,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Returns a new json map for the standard entityJson field.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public <K, V> Map<K, V> makeEntityJsonMap(Map<? extends K, ? extends V> initialValues) {
@@ -1398,6 +1454,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Returns a new json map for the standard entityJson field.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public <K, V> Map<K, V> makeEntityJsonMap() {
@@ -1406,6 +1463,7 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Clears last json Map/List cache.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public void clearJsonCache() {
@@ -1414,7 +1472,9 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * Clears last json Map/List cache for the field name.
+     *
      * <p>NOTE: Currently forces a full clear.</p>
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public void clearJsonCache(String name) {

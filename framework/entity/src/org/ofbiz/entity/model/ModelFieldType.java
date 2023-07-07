@@ -50,6 +50,13 @@ public class ModelFieldType implements Serializable {
     /** The sql-type-alias of the Field, this is optional */
     protected String sqlTypeAlias = null;
 
+    /**
+     * Whether this is a JSON-storing field.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    protected boolean json = false;
+
     /** Default Constructor */
     public ModelFieldType() {}
 
@@ -60,6 +67,7 @@ public class ModelFieldType implements Serializable {
         this.sqlType = UtilXml.checkEmpty(fieldTypeElement.getAttribute("sql-type")).intern();
         this.sqlTypeAlias = UtilXml.checkEmpty(fieldTypeElement.getAttribute("sql-type-alias")).intern();
         this.jdbcValueHandler = JdbcValueHandler.getInstance(this.javaType, this.sqlType);
+        this.json = this.type.startsWith("json");
     }
 
     /** The type of the Field */
@@ -112,5 +120,14 @@ public class ModelFieldType implements Serializable {
             return 5000;
         }
         return 20;
+    }
+
+    /**
+     * Returns true if this is a specifically-defined JSON type (json, json-array, json-object).
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public boolean isJson() {
+        return json;
     }
 }

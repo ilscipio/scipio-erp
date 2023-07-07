@@ -3446,7 +3446,7 @@ code package.
       <field name="contentIds" type="very-long"><description>Comma-separated list</description></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="entityJson" type="very-long"><description>JSON fields for extra data</description></field>
+      <field name="entityJson" type="json-object"><description>JSON fields for extra data</description></field>
       <!-- logical PK
       <prim-key field="serverHostName"/>
       <prim-key field="date"/>-->

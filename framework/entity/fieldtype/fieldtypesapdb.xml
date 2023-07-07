@@ -48,4 +48,8 @@ code package.
     <field-type-def type="id-vlong-ne" sql-type="VARCHAR(255) UNICODE" sql-type-alias="VARCHAR() UNICODE" java-type="String"/>
     <field-type-def type="tel-number" sql-type="VARCHAR(60) UNICODE" sql-type-alias="VARCHAR() UNICODE" java-type="String"/>
 
+    <!-- SCIPIO: 3.0.0: JSON-specific types, for GenericEntity integration (based on "very-long") -->
+    <field-type-def type="json" sql-type="LONG UNICODE" java-type="String"/>
+    <field-type-def type="json-array" sql-type="LONG UNICODE" java-type="String"/>
+    <field-type-def type="json-object" sql-type="LONG UNICODE" java-type="String"/>
 </fieldtypemodel>

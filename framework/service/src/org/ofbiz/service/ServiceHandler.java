@@ -9,17 +9,21 @@ import java.util.Map;
 /**
  * Service implementation interface and abstract classes.
  *
+ * <p>NOTE: For most cases, use {@link LocalService} as base service implementation, which is a facade provided over this one.</p>
+ *
  * <p>Implicitly supports the {@link com.ilscipio.scipio.service.def.Service} annotation, but they can be used
  * completely independently.</p>
  *
- * <p>The recommended way to write new services is by extending {@link ServiceHandler.LocalExec}.</p>
+ * <p>The recommended way to write new services is by extending {@link LocalService} ({@link ServiceHandler.LocalExec}).</p>
  *
  * <p>Typically an implementation will provided either a default constructor or a constructor taking a
  * {@link ServiceContext}; the default constructor causes a delayed call to {@link Local#init(ServiceContext)} whereas
  * the service context constructor does not.</p>
  *
- * <p>SCIPIO: 3.0.0: Added optional {@link ServiceHandler.Exec}, {@link ServiceHandler.LocalExec} for standardization.</p>
+ * <p>SCIPIO: 3.0.0: Added {@link LocalService}, optional {@link ServiceHandler.Exec}, {@link ServiceHandler.LocalExec} for standardization.</p>
  * <p>SCIPIO: 2.1.0: Added and integrated into service engine. See for example.</p>
+ *
+ * @see LocalService
  */
 public interface ServiceHandler {
 
@@ -115,9 +119,7 @@ public interface ServiceHandler {
          * it will be invoked on every service call and {@link #init(ServiceContext)} will not be called.</p>
          */
         public Local(ServiceContext ctx) throws GeneralException {
-            this.ctx = ctx;
-            this.dctx = ctx.dctx();
-            this.context = ctx.context();
+            setServiceContext(ctx);
         }
 
         /**

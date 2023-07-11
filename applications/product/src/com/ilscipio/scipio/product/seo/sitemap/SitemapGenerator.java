@@ -25,7 +25,6 @@ import com.ilscipio.scipio.product.category.CatalogAltUrlSanitizer;
 import com.ilscipio.scipio.product.category.CatalogFilters;
 import com.ilscipio.scipio.product.seo.SeoConfig;
 import com.redfin.sitemapgenerator.AltLink;
-import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -246,7 +245,9 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                     if (localeConfig.getUrlConfPath() != null) {
                         locUrlRewriterConf = ScipioUrlRewriter.getForContext(locWebappInfo, localeConfig.getUrlConfPath(), locUrlRewriterCtx);
                     }
-                    localeInfos.put(locale, new LocaleInfo(locale, localeConfig, locUrlRewriterConf, locUrlRewriterCtx, locWebappInfo));
+
+                    SeoCatalogUrlWorker locUrlWorker = SeoCatalogUrlWorker.getInstance(delegator, locWebSiteId);
+                    localeInfos.put(locale, new LocaleInfo(locale, localeConfig, locUrlRewriterConf, locUrlRewriterCtx, locWebappInfo, locUrlWorker));
                 }
                 //}
 
@@ -397,8 +398,14 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return (getLogLevel() <= Debug.VERBOSE || Debug.verboseOn());
     }
 
+    /**
+     * WARN: Only returns for the default webapp/locale.
+     */
     public SeoCatalogUrlWorker getUrlWorker() { return urlWorker; }
 
+    /**
+     * WARN: Only returns for the default webapp/locale.
+     */
     public SeoConfig getSeoConfig() { return getUrlWorker().getConfig(); }
 
     @Override
@@ -693,14 +700,16 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
     @Override
     public void pushCategory(GenericValue productCategory, TraversalState state) throws GeneralException {
-        CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
-                .makeSanitizeContext(getDelegator(), getDispatcher(), null, isUseCache()).setNameIndex(state.getPhysicalDepth());
         Map<Locale, List<String>> trailNames = getTrailNames(state);
         if (getSitemapConfig().isPreProcessTrail()) {
+            // TODO: REVIEW: URL Worker here does not cover multi-locale SeoConfig, so maybe leave preProcessTrail off for multi-locale...
+            SeoCatalogUrlWorker urlWorker = getUrlWorker();
+            CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = urlWorker.getCatalogAltUrlSanitizer()
+                    .makeSanitizeContext(getDelegator(), getDispatcher(), null, isUseCache()).setNameIndex(state.getPhysicalDepth());
             for (Locale locale : locales) {
                 // NOTE: this is non-last - cannot reuse the one determined in previous call
-                SeoConfig.TrailFormat trailFormat = getSeoConfig().getCategoryUrlTrailFormat(); // FIXME?: this is flawed and may violate configuration; we're forced to ignore product-url-trail-format
-                String trailName = getUrlWorker().getCategoryPathSegment(getDelegator(), getDispatcher(), locale, productCategory, trailFormat, sanitizeCtx.setLocale(locale), isUseCache());
+                SeoConfig.TrailFormat trailFormat = getUrlWorker().getConfig().getCategoryUrlTrailFormat(); // FIXME?: this is flawed and may violate configuration; we're forced to ignore product-url-trail-format
+                String trailName = urlWorker.getCategoryPathSegment(getDelegator(), getDispatcher(), locale, productCategory, trailFormat, sanitizeCtx.setLocale(locale), isUseCache());
                 trailNames.get(locale).add(trailName); // no need copy, just remove after
             }
         } else {
@@ -736,21 +745,22 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         Locale defaultLocale = getDefaultLocale();
         List<AltLink> altLinks = null;
         try {
+            SeoCatalogUrlWorker urlWorker = getUrlWorker();
             Locale locale = getDefaultLocale();
 
             if (getSitemapConfig().isPreProcessTrail()) {
                 List<String> trail = trailNames.get(locale);
-                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
+                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = urlWorker.getCatalogAltUrlSanitizer()
                         .makeSanitizeContext(getDelegator(), getDispatcher(), locale, isUseCache()).setTargetCategory(productCategory)
                         .setLast(true).setNameIndex(trail.size() - 1).setTotalNames(trail.size());
-                url = getUrlWorker().makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
+                url = urlWorker.makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
             } else {
-                url = getUrlWorker().makeCategoryUrlCore(getDelegator(), getDispatcher(), locale, productCategory, null, null, trailEntities,
+                url = urlWorker.makeCategoryUrlCore(getDelegator(), getDispatcher(), locale, productCategory, null, null, trailEntities,
                         getWebappInfo(), isUseCache()).toString();
             }
 
             String processedUrl = postprocessElementLink(url, locale);
-            if (processedUrl == null || processedUrl.isEmpty() || matchesUrlFilter(processedUrl)) {
+            if (processedUrl == null || processedUrl.isEmpty() || matchesUrlFilter(processedUrl, urlWorker.getConfig())) {
                 Debug.logInfo(getLogMsgPrefix() + "category [" + productCategoryId + "]: filtered url [" + defaultLocale + "=" + (processedUrl != null ? processedUrl : url) + "]", module);
                 getStats().categoryFiltered++;
             } else {
@@ -769,14 +779,16 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                         for (Locale altLocale : altLocales) {
                             locale = altLocale;
                             String altUrl;
+                            LocaleInfo localeInfo = getLocaleInfo(altLocale);
+                            urlWorker = (localeInfo != null) ? localeInfo.getUrlWorker() : getUrlWorker();
                             if (getSitemapConfig().isPreProcessTrail()) {
                                 List<String> trail = trailNames.get(locale);
-                                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
+                                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = urlWorker.getCatalogAltUrlSanitizer()
                                         .makeSanitizeContext(getDelegator(), getDispatcher(), locale, isUseCache()).setTargetCategory(productCategory)
                                         .setLast(true).setNameIndex(trail.size() - 1).setTotalNames(trail.size());
-                                altUrl = getUrlWorker().makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
+                                altUrl = urlWorker.makeCategoryUrlPath(getDelegator(), getDispatcher(), locale, productCategory, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
                             } else {
-                                altUrl = getUrlWorker().makeCategoryUrlCore(getDelegator(), getDispatcher(), locale, productCategory, null, null, trailEntities,
+                                altUrl = urlWorker.makeCategoryUrlCore(getDelegator(), getDispatcher(), locale, productCategory, null, null, trailEntities,
                                         getWebappInfo(), isUseCache()).toString();
                             }
                             if (altUrl != null && !altUrl.isEmpty()) {
@@ -810,20 +822,21 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         Locale defaultLocale = getDefaultLocale();
         List<AltLink> altLinks = null;
         try {
+            SeoCatalogUrlWorker urlWorker = getUrlWorker();
             Locale locale = defaultLocale;
             if (getSitemapConfig().isPreProcessTrail()) {
                 List<String> trail = trailNames.get(locale);
-                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
+                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = urlWorker.getCatalogAltUrlSanitizer()
                         .makeSanitizeContext(getDelegator(), getDispatcher(), locale, isUseCache()).setTargetProduct(product)
                         .setLast(true).setNameIndex(trail.size()).setTotalNames(trail.size() + 1);
-                url = getUrlWorker().makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
+                url = urlWorker.makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
             } else {
-                url = getUrlWorker().makeProductUrlCore(getDelegator(), getDispatcher(), locale, product, null, null, trailEntities,
+                url = urlWorker.makeProductUrlCore(getDelegator(), getDispatcher(), locale, product, null, null, trailEntities,
                         getWebappInfo(), isUseCache()).toString();
             }
 
             String processedUrl = postprocessElementLink(url, locale);
-            if (processedUrl == null || processedUrl.isEmpty() || matchesUrlFilter(processedUrl)) {
+            if (processedUrl == null || processedUrl.isEmpty() || matchesUrlFilter(processedUrl, urlWorker.getConfig())) {
                 Debug.logInfo(getLogMsgPrefix() + "product [" + productId + "]: filtered url [" + defaultLocale + "=" + (processedUrl != null ? processedUrl : url) + "]", module);
                 getStats().productFiltered++;
             } else {
@@ -842,14 +855,16 @@ public class SitemapGenerator extends SeoCatalogTraverser {
                         for (Locale altLocale : altLocales) {
                             locale = altLocale;
                             String altUrl;
+                            LocaleInfo localeInfo = getLocaleInfo(altLocale);
+                            urlWorker = (localeInfo != null) ? localeInfo.getUrlWorker() : getUrlWorker();
                             if (getSitemapConfig().isPreProcessTrail()) {
                                 List<String> trail = trailNames.get(locale);
-                                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = getUrlWorker().getCatalogAltUrlSanitizer()
+                                CatalogAltUrlSanitizer.SanitizeContext sanitizeCtx = urlWorker.getCatalogAltUrlSanitizer()
                                         .makeSanitizeContext(getDelegator(), getDispatcher(), locale, isUseCache()).setTargetProduct(product)
                                         .setLast(true).setNameIndex(trail.size()).setTotalNames(trail.size() + 1);
-                                altUrl = getUrlWorker().makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
+                                altUrl = urlWorker.makeProductUrlPath(getDelegator(), getDispatcher(), locale, product, trail, getContextPath(locale), sanitizeCtx, isUseCache()).toString();
                             } else {
-                                altUrl = getUrlWorker().makeProductUrlCore(getDelegator(), getDispatcher(), locale, product, null, null, trailEntities,
+                                altUrl = urlWorker.makeProductUrlCore(getDelegator(), getDispatcher(), locale, product, null, null, trailEntities,
                                         getWebappInfo(), isUseCache()).toString();
                             }
                             if (altUrl != null && !altUrl.isEmpty()) {
@@ -1250,8 +1265,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return url;
     }
 
-    protected SeoConfig.UrlFilter matchUrlFilter(String url) {
-        for(SeoConfig.UrlFilter urlFilter : getSeoConfig().getUrlFilters()) {
+    protected SeoConfig.UrlFilter matchUrlFilter(String url, SeoConfig seoConfig) {
+        for(SeoConfig.UrlFilter urlFilter : seoConfig.getUrlFilters()) {
             if (urlFilter.matches(url)) {
                 return urlFilter;
             }
@@ -1259,8 +1274,8 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         return null;
     }
 
-    protected boolean matchesUrlFilter(String url) {
-        return matchUrlFilter(url) != null;
+    protected boolean matchesUrlFilter(String url, SeoConfig seoConfig) {
+        return matchUrlFilter(url, seoConfig) != null;
     }
 
     /**
@@ -1359,14 +1374,16 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         private final ScipioUrlRewriter urlRewriterConf;
         private final Map<String, Object> urlRewriterCtx;
         private final FullWebappInfo webappInfo;
+        private final SeoCatalogUrlWorker urlWorker;
 
         public LocaleInfo(Locale locale, SitemapConfig.LocaleConfig localeConfig, ScipioUrlRewriter urlRewriterConf,
-                          Map<String, Object> urlRewriterCtx, FullWebappInfo webappInfo) {
+                          Map<String, Object> urlRewriterCtx, FullWebappInfo webappInfo, SeoCatalogUrlWorker urlWorker) {
             this.locale = locale;
             this.localeConfig = localeConfig;
             this.urlRewriterConf = urlRewriterConf;
             this.urlRewriterCtx = urlRewriterCtx;
             this.webappInfo = webappInfo;
+            this.urlWorker = urlWorker;
         }
 
         public Locale getLocale() {
@@ -1423,6 +1440,10 @@ public class SitemapGenerator extends SeoCatalogTraverser {
 
         public FlexibleStringExpander getCmsPageUrlAttr() {
             return getLocaleConfig().getCmsPageUrlAttr();
+        }
+
+        public SeoCatalogUrlWorker getUrlWorker() {
+            return urlWorker;
         }
     }
 

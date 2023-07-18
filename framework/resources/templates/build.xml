@@ -16,6 +16,9 @@
     <property name="lib.dir" value="lib"/>
     <property name="build.dir" value="build"/>
 
+    <property name="lib.resolve.build.confs" value="build"/>
+    <property name="lib.resolve.src.confs" value="sources"/>
+
     <filelist dir="." id="component.build.dependencies">
         <!-- Placeholder -->
     </filelist>

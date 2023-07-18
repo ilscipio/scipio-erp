@@ -2692,6 +2692,8 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <mkdir dir="${basedir}/hot-deploy/${component-name}/entitydef"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/lib"/>
         <copy file="${basedir}/framework/resources/templates/.gitignore-lib" tofile="${basedir}/hot-deploy/${component-name}/lib/.gitignore"/>
+        <mkdir dir="${basedir}/hot-deploy/${component-name}/libsrc"/>
+        <copy file="${basedir}/framework/resources/templates/.gitignore-lib" tofile="${basedir}/hot-deploy/${component-name}/libsrc/.gitignore"/>
         <!--<mkdir dir="${basedir}/hot-deploy/${component-name}/patches"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/test"/>
         <mkdir dir="${basedir}/hot-deploy/${component-name}/patches/qa"/>

@@ -2726,6 +2726,20 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
         return copyFields(out, fieldNames, includeNull, null);
     }
 
+    /**
+     * Returns a cache key in the format "[delegatorname]::[pk1]::[pk2]::..."
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public String getDelegatorPkCacheKey() {
+        StringBuilder cacheKey = new StringBuilder(getDelegator().getDelegatorName());
+        for (String fieldName : getModelEntity().getPkFieldNames()) {
+            cacheKey.append("::");
+            cacheKey.append(getString(fieldName));
+        }
+        return cacheKey.toString();
+    }
+
     public static interface NULL {
     }
 

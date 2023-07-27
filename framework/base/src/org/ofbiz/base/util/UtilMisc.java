@@ -3436,4 +3436,23 @@ public class UtilMisc {
             return UtilGenerics.cast(Collections.emptySet());
         }
     }
+
+    /**
+     * Specific index lookup for non-lists.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static <T> T getAtIndex(Iterable<?> collection, int index) {
+        if (collection instanceof List) {
+            return cast(((List<?>) collection).get(index));
+        } else {
+            Iterator<?> it = collection.iterator();
+            Object value = null;
+            for (int i = 0; i <= index; i++) {
+                value = it.next();
+            }
+            return cast(value);
+        }
+    }
+
 }

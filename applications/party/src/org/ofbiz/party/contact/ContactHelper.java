@@ -82,6 +82,42 @@ public class ContactHelper {
         }
     }
 
+    /**
+     * Returns PartyContactMech instead of ContactMech.
+     *
+     * <p>NOTE: This does not validate any contactMechTypeId; typically these can be verified since POSTAL_ADDRESS and telecom are typically implicit.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added as analog of {@link #getContactMech(GenericValue, String, String, boolean)}.</p>
+     */
+    public static Collection<GenericValue> getPartyContactMech(GenericValue party, String contactMechPurposeTypeId, boolean includeOld) {
+        if (party == null) {
+            return null;
+        }
+        try {
+            List<GenericValue> partyContactMechList;
+
+            if (contactMechPurposeTypeId == null) {
+                partyContactMechList = party.getRelated("PartyContactMech", null, null, false);
+            } else {
+                List<GenericValue> list;
+
+                list = party.getRelated("PartyContactMechPurpose", UtilMisc.toMap("contactMechPurposeTypeId", contactMechPurposeTypeId), null, false);
+                if (!includeOld) {
+                    list = EntityUtil.filterByDate(list, true);
+                }
+                partyContactMechList = EntityUtil.getRelated("PartyContactMech", null, list, false);
+            }
+            if (!includeOld) {
+                partyContactMechList = EntityUtil.filterByDate(partyContactMechList, true);
+            }
+            partyContactMechList = EntityUtil.orderBy(partyContactMechList, UtilMisc.toList("fromDate DESC"));
+            return partyContactMechList;
+        } catch (GenericEntityException gee) {
+            Debug.logWarning(gee, module);
+            return Collections.emptyList();
+        }
+    }
+
     public static String formatCreditCard(GenericValue creditCardInfo) {
         StringBuilder result = new StringBuilder(16);
 

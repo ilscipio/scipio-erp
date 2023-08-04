@@ -1577,6 +1577,9 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
 
     /**
      * call by the previous method to be able to read with View entityName and entity Field and after for real entity
+     *
+     * <p>SCIPIO: 3.0.0: Now looks up using global resource bundle instead of only default-resource-name.</p>
+     *
      * @param modelEntity the modelEntity, for a view it's the ViewEntity
      * @param modelEntityToUse, same as before except if it's a second call for a view, and so it's the real modelEntity
      * @return null or resourceValue
@@ -1584,18 +1587,25 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
     private Object get(ModelEntity modelEntity, ModelEntity modelEntityToUse, String name, String resource, Locale locale) {
         if (UtilValidate.isEmpty(resource)) {
             resource = modelEntityToUse.getDefaultResourceName();
+            // SCIPIO: 3.0.0: Default to global
             // still empty? return null
-            if (UtilValidate.isEmpty(resource)) {
-                return null;
-            }
+            //if (UtilValidate.isEmpty(resource)) {
+            //    return null;
+            //}
         }
-        if (UtilProperties.isPropertiesResourceNotFound(resource, locale, false)) {
-            // Properties do not exist for this resource+locale combination
-            return null;
-        }
-        ResourceBundle bundle = null;
+        //if (UtilProperties.isPropertiesResourceNotFound(resource, locale, false)) {
+        //    // Properties do not exist for this resource+locale combination
+        //    return null;
+        //}
+        ResourceBundle bundle;
         try {
-            bundle = UtilProperties.getResourceBundle(resource, locale);
+            // SCIPIO: 3.0.0: Lookup through global bundle
+            // NOTE: getResourceBundle automatically selects the global bundle for us; getGlobalResourceBundle only needed in case no explicit resource
+            if (UtilValidate.isNotEmpty(resource)) {
+                bundle = UtilProperties.getResourceBundle(resource, locale);
+            } else {
+                bundle = UtilProperties.getGlobalResourceBundle(locale);
+            }
         } catch (IllegalArgumentException e) {
             bundle = null;
         }

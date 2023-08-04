@@ -1547,11 +1547,11 @@ public class GenericEntity implements ScipioMap<String, Object>, LocalizedMap<Ob
      *    property value is returned; otherwise returns the field value
      */
     public Object get(String name, String resource, Locale locale) {
-        Object fieldValue = get(name);
         // In case of view entity first try to retrieve with View field names
         ModelEntity modelEntityToUse = this.getModelEntity();
         Object resourceValue = get(this.getModelEntity(), modelEntityToUse, name, resource, locale);
         if (resourceValue == null) {
+            Object fieldValue = get(name); // SCIPIO: 3.0.0: Moved (optimized)
             if (modelEntityToUse instanceof ModelViewEntity) {
                 //  now try to retrieve with the field heading from the real entity linked to the view
                 ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntityToUse;

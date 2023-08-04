@@ -4883,6 +4883,22 @@ code package.
             <key-map field-name="productStoreId"/>
         </relation>
     </extend-entity>
+    <!-- SCIPIO -->
+    <entity entity-name="ProductStoreMarketplace"
+            package-name="org.ofbiz.product.store"
+            title="Product Store Marketplace">
+        <description>Defines (external) marketplace linked to a ProductStore</description>
+        <field name="marketplaceId" type="id-ne"></field>
+        <field name="productStoreId" type="id-ne"></field>
+        <field name="fromDate" type="date-time"></field>
+        <field name="thruDate" type="date-time"></field>
+        <prim-key field="marketplaceId"/>
+        <prim-key field="productStoreId"/>
+        <prim-key field="fromDate"/>
+        <relation type="one" fk-name="PRDSTRMKTPLC_PRDS" rel-entity-name="ProductStore">
+            <key-map field-name="productStoreId"/>
+        </relation>
+    </entity>
 
     <!-- ========================================================= -->
     <!-- org.ofbiz.product.subscription -->

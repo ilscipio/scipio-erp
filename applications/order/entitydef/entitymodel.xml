@@ -473,6 +473,15 @@ code package.
         <index-field name="statusId" />
       </index>-->
     </entity>
+    <!--SCIPIO -->
+    <extend-entity entity-name="OrderHeader">
+        <field name="marketplaceId" type="id-ne"></field>
+        <relation type="one" fk-name="ORDER_HDR_MRKTPLC" title="" rel-entity-name="ProductStoreMarketplace">
+            <key-map field-name="marketplaceId" />
+            <key-map field-name="productStoreId" />
+        </relation>
+    </extend-entity>
+
     <entity entity-name="OrderHeaderNote"
             package-name="org.ofbiz.order.order"
             never-cache="true"

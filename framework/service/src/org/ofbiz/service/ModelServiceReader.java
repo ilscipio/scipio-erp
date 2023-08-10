@@ -41,6 +41,7 @@ import com.ilscipio.scipio.service.def.AttributeList;
 import com.ilscipio.scipio.service.def.EntityAttributes;
 import com.ilscipio.scipio.service.def.EntityAttributesList;
 import com.ilscipio.scipio.service.def.Implements;
+import com.ilscipio.scipio.service.def.ImplementsList;
 import com.ilscipio.scipio.service.def.OverrideAttribute;
 import com.ilscipio.scipio.service.def.OverrideAttributeList;
 import com.ilscipio.scipio.service.def.Permission;
@@ -748,9 +749,14 @@ public class ModelServiceReader implements Serializable {
     private void createPermGroups(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService model) {
         List<Permissions> permissions = new ArrayList<>(Arrays.asList(serviceDef.permissions()));
         // Add in the defined attributes (override the above defaults if specified)
-        PermissionsList permissionsList = (serviceMethod != null) ? serviceMethod.getAnnotation(PermissionsList.class) : serviceClass.getAnnotation(PermissionsList.class);
-        if (permissionsList != null) {
-            permissions.addAll(Arrays.asList(permissionsList.value()));
+        PermissionsList permissionsDefList = (serviceMethod != null) ? serviceMethod.getAnnotation(PermissionsList.class) : serviceClass.getAnnotation(PermissionsList.class);
+        if (permissionsDefList != null) {
+            permissions.addAll(Arrays.asList(permissionsDefList.value()));
+        } else {
+            Permissions permissionsDef = (serviceMethod != null) ? serviceMethod.getAnnotation(Permissions.class) : serviceClass.getAnnotation(Permissions.class);
+            if (permissionsDef != null) {
+                permissions.add(permissionsDef);
+            }
         }
         for (Permissions permissionsDef : permissions) {
             ModelPermGroup group = new ModelPermGroup();
@@ -901,7 +907,18 @@ public class ModelServiceReader implements Serializable {
     }
 
     private void createImplDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
-        for (Implements implementsDef : serviceDef.implemented()) {
+        List<Implements> implementsDefs = new ArrayList<>(Arrays.asList(serviceDef.implemented()));
+        // Add in the defined attributes (override the above defaults if specified)
+        ImplementsList implementsDefList = (serviceMethod != null) ? serviceMethod.getAnnotation(ImplementsList.class) : serviceClass.getAnnotation(ImplementsList.class);
+        if (implementsDefList != null) {
+            implementsDefs.addAll(Arrays.asList(implementsDefList.value()));
+        } else {
+            Implements implementsDef = (serviceMethod != null) ? serviceMethod.getAnnotation(Implements.class) : serviceClass.getAnnotation(Implements.class);
+            if (implementsDef != null) {
+                implementsDefs.add(implementsDef);
+            }
+        }
+        for (Implements implementsDef : implementsDefs) {
             String serviceName = implementsDef.service();
             boolean optional = UtilXml.checkBoolean(implementsDef.optional(), false);
             if (serviceName.length() > 0) {
@@ -922,6 +939,11 @@ public class ModelServiceReader implements Serializable {
         EntityAttributesList entityAttributesList = (serviceMethod != null) ? serviceMethod.getAnnotation(EntityAttributesList.class) : serviceClass.getAnnotation(EntityAttributesList.class);
         if (entityAttributesList != null) {
             entityAttributes.addAll(Arrays.asList(entityAttributesList.value()));
+        } else {
+            EntityAttributes entityAttributesDef = (serviceMethod != null) ? serviceMethod.getAnnotation(EntityAttributes.class) : serviceClass.getAnnotation(EntityAttributes.class);
+            if (entityAttributesDef != null) {
+                entityAttributes.add(entityAttributesDef);
+            }
         }
         for (EntityAttributes entityAttributesDef : entityAttributes) {
             createAutoAttrDef(serviceClass, serviceMethod, serviceDef, entityAttributesDef, service);
@@ -1156,9 +1178,14 @@ public class ModelServiceReader implements Serializable {
     private void createAttrDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         List<Attribute> attributes = new ArrayList<>(Arrays.asList(serviceDef.attributes()));
         // Add in the defined attributes (override the above defaults if specified)
-        AttributeList attributeList = (serviceMethod != null) ? serviceMethod.getAnnotation(AttributeList.class) : serviceClass.getAnnotation(AttributeList.class);
-        if (attributeList != null) {
-            attributes.addAll(Arrays.asList(attributeList.value()));
+        AttributeList attributeDefList = (serviceMethod != null) ? serviceMethod.getAnnotation(AttributeList.class) : serviceClass.getAnnotation(AttributeList.class);
+        if (attributeDefList != null) {
+            attributes.addAll(Arrays.asList(attributeDefList.value()));
+        } else {
+            Attribute attributeDef = (serviceMethod != null) ? serviceMethod.getAnnotation(Attribute.class) : serviceClass.getAnnotation(Attribute.class);
+            if (attributeDef != null) {
+                attributes.add(attributeDef);
+            }
         }
         for (Attribute attributeDef : attributes) {
             ModelParam param = new ModelParam();
@@ -1399,9 +1426,14 @@ public class ModelServiceReader implements Serializable {
     private void createOverrideDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         List<OverrideAttribute> overrideAttributes = new ArrayList<>(Arrays.asList(serviceDef.overrideAttributes()));
         // Add in the defined attributes (override the above defaults if specified)
-        OverrideAttributeList overrideAttributeList = (serviceMethod != null) ? serviceMethod.getAnnotation(OverrideAttributeList.class) : serviceClass.getAnnotation(OverrideAttributeList.class);
-        if (overrideAttributeList != null) {
-            overrideAttributes.addAll(Arrays.asList(overrideAttributeList.value()));
+        OverrideAttributeList overrideAttributeDefList = (serviceMethod != null) ? serviceMethod.getAnnotation(OverrideAttributeList.class) : serviceClass.getAnnotation(OverrideAttributeList.class);
+        if (overrideAttributeDefList != null) {
+            overrideAttributes.addAll(Arrays.asList(overrideAttributeDefList.value()));
+        } else {
+            OverrideAttribute overrideAttributeDef = (serviceMethod != null) ? serviceMethod.getAnnotation(OverrideAttribute.class) : serviceClass.getAnnotation(OverrideAttribute.class);
+            if (overrideAttributeDef != null) {
+                overrideAttributes.add(overrideAttributeDef);
+            }
         }
         for (OverrideAttribute overrideAttributeDef : overrideAttributes) {
             String name = UtilXml.checkEmpty(overrideAttributeDef.name());
@@ -1529,9 +1561,14 @@ public class ModelServiceReader implements Serializable {
     private void createProperties(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
         List<Property> propertiesAll = new ArrayList<>(Arrays.asList(serviceDef.properties()));
         // Add in the defined attributes (override the above defaults if specified)
-        PropertyList propertyList = (serviceMethod != null) ? serviceMethod.getAnnotation(PropertyList.class) : serviceClass.getAnnotation(PropertyList.class);
-        if (propertyList != null) {
-            propertiesAll.addAll(Arrays.asList(propertyList.value()));
+        PropertyList propertyDefList = (serviceMethod != null) ? serviceMethod.getAnnotation(PropertyList.class) : serviceClass.getAnnotation(PropertyList.class);
+        if (propertyDefList != null) {
+            propertiesAll.addAll(Arrays.asList(propertyDefList.value()));
+        } else {
+            Property propertyDef = (serviceMethod != null) ? serviceMethod.getAnnotation(Property.class) : serviceClass.getAnnotation(Property.class);
+            if (propertyDef != null) {
+                propertiesAll.add(propertyDef);
+            }
         }
         if (propertiesAll.size() > 0) {
             Map<String, Object> properties = new LinkedHashMap<>();

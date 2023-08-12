@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletRequest;
 
@@ -681,4 +682,18 @@ public class PartyWorker {
             return mainCond;
         }
     }
+
+    /**
+     * Returns the default (first) UserLogin for the given partyId.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static GenericValue getDefaultUserLogin(Delegator delegator, String partyId, boolean useCache) throws GenericEntityException {
+        if (partyId == null || partyId.isEmpty()) {
+            return null;
+        }
+        List<GenericValue> userLogins = delegator.query().from("UserLogin").where("partyId", partyId).cache(useCache).queryList();
+        return EntityUtil.getFirst(userLogins);
+    }
+
 }

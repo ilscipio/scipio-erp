@@ -177,6 +177,7 @@
         <!-- FIXME: Original Reflections library has fatal errors, so temporarily use its fork
         <dependency org="org.reflections" name="reflections" rev="0.9.12" conf="base,sources"/>-->
         <dependency org="net.oneandone.reflections8" name="reflections8" rev="0.11.7" conf="base,sources"/>
+        <dependency org="org.dom4j" name="dom4j" rev="2.1.4" conf="base,sources"/><!-- needed by: maileon -->
 
         <!-- jdk11 removed JDK packages -->
         <dependency org="javax.xml.bind" name="jaxb-api" rev="2.4.0-b180830.0359" conf="base-jdk11,sources-jdk11"/>

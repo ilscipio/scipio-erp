@@ -3455,4 +3455,21 @@ public class UtilMisc {
         }
     }
 
+    /**
+     * Returns the given map key value as string or, if already a string, the string itself.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String asStringForKey(Object mapOrValue, Object key) {
+        if (mapOrValue instanceof String) {
+            return (String) mapOrValue;
+        } else if (mapOrValue instanceof Map) {
+            Object result = ((Map<?, ?>) mapOrValue).get(key);
+            return (result != null) ? result.toString() : null;
+        } else if (mapOrValue == null) {
+            return null;
+        } else {
+            throw new IllegalArgumentException("Invalid type: " + mapOrValue.getClass().getName());
+        }
+    }
 }

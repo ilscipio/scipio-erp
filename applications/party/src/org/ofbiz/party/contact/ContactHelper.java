@@ -21,10 +21,14 @@ package org.ofbiz.party.contact;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
@@ -35,6 +39,11 @@ import org.ofbiz.entity.util.EntityUtil;
 public class ContactHelper {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+    public static final FlexibleStringExpander DEFAULT_TELECOM_EXDR =
+            FlexibleStringExpander.getInstance("${countryCode}-${areaCode}-${contactNumber}${empty extension ? '' : ' ext. ' + extension}");
+    public static final FlexibleStringExpander DEFAULT_FULLNAME_EXDR =
+            FlexibleStringExpander.getInstance("${firstName} ${middleName} ${lastName}");
 
     private ContactHelper() {}
 
@@ -97,7 +106,8 @@ public class ContactHelper {
             List<GenericValue> partyContactMechList;
 
             if (contactMechPurposeTypeId == null) {
-                partyContactMechList = party.getRelated("PartyContactMech", null, null, false);
+                throw new NullPointerException("Missing contactMechPurposeTypeId");
+                //partyContactMechList = party.getRelated("PartyContactMech", null, null, false);
             } else {
                 List<GenericValue> list;
 
@@ -129,6 +139,47 @@ public class ContactHelper {
         }
         result.append(' ').append(creditCardInfo.getString("expireDate"));
         return result.toString();
+    }
+
+    /**
+     * Formats a telecom number according to expression, with some automatic cleanup.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String formatTelecomNumber(GenericValue partyContactMech, GenericValue contactMech, GenericValue telecomNumber,
+                                             FlexibleStringExpander format, boolean cleanupFormat) {
+        Map<String, Object> ctx = new HashMap<>(telecomNumber);
+        ctx.put("extension", partyContactMech.getString("extension"));
+        String number = format.expandString(ctx);
+        if (cleanupFormat) {
+            number = number.replaceAll("^[-\\s]+", "");
+            number = number.replaceAll("[-]{2,}", "-");
+            number = number.replaceAll("\\s{2,}", " ");
+        }
+        return number;
+    }
+
+    public static FlexibleStringExpander getDefaultTelecomExdr(Delegator delegator) {
+        return DEFAULT_TELECOM_EXDR;
+    }
+
+
+    /**
+     * Formats a person full name, with some automatic cleanup.
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static String formatFullName(GenericValue person, FlexibleStringExpander format, boolean cleanupFormat) {
+        Map<String, Object> ctx = new HashMap<>(person);
+        String number = format.expandString(ctx);
+        if (cleanupFormat) {
+            number = number.replaceAll("\\s{2,}", " ");
+        }
+        return number;
+    }
+
+    public static FlexibleStringExpander getDefaultFullNameExdr(Delegator delegator) {
+        return DEFAULT_FULLNAME_EXDR;
     }
 
 }

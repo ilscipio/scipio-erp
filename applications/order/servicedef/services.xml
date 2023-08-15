@@ -142,6 +142,7 @@ code package.
         <attribute name="supplierPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="INOUT" optional="true"/>
         <attribute name="originOrderId" type="String" mode="IN" optional="true"/>
+        <attribute name="marketplaceId" type="String" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="OUT" optional="false"/>
     </service>
 

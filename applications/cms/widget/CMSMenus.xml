@@ -209,6 +209,7 @@
         <actions>
             <script><![CDATA[groovy:
                 context.wordpressAvailable = org.ofbiz.base.component.ComponentConfig.isComponentPresent("wordpress");
+                context.maileonAvailable = org.ofbiz.base.component.ComponentConfig.isComponentPresent("maileon");
             ]]></script>
         </actions>
         <menu-item name="robots" title="${uiLabelMap.CommonRobots}">
@@ -222,6 +223,12 @@
                 <if-compare field="wordpressAvailable" operator="equals" value="true"/>
             </condition>
             <link target="wordpress" />
+        </menu-item>
+        <menu-item name="maileon" title="Maileon">
+            <condition>
+                <if-compare field="maileonAvailable" operator="equals" value="true"/>
+            </condition>
+            <link target="maileon" />
         </menu-item>
     </menu>
 </menus>

@@ -280,6 +280,10 @@
 <#if isOpenAIComponentPresent>
     <@(.get_optional_template("component://openai/webapp/openai/openai-common.ftl").include!templateMissingFallback("htmlOpenAI.html")) />
 </#if>
+<#assign isMaileonComponentPresent = Static["org.ofbiz.base.component.ComponentConfig"].isComponentPresent("maileon")!false>
+<#if isMaileonComponentPresent>
+    <@(.get_optional_template("component://maileon/webapp/maileon/maileon-common.ftl").include!templateMissingFallback("htmlMaileon.html")) />
+</#if>
 
 <#-- After everything included, create a copy of the namespace so that macros can access 
      their global variables without possibility of override (sometimes needed)

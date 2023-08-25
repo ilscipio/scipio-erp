@@ -4,6 +4,11 @@ package org.ofbiz.base.util;
 
 import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponseInterceptor;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.BasicUserPrincipal;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.HttpClientConnectionManager;
@@ -12,6 +17,7 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
@@ -30,6 +36,7 @@ import javax.net.ssl.SSLContext;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.Serializable;
+import java.security.Principal;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
@@ -223,6 +230,8 @@ public class ScipioHttpClient implements Closeable {
         private final String jksStoreFileName;
         private final String jksStorePassword;
         private final String userAgent;
+        private final String basicAuthUser;
+        private final String basicAuthPassword;
 
         protected Config(Map<String, ?> properties, Factory factory) {
             this.factory = factory;
@@ -241,6 +250,8 @@ public class ScipioHttpClient implements Closeable {
             String jksStorePassword = (String) properties.get("jksStorePassword");
             this.jksStorePassword = UtilValidate.isNotEmpty(jksStorePassword) ? jksStorePassword : DEFAULT_JKS_STORE_PASSWORD;
             this.userAgent = properties.get("userAgent") != null ? (String) properties.get("userAgent") : DEFAULT_USER_AGENT;
+            this.basicAuthUser = (String) properties.get("basicAuthUser");
+            this.basicAuthPassword = (String) properties.get("basicAuthPassword");
         }
 
         public static Config fromContext(Map<String, ?> properties) {
@@ -375,6 +386,13 @@ public class ScipioHttpClient implements Closeable {
             if (getUserAgent() != null) {
                 builder.setUserAgent(userAgent);
             }
+
+            if (isBasicAuthEnabled()) {
+                BasicCredentialsProvider bcp = new BasicCredentialsProvider();
+                bcp.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(getBasicAuthUser(), getBasicAuthPassword()));
+                builder.setDefaultCredentialsProvider(bcp);
+            }
+
             return builder;
         }
 
@@ -449,6 +467,13 @@ public class ScipioHttpClient implements Closeable {
             if (getUserAgent() != null) {
                 builder.setUserAgent(userAgent);
             }
+
+            if (isBasicAuthEnabled()) {
+                BasicCredentialsProvider bcp = new BasicCredentialsProvider();
+                bcp.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(getBasicAuthUser(), getBasicAuthPassword()));
+                builder.setDefaultCredentialsProvider(bcp);
+            }
+
             return builder;
         }
 
@@ -519,6 +544,18 @@ public class ScipioHttpClient implements Closeable {
 
         public String getUserAgent() {
             return userAgent;
+        }
+
+        public String getBasicAuthUser() {
+            return basicAuthUser;
+        }
+
+        public String getBasicAuthPassword() {
+            return basicAuthPassword;
+        }
+
+        public boolean isBasicAuthEnabled() {
+            return UtilValidate.isNotEmpty(getBasicAuthUser()) || UtilValidate.isNotEmpty(getBasicAuthPassword());
         }
     }
 

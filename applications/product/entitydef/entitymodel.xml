@@ -4890,13 +4890,20 @@ code package.
         <description>Defines (external) marketplace linked to a ProductStore</description>
         <field name="marketplaceId" type="id-ne"></field>
         <field name="productStoreId" type="id-ne"></field>
+        <field name="orderFulfillmentChannelEnumId" type="id-ne">
+            <description>Represents in which way logistics are taken care of (marketplace or store)</description>
+        </field>
         <field name="fromDate" type="date-time"></field>
         <field name="thruDate" type="date-time"></field>
         <prim-key field="marketplaceId"/>
         <prim-key field="productStoreId"/>
+        <prim-key field="orderFulfillmentChannelEnumId"/>
         <prim-key field="fromDate"/>
         <relation type="one" fk-name="PRDSTRMKTPLC_PRDS" rel-entity-name="ProductStore">
             <key-map field-name="productStoreId"/>
+        </relation>
+        <relation type="one" fk-name="PRDSTRMKTPLC_OFC_ENUM" title="OrderFulfillmentChannel" rel-entity-name="Enumeration">
+            <key-map field-name="orderFulfillmentChannelEnumId" rel-field-name="enumId"/>
         </relation>
     </entity>
 

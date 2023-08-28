@@ -77,6 +77,11 @@ code package.
     <EnumerationType description="Order Item Change Reason" enumTypeId="ODR_ITM_CH_REASON" hasTable="N" parentTypeId=""/>
     <Enumeration description="Mis-Ordered Item" enumCode="MISORDER" enumId="OICR_MISORDER_ITEM" sequenceId="01" enumTypeId="ODR_ITM_CH_REASON"/>
     <Enumeration description="Changed Mind" enumCode="CHANGE_MIND" enumId="OICR_CHANGE_MIND" sequenceId="02" enumTypeId="ODR_ITM_CH_REASON"/>
+    <!-- SCIPIO -->
+    <EnumerationType description="Order Fulfillment Channel" enumTypeId="ORDER_FULFILLMENT_CHANNEL" hasTable="N"/>
+    <Enumeration enumId="_NA_" enumTypeId="ORDER_FULFILLMENT_CHANNEL" enumCode="_NA_" sequenceId="0" description="Not Applicable"/>
+    <Enumeration description="Fulfill by Amazon seller" enumCode="MFN" enumId="MFN" sequenceId="10" enumTypeId="ORDER_FULFILLMENT_CHANNEL"/>
+    <Enumeration description="Fulfill by Amazon" enumCode="AFN" enumId="AFN" sequenceId="11" enumTypeId="ORDER_FULFILLMENT_CHANNEL"/>
 
     <QuoteType description="Other" hasTable="N" parentTypeId="" quoteTypeId="OTHER_QUOTE"/>
     <QuoteType description="Product" hasTable="N" parentTypeId="" quoteTypeId="PRODUCT_QUOTE"/>

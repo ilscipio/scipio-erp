@@ -476,9 +476,13 @@ code package.
     <!--SCIPIO -->
     <extend-entity entity-name="OrderHeader">
         <field name="marketplaceId" type="id-ne"></field>
+        <field name="marketplaceStatusId" type="id"></field>
         <relation type="one" fk-name="ORDER_HDR_MRKTPLC" title="" rel-entity-name="ProductStoreMarketplace">
             <key-map field-name="marketplaceId" />
             <key-map field-name="productStoreId" />
+        </relation>
+        <relation type="one" fk-name="ORDER_MRKTPL_STATUS" rel-entity-name="StatusItem">
+            <key-map field-name="statusId"/>
         </relation>
     </extend-entity>
 

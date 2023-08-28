@@ -910,7 +910,8 @@
                         minHeight: 300,
                         border: 0,
                         padding:0
-                    }).attr('aria-label', 'visual editor');
+                    }).attr('aria-label', 'visual editor').attr('role', 'document');
+
                 $trObj.append($iframe);
                 var contextIframe = $iframe.contents()[0];
 
@@ -921,7 +922,7 @@
                 var $treditor= $trObj.find('.trumbowyg-editor');
                 $treditor.detach();
                 $iframe.contents().find("body").append($treditor);
-
+                $iframe.addClass('trumbowyg-editor');
             });
 
         });

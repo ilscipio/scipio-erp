@@ -388,7 +388,11 @@
         <dependency org="org.apache.pdfbox" name="fontbox" rev="2.0.27" conf="base,sources"/>
         <dependency org="org.apache.pdfbox" name="jempbox" rev="1.8.17" conf="base,sources"/>
         <dependency org="org.apache.pdfbox" name="pdfbox" rev="2.0.27" conf="base,sources"/>
-        <dependency org="org.apache.poi" name="poi" rev="5.0.0" conf="base,sources"/>
+        <dependency org="org.apache.poi" name="poi" rev="5.0.0" conf="base,sources">
+            <!-- TODO: REVIEW: we cannot allow jcl-over-slf4j on the classpath just like that;
+            it intentionally tries to replace (has same class names as) apache commons-logging classes -->
+            <exclude org="org.slf4j" module="jcl-over-slf4j"/>
+        </dependency>
         <dependency org="org.apache.poi" name="poi-ooxml" rev="5.0.0" conf="base,sources"/>
 
         <!-- solr component (applications/solr/ivy.xml)

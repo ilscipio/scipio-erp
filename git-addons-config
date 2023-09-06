@@ -74,6 +74,7 @@ SCIPIO_ADDON_MAP[wordpress]="wordpress addons/wordpress ee wordpress /"
 SCIPIO_ADDON_MAP[amazon-selling-partners]="amazon-selling-partners addons/amazon-selling-partners ee amazon-selling-partners /"
 SCIPIO_ADDON_MAP[algolia]="algolia addons/algolia ee algolia /"
 SCIPIO_ADDON_MAP[openai]="openai addons/openai ee openai /"
+SCIPIO_ADDON_MAP[maileon]="maileon addons/maileon ee maileon /"
 
 # OVERRIDES
 # If you need to override any of the above definitions (for whatever reason, normally not),

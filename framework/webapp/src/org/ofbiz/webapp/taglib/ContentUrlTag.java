@@ -128,7 +128,7 @@ public class ContentUrlTag {
      */
     public static void appendContentPrefix(HttpServletRequest request, Appendable urlBuffer, String webSiteId, Boolean secure, String type) throws IOException {
         if (request == null) {
-            Debug.logError("appendContentPrefix: request is null; this probably means appendContentPrefix was used where it"
+            Debug.logWarning("appendContentPrefix: request is null; this probably means appendContentPrefix was used where it"
                     + " shouldn't be or context is incomplete; falling back to *content.url.prefix.* from url.properties if available (no WebSite, delegator or security setting known)", module);
             if (checkDoLocalContentPrefix(DelegatorFactory.getDefaultDelegator(), urlBuffer, true, type, false)) {
                 return;

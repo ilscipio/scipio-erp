@@ -1,11 +1,11 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper;
 
+import org.ofbiz.entity.Delegator;
+import org.ofbiz.entity.GenericEntityException;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.GenericEntityException;
 
 public class JFairyDemoDataHelper extends AbstractDemoDataHelper {
 
@@ -23,6 +23,9 @@ public class JFairyDemoDataHelper extends AbstractDemoDataHelper {
         this.locale = locale;
     }
 
+    public boolean generateEmailAddress() {
+        return (boolean) getContext().get("generateEmailAddress");
+    }
     public boolean generateAddress() {
         return (boolean) getContext().get("generateAddress");
     }

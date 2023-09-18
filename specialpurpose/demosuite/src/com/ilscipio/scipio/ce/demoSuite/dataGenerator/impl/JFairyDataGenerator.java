@@ -1,14 +1,9 @@
 package com.ilscipio.scipio.ce.demoSuite.dataGenerator.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import org.ofbiz.base.util.UtilValidate;
-
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator;
-import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataEmailAddress;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataOrder;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
@@ -17,9 +12,13 @@ import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.party.DemoDataP
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.JFairyDemoDataHelper;
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGeneratorUtil;
-
 import io.codearte.jfairy.Fairy;
 import io.codearte.jfairy.producer.person.Person;
+import org.ofbiz.base.util.UtilValidate;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 public class JFairyDataGenerator extends AbstractDataGenerator {
     private final static String JFAIRY_DATA_GENERATOR = "jfairy";
@@ -95,6 +94,12 @@ public class JFairyDataGenerator extends AbstractDataGenerator {
                 demoDataUserLogin.setUserLoginId(person.getUsername());
                 demoDataUserLogin.setCurrentPassword(person.getPassword());
                 demoDataParty.setUserLogin(demoDataUserLogin);
+            }
+
+            if (helper.generateEmailAddress()) {
+                DemoDataEmailAddress demoDataEmailAddress = new DemoDataEmailAddress();
+                demoDataEmailAddress.setEmailAddress(person.getEmail());
+                demoDataParty.setEmailAddress(demoDataEmailAddress);
             }
 
             handledData = demoDataParty;

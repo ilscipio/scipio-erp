@@ -1,24 +1,24 @@
-import java.sql.Timestamp
-
-import org.ofbiz.base.crypto.HashCrypt
-import org.ofbiz.base.util.Debug
-import org.ofbiz.base.util.UtilDateTime
-import org.ofbiz.base.util.UtilMisc
-import org.ofbiz.base.util.UtilRandom
-import org.ofbiz.common.login.LoginServices
-import org.ofbiz.entity.*
-import org.ofbiz.entity.util.*
-
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.AbstractDataGenerator
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.DataGeneratorProvider
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.AbstractDataObject
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataPerson
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataUserLogin
+import com.ilscipio.scipio.ce.demoSuite.dataGenerator.dataObject.DemoDataEmailAddress
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.helper.AbstractDemoDataHelper.DataTypeEnum
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.service.DataGeneratorGroovyBaseScript
 import com.ilscipio.scipio.ce.demoSuite.dataGenerator.util.DemoSuiteDataGeneratorUtil.DataGeneratorProviders
+import org.ofbiz.base.crypto.HashCrypt
+import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilDateTime
+import org.ofbiz.base.util.UtilMisc
+import org.ofbiz.base.util.UtilRandom
+import org.ofbiz.common.login.LoginServices
+import org.ofbiz.entity.GenericValue
+import org.ofbiz.entity.util.EntityUtil
+import org.ofbiz.entity.util.EntityUtilProperties
 
+import java.sql.Timestamp
 
 @DataGeneratorProvider(providers=[DataGeneratorProviders.JFAIRY])
 public class PartyData extends DataGeneratorGroovyBaseScript {
@@ -118,6 +118,18 @@ public class PartyData extends DataGeneratorGroovyBaseScript {
                     postalAddressToStore.add(delegator.makeValue("PartyContactMechPurpose", ["partyId" : partyId, "contactMechId" : contactMech.contactMechId, "contactMechPurposeTypeId" : "GENERAL_LOCATION", "fromDate" : UtilDateTime.nowTimestamp()]));
                     toBeStored.addAll(postalAddressToStore);
                 }
+            }
+
+            if (generator.getHelper().generateEmailAddress()) {
+                DemoDataEmailAddress demoDataEmailAddress = partyData.getEmailAddress();
+
+                String contactMechId = "GEN_" + delegator.getNextSeqId("demo-contactMechId");
+                List<GenericValue> emailAddressToStore = [];
+                GenericValue contactMech = delegator.makeValue("ContactMech", ["contactMechTypeId" : "EMAIL_ADDRESS", "contactMechId" : contactMechId, "infoString" : demoDataEmailAddress.getEmailAddress()]);
+                emailAddressToStore.add(contactMech);
+                emailAddressToStore.add(delegator.makeValue("PartyContactMech", ["partyId" : partyId, "contactMechId" : contactMech.contactMechId, "fromDate" : UtilDateTime.nowTimestamp()]));
+                emailAddressToStore.add(delegator.makeValue("PartyContactMechPurpose", ["partyId" : partyId, "contactMechId" : contactMech.contactMechId, "contactMechPurposeTypeId" : "PRIMARY_EMAIL", "fromDate" : UtilDateTime.nowTimestamp()]));
+                toBeStored.addAll(emailAddressToStore);
             }
         }
         return toBeStored;

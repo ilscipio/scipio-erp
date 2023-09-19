@@ -247,7 +247,7 @@
                 <parameter param-name="partyId"/>
             </link>
         </menu-item> -->
-        <menu-item name="createNew" title="${uiLabelMap.AccountingBillingAccount}" widget-style="+${styles.action_nav} ${styles.action_find}">
+        <menu-item name="createNew" title="${uiLabelMap.AccountingBillingAccount}">
             <condition>
                 <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
             </condition>

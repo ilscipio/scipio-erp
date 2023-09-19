@@ -184,8 +184,11 @@ origArgs={} passArgs={} catchArgs...>
             <#-- FIXME: this "navigation" variable is way too generic name! is it even still valid? -->
             <#if navigation?has_content><heading>${escapeVal(navigation, 'htmlmarkup')}</heading></#if>
         <#elseif specialType == "button-dropdown">
-            <button href="#" data-dropdown="${escapeVal(id, 'html')}" aria-controls="${escapeVal(id, 'html')}" data-toggle="dropdown" aria-expanded="false"<@compiledClassAttribStr class=titleClass />>${escapeVal(title, 'htmlmarkup')}</button><br>
-            <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
+            <div class="dropdown">
+                <div class="dropdown-trigger">
+                    <button href="#" data-dropdown="${escapeVal(id, 'html')}" aria-haspopup="true" aria-controls="${escapeVal(id, 'html')}" data-toggle="dropdown" aria-expanded="false"<@compiledClassAttribStr class=titleClass />>${escapeVal(title, 'htmlmarkup')}</button><br>
+                    <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
+                </div>
         </#if>
     </#if>
     <#-- Logo -->
@@ -217,11 +220,17 @@ origArgs={} passArgs={} catchArgs...>
         <#local class = addClassArg(class,"is-open")/>
     </#if>
     <#-- Menu -->
-    <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if>
+    <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if> role="menu"></#if>
     <#if (sepMenu.layout!) == "before-inline">
         <li class="nav-title" id="menu_1_title"><a href="javascript:openSidebarTab('menu_1');"><i class="fa fa-sitemap" aria-hidden="true"></i><span class="menu-label is-sr-only">${getLabel("CommonNavigation")}</span></a></li>
         <#--<@menuitem type="text" class=sepMenu.nonsepTitleItemClass contentClass="is-sr-only" text=getLabel("CommonNavigation")/>--></#if>
-    <#nested>
+    <#if specialType == "button-dropdown">
+        <div class="dropdown-content">
+            <#nested>
+        </div>
+    <#else>
+        <#nested>
+    </#if>
     <#if !inlineItems && htmlwrap?has_content>
         <#if specialType == "main">
             <#if htmlwrap?has_content></${htmlwrap}></#if>
@@ -230,6 +239,7 @@ origArgs={} passArgs={} catchArgs...>
             <#if htmlwrap?has_content></${htmlwrap}></#if>
             </aside>
         <#else>
+            <#if specialType == "button-dropdown"></div></#if>
             <#if htmlwrap?has_content></${htmlwrap}></#if>
         </#if>
     </#if>

@@ -1135,11 +1135,11 @@
         <field name="supplierProductId" required-field="true">
             <text/>
         </field>
-        <field name="lastPrice" required-field="true">
+        <field name="lastPrice" required-field="true" >
             <text />
         </field>
         <field name="availableFromDate" use-when="supplierProduct==null" required-field="true">
-            <date-time type="date" />
+            <date-time type="timestamp" />
         </field>
         <field name="availableFromDate" use-when="supplierProduct!=null">
             <display type="date" />

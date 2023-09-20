@@ -1011,32 +1011,16 @@ dateDisplayType="" htmlwrap=true required=false origArgs={} passArgs={} catchArg
     <#local fdatepickerOptions>{showTodayButton:true${fdpExtraOpts}}</#local><#lt/>
     <@script htmlwrap=htmlwrap>
         $(function() {
-        var sfdh = new ScpFieldDateHelper({ <#-- see selectall.js -->
-            displayInputId: "${displayInputIdJs}",
-            inputId: "${inputIdJs}",
-            displayCorrect: ${displayCorrect?string},
-            useFillDate: ${useFillDate?string},
-            dateFmt: "${dateConvFmt}",
-            dateDisplayFmt: "${dateDisplayConvFmt}",
-            dateEffDispFmt: "${dateEffDispConvFmt}"
+            bulmaCalendar.attach('#${displayInputIdJs}', ${fdatepickerOptions});
+
+            var $bulmaCalendar_${inputIdJs} = document.querySelector('#${displayInputIdJs}');
+            if ($bulmaCalendar_${inputIdJs}) {
+                $bulmaCalendar_${inputIdJs}.bulmaCalendar.on('save', function(datepicker) {
+                    document.querySelector('#${inputIdJs}').value = datepicker.data.value();
+                });
+            }
         });
-
-        jQuery("#${displayInputIdJs}").change(function() {
-            sfdh.updateNormDateInputFromI18n(this.value);
-        });
-
-        var onDatePopup = function(ev) {
-            sfdh.saveOldDateFromI18n();
-        };
-
-        var onDateChange = function(ev) {
-            <#-- for fdatepicker, the default value lookup on displayInputId input is enough here. -->
-            sfdh.updateAllDateInputs(sfdh.getDefUpAllInputArgs());
-        };
-
-        bulmaCalendar.attach('#${displayInputIdJs}', ${fdatepickerOptions});
-    });
-  </@script>
+    </@script>
 </#macro>
 
 <#macro field_datefind_markup_widget id="" class="" style="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" dateDisplayType="" dateDisplayFormat=""

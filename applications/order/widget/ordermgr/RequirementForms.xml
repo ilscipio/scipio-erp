@@ -220,7 +220,7 @@ code package.
             <submit button-type="button"/>
         </field>
     </form>
-    <form name="ApproveRequirements" type="multi" use-row-submit="true" target="approveRequirements" title="" list-name="requirements"
+    <form name="ApproveRequirements" type="multi" use-row-submit="false" target="approveRequirements" title="" list-name="requirements"
         paginate-target="ApproveRequirements" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="requirementId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">

@@ -363,7 +363,7 @@ code package.
         <field name="quantityTotal"><display/></field>
         <field name="amountTotal"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
-    <form name="ApprovedProductRequirementsByVendor" type="list" use-row-submit="true" list-name="requirements" target="ApprovedProductRequirements" separate-columns="true"
+    <form name="ApprovedProductRequirementsByVendor" type="list" use-row-submit="false" list-name="requirements" target="ApprovedProductRequirements" separate-columns="true"
         paginate-target="ApprovedProductRequirementsByVendor" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Party" value-field="supplierParty">

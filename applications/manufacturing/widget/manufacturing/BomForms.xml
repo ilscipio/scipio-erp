@@ -129,7 +129,13 @@ code package.
     </form>
     <form name="ListBom" type="list" list-name="ListProductBom" odd-row-style="alternate-row"
         paginate-target="FindBom"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
-        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="" widget-style="${styles.link_nav_info_id}">
+        <field name="productIdFrom" title="${uiLabelMap.ManufacturingProductId}" use-when="" widget-style="${styles.link_nav_info_id}">
+            <hyperlink target="EditProductBom" description="${productIdFrom}">
+                <parameter param-name="productId" value="${productIdFrom}"/>
+                <parameter param-name="productAssocTypeId"/>
+            </hyperlink>
+        </field>
+        <field name="productId" title="${uiLabelMap.ManufacturingProductIdTo}" use-when="" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditProductBom" description="${productId}">
                 <parameter param-name="productId"/>
                 <parameter param-name="productAssocTypeId"/>

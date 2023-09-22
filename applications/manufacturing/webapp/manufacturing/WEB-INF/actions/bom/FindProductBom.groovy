@@ -17,8 +17,9 @@
  * under the License.
  */
 
-import org.ofbiz.entity.util.*;
-import org.ofbiz.entity.condition.*;
+
+import org.ofbiz.entity.condition.EntityCondition
+import org.ofbiz.entity.condition.EntityOperator
 
 condList = [];
 if (parameters.productId) {
@@ -38,8 +39,8 @@ if (parameters.productAssocTypeId) {
                                           ], EntityOperator.OR);
     condList.add(cond);
 }
-bomListIterator = select("productId", "internalName", "productAssocTypeId")
-                    .from("ProductAndAssoc")
+bomListIterator = select("productId", "productIdFrom", "internalName", "productAssocTypeId")
+                    .from("ProductAndAssocToAll")
                     .where(condList)
                     .orderBy("productId", "productAssocTypeId")
                     .cursorScrollInsensitive()

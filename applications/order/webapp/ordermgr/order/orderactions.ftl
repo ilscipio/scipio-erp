@@ -1,87 +1,93 @@
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", request) && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
   <#-- title=uiLabelMap.OrderActions -->
   <@menu type="button">
-    <#if security.hasEntityPermission("FACILITY", "_CREATE", request) && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
-      <#-- Special shipment options -->
-      <#if orderHeader.orderTypeId == "SALES_ORDER">
-      <#else> <#-- PURCHASE_ORDER -->
-        <#--<#if orderHeader.orderTypeId == "PURCHASE_ORDER">${uiLabelMap.ProductDestinationFacility}</#if>-->
-        <#if ownedFacilities?has_content>
+      <#if security.hasEntityPermission("FACILITY", "_CREATE", request) && ((orderHeader.statusId == "ORDER_APPROVED") || (orderHeader.statusId == "ORDER_SENT"))>
+          <#-- Special shipment options -->
+          <#if orderHeader.orderTypeId == "PURCHASE_ORDER">
+              <#--<#if orderHeader.orderTypeId == "PURCHASE_ORDER">${uiLabelMap.ProductDestinationFacility}</#if>-->
+              <#if ownedFacilities?has_content>
+                  <#-- FIXME -->
+                  <#if !allShipments?has_content>
+                      <@menuitem type="generic">
+                          <@modal id="modal_quick_ship_order" label="${rawLabel('OrderQuickReceivePurchaseOrder')}" linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_terminate!}"
+                          title="${rawLabel('OrderQuickReceivePurchaseOrder')}">
+                              <form action="<@serverUrl>/facility/control/quickShipPurchaseOrder<#if externalLoginKey?has_content>?externalLoginKey=${externalLoginKey}</#if></@serverUrl>" method="post">
+                                  <input type="hidden" name="initialSelected" value="Y"/>
+                                  <input type="hidden" name="orderId" value="${orderId}"/>
+                                  <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
+                                  <select name="facilityId">
+                                      <#list ownedFacilities as facility>
+                                          <option value="${facility.facilityId}">${facility.facilityName}</option>
+                                      </#list>
+                                  </select>
+                                  <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonSubmit}"/>
+                              </form>
+                          </@modal>
+                      </@menuitem>
+                      <@menuitem type="generic">
+                          <@modal id="modal_receive_order" label="${rawLabel('CommonReceive')}" linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_update!}"
+                          title="${rawLabel('CommonReceive')}">
+                              <form name="receivePurchaseOrderForm" action="<@serverUrl>/facility/control/quickShipPurchaseOrder<#if externalLoginKey?has_content>?externalLoginKey=${externalLoginKey}</#if></@serverUrl>" method="post">
+                                  <input type="hidden" name="initialSelected" value="Y"/>
+                                  <input type="hidden" name="orderId" value="${orderId}"/>
+                                  <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
+                                  <input type="hidden" name="partialReceive" value="Y"/>
+                                  <select name="facilityId">
+                                      <#list ownedFacilities as facility>
+                                          <option value="${facility.facilityId}">${facility.facilityName}</option>
+                                      </#list>
+                                  </select>
+                              </form>
+                              <a href="javascript:document.receivePurchaseOrderForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.CommonSubmit}</a>
+                          </@modal>
+                      </@menuitem>
+                  <#else>
+                      <@menuitem type="generic">
+                          <form name="receiveInventoryForm" action="<@serverUrl>/facility/control/ReceiveInventory</@serverUrl>" method="post">
+                              <input type="hidden" name="initialSelected" value="Y"/>
+                              <input type="hidden" name="purchaseOrderId" value="${orderId!}"/>
+                              <select name="facilityId">
+                                  <#list ownedFacilities as facility>
+                                      <option value="${facility.facilityId}">${facility.facilityName}</option>
+                                  </#list>
+                              </select>
+                          </form>
+                          <a href="javascript:document.receiveInventoryForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.OrderQuickReceivePurchaseOrder}</a>
+                      </@menuitem>
+                      <@menuitem type="generic">
+                          <form name="partialReceiveInventoryForm" action="<@serverUrl>/facility/control/ReceiveInventory</@serverUrl>" method="post">
+                              <input type="hidden" name="initialSelected" value="Y"/>
+                              <input type="hidden" name="purchaseOrderId" value="${orderId!}"/>
+                              <input type="hidden" name="partialReceive" value="Y"/>
+                              <select name="facilityId">
+                                  <#list ownedFacilities as facility>
+                                      <option value="${facility.facilityId}">${facility.facilityName}</option>
+                                  </#list>
+                              </select>
+                          </form>
+                          <a href="javascript:document.partialReceiveInventoryForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.CommonReceive}</a>
+                      </@menuitem>
+                  </#if>
 
-          <#-- FIXME
-          <#if !allShipments?has_content>
-              <@menuitem type="generic">
-                 <form action="<@serverUrl>/facility/control/quickShipPurchaseOrder<#if externalLoginKey?has_content>?externalLoginKey=${externalLoginKey}</#if></@serverUrl>" method="post">
-                   <input type="hidden" name="initialSelected" value="Y"/>
-                   <input type="hidden" name="orderId" value="${orderId}"/>
-                   <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
-                  <select name="facilityId">
-                    <#list ownedFacilities as facility>
-                      <option value="${facility.facilityId}">${facility.facilityName}</option>
-                    </#list>
-                  </select>
-                  <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderQuickReceivePurchaseOrder}"/>
-                 </form>
-              </@menuitem>
-              <@menuitem type="generic">
-                <form name="receivePurchaseOrderForm" action="<@serverUrl>/facility/control/quickShipPurchaseOrder<#if externalLoginKey?has_content>?externalLoginKey=${externalLoginKey}</#if></@serverUrl>" method="post">
-                  <input type="hidden" name="initialSelected" value="Y"/>
-                  <input type="hidden" name="orderId" value="${orderId}"/>
-                  <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
-                  <input type="hidden" name="partialReceive" value="Y"/>
-                  <select name="facilityId">
-                    <#list ownedFacilities as facility>
-                      <option value="${facility.facilityId}">${facility.facilityName}</option>
-                    </#list>
-                  </select>
-                  </form>
-                  <a href="javascript:document.receivePurchaseOrderForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.CommonReceive}</a>
-              </@menuitem>
-          <#else>
-              <@menuitem type="generic">
-                <form name="receiveInventoryForm" action="<@serverUrl>/facility/control/ReceiveInventory</@serverUrl>" method="post">
-                  <input type="hidden" name="initialSelected" value="Y"/>
-                  <input type="hidden" name="purchaseOrderId" value="${orderId!}"/>
-                  <select name="facilityId">
-                    <#list ownedFacilities as facility>
-                      <option value="${facility.facilityId}">${facility.facilityName}</option>
-                    </#list>
-                  </select>
-                </form>
-                <a href="javascript:document.receiveInventoryForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.OrderQuickReceivePurchaseOrder}</a>
-              </@menuitem>
-              <@menuitem type="generic">
-                <form name="partialReceiveInventoryForm" action="<@serverUrl>/facility/control/ReceiveInventory</@serverUrl>" method="post">
-                  <input type="hidden" name="initialSelected" value="Y"/>
-                  <input type="hidden" name="purchaseOrderId" value="${orderId!}"/>
-                  <input type="hidden" name="partialReceive" value="Y"/>
-                  <select name="facilityId">
-                    <#list ownedFacilities as facility>
-                       <option value="${facility.facilityId}">${facility.facilityName}</option>
-                     </#list>
-                   </select>
-                </form>
-                <a href="javascript:document.partialReceiveInventoryForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.CommonReceive}</a>
-              </@menuitem>
+                  <#if orderHeader.statusId != "ORDER_COMPLETED">
+                      <@modal id="modal_complete_order" label="${rawLabel('OrderForceCompletePurchaseOrder')}" linkClass="+${styles.menu_button_item_link!} ${styles.action_nav!} ${styles.action_terminate!}"
+                      title="${rawLabel('OrderForceCompletePurchaseOrder')}">
+                          <@menuitem type="generic">
+                              <form action="<@pageUrl>completePurchaseOrder<#if externalLoginKey?has_content>?externalLoginKey=${externalLoginKey}</#if></@pageUrl>" method="post">
+                                  <input type="hidden" name="orderId" value="${orderId}"/>
+                                  <select name="facilityId">
+                                      <#list ownedFacilities as facility>
+                                          <option value="${facility.facilityId}">${facility.facilityName}</option>
+                                      </#list>
+                                  </select>
+                                  <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.CommonSubmit}"/>
+                              </form>
+                          </@menuitem>
+                      </@modal>
+                  </#if>
+              </#if>
           </#if>
-
-          <#if orderHeader.statusId != "ORDER_COMPLETED">
-              <@menuitem type="generic">
-                <form action="<@pageUrl>completePurchaseOrder<#if externalLoginKey?has_content>?externalLoginKey=${externalLoginKey}</#if></@pageUrl>" method="post">
-                 <input type="hidden" name="orderId" value="${orderId}"/>
-                <select name="facilityId">
-                  <#list ownedFacilities as facility>
-                    <option value="${facility.facilityId}">${facility.facilityName}</option>
-                  </#list>
-                </select>
-                <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderForceCompletePurchaseOrder}"/>
-                </form>
-              </@menuitem>
-          </#if>
-          -->
-        </#if>
       </#if>
-    </#if>
   </@menu>
 
   <@menu type="button">
@@ -215,6 +221,7 @@
             </#if>
         </#if>
     </#if>
+
     <#-- Return / Refund -->
     <#if security.hasEntityPermission("ORDERMGR","_RETURN", request)>
         <#-- Apart from the returnableItems check, this is really just a duplicate of OrderQuickRefundEntireOrder

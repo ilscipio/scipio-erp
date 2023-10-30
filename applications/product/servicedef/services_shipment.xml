@@ -151,6 +151,8 @@ code package.
             <exclude field-name="lastModifiedDate"/>
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
+        <attribute include="shipmentTypeId" mode="OUT" optional="true"/>
+        <attribute include="statusId" mode="OUT" optional="true"/>
     </service>
     <service name="updateShipment" default-entity-name="Shipment" engine="simple"
             location="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="updateShipment" auth="true">
@@ -379,6 +381,8 @@ code package.
         <permission-service service-name="facilityGenericPermission" main-action="CREATE"/>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <!-- SCIPIO: added shipment statusId -->
+        <attribute type="String" mode="IN" name="statusId" optional="true" />
         <override name="shipmentRouteSegmentId" mode="INOUT" optional="true"/>
     </service>
     <service name="updateShipmentRouteSegment" default-entity-name="ShipmentRouteSegment" engine="simple"

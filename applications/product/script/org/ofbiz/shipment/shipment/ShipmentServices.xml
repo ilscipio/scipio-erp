@@ -77,7 +77,9 @@ code package.
             <set from-field="newEntity.shipmentId" field="newStatusValue.shipmentId"/>
             <now-timestamp field="newStatusValue.statusDate"/>
             <create-value value-field="newStatusValue"/>
+            <field-to-result field="newEntity.statusId" result-name="statusId"/>
         </if-not-empty>
+        <field-to-result field="newEntity.shipmentTypeId" result-name="shipmentTypeId"/>
     </simple-method>
     
     <simple-method method-name="updateShipment" short-description="Update Shipment">
@@ -500,6 +502,7 @@ code package.
         </if-empty>
 
         <!-- To: SHIP_TO_CUSTOMER -->
+        <log level="always" message="setShipmentSettingsFromPrimaryOrder shipment.partyIdTo 1 ===> ${shipment.partyIdTo}"/>
         <if-empty field="shipment.partyIdTo">
             <set value="SHIP_TO_CUSTOMER" field="limitRoleMap.roleTypeId"/>
             <filter-list-by-and list="orderRoles" map="limitRoleMap" to-list="limitOrderRoles"/>
@@ -519,6 +522,7 @@ code package.
             </if-not-empty>
             <clear-field field="limitRoleMap"/><clear-field field="limitOrderRoles"/><clear-field field="limitOrderRole"/>
         </if-empty>
+        <log level="always" message="setShipmentSettingsFromPrimaryOrder shipment.partyIdTo 2 ===> ${shipment.partyIdTo}"/>
 
         <entity-and entity-name="OrderContactMech" list="orderContactMechs">
             <field-map field-name="orderId" from-field="shipment.primaryOrderId"/>
@@ -624,6 +628,9 @@ code package.
             ]]></script>
         </if-empty>
 
+        <set-service-fields service-name="updateShipment" map="shipment" to-map="shipmentUpdateMap"/>
+        <call-service service-name="updateShipment" in-map-name="shipmentUpdateMap"/>
+
         <!-- create a ShipmentRouteSegment with originFacilityId (if set on Shipment), destContactMechId,
             and from OrderItemShipGroup shipmentMethodTypeId, carrierPartyId, etc -->
             <set from-field="shipment.shipmentId" field="shipmentRouteSegmentMap.shipmentId"/>
@@ -639,6 +646,7 @@ code package.
             <set from-field="shipment.destinationFacilityId" field="shipmentRouteSegmentMap.destFacilityId"/>
             <set from-field="shipment.destinationContactMechId" field="shipmentRouteSegmentMap.destContactMechId"/>
             <set from-field="shipment.destinationTelecomNumberId" field="shipmentRouteSegmentMap.destTelecomNumberId"/>
+            <set from="shipment.statusId" field="shipmentRouteSegmentMap.statusId"/>
 
             <entity-one entity-name="OrderItemShipGroup" value-field="orderItemShipGroup">
                 <field-map field-name="orderId" from-field="shipment.primaryOrderId"/>
@@ -650,9 +658,6 @@ code package.
             </if-not-empty>
             <call-service service-name="createShipmentRouteSegment" in-map-name="shipmentRouteSegmentMap"/>
         </if-empty>
-
-        <set-service-fields service-name="updateShipment" map="shipment" to-map="shipmentUpdateMap"/>
-        <call-service service-name="updateShipment" in-map-name="shipmentUpdateMap"/>
     </simple-method>
 
     <simple-method method-name="setShipmentSettingsFromFacilities" short-description="Set Shipment Settings From Facilities">

@@ -1160,6 +1160,10 @@ public class OrderReadHelper {
         if (product != null) {
             if (ProductWorker.shippingApplies(product)) {
                 BigDecimal weight = product.getBigDecimal("weight");
+                // SCIPIO: getting productWeight if weight is null, zero o less
+                if (UtilValidate.isEmpty(weight) || weight.compareTo(BigDecimal.ZERO) <= 0) {
+                    weight = product.getBigDecimal("productWeight");
+                }
                 String isVariant = product.getString("isVariant");
                 if (weight == null && "Y".equals(isVariant)) {
                     // get the virtual product and check its weight
@@ -1169,6 +1173,10 @@ public class OrderReadHelper {
                             GenericValue virtual = EntityQuery.use(delegator).from("Product").where("productId", virtualId).cache().queryOne();
                             if (virtual != null) {
                                 weight = virtual.getBigDecimal("weight");
+                                // SCIPIO: getting productWeight if weight is null, zero o less
+                                if (UtilValidate.isEmpty(weight) || weight.compareTo(BigDecimal.ZERO) <= 0) {
+                                    weight = product.getBigDecimal("productWeight");
+                                }
                             }
                         }
                     } catch (GenericEntityException e) {
@@ -1202,6 +1210,10 @@ public class OrderReadHelper {
         if (product != null) {
             if (ProductWorker.shippingApplies(product)) {
                 BigDecimal weight = product.getBigDecimal("weight");
+                // SCIPIO: getting productWeight if weight is null, zero o less
+                if (UtilValidate.isEmpty(weight) || weight.compareTo(BigDecimal.ZERO) <= 0) {
+                    weight = product.getBigDecimal("productWeight");
+                }
                 String isVariant = product.getString("isVariant");
                 if (weight == null && "Y".equals(isVariant)) {
                     // get the virtual product and check its weight
@@ -1210,7 +1222,6 @@ public class OrderReadHelper {
                         if (UtilValidate.isNotEmpty(virtualId)) {
                             GenericValue virtual = EntityQuery.use(delegator).from("Product").where("productId", virtualId).cache().queryOne();
                             if (virtual != null) {
-                                weight = virtual.getBigDecimal("weight");
                                 product = virtual;
                             }
                         }
@@ -1462,6 +1473,10 @@ public class OrderReadHelper {
         Map<String, Object> weightInfo = this.getItemWeightInfo(item);
         if (weightInfo != null) {
             weight = (BigDecimal) weightInfo.get("weight");
+            // SCIPIO: Falling-back to productWeight if weight is null or zero
+            if (UtilValidate.isEmpty(weight) || weight.compareTo(BigDecimal.ZERO) <= 0) {
+                weight = (BigDecimal) weightInfo.get("productWeight");
+            }
             weightUomId = (String) weightInfo.get("weightUomId");
         }
         itemInfo.put("weight", weight != null ? weight : BigDecimal.ZERO);

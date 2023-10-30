@@ -63,7 +63,10 @@ public class OrderData extends DataGeneratorGroovyBaseScript {
         def customerParty = null;
         if (orderType.equals("SALES_ORDER")) {
             if (partyId) {
-                customerParty = from("Party").where("PartyRole").where("partyId", partyId, "roleTypeId", "CUSTOMER").queryOne();
+                customerPartyAndRole = from("PartyAndRole").where("partyId", partyId, "roleTypeId", "CUSTOMER").queryOne();
+                if (customerPartyAndRole) {
+                    customerParty = from("Party").where("partyId", partyId).queryOne();
+                }
             }
             // If no partyId is passed or wrong customerPartyId, pick one randomly
             if (!customerParty) {

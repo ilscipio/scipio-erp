@@ -111,6 +111,11 @@ In order to install on a client system or start on a server, the following steps
   Username: admin
   Password: scipio
 
+If build failure occurs due to missing Nashorn JS engine on JDK 15 or later, first run:
+  * Linux ./ant download-nashorn
+  * OS X: ./ant download-nashorn
+  * Windows: ant.bat download-nashorn
+
 Note: These steps are typically too limited for developers; see section below.
 
                      **Congratulations, you have installed SCIPIO ERP!**
@@ -159,6 +164,11 @@ development tasks, the traditional bundled Apache Ant commands may and sometimes
   * Linux ./ant clean-all build load-demo start-debug
   * OS X: ./ant clean-all build load-demo start-debug
   * Windows: ant.bat clean-all build load-demo start-debug
+
+If build failure occurs due to missing Nashorn JS engine on JDK 15 or later, first run:
+  * Linux ./ant download-nashorn
+  * OS X: ./ant download-nashorn
+  * Windows: ant.bat download-nashorn
 
 Commands can be listed using: ant -p (./ant -p)
 

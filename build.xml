@@ -449,7 +449,7 @@ code package.
         
     </target>
 
-    <target name="clean" depends="ivy-init,build-scipio-build-tools">
+    <target name="clean" depends="ivy-init,check-build-requisites,build-scipio-build-tools">
         
         <!-- SCIPIO: hooks -->
         <invokehook target="pre-clean" />
@@ -770,7 +770,7 @@ code package.
     <!-- Build Components                                                   -->
     <!-- ================================================================== -->
     
-    <target name="build" depends="ofbiz-init,build-scipio-build-tools,check-lib-update">
+    <target name="build" depends="ofbiz-init,check-build-requisites,build-scipio-build-tools,check-lib-update">
         <!-- SCIPIO: 2018-11-14: Can bypass actual build using flag: -Dscipio.target.build=false 
             FIXME?: using big if here is ugly -->
         <if>
@@ -2455,6 +2455,15 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <antcall target="download-jdbc-postgresql"/>
     </target>
 
+    <target name="clean-nashorn" description="Download JaCoCo related files">
+        <delete verbose="on"><fileset dir="framework/base/lib/ant" includes="nashorn-*.jar"/></delete>
+        <delete verbose="on"><fileset dir="framework/base/lib/ant" includes="asm-*.jar"/></delete>
+    </target>
+
+    <target name="download-nashorn" depends="ivy-init,clean-nashorn" description="Download Nashorn related files (JDK15+)">
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant/[artifact]-[revision].[ext]" conf="nashorn"/>
+    </target>
+
     <!-- ================================================================== -->
     <!-- Create New Component. This target will create basic directory structure for an Scipio ERP component in hot-deploy directory. -->
     <!-- ================================================================== -->
@@ -3134,5 +3143,42 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
             </else>
         </if>
     </target>
-    
+
+    <target name="check-build-requisites" description="Download build requisites (SCIPIO)" depends="check-nashorn">
+    </target>
+
+    <target name="check-nashorn" description="Check Nashorn download required">
+        <condition property="javaatleast15" value="true" else="false">
+            <and>
+                <not>
+                    <matches pattern="^1\.[0-8]($|\..*)" string="${ant.java.version}"/><!-- string="${ant.java.version}"/> -->
+                </not>
+                <matches pattern="^(1[5-9]|[2-9][0-9]).*" string="${ant.java.version}"/><!-- string="${ant.java.version}"/> -->
+            </and>
+        </condition>
+        <if>
+            <equals arg1="${javaatleast15}" arg2="true"/>
+            <then>
+                <condition property="nashornpresent" value="true" else="false">
+                    <resourcecount when="greater" count="0">
+                        <fileset file="framework/base/lib/ant/nashorn-*.jar"/>
+                    </resourcecount>
+                </condition>
+                <if>
+                    <equals arg1="${nashornpresent}" arg2="false"/>
+                    <then>
+                        <echo message="Java 15+ JDK detected (${ant.java.version}) - downloading Nashorn JS engine; NOTE: If build fails after this, simply re-run original task (after download-nashorn succeeds)" level="info"/>
+                        <antcall target="download-nashorn"/>
+                        <!-- Always fail because it's guaranteed to crash without a restart -->
+                        <fail message="Java 15+ JDK detected (${ant.java.version}) - framework/base/lib/ant has been updated for Nashorn -
+ PLEASE RE-RUN ORIGINAL TASK (this is a normal workaround); for devs: use './ant download-nashorn' separately to fix in scripts"/>
+                    </then>
+                    <else>
+                        <echo message="Java 15+ JDK detected (${ant.java.version}) - Nashorn JS engine already present" level="info"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
+
 </project>

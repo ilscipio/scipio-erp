@@ -36,6 +36,17 @@ find_jar() {
         exit 1
     fi
 }
-# FIXME: 2018-03-26: oro: adding libs outside base/lib/ant for ivy from within builds does not work without this
+
+JAVA_VER="$(java -version 2>&1 | head -n 1 | cut -d'"' -f2)"
+if [ ! -z "${JAVA_VER}" ] && echo "${JAVA_VER}" | grep -Eq '^(1[5-9]|[2-9][0-9]).*'; then
+    for NASHORN_LIB in "$top"/framework/base/lib/ant/nashorn-*.jar; do
+        if [ -z "${NASHORN_LIB}" ] || [ "${NASHORN_LIB}" = "$top""/framework/base/lib/ant/nashorn-*.jar" ]; then
+            echo "Scipio: JDK15+ detected; fetching Nashorn JS script engine (if issue occurs, try ./ant download-nashorn)"
+            "$JAVA" -jar "$(find_jar)" -lib "$top/framework/base/lib/ant" -lib "$top"/framework/base/lib/oro-*.jar download-nashorn
+            break
+        fi
+    done
+fi
+
 "$JAVA" -jar "$(find_jar)" -lib "$top/framework/base/lib/ant" -lib "$top"/framework/base/lib/oro-*.jar "$@"
 

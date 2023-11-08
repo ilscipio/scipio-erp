@@ -1,8 +1,12 @@
 package com.ilscipio.scipio.service.def;
 
+import org.ofbiz.service.ServiceContext;
+
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Defines a service attribute for a {@link Service} definition, equivalent to services.xsd service attribute element.
@@ -11,18 +15,31 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(AttributeList.class)
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
 public @interface Attribute {
 
     String name();
 
     String description() default "";
 
-    String type();
+    /**
+     * Attribute type, as {@link String}.
+     *
+     * <p>NOTE: This is normally the same as {@link Class#getName()}, as may be specified as {@link #typeCls()} instead.</p>
+     */
+    String type() default "";
+
+    /**
+     * Attribute type, as {@link Class}.
+     */
+    Class<?> typeCls() default Object.class;
 
     /**
      * Attribute mode; "IN", "OUT", "INOUT".
+     *
+     * <p>NOTE: This should always be specified unless overriding using only {@link #name()} and {@link #inject()}.</p>
      */
-    String mode();
+    String mode() default "";
 
     String optional() default "false";
 
@@ -81,5 +98,16 @@ public @interface Attribute {
     String access() default "";
 
     String eventAccess() default "";
+
+    /**
+     * When used as annotation on a protected field of a {@link org.ofbiz.service.LocalService} implementation,
+     * when true, the {@link org.ofbiz.service.LocalService#init(ServiceContext)} super method automatically attempts to
+     * inject the (default) value with appropriate type on the protected field; "true" or "false", default "false".
+     *
+     * <p>NOTE: {@link #mode()} Can be left empty while this is set to mark which field to inject, separately from
+     * the rest of the attribute definition.</p>
+     */
+    String inject() default "";
+
 
 }

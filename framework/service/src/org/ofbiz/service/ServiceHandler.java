@@ -3,7 +3,9 @@ package org.ofbiz.service;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -120,6 +122,7 @@ public interface ServiceHandler {
          */
         public Local(ServiceContext ctx) throws GeneralException {
             setServiceContext(ctx);
+            initAttributes(ctx);
         }
 
         /**
@@ -132,6 +135,7 @@ public interface ServiceHandler {
          */
         public void init(ServiceContext ctx) throws GeneralException {
             setServiceContext(ctx);
+            initAttributes(ctx);
         }
 
         protected void setServiceContext(ServiceContext ctx) {
@@ -163,6 +167,14 @@ public interface ServiceHandler {
             }
         }
 
+        protected void initAttributes(ServiceContext ctx) {
+            injectAttributes(ctx);
+        }
+
+        protected void injectAttributes(ServiceContext ctx) {
+            ServiceHandler.injectAttributes(this, ctx.getModelService(), ctx);
+        }
+
         // No method is explicitly defined because 3 overloads and various exception signatures are supported:
         //   exec(), exec(ServiceContext), exec(DispatchContext, Map)
         // The following is the preferred method name and overload:
@@ -171,6 +183,27 @@ public interface ServiceHandler {
         //public final Map<String, Object> exec(ServiceContext ctx) throws GeneralException {
         //    return exec();
         //}
+    }
+
+    static void injectAttributes(ServiceHandler serviceHandler, ModelService modelService, ServiceContext ctx) {
+        if (modelService.getServiceClass() == null) {
+            return;
+        }
+        List<ModelParam.ModelParamAndField> paramInjectFieldList = modelService.getParamInjectFieldList();
+        if (paramInjectFieldList == null || paramInjectFieldList.isEmpty()) {
+            return;
+        }
+        for (ModelParam.ModelParamAndField paramAndField : paramInjectFieldList) {
+            String paramName = paramAndField.getParam().getName();
+            Object paramValue = ctx.context().get(paramName);
+            try {
+                // TODO: IMPROVE: setAccessible clearly not ideal
+                paramAndField.getField().setAccessible(true);
+                paramAndField.getField().set(serviceHandler, paramValue);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     /**

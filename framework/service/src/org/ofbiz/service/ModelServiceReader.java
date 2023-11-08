@@ -20,6 +20,7 @@ package org.ofbiz.service;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
@@ -455,6 +456,7 @@ public class ModelServiceReader implements Serializable {
         service.name = serviceName;
         service.definitionLocation = (serviceMethod != null) ? serviceMethod.getDeclaringClass().getName() :
                 (serviceClass.getEnclosingClass() != null ? serviceClass.getEnclosingClass().getName() : serviceClass.getName());
+        service.serviceClass = serviceClass;
         service.engineName = "java";
         service.location = (serviceMethod != null) ? serviceMethod.getDeclaringClass().getName() : serviceClass.getName();
         service.invoke = (serviceMethod != null) ? serviceMethod.getName() : "exec";
@@ -1187,12 +1189,34 @@ public class ModelServiceReader implements Serializable {
                 attributes.add(attributeDef);
             }
         }
+
+        if (serviceClass != null) {
+            for (Field field : ObjectType.getAllDeclaredFieldsSuperFirst(new ArrayList<>(), serviceClass)) {
+                Attribute fieldAttributeDef = field.getAnnotation(Attribute.class);
+                if (fieldAttributeDef != null) {
+                    attributes.add(fieldAttributeDef);
+                }
+            }
+        }
+
+        // Remove duplicates
+        Map<String, Attribute> attributeMap = new LinkedHashMap<>();
         for (Attribute attributeDef : attributes) {
+            if (!attributeDef.mode().isEmpty()) { // skip those missing mode
+                attributeMap.put(attributeDef.name(), attributeDef);
+            }
+        }
+
+        for (Attribute attributeDef : attributeMap.values()) {
             ModelParam param = new ModelParam();
 
             param.name = attributeDef.name();
             param.description = attributeDef.description();
-            param.type = attributeDef.type();
+            String type = attributeDef.type();
+            if (type.isEmpty()) {
+                type = attributeDef.typeCls().getName();
+            }
+            param.type = type;
             param.mode = attributeDef.mode();
             param.entityName = attributeDef.entityName();
             param.fieldName = attributeDef.fieldName();

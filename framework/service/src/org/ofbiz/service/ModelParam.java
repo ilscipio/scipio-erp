@@ -19,13 +19,16 @@
 package org.ofbiz.service;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.wsdl.Definition;
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
 
+import com.ilscipio.scipio.service.def.Attribute;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilProperties;
@@ -367,4 +370,23 @@ public class ModelParam implements Serializable {
             return className + "::" + methodName + "::" + failMessage + "::" + failResource + "::" + failProperty;
         }
     }
+
+    public static class ModelParamAndField {
+        private final ModelParam param;
+        private final Field field;
+
+        public ModelParamAndField(ModelParam param, Field field) {
+            this.param = param;
+            this.field = field;
+        }
+
+        public ModelParam getParam() {
+            return param;
+        }
+
+        public Field getField() {
+            return field;
+        }
+    }
+
 }

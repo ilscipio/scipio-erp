@@ -1,8 +1,10 @@
 package com.ilscipio.scipio.service.def;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Defines implemented services for a {@link Service} definition, equivalent to services.xsd service implements element.
@@ -11,6 +13,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(ImplementsList.class)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Implements {
 
     /**

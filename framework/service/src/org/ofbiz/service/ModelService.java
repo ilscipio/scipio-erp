@@ -51,6 +51,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import com.ilscipio.scipio.service.def.Attribute;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.metrics.Metrics;
 import org.ofbiz.base.util.Debug;
@@ -330,13 +331,16 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     /**
      * The package name or location of the accessor (factory) class of this service.
+     *
      * <p>Defaults to {@link #location}.</p>
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public String accessorLocation;
 
     /**
      * The method or function to invoke for the accessor (factory) class of this service.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     public String accessorInvoke;
@@ -429,18 +433,21 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     /**
      * Defines custom service properties, which can be interpreted by the system or custom
      * code as needed.
+     *
      * <p>SCIPIO: 2.x.x: Added.</p>
      */
     protected Map<String, Object> properties = Collections.emptyMap();
 
     /**
      * Saved relative definition location, as opposed to absolute.
+     *
      * <p>SCIPIO: 2.x.x: Added.</p>
      */
     String relativeDefinitionLocation;
 
     /**
      * Logical log level for services.
+     *
      * <p>SCIPIO: 2.x.x: Added.</p>
      */
     public enum LogLevel { // SCIPIO
@@ -465,18 +472,21 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
     
     /**
      * If true, avoids optional logging.
+     *
      * <p>SCIPIO: 2.x.x: Added.</p>
      */
     LogLevel logLevel = LogLevel.NORMAL;
 
     /**
      * Log level for when this service is called from ECAs.
+     *
      * <p>SCIPIO: 2.x.x: Added.</p>
      */
     LogLevel ecaLogLevel = LogLevel.NORMAL;
 
     /**
      * Filters out some trace logging based on dispatcher name.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     Pattern logTraceExcludeDispatcherRegex;
@@ -485,37 +495,57 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     /**
      * The last service this one overrides (which may override one before it).
-     * This is now used for both debugging and to implement self interfaces.
+     *
+     * <p>This is now used for both debugging and to implement self interfaces.</p>
+     *
      * <p>SCIPIO: 2.x.x: Added.</p>
      */
     ModelService overriddenService; // SCIPIO: This is always null unless
 
     /**
      * Service priority for async and job services.
+     *
      * <p>SCIPIO: 2.x.x: Added.</p>
      */
     Long priority;
 
     /**
      * Default job pool when service invoked as persistent job, when not overridden by caller.
+     *
      * <p>SCIPIO: 2.x.x: Added.</p>
      */
     String jobPoolPersist;
 
     /**
      * Start delay, in milliseconds (thread sleep).
+     *
      * <p>SCIPIO: 2.1.0: Added start-delay service attribute.</p>
      */
     Integer startDelay;
 
     /**
      * Cached reflection info for StandardJavaEngine.
+     *
      * <p>SCIPIO: 2.1.0: Added.</p>
      */
     transient Object javaServiceReflectInfo;
 
     /**
+     * Service class.
+     *
+     * <p>Non-null only if the service is a {@link ServiceHandler} or compatible class-based service implementation.</p>
+     *
+     * <p>TODO: REVIEW: Technically this is redundant with {@link #javaServiceReflectInfo} and may theoretically
+     *      be out of date, but this is currently used only to read annotated fields in case of deserialization.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    Class<?> serviceClass;
+    transient List<ModelParam.ModelParamAndField> paramInjectFieldList;
+
+    /**
      * Access modifier for publicly-reachable interfaces.
+     *
      * <p>SCIPIO: 2.x.x: Added.</p>
      */
     public static class Access implements Serializable {
@@ -606,6 +636,7 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
         this.accessorLocation = model.accessorLocation;
         this.accessorInvoke = model.accessorInvoke;
         this.overriddenService = model.overriddenService;
+        this.serviceClass = model.serviceClass;
     }
 
     @Override
@@ -3051,6 +3082,28 @@ public class ModelService extends AbstractMap<String, Object> implements Seriali
 
     public void setJavaServiceReflectInfo(Object javaServiceReflectInfo) {
         this.javaServiceReflectInfo = javaServiceReflectInfo;
+    }
+
+    protected Class<?> getServiceClass() {
+        return serviceClass;
+    }
+
+    public List<ModelParam.ModelParamAndField> getParamInjectFieldList() {
+        List<ModelParam.ModelParamAndField> paramInjectFieldList = this.paramInjectFieldList;
+        if (paramInjectFieldList == null && serviceClass != null) {
+            paramInjectFieldList = new ArrayList<>();
+            for (Field field : ObjectType.getAllDeclaredFieldsSuperFirst(new ArrayList<>(), serviceClass)) {
+                Attribute fieldAttributeDef = field.getAnnotation(Attribute.class);
+                if (fieldAttributeDef != null && "true".equals(fieldAttributeDef.inject())) {
+                    ModelParam param = getParam(fieldAttributeDef.name());
+                    if (param != null) {
+                        paramInjectFieldList.add(new ModelParam.ModelParamAndField(param, field));
+                    }
+                }
+            }
+            this.paramInjectFieldList = paramInjectFieldList;
+        }
+        return paramInjectFieldList;
     }
 
     /**

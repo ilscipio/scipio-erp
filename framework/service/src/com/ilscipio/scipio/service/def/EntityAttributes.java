@@ -1,8 +1,10 @@
 package com.ilscipio.scipio.service.def;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Defines entity auto-attributes for a {@link Service} definition, equivalent to services.xsd service auto-attributes
@@ -12,6 +14,7 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(EntityAttributesList.class)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface EntityAttributes {
 
     /**

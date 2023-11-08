@@ -21,7 +21,9 @@ package org.ofbiz.base.util;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -1048,4 +1050,31 @@ public class ObjectType {
             return other instanceof NullObject;
         }
     }
+
+    /**
+     * Gets declared fields from this class (first) and its superclasses (last).
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static List<Field> getAllDeclaredFields(List<Field> fields, Class<?> type) {
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+        if (type.getSuperclass() != null) {
+            getAllDeclaredFields(fields, type.getSuperclass());
+        }
+        return fields;
+    }
+
+    /**
+     * Gets declared fields from this class's superclasses (first) and itself (last).
+     *
+     * <p>SCIPIO: 3.0.0: Added.</p>
+     */
+    public static List<Field> getAllDeclaredFieldsSuperFirst(List<Field> fields, Class<?> type) {
+        if (type.getSuperclass() != null) {
+            getAllDeclaredFieldsSuperFirst(fields, type.getSuperclass());
+        }
+        fields.addAll(Arrays.asList(type.getDeclaredFields()));
+        return fields;
+    }
+
 }

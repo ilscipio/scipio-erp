@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
  * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
  */
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
 public @interface TypeValidate {
 
     String method();

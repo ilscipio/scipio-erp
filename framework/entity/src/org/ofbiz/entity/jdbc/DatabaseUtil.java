@@ -366,7 +366,7 @@ public class DatabaseUtil {
                                     }
                                     if (checkPks && !ccInfo.isPk && field.getIsPk()) {
                                         String message = "Column [" + ccInfo.columnName + "] of table [" + tableName + "] of entity [" +
-                                            entity.getEntityName() + "] IS NOT a primary key in the database, but IS a primary key in the entity definition. The primary key for this table needs to be re-created or modified to add this column to the primary key. Note that data may need to be added first as a primary key column cannot have an null values.";
+                                            entity.getEntityName() + "] IS NOT a primary key in the database, but IS a primary key in the entity definition. The primary key for this table needs to be re-created or modified to add this column to the primary key. Note that data may need to be added first as a primary key column cannot have null values.";
                                         Debug.logError(message, module);
                                         if (messages != null) messages.add(message);
                                     }

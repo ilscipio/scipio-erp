@@ -151,7 +151,7 @@ public class ModelServiceReader implements Serializable {
                     Debug.logInfo("Service " + serviceName + " is defined more than once, " +
                             "most recent will over-write previous definition(s)", module);
                 }
-                ModelService service = createModelService(serviceName, serviceClass, null, serviceDef, overriddenService);
+                ModelService service = createModelService(serviceName, serviceDef, overriddenService, serviceClass, null);
 
                 // SCIPIO: 2018-09-10: new ability to perform additional validation at load time
                 if (loadValidateHigh) {
@@ -174,7 +174,7 @@ public class ModelServiceReader implements Serializable {
                     Debug.logInfo("Service " + serviceName + " is defined more than once, " +
                             "most recent will over-write previous definition(s)", module);
                 }
-                ModelService service = createModelService(serviceName, null, serviceMethod, serviceDef, overriddenService);
+                ModelService service = createModelService(serviceName, serviceDef, overriddenService, null, serviceMethod);
 
                 // SCIPIO: 2018-09-10: new ability to perform additional validation at load time
                 if (loadValidateHigh) {
@@ -450,7 +450,7 @@ public class ModelServiceReader implements Serializable {
      *
      * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
      */
-    private ModelService createModelService(String serviceName, Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService overriddenService) {
+    private ModelService createModelService(String serviceName, Service serviceDef, ModelService overriddenService, Class<?> serviceClass, Method serviceMethod) {
         ModelService service = new ModelService();
 
         service.name = serviceName;
@@ -566,20 +566,20 @@ public class ModelServiceReader implements Serializable {
         service.transactionTimeout = timeout;
 
         service.description = serviceDef.description();
-        this.createNamespace(serviceClass, serviceMethod, serviceDef, service);
+        this.createNamespace(serviceDef, serviceClass, serviceMethod, service);
 
         // construct the context
         service.contextInfo = new HashMap<>();
-        this.createNotification(serviceClass, serviceMethod, serviceDef, service);
-        this.createPermission(serviceClass, serviceMethod, serviceDef, service);
-        this.createPermGroups(serviceClass, serviceMethod, serviceDef, service);
-        this.createGroupDefs(serviceClass, serviceMethod, serviceDef, service);
-        this.createImplDefs(serviceClass, serviceMethod, serviceDef, service);
-        this.createAutoAttrDefs(serviceClass, serviceMethod, serviceDef, service);
-        this.createAttrDefs(serviceClass, serviceMethod, serviceDef, service);
-        this.createOverrideDefs(serviceClass, serviceMethod, serviceDef, service);
-        this.createDeprecated(serviceClass, serviceMethod, serviceDef, service);
-        this.createProperties(serviceClass, serviceMethod, serviceDef, service); // SCIPIO: 2018-11-23
+        this.createNotification(serviceDef, serviceClass, serviceMethod, service);
+        this.createPermission(serviceDef, serviceClass, serviceMethod, service);
+        this.createPermGroups(serviceDef, serviceClass, serviceMethod, service);
+        this.createGroupDefs(serviceDef, serviceClass, serviceMethod, service);
+        this.createImplDefs(serviceDef, serviceClass, serviceMethod, service);
+        this.createAutoAttrDefs(serviceDef, serviceClass, serviceMethod, service);
+        this.createAttrDefs(serviceDef, serviceClass, serviceMethod, service);
+        this.createOverrideDefs(serviceDef, serviceClass, serviceMethod, service);
+        this.createDeprecated(serviceDef, serviceClass, serviceMethod, service);
+        this.createProperties(serviceDef, serviceClass, serviceMethod, service); // SCIPIO: 2018-11-23
 
         // Get metrics.
         if (serviceDef.metrics().length > 0) {
@@ -682,7 +682,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createNotification(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService model) {
+    private void createNotification(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService model) {
         // default notification groups
         ModelNotification nSuccess = new ModelNotification();
         nSuccess.notificationEvent = "success";
@@ -721,7 +721,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createPermission(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService model) {
+    private void createPermission(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService model) {
         PermissionService permissionService = (serviceMethod != null) ? serviceMethod.getAnnotation(PermissionService.class) : serviceClass.getAnnotation(PermissionService.class);
         if (serviceDef.permissionService().length > 0) {
             if (serviceDef.permissionService().length > 1) {
@@ -748,7 +748,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createPermGroups(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService model) {
+    private void createPermGroups(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService model) {
         List<Permissions> permissions = new ArrayList<>(Arrays.asList(serviceDef.permissions()));
         // Add in the defined attributes (override the above defaults if specified)
         PermissionsList permissionsDefList = (serviceMethod != null) ? serviceMethod.getAnnotation(PermissionsList.class) : serviceClass.getAnnotation(PermissionsList.class);
@@ -763,7 +763,7 @@ public class ModelServiceReader implements Serializable {
         for (Permissions permissionsDef : permissions) {
             ModelPermGroup group = new ModelPermGroup();
             group.joinType = permissionsDef.joinType();
-            createGroupPermissions(serviceClass, serviceMethod, serviceDef, permissionsDef, group, model);
+            createGroupPermissions(permissionsDef, serviceDef, serviceClass, serviceMethod, group, model);
             model.permissionGroups.add(group);
         }
 
@@ -772,7 +772,7 @@ public class ModelServiceReader implements Serializable {
         if (singlePermission != null) {
             ModelPermGroup group = new ModelPermGroup();
             group.joinType = "";
-            createSimpleGroupPermissions(serviceClass, serviceMethod, serviceDef, singlePermission, group, model);
+            createSimpleGroupPermissions(singlePermission, serviceDef, serviceClass, serviceMethod, group, model);
             model.permissionGroups.add(group);
         }
     }
@@ -818,8 +818,8 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createSimpleGroupPermissions(Class<?> serviceClass, Method serviceMethod, Service serviceDef, Permission permissionDef,
-                                        ModelPermGroup group, ModelService service) {
+    private void createSimpleGroupPermissions(Permission permissionDef, Service serviceDef, Class<?> serviceClass, Method serviceMethod,
+                                              ModelPermGroup group, ModelService service) {
         // create the simple permissions
         ModelPermission perm = new ModelPermission();
         perm.nameOrRole = permissionDef.permission();
@@ -837,7 +837,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createGroupPermissions(Class<?> serviceClass, Method serviceMethod, Service serviceDef, Permissions permissionsDef,
+    private void createGroupPermissions(Permissions permissionsDef, Service serviceDef, Class<?> serviceClass, Method serviceMethod,
                                         ModelPermGroup group, ModelService service) {
         // create the simple permissions
         for (Permission permissionDef : permissionsDef.permissions()) {
@@ -894,7 +894,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createGroupDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createGroupDefs(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService service) {
         // SCIPIO: 3.0.0: Not for annotations
     }
 
@@ -908,7 +908,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createImplDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createImplDefs(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService service) {
         List<Implements> implementsDefs = new ArrayList<>(Arrays.asList(serviceDef.implemented()));
         // Add in the defined attributes (override the above defaults if specified)
         ImplementsList implementsDefList = (serviceMethod != null) ? serviceMethod.getAnnotation(ImplementsList.class) : serviceClass.getAnnotation(ImplementsList.class);
@@ -935,7 +935,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createAutoAttrDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createAutoAttrDefs(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService service) {
         List<EntityAttributes> entityAttributes = new ArrayList<>(Arrays.asList(serviceDef.entityAttributes()));
         // Add in the defined attributes (override the above defaults if specified)
         EntityAttributesList entityAttributesList = (serviceMethod != null) ? serviceMethod.getAnnotation(EntityAttributesList.class) : serviceClass.getAnnotation(EntityAttributesList.class);
@@ -948,7 +948,7 @@ public class ModelServiceReader implements Serializable {
             }
         }
         for (EntityAttributes entityAttributesDef : entityAttributes) {
-            createAutoAttrDef(serviceClass, serviceMethod, serviceDef, entityAttributesDef, service);
+            createAutoAttrDef(entityAttributesDef, serviceDef, serviceClass, serviceMethod, service);
         }
     }
 
@@ -1035,7 +1035,8 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createAutoAttrDef(Class<?> serviceClass, Method serviceMethod, Service serviceDef, EntityAttributes entityAttributesDef, ModelService service) {
+    private void createAutoAttrDef(EntityAttributes entityAttributesDef, Service serviceDef, Class<?> serviceClass,
+                                   Method serviceMethod, ModelService service) {
         // get the entity name; first from the auto-attributes then from the service def
         String entityName = UtilXml.checkEmpty(entityAttributesDef.entityName());
         if (UtilValidate.isEmpty(entityName)) {
@@ -1177,7 +1178,7 @@ public class ModelServiceReader implements Serializable {
         createDefaultAttrDefs(service);
     }
 
-    private void createAttrDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createAttrDefs(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService service) {
         List<Attribute> attributes = new ArrayList<>(Arrays.asList(serviceDef.attributes()));
         // Add in the defined attributes (override the above defaults if specified)
         AttributeList attributeDefList = (serviceMethod != null) ? serviceMethod.getAnnotation(AttributeList.class) : serviceClass.getAnnotation(AttributeList.class);
@@ -1261,7 +1262,7 @@ public class ModelServiceReader implements Serializable {
             }
 
             // set the validators
-            this.addValidators(serviceClass, serviceMethod, serviceDef, attributeDef, param);
+            this.addValidators(attributeDef, serviceDef, serviceClass, serviceMethod, param);
             service.addParam(param);
         }
 
@@ -1447,7 +1448,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createOverrideDefs(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createOverrideDefs(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService service) {
         List<OverrideAttribute> overrideAttributes = new ArrayList<>(Arrays.asList(serviceDef.overrideAttributes()));
         // Add in the defined attributes (override the above defaults if specified)
         OverrideAttributeList overrideAttributeDefList = (serviceMethod != null) ? serviceMethod.getAnnotation(OverrideAttributeList.class) : serviceClass.getAnnotation(OverrideAttributeList.class);
@@ -1526,7 +1527,7 @@ public class ModelServiceReader implements Serializable {
                 }
 
                 // override validators
-                this.addValidators(serviceClass, serviceMethod, serviceDef, overrideAttributeDef, param);
+                this.addValidators(overrideAttributeDef, serviceDef, serviceClass, serviceMethod, param);
 
                 if (directToParams) {
                     service.addParam(param);
@@ -1550,7 +1551,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createDeprecated(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createDeprecated(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService service) {
         if (UtilValidate.isNotEmpty(serviceDef.deprecated())) {
             service.deprecatedUseInstead = serviceDef.deprecatedBy();
             service.deprecatedSince = serviceDef.deprecatedSince();
@@ -1582,7 +1583,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createProperties(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createProperties(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService service) {
         List<Property> propertiesAll = new ArrayList<>(Arrays.asList(serviceDef.properties()));
         // Add in the defined attributes (override the above defaults if specified)
         PropertyList propertyDefList = (serviceMethod != null) ? serviceMethod.getAnnotation(PropertyList.class) : serviceClass.getAnnotation(PropertyList.class);
@@ -1639,7 +1640,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void createNamespace(Class<?> serviceClass, Method serviceMethod, Service serviceDef, ModelService service) {
+    private void createNamespace(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService service) {
         if (UtilValidate.isNotEmpty(serviceDef.namespace())) {
             service.nameSpace = serviceDef.namespace();
             service.nameSpacePrefix = serviceDef.namespacePrefix();
@@ -1673,7 +1674,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void addValidators(Class<?> serviceClass, Method serviceMethod, Service serviceDef, Attribute attributeDef, ModelParam param) {
+    private void addValidators(Attribute attributeDef, Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelParam param) {
         if (attributeDef.typeValidate().length > 0) {
             // always clear out old ones; never append
             param.validators = new ArrayList<>(); // SCIPIO: switched to ArrayList
@@ -1697,7 +1698,7 @@ public class ModelServiceReader implements Serializable {
         }
     }
 
-    private void addValidators(Class<?> serviceClass, Method serviceMethod, Service serviceDef, OverrideAttribute attributeDef, ModelParam param) {
+    private void addValidators(OverrideAttribute attributeDef, Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelParam param) {
         if (attributeDef.typeValidate().length > 0) {
             // always clear out old ones; never append
             param.validators = new ArrayList<>(); // SCIPIO: switched to ArrayList

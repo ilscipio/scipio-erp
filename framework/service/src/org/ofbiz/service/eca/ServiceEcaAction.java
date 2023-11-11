@@ -18,11 +18,16 @@
  *******************************************************************************/
 package org.ofbiz.service.eca;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.ilscipio.scipio.service.def.Service;
+import com.ilscipio.scipio.service.def.ServiceDefUtil;
+import com.ilscipio.scipio.service.def.seca.Seca;
+import com.ilscipio.scipio.service.def.seca.SecaAction;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
@@ -43,30 +48,31 @@ public class ServiceEcaAction implements java.io.Serializable {
 
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
-    protected String eventName = null;
-    protected String serviceName = null;
-    protected String serviceMode = null;
-    protected String resultMapName = null;
-    protected String runAsUser = null;
+    protected final String eventName;
+    protected final String serviceName;
+    protected final String serviceMode;
+    protected final String resultMapName;
+    protected final String runAsUser;
 
-    protected boolean newTransaction = false;
-    protected boolean resultToContext = true;
-    protected boolean resultToResult = false;
-    protected boolean ignoreFailure = false;
-    protected boolean ignoreError = false;
-    protected boolean persist = false;
-    protected Long priority; // SCIPIO
-    protected String jobPool; // SCIPIO
-
-    protected ServiceEcaAction() {}
+    protected final boolean newTransaction;
+    protected final boolean resultToContext;
+    protected final boolean resultToResult;
+    protected final boolean ignoreFailure;
+    protected final boolean ignoreError;
+    protected final boolean persist;
+    protected final Long priority; // SCIPIO
+    protected final String jobPool; // SCIPIO
 
     public ServiceEcaAction(Element action, String event) {
         this.eventName = event;
         this.serviceName = action.getAttribute("service");
         this.serviceMode = action.getAttribute("mode");
-        this.runAsUser = action.getAttribute("run-as-user");
+        String runAsUser = action.getAttribute("run-as-user");
         // support the old, inconsistent attribute name
-        if (UtilValidate.isEmpty(this.runAsUser)) this.runAsUser = action.getAttribute("runAsUser");
+        if (UtilValidate.isEmpty(runAsUser)) {
+            runAsUser = action.getAttribute("runAsUser");
+        }
+        this.runAsUser = runAsUser;
         this.resultMapName = action.getAttribute("result-map-name");
 
         // default is true, so anything but false is true
@@ -88,6 +94,51 @@ public class ServiceEcaAction implements java.io.Serializable {
         }
         this.priority = priority;
         String jobPool = action.getAttribute("job-pool");
+        this.jobPool = UtilValidate.isNotEmpty(jobPool) ? jobPool : null;
+    }
+
+    /**
+     * Annotations constructor.
+     *
+     * <p>NOTE: serviceClass null when serviceMethod set and vice-versa.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public ServiceEcaAction(SecaAction actionDef, Seca secaDef, Service serviceDef, Class<?> serviceClass, Method serviceMethod) {
+        this.eventName = secaDef.event();
+        this.serviceName = (!actionDef.service().isEmpty()) ? actionDef.service() : ServiceDefUtil.getServiceName(serviceDef, serviceClass, serviceMethod);
+        if (UtilValidate.isEmpty(serviceName)) {
+            if (serviceClass != null) {
+                throw new IllegalArgumentException("Missing service ECA action service name on " + SecaAction.class.getSimpleName() +
+                        " annotation for service class " + serviceClass.getName());
+            } else {
+                throw new IllegalArgumentException("Missing service ECA action service name on " + SecaAction.class.getSimpleName() +
+                        " annotation for service method " + serviceMethod.getDeclaringClass().getName() + "." + serviceMethod.getName());
+            }
+        }
+        this.serviceMode = (!actionDef.mode().isEmpty()) ? actionDef.mode() : "sync";
+        this.runAsUser = actionDef.runAsUser();
+        this.resultMapName = actionDef.resultMapName();
+
+        // default is true, so anything but false is true
+        this.resultToContext = !"false".equals(actionDef.resultToContext());
+        // default is false, so anything but true is false
+        this.resultToResult = "true".equals(actionDef.resultToResult());
+        this.newTransaction = !"false".equals(actionDef.newTransaction());
+        this.ignoreFailure = !"false".equals(actionDef.ignoreFailure());
+        this.ignoreError = !"false".equals(actionDef.ignoreError());
+        this.persist = "true".equals(actionDef.persist());
+        String priorityStr = actionDef.priority();
+        Long priority = null;
+        if (!priorityStr.isEmpty()) {
+            try {
+                priority = Long.parseLong(priorityStr);
+            } catch (NumberFormatException e) {
+                Debug.logError("Invalid job priority on service ECA event [" + eventName + "] service [" + this.serviceName + "]; using default", module);
+            }
+        }
+        this.priority = priority;
+        String jobPool = actionDef.jobPool();
         this.jobPool = UtilValidate.isNotEmpty(jobPool) ? jobPool : null;
     }
 

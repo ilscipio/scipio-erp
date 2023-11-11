@@ -18,29 +18,28 @@
  *******************************************************************************/
 package org.ofbiz.entityext.eca;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ilscipio.scipio.service.def.Service;
+import com.ilscipio.scipio.service.def.eeca.Eeca;
+import com.ilscipio.scipio.service.def.eeca.EecaAction;
+import com.ilscipio.scipio.service.def.eeca.EecaSet;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.Delegator;
-import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
-import org.ofbiz.entityext.EntityServiceFactory;
 import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.LocalDispatcherFactory;
-import org.ofbiz.service.ServiceContainer;
-import org.ofbiz.service.ServiceDispatcher;
 import org.w3c.dom.Element;
 
 /**
@@ -96,6 +95,54 @@ public final class EntityEcaRule implements java.io.Serializable {
         this.reloadValue = reloadValue; // SCIPIO
         if (Debug.verboseOn()) {
             Debug.logVerbose("Conditions: " + conditions, module);
+            Debug.logVerbose("actions and sets (intermixed): " + actionsAndSets, module);
+        }
+    }
+
+    /**
+     * Annotations constructor.
+     *
+     * <p>NOTE: serviceClass null when serviceMethod set and vice-versa.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public EntityEcaRule(Eeca eecaDef, Service serviceDef, Class<?> serviceClass, Method serviceMethod) {
+        this.entityName = eecaDef.entity();
+        this.operationName = eecaDef.operation();
+        this.eventName = eecaDef.event();
+        this.runOnError = "true".equals(eecaDef.runOnError());
+        this.enabled = !"false".equals(eecaDef.enabled());
+
+        ArrayList<Object> actionsAndSets = new ArrayList<Object>();
+        boolean reloadValue = false;
+
+        // Global assignments
+        List<EecaSet> assignments = new ArrayList<>(Arrays.asList(eecaDef.assignments()));
+        for (EecaSet assignmentDef : assignments) {
+            actionsAndSets.add(new EntityEcaSetField(assignmentDef, eecaDef, serviceDef, serviceClass, serviceMethod));
+        }
+
+        // Actions and local assignments
+        List<EecaAction> actions = new ArrayList<>(Arrays.asList(eecaDef.actions()));
+        if (actions.isEmpty()) {
+            actions.add(EecaAction.DefaultType.class.getAnnotation(EecaAction.class));
+        }
+        for (EecaAction action : actions) {
+            for (EecaSet assignmentDef : action.assignments()) {
+                actionsAndSets.add(new EntityEcaSetField(assignmentDef, eecaDef, serviceDef, serviceClass, serviceMethod));
+            }
+            EntityEcaAction ecaAction = new EntityEcaAction(action, eecaDef, serviceDef, serviceClass, serviceMethod);
+            if (ecaAction.isReloadValue()) {
+                reloadValue = true;
+            }
+            actionsAndSets.add(ecaAction);
+        }
+
+        this.conditions = List.of();
+        actionsAndSets.trimToSize();
+        this.actionsAndSets = Collections.unmodifiableList(actionsAndSets);
+        this.reloadValue = reloadValue;
+        if (Debug.verboseOn()) {
             Debug.logVerbose("actions and sets (intermixed): " + actionsAndSets, module);
         }
     }
@@ -207,6 +254,7 @@ public final class EntityEcaRule implements java.io.Serializable {
      * @deprecated Not thread-safe, no replacement.
      * @param enabled
      */
+    @Deprecated
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

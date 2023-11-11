@@ -19,10 +19,14 @@
 
 package org.ofbiz.service.eca;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import com.ilscipio.scipio.service.def.Service;
+import com.ilscipio.scipio.service.def.seca.Seca;
+import com.ilscipio.scipio.service.def.seca.SecaSet;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilValidate;
@@ -53,6 +57,24 @@ public class ServiceEcaSetField implements java.io.Serializable { // SCIPIO: add
         this.envName = set.getAttribute("env-name");
         this.value = set.getAttribute("value");
         this.format = set.getAttribute("format");
+    }
+
+    /**
+     * Annotations constructor.
+     *
+     * <p>NOTE: serviceClass null when serviceMethod set and vice-versa.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public ServiceEcaSetField(SecaSet setDef, Seca secaDef, Service serviceDef, Class<?> serviceClass, Method serviceMethod) {
+        this.fieldName = setDef.fieldName();
+        if (UtilValidate.isNotEmpty(this.fieldName) && this.fieldName.indexOf('.') != -1) {
+            this.mapName = fieldName.substring(0, this.fieldName.indexOf('.'));
+            this.fieldName = this.fieldName.substring(this.fieldName.indexOf('.') +1);
+        }
+        this.envName = setDef.envName();
+        this.value = setDef.value();
+        this.format = setDef.format();
     }
 
     public void eval(Map<String, Object> context) {

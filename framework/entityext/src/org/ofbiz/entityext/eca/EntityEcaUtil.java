@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.entityext.eca;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,12 +27,18 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+import com.ilscipio.scipio.ce.base.component.ComponentReflectInfo;
+import com.ilscipio.scipio.ce.base.component.ComponentReflectRegistry;
+import com.ilscipio.scipio.service.def.Service;
+import com.ilscipio.scipio.service.def.eeca.Eeca;
+import com.ilscipio.scipio.service.def.eeca.EecaList;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.Delegator;
@@ -104,6 +111,11 @@ public final class EntityEcaUtil {
             }
         }
 
+        // SCIPIO: 3.0.0: Handle annotation definitions
+        for (ComponentReflectInfo cri : ComponentReflectRegistry.getReflectInfos()) {
+            futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createEcaLoaderCallable(cri)));
+        }
+
         for (List<EntityEcaRule> oneFileRules: ExecutionPool.getAllFutures(futures)) {
             for (EntityEcaRule rule: oneFileRules) {
                 String entityName = rule.getEntityName();
@@ -153,10 +165,65 @@ public final class EntityEcaUtil {
         return rules;
     }
 
+    private static List<EntityEcaRule> getEcaDefinitions(ComponentReflectInfo reflectInfo) {
+        UtilTimer utilTimer = new UtilTimer();
+        utilTimer.timerString("Loading Entity ECA annotations for component [" + reflectInfo.getComponent().getGlobalName() + "]");
+        List<EntityEcaRule> ecaRules = new ArrayList<>(); // SCIPIO: switched to ArrayList
+
+        for (Class<?> serviceClass : reflectInfo.getReflectQuery().getAnnotatedClasses(List.of(Eeca.class, EecaList.class))) {
+            Service serviceDef = serviceClass.getAnnotation(Service.class);
+            EecaList eecaDefList = serviceClass.getAnnotation(EecaList.class);
+            if (eecaDefList != null) {
+                for (Eeca eecaDef : eecaDefList.value()) {
+                    ecaRules.add(new EntityEcaRule(eecaDef, serviceDef, serviceClass, null));
+                }
+            } else {
+                Eeca eecaDef = serviceClass.getAnnotation(Eeca.class);
+                if (eecaDef != null) {
+                    ecaRules.add(new EntityEcaRule(eecaDef, serviceDef, serviceClass, null));
+                }
+            }
+        }
+
+        for (Method serviceMethod : reflectInfo.getReflectQuery().getAnnotatedMethods(List.of(Eeca.class, EecaList.class))) {
+            Service serviceDef = serviceMethod.getAnnotation(Service.class);
+            EecaList eecaDefList = serviceMethod.getAnnotation(EecaList.class);
+            if (eecaDefList != null) {
+                for (Eeca eecaDef : eecaDefList.value()) {
+                    ecaRules.add(new EntityEcaRule(eecaDef, serviceDef, null, serviceMethod));
+                }
+            } else {
+                Eeca eecaDef = serviceMethod.getAnnotation(Eeca.class);
+                if (eecaDef != null) {
+                    ecaRules.add(new EntityEcaRule(eecaDef, serviceDef, null, serviceMethod));
+                }
+            }
+        }
+
+        utilTimer.timerString("Finished Entity ECA annotations for component [" +
+                reflectInfo.getComponent().getGlobalName() + "] - Total Service ECAs: " + ecaRules.size() + " FINISHED");
+        Debug.logInfo("Loaded [" + ecaRules.size() + "] Entity ECA Rules from Entity ECA annotations for component [" +
+                reflectInfo.getComponent().getGlobalName() + "]", module);
+        return ecaRules;
+    }
+
     private static Callable<List<EntityEcaRule>> createEcaLoaderCallable(final ResourceHandler handler) {
         return new Callable<List<EntityEcaRule>>() {
             public List<EntityEcaRule> call() throws Exception {
                 return getEcaDefinitions(handler);
+            }
+        };
+    }
+
+    /**
+     * Creates Annotations-based loader.
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    private static Callable<List<EntityEcaRule>> createEcaLoaderCallable(ComponentReflectInfo cri) {
+        return new Callable<List<EntityEcaRule>>() {
+            public List<EntityEcaRule> call() throws Exception {
+                return getEcaDefinitions(cri);
             }
         };
     }

@@ -19,8 +19,12 @@
 
 package org.ofbiz.entityext.eca;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
+import com.ilscipio.scipio.service.def.Service;
+import com.ilscipio.scipio.service.def.eeca.Eeca;
+import com.ilscipio.scipio.service.def.eeca.EecaSet;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
@@ -45,6 +49,20 @@ public final class EntityEcaSetField implements java.io.Serializable { // SCIPIO
         this.envName = set.getAttribute("env-name");
         this.value = set.getAttribute("value");
         this.format = set.getAttribute("format");
+    }
+
+    /**
+     * Annotations constructor.
+     *
+     * <p>NOTE: serviceClass null when serviceMethod set and vice-versa.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public EntityEcaSetField(EecaSet setDef, Eeca secaDef, Service serviceDef, Class<?> serviceClass, Method serviceMethod) {
+        this.fieldName = setDef.fieldName();
+        this.envName = setDef.envName();
+        this.value = setDef.value();
+        this.format = setDef.format();
     }
 
     public void eval(Map<String, Object> context) {

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.service.eca;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,12 +30,18 @@ import java.util.TreeSet;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+import com.ilscipio.scipio.ce.base.component.ComponentReflectInfo;
+import com.ilscipio.scipio.ce.base.component.ComponentReflectRegistry;
+import com.ilscipio.scipio.service.def.Service;
+import com.ilscipio.scipio.service.def.seca.Seca;
+import com.ilscipio.scipio.service.def.seca.SecaList;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.concurrent.ExecutionPool;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.service.DispatchContext;
@@ -108,6 +115,11 @@ public final class ServiceEcaUtil {
             futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createEcaLoaderCallable(componentResourceInfo.createResourceHandler())));
         }
 
+        // SCIPIO: 3.0.0: Handle annotation definitions
+        for (ComponentReflectInfo cri : ComponentReflectRegistry.getReflectInfos()) {
+            futures.add(ExecutionPool.GLOBAL_FORK_JOIN.submit(createEcaLoaderCallable(cri)));
+        }
+
         Map<String, Map<String, List<ServiceEcaRule>>> ecaCache = new HashMap<>(); // SCIPIO: new cache, for consistent view for reads
         for (List<ServiceEcaRule> handlerRules: ExecutionPool.getAllFutures(futures)) {
             mergeEcaDefinitions(handlerRules, ecaCache);
@@ -123,6 +135,23 @@ public final class ServiceEcaUtil {
         };
     }
 
+    /**
+     * Creates Annotations-based loader.
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    private static Callable<List<ServiceEcaRule>> createEcaLoaderCallable(ComponentReflectInfo cri) {
+        return new Callable<List<ServiceEcaRule>>() {
+            public List<ServiceEcaRule> call() throws Exception {
+                return getEcaDefinitions(cri);
+            }
+        };
+    }
+
+    /**
+     * @deprecated SCPIO: 3.0.0: Unused/unmaintained
+     */
+    @Deprecated
     public static void addEcaDefinitions(ResourceHandler handler) {
         synchronized(ecaCacheLock) { // SCIPIO: write-lock, because this method is public
             List<ServiceEcaRule> handlerRules = getEcaDefinitions(handler);
@@ -155,6 +184,48 @@ public final class ServiceEcaUtil {
             Debug.logInfo("Loaded [" + handlerRules.size() + "] Service ECA Rules from " + resourceLocation, module);
         }
         return handlerRules;
+    }
+
+    private static List<ServiceEcaRule> getEcaDefinitions(ComponentReflectInfo reflectInfo) {
+        UtilTimer utilTimer = new UtilTimer();
+        utilTimer.timerString("Loading Service ECA annotations for component [" + reflectInfo.getComponent().getGlobalName() + "]");
+        List<ServiceEcaRule> ecaRules = new ArrayList<>(); // SCIPIO: switched to ArrayList
+
+        for (Class<?> serviceClass : reflectInfo.getReflectQuery().getAnnotatedClasses(List.of(Seca.class, SecaList.class))) {
+            Service serviceDef = serviceClass.getAnnotation(Service.class);
+            SecaList secaDefList = serviceClass.getAnnotation(SecaList.class);
+            if (secaDefList != null) {
+                for (Seca secaDef : secaDefList.value()) {
+                    ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, serviceClass, null));
+                }
+            } else {
+                Seca secaDef = serviceClass.getAnnotation(Seca.class);
+                if (secaDef != null) {
+                    ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, serviceClass, null));
+                }
+            }
+        }
+
+        for (Method serviceMethod : reflectInfo.getReflectQuery().getAnnotatedMethods(List.of(Seca.class, SecaList.class))) {
+            Service serviceDef = serviceMethod.getAnnotation(Service.class);
+            SecaList secaDefList = serviceMethod.getAnnotation(SecaList.class);
+            if (secaDefList != null) {
+                for (Seca secaDef : secaDefList.value()) {
+                    ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, null, serviceMethod));
+                }
+            } else {
+                Seca secaDef = serviceMethod.getAnnotation(Seca.class);
+                if (secaDef != null) {
+                    ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, null, serviceMethod));
+                }
+            }
+        }
+
+        utilTimer.timerString("Finished Service ECA annotations for component [" +
+                reflectInfo.getComponent().getGlobalName() + "] - Total Service ECAs: " + ecaRules.size() + " FINISHED");
+        Debug.logInfo("Loaded [" + ecaRules.size() + "] Service ECA Rules from Service ECA annotations for component [" +
+                reflectInfo.getComponent().getGlobalName() + "]", module);
+        return ecaRules;
     }
 
     // SCIPIO: modified to take a ecaCache as parameter

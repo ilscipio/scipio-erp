@@ -52,6 +52,7 @@ import com.ilscipio.scipio.service.def.PermissionsList;
 import com.ilscipio.scipio.service.def.Property;
 import com.ilscipio.scipio.service.def.PropertyList;
 import com.ilscipio.scipio.service.def.Service;
+import com.ilscipio.scipio.service.def.ServiceDefUtil;
 import com.ilscipio.scipio.service.def.TypeValidate;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceHandler;
@@ -139,9 +140,7 @@ public class ModelServiceReader implements Serializable {
             int i = 0;
             for (Class<?> serviceClass : reflectInfo.getReflectQuery().getAnnotatedClasses(Service.class)) {
                 Service serviceDef = serviceClass.getAnnotation(Service.class);
-                String serviceName = UtilValidate.isNotEmpty(serviceDef.name()) ? serviceDef.name() :
-                    serviceClass.getSimpleName().substring(0, 1).toLowerCase() +
-                            (serviceClass.getSimpleName().length() > 1 ? serviceClass.getSimpleName().substring(1) : "");
+                String serviceName = ServiceDefUtil.getServiceName(serviceDef, serviceClass);
 
                 // check to see if service with same name has already been read
                 // SCIPIO: Preserve the previous service temporarily using an alias that will be removed later
@@ -164,7 +163,7 @@ public class ModelServiceReader implements Serializable {
 
             for (Method serviceMethod : reflectInfo.getReflectQuery().getAnnotatedMethods(Service.class)) {
                 Service serviceDef = serviceMethod.getAnnotation(Service.class);
-                String serviceName = UtilValidate.isNotEmpty(serviceDef.name()) ? serviceDef.name() : serviceMethod.getName();
+                String serviceName = ServiceDefUtil.getServiceName(serviceDef, serviceMethod);
 
                 // check to see if service with same name has already been read
                 // SCIPIO: Preserve the previous service temporarily using an alias that will be removed later

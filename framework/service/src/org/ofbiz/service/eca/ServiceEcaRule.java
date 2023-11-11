@@ -18,16 +18,24 @@
  *******************************************************************************/
 package org.ofbiz.service.eca;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.ilscipio.scipio.service.def.Service;
+import com.ilscipio.scipio.service.def.ServiceDefUtil;
+import com.ilscipio.scipio.service.def.seca.Seca;
+import com.ilscipio.scipio.service.def.seca.SecaAction;
+import com.ilscipio.scipio.service.def.seca.SecaSet;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.w3c.dom.Element;
@@ -45,6 +53,7 @@ public final class ServiceEcaRule implements java.io.Serializable {
     public final boolean runOnFailure;
     public final boolean runOnError;
     public final List<ServiceEcaCondition> conditions;
+    public final FlexibleStringExpander conditionExpr; // SCIPIO: 3.0.0: Added for annotations support
     public final List<Object> actionsAndSets;
     public final boolean enabled; // SCIPIO: 2018-09-06: made final for thread-safety
     public final String definitionLocation;
@@ -91,6 +100,7 @@ public final class ServiceEcaRule implements java.io.Serializable {
         }
         conditions.trimToSize();
         this.conditions = Collections.unmodifiableList(conditions);
+        this.conditionExpr = null; // SCIPIO: 3.0.0: Added for annotations support
 
         Set<String> nameSet = UtilMisc.toSet("set", "action");
         ArrayList<Object> actionsAndSets = new ArrayList<Object>(); // SCIPIO: fixed final synch issue
@@ -101,6 +111,61 @@ public final class ServiceEcaRule implements java.io.Serializable {
                 actionsAndSets.add(new ServiceEcaSetField(actionOrSetElement));
             }
         }
+        actionsAndSets.trimToSize();
+        this.actionsAndSets = Collections.unmodifiableList(actionsAndSets);
+
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("actions and sets (intermixed): " + actionsAndSets, module);
+        }
+    }
+
+    /**
+     * Annotations constructor.
+     *
+     * <p>NOTE: serviceClass null when serviceMethod set and vice-versa.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public ServiceEcaRule(Seca secaDef, Service serviceDef, Class<?> serviceClass, Method serviceMethod) {
+        this.definitionLocation = (serviceMethod != null) ? serviceMethod.getDeclaringClass().getName() :
+                (serviceClass.getEnclosingClass() != null ? serviceClass.getEnclosingClass().getName() : serviceClass.getName());
+        this.serviceName = (!secaDef.service().isEmpty()) ? secaDef.service() : ServiceDefUtil.getServiceName(serviceDef, serviceClass, serviceMethod);
+        if (UtilValidate.isEmpty(serviceName)) {
+            if (serviceClass != null) {
+                throw new IllegalArgumentException("Missing service ECA source service name on " + Seca.class.getSimpleName() +
+                        " annotation for service class " + serviceClass.getName());
+            } else {
+                throw new IllegalArgumentException("Missing service ECA source service name on " + Seca.class.getSimpleName() +
+                        " annotation for service method " + serviceMethod.getDeclaringClass().getName() + "." + serviceMethod.getName());
+            }
+        }
+        this.eventName = secaDef.event();
+        this.runOnFailure = "true".equals(secaDef.runOnFailure());
+        this.runOnError = "true".equals(secaDef.runOnError());
+        this.enabled = !"false".equals(secaDef.enabled());
+        this.conditions = List.of();
+        this.conditionExpr = FlexibleStringExpander.getInstance(secaDef.condition());
+
+        ArrayList<Object> actionsAndSets = new ArrayList<Object>(); // SCIPIO: fixed final synch issue
+
+        // Global assignments
+        List<SecaSet> assignments = new ArrayList<>(Arrays.asList(secaDef.assignments()));
+        for (SecaSet assignmentDef : assignments) {
+            actionsAndSets.add(new ServiceEcaSetField(assignmentDef, secaDef, serviceDef, serviceClass, serviceMethod));
+        }
+
+        // Actions and local assignments
+        List<SecaAction> actions = new ArrayList<>(Arrays.asList(secaDef.actions()));
+        if (actions.isEmpty()) {
+            actions.add(SecaAction.DefaultType.class.getAnnotation(SecaAction.class));
+        }
+        for (SecaAction action : actions) {
+            for (SecaSet assignmentDef : action.assignments()) {
+                actionsAndSets.add(new ServiceEcaSetField(assignmentDef, secaDef, serviceDef, serviceClass, serviceMethod));
+            }
+            actionsAndSets.add(new ServiceEcaAction(action, secaDef, serviceDef, serviceClass, serviceMethod));
+        }
+
         actionsAndSets.trimToSize();
         this.actionsAndSets = Collections.unmodifiableList(actionsAndSets);
 

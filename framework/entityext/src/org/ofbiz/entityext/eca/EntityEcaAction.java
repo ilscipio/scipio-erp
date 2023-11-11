@@ -18,8 +18,13 @@
  *******************************************************************************/
 package org.ofbiz.entityext.eca;
 
+import java.lang.reflect.Method;
 import java.util.Map;
 
+import com.ilscipio.scipio.service.def.Service;
+import com.ilscipio.scipio.service.def.ServiceDefUtil;
+import com.ilscipio.scipio.service.def.eeca.Eeca;
+import com.ilscipio.scipio.service.def.eeca.EecaAction;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
@@ -79,6 +84,48 @@ public final class EntityEcaAction implements java.io.Serializable {
         String jobPool = action.getAttribute("job-pool");
         this.jobPool = UtilValidate.isNotEmpty(jobPool) ? jobPool : null;
         this.reloadValue = UtilMisc.booleanValue(action.getAttribute("reload-value"), false);
+    }
+
+    /**
+     * Annotations constructor.
+     *
+     * <p>NOTE: serviceClass null when serviceMethod set and vice-versa.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Added for annotations support.</p>
+     */
+    public EntityEcaAction(EecaAction actionDef, Eeca secaDef, Service serviceDef, Class<?> serviceClass, Method serviceMethod) {
+        this.serviceName = (!actionDef.service().isEmpty()) ? actionDef.service() : ServiceDefUtil.getServiceName(serviceDef, serviceClass, serviceMethod);
+        if (UtilValidate.isEmpty(serviceName)) {
+            if (serviceClass != null) {
+                throw new IllegalArgumentException("Missing Entity ECA action service name on " + EecaAction.class.getSimpleName() +
+                        " annotation for service class " + serviceClass.getName());
+            } else {
+                throw new IllegalArgumentException("Missing Entity ECA action service name on " + EecaAction.class.getSimpleName() +
+                        " annotation for service method " + serviceMethod.getDeclaringClass().getName() + "." + serviceMethod.getName());
+            }
+        }
+        this.serviceMode = (!actionDef.mode().isEmpty()) ? actionDef.mode() : "sync";
+        // default is true, so anything but false is true
+        this.resultToValue = !"false".equals(actionDef.resultToValue());
+        // default is false, so anything but true is false
+        this.abortOnError = "true".equals(actionDef.abortOnError());
+        this.rollbackOnError = "true".equals(actionDef.rollbackOnError());
+        this.persist = "true".equals(actionDef.persist());
+        this.runAsUser = (!actionDef.runAsUser().isEmpty()) ? actionDef.runAsUser() : "system"; // default "system" - see entity-eca.xsd
+        this.valueAttr = actionDef.valueAttr();
+        String priorityStr = actionDef.priority();
+        Long priority = null;
+        if (!priorityStr.isEmpty()) {
+            try {
+                priority = Long.parseLong(priorityStr);
+            } catch (NumberFormatException e) {
+                Debug.logError("Invalid job priority on entity ECA service [" + this.serviceName + "]; using default", module);
+            }
+        }
+        this.priority = priority;
+        String jobPool = actionDef.jobPool();
+        this.jobPool = UtilValidate.isNotEmpty(jobPool) ? jobPool : null;
+        this.reloadValue = UtilMisc.booleanValue(actionDef.reloadValue(), false);
     }
 
     public String getServiceName() {

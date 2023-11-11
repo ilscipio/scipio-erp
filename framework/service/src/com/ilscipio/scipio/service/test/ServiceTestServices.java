@@ -8,6 +8,12 @@ import com.ilscipio.scipio.service.def.Permission;
 import com.ilscipio.scipio.service.def.PermissionService;
 import com.ilscipio.scipio.service.def.Permissions;
 import com.ilscipio.scipio.service.def.Service;
+import com.ilscipio.scipio.service.def.eeca.Eeca;
+import com.ilscipio.scipio.service.def.eeca.EecaAction;
+import com.ilscipio.scipio.service.def.eeca.EecaSet;
+import com.ilscipio.scipio.service.def.seca.Seca;
+import com.ilscipio.scipio.service.def.seca.SecaAction;
+import com.ilscipio.scipio.service.def.seca.SecaSet;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.service.LocalService;
@@ -152,9 +158,17 @@ public abstract class ServiceTestServices {
         return result;
     }
 
+    // Injection, EECA and SECA test
     @Service(auth = "true")
     @Attribute(name = "stringParam1", typeCls = String.class, mode = "IN", defaultValue = "test value 1", optional = "true")
     @Attribute(name = "stringParam1b", typeCls = String.class, mode = "IN", defaultValue = "test value 1b", optional = "true")
+    @Eeca(entity = "Testing", operation = "create-store", event = "return") // default mode: actions = {@EecaAction(mode = "sync")
+    @Eeca(entity = "Testing", operation = "remove", event = "return", actions = {
+            @EecaAction(mode = "async")})
+    @Seca(service = "serviceAnnotationsTest3b", event = "global-commit")
+    @Seca(service = "serviceAnnotationsTest4Extended", event = "commit", actions = {
+            @SecaAction(mode = "async", assignments = {
+                    @SecaSet(fieldName = "stringParam1b", value = "test value 1b from SECA")})})
     public static class ServiceAnnotationsTest4c extends LocalService {
 
         // Manually-assigned parameters

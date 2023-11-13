@@ -352,11 +352,16 @@ jQuery(document).ready(function() {
     <#local params = parameters>
   </#if>
   <#local args = inlineArgs>
-  <@field type="select" label="${rawLabel('PartyAllowSolicitation')}?" name=name args=args>
-    <option></option><#-- NOTE: Empty must be allowed? -->
-    <option value="Y"<#if (params[name]!(args.allowSolicitation)!) == "Y"> selected="selected"</#if>>${uiLabelMap.CommonYes}</option>
-    <option value="N"<#if (params[name]!(args.allowSolicitation)!) == "N"> selected="selected"</#if>>${uiLabelMap.CommonNo}</option>
-  </@field>
+    <#assign isMaileonComponentPresent = Static["org.ofbiz.base.component.ComponentConfig"].isComponentPresent("maileon")!false>
+    <#if !isMaileonComponentPresent || (isMaileonComponentPresent && name != "CUSTOMER_EMAIL_ALLOW_SOL")>
+      <@field type="select" label="${rawLabel('PartyAllowSolicitation')}?" name=name args=args>
+        <option></option><#-- NOTE: Empty must be allowed? -->
+        <option value="Y"<#if (params[name]!(args.allowSolicitation)!) == "Y"> selected="selected"</#if>>${uiLabelMap.CommonYes}</option>
+        <option value="N"<#if (params[name]!(args.allowSolicitation)!) == "N"> selected="selected"</#if>>${uiLabelMap.CommonNo}</option>
+      </@field>
+    <#else>
+        <@renderMaileon mode="solicitation" />
+    </#if>
 </#macro>
 
 <#macro personalTitleField params=true name="" label="" inlineArgs...>

@@ -372,6 +372,14 @@ code package.
                 <!--<set field="title" value="${uiLabelMap.PageTitleMain}: ${categoryTitle}"/>-->
                 <set field="title" value=""/>
                 <set field="titleProperty" value=""/>
+                <script lang="groovy"><![CDATA[
+                    import org.ofbiz.base.util.UtilValidate
+                    isMaileonComponentPresent = org.ofbiz.base.component.ComponentConfig.isComponentPresent("maileon")
+                    if (UtilValidate.isEmpty(isMaileonComponentPresent)) {
+                        isMaileonComponentPresent = false
+                    }
+                    context.isMaileonComponentPresent = isMaileonComponentPresent
+                ]]></script>
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -404,6 +412,16 @@ code package.
                             </actions>
                             <widgets>
                                 <include-screen name="ScipioDashboardMiniProductSlider"/>
+                            </widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <if-true field="context.isMaileonComponentPresent"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://maileon/webapp/maileon/maileon-section.ftl"/></html>
+                                </platform-specific>
                             </widgets>
                         </section>
                     </decorator-section>

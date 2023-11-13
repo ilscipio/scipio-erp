@@ -151,8 +151,8 @@ code package.
             <exclude field-name="lastModifiedDate"/>
             <exclude field-name="lastModifiedByUserLogin"/>
         </auto-attributes>
-        <attribute include="shipmentTypeId" mode="OUT" optional="true"/>
-        <attribute include="statusId" mode="OUT" optional="true"/>
+        <attribute name="shipmentTypeId" type="String" mode="OUT" optional="true"/>
+        <attribute name="statusId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="updateShipment" default-entity-name="Shipment" engine="simple"
             location="component://product/script/org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="updateShipment" auth="true">

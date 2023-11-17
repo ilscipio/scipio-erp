@@ -418,9 +418,24 @@ code package.
                             <condition>
                                 <if-true field="context.isMaileonComponentPresent"/>
                             </condition>
+                            <actions>
+                                <set field="depFormFieldPrefix" value="MAILEON_CONTACT_"/>
+                                <set field="dependentForm" value="MAILEON_CONTACT_FORM"/>
+                                <set field="paramKey" value="countryGeoId"/>
+                                <set field="mainId" value="COUNTRY_"/>
+                                <set field="dependentId" value="STATE_"/>
+                                <set field="requestName" value="getAssociatedStateList"/>
+                                <set field="responseName" value="stateList"/>
+                                <set field="dependentKeyName" value="geoId"/>
+                                <set field="descName" value="geoName"/>
+                                <set field="selectedDependentOption" default-value="_previous_"/>
+                            </actions>
                             <widgets>
                                 <platform-specific>
-                                    <html><html-template location="component://maileon/webapp/maileon/maileon-section.ftl"/></html>
+                                    <html>
+                                        <html-template location="component://common/webcommon/includes/setDependentDropdownValuesJs.ftl"/>
+                                        <html-template location="component://maileon/webapp/maileon/maileon-section.ftl"/>
+                                    </html>
                                 </platform-specific>
                             </widgets>
                         </section>

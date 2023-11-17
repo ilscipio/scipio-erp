@@ -35,7 +35,7 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
 //             this is to handle a specific case where an input field is needed instead of a drop-down when no values are returned by the request
 //             this will be maybe extended later to use an auto-completed drop-down or a lookup, instead of straight drop-down currently, when there are too much values to populate
 //             this is e.g. currently used in the Product Price Rules screen
-    target = '#' + targetField;
+    target = '[id^=' + targetField + ']';
     input = '#' + inputField;
     targetTitle = target + '_title'
     optionList = '';
@@ -43,7 +43,7 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
         url: request,
         data: [{
             name: paramKey,
-            value: jQuery('#' + paramField).val()
+            value: jQuery('[id^=' + paramField + ']').val()
         }], // get requested value from parent drop-down field
         async: false,
         type: 'POST',

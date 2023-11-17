@@ -12,8 +12,8 @@ jQuery(document).ready(function() {
     </#if>
     <#assign mainIdFull = raw(depFormFieldPrefix) + raw(mainId)>
     <#assign depIdFull = raw(depFormFieldPrefix) + raw(dependentId)>
-    if (jQuery('#${escapeVal(dependentForm, 'js')}').length && jQuery('#${escapeVal(mainIdFull, 'js')}').length) {
-      jQuery('#${escapeVal(mainIdFull, 'js')}').change(function(e, data) {
+    if (jQuery('[id^=${escapeVal(dependentForm, 'js')}]').length && jQuery('[id^=${escapeVal(mainIdFull, 'js')}]').length) {
+      jQuery('[id^=${escapeVal(mainIdFull, 'js')}]').change(function(e, data) {
           getDependentDropdownValues('${escapeVal(requestName, 'js')}', 
             '${escapeVal(paramKey, 'js')}', 
             '${escapeVal(mainIdFull, 'js')}', 

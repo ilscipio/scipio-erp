@@ -4,7 +4,15 @@
                 <@render type="menu" name=mainSideBarMenuCfg.name resource=mainSideBarMenuCfg.location subMenus="all"/> 
             </#if-->
             <#-- NOTE: forced to use global vars because ctxVars suffer from backward-nesting issues with type="section" -->
-            <@render type="section" name="left-column" globalCtxVars={"menuCfgSubMenuFilter":"all"}/>
+            <#-- TODO: Currently this is not providing enough benefit and generates still too many broken links, so
+                until menus are globally refactored across all apps and menu items parameters are re-standardized (using application-wide-scope
+                context variables), it leads to too many menu expansions having seriously broken links leading users to broken pages,
+                because visible menus are force-expanded even when all the links are missing required parameters, which happens because
+                expansions were previously based on the current screen only; essentially all the menu-item and sub-menu conditions
+                need to become current-screen-agnostic and the context variables used to populate their parameters must be
+                standardized globally per-application
+            <@render type="section" name="left-column" globalCtxVars={"menuCfgSubMenuFilter":"all"}/>-->
+            <@render type="section" name="left-column" globalCtxVars={"menuCfgSubMenuFilter":"current"}/>
         </#macro>
         <div class="app-body">
             <#if userLogin??>

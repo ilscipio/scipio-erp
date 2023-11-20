@@ -364,12 +364,12 @@ jQuery(document).ready(function() {
     </#if>
 </#macro>
 
-<#macro personalTitleField params=true name="" label="" inlineArgs...>
+<#macro personalTitleField params=true id="" name="" label="" inlineArgs...>
   <#if params?is_boolean>
     <#local params = parameters>
   </#if>
     <#local args = inlineArgs>
-    <@field type="select" name=name label=label>
+    <@field type="select" id=id name=name label=label placeholder=label inline=(args.inline!false)>
         <#-- SCIPIO: NOTE: Stock Ofbiz seems to write code that causes pers title to be stored in localized form.
             This is probably an error because the values read from DB become hard to re-localize.
             It is better to store these as values coded in english (and localize on print only). -->

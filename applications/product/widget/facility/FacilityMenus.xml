@@ -17,7 +17,7 @@ code package.
         <!-- SCIPIO: Commmented out for now. Seems to not be used at the moment -->
         <!-- <menu-item name="facilityGroup" title="${uiLabelMap.ProductFacilityGroups}"><link target="FindFacilityGroup"/></menu-item> -->        
         <menu-item name="ShipmentGatewayConfig" title="${uiLabelMap.FacilityShipmentGatewayConfig}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="FACILITY" action="_ADMIN"/>
             </condition>
             <link target="FindShipmentGatewayConfig"/>

@@ -2279,6 +2279,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
         private final FlexibleStringExpander maxDepthExdr; // SCIPIO: new
         private final FlexibleStringExpander subMenuFilterExdr; // SCIPIO: new
         private final List<ModelAction> actions; // SCIPIO: 2017-05-01: new post-context-stack-push actions
+        private final FlexibleStringExpander itemConditionMode;
 
         public Menu(ModelScreen modelScreen, Element menuElement) {
             super(modelScreen, menuElement);
@@ -2288,6 +2289,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
             this.shareScopeExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("share-scope"));
             this.maxDepthExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("max-depth"));
             this.subMenuFilterExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("sub-menus"));
+            this.itemConditionMode = FlexibleStringExpander.getInstance(menuElement.getAttribute("item-condition-mode"));
             this.actions = readActions(modelScreen, menuElement, "actions");
         }
 
@@ -2333,6 +2335,7 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                         }
                         renderState.setMaxDepth(getMaxDepth(context));
                         renderState.setSubMenuFilter(getSubMenuFilter(context));
+                        renderState.setItemConditionMode(getItemConditionMode(context));
                         // SCIPIO: support a dedicated menuCfgInlineItems for now, to simplify screen calls, because menuRenderArgs is harder to use
                         if (!renderState.isInlineEntriesSet() && context.get("menuCfgInlineItems") != null) {
                             renderState.setInlineEntries((Boolean) context.get("menuCfgInlineItems"));
@@ -2411,6 +2414,10 @@ public abstract class ModelScreenWidget extends ModelWidget implements ContainsE
                     return null;
                 }
             }
+        }
+
+        public String getItemConditionMode(Map<String, Object> context) { // SCIPIO
+            return this.itemConditionMode.expandString(context);
         }
 
         public FlexibleStringExpander getSubMenuFilterExdr() { // SCIPIO

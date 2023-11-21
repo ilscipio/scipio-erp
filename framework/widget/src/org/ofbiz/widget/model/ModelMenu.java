@@ -156,6 +156,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
     private final FlexibleStringExpander separateMenuTargetStyle;
     private final FlexibleStringExpander separateMenuTargetPreference;
     private final FlexibleStringExpander separateMenuTargetOriginalAction;
+    private final FlexibleStringExpander itemConditionMode; // SCIPIO: 3.0.0: Added
 
     /** XML Constructor */
     public ModelMenu(Element menuElement, String menuLocation) {
@@ -211,6 +212,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
         FlexibleStringExpander separateMenuTargetStyle = FlexibleStringExpander.getInstance("");
         FlexibleStringExpander separateMenuTargetPreference = FlexibleStringExpander.getInstance("");
         FlexibleStringExpander separateMenuTargetOriginalAction = FlexibleStringExpander.getInstance("");
+        FlexibleStringExpander itemConditionMode = FlexibleStringExpander.getInstance("");
 
         // check if there is a parent menu to inherit from
         ModelMenu parent = null;
@@ -265,6 +267,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
                 separateMenuTargetStyle = parent.separateMenuTargetStyle;
                 separateMenuTargetPreference = parent.separateMenuTargetPreference;
                 separateMenuTargetOriginalAction = parent.separateMenuTargetOriginalAction;
+                itemConditionMode = parent.itemConditionMode;
             }
         }
         if (!menuElement.getAttribute("type").isEmpty()) {
@@ -384,6 +387,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
         separateMenuTargetPreference = getExpander(menuElement, "separate-menu-target-preference", separateMenuTargetPreference);
         if (separateMenuTargetPreference.isEmpty()) separateMenuTargetPreference = FlexibleStringExpander.getInstance("greatest-ancestor");
         separateMenuTargetOriginalAction = getExpander(menuElement, "separate-menu-target-original-action", separateMenuTargetOriginalAction);
+        itemConditionMode = getExpander(menuElement, "item-condition-mode", itemConditionMode);
 
         this.autoSubMenuNames = autoSubMenuNames;
         this.defaultSubMenuModelScope = defaultSubMenuModelScope;
@@ -432,6 +436,8 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
         this.separateMenuTargetStyle = separateMenuTargetStyle;
         this.separateMenuTargetPreference = separateMenuTargetPreference;
         this.separateMenuTargetOriginalAction = separateMenuTargetOriginalAction;
+
+        this.itemConditionMode = itemConditionMode;
 
         CurrentMenuDefBuildArgs currentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(this);
         Map<String, ModelMenuItemAlias> menuItemAliasMap = new HashMap<>();
@@ -497,8 +503,9 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
     }
 
     private static FlexibleStringExpander getExpander(Element element, String name, FlexibleStringExpander existing) { // SCIPIO: helper
-        if (!element.getAttribute(name).isEmpty())
+        if (!element.getAttribute(name).isEmpty()) {
             return FlexibleStringExpander.getInstance(element.getAttribute(name));
+        }
         return existing;
     }
 
@@ -1241,13 +1248,16 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
     }
 
     /**
-     * SCIPIO: Combines an extra style (like selected-style) to a main style
+     * Combines an extra style (like selected-style) to a main style
      * string (like widget-style).
-     * <p>
-     * NOTE: currently, the extra style is always added as an extra, and
-     * never replaces. The extra's prefix (+/=) is stripped.
-     * <p>
-     * ALWAYS USE THIS METHOD TO CONCATENATE EXTRA STYLES.
+     *
+     * <p>NOTE: currently, the extra style is always added as an extra, and
+     * never replaces. The extra's prefix (+/=) is stripped.</p>
+     *
+     * <p>ALWAYS USE THIS METHOD TO CONCATENATE EXTRA STYLES.</p>
+     *
+     * <p>SCIPIO: 3.0.0: Returns existing style if extraStyle empty.</p>
+     * <p>SCIPIO: 1.x.x: Added.</p>
      */
     public static String combineExtraStyle(String style, String extraStyle) {
         String res;
@@ -1260,6 +1270,9 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
             extraStyle = "";
         } else {
             extraStyle = extraStyle.trim();
+        }
+        if (extraStyle.isEmpty() || "+".equals(extraStyle)) { // SCIPIO: 3.0.0: Added
+            return style;
         }
 
         if (style.isEmpty()) {
@@ -1998,6 +2011,10 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
 
     private String getSeparateMenuTargetOriginalAction(Map<String, Object> context) { // SCIPIO
         return separateMenuTargetOriginalAction.expandString(context);
+    }
+
+    public String getItemConditionMode(Map<String, Object> context) { // SCIPIO
+        return itemConditionMode.expandString(context);
     }
 
     public SeparateMenuConfig getSeparateMenuConfig(Map<String, Object> context) { // SCIPIO

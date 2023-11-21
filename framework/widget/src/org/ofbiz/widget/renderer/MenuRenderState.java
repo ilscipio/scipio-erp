@@ -28,6 +28,7 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
     private int currentDepth;
     private int maxDepth;
     private String subMenuFilter;
+    private String itemConditionMode;
     private transient boolean noSubMenus;
     private transient boolean currentSubMenusOnly;
     private transient ModelMenu.MenuAndItemLookup selectedMenuAndItem;
@@ -66,6 +67,9 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
             return this.get(key);
         } else if ("inlineEntries".equals(key)) {
             this.setInlineEntries((Boolean) value);
+            return this.get(key);
+        } else if ("itemCondMode".equals(key)) {
+            this.setItemConditionMode((String) value);
             return this.get(key);
         } else {
             return setInternal(key, value);
@@ -125,6 +129,15 @@ public class MenuRenderState extends CompositeReadOnlyMap<String, Object> implem
         this.noSubMenus = "none".equals(subMenuFilter);
         this.currentSubMenusOnly = "current".equals(subMenuFilter);
         setInternal("subMenuFilter", this.subMenuFilter);
+    }
+
+    public String getItemConditionMode() {
+        return itemConditionMode;
+    }
+
+    public void setItemConditionMode(String itemConditionMode) {
+        this.itemConditionMode = itemConditionMode;
+        setInternal("itemCondMode", this.itemConditionMode);
     }
 
     public void increaseCurrentDepth() {

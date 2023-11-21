@@ -147,14 +147,20 @@ TODO: Reimplement as transform.
                               or screen widgets based on extension.
                               Only file locations are supported this way due to security risks of mixing locations and inline content,
                               and because locations allow for optimizations.            
-    
+    itemCondMode            = (inherit|omit|disable, default: inherit) What to do when menu-items rendered as part of this menu evaluate false conditions.
+                              Values:
+                              * inherit: default, same as unspecified (if no other override, defaults to "omit")
+                              * omit: omit menu item from render (legacy default)
+                              * disable: menu items are disabled
+
   * History *
+    Enhanced for 3.0.0 (itemCondMode).
     Enhanced for 1.14.4 (type="ftl", type="decorator" (WORK-IN-PROGRESS), improved defaults handling).
     Enhanced for 1.14.3 (shareScope).
     Enhanced for 1.14.2.
 -->
 <#macro render resource="" name="" type="" ctxVars={} globalCtxVars={} reqAttribs={} clearValues=false restoreValues=true 
-    asString=false shareScope=false maxDepth="" subMenus="" secMap={}>
+    asString=false shareScope=false maxDepth="" subMenus="" itemCondMode="" secMap={}>
   <#if resource?has_content || name?has_content><#t><#-- NEW: 2017-03-10: we'll simply render nothing if no resource or name - helps simplify template code -->
   <#if !type?has_content>
     <#-- assuming type=="screen" as default for now, unless .ftl extension (2017-03-10)-->
@@ -215,7 +221,7 @@ TODO: Reimplement as transform.
       <#-- DEV NOTE: WARN: name clashes -->
       <#if type == "menu">
         <#local dummy = setContextField("scipioWidgetWrapperArgs", {
-          "resName":name, "resLocation":resource, "shareScope":shareScope, "maxDepth":maxDepth, "subMenus":subMenus, "ctxVars":innerCtxVars
+          "resName":name, "resLocation":resource, "shareScope":shareScope, "maxDepth":maxDepth, "subMenus":subMenus, "itemCondMode":itemCondMode, "ctxVars":innerCtxVars
         })>
         ${StringUtil.wrapString(screens.render("component://common/widget/CommonScreens.xml", "scipioMenuWidgetWrapper", asString))}<#t>
       <#elseif type == "form">

@@ -386,6 +386,22 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>-->
             </xs:attribute>
+            <xs:attribute type="xs:string" name="item-condition-mode">
+                <xs:annotation>
+                    <xs:documentation>
+                        What to do when menu-items rendered as part of this menu have render conditions that
+                        evaluate to false. May be overridden per-item.
+
+                        Values:
+                        * inherit: default, same as unspecified (if no other override, defaults to "omit")
+                        * omit: omit menu item from render (legacy default)
+                        * disable: menu items are disabled
+                        * disable-with-submenu: menu items having sub-menus are disabled; those without submenus are omitted
+
+                        SCIPIO: 3.0.0: Added.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:complexType name="menu-elements-include"><!-- SCIPIO: Element name: "include-elements" -->
@@ -625,9 +641,26 @@ under the License.
                     <xs:complexType>
                         <xs:complexContent>
                             <xs:extension base="ConditionRootType">
+                                <xs:attribute type="xs:string" name="mode">
+                                    <xs:annotation>
+                                        <xs:documentation>
+                                            What to do when this sub-menu's render condition evaluates to false.
+
+                                            Values:
+                                            * inherit: default, same as unspecified (if no other override, defaults to "omit")
+                                            * omit: omit menu item from render (legacy default)
+                                            * disable: menu items are disabled
+                                            * disable-with-submenu: menu items having sub-menus are disabled; those without submenus are omitted
+
+                                            SCIPIO: 3.0.0: Added.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
                                 <xs:attribute type="xs:string" name="pass-style">
                                     <xs:annotation>
                                         <xs:documentation>
+                                            SCIPIO: NOTE: Not implemented in stock.
+
                                             If a pass-style provided and the condition passes, the widget-style of
                                             the parent menu-item is set with the pass-style. If no pass-style is given,
                                             the widget-style is not changed.
@@ -637,6 +670,8 @@ under the License.
                                 <xs:attribute type="xs:string" name="disabled-style">
                                     <xs:annotation>
                                         <xs:documentation>
+                                            SCIPIO: NOTE: Not implemented in stock.
+
                                             If a disabled-style provided and the condition fails, the disabled-style of
                                             the parent menu-item is set with the disabled-style and processing is allowed to continue.
                                             If no disabled-style is given, the widget-style is not changed and the menu-item is not rendered.
@@ -876,6 +911,25 @@ under the License.
                     <xs:complexType>
                         <xs:complexContent>
                             <xs:extension base="ConditionRootType">
+                                <xs:attribute type="xs:string" name="mode">
+                                    <xs:annotation>
+                                        <xs:documentation>
+                                            What to do when this sub-menu's render condition evaluates to false.
+
+                                            Values:
+                                            * inherit: default, same as unspecified (if no other override, defaults to "omit")
+                                            * omit: omit sub-menu from render (legacy default) - specify explicitly
+                                              to override "all" filter and "disable" item-condition-mode from menu or include-menu.
+
+                                            NOTE: Unlike menu-item, specifying "disable" is only used internally/transiently
+                                            and has no effect as it will simply render the sub-menu as usual. However,
+                                            explicit "omit" may be specified to override inherited "disable"/"disable-with-submenu" from
+                                            menu or include-menu item-condition-mode.
+
+                                            SCIPIO: 3.0.0: Added.
+                                        </xs:documentation>
+                                    </xs:annotation>
+                                </xs:attribute>
                             </xs:extension>
                         </xs:complexContent>
                     </xs:complexType>

@@ -53,7 +53,7 @@ Common menus NOTES:
     </menu>
     <menu name="CommonAppBarMenu" extends="CommonEmptyAppBarMenu">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
-            <condition><not><if-empty field="userLogin"/></not></condition>
+            <condition mode="omit"><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
         </menu-item>
     </menu>
@@ -65,7 +65,7 @@ Common menus NOTES:
     </menu>
     <menu name="CommonAppBarDashboardMenu" extends="CommonEmptyAppBarDashboardMenu">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
-            <condition><not><if-empty field="userLogin"/></not></condition>
+            <condition mode="omit"><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
         </menu-item>
     </menu>
@@ -81,7 +81,7 @@ Common menus NOTES:
     </menu>
     <menu name="CommonAppSideBarMenu" extends="CommonEmptyAppSideBarMenu">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}" >
-            <condition><not><if-empty field="userLogin"/></not></condition>
+            <condition mode="omit"><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
         </menu-item>
     </menu>
@@ -110,7 +110,7 @@ Common menus NOTES:
     </menu>
     <menu name="CommonSideBarMenu" extends="CommonEmptySideBarMenu">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="userLogin"/></not>
                     <!-- this preserves compability, so CommonSideBarMenu can still be used top-level or nested for the time being -->

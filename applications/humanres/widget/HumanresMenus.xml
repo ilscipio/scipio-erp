@@ -333,11 +333,11 @@
     <menu name="RecruitmentTypeMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="JobRequisition">
         <menu-item name="JobRequisition" title="${uiLabelMap.HumanResJobRequisition}">
-            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <condition mode="omit"><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
             <link target="FindJobRequisitions"/>
         </menu-item>
         <menu-item name="InternalJobPosting" title="${uiLabelMap.HumanResInternalJobPosting}">
-            <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
+            <condition mode="omit"><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
             <link target="FindInternalJobPosting"/>
         </menu-item>
     </menu>
@@ -356,15 +356,15 @@
             <link target="FindInternalJobPosting"/>
         </menu-item>
         <menu-item name="JobInterview" title="${uiLabelMap.HumanResJobInterview}">
-            <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
+            <condition mode="omit"><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
             <link target="FindJobInterview"/>
         </menu-item>
         <menu-item name="Approval" title="${uiLabelMap.HumanResApproval}">
-            <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
+            <condition mode="omit"><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
             <link target="FindApprovals"/>
         </menu-item>
         <menu-item name="Relocation" title="${uiLabelMap.HumanResRelocation}">
-            <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
+            <condition mode="omit"><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
             <link target="FindRelocation"/>
         </menu-item>
     </menu>
@@ -378,11 +378,11 @@
             <link target="TrainingCalendar"/>
         </menu-item>
         <menu-item name="FindTrainingStatus" title="${uiLabelMap.HumanResTrainingStatus}">
-            <condition><if-has-permission permission="EMPLOYEE" action="_VIEW"/></condition>
+            <condition mode="omit"><if-has-permission permission="EMPLOYEE" action="_VIEW"/></condition>
             <link target="FindTrainingStatus"/>
         </menu-item>
         <menu-item name="FindTrainingApprovals" title="${uiLabelMap.HumanResTrainingApprovals}">
-            <condition><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
+            <condition mode="omit"><if-has-permission permission="HUMANRES" action="_ADMIN"/></condition>
             <link target="FindTrainingApprovals"/>
         </menu-item>
     </menu>
@@ -407,7 +407,7 @@
             <link target="FindEmplLeaves"/>
         </menu-item>
         <menu-item name="Approval" title="${uiLabelMap.HumanResLeaveApproval}">
-            <condition><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
+            <condition mode="omit"><if-has-permission permission="HUMANRES" action="_APPROVE"/></condition>
             <link target="FindLeaveApprovals"/>
         </menu-item>
     </menu>

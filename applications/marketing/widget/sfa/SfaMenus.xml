@@ -430,7 +430,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="newInternalNote" title="${uiLabelMap.PartyNewInternalNote}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="PARTYMGR_CME-NOTE_CREATE"/>
                     <if-empty field="communicationEvent"/>

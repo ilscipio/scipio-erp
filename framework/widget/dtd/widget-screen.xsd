@@ -963,6 +963,21 @@ under the License.
                         Default: all</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="item-condition-mode">
+                <xs:annotation>
+                    <xs:documentation>
+                        What to do when menu-items rendered as part of this menu have render conditions that
+                        evaluate to false.
+
+                        Values:
+                        * inherit: default, same as unspecified (if no other override, defaults to "omit")
+                        * omit: omit menu item from render (legacy default)
+                        * disable: menu items are disabled
+
+                        SCIPIO: 3.0.0: Added.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="include-screen" substitutionGroup="AllWidgets">

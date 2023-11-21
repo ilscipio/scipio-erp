@@ -226,7 +226,8 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
 
         Element conditionElement = UtilXml.firstChildElement(subMenuElement, "condition");
         if (conditionElement != null) {
-            conditionElement = UtilXml.firstChildElement(conditionElement);
+            // SCIPIO: 3.0.0: Stock bugfix: this was done too soon here so attributes were not read properly
+            //conditionElement = UtilXml.firstChildElement(conditionElement);
             this.condition = new ModelMenuCondition(this, conditionElement);
         } else {
             this.condition = null;
@@ -548,7 +549,9 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             throws IOException {
         MenuRenderState renderState = MenuRenderState.retrieve(context);
 
-        if (shouldBeRendered(context, renderState)) { // SCIPIO: renderState
+        String conditionMode = getConditionMode(context, renderState);
+        boolean conditionResult = shouldBeRendered(context, renderState);
+        if (conditionResult || "disable".equals(conditionMode) || "disable-with-submenu".equals(conditionMode)) {
             boolean protectScope = !shareScope(context);
             if (protectScope) {
                 context = RenderMapStack.ensureRenderContext(context); // SCIPIO: Dedicated context class: MapStack.create(context);
@@ -584,6 +587,23 @@ public class ModelSubMenu extends ModelMenuCommon { // SCIPIO: new comon base cl
             return this.condition.getCondition().eval(context);
         }
         return true;
+    }
+
+    public String getConditionMode(Map<String, Object> context, MenuRenderState renderState) {
+        if (this.condition == null) {
+            return null;
+        }
+        String mode = this.condition.getMode().expandString(context);
+        if (mode == null || mode.isEmpty() || "inherit".equals(mode)) {
+            mode = renderState.getItemConditionMode();
+            if (mode == null || mode.isEmpty() || "inherit".equals(mode)) {
+                mode = renderState.getModelMenu().getItemConditionMode(context);
+                if (mode == null || mode.isEmpty() || "inherit".equals(mode)) {
+                    mode = "omit";
+                }
+            }
+        }
+        return mode;
     }
 
     public ModelMenuCondition getCondition() {

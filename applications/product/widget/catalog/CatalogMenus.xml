@@ -374,85 +374,133 @@ code package.
 
     <menu name="ProductStoreTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditProductStore" title="${uiLabelMap.ProductStore}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStore">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="FindProductStoreRoles" title="${uiLabelMap.PartyRoles}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="FindProductStoreRoles">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductStorePromos" title="${uiLabelMap.ProductPromos}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStorePromos">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductStoreCatalogs" title="${uiLabelMap.ProductCatalogs}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStoreCatalogs">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <!-- SCIPIO: NOTE: WebSite editing is now handled within catalog app instead of delegating to content app -->
         <menu-item name="EditProductStoreWebSites" title="${uiLabelMap.ProductWebSites}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStoreWebSites">
                 <parameter param-name="productStoreId" from-field="productStoreId"/>
             </link>
         </menu-item>
         <!-- The tax stuff is in the Tax Authority area of the accounting manager, need to re-do this screen to list current tax entries and link to the accmgr screens
         <menu-item name="EditProductStoreTaxSetup" title="${uiLabelMap.ProductSalesTax}">
+                    <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStoreTaxSetup">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         -->
         <menu-item name="ListShipmentMethodTypes" title="${uiLabelMap.ProductShipping}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="ListShipmentMethodTypes">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>        
         <!-- SCIPIO: Renamed to Payment Methods -->
         <menu-item name="EditProductStorePaySetup" title="${uiLabelMap.ProductPaymentMethods}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStorePaySetup">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductStoreFinAccountSettings" title="${uiLabelMap.CommonFinAccounts}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStoreFinAccountSettings">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductStoreFacilities" title="${uiLabelMap.ProductFacility}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="ProductStoreFacilities">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductStoreEmails" title="${uiLabelMap.CommonEmails}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStoreEmails">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductStoreSurveys" title="${uiLabelMap.CommonSurveys}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStoreSurveys">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductStoreKeywordOvrd" title="${uiLabelMap.FormFieldTitle_keyword}"><!-- ProductOverride -->
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="editProductStoreKeywordOvrd">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="ViewProductStoreSegments" title="${uiLabelMap.ProductSegments}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="ViewProductStoreSegments">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductStoreVendorPayments" title="${uiLabelMap.ProductVendorPayments}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStoreVendorPayments">
                 <parameter param-name="productStoreId"/>
             </link>
         </menu-item>
         <menu-item name="EditProductStoreVendorShipments" title="${uiLabelMap.ProductVendorShipments}">
+            <condition>
+                <not><if-empty field="productStore"/></not>
+            </condition>
             <link target="EditProductStoreVendorShipments">
                 <parameter param-name="productStoreId"/>
             </link>
@@ -460,7 +508,10 @@ code package.
         <!-- SCIPIO: fallback entry. currently it will normally not show. -->
         <menu-item name="EditProductStoreGroups" title="${uiLabelMap.ProductProductStoreGroup}">
             <condition>
-                <not><if-empty field="_non_existent_variable_"/></not>
+                <and>
+                    <not><if-empty field="productStore"/></not>
+                    <not><if-empty field="_non_existent_variable_"/></not>
+                </and>
             </condition>
             <link target="ListParentProductStoreGroup">
                 <parameter param-name="productStoreGroupId"/>
@@ -615,7 +666,7 @@ code package.
         </menu-item>
         -->
         <menu-item name="EditProduct" title="${uiLabelMap.ProductProduct}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="CATALOG" action="_UPDATE"/>
                     <!-- SCIPIO: this is added but only used in emergency; New screen shouldn't show submenu -->
@@ -984,7 +1035,7 @@ code package.
    <!--  <menu name="ImageManagementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
            selected-menuitem-context-field-name="userTabButtonImage">
         <menu-item name="main" title="${uiLabelMap.CommonMain}" sort-mode="off">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
             </condition>
             <link target="Imagemanagement"/>
@@ -995,7 +1046,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="ImageUpload" title="${uiLabelMap.CommonUpload}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="IMAGE_MANAGEMENT_UPLOAD"/>
                     <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
@@ -1006,7 +1057,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="ImageManage" title="${uiLabelMap.CommonManage}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
             </condition>
             <link target="ListImageManage">
@@ -1014,7 +1065,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="ImageApprove" title="${uiLabelMap.ImageManagementApprove}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="IMAGE_MANAGEMENT_APPROVE"/>
                     <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
@@ -1023,7 +1074,7 @@ code package.
             <link target="ImageApprove"/>
         </menu-item>
         <menu-item name="ImageRejected" title="${uiLabelMap.CommonRejected}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="IMAGE_MANAGEMENT_APPROVE"/>
                     <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
@@ -1032,7 +1083,7 @@ code package.
             <link target="ImageRejected"/>
         </menu-item>
         <menu-item name="ImageRecentlyApproved" title="${uiLabelMap.ImageManagementRecentlyApproved}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="IMAGE_MANAGEMENT_APPROVE"/>
                     <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
@@ -1041,7 +1092,7 @@ code package.
             <link target="ImageRecentlyApproved"/>
         </menu-item>
         <menu-item name="ImageReplace" title="${uiLabelMap.ImageManagementReplace}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
             </condition>
             <link target="ListImageReplace">
@@ -1049,7 +1100,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="ImageResize" title="${uiLabelMap.ImageManagementResize}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
             </condition>
             <link target="ImageResize">

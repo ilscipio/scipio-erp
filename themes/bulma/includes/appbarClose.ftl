@@ -1,10 +1,10 @@
 <#--<#include "component://base-theme/includes/appbarClose.ftl">-->
 <#macro sideBarMenu>
     <#--<#if (mainSideBarMenuCfg.location)?has_content && (mainSideBarMenuCfg.name)?has_content>
-                <@render type="menu" name=mainSideBarMenuCfg.name resource=mainSideBarMenuCfg.location subMenus="all"/>
+                <@render type="menu" name=mainSideBarMenuCfg.name resource=mainSideBarMenuCfg.location subMenus="all" itemCondMode="disable-with-submenu"/>
             </#if-->
     <#-- NOTE: forced to use global vars because ctxVars suffer from backward-nesting issues with type="section" -->
-    <@render type="section" name="left-column" globalCtxVars={"menuCfgSubMenuFilter":"all"}/>
+    <@render type="section" name="left-column" globalCtxVars={"menuCfgSubMenuFilter":"all", "menuCfgItemCondMode":"disable-with-submenu"}/>
 </#macro>
 
 <#-- Sets sidebar based on cookie value -->

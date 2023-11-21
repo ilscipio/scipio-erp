@@ -20,6 +20,7 @@ package org.ofbiz.widget.model;
 
 import java.io.Serializable;
 
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.w3c.dom.Element;
 
@@ -50,11 +51,16 @@ public final class ModelMenuCondition implements Serializable {
     private final FlexibleStringExpander passStyleExdr;
     private final FlexibleStringExpander failStyleExdr;
     private final ModelCondition condition;
+    private final FlexibleStringExpander mode; // SCIPIO: 3.0.0: Added
 
     public ModelMenuCondition(ModelWidget modelWidget, Element conditionElement) { // SCIPIO: 3.0.0: Switched to ModelWidget (generalized)
         this.passStyleExdr = FlexibleStringExpander.getInstance(conditionElement.getAttribute("pass-style"));
         this.failStyleExdr = FlexibleStringExpander.getInstance(conditionElement.getAttribute("disabled-style"));
-        this.condition = AbstractModelCondition.DEFAULT_CONDITION_FACTORY.newInstance(modelWidget, conditionElement);
+        // SCIPIO: 3.0.0: Previously the inner condition was passed here - must pass the inner element instead
+        //this.condition = AbstractModelCondition.DEFAULT_CONDITION_FACTORY.newInstance(modelWidget, conditionElement);
+        Element innerConditionElement = UtilXml.firstChildElement(conditionElement);
+        this.condition = AbstractModelCondition.DEFAULT_CONDITION_FACTORY.newInstance(modelWidget, innerConditionElement);
+        this.mode = FlexibleStringExpander.getInstance(conditionElement.getAttribute("mode"));
     }
 
     public ModelCondition getCondition() {
@@ -67,5 +73,9 @@ public final class ModelMenuCondition implements Serializable {
 
     public FlexibleStringExpander getPassStyleExdr() {
         return passStyleExdr;
+    }
+
+    public FlexibleStringExpander getMode() {
+        return mode;
     }
 }

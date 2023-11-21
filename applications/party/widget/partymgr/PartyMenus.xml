@@ -28,7 +28,7 @@
         <menu-item name="loggedinusers" title="${uiLabelMap.PartyLoggedInUsers}"><link target="listLoggedInUsers"/></menu-item>
         <!--<menu-item name="classification" title="${uiLabelMap.PartyClassifications}"><link target="showclassgroups"/></menu-item> -->
         <menu-item name="security" title="${uiLabelMap.CommonSecurity}">
-            <condition>
+            <condition mode="omit">
                 <if-service-permission service-name="partyBasePermissionCheck" main-action="VIEW"/>
             </condition>
             <link target="FindSecurityGroup"/>
@@ -220,7 +220,7 @@
             </link>
         </menu-item> -->
         <menu-item name="FinancialHistory" title="${uiLabelMap.PartyFinancialHistory}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-true field="specificPartyItems"/>
                     <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
@@ -248,7 +248,7 @@
             </link>
         </menu-item> -->
         <menu-item name="createNew" title="${uiLabelMap.AccountingBillingAccount}">
-            <condition>
+            <condition mode="omit">
                 <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
             </condition>
             <link target="/accounting/control/FindBillingAccount" url-mode="inter-app">
@@ -257,7 +257,7 @@
         </menu-item>
         <!-- 
         <menu-item name="finAccounts" title="${uiLabelMap.AccountingFinAccounts}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-true field="specificPartyItems"/>
                     <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
@@ -276,7 +276,7 @@
             </link>
         </menu-item>
         <menu-item name="findRequest" title="${uiLabelMap.PartyPartyRequests}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-true field="specificPartyItems"/>
                     <if-has-permission permission="ORDERMGR" action="_VIEW"/>
@@ -289,7 +289,7 @@
             </link>
         </menu-item>
         <menu-item name="findQuote" title="${uiLabelMap.OrderOrderQuotes}" >
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-true field="specificPartyItems"/>
                     <if-has-permission permission="ORDERMGR" action="_VIEW"/>
@@ -301,7 +301,7 @@
             </link>
         </menu-item>
         <menu-item name="searchOrder" title="${uiLabelMap.OrderOrders}" >
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-true field="specificPartyItems"/>
                     <if-has-permission permission="ORDERMGR" action="_VIEW"/>
@@ -356,7 +356,7 @@
         </menu-item>
         
         <menu-item name="createUserLogin" title="${uiLabelMap.CreateUserLogin}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
             </condition>
             <link target="ProfileCreateNewLogin">
@@ -365,7 +365,7 @@
         </menu-item>
         
         <menu-item name="EditUserLoginSecurityGroups" title="${uiLabelMap.SecurityGroups}" widget-style="+${styles.action_nav} ${styles.action_update}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
             </condition>
             <link target="EditUserLoginSecurityGroups">
@@ -382,7 +382,7 @@
         </menu-item>
         
         <menu-item name="editcontactmech" title="${uiLabelMap.PartyCreateNewContact}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
             </condition>
             <link target="editcontactmech">
@@ -391,7 +391,7 @@
         </menu-item>
         
         <menu-item name="createNewEftAccount" title="${uiLabelMap.AccountingCreateNewEftAccount}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="PAY_INFO" action="_CREATE"/>
                     <if-has-permission permission="ACCOUNTING" action="_CREATE"/>
@@ -402,7 +402,7 @@
             </link>
         </menu-item>
         <menu-item name="createNewGiftCard" title="${uiLabelMap.AccountingCreateNewGiftCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="PAY_INFO" action="_CREATE"/>
                     <if-has-permission permission="ACCOUNTING" action="_CREATE"/>
@@ -413,7 +413,7 @@
             </link>
         </menu-item>
         <menu-item name="createNewCreditCard" title="${uiLabelMap.AccountingCreateNewCreditCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="PAY_INFO" action="_CREATE"/>
                     <if-has-permission permission="ACCOUNTING" action="_CREATE"/>
@@ -424,7 +424,7 @@
             </link>
         </menu-item>
         <menu-item name="newQuote" title="${uiLabelMap.OrderNewQuote}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="ORDERMGR" action="_CREATE"/>
             </condition>
             <link target="/ordermgr/control/EditQuote" url-mode="inter-app">
@@ -433,7 +433,7 @@
             </link>
         </menu-item>
         <menu-item name="newOrder" title="${uiLabelMap.OrderNewOrder}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="ORDERMGR" action="_CREATE"/>
             </condition>
             <link target="/ordermgr/control/checkinits" url-mode="inter-app">
@@ -511,7 +511,7 @@
 
     <menu name="addShipper">
         <menu-item name="new" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
             </condition>
             <link target="editCarrierAccount">
@@ -521,7 +521,7 @@
     </menu>
     <menu name="communicationsMenu">
         <menu-item name="newEmail" title="${uiLabelMap.PartyNewEmail}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="PARTYMGR_CME-EMAIL_CREATE"/>
             </condition>
             <link target="${parameters._LAST_VIEW_NAME_}">
@@ -534,7 +534,7 @@
             </link>
         </menu-item>
         <menu-item name="newNote" title="${uiLabelMap.PartyNewInternalNote}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="PARTYMGR_CME-NOTE_CREATE"/>
             </condition>
             <link target="${parameters._LAST_VIEW_NAME_}">
@@ -574,7 +574,7 @@
             <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
         </actions>
         <menu-item name="newEmail" title="${uiLabelMap.PartyNewEmail}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="PARTYMGR_CME-EMAIL_CREATE"/>
                     <if-empty field="communicationEvent"/>
@@ -590,7 +590,7 @@
             </link>
         </menu-item>
         <menu-item name="newInternalNote" title="${uiLabelMap.PartyNewInternalNote}" widget-style="+${styles.action_nav} ${styles.action_add}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="PARTYMGR_CME-NOTE_CREATE"/>
                     <if-empty field="communicationEvent"/>
@@ -606,7 +606,7 @@
             </link>
         </menu-item>
         <menu-item name="reply" title="${uiLabelMap.PartyReply}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="communicationEvent"/></not>
                     <not><if-empty field="communicationEvent.partyIdFrom"/></not>
@@ -628,7 +628,7 @@
             </link>
         </menu-item>
         <menu-item name="replyAll" title="${uiLabelMap.PartyReplyAll}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="communicationEvent"/></not>
                     <not><if-empty field="communicationEvent.partyIdFrom"/></not>
@@ -650,7 +650,7 @@
             </link>
         </menu-item>
         <menu-item name="forward" title="${uiLabelMap.PartyForward}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="communicationEvent"/></not>
                     <if-compare field="communicationEvent.statusId" operator="not-equals" value="COM_PENDING"/>
@@ -670,7 +670,7 @@
             </link>
         </menu-item>
         <menu-item name="createRequestFromCommEvent" title="${uiLabelMap.PartyCreateRequestFromCommEvent}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="communicationEvent"/></not>
                     <not><if-empty field="communicationEvent.partyIdFrom"/></not>
@@ -686,7 +686,7 @@
             </link>
         </menu-item>
         <menu-item name="createRequestFromCommEvent1" title="${uiLabelMap.PartyCreateRequestFromCommEvent}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="communicationEvent"/></not>
                     <not><if-empty field="communicationEvent.partyIdFrom"/></not>
@@ -716,7 +716,7 @@
             </link>
         </menu-item>
         <menu-item name="close" title="${uiLabelMap.CommonClose}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="communicationEvent"/></not>
                     <if-compare field="communicationEventRole.statusId" operator="equals" value="COM_ROLE_READ"/>
@@ -733,7 +733,7 @@
             </link>
         </menu-item>
         <menu-item name="delete" title="${uiLabelMap.CommonDelete}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="communicationEvent"/></not>
                     <or>
@@ -932,7 +932,7 @@
             </link>
         </menu-item>
         <menu-item name="delete" title="${uiLabelMap.CommonDelete}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="communicationEventRole"/></not>
                     <or>

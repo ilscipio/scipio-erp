@@ -8,7 +8,7 @@ code package.
     
     <menu name="OrderAppBar" title="${uiLabelMap.OrderManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" override-mode="replace" sort-mode="off" widget-style="+${styles.menu_sidebar_itemdashboard}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="ORDERMGR" action="_VIEW"/>
                     <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
@@ -17,13 +17,13 @@ code package.
             <link target="main"/>
         </menu-item>
         <menu-item name="findorders" title="${uiLabelMap.OrderOrders}" sort-mode="off"><!-- SCIPIO: this label was too inconsistent with the others: ${uiLabelMap.OrderFindOrder} -->
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="ORDERMGR" action="_VIEW"/>
             </condition>
             <link target="findorders"/>
         </menu-item>
         <menu-item name="request" title="${uiLabelMap.OrderRequests}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="ORDERMGR" action="_VIEW"/>
                     <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
@@ -32,7 +32,7 @@ code package.
             <link target="FindRequest"/>
         </menu-item>
         <menu-item name="quote" title="${uiLabelMap.OrderOrderQuotes}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="ORDERMGR" action="_VIEW"/>
                     <if-has-permission permission="ORDERMGR" action="_PURCHASE_VIEW"/>
@@ -41,13 +41,13 @@ code package.
             <link target="FindQuote"/>
         </menu-item>
         <menu-item name="orderlist" title="${uiLabelMap.OrderOrderList} / ${uiLabelMap.CommonFilter}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="ORDERMGR" action="_VIEW"/>
             </condition>
             <link target="orderlist"/>
         </menu-item>
         <menu-item name="orderentry" title="${uiLabelMap.OrderOrderEntry}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="ORDERMGR" action="_CREATE"/>
                     <if-has-permission permission="ORDERMGR" action="_PURCHASE_CREATE"/>
@@ -56,13 +56,13 @@ code package.
             <link target="orderentry" link-type="anchor"/>
         </menu-item>
         <menu-item name="return" title="${uiLabelMap.OrderOrderReturns}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="ORDERMGR" action="_RETURN"/>
             </condition>
             <link target="findreturn"/>
         </menu-item>
         <menu-item name="requirement" title="${uiLabelMap.OrderRequirements}">
-            <condition>
+            <condition mode="omit">
                 <or>
                     <if-has-permission permission="ORDERMGR" action="_VIEW"/>
                     <if-has-permission permission="ORDERMGR_ROLE" action="_VIEW"/>
@@ -199,7 +199,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="QuickShipOrder" title="${uiLabelMap.OrderQuickShipEntireOrder}" widget-style="+${styles.action_nav} ${styles.action_complete}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="FACILITY" action="_CREATE"/>
                     <if-compare field="orderHeader.orderTypeId" operator="equals" value="SALES_ORDER"/>
@@ -214,7 +214,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="CreateReturn" title="${uiLabelMap.OrderCreateReturn}" widget-style="+${styles.action_nav}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="returnableItems"/></not>
                     <if-has-permission permission="ORDERMGR" action="_RETURN"/>
@@ -229,7 +229,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="RefundEntireOrder" title="${uiLabelMap.OrderQuickRefundEntireOrder}" widget-style="+${styles.action_nav} ${styles.action_terminate}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="ORDERMGR" action="_RETURN"/>
                     <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_COMPLETED"/>
@@ -284,7 +284,7 @@ code package.
      
     <menu name="OrderShippingSubTabBar" extends="CommonSubTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="QuickShipOrder" title="${uiLabelMap.OrderQuickShipEntireOrder}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="FACILITY" action="_CREATE"/>
                     <if-compare field="orderHeader.orderTypeId" operator="equals" value="SALES_ORDER"/>
@@ -447,7 +447,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="ListQuoteCoefficients" title="${uiLabelMap.OrderOrderQuoteCoefficients}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
                     <not><if-empty field="quoteId"/></not>
@@ -458,7 +458,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="ManageQuotePrices" title="${uiLabelMap.ProductPrices}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
                     <not><if-empty field="quoteId"/></not>
@@ -469,7 +469,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="ListQuoteAdjustments" title="${uiLabelMap.OrderOrderQuoteAdjustments}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
                     <not><if-empty field="quoteId"/></not>
@@ -480,7 +480,7 @@ code package.
             </link>
         </menu-item>
         <menu-item name="ViewQuoteProfit" title="${uiLabelMap.OrderViewQuoteProfit}">
-            <condition>
+            <condition mode="omit">
                 <and>
                     <if-has-permission permission="ORDERMGR" action="_QUOTE_PRICE"/>
                     <not><if-empty field="quoteId"/></not>

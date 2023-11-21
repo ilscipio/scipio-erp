@@ -25,7 +25,7 @@
             <link target="deleteAllSystemNotes"/>
         </menu-item>
         <menu-item name="createPublicMsg" title="${uiLabelMap.CommonExtCreatePublicMessage}">
-            <condition>
+            <condition mode="omit">
                 <if-has-permission permission="COMMONEXT_PUBLMSG"/>
             </condition>
             <link target="${parameters._LAST_VIEW_NAME_}">

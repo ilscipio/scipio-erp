@@ -321,7 +321,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
 
     @Override
-    public void renderLink(Appendable writer, Map<String, Object> context, MenuLink link) throws IOException {
+    public void renderLink(Appendable writer, Map<String, Object> context, MenuLink link, Boolean enabled) throws IOException {
         Map<String, Object> parameters = new HashMap<>();
         String target = link.getTarget(context);
         ModelMenuItem menuItem = link.getLinkMenuItem();
@@ -329,7 +329,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         //if (isDisableIfEmpty(menuItem, context)) {
         //    target = null;
         //}
-        boolean disabled = isDisableIfEmpty(menuItem, context);
+        boolean disabled = (Boolean.FALSE.equals(enabled) || isDisableIfEmpty(menuItem, context));
 
         // SCIPIO: tell macro which selected and disabled
         MenuRenderState renderState = MenuRenderState.retrieve(context);
@@ -442,7 +442,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     }
 
     @Override
-    public void renderMenuItem(Appendable writer, Map<String, Object> context, ModelMenuItem menuItem) throws IOException {
+    public void renderMenuItem(Appendable writer, Map<String, Object> context, ModelMenuItem menuItem, Boolean enabled) throws IOException {
         contextHandler.registerContext(writer, context);
         if (isHideIfSelected(menuItem, context)) {
             return;
@@ -485,7 +485,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
                 style = ModelMenu.combineExtraStyle(style, selectedStyle);
             }
         }
-        boolean disabled = this.isDisableIfEmpty(menuItem, context);
+        boolean disabled = (Boolean.FALSE.equals(enabled) || this.isDisableIfEmpty(menuItem, context));
         if (disabled) {
             // SCIPIO: Must use new combination logic
             //style = menuItem.getDisabledTitleStyle();
@@ -513,7 +513,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         boolean useLink = (link != null && !Boolean.FALSE.equals(link.getUseWhen(context)));
         if (useLink) {
             StringWriter sw = new StringWriter();
-            renderLink(sw, context, link);
+            renderLink(sw, context, link, enabled);
             linkStr = sw.toString();
         } else {
             linkStr = menuItem.getTitle(context);

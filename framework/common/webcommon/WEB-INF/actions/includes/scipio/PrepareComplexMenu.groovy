@@ -12,6 +12,7 @@ cplxLoc = menuCfg.location ?: "";
 cplxName = menuCfg.name ?: "";
 cplxSubFilter = context.menuCfgSubMenuFilter ?: menuCfg.subMenuFilter ?: "current";
 cplxMaxDepth = context.menuCfgMaxDepth ?: menuCfg.maxDepth ?: "";
+cplxItemCondMode = context.menuCfgItemCondMode ?: menuCfg.itemCondMode ?: "";
 
 cplxSelSubField = menuCfg.selMenuFieldName ?: ""; // set further below if needed: ?: "activeMainSubMenu";
 cplxSelItemField = menuCfg.selMenuItemFieldName ?: ""; // set further below if needed: ?: "activeMainMenuItem";
@@ -201,6 +202,7 @@ context.cplxName = cplxName;
 context.cplxLoc = cplxLoc;
 context.cplxSubFilter = cplxSubFilter;
 context.cplxMaxDepth = cplxMaxDepth;
+context.cplxItemCondMode = cplxItemCondMode;
 
 /*
 if (true) {

@@ -277,7 +277,8 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         // read condition under the "condition" element
         Element conditionElement = UtilXml.firstChildElement(menuItemElement, "condition");
         if (conditionElement != null) {
-            conditionElement = UtilXml.firstChildElement(conditionElement);
+            // SCIPIO: 3.0.0: Stock bugfix: this was done too soon here so attributes were not read properly
+            //conditionElement = UtilXml.firstChildElement(conditionElement);
             this.condition = new ModelMenuCondition(this, conditionElement);
         } else {
             this.condition = null;
@@ -1135,28 +1136,32 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
         // SCIPIO: figure out this logic early so the condition can use it
         MenuRenderState renderState = MenuRenderState.retrieve(context);
         Object prevItemContext = prepareItemContext(context, renderState);
-
-        if (shouldBeRendered(context, renderState)) { // SCIPIO: renderState
-            AbstractModelAction.runSubActions(actions, context);
-            String parentPortalPageId = getParentPortalPageId(context);
-            if (UtilValidate.isNotEmpty(parentPortalPageId)) {
-                List<GenericValue> portalPages = PortalPageWorker.getPortalPages(parentPortalPageId, context);
-                if (UtilValidate.isNotEmpty(portalPages)) {
-                    Locale locale = (Locale) context.get("locale");
-                    for (GenericValue portalPage : portalPages) {
-                        if (UtilValidate.isNotEmpty(portalPage.getString("portalPageName"))) {
-                            ModelMenuItem localItem = new ModelMenuItem(portalPage, this, locale);
-                            menuStringRenderer.renderMenuItem(writer, context, localItem);
+        try {
+            String conditionMode = getConditionMode(context, renderState);
+            boolean conditionResult = shouldBeRendered(context, renderState);
+            if (conditionResult || "disable".equals(conditionMode) ||
+                    ("disable-with-submenu".equals(conditionMode) && hasSubMenu())) {
+                AbstractModelAction.runSubActions(actions, context);
+                String parentPortalPageId = getParentPortalPageId(context);
+                if (UtilValidate.isNotEmpty(parentPortalPageId)) {
+                    List<GenericValue> portalPages = PortalPageWorker.getPortalPages(parentPortalPageId, context);
+                    if (UtilValidate.isNotEmpty(portalPages)) {
+                        Locale locale = (Locale) context.get("locale");
+                        for (GenericValue portalPage : portalPages) {
+                            if (UtilValidate.isNotEmpty(portalPage.getString("portalPageName"))) {
+                                ModelMenuItem localItem = new ModelMenuItem(portalPage, this, locale);
+                                menuStringRenderer.renderMenuItem(writer, context, localItem, conditionResult ? null : false);
+                            }
                         }
                     }
+                } else {
+                    menuStringRenderer.renderMenuItem(writer, context, this, conditionResult ? null : false);
                 }
-            } else {
-                menuStringRenderer.renderMenuItem(writer, context, this);
             }
+        } finally {
+            // SCIPIO: restore previous
+            restoreItemContext(context, prevItemContext, renderState);
         }
-
-        // SCIPIO: restore previous
-        restoreItemContext(context, prevItemContext, renderState);
     }
 
     /**
@@ -1230,6 +1235,23 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
             return result;
         }
         return true;
+    }
+
+    public String getConditionMode(Map<String, Object> context, MenuRenderState renderState) {
+        if (this.condition == null) {
+            return null;
+        }
+        String mode = this.condition.getMode().expandString(context);
+        if (mode == null || mode.isEmpty() || "inherit".equals(mode)) {
+            mode = renderState.getItemConditionMode();
+            if (mode == null || mode.isEmpty() || "inherit".equals(mode)) {
+                mode = renderState.getModelMenu().getItemConditionMode(context);
+                if (mode == null || mode.isEmpty() || "inherit".equals(mode)) {
+                    mode = "omit";
+                }
+            }
+        }
+        return mode;
     }
 
     public static class MenuLink implements Serializable {
@@ -1394,7 +1416,7 @@ public class ModelMenuItem extends ModelWidget implements ModelMenuItemNode {
 
         public void renderLinkString(Appendable writer, Map<String, Object> context, MenuStringRenderer menuStringRenderer)
                 throws IOException {
-            menuStringRenderer.renderLink(writer, context, this);
+            menuStringRenderer.renderLink(writer, context, this, null);
         }
     }
 

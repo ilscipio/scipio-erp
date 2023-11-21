@@ -18,7 +18,7 @@ code package.
             <link target="ViewComponents"/>
         </menu-item>
         <menu-item name="security" title="${uiLabelMap.CommonSecurity}">
-            <condition>
+            <condition mode="omit">
                 <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
             </condition>
             <link target="security"/>
@@ -52,7 +52,7 @@ code package.
         </menu-item> 
         <!-- SCIPIO: Disabled for now -->       
         <!-- <menu-item name="portalAdmin" title="${uiLabelMap.WebtoolsAdminPortalPage}">
-            <condition><if-has-permission permission="PORTALPAGE_ADMIN"/></condition>
+            <condition mode="omit"><if-has-permission permission="PORTALPAGE_ADMIN"/></condition>
             <link target="FindPortalPage"/>
         </menu-item> -->
         <menu-item name="Development" title="${uiLabelMap.CommonDevelopment}">
@@ -140,7 +140,7 @@ code package.
             <link target="EntityExportAll"/>
         </menu-item>
         <menu-item name="programExport" title="${uiLabelMap.PageTitleProgramExport}">
-            <condition><!-- SCIPIO -->
+            <condition mode="omit"><!-- SCIPIO -->
                 <and>
                     <if-has-permission permission="OFBTOOLS" action="_VIEW"/>
                     <if-has-permission permission="ENTITY_DATA_ADMIN"/><!-- SUPER/FULLADMIN only, for security reasons -->
@@ -213,7 +213,7 @@ code package.
             <sub-menu name="artifact" include="artifactSideBar"/>
         </menu-item>
         <menu-item name="security" title="${uiLabelMap.CommonSecurity}">
-            <condition>
+            <condition mode="omit">
                 <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
             </condition>
             <link target="security"/>
@@ -275,7 +275,7 @@ code package.
         </menu-item>
         <!-- SCIPIO: this appears redundant. show create instead.
         <menu-item name="editExpression" title="${uiLabelMap.CommonEdit}">
-            <condition>
+            <condition mode="omit">
                 <not><if-empty field="temporalExpression"/></not>
             </condition>
             <link target="editTemporalExpression">
@@ -574,7 +574,7 @@ code package.
             <link target="${basePageInterWebappUri}/${targetLibPath}?docWidePage=${sideBarShown}#extLoginKey=OFF" url-mode="inter-app"/>
         </menu-item>-->
         <menu-item name="reloadDataModel" title="Reload from source" widget-style="+${styles.action_run_session} ${styles.action_update}"><!--${uiLabelMap.CommonReload}-->
-            <condition>
+            <condition mode="omit">
                 <and>
                     <not><if-empty field="targetLibPath"/></not>
                     <!-- heavy session cache and processing, avoid abuse -->

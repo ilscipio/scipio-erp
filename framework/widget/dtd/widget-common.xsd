@@ -18,6 +18,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <!--
+        DEV NOTE: TODO: REVIEW: This file has been manually duplicated in:
+            widget-form.xsd
+            widget-menu.xsd
+            widget-screen.xsd
+            widget-tree.xsd
+        Changes made here may need to be duplicated there.
+        This allows for more reliable IDE integration, simplified XML parsing for libraries, and support for per-file modifications.
+    -->
     <xs:annotation>
         <xs:documentation><![CDATA[
             Common Widget Definitions

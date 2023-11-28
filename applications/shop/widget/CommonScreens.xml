@@ -380,6 +380,7 @@ code package.
                     }
                     context.isMaileonComponentPresent = isMaileonComponentPresent
                 ]]></script>
+                <script location="component://maileon/script/MaileonCustomFields.groovy" lang="groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">

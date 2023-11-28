@@ -374,13 +374,26 @@ code package.
                 <set field="titleProperty" value=""/>
                 <script lang="groovy"><![CDATA[
                     import org.ofbiz.base.util.UtilValidate
+                    import org.ofbiz.base.util.GroovyUtil
+                    import org.ofbiz.entity.util.EntityQuery
+                    import org.ofbiz.product.store.ProductStoreWorker
+
                     isMaileonComponentPresent = org.ofbiz.base.component.ComponentConfig.isComponentPresent("maileon")
                     if (UtilValidate.isEmpty(isMaileonComponentPresent)) {
                         isMaileonComponentPresent = false
                     }
+
+                    productStoreId = ProductStoreWorker.getProductStoreId(request)
+                    productStoreMaileon = null
+                    if (isMaileonComponentPresent && productStoreId) {
+                        productStoreMaileon = EntityQuery.use(delegator).from("ProductStoreMaileon").where("productStoreId", productStoreId).queryOne()
+                        GroovyUtil.runScriptAtLocation("component://maileon/script/MaileonCustomFields.groovy", null, context)
+                    }
+                    context.productStoreMaileon = productStoreMaileon
                     context.isMaileonComponentPresent = isMaileonComponentPresent
+                    context.maileonRenderEmail = true
                 ]]></script>
-                <script location="component://maileon/script/MaileonCustomFields.groovy" lang="groovy" />
+                <script location="" lang="groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">
@@ -417,7 +430,10 @@ code package.
                         </section>
                         <section>
                             <condition>
-                                <if-true field="context.isMaileonComponentPresent"/>
+                                <and>
+                                    <if-true field="context.isMaileonComponentPresent"/>
+                                    <not><if-empty field="context.productStoreMaileon"/></not>
+                                </and>
                             </condition>
                             <actions>
                                 <set field="depFormFieldPrefix" value="MAILEON_CONTACT_"/>

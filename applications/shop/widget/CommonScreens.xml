@@ -393,7 +393,6 @@ code package.
                     context.isMaileonComponentPresent = isMaileonComponentPresent
                     context.maileonRenderEmail = true
                 ]]></script>
-                <script location="" lang="groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">

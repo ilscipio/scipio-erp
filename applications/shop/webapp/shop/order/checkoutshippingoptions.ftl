@@ -134,6 +134,9 @@ function submitForm(form, mode, value) {
               </@field>
         <#--</fieldset>-->
     </@fields>
+    <@fields type="default-compact" ignoreParentField=true>
+        <@allowSolicitationField name="CUSTOMER_EMAIL_ALLOW_SOL" />
+    </@fields>
 
     </form>
 </@section>

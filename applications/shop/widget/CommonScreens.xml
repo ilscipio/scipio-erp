@@ -369,30 +369,10 @@ code package.
                 <set field="activeSubMenuItem" value="main"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/Main.groovy"/>
                 <script location="component://shop/webapp/shop/WEB-INF/actions/shop/Category.groovy"/>
+                <script location="component://shop/script/com/ilscipio/scipio/shop/misc/Newsletter.groovy"/>
                 <!--<set field="title" value="${uiLabelMap.PageTitleMain}: ${categoryTitle}"/>-->
                 <set field="title" value=""/>
                 <set field="titleProperty" value=""/>
-                <script lang="groovy"><![CDATA[
-                    import org.ofbiz.base.util.UtilValidate
-                    import org.ofbiz.base.util.GroovyUtil
-                    import org.ofbiz.entity.util.EntityQuery
-                    import org.ofbiz.product.store.ProductStoreWorker
-
-                    isMaileonComponentPresent = org.ofbiz.base.component.ComponentConfig.isComponentPresent("maileon")
-                    if (UtilValidate.isEmpty(isMaileonComponentPresent)) {
-                        isMaileonComponentPresent = false
-                    }
-
-                    productStoreId = ProductStoreWorker.getProductStoreId(request)
-                    productStoreMaileon = null
-                    if (isMaileonComponentPresent && productStoreId) {
-                        productStoreMaileon = EntityQuery.use(delegator).from("ProductStoreMaileon").where("productStoreId", productStoreId).queryOne()
-                        GroovyUtil.runScriptAtLocation("component://maileon/script/MaileonCustomFields.groovy", null, context)
-                    }
-                    context.productStoreMaileon = productStoreMaileon
-                    context.isMaileonComponentPresent = isMaileonComponentPresent
-                    context.maileonRenderEmail = true
-                ]]></script>
             </actions>
             <widgets>
                 <decorator-screen name="CommonShopAppDecorator" location="${parameters.mainDecoratorLocation}">

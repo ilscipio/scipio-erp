@@ -229,6 +229,16 @@
                 <if-compare field="maileonAvailable" operator="equals" value="true"/>
             </condition>
             <link target="maileon" />
+            <sub-menu name="Maileon" include="MaileonSideBar"/>
+        </menu-item>
+    </menu>
+
+    <menu name="MaileonSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+scipio-nav-actions-menu">
+        <menu-item name="maileonCustomFields" title="Maileon Custom Fields">
+            <condition>
+                <if-compare field="maileonAvailable" operator="equals" value="true"/>
+            </condition>
+            <link target="maileonCustomFields" />
         </menu-item>
         <menu-item name="maileonContactSync" title="Maileon Contact Sync">
             <condition>

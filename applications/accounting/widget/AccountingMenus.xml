@@ -77,13 +77,19 @@
     <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="AccountingAppBar" recursive="full" />
         <menu-item name="payable">
-            <sub-menu name="AccountsPayable" include="AccountsPayableSidebar"/>
+            <sub-menu name="AccountsPayable" include="AccountsPayableSideBar"/>
         </menu-item>
         <menu-item name="receivable">
             <sub-menu name="AccountsReceivable" include="AccountsReceivableSideBar"/>
         </menu-item>
         <menu-item name="billingaccount">
-            <sub-menu name="BillingAccount" include="BillingAccountSidebar"/>
+            <sub-menu name="BillingAccount" include="BillingAccountSideBar">
+                <!-- NOTE: Currently in practice this condition has little effect for themes using menuCfgItemCondMode "disable" or "disable-with-submenu",
+                    but in principle it should always have been here -->
+                <condition>
+                    <not><if-empty field="billingAccount.billingAccountId"/></not>
+                </condition>
+            </sub-menu>
         </menu-item>
         <menu-item name="chartofaccounts">
             <sub-menu name="CommonGL" include="CommonGLSideBar"/>
@@ -120,15 +126,13 @@
         </menu-item>
     </menu>
     
-    
-    
-    
+
     <!-- 
     **************
     * Accounts Payable 
     **************
     -->
-    <menu name="AccountsPayableSidebar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="AccountsPayableSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="apmain" title="${uiLabelMap.CommonOverview}" sort-mode="off"> 
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="apmain" link-type="anchor"/>
@@ -245,39 +249,61 @@
     * Billing Accounts
     **************
      -->
-    <menu name="BillingAccountSidebar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="BillingAccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- NOTE: Uncomment for testing or accessing BillingAccount-related associations - was not here previously
+        <include-elements menu-name="BillingAccountTabBar" recursive="includes-only"/>-->
     </menu>
      
     <menu name="BillingAccountTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!--
         <menu-item name="FindBillingAccount" title="${uiLabelMap.CommonFind}">
             <link target="FindBillingAccount" />
         </menu-item>
+        -->
         <menu-item name="EditBillingAccount" title="${uiLabelMap.CommonAccount}">
+            <condition>
+                <not><if-empty field="billingAccount.billingAccountId"/></not>
+            </condition>
             <link target="EditBillingAccount">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
         <menu-item name="EditBillingAccountRoles" title="${uiLabelMap.CommonRoles}">
+            <condition>
+                <not><if-empty field="billingAccount.billingAccountId"/></not>
+            </condition>
             <link target="EditBillingAccountRoles">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
         <menu-item name="EditBillingAccountTerms" title="${uiLabelMap.CommonTerms}">
+            <condition>
+                <not><if-empty field="billingAccount.billingAccountId"/></not>
+            </condition>
             <link target="EditBillingAccountTerms">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
         <menu-item name="BillingAccountInvoices" title="${uiLabelMap.CommonInvoices}">
+            <condition>
+                <not><if-empty field="billingAccount.billingAccountId"/></not>
+            </condition>
             <link target="BillingAccountInvoices">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
         <menu-item name="BillingAccountPayments" title="${uiLabelMap.CommonPayments}">
+            <condition>
+                <not><if-empty field="billingAccount.billingAccountId"/></not>
+            </condition>
             <link target="BillingAccountPayments">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
         <menu-item name="BillingAccountOrders" title="${uiLabelMap.CommonOrders}">
+            <condition>
+                <not><if-empty field="billingAccount.billingAccountId"/></not>
+            </condition>
             <link target="BillingAccountOrders">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
@@ -1912,7 +1938,7 @@
         <menu-item name="settings" title="${uiLabelMap.AccountingCompanies}" sort-mode="off">
             <link target="settings" />
         </menu-item>
-         <menu-item name="InvoiceItemTypes" title="${uiLabelMap.AccountingInvoiceItemType}">
+        <menu-item name="InvoiceItemTypes" title="${uiLabelMap.AccountingInvoiceItemType}">
             <link target="editInvoiceItemType" />
         </menu-item>
         <menu-item name="ViewRateAmounts" title="${uiLabelMap.AccountingRates}">

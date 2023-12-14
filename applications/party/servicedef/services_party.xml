@@ -139,4 +139,11 @@ code package.
         <auto-attributes mode="IN" include="pk"/>
     </service>
 
+    <!-- EECA condition contactMech services -->
+    <service name="checkEmailPartyContactMech" engine="java" location="com.ilscipio.scipio.party.PartyServices" invoke="checkEmailPartyContactMech">
+        <description>Checks the party contactMechType. Meant to be used in *ecas</description>
+        <attribute name="serviceContext" type="Map" mode="IN" optional="false"/>
+        <attribute name="conditionReply" type="Boolean" mode="OUT" optional="false"/>
+    </service>
+
 </services>

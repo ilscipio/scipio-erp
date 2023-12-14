@@ -15,6 +15,7 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
+import java.util.List;
 import java.util.Map;
 
 public class PartyServices {
@@ -191,6 +192,38 @@ public class PartyServices {
         result.put("partyPurposeCount", partyPurposeCount);
         result.put("facilityPurposeCount", facilityPurposeCount);
         result.put("totalPurposeCount", partyPurposeCount + facilityPurposeCount);
+        return result;
+    }
+
+    /**
+     * Checks if a PartyContactMech for a given contactMechTypeId exists.
+     *
+     * @param dctx
+     * @param context
+     * @return
+     */
+    public static Map<String, Object> checkEmailPartyContactMech(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+
+        Map<String, Object> serviceContext = (Map<String, Object>) context.get("serviceContext");
+
+        String partyId = (String) serviceContext.get("partyId");
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+
+        try {
+            List<GenericValue> partyContactMechs = EntityQuery.use(delegator).from("PartyContactMech").where("partyId", partyId).queryList();
+            result.put("conditionReply", Boolean.FALSE);
+            for (GenericValue partyContactMech : partyContactMechs) {
+                GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech", false);
+                if ("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId")) && "Y".equals(partyContactMech.getString("allowSolicitation"))) {
+                    result.put("conditionReply", Boolean.TRUE);
+                    break;
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
         return result;
     }
 

@@ -18,23 +18,26 @@
  */
 
 
+
+import org.ofbiz.accounting.payment.PaymentWorker
+import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilMisc
+import org.ofbiz.base.util.UtilValidate
+import org.ofbiz.entity.GenericValue
+import org.ofbiz.entity.condition.EntityCondition
+import org.ofbiz.entity.condition.EntityJoinOperator
+import org.ofbiz.entity.condition.EntityOperator
+import org.ofbiz.entity.util.EntityUtil
+import org.ofbiz.order.order.OrderReadHelper
+import org.ofbiz.party.contact.ContactHelper
+import org.ofbiz.party.contact.ContactMechWorker
+import org.ofbiz.product.catalog.CatalogWorker
+import org.ofbiz.product.inventory.InventoryWorker
 import org.ofbiz.product.product.ProductWorker
+import org.ofbiz.product.store.ProductStoreWorker
 import org.ofbiz.shipment.packing.PackingSession
 
-import java.math.BigDecimal;
-import java.util.*;
-import java.sql.Timestamp;
-import org.ofbiz.entity.*;
-import org.ofbiz.entity.condition.*;
-import org.ofbiz.entity.util.*;
-import org.ofbiz.base.util.*;
-import org.ofbiz.base.util.collections.*;
-import org.ofbiz.order.order.*;
-import org.ofbiz.party.contact.*;
-import org.ofbiz.product.inventory.InventoryWorker;
-import org.ofbiz.product.catalog.CatalogWorker;
-import org.ofbiz.product.store.ProductStoreWorker;
-import org.ofbiz.accounting.payment.*;
+import java.sql.Timestamp
 
 module = "OrderView.groovy";
 
@@ -392,7 +395,6 @@ if (orderHeader) {
         setOrderCompleteOption = false;
     }
     context.setOrderCompleteOption = setOrderCompleteOption;
-    Debug.logInfo("context.setOrderCompleteOption ===> " + context.setOrderCompleteOption, module);
 
     // get inventory summary for each shopping cart product item
     inventorySummary = runService('getProductInventorySummaryForItems', [orderItems: orderItems])

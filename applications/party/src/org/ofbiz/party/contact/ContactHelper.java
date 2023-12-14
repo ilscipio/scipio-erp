@@ -19,19 +19,21 @@
 
 package org.ofbiz.party.contact;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Accessors for Contact Mechanisms
@@ -98,7 +100,7 @@ public class ContactHelper {
      *
      * <p>SCIPIO: 3.0.0: Added as analog of {@link #getContactMech(GenericValue, String, String, boolean)}.</p>
      */
-    public static Collection<GenericValue> getPartyContactMech(GenericValue party, String contactMechPurposeTypeId, boolean includeOld) {
+    public static Collection<GenericValue> getPartyContactMech(GenericValue party, String contactMechPurposeTypeId, String contactMechTypeId, boolean includeOld) {
         if (party == null) {
             return null;
         }
@@ -106,8 +108,8 @@ public class ContactHelper {
             List<GenericValue> partyContactMechList;
 
             if (contactMechPurposeTypeId == null) {
-                throw new NullPointerException("Missing contactMechPurposeTypeId");
-                //partyContactMechList = party.getRelated("PartyContactMech", null, null, false);
+//                throw new NullPointerException("Missing contactMechPurposeTypeId");
+                partyContactMechList = party.getRelated("PartyContactMech", null, null, false);
             } else {
                 List<GenericValue> list;
 
@@ -121,7 +123,11 @@ public class ContactHelper {
                 partyContactMechList = EntityUtil.filterByDate(partyContactMechList, true);
             }
             partyContactMechList = EntityUtil.orderBy(partyContactMechList, UtilMisc.toList("fromDate DESC"));
-            return partyContactMechList;
+            if (contactMechTypeId == null) {
+                return partyContactMechList;
+            }
+            List<GenericValue> contactMechs = EntityUtil.getRelated("ContactMech", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), partyContactMechList, false);
+            return EntityUtil.filterByCondition(partyContactMechList, EntityCondition.makeCondition("contactMechId", EntityOperator.IN, EntityUtil.getFieldListFromEntityList(contactMechs,"contactMechId", true)));
         } catch (GenericEntityException gee) {
             Debug.logWarning(gee, module);
             return Collections.emptyList();

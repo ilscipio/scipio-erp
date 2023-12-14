@@ -18,18 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.order.shoppingcart;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import com.ilscipio.scipio.common.SolicitationTypeEnum;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -58,6 +47,17 @@ import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.webapp.control.RequestVarScopes;
 import org.ofbiz.webapp.stats.VisitHandler;
 import org.ofbiz.webapp.website.WebSiteWorker;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Events used for processing checkout and orders.
@@ -187,6 +187,7 @@ public class CheckOutEvents {
             String internalCode = request.getParameter("internalCode");
             String shipBeforeDate =  request.getParameter("shipBeforeDate");
             String shipAfterDate = request.getParameter("shipAfterDate");
+            cart.resolveAllowedSolicitation(SolicitationTypeEnum.EMAIL, UtilHttp.getParameterMap(request));
             Map<String, ? extends Object> callResult = ServiceUtil.returnSuccess();
 
             for (int shipGroupIndex = 0; shipGroupIndex < cart.getShipGroupSize(); shipGroupIndex++) {
@@ -1108,6 +1109,7 @@ public class CheckOutEvents {
                     }
                     cart.clearOrderNotes();
                     cart.clearInternalOrderNotes();
+                    cart.resolveAllowedSolicitation(SolicitationTypeEnum.EMAIL, paramMap);
                     if (shipEstimate == null) {  // allow ship estimate to be set manually if a purchase order
                         callResult = checkOutHelper.finalizeOrderEntryOptions(shipGroupIndex, shippingMethod, shippingInstructions, maySplit, giftMessage, isGift, internalCode, shipBeforeDate, shipAfterDate, internalOrderNotes, shippingNotes);
                     } else {

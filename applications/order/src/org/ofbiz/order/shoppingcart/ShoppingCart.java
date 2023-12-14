@@ -18,27 +18,7 @@
  *******************************************************************************/
 package org.ofbiz.order.shoppingcart;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-
+import com.ilscipio.scipio.common.SolicitationTypeEnum;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -75,6 +55,27 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Shopping Cart Object
@@ -231,6 +232,9 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
 
     protected boolean allowMissingShipEstimates; // = false; // SCIPIO: see WebShoppingCart for implementation
 
+    // SCIPIO:
+    protected List<SolicitationTypeEnum> allowedSolicitations = UtilMisc.newList();
+
     /** don't allow empty constructor */
     protected ShoppingCart() {}
 
@@ -359,6 +363,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
             }
             this.cartSubscriptionItems = cartSubscriptionItems;
             */
+            this.allowedSolicitations = cart.allowedSolicitations;
         } else {
             // Partial/high-level instance copy (legacy)
             this.delegator = cart.getDelegator();
@@ -417,6 +422,7 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
                 cartLines.add(item.copy(exactCopy));
             }
             this.cartLines = cartLines;
+            this.allowedSolicitations = cart.allowedSolicitations;
         }
 
         // clone the additionalPartyRoleMap
@@ -6497,10 +6503,39 @@ public class ShoppingCart implements Iterable<ShoppingCartItem>, Serializable {
         this.allowMissingShipEstimates = allowMissingShipEstimates;
     }
 
+    public List<SolicitationTypeEnum> getSolicitationTypes() {
+        return allowedSolicitations;
+    }
+
+    public void setSolicitationTypes(List<SolicitationTypeEnum> allowedSolicitations) {
+        this.allowedSolicitations = allowedSolicitations;
+    }
+
+    public void addAllowedSolicitation(SolicitationTypeEnum solicitationTypeEnum) {
+        this.allowedSolicitations.add(solicitationTypeEnum);
+    }
+
+    public void removeAllowedSolicitation(SolicitationTypeEnum solicitationTypeEnum) {
+        this.allowedSolicitations.remove(solicitationTypeEnum);
+    }
+
+    public void resolveAllowedSolicitation(SolicitationTypeEnum solicitationTypeEnum, Map<String, Object> params) {
+        if (!Arrays.stream(solicitationTypeEnum.getParameterNames()).filter(paramName -> params.containsKey(paramName) && params.get(paramName).equals("Y")).findFirst().isEmpty()) {
+            if (!this.allowedSolicitations.contains(solicitationTypeEnum)) {
+                this.addAllowedSolicitation(solicitationTypeEnum);
+            }
+        }
+        if (!Arrays.stream(solicitationTypeEnum.getParameterNames()).filter(paramName -> params.containsKey(paramName) && params.get(paramName).equals("N")).findFirst().isEmpty()) {
+            if (this.allowedSolicitations.contains(solicitationTypeEnum)) {
+                this.removeAllowedSolicitation(solicitationTypeEnum);
+            }
+        }
+    }
+
     /**
      * SCIPIO: Returns true if verbose logging is on for cart-related processes. Roughly same as verbose logging.
      * WARN: Some things controlled by this may lower performance when enabled.
-     * Added 2018-11-30. 
+     * Added 2018-11-30.
      */
     public static boolean verboseOn() {
         return (ShoppingCart.DEBUG || Debug.verboseOn());

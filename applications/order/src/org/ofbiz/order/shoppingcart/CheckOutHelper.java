@@ -18,17 +18,7 @@
  */
 package org.ofbiz.order.shoppingcart;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
+import com.ilscipio.scipio.common.SolicitationTypeEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -66,6 +56,17 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * A facade over the ShoppingCart to simplify the relatively complex
@@ -765,6 +766,10 @@ public class CheckOutHelper {
             Iterator<GenericValue> emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
             while (emailIter != null && emailIter.hasNext()) {
                 GenericValue email = emailIter.next();
+                if (this.cart.allowedSolicitations.contains(SolicitationTypeEnum.EMAIL)) {
+                    email.put("allowSolicitation", "Y");
+                    toBeStored.add(email);
+                }
                 GenericValue orderContactMech = this.delegator.makeValue("OrderContactMech",
                         UtilMisc.toMap("orderId", orderId, "contactMechId", email.getString("contactMechId"), "contactMechPurposeTypeId", "ORDER_EMAIL"));
                 toBeStored.add(orderContactMech);

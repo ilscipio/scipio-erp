@@ -360,7 +360,7 @@ jQuery(document).ready(function() {
         <option value="N"<#if (params[name]!(args.allowSolicitation)!) == "N"> selected="selected"</#if>>${uiLabelMap.CommonNo}</option>
       </@field>
     <#else>
-        <@renderMaileon mode="solicitation" />
+        <@maileon mode="solicitation" args={"emailSolicitationFieldName":name} />
     </#if>
 </#macro>
 

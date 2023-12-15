@@ -182,7 +182,13 @@ code package.
             <!-- Core build system dependencies (Ant & Ivy) -->
             <filename name="ant/**.jar"/>
             <filename name="oro-*.jar"/><!-- required by Ivy for matcher="glob", committed in filesystem -->
- 
+
+            <!-- Don't remove the Ant javascript engine -->
+            <filename name="ant-ext/js/*.jar"/>
+
+            <!-- TODO: REVIEW: Do we spare ant-ext top folder as well? Not frequently used -->
+            <filename name="ant-ext/*.jar"/>
+
             <!-- Optional dependencies, retrieved separately - do not delete! -->
             <filename name="ant-opt/**/*.jar"/>
         </or>

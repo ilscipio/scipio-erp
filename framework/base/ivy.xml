@@ -79,8 +79,8 @@
         <conf name="sonar-ant-task" description="download the ant sonar task (need sonar)
             http://docs.codehaus.org/display/SONAR/Analyzing+with+SonarQube+Ant+Task"/>
 
-        <!-- deps for main build.xml ant task: download-nashorn -->
-        <conf name="nashorn" description="download nashorn (JDK 15+)"/>
+        <!-- deps for main build.xml ant task: download-ant-js-nashorn -->
+        <conf name="ant-js-nashorn" description="download nashorn js engine for ant (JDK 15+)"/>
 
         <!--
             CUSTOM/CLIENT CONFIGURATIONS
@@ -493,8 +493,8 @@
         <!-- deps for main build.xml ant task: download-sonar-ant-task -->
         <dependency org="org.codehaus.sonar-plugins" name="sonar-ant-task" rev="2.2" conf="sonar-ant-task"/>
 
-        <!-- deps for main build.xml ant task: download-nashorn -->
-        <dependency org="org.openjdk.nashorn" name="nashorn-core" rev="15.4" conf="nashorn"/>
+        <!-- deps for main build.xml ant task: download-ant-js-nashorn -->
+        <dependency org="org.openjdk.nashorn" name="nashorn-core" rev="15.4" conf="ant-js-nashorn"/>
 
         <!--
             CUSTOM/CLIENT DEPENDENCIES

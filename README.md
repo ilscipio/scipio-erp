@@ -111,10 +111,10 @@ In order to install on a client system or start on a server, the following steps
   Username: admin
   Password: scipio
 
-If build failure occurs due to missing Nashorn JS engine on JDK 15 or later, first run:
-  * Linux ./ant download-nashorn
-  * OS X: ./ant download-nashorn
-  * Windows: ant.bat download-nashorn
+If build failure occurs due to missing Nashorn Javascript engine on JDK 15 or later, first run:
+  * Linux ./ant download-ant-js
+  * OS X: ./ant download-ant-js
+  * Windows: ant.bat download-ant-js
 
 Note: These steps are typically too limited for developers; see section below.
 
@@ -165,10 +165,10 @@ development tasks, the traditional bundled Apache Ant commands may and sometimes
   * OS X: ./ant clean-all build load-demo start-debug
   * Windows: ant.bat clean-all build load-demo start-debug
 
-If build failure occurs due to missing Nashorn JS engine on JDK 15 or later, first run:
-  * Linux ./ant download-nashorn
-  * OS X: ./ant download-nashorn
-  * Windows: ant.bat download-nashorn
+If build failure occurs due to missing Nashorn Javascript engine on JDK 15 or later, first run:
+  * Linux ./ant download-ant-js
+  * OS X: ./ant download-ant-js
+  * Windows: ant.bat download-ant-js
 
 Commands can be listed using: ant -p (./ant -p)
 

@@ -208,9 +208,9 @@ From command line, Scipio build should be invoked using the provided ant launch 
         <fileset dir="${ofbiz.home.dir}/framework/base/lib/" includes="groovy-*.jar"/>
     </path>
 
-    <!-- rhino -->
-    <path id="rhino.class.path">
-        <fileset dir="${ofbiz.home.dir}/extension/rhino/lib/" includes="js-*.jar"/>
+    <property name="lib.ant.js.engine.name" value="nashorn"/>
+    <path id="lib.ant.js.class.path">
+        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-ext/js/" includes="*.jar"/>
     </path>
 
     <!-- junit -->
@@ -611,7 +611,7 @@ Unexpectedly received empty list of builds to iterate."/>
                     <pathconvert property="component.build.dependencies.prop" refid="component.build.dependencies"
                         pathsep="${component.build.dependencies.sep}" setonempty="true">
                         <!-- DEV NOTE: see https://ant.apache.org/manual/Tasks/script.html for language details -->
-                        <scriptmapper language="javascript"><![CDATA[
+                        <scriptmapper language="javascript" classpathref="lib.ant.js.class.path"><![CDATA[
                             var proj = self.getProject();
 
                             var doFail = function(msg) {

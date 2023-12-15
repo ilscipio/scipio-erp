@@ -39,10 +39,10 @@ find_jar() {
 
 JAVA_VER="$(java -version 2>&1 | head -n 1 | cut -d'"' -f2)"
 if [ ! -z "${JAVA_VER}" ] && echo "${JAVA_VER}" | grep -Eq '^(1[5-9]|[2-9][0-9]).*'; then
-    for NASHORN_LIB in "$top"/framework/base/lib/ant/nashorn-*.jar; do
-        if [ -z "${NASHORN_LIB}" ] || [ "${NASHORN_LIB}" = "$top""/framework/base/lib/ant/nashorn-*.jar" ]; then
-            echo "Scipio: JDK15+ detected; fetching Nashorn JS script engine (if issue occurs, try ./ant download-nashorn)"
-            "$JAVA" -jar "$(find_jar)" -lib "$top/framework/base/lib/ant" -lib "$top"/framework/base/lib/oro-*.jar download-nashorn
+    for ANT_JS_LIB in "$top"/framework/base/lib/ant-ext/js/*.jar; do
+        if [ -z "${ANT_JS_LIB}" ] || [ "${ANT_JS_LIB}" = "$top""/framework/base/lib/ant-ext/js/*.jar" ]; then
+            echo "Scipio: JDK15+ detected; fetching Ant JS script engine (if issue occurs, try ./ant download-ant-js)"
+            "$JAVA" -jar "$(find_jar)" -lib "$top/framework/base/lib/ant" -lib "$top"/framework/base/lib/oro-*.jar download-ant-js
             break
         fi
     done

@@ -2235,15 +2235,15 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <iterate target="lib-update" filelist="specialpurpose-builds"/>
     </target>
     
-    <target name="addons-lib-update">
+    <target name="addons-lib-update" depends="check-build-requisites">
         <addonsant target="lib-update"/>
     </target>
     
-    <target name="hotdeploy-lib-update">
+    <target name="hotdeploy-lib-update" depends="check-build-requisites">
         <hotdeployant target="lib-update"/>
     </target>
     
-    <target name="themes-lib-update">
+    <target name="themes-lib-update" depends="check-build-requisites">
         <dep-subant dir="${basedir}/themes" target="lib-update"/>
     </target>
     
@@ -2313,19 +2313,19 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <iterate target="lib-clean" filelist="specialpurpose-builds"/>
     </target>
     
-    <target name="addons-lib-clean">
+    <target name="addons-lib-clean" depends="check-build-requisites">
         <addonsant target="lib-clean"/>
     </target>
     
-    <target name="hotdeploy-lib-clean">
+    <target name="hotdeploy-lib-clean" depends="check-build-requisites">
         <hotdeployant target="lib-clean"/>
     </target>
     
-    <target name="themes-lib-clean">
+    <target name="themes-lib-clean" depends="check-build-requisites">
         <dep-subant dir="${basedir}/themes" target="lib-clean"/>
     </target>
     
-    <target name="lib-dep-tree" description="Shows library dependency trees for all components with an ivyfile">
+    <target name="lib-dep-tree" depends="check-build-requisites" description="Shows library dependency trees for all components with an ivyfile">
         <iterate target="lib-dep-tree" filelist="framework-builds"/>
         <iterate target="lib-dep-tree" filelist="application-builds"/>
         <iterate target="lib-dep-tree" filelist="specialpurpose-builds"/>
@@ -2334,7 +2334,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <dep-subant dir="${basedir}/themes" target="lib-dep-tree"/>
     </target>
     
-    <target name="lib-dep-report" description="Generate library dependency HTML reports">
+    <target name="lib-dep-report" depends="check-build-requisites" description="Generate library dependency HTML reports">
         <iterate target="lib-dep-report" filelist="framework-builds"/>
         <iterate target="lib-dep-report" filelist="application-builds"/>
         <iterate target="lib-dep-report" filelist="specialpurpose-builds"/>
@@ -2349,7 +2349,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         </delete>
     </target>
     
-    <target name="lib-dep-checkupdates" description="Check for library dependency updates">
+    <target name="lib-dep-checkupdates" depends="check-build-requisites" description="Check for library dependency updates">
         <iterate target="lib-dep-checkupdates" filelist="framework-builds"/>
         <iterate target="lib-dep-checkupdates" filelist="application-builds"/>
         <iterate target="lib-dep-checkupdates" filelist="specialpurpose-builds"/>
@@ -2455,13 +2455,16 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <antcall target="download-jdbc-postgresql"/>
     </target>
 
-    <target name="clean-nashorn" description="Download JaCoCo related files">
-        <delete verbose="on"><fileset dir="framework/base/lib/ant" includes="nashorn-*.jar"/></delete>
-        <delete verbose="on"><fileset dir="framework/base/lib/ant" includes="asm-*.jar"/></delete>
+    <target name="clean-ant-js" description="Clean Ant Javascript engine files">
+        <delete verbose="on"><fileset dir="framework/base/lib/ant-ext/js" includes="*.jar"/></delete>
     </target>
 
-    <target name="download-nashorn" depends="ivy-init,clean-nashorn" description="Download Nashorn related files (JDK15+)">
-        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant/[artifact]-[revision].[ext]" conf="nashorn"/>
+    <target name="download-ant-js" depends="ivy-init,clean-ant-js" description="Download Ant Javascript related files (JDK15+)">
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant-ext/js/[artifact]-[revision].[ext]" conf="ant-js-${lib.ant.js.engine.name}"/>
+    </target>
+
+    <target name="download-ant-js-nashorn" depends="ivy-init,clean-ant-js" description="Download Ant Javascript Nashorn related files (JDK15+)">
+        <ivy:retrieve file="${lib.comp.base.ivyfile}" pattern="framework/base/lib/ant-ext/js/[artifact]-[revision].[ext]" conf="ant-js-nashorn"/>
     </target>
 
     <!-- ================================================================== -->
@@ -3144,10 +3147,11 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         </if>
     </target>
 
-    <target name="check-build-requisites" description="Download build requisites (SCIPIO)" depends="check-nashorn">
+    <target name="check-build-requisites" description="Download build requisites (SCIPIO)" depends="check-ant-js">
     </target>
 
-    <target name="check-nashorn" description="Check Nashorn download required">
+    <target name="check-ant-js" description="Check Ant Javascript engine download required">
+        <var name="javaatleast15" unset="true"/>
         <condition property="javaatleast15" value="true" else="false">
             <and>
                 <not>
@@ -3159,22 +3163,23 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <if>
             <equals arg1="${javaatleast15}" arg2="true"/>
             <then>
-                <condition property="nashornpresent" value="true" else="false">
+                <var name="lib.ant.js.present" unset="true"/>
+                <condition property="lib.ant.js.present" value="true" else="false">
                     <resourcecount when="greater" count="0">
-                        <fileset file="framework/base/lib/ant/nashorn-*.jar"/>
+                        <fileset dir="${ofbiz.home.dir}/framework/base/lib/ant-ext/js" includes="*.jar" />
                     </resourcecount>
                 </condition>
                 <if>
-                    <equals arg1="${nashornpresent}" arg2="false"/>
+                    <equals arg1="${lib.ant.js.present}" arg2="false"/>
                     <then>
-                        <echo message="Java 15+ JDK detected (${ant.java.version}) - downloading Nashorn JS engine; NOTE: If build fails after this, simply re-run original task (after download-nashorn succeeds)" level="info"/>
-                        <antcall target="download-nashorn"/>
-                        <!-- Always fail because it's guaranteed to crash without a restart -->
-                        <fail message="Java 15+ JDK detected (${ant.java.version}) - framework/base/lib/ant has been updated for Nashorn -
- PLEASE RE-RUN ORIGINAL TASK (this is a normal workaround); for devs: use './ant download-nashorn' separately to fix in scripts"/>
+                        <echo message="Java 15+ JDK detected (${ant.java.version}) - downloading Ant Javascript engine; NOTE: If build fails after this, simply re-run original task (after download-ant-js succeeds)" level="info"/>
+                        <antcall target="download-ant-js"/>
+                        <!-- May no longer be needed
+                        <fail message="Java 15+ JDK detected (${ant.java.version}) - framework/base/lib/ant-ext/js has been updated with engine jar -
+ PLEASE RE-RUN ORIGINAL TASK (this is a normal workaround); for devs: use './ant download-ant-js' separately to fix in scripts"/>-->
                     </then>
                     <else>
-                        <echo message="Java 15+ JDK detected (${ant.java.version}) - Nashorn JS engine already present" level="info"/>
+                        <echo message="Java 15+ JDK detected (${ant.java.version}) - Ant Javascript engine already present" level="info"/>
                     </else>
                 </if>
             </then>

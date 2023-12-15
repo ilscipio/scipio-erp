@@ -161,12 +161,12 @@ The JetBrains IntelliJ IDEA integrated development environment with Scipio ERP P
 development tasks, the traditional bundled Apache Ant commands may and sometimes should be used instead:
 
 1. Clear local database (Derby), clean out old JARs, build, load demo data to database and start:
-  * Linux ./ant clean-all build load-demo start-debug
+  * Linux: ./ant clean-all build load-demo start-debug
   * OS X: ./ant clean-all build load-demo start-debug
   * Windows: ant.bat clean-all build load-demo start-debug
 
 If build failure occurs due to missing Nashorn Javascript engine on JDK 15 or later, first run:
-  * Linux ./ant download-ant-js
+  * Linux: ./ant download-ant-js
   * OS X: ./ant download-ant-js
   * Windows: ant.bat download-ant-js
 
@@ -186,6 +186,20 @@ Commonly used and useful Ant developer commands:
   * stop-wait
 
 This is a quick cheat sheet and further information for developers can be found on the website documentation.
+
+#### Automatically Download Jar Sources ####
+
+In order for build, lib-update and lib-update-force commands to automatically download third-party JAR sources 
+under component libsrc folders for their corresponding binaries under lib, simply create a file named 
+"build.scp.local.properties" under project root that sets "lib.update.sources=true".
+* Linux/OS X: echo "lib.update.sources=true" >> build.scp.local.properties
+
+After build/lib-update-force is run, IntelliJ IDEA using the Scipio ERP plugin can be instructed to refer to 
+these sources and automatically expand into them using Ctrl+B (a good test is HttpServletRequest):
+* Tools -> Scipio ERP -> Reload Resource Directories
+
+See build.properties for other options; build.scp.local.properties and other *.scp.local.properties files are 
+ignored for version control by .gitignore.
 
 ## Support
 For detailed information and changes about the SCIPIO ERP suite, visit the official website at:

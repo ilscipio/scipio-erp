@@ -861,7 +861,7 @@ code package.
     <!-- Build JavaDocs                                                     -->
     <!-- ================================================================== -->
 
-    <target name="docs" depends="ofbiz-init">
+    <target name="docs" depends="ofbiz-init,check-build-requisites">
         <echo message="[docs] ========== Start Building (JavaDoc) =========="/>
         
         <!-- SCIPIO: hooks -->
@@ -1804,7 +1804,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         <antcall target="run-cobertura-analysis"/>
     </target>
 
-    <target name="run-cobertura-analysis">
+    <target name="run-cobertura-analysis" depends="check-build-requisites">
         <iterate target="tests-cobertura" filelist="framework-builds"/>
         <iterate target="tests-cobertura" filelist="application-builds"/>
         <iterate target="tests-cobertura" filelist="specialpurpose-builds"/>
@@ -1849,7 +1849,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         </jacoco:merge>
     </target>
 
-    <target name="run-jacoco-analysis">
+    <target name="run-jacoco-analysis" depends="check-build-requisites">
         <iterate target="tests-jacoco" filelist="framework-builds"/>
         <iterate target="tests-jacoco" filelist="application-builds"/>
         <iterate target="tests-jacoco" filelist="specialpurpose-builds"/>
@@ -2102,7 +2102,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
 
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
 
-    <target name="lib-update" depends="ivy-init" description="Initial libraries and dependencies download, global">
+    <target name="lib-update" depends="ivy-init,check-build-requisites" description="Initial libraries and dependencies download, global">
         <stopwatch name="lib.update.stopwatch" action="start"/>
         <!--
         <tstamp>
@@ -2292,7 +2292,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
     <target name="lib-clean-cache-full" depends="clean-ivy-full" description="Cleans Ivy resolution and repository/download caches (forces lib re-download, may affect other projects) [same as clean-ivy-full]">
     </target>
     
-    <target name="lib-clean-deployed" description="Cleans out the library deployment folders (but not library/ivy caches)">
+    <target name="lib-clean-deployed" depends="check-build-requisites" description="Cleans out the library deployment folders (but not library/ivy caches)">
         <antcall target="framework-lib-clean"/>
         <antcall target="themes-lib-clean"/>
         <antcall target="applications-lib-clean"/>

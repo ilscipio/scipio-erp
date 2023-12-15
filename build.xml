@@ -2102,7 +2102,7 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
 
     <!-- SCIPIO: 2017-01-30: New ivy download targets -->
 
-    <target name="lib-update" depends="ivy-init,check-build-requisites" description="Initial libraries and dependencies download, global">
+    <target name="lib-update" depends="ivy-init,check-build-requisites,build-scipio-build-tools" description="Initial libraries and dependencies download, global">
         <stopwatch name="lib.update.stopwatch" action="start"/>
         <!--
         <tstamp>
@@ -3130,9 +3130,13 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
         </if>
       </sequential>
     </macrodef>
-    
+
+    <!-- TODO?: build-scipio-build-tools should be a depends, but it currently always-builds, not just on changes -->
+    <target name="check-build-requisites" description="Download build requisites (SCIPIO)" depends="check-ant-js">
+    </target>
+
     <target name="build-scipio-build-tools" description="Builds standalone Scipio setup/build tools">
-        <!-- SCIPIO: 2018-11-14: Can bypass actual build using flag: -Dscipio.target.build=false 
+        <!-- SCIPIO: 2018-11-14: Can bypass actual build using flag: -Dscipio.target.build=false
             FIXME?: using big if here is ugly -->
         <if>
             <equals arg1="${scipio.target.build}" arg2="false"/>
@@ -3140,14 +3144,11 @@ Use -Dportoffset=portNumber to shift all ports with the portNumber value.">
                 <echo message="[build-scipio-build-tools] (bypassed)"/>
             </then>
             <else>
-                <filelist id="scipio.build.tools.buildfile" dir="." files="framework/base/build-scipio-build-tools.xml"/>
+                <filelist id="scipio.build.tools.buildfile" dir="${ofbiz.home.dir}" files="framework/base/build-scipio-build-tools.xml"/>
                 <iterate target="jar" filelist="scipio.build.tools.buildfile"/>
-                <move todir="tools/misc" file="framework/base/build/lib/scipio-build-tools.jar" />
+                <move todir="${ofbiz.home.dir}/tools/misc" file="${ofbiz.home.dir}/framework/base/build/lib/scipio-build-tools.jar" />
             </else>
         </if>
-    </target>
-
-    <target name="check-build-requisites" description="Download build requisites (SCIPIO)" depends="check-ant-js">
     </target>
 
     <target name="check-ant-js" description="Check Ant Javascript engine download required">

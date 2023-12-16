@@ -20,7 +20,7 @@ code package.
     <!-- ant -->
     <property name="minimumantversion" value="1.9.1"/>
 
-    <!-- javac -->
+    <!-- javac (run ant clean after changing) -->
     <property name="scipio.build.javac.release" value="11"/><!-- 11 -->
     <property name="scipio.build.javac.compiler" value="javac10+"/><!-- javac10+ -->
 

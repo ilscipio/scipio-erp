@@ -16,26 +16,28 @@ code package.
         NOTES:
         * macros.xml (legacy name) contains all early defs (including ofbiz.homedir), 
           defined for both main build invocations and component build subfolder ant invocations
-        * The framework/base/lib libraries are not automatically on the classpath; this is now (2017-02-02) 
+        * Main build properties that must be passed to iterated sub-builds must be declared in:
+            ofbiz.subbuild.props.pass
+          otherwise the defaults from macros.xml or common.xml will be used instead (if any)
+        * The framework/base/lib libraries are not automatically on the classpath; this is now (2017-02-02)
           enforced; needed libs must be specified explicitly (<taskdef>), including for the <junit/> task.
     -->
-    
+
+    <!-- Local build properties file, ignored by version control - local developer/user settings -->
+    <property file="build.scp.local.properties"/><!-- standard filename -->
+    <property file="build.local.properties"/><!-- legacy filename -->
+
+    <!-- Default properties for your project - shared between developers/users -->
+    <property file="build.properties"/>
+
+    <!-- Contains reusable definitions to all builds and default compilation settings -->
     <import file="macros.xml"/>
-    
+
     <!-- ================================================================== -->
     <!-- SCIPIO: early-inclusion, new, original properties and tasks        -->
     <!-- ================================================================== -->
     <!-- NOTE: Properties may also be defined in macros.xml (e.g. for standalone component task support) -->
-    
-    <!-- 2017-02-03: Local build properties file support, ignored by version control,
-        which allows to specify build properties for the current local machine/developer only -->
-    <property file="build.scp.local.properties"/><!-- standard filename (namespaced, unique) -->
-    <property file="build.local.properties"/><!-- legacy filename -->
-    
-    <!-- 2018-06-25: New build.properties file (NOT ignored by version control), where
-        you may specific some default shared properties for your project (shared between developers/users) -->
-    <property file="build.properties"/>
-    
+
     <!-- IVY BYPASS: set this to true (or pass -Dlib.update.bypass=true) to prevent 
         automatic lib update check upon build and other target invocations
         2017-02-03: Ivy now enabled by default (bypass false) -->
@@ -63,6 +65,7 @@ code package.
     <propertyset id="ofbiz.subbuild.props.pass">
         <propertyref name="ofbiz.home.dir"/>
         <propertyref name="ofbiz.component.dirs"/>
+        <propertyref regex="scipio\.build\..*"/>
         <propertyref regex="lib\.update\..*"/>
         <propertyref regex="lib\.clean\..*"/>
         <propertyref regex="lib\.entity\..*"/><!-- FIXME?: unfortunate exception... should have been lib.scpcfg.entity... too late -->

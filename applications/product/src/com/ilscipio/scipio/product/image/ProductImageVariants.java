@@ -156,8 +156,21 @@ public class ProductImageVariants extends ImageVariants {
             if (UtilValidate.isNotEmpty(originalImageUrl)) {
                 // See also ProductContentWrapper.getImageUrl
                 ProductImageWorker.ensureProductImage(dispatcher.getDispatchContext(), locale, product, productContentTypeId, originalImageUrl, true, true);
-            } else {
-                return null;
+                // NOTE: Do not return null here - the imageVariants object must always be returned when ORIGINAL_IMAGE_URL/originalImageUrl
+                //  specifically is requested as some products/categories may only have LARGE_IMAGE_URL/largeImageUrl and it can still exist
+                //  as an inline field; without the object, further queries for the large/other variants (imageVariants.getVariant("large"),
+                //  as done in productDetailImages ftl macro) become impossible through this interface and force the use of low-level entity
+                //  or product content wrapper access.
+                //  Note this is only for ORIGINAL_IMAGE_URL/originalImageUrl because it has inline fields for its variants - done by design
+                //  as noted in special condition above - as the other types (ADDITIONAL_IMAGE_*) have variants implemented using content
+                //  record associations only and will already have returned null above.
+                //  Callers can specifically check as appropriate in ftl:
+                //      * (imageVariants.getOriginal().getImageUrl())!?has_content
+                //      * (imageVariants.getOriginal().getStaticImageUrl())!?has_content
+                //      * (imageVariants.getVariantList())!?has_content
+                //      * (imageVariants.getResponsiveVariantMap())!?has_content
+            //} else {
+            //    return null;
             }
 
             return imageVariants;

@@ -99,7 +99,10 @@ public class GetImageVariantsMethod implements TemplateMethodModelEx {
         LocalDispatcher dispatcher = ContextFtlUtil.getDispatcher(env);
         Locale locale = TransformUtil.getOfbizLocaleArgOrCurrent(mapArgs, "locale", env);
 
-        if (UtilValidate.isNotEmpty(productId) && UtilValidate.isNotEmpty(productContentTypeId)) {
+        if (UtilValidate.isNotEmpty(productId)) {
+            if (UtilValidate.isEmpty(productContentTypeId)) { // SCIPIO: 3.0.0: Default to ORIGINAL_IMAGE_URL
+                productContentTypeId = "ORIGINAL_IMAGE_URL";
+            }
             return ProductImageVariants.from(productId, productContentTypeId, true, delegator, dispatcher, locale, useCache, unwrappedMapArgs);
         } else if (UtilValidate.isNotEmpty(contentId)) {
             boolean useUtilCache = TransformUtil.getBooleanArg(args, "useUtilCache", 2, true);

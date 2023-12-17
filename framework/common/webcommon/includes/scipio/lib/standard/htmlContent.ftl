@@ -1905,9 +1905,11 @@ Relies on custom scipioObjectFit Javascript function as a fallback for IE.
                             <#-- FIXME: This must consider any type of content (ie: product/category) -->
                             <#local imageVariants = getImageVariants({"contentId":contentId, "useCache":true})!false>
                         <#elseif productId?has_content>
-                            <#local imageVariants = getProductImageVariants({"productId":productId, "useCache":true})!false>
+                            <#local productContentTypeId = "ORIGINAL_IMAGE_URL"><#-- TODO: unhardcode -->
+                            <#local imageVariants = getProductImageVariants({"productId":productId, "productContentTypeId":productContentTypeId, "useCache":true})!false>
                         <#elseif productCategoryId?has_content>
-                            <#local imageVariants = getCategoryImageVariants({"productCategoryId":productCategoryId, "useCache":true})!false>
+                            <#local productCatContentTypeId = "ORIGINAL_IMAGE_URL"><#-- TODO: unhardcode -->
+                            <#local imageVariants = getCategoryImageVariants({"productCategoryId":productCategoryId, "productCatContentTypeId":productCatContentTypeId, "useCache":true})!false>
                         </#if>
                         <#if !imageVariants?is_boolean>
                             <#local responsiveMap = imageVariants.getResponsiveVariantMap("image/webp", sizeDef, context, {})!{}>

@@ -900,33 +900,6 @@
                 }
             }
         });
-
-
-        $('.trumbowyg').each(function(){
-            var $trObj = $(this);
-            $trObj.on('tbwinit ',function(){
-                var $iframe = $('<iframe/>').css({
-                        width: '100%',
-                        minHeight: 300,
-                        border: 0,
-                        padding:0
-                    }).attr('aria-label', 'visual editor');
-                $trObj.append($iframe);
-                var contextIframe = $iframe.contents()[0];
-
-                $('head', contextIframe).append($('<link>', {
-                    href: '/base-theme/bower_components/trumbowyg/dist/ui/trumbowyg.min.css',
-                    rel: 'stylesheet'
-                }));
-                var $treditor= $trObj.find('.trumbowyg-editor');
-                $treditor.detach();
-                $iframe.contents().find("body").append($treditor);
-
-            });
-
-        });
-
-
     }
     <#if onLoad>
     $(document).ready(function() {

@@ -230,5 +230,11 @@
             </condition>
             <link target="maileon" />
         </menu-item>
+        <menu-item name="maileonContactSync" title="Maileon Contact Sync">
+            <condition>
+                <if-compare field="maileonAvailable" operator="equals" value="true"/>
+            </condition>
+            <link target="maileonContactSync" />
+        </menu-item>
     </menu>
 </menus>

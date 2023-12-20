@@ -6,7 +6,7 @@
   </form>
 </#macro>
 
-<#macro solrServiceFields params=true initParams={} exclude={} defaultSyncMode="sync">
+<#macro solrServiceFields params=true initParams={} exclude=[] defaultSyncMode="sync">
   <#if params?is_boolean>
     <#if params>
       <#local params = {"POOL_NAME":POOL_NAME} + initParams>

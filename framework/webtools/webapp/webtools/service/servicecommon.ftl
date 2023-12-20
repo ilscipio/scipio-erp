@@ -12,11 +12,11 @@
   </#if>
 </#function>
 
-<#macro serviceFields serviceParameters params={} exclude={}>
+<#macro serviceFields serviceParameters params={} exclude=[]>
   <#list serviceParameters as serviceParameter>
     <#-- WARN: watch out for screen auto-escaping on serviceParameter -->
     <#local rawName = raw(serviceParameter.name)>
-    <#if (exclude[rawName]!false) != true>
+    <#if (exclude?seq_contains(rawName)!false) != true>
       <#local defaultValue = serviceParameter.defaultValue!>
       <#local defaultValStr = defaultValue?string><#-- NOTE: forced html escaping - do not pass to macro params -->
       <#local fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if defaultValStr?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${defaultValStr}</em>)</#if></#local>

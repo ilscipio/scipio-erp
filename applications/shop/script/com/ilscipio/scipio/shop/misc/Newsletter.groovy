@@ -20,4 +20,7 @@ if (isMaileonComponentPresent && productStoreId) {
 }
 context.productStoreMaileon = productStoreMaileon
 context.isMaileonComponentPresent = isMaileonComponentPresent
-context.maileonRenderEmail = true
+context.maileonRenderEmail = false
+if (productStoreMaileon) {
+    context.maileonRenderEmail = true
+}

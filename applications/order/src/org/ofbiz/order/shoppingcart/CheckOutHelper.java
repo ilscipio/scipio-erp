@@ -767,8 +767,13 @@ public class CheckOutHelper {
             while (emailIter != null && emailIter.hasNext()) {
                 GenericValue email = emailIter.next();
                 if (this.cart.allowedSolicitations.contains(SolicitationTypeEnum.EMAIL)) {
-                    email.put("allowSolicitation", "Y");
-                    toBeStored.add(email);
+                    try {
+                        GenericValue partyContactMech = EntityQuery.use(delegator).from("PartyContactMech").where("contactMechId", email.getString("contactMechId"), "partyId", partyId).filterByDate().queryFirst();
+                        partyContactMech.put("allowSolicitation", "Y");
+                        toBeStored.add(partyContactMech);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                    }
                 }
                 GenericValue orderContactMech = this.delegator.makeValue("OrderContactMech",
                         UtilMisc.toMap("orderId", orderId, "contactMechId", email.getString("contactMechId"), "contactMechPurposeTypeId", "ORDER_EMAIL"));

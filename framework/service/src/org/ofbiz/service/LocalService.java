@@ -1,5 +1,6 @@
 package org.ofbiz.service;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 
 import java.util.Map;
@@ -64,5 +65,30 @@ public abstract class LocalService extends ServiceHandler.LocalExec {
      */
     @Override
     public abstract Map<String, Object> exec() throws GeneralException;
+
+    /**
+     * Sets the value of {@link #srvModule} if not already set, for use in parametrizing {@link Debug} log operations.
+     *
+     * <p>This version can be called inside {@link #init(ServiceContext)} before any <code>super.init()</code> invocation to ensure
+     * it is set even from within that method.</p>
+     *
+     * <p>Typically, this should be called from the {@link #init(ServiceContext)} method.</p>
+     */
+    @Override
+    protected ServiceContext initServiceLogNew(ServiceContext ctx, Debug.OfbizLogger localModule) {
+        return super.initServiceLogNew(ctx, localModule);
+    }
+
+    /**
+     * Overrides the value of {@link #srvModule}, for use in parametrizing {@link Debug} log operations.
+     *
+     * <p>Typically, this should be called from the {@link #init(ServiceContext)} method, but it is often better to
+     * call {@link #initServiceLogNew} before <code>super.init</code> instead, so that it is available from the super
+     * init method itself.</p>
+     */
+    @Override
+    protected ServiceContext initServiceLog(ServiceContext ctx, Debug.OfbizLogger localModule) {
+        return super.initServiceLog(ctx, localModule);
+    }
 
 }

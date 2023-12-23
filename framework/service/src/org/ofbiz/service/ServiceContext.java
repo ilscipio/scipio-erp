@@ -57,6 +57,10 @@ public class ServiceContext extends MapWrapper.Abstract<String, Object> implemen
     private final ModelService service;
     private final DispatchContext dctx;
     private final Map<String, Object> context;
+    // TODO: Currently this is only available on LocalService (ServiceHandler.Local); it will violate the final
+    //  pattern (don't really want a volatile), complicate serialization woes (for which we have to deprecated OfbizLogger's non-Class<?> getInstance()
+    //  and will not remove the need for the field on ServiceHandler.Local anyway (due to explicitly-desired direct field usage there)
+    //private Debug.OfbizLogger srvModule;
 
     protected ServiceContext(ModelService service, DispatchContext dctx, Map<String, ?> context) {
         if (service == null) {

@@ -1,9 +1,9 @@
 package org.ofbiz.service;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilGenerics;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,6 +97,14 @@ public interface ServiceHandler {
         protected DispatchContext dctx; // legacy code support
         /** Map context for the service call, for easy access from legacy code. */
         protected Map<String, Object> context; // legacy code support
+        /**
+         * A local field used to hold the leaf class service implementation's log, for use in service code templating for implementations.
+         *
+         * <p>Callers can initialize using {@link #initServiceLogNew} at the start of {@link #init(ServiceContext)}.
+         * If a service code implementation or template makes use of this anywhere, it is responsible for initializing
+         * it with its own default.</p>
+         */
+        protected Debug.OfbizLogger srvModule;
 
         /**
          * Standard delayed-init dynamic handler constructor that relies on {@link #init(ServiceContext)} to initialize fields.
@@ -138,10 +146,50 @@ public interface ServiceHandler {
             initAttributes(ctx);
         }
 
+        /**
+         * Sets the value of {@link #srvModule} if not already set, for use in parametrizing {@link Debug} log operations.
+         *
+         * <p>This version can be called inside {@link #init(ServiceContext)} before any <code>super.init()</code> invocation to ensure
+         * it is set even from within that method.</p>
+         *
+         * <p>Typically, this should be called from the {@link #init(ServiceContext)} method.</p>
+         */
+        protected ServiceContext initServiceLogNew(ServiceContext ctx, Debug.OfbizLogger localModule) {
+            if (this.srvModule == null) {
+                setServiceLog(localModule);
+            }
+            return ctx;
+        }
+
+        /**
+         * Overrides the value of {@link #srvModule}, for use in parametrizing {@link Debug} log operations.
+         *
+         * <p>Typically, this should be called from the {@link #init(ServiceContext)} method, but it is often better to
+         * call {@link #initServiceLogNew} before <code>super.init</code> instead, so that it is available from the super
+         * init method itself.</p>
+         */
+        protected ServiceContext initServiceLog(ServiceContext ctx, Debug.OfbizLogger localModule) {
+            setServiceLog(localModule);
+            return ctx;
+        }
+
+        /**
+         * Sets local module variable - avoid from main client/service code because this field was originally meant
+         * to be on {@link ServiceContext}.
+         *
+         * <p>WARN: This should be avoided by calling code in favor of {@link #initServiceLogNew} or (if need be)
+         * {@link #initServiceLog}.</p>
+         */
+        protected void setServiceLog(Debug.OfbizLogger srvModule) {
+            this.srvModule = srvModule;
+        }
+
         protected void setServiceContext(ServiceContext ctx) {
             this.ctx = ctx;
             this.dctx = ctx.dctx();
             this.context = ctx.context();
+            // NOTE: There is no need to set srvModule here because currently it is set directly by initLocalModule[New]()
+            //  by callers and service code templates/implementations that support it (otherwise left null, intentionally)
         }
 
         /**

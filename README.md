@@ -88,7 +88,7 @@ provides you with the latest stable version with important updates:
   * git checkout master
 
 Note it is also possible to checkout specific version tags as well as stable
-version series this way (e.g., git checkout 2.x), but main branch typically
+version series this way (e.g., git checkout 3.0.0), but main branch typically
 contains the desirable setup for most demo, server and client usages.
 
 ### Installation Process

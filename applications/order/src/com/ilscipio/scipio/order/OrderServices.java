@@ -1,5 +1,7 @@
 package com.ilscipio.scipio.order;
 
+import com.ilscipio.scipio.service.def.Attribute;
+import com.ilscipio.scipio.service.def.Service;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -27,9 +29,40 @@ public abstract class OrderServices {
 
     protected OrderServices() {}
 
-    /**
-     * Implements populateBestSellingCategory service; service overrides can override any protected methods.
-     */
+    @Service(
+            description = "Populates a best-selling category with products based on sales total or quantity ordered"
+    )
+    @Attribute(name = "productCategoryId", type = "String", mode = "IN", optional = "false")
+    @Attribute(name = "orderByType", type = "String", mode = "IN", optional = "true", defaultValue = "quantity-ordered",
+            description = "Ordering criteria, one of (extensible by overriding services): " +
+                    "sales-total: use BestSellingProductsBySalesTotal view-entity or equivalent; " +
+                    "quantity-ordered: use BestSellingProductsByQuantityOrdered view-entity or equivalent; " +
+                    "order-item-count: use BestSellingProductsByQuantityOrdered view-entity or equivalent")
+    @Attribute(name = "productStoreIdList", type = "List", mode = "IN", optional = "true",
+            description = "Filter for OrderHeader.productStoreId")
+    @Attribute(name = "productStoreId", type = "String", mode = "IN", optional = "true",
+            description = "Filter for OrderHeader.productStoreId")
+    @Attribute(name = "filterCategoryId", type = "String", mode = "IN", optional = "true",
+            description = "Only products belonging to this category and sold from this category are considered, using OrderItem.productCategoryId")
+    @Attribute(name = "filterCategoryIdWithParents", type = "String", mode = "IN", optional = "true",
+            description = "Only products belonging to this category or whose (virtual) parents are in the category or are considered")
+    @Attribute(name = "filterSalesDiscDate", type = "Boolean", mode = "IN", optional = "true", defaultValue = "true")
+    @Attribute(name = "maxProducts", type = "Integer", mode = "IN", optional = "true")
+    @Attribute(name = "orderDateStart", type = "Timestamp", mode = "IN", optional = "true",
+            description = "Absolute start date if specified")
+    @Attribute(name = "orderDateEnd", type = "Timestamp", mode = "IN", optional = "true",
+            description = "Absolute end date if specified; defaults to now")
+    @Attribute(name = "orderDateDays", type = "Integer", mode = "IN", optional = "true", defaultValue = "30",
+            description = "Days to substract from orderDateEnd to get absolute start date")
+    @Attribute(name = "updateMode", type = "String", mode = "IN", optional = "true", defaultValue = "update",
+            description = "Update mode, one of: " +
+                    "update: update records in-place where necessary and possible; " +
+                    "create: always delete and recreate records (makes records sequenced by date)")
+    @Attribute(name = "removeMode", type = "String", mode = "IN", optional = "true", defaultValue = "remove",
+            description = "Removal mode, one of: " +
+                    "remove: remove old records; " +
+                    "preserve: ignore old records (faster)")
+    @Attribute(name = "logEvery", type = "Integer", mode = "IN", optional = "true", defaultValue = "50")
     public static class PopulateBestSellingCategory extends LocalService {
         protected static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
@@ -45,19 +78,24 @@ public abstract class OrderServices {
         protected long sequenceNum = 1;
         protected Timestamp orderDateStart;
         protected Timestamp orderDateEnd;
+        protected Integer orderDateDays;
         protected String filterCategoryId;
         protected String filterCategoryIdWithParents;
         protected Timestamp nowTimestamp;
-        protected boolean removeOld = "remove".equals(ctx.attr("removeMode"));
-        protected boolean createNew = "create".equals(ctx.attr("updateMode"));
-        protected boolean filterSalesDiscDate = ctx.attr("filterSalesDiscDate", true);
+        protected boolean removeOld;
+        protected boolean createNew;
+        protected boolean filterSalesDiscDate;
         protected Integer logEvery;
+
         @Override
         public void init(ServiceContext ctx) throws GeneralException {
-            super.init(ctx);
-            this.productCategoryId = ctx.attr("productCategoryId");
-            Collection<String> productStoreIds = ctx.attr("productStoreIdList");
-            String productStoreId = ctx.getStringNonEmpty("productStoreIds");
+            super.init(initServiceLogNew(ctx, module));
+            if (nowTimestamp == null) {
+                nowTimestamp = UtilDateTime.nowTimestamp();
+            }
+            productCategoryId = ctx.attr("productCategoryId");
+            productStoreIds = ctx.attrNonEmpty("productStoreIdList");
+            String productStoreId = ctx.getStringNonEmpty("productStoreId");
             if (UtilValidate.isNotEmpty(productStoreId)) {
                 Set<String> newProductStoreIds = new LinkedHashSet<>();
                 newProductStoreIds.add(productStoreId);
@@ -66,24 +104,21 @@ public abstract class OrderServices {
                 }
                 productStoreIds = newProductStoreIds;
             }
-            this.productStoreIds = UtilValidate.isNotEmpty(productStoreIds) ? productStoreIds : null;
-            if (nowTimestamp == null) {
-                nowTimestamp = UtilDateTime.nowTimestamp();
-            }
-            Timestamp orderDateStart = ctx.attr("orderDateStart");
-            Timestamp orderDateEnd = ctx.attr("orderDateEnd"); // don't force here: UtilDateTime::nowTimestamp
-            Integer orderDateDays = ctx.attr("orderDateDays");
+            orderDateStart = ctx.attr("orderDateStart");
+            orderDateEnd = ctx.attr("orderDateEnd"); // don't force here: UtilDateTime::nowTimestamp
+            orderDateDays = ctx.attr("orderDateDays");
             if (orderDateStart == null && orderDateDays != null && orderDateDays > 0) {
                 if (orderDateEnd == null) {
                     orderDateEnd = nowTimestamp;
                 }
                 orderDateStart = UtilDateTime.addDaysToTimestamp(orderDateEnd, -orderDateDays);
             }
-            this.orderDateStart = orderDateStart;
-            this.orderDateEnd = orderDateEnd;
-            this.filterCategoryId = ctx.attr("filterCategoryId");
-            this.filterCategoryIdWithParents = ctx.attr("filterCategoryIdWithParents");
-            this.logEvery = ctx.attr("logEvery");
+            filterCategoryId = ctx.attr("filterCategoryId");
+            filterCategoryIdWithParents = ctx.attr("filterCategoryIdWithParents");
+            removeOld = "remove".equals(ctx.attr("removeMode"));
+            createNew = "create".equals(ctx.attr("updateMode"));
+            filterSalesDiscDate = ctx.attr("filterSalesDiscDate", true);
+            logEvery = ctx.attr("logEvery");
         }
 
         @Override
@@ -91,7 +126,7 @@ public abstract class OrderServices {
             try {
                 productCategory = ctx.delegator().from("ProductCategory").where("productCategoryId", productCategoryId).queryOne();
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, srvModule);
                 return ServiceUtil.returnError(e.toString());
             }
             if (productCategory == null) {
@@ -112,16 +147,16 @@ public abstract class OrderServices {
                             removeProductCategoryMember(pcm);
                         }
                         Debug.logInfo("Removed " + removed + " old ProductCategoryMember records for category [" +
-                                productCategoryId + "]", module);
+                                productCategoryId + "]", srvModule);
                     } catch (GeneralException e) {
-                        Debug.logError(e, module);
+                        Debug.logError(e, srvModule);
                         return ServiceUtil.returnError(e.toString());
                     } finally {
                         if (catIt instanceof AutoCloseable) {
                             try {
                                 ((AutoCloseable) catIt).close();
                             } catch (Exception e) {
-                                Debug.logError(e, module);
+                                Debug.logError(e, srvModule);
                             }
                         }
                     }
@@ -130,7 +165,7 @@ public abstract class OrderServices {
                     try {
                         unseenProductIds = getCategoryProductIdSet(productCategoryId);
                     } catch (GeneralException e) {
-                        Debug.logError(e, module);
+                        Debug.logError(e, srvModule);
                         return ServiceUtil.returnError(e.toString());
                     }
                 }
@@ -138,7 +173,7 @@ public abstract class OrderServices {
 
             Iterator<? extends Map<String, Object>> prodIt = null;
             try {
-                Debug.logInfo("Beginning query on category [" + productCategoryId + "]", module);
+                Debug.logInfo("Beginning query on category [" + productCategoryId + "]", srvModule);
                 prodIt = UtilMisc.asIterator(getProducts());
                 Integer maxProducts = ctx.attr("maxProducts");
                 Map<String, Object> productEntry;
@@ -157,18 +192,18 @@ public abstract class OrderServices {
                         productCount++;
                     }
                     if (logEvery != null && (sequenceNum % logEvery == 0)) {
-                        Debug.logInfo("Visited " + sequenceNum + " records, added " + productCount + " products", module);
+                        Debug.logInfo("Visited " + sequenceNum + " records, added " + productCount + " products", srvModule);
                     }
                 }
             } catch(GeneralException e) {
-                Debug.logError(e, module);
+                Debug.logError(e, srvModule);
                 return ServiceUtil.returnError(e.toString());
             } finally {
                 if (prodIt instanceof AutoCloseable) {
                     try {
                         ((AutoCloseable) prodIt).close();
                     } catch (Exception e) {
-                        Debug.logError(e, module);
+                        Debug.logError(e, srvModule);
                     }
                 }
             }
@@ -182,21 +217,21 @@ public abstract class OrderServices {
                         removeProductCategoryMember(pcm);
                     }
                 } catch (GeneralException e) {
-                    Debug.logError(e, module);
+                    Debug.logError(e, srvModule);
                     return ServiceUtil.returnError(e.toString());
                 } finally {
                     if (catIt instanceof AutoCloseable) {
                         try {
                             ((AutoCloseable) catIt).close();
                         } catch (Exception e) {
-                            Debug.logError(e, module);
+                            Debug.logError(e, srvModule);
                         }
                     }
                 }
             }
 
             String msg = getSuccessMsg();
-            Debug.logInfo("populateBestSellingCategory: " + msg, module);
+            Debug.logInfo("populateBestSellingCategory: " + msg, srvModule);
             return ServiceUtil.returnSuccess(msg);
         }
 
@@ -239,17 +274,6 @@ public abstract class OrderServices {
             return ctx.delegator().from(dve).where(cond).orderBy("-orderItemCount").cache(false).queryIterator();
         }
 
-        /*
-        protected SolrDocumentList getProductsBySolr() throws GeneralException {
-            Map<String, Object> result = ctx.dispatcher().runSync("solrProductsSearch", makeSolrContext());
-            if (!ServiceUtil.isSuccess(result)) {
-                throw new GeneralException(ServiceUtil.getErrorMessage(result));
-            }
-            return UtilGenerics.cast(result.get("results"));
-        }
-         */
-
-
         protected EntityCondition makeCommonCondition() throws GeneralException {
             EntityCondition cond = EntityCondition.makeDateRangeCondition("orderDate", orderDateStart, orderDateEnd);
             if (UtilValidate.isNotEmpty(productStoreIds)) {
@@ -271,26 +295,6 @@ public abstract class OrderServices {
                 cond = EntityCondition.makeCondition(cond, EntityOperator.AND, filterCond);
             }
             return cond;
-        }
-
-        /*
-        protected Map<String, Object> makeSolrContext() throws GeneralException {
-            throw new UnsupportedOperationException("Not implemented");
-            return UtilMisc.toMap(
-                    "productStore", productStoreIds != null ? productStoreIds.iterator().next() : null,
-                    "productCategoryId", productCategoryId,
-                    "queryFilters", catArgs.queryFilters,
-                    "useDefaultFilters", true,
-                    "filterTimestamp", nowTimestamp,
-                    "sortByList", catArgs.sortByList,
-                    "locale", ctx.locale(),
-                    "userLogin", ctx.userLogin(),
-                    "timeZone", ctx.timeZone());
-        }
-        */
-
-        protected EntityQuery makeCustomQuery() throws GeneralException {
-            throw new ServiceValidationException("Invalid orderByType for query", ctx.getModelService());
         }
 
         protected Object getCategoryMembers(String productCategoryId) throws GeneralException {
@@ -322,7 +326,7 @@ public abstract class OrderServices {
                 if (prevPcms.size() > 1) {
                     Debug.logWarning("ProductCategoryMember productCategoryId [" + productCategoryId +
                             "] productId [" + info.getProductId() + "] has more than one (" + prevPcms.size() +
-                            ") entry for category; updating first only", module);
+                            ") entry for category; updating first only", srvModule);
                 }
                 pcm = prevPcms.get(0);
                 pcm.set("sequenceNum", info.getSequenceNum());
@@ -367,7 +371,7 @@ public abstract class OrderServices {
             if (product == null) {
                 product = ctx.delegator().from("Product").where("productId", productId).queryOne();
                 if (product == null) {
-                    Debug.logError("Could not find product [" + productId + "]", module);
+                    Debug.logError("Could not find product [" + productId + "]", srvModule);
                     return false;
                 }
             }

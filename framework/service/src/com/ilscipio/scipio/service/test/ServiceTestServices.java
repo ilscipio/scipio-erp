@@ -10,7 +10,6 @@ import com.ilscipio.scipio.service.def.Permissions;
 import com.ilscipio.scipio.service.def.Service;
 import com.ilscipio.scipio.service.def.eeca.Eeca;
 import com.ilscipio.scipio.service.def.eeca.EecaAction;
-import com.ilscipio.scipio.service.def.eeca.EecaSet;
 import com.ilscipio.scipio.service.def.seca.Seca;
 import com.ilscipio.scipio.service.def.seca.SecaAction;
 import com.ilscipio.scipio.service.def.seca.SecaSet;
@@ -41,7 +40,7 @@ public abstract class ServiceTestServices {
             }
     )
     public static Map<String, Object> serviceAnnotationsTest1(ServiceContext ctx) {
-        Debug.logInfo("serviceAnnotationsTest1: input: " + ctx.context(), module);
+        Debug.logInfo(ctx.serviceName() + ": input: " + ctx.context(), module);
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("result1", "test result value 1");
         return result;
@@ -55,31 +54,56 @@ public abstract class ServiceTestServices {
     @PermissionService(service = "commonGenericPermission", mainAction = "UPDATE")
     @Permission(permission = "ENTITYMAINT")
     public static class ServiceAnnotationsTest2 extends LocalService {
+        protected static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+
+        protected String param1;
+        protected String param2; // NOTE: This shorthand is less efficient for
+
+        @Override
+        public void init(ServiceContext ctx) throws GeneralException {
+            super.init(initServiceLogNew(ctx, module)); // Allows subclasses to specify srvModule
+            param1 = ctx.attr("param1");
+            param2 = ctx.attr("param2");
+        }
+
         @Override
         public Map<String, Object> exec() {
-            Debug.logInfo("serviceAnnotationsTest2: input: " + ctx.context(), module);
+            Debug.logInfo(ctx.serviceName() + ": input: " + ctx.context(), srvModule);
             Map<String, Object> result = ctx.success();
-            result.put("result1", "test result value 1");
+            result.put("result1", "test result value 1; concatenated param values: " + concatenateParams());
             return result;
+        }
+
+        protected String concatenateParams() {
+            return param1 + "::" + param2;
         }
     }
 
     @Service(
             implemented = {
-                    @Implements(service = "serviceAnnotationsTest1")
+                    @Implements(service = "serviceAnnotationsTest2")
+            },
+            attributes = {
+                    @Attribute(name = "param3", type = "String", mode = "IN", defaultValue = "test value 3", optional = "true")
             },
             auth = "true",
             permissionService = {
                     @PermissionService(service = "commonGenericPermission", mainAction = "UPDATE")
             }
     )
-    public static class ServiceAnnotationsTest3 extends LocalService {
+    public static class ServiceAnnotationsTest3 extends ServiceAnnotationsTest2 {
+        protected static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+        protected String param3;
+
         @Override
-        public Map<String, Object> exec() {
-            Debug.logInfo("serviceAnnotationsTest3: input: " + ctx.context(), module);
-            Map<String, Object> result = ServiceUtil.returnSuccess();
-            result.put("result1", "test result value 1");
-            return result;
+        public void init(ServiceContext ctx) throws GeneralException {
+            super.init(initServiceLogNew(ctx, module));
+            param3 = ctx.attr("param3");
+        }
+
+        @Override
+        protected String concatenateParams() {
+            return super.concatenateParams() + "::" + param3;
         }
     }
 
@@ -92,9 +116,10 @@ public abstract class ServiceTestServices {
                             @Permission(permission = "ENTITY_MAINT") },
             services = { @PermissionService(service = "commonGenericPermission", mainAction = "UPDATE") })
     public static class ServiceAnnotationsTest3b extends LocalService {
+        protected static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
         @Override
         public Map<String, Object> exec() {
-            Debug.logInfo("serviceAnnotationsTest3b: input: " + ctx.context(), module);
+            Debug.logInfo(ctx.serviceName() + ": input: " + ctx.context(), module);
             Map<String, Object> result = ctx.success();
             result.put("result1", "test result value 1");
             return result;
@@ -170,41 +195,38 @@ public abstract class ServiceTestServices {
             @SecaAction(mode = "async", assignments = {
                     @SecaSet(fieldName = "stringParam1b", value = "test value 1b from SECA")})})
     public static class ServiceAnnotationsTest4c extends LocalService {
+        protected static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
         // Manually-assigned parameters
         protected String stringParam1;
-
         @Attribute(name = "stringParam2", typeCls = String.class, mode = "IN", defaultValue = "test value 2", optional = "true")
         protected String stringParam2;
 
         // Auto-injected parameters (inject = "true")
-
         @Attribute(name = "stringParam1b", inject = "true")
         protected String stringParam1b;
-
         @Attribute(name = "stringListParam3", typeCls = List.class, mode = "IN", defaultValue = "[testvalue3a, testvalue3b]", optional = "true", inject = "true")
         protected Collection<String> stringListParam3;
-
         @Attribute(name = "mapParam4", typeCls = Map.class, mode = "IN", defaultValue = "{testkey4a=testvalue4a, testkey4b=testvalue4b}", optional = "true", inject = "true")
         protected Map<String, Object> mapParam4;
 
         @Override
         public void init(ServiceContext ctx) throws GeneralException {
+            super.init(initServiceLogNew(ctx, module));
             stringParam1 = ctx.attr("stringParam1");
             stringParam2 = ctx.attr("stringParam2");
-            super.init(ctx);
         }
 
         @Override
         public Map<String, Object> exec() {
-            Debug.logInfo("serviceAnnotationsTest4c: input: " + ctx.context(), module);
+            Debug.logInfo(ctx.serviceName() + ": input: " + ctx.context(), srvModule);
             Map<String, Object> params = new LinkedHashMap<>();
             params.put("stringParam1", stringParam1);
-            params.put("stringParam2", stringParam2);
             params.put("stringParam1b", stringParam1b);
+            params.put("stringParam2", stringParam2);
             params.put("stringListParam3", stringListParam3);
             params.put("mapParam4", mapParam4);
-            Debug.logInfo("serviceAnnotationsTest4c: params: " + params, module);
+            Debug.logInfo(ctx.serviceName() + ": params: " + params, srvModule);
             return ctx.success("Injected params: " + params);
         }
     }

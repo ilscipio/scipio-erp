@@ -350,8 +350,13 @@ public class LoginWorker {
             if (password == null) password = (String) session.getAttribute("PASSWORD");
 
             // in this condition log them in if not already; if not logged in or can't log in, save parameters and return error
-            if ((username == null) || (password == null) || ("error".equals(login(request, response)))) {
 
+            // SCIPIO: 3.0.1: More stringent login success detection, to avoid bypass by any non-"error" results
+            // Here, request user login be returned in a specific request attribute to ensure consistency (limited return types)
+            request.removeAttribute("login.result.userLogin");
+            String loginResult = login(request, response);
+            userLogin = (GenericValue) request.getAttribute("login.result.userLogin");
+            if (UtilValidate.isEmpty(username) || UtilValidate.isEmpty(password) || "error".equals(loginResult) || userLogin == null) {
                 // make sure this attribute is not in the request; this avoids infinite recursion when a login by less stringent criteria (like not checkout the hasLoggedOut field) passes; this is not a normal circumstance but can happen with custom code or in funny error situations when the userLogin service gets the userLogin object but runs into another problem and fails to return an error
                 request.removeAttribute("_LOGIN_PASSED_");
 
@@ -672,8 +677,11 @@ public class LoginWorker {
     public static void doBasicLogin(GenericValue userLogin, HttpServletRequest request) {
         HttpSession session = request.getSession();
         session.setAttribute("userLogin", userLogin);
+        // SCIPIO: 3.0.1: Also set as a request result for checkLogin/other
+        // NOTE: Callers that read this (like checkLogin) should probably clear it with removeAttribute() first, just to be safe
+        request.setAttribute("login.result.userLogin", userLogin);
 
-        // SCIPIO: 3.0.0:
+        // SCIPIO: 3.0.0: Attribute handler login events call
         AttrHandler.resolver(request).runBasicLoginEvents();
 
         String javaScriptEnabled = null;

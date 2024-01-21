@@ -30,10 +30,6 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceDispatcher;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.service.config.ServiceConfigUtil;
-import org.ofbiz.service.config.model.Engine;
-import org.ofbiz.service.config.model.ServiceEngine;
-import org.ofbiz.service.engine.XMLRPCClientEngine;
 
 /**
  * Service startup events.
@@ -81,49 +77,18 @@ public class ServiceStartupEvents implements ExtendedStartupLoader {
     }
 
     protected void execCheckEngines() throws StartupException {
+        // SCIPIO: 3.0.1: No checks needed anymore currently
+        /*
         try {
             for(ServiceEngine serviceEngine : ServiceConfigUtil.getServiceConfig().getServiceEngines()) {
                 for(Engine engine : serviceEngine.getEngines()) {
-                    if (XMLRPCClientEngine.class.getName().equals(engine.getClassName())) {
-                        String urlParam = engine.getParameterValue("url");
-                        if (UtilValidate.isEmpty(urlParam)) {
-                            Debug.logError("Missing 'url' parameter in service engine config for XML-RPC engine '"
-                                    + engine.getName() + "'", module);
-                            continue;
-                        }
-                        try {
-                            URL url = new URL(urlParam);
-                            if (!"localhost".equals(url.getHost()) && !"127.0.0.1".equals(url.getHost())) {
-                                Debug.logWarning("\n"
-                                        + "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                                        + "\nScipio: WARNING: Insecure XML-RPC service engine configuration!"
-                                        + "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                                        + "\n"
-                                        + "\nScipio has detected you have defined the following XML-RPC"
-                                        + " service engine with a non-local host, '" + url.getHost() + "' (serviceengine.xml):"
-                                        + "\n"
-                                        + "\n    name: " + engine.getName()
-                                        + "\n    class: " + engine.getClassName()
-                                        + "\n    url: " + urlParam
-                                        + "\n"
-                                        + "\nThis configuration is insecure; the XML-RPC implementation is based on"
-                                        + " Apache XML-RPC (https://ws.apache.org/xmlrpc/), which has not been maintained since"
-                                        + " 2010 and contains security issues. It is only safe enough to use on localhost addresses."
-                                        + " Please change to a different service engine implementation for network communication."
-                                        + "\n"
-                                        + "\n!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                                        + "\n", module);
-                            }
-                        } catch (MalformedURLException e) {
-                            Debug.logError("Malformed 'url' parameter in service engine config for XML-RPC engine '" + engine.getName() + "': "
-                                    + urlParam + ": " + e.getMessage(), module);
-                        }
-                    }
+                    // ...
                 }
             }
         } catch (GenericConfigException e) {
             Debug.logError("Unable to read service engine config: " + e.getMessage(), module);
         }
+         */
     }
 
     protected boolean execStartupServiceAsync() throws StartupException {

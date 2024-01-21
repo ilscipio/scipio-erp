@@ -217,7 +217,7 @@ public class LoginServices {
                         boolean useTomcatSSO = EntityUtilProperties.propertyValueEquals("security", "security.login.tomcat.sso", "true");
                         HttpServletRequest request = (javax.servlet.http.HttpServletRequest) context.get("request");
                         // when request is not supplied, we will treat that SSO is not required as
-                        // in the usage of userLogin service in ICalWorker.java and XmlRpcEventHandler.java.
+                        // in the usage of userLogin service in ICalWorker.java.
                         useTomcatSSO = useTomcatSSO && (request!=null);
 
                         // if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords

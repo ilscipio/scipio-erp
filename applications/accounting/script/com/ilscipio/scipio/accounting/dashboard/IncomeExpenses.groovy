@@ -1,12 +1,10 @@
 import java.text.SimpleDateFormat
 
-import org.apache.xmlrpc.util.HttpUtil
 import org.ofbiz.accounting.util.UtilAccounting
 import org.ofbiz.base.util.*
 import org.ofbiz.base.util.cache.UtilCache
 import org.ofbiz.entity.*
 import org.ofbiz.entity.condition.*
-import org.ofbiz.entity.util.*
 import org.ofbiz.party.party.PartyWorker
 
 contentCache = UtilCache.getOrCreateUtilCache("dashboard.accounting", 0, 0, 60000, true);

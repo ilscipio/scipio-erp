@@ -412,9 +412,12 @@ public class LoginWorker {
             request.changeSessionId();
         }
 
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        boolean requirePasswordChange = "Y".equals(request.getParameter("requirePasswordChange"));
 
-        if(UtilValidate.isNotEmpty(userLogin)){
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        // SCIPIO: 3.0.1: TODO: REVIEW: Old fix for login - must be bypassed when password change requested - should
+        //                 probably have further checks
+        if (!requirePasswordChange && userLogin != null && !"anonymous".equals(userLogin.getString("userLoginId"))) {
             return "loggedIn";
         }
 
@@ -440,7 +443,7 @@ public class LoginWorker {
         if (UtilValidate.isEmpty(password)) {
             unpwErrMsgList.add(UtilProperties.getMessage(resourceWebapp, "loginevents.password_was_empty_reenter", UtilHttp.getLocale(request)));
         }
-        boolean requirePasswordChange = "Y".equals(request.getParameter("requirePasswordChange"));
+
         if ("GET".equals(request.getMethod()) && username == null && password == null) {
             // SCIPIO: If this is a GET request with no username or password (checked using null instead of empty to make sure nothing tried to set them),
             // just direct to login without the messages because they are meaningless and complicate flow for nothing

@@ -8,7 +8,7 @@
     "gulp": "^3.9.1"
   },
   "devDependencies": {
-    "browser-sync": "^2.16.0",
+    "browser-sync": "^2.27.11",
     "gulp": "^3.9.1",
     "gulp-bower-src": "^0.1.0",
     "gulp-concat": "^2.6.0",

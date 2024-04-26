@@ -33,11 +33,11 @@ code package.
                                 </fo:list-item>
                                 <fo:list-item>
                                     <fo:list-item-label><fo:block>${uiLabelMap.ManufacturingEstimatedStartDate}</fo:block></fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()"><fo:block><#if productionRunData.estimatedStartDate??>${UtilDateTime.toDateString(productionRunData.estimatedStartDate, "dd/MM/yyyy")}</#if></fo:block></fo:list-item-body>
+                                    <fo:list-item-body start-indent="body-start()"><fo:block><#if productionRunData.estimatedStartDate??>${productionRunData.estimatedStartDate!?string("dd/MM/yyyy")}</#if></fo:block></fo:list-item-body>
                                 </fo:list-item>
                                 <fo:list-item>
                                     <fo:list-item-label><fo:block>${uiLabelMap.ManufacturingEstimatedCompletionDate}</fo:block></fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()"><fo:block><#if productionRunData.estimatedCompletionDate??>${UtilDateTime.toDateString(productionRunData.estimatedCompletionDate, "dd/MM/yyyy")}</#if></fo:block></fo:list-item-body>
+                                    <fo:list-item-body start-indent="body-start()"><fo:block><#if productionRunData.estimatedCompletionDate??>${productionRunData.estimatedCompletionDate!?string("dd/MM/yyyy")}</#if></fo:block></fo:list-item-body>
                                 </fo:list-item>
                             </fo:list-block>
                         </fo:table-cell>
@@ -53,11 +53,11 @@ code package.
                                 </fo:list-item>
                                 <fo:list-item>
                                     <fo:list-item-label><fo:block>${uiLabelMap.CommonStartDate}</fo:block></fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()"><fo:block><#if productionRunData.actualStartDate??>${UtilDateTime.toDateString(productionRunData.actualStartDate, "dd/MM/yyyy")}</#if></fo:block></fo:list-item-body>
+                                    <fo:list-item-body start-indent="body-start()"><fo:block><#if productionRunData.actualStartDate??>${productionRunData.actualStartDate!?string("dd/MM/yyyy")}</#if></fo:block></fo:list-item-body>
                                 </fo:list-item>
                                 <fo:list-item>
                                     <fo:list-item-label><fo:block>${uiLabelMap.ManufacturingActualCompletionDate}</fo:block></fo:list-item-label>
-                                    <fo:list-item-body start-indent="body-start()"><fo:block><#if productionRunData.actualCompletionDate??>${UtilDateTime.toDateString(productionRunData.actualCompletionDate, "dd/MM/yyyy")}</#if></fo:block></fo:list-item-body>
+                                    <fo:list-item-body start-indent="body-start()"><fo:block><#if productionRunData.actualCompletionDate??>${productionRunData.actualCompletionDate!?string("dd/MM/yyyy")}</#if></fo:block></fo:list-item-body>
                                 </fo:list-item>
                             </fo:list-block>
                         </fo:table-cell>

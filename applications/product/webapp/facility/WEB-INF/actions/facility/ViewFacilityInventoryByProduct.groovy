@@ -131,7 +131,7 @@ if (action) {
     List prods = null;
     try {
         beganTransaction = TransactionUtil.begin();
-        prodsEli = from(prodView).where(whereCondition).orderBy("productId").cursorScrollInsensitive().distinct().queryIterator();
+        prodsEli = EntityQuery.use(delegator).from(prodView).where(whereCondition).orderBy("productId").cursorScrollInsensitive().distinct().queryIterator();
         prods = prodsEli.getPartialList(lowIndex, highIndex);
         listSize = prodsEli.getResultsSizeAfterPartialList();
         prodsEli.close();

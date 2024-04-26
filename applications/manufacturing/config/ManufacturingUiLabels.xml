@@ -4247,6 +4247,12 @@
         <value xml:lang="zh">生产运行任务</value>
         <value xml:lang="zh-TW">生產運行任務</value>
     </property>
+    <property key="ManufacturingMandatoryWorkEfforts">
+        <value xml:lang="en">Mandatory Workeffort</value>
+    </property>
+    <property key="ManufacturingDependentWorkEfforts">
+        <value xml:lang="en">Dependent Workeffort</value>
+    </property>
     <property key="ManufacturingProductionRunTryToCreateWorkEffortAssoc">
         <value xml:lang="de">Fehler beim Versuch eine Arbeitsaufwandsverknüpfung hinzuzufügen.</value>
         <value xml:lang="en">Error try to create workeffort assoc</value>

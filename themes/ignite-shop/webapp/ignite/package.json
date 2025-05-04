@@ -5,11 +5,11 @@
   "main": "index.html",
   "dependencies": {
     "del": "^2.2.2",
-    "gulp": "^3.9.1"
+    "gulp": "^4.0.2"
   },
   "devDependencies": {
     "browser-sync": "^2.16.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-bower-src": "^0.1.0",
     "gulp-concat": "^2.6.0",
     "gulp-filter": "^4.0.0",

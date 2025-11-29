@@ -193,6 +193,13 @@ From command line, Scipio build should be invoked using the provided ant launch 
                         </not>
                     </condition>
                     <fail unless="javaatleast11" message="Please upgrade Java JDK to 11 or higher."/>
+                    <!-- SCIPIO: JDK 17/21 detection for modern Java compatibility -->
+                    <condition property="javaatleast17">
+                        <matches pattern="^(1[7-9]|[2-9][0-9])($|\..*)" string="${ant.java.version}"/>
+                    </condition>
+                    <condition property="javaatleast21">
+                        <matches pattern="^(2[1-9]|[3-9][0-9])($|\..*)" string="${ant.java.version}"/>
+                    </condition>
 
                     <property name="checkreqs.ran" value="true"/>
                 </then>

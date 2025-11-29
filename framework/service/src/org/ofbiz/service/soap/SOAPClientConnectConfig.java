@@ -29,7 +29,7 @@ import javax.net.ssl.X509TrustManager;
 
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.axis2.kernel.http.HTTPConstants;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.TrustManagers;

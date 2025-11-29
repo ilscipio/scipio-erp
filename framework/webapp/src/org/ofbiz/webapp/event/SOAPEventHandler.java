@@ -45,7 +45,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMXMLBuilderFactory;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.OMXMLParserWrapper;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
@@ -265,7 +265,7 @@ public class SOAPEventHandler implements EventHandler {
             String xmlResults = SoapSerializer.serialize(serviceResults);
             //Debug.logInfo("xmlResults ==================" + xmlResults, module);
             XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xmlResults));
-            StAXOMBuilder resultsBuilder = (StAXOMBuilder) OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(), reader);
+            OMXMLParserWrapper resultsBuilder = OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(), reader);
             OMElement resultSer = resultsBuilder.getDocumentElement();
 
             // create the response soap
@@ -314,7 +314,7 @@ public class SOAPEventHandler implements EventHandler {
             res.setContentType("text/xml");
             String xmlResults= SoapSerializer.serialize(object);
             XMLStreamReader xmlReader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xmlResults));
-            StAXOMBuilder resultsBuilder = (StAXOMBuilder) OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(), xmlReader);
+            OMXMLParserWrapper resultsBuilder = OMXMLBuilderFactory.createStAXOMBuilder(OMAbstractFactory.getOMFactory(), xmlReader);
             OMElement resultSer = resultsBuilder.getDocumentElement();
 
             // create the response soap

@@ -43,7 +43,8 @@ public class DatevHelper {
             else
                 this.results = BaseOperationResults.class.getConstructor().newInstance();
             if (Debug.isOn(Debug.VERBOSE)) {
-                Debug.logInfo("Datev helper succesfully initialized.", module);
+                Debug.logInfo("Datev helper successfully initialized.", module);
+		// Typo corrected: "succesfully" ---> "successfully"
             }
         } catch (Exception e) {
             throw new DatevException("Internal error. Cannot initialize DATEV helper.");

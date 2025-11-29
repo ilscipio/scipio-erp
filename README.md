@@ -66,7 +66,7 @@ modern HTML frameworks.
 * 4+GB RAM, 2+GB free hard disk space
 
 ### Software Requirements
-* Java 11 JDK or greater (Openjdk or Oracle)
+* Java 11, 17, or 21 JDK (OpenJDK or Oracle)
 
 ### Recommended Development Tools
 * Git client
@@ -74,7 +74,7 @@ modern HTML frameworks.
 
 ### Prerequisites
 In order to install SCIPIO ERP, the following prerequisites must be installed:
-* Java 11 JDK or greater
+* Java 11, 17, or 21 JDK (LTS versions recommended)
   * Download and Install
   * Set JAVA_HOME Path (Windows)
 
@@ -111,10 +111,8 @@ In order to install on a client system or start on a server, the following steps
   Username: admin
   Password: scipio
 
-If build failure occurs due to missing Nashorn Javascript engine on JDK 15 or later, first run:
-  * Linux ./ant download-ant-js
-  * OS X: ./ant download-ant-js
-  * Windows: ant.bat download-ant-js
+Note: On JDK 15 or later, the Nashorn Javascript engine is automatically downloaded on first build.
+If issues occur, you can manually run: ./ant download-ant-js (or ant.bat download-ant-js on Windows)
 
 Note: These steps are typically too limited for developers; see section below.
 
@@ -165,10 +163,7 @@ development tasks, the traditional bundled Apache Ant commands may and sometimes
   * OS X: ./ant clean-all build load-demo start-debug
   * Windows: ant.bat clean-all build load-demo start-debug
 
-If build failure occurs due to missing Nashorn Javascript engine on JDK 15 or later, first run:
-  * Linux: ./ant download-ant-js
-  * OS X: ./ant download-ant-js
-  * Windows: ant.bat download-ant-js
+Note: On JDK 15+, Nashorn is auto-downloaded. If issues occur: ./ant download-ant-js
 
 Commands can be listed using: ant -p (./ant -p)
 

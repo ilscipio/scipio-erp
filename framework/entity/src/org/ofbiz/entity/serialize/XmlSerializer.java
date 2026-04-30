@@ -45,7 +45,8 @@ import java.util.TreeSet;
 import java.util.Vector;
 import java.util.WeakHashMap;
 
-import javax.xml.bind.DatatypeConverter;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
@@ -471,7 +472,8 @@ public class XmlSerializer {
                  * Fallback is java.sql.Timestamp because it has been this way all the time.
                  */
                 try {
-                    Calendar cal = DatatypeConverter.parseDate(valStr);
+                    XMLGregorianCalendar xcal = DatatypeFactory.newInstance().newXMLGregorianCalendar(valStr);
+                    Calendar cal = xcal.toGregorianCalendar();
                     return new java.sql.Timestamp(cal.getTimeInMillis());
                 }
                 catch (Exception e) {

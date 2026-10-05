@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.webapp.control;
 
 import static org.ofbiz.base.util.UtilGenerics.checkMap;
@@ -2345,7 +2351,7 @@ public class RequestHandler {
                 // SCIPIO: This is the original stock case: intra-webapp, controller link
                 // create the path to the control servlet
                 //String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
-                newURL.append(getControlPath(request));
+                newURL.append(getControlLinkPath(request, url)); // SCIPIO: 4.0.0: root controller links
 
                 if (Boolean.TRUE.equals(RequestLinkUtil.isUrlAppendNeedsDirSep(url, newURL))) { // SCIPIO: improved check: !url.startsWith("/")
                     newURL.append("/");
@@ -3162,7 +3168,45 @@ public class RequestHandler {
         String controlPath = (String) request.getAttribute("_CONTROL_PATH_");
         return (controlPath != null) ? controlPath : request.getContextPath() + getControlServletPath(request);
     }
-    
+
+    /**
+     * SCIPIO: 4.0.0: Returns the path prefix for a controller link of the current webapp: the context path
+     * when the webapp serves controller URIs at its root (ContextFilter forwardRootControllerUris, so
+     * <code>/cms/pages</code>), otherwise the control path (<code>/cms/control/pages</code>).
+     */
+    public static String getControlLinkPath(HttpServletRequest request) {
+        if (Boolean.TRUE.equals(request.getAttribute(ContextFilter.ROOT_CONTROLLER_LINKS_ATTR))) {
+            return request.getContextPath();
+        }
+        return getControlPath(request);
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Like {@link #getControlLinkPath(HttpServletRequest)}, but a request whose name a servlet
+     * mapping owns (<code>/cms/media/*</code>) keeps the control path, because the root URI goes to the servlet.
+     */
+    public static String getControlLinkPath(HttpServletRequest request, String uri) {
+        if (!Boolean.TRUE.equals(request.getAttribute(ContextFilter.ROOT_CONTROLLER_LINKS_ATTR))) {
+            return getControlPath(request);
+        }
+        @SuppressWarnings("unchecked")
+        Set<String> servletElems = (Set<String>) request.getServletContext().getAttribute(ContextFilter.SERVLET_MAPPED_ROOT_ELEMS_ATTR);
+        if (servletElems != null && !servletElems.isEmpty() && uri != null) {
+            String name = uri.startsWith("/") ? uri.substring(1) : uri;
+            int end = name.length();
+            for (char c : new char[] {'/', '?', '#', ';'}) {
+                int i = name.indexOf(c);
+                if (i >= 0 && i < end) {
+                    end = i;
+                }
+            }
+            if (servletElems.contains(name.substring(0, end))) {
+                return getControlPath(request);
+            }
+        }
+        return request.getContextPath();
+    }
+
     /**
      * SCIPIO: Returns the servlet path for the controller or empty string if it's the catch-all path ("/").
      * (same rules as {@link HttpServletRequest#getServletPath()}).

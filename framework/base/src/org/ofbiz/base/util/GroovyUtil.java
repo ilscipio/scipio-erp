@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.base.util;
 
 import java.io.IOException;
@@ -82,7 +88,8 @@ public class GroovyUtil {
             if (!scriptBaseClass.isEmpty()) {
                 conf = new CompilerConfiguration();
                 conf.setScriptBaseClass(scriptBaseClass);
-                groovyClassLoader = new GroovyClassLoader(GroovyUtil.class.getClassLoader(), conf);
+                // SCIPIO: 4.0.0: Use thread context classloader for proper visibility of all component classes
+                groovyClassLoader = new GroovyClassLoader(getGroovyParentClassLoader(), conf);
             } else {
                 // SCIPIO: 2019-04-15: Make a copy so we can modify safely
                 //conf = CompilerConfiguration.DEFAULT;
@@ -396,7 +403,8 @@ public class GroovyUtil {
     @Deprecated
     public static Class<?> loadClass(String path) throws ClassNotFoundException, IOException {
         if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
-        GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+        // SCIPIO: 4.0.0: Use thread context classloader for proper visibility of all component classes
+        GroovyClassLoader groovyClassLoader = new GroovyClassLoader(getGroovyParentClassLoader());
         Class<?> classLoader = groovyClassLoader.loadClass(path);
         groovyClassLoader.close();
         return classLoader;
@@ -413,7 +421,8 @@ public class GroovyUtil {
     @Deprecated
     public static Class<?> parseClass(InputStream in, String location) throws IOException {
         if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
-        GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+        // SCIPIO: 4.0.0: Use thread context classloader for proper visibility of all component classes
+        GroovyClassLoader groovyClassLoader = new GroovyClassLoader(getGroovyParentClassLoader());
         Class<?> classLoader = groovyClassLoader.parseClass(UtilIO.readString(in), location);
         groovyClassLoader.close();
         return classLoader;
@@ -431,7 +440,8 @@ public class GroovyUtil {
     @Deprecated
     public static Class<?> parseClass(String text) throws IOException {
         if (!baseScriptInitialized) { initBaseScript(); } // SCIPIO
-        GroovyClassLoader groovyClassLoader = new GroovyClassLoader();
+        // SCIPIO: 4.0.0: Use thread context classloader for proper visibility of all component classes
+        GroovyClassLoader groovyClassLoader = new GroovyClassLoader(getGroovyParentClassLoader());
         Class<?> classLoader = groovyClassLoader.parseClass(text);
         groovyClassLoader.close();
         return classLoader;
@@ -519,17 +529,31 @@ public class GroovyUtil {
     }
 
     /**
+     * SCIPIO: Gets the best available parent classloader for GroovyClassLoader.
+     * <p>
+     * SCIPIO: 4.0.0: Uses thread context classloader (set by Scipio Start) to support separate
+     * component JARs where base module can't directly see webapp/service module classes.
+     * Falls back to GroovyUtil's classloader if thread context is not set.
+     */
+    private static ClassLoader getGroovyParentClassLoader() {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        if (cl == null) {
+            cl = GroovyUtil.class.getClassLoader();
+        }
+        return cl;
+    }
+
+    /**
      * SCIPIO: Creates a new GroovyClassLoader.
      * <p>
      * This required in the absence of a script cache, because a design issue
      * about the GroovyClassLoader causes it to make a thread lock even when
      * not actually using its file cache.
      * <p>
-     * TODO: REVIEW: Currently this does NOT use the current thread context class loader;
-     * it may cause unpredictable behavior due to caching and other reasons.
+     * SCIPIO: 4.0.0: Now uses thread context classloader for proper visibility of all component classes.
      */
     private static GroovyClassLoader getNewGroovyScriptClassLoader(CompilerConfiguration conf) {
-        return new GroovyClassLoader(GroovyUtil.class.getClassLoader(), conf);
+        return new GroovyClassLoader(getGroovyParentClassLoader(), conf);
     }
 
     /**
@@ -780,7 +804,8 @@ public class GroovyUtil {
                 private static final GroovyClassLoader classLoader;
                 static {
                     compilerConfig = CompilerConfiguration.DEFAULT;
-                    classLoader = new GroovyClassLoader(GroovyUtil.class.getClassLoader(), compilerConfig);
+                    // SCIPIO: 4.0.0: Use thread context classloader for proper visibility of all component classes
+                    classLoader = new GroovyClassLoader(getGroovyParentClassLoader(), compilerConfig);
                 }
             }
 
@@ -808,7 +833,8 @@ public class GroovyUtil {
 
             @Override
             public GroovyClassLoader createGroovyClassLoader() {
-                return new GroovyClassLoader(GroovyUtil.class.getClassLoader(), StockVariantConfigLoader.compilerConfig);
+                // SCIPIO: 4.0.0: Use thread context classloader for proper visibility of all component classes
+                return new GroovyClassLoader(getGroovyParentClassLoader(), StockVariantConfigLoader.compilerConfig);
             }
         }
     }

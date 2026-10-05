@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.product.config;
 
 import java.io.IOException;
@@ -112,7 +118,7 @@ public class ProductConfigItemContentWrapper extends CommonContentWrapper {
     public static String getProductConfigItemContentAsText(GenericValue productConfigItem, String confItemContentTypeId, Locale locale, String mimeTypeId, Delegator delegator, LocalDispatcher dispatcher, boolean useCache, String encoderType) {
         UtilCodec.SimpleEncoder encoder = ContentLangUtil.getContentWrapperSanitizer(encoderType);
         String candidateFieldName = ModelUtil.dbNameToVarName(confItemContentTypeId);
-        String cacheKey = (useCache) ? confItemContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productConfigItem.get("configItemId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator : null;
+        String cacheKey = (useCache) ? confItemContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productConfigItem.get("configItemId") + SEPARATOR + encoder.getLang() + SEPARATOR + (delegator != null ? delegator.getDelegatorName() : null) : null; // SCIPIO: 4.0.0: delegator name (G14)
         try {
             if (useCache) {
                 String cachedValue = configItemContentCache.get(cacheKey);

@@ -16,15 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.minilang.method.conditional;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Matcher;
+import java.util.regex.PatternSyntaxException;
+import java.util.regex.Pattern;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.PatternFactory;
 import org.ofbiz.base.util.UtilXml;
@@ -95,13 +99,12 @@ public class RegexpCondition extends MethodOperation implements Conditional {
 
         try {
             pattern = PatternFactory.createOrGetPerl5CompiledPattern(regExp, true);
-        } catch (MalformedPatternException e) {
+        } catch (PatternSyntaxException e) {
             Debug.logError(e, "Regular Expression [" + regExp + "] is mal-formed: " + e.toString(), module);
             throw new MiniLangRuntimeException(e, this);
         }
 
-        PatternMatcher matcher = new Perl5Matcher();
-        if (matcher.matches((String) fieldVal, pattern)) {
+        if (pattern.matcher((String) fieldVal).matches()) {
             //Debug.logInfo("The string [" + fieldVal + "] matched the pattern expr [" + pattern.getPattern() + "]", module);
             return true;
         } else {

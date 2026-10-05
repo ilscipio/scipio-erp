@@ -4,6 +4,10 @@ rem Licensed to the Apache Software Foundation (ASF) under one
 rem or more contributor license agreements.  See the NOTICE file
 rem distributed with this work for additional information
 rem regarding copyright ownership.  The ASF licenses this file
+REM Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+REM under the GNU Affero General Public License, version 3, or a commercial
+REM license from Ilscipio GmbH (file LICENSE). The original code stays under
+REM the Apache License, version 2.0, as stated above.
 rem to you under the Apache License, Version 2.0 (the
 rem "License"); you may not use this file except in compliance
 rem with the License.  You may obtain a copy of the License at

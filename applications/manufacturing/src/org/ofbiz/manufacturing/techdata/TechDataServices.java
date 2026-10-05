@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.manufacturing.techdata;
 
 import java.sql.Time;
@@ -261,78 +267,156 @@ public class TechDataServices {
         result.put("moveDay", moveDay);
         return result;
     }
+    /** SCIPIO: maximum number of days scanned for an available period before the calendar is declared empty. */
+    private static final int MAX_CALENDAR_SCAN_DAYS = 400;
+
+    /** SCIPIO: Returns the calendar week pattern of a calendar, or null when it cannot be read. */
+    private static GenericValue getCalendarWeek(GenericValue techDataCalendar) {
+        try {
+            return techDataCalendar.getRelatedOne("TechDataCalendarWeek", true);
+        } catch (GenericEntityException e) {
+            Debug.logError("Pb reading Calendar Week associated with calendar" + e.getMessage(), module);
+            return null;
+        }
+    }
+
+    /** SCIPIO: Returns capacity (ms) and start time of one weekday from a calendar week pattern. */
+    private static Map<String, Object> weekDayValues(GenericValue techDataCalendarWeek, int dayOfWeek) {
+        String prefix;
+        switch (dayOfWeek) {
+            case Calendar.MONDAY: prefix = "monday"; break;
+            case Calendar.TUESDAY: prefix = "tuesday"; break;
+            case Calendar.WEDNESDAY: prefix = "wednesday"; break;
+            case Calendar.THURSDAY: prefix = "thursday"; break;
+            case Calendar.FRIDAY: prefix = "friday"; break;
+            case Calendar.SATURDAY: prefix = "saturday"; break;
+            default: prefix = "sunday"; break;
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("capacity", techDataCalendarWeek.getDouble(prefix + "Capacity"));
+        result.put("startTime", techDataCalendarWeek.getTime(prefix + "StartTime"));
+        return result;
+    }
+
+    /**
+     * SCIPIO: Returns the working period of one calendar day: "capacity" (Double, milliseconds),
+     * "periodStart" and "periodEnd" (Timestamp). An exception day (TechDataCalendarExcDay) wins,
+     * then an exception week (TechDataCalendarExcWeek) that starts within the 7 days before the day,
+     * then the calendar week pattern. A day without capacity returns capacity 0.
+     */
+    public static Map<String, Object> getDayCapacity(GenericValue techDataCalendar, GenericValue techDataCalendarWeek, Timestamp day) {
+        Map<String, Object> result = new HashMap<>();
+        Timestamp dayStart = UtilDateTime.getDayStart(day);
+        Timestamp dayEnd = UtilDateTime.getDayEnd(day);
+        Delegator delegator = techDataCalendar.getDelegator();
+        String calendarId = techDataCalendar.getString("calendarId");
+        Double capacity = null;
+        Timestamp periodStart = null;
+        try {
+            GenericValue excDay = EntityQuery.use(delegator).from("TechDataCalendarExcDay")
+                    .where(EntityCondition.makeCondition("calendarId", calendarId),
+                            EntityCondition.makeCondition("exceptionDateStartTime", EntityOperator.GREATER_THAN_EQUAL_TO, dayStart),
+                            EntityCondition.makeCondition("exceptionDateStartTime", EntityOperator.LESS_THAN_EQUAL_TO, dayEnd))
+                    .orderBy("exceptionDateStartTime").cache(true).queryFirst();
+            if (excDay != null) {
+                capacity = excDay.getDouble("exceptionCapacity");
+                periodStart = excDay.getTimestamp("exceptionDateStartTime");
+            } else {
+                GenericValue week = techDataCalendarWeek;
+                Timestamp weekWindowStart = UtilDateTime.getDayStart(dayStart, -6);
+                GenericValue excWeek = EntityQuery.use(delegator).from("TechDataCalendarExcWeek")
+                        .where(EntityCondition.makeCondition("calendarId", calendarId),
+                                EntityCondition.makeCondition("exceptionDateStart", EntityOperator.GREATER_THAN_EQUAL_TO, new java.sql.Date(weekWindowStart.getTime())),
+                                EntityCondition.makeCondition("exceptionDateStart", EntityOperator.LESS_THAN_EQUAL_TO, new java.sql.Date(dayStart.getTime())))
+                        .orderBy("-exceptionDateStart").cache(true).queryFirst();
+                if (excWeek != null) {
+                    GenericValue excWeekPattern = excWeek.getRelatedOne("TechDataCalendarWeek", true);
+                    if (excWeekPattern != null) {
+                        week = excWeekPattern;
+                    }
+                }
+                if (week != null) {
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(dayStart);
+                    Map<String, Object> values = weekDayValues(week, cal.get(Calendar.DAY_OF_WEEK));
+                    capacity = (Double) values.get("capacity");
+                    Time startTime = (Time) values.get("startTime");
+                    if (startTime != null) {
+                        Calendar st = Calendar.getInstance();
+                        st.setTime(startTime);
+                        cal.set(Calendar.HOUR_OF_DAY, st.get(Calendar.HOUR_OF_DAY));
+                        cal.set(Calendar.MINUTE, st.get(Calendar.MINUTE));
+                        cal.set(Calendar.SECOND, st.get(Calendar.SECOND));
+                        cal.set(Calendar.MILLISECOND, 0);
+                        periodStart = new Timestamp(cal.getTimeInMillis());
+                    }
+                }
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem reading calendar exceptions for calendar " + calendarId, module);
+        }
+        if (capacity == null) {
+            capacity = 0.0;
+        }
+        if (periodStart == null) {
+            periodStart = dayStart;
+        }
+        result.put("capacity", capacity);
+        result.put("periodStart", periodStart);
+        result.put("periodEnd", new Timestamp(periodStart.getTime() + capacity.longValue()));
+        return result;
+    }
+
     /** Used to to request the remain capacity available for dateFrom in a TechDataCalenda,
      * If the dateFrom (param in) is not  in an available TechDataCalendar period, the return value is zero.
+     * SCIPIO: honors exception days and exception weeks.
      *
      * @param techDataCalendar        The TechDataCalendar cover
      * @param dateFrom                        the date
      * @return  long capacityRemaining
      */
     public static long capacityRemaining(GenericValue techDataCalendar,  Timestamp  dateFrom) {
-        GenericValue techDataCalendarWeek = null;
-        // TODO read TechDataCalendarExcWeek to manage execption week (maybe it's needed to refactor the entity definition
-        try {
-            techDataCalendarWeek = techDataCalendar.getRelatedOne("TechDataCalendarWeek", true);
-        } catch (GenericEntityException e) {
-            Debug.logError("Pb reading Calendar Week associated with calendar"+e.getMessage(), module);
-            return 0;
-        }
-        // TODO read TechDataCalendarExcDay to manage execption day
-        Calendar cDateTrav =  Calendar.getInstance();
-        cDateTrav.setTime(dateFrom);
-        Map<String, Object> position = dayStartCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
-        int moveDay = (Integer) position.get("moveDay");
-        if (moveDay != 0) return 0;
-        Time startTime = (Time) position.get("startTime");
-        Double capacity = (Double) position.get("capacity");
-        Timestamp startAvailablePeriod = new Timestamp(UtilDateTime.getDayStart(dateFrom).getTime() + startTime.getTime() + cDateTrav.get(Calendar.ZONE_OFFSET) + cDateTrav.get(Calendar.DST_OFFSET));
-        if (dateFrom.before(startAvailablePeriod)) return 0;
-        Timestamp endAvailablePeriod = new Timestamp(startAvailablePeriod.getTime()+capacity.longValue());
-        if (dateFrom.after(endAvailablePeriod)) return 0;
-        return  endAvailablePeriod.getTime() - dateFrom.getTime();
+        GenericValue techDataCalendarWeek = getCalendarWeek(techDataCalendar);
+        if (techDataCalendarWeek == null) return 0;
+        Map<String, Object> dayInfo = getDayCapacity(techDataCalendar, techDataCalendarWeek, dateFrom);
+        Double capacity = (Double) dayInfo.get("capacity");
+        if (capacity == null || capacity == 0) return 0;
+        Timestamp periodStart = (Timestamp) dayInfo.get("periodStart");
+        Timestamp periodEnd = (Timestamp) dayInfo.get("periodEnd");
+        if (dateFrom.before(periodStart) || dateFrom.after(periodEnd)) return 0;
+        return periodEnd.getTime() - dateFrom.getTime();
     }
+
     /** Used to move in a TechDataCalenda, produce the Timestamp for the begining of the next day available and its associated capacity.
      * If the dateFrom (param in) is not  in an available TechDataCalendar period, the return value is the next day available
+     * SCIPIO: honors exception days and exception weeks.
      *
      * @param techDataCalendar        The TechDataCalendar cover
      * @param dateFrom                        the date
      * @return a map with Timestamp dateTo, Double nextCapacity
      */
     public static Map<String, Object> startNextDay(GenericValue techDataCalendar, Timestamp  dateFrom) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        Timestamp dateTo = null;
-        GenericValue techDataCalendarWeek = null;
-        // TODO read TechDataCalendarExcWeek to manage execption week (maybe it's needed to refactor the entity definition
-        try {
-            techDataCalendarWeek = techDataCalendar.getRelatedOne("TechDataCalendarWeek", true);
-        } catch (GenericEntityException e) {
-            Debug.logError("Pb reading Calendar Week associated with calendar"+e.getMessage(), module);
+        Map<String, Object> result = new HashMap<>();
+        GenericValue techDataCalendarWeek = getCalendarWeek(techDataCalendar);
+        if (techDataCalendarWeek == null) {
             return ServiceUtil.returnError("Pb reading Calendar Week associated with calendar");
         }
-        // TODO read TechDataCalendarExcDay to manage execption day
-        Calendar cDateTrav =  Calendar.getInstance();
-        cDateTrav.setTime(dateFrom);
-        Map<String, Object> position = dayStartCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
-        Time startTime = (Time) position.get("startTime");
-        int moveDay = (Integer) position.get("moveDay");
-        dateTo = (moveDay == 0) ? dateFrom : UtilDateTime.getDayStart(dateFrom,moveDay);
-        Timestamp startAvailablePeriod = new Timestamp(UtilDateTime.getDayStart(dateTo).getTime() + startTime.getTime() + cDateTrav.get(Calendar.ZONE_OFFSET) + cDateTrav.get(Calendar.DST_OFFSET));
-        if (dateTo.before(startAvailablePeriod)) {
-            dateTo = startAvailablePeriod;
+        Timestamp day = dateFrom;
+        for (int i = 0; i < MAX_CALENDAR_SCAN_DAYS; i++) {
+            Map<String, Object> dayInfo = getDayCapacity(techDataCalendar, techDataCalendarWeek, day);
+            Double capacity = (Double) dayInfo.get("capacity");
+            Timestamp periodStart = (Timestamp) dayInfo.get("periodStart");
+            if (capacity != null && capacity > 0 && dateFrom.before(periodStart)) {
+                result.put("dateTo", periodStart);
+                result.put("nextCapacity", capacity);
+                return result;
+            }
+            day = UtilDateTime.getNextDayStart(day);
         }
-        else {
-            dateTo = UtilDateTime.getNextDayStart(dateTo);
-            cDateTrav.setTime(dateTo);
-            position = dayStartCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
-            startTime = (Time) position.get("startTime");
-            moveDay = (Integer) position.get("moveDay");
-            if (moveDay != 0) dateTo = UtilDateTime.getDayStart(dateTo,moveDay);
-            dateTo.setTime(dateTo.getTime() + startTime.getTime() + cDateTrav.get(Calendar.ZONE_OFFSET) + cDateTrav.get(Calendar.DST_OFFSET));
-        }
-        result.put("dateTo",dateTo);
-        result.put("nextCapacity",position.get("capacity"));
-        return result;
+        throw new IllegalStateException("Calendar " + techDataCalendar.getString("calendarId") + " has no available day within "
+                + MAX_CALENDAR_SCAN_DAYS + " days after " + dateFrom);
     }
+
     /** Used to move forward in a TechDataCalenda, start from the dateFrom and move forward only on available period.
      * If the dateFrom (param in) is not  a available TechDataCalendar period, the startDate is the begining of the next  day available
      *
@@ -417,78 +501,54 @@ public class TechDataServices {
     }
     /** Used to request the remaining capacity available for dateFrom in a TechDataCalenda,
      * If the dateFrom (param in) is not  in an available TechDataCalendar period, the return value is zero.
+     * SCIPIO: honors exception days and exception weeks.
      *
      * @param techDataCalendar        The TechDataCalendar cover
      * @param dateFrom                        the date
      * @return  long capacityRemaining
      */
     public static long capacityRemainingBackward(GenericValue techDataCalendar,  Timestamp  dateFrom) {
-        GenericValue techDataCalendarWeek = null;
-        // TODO read TechDataCalendarExcWeek to manage exception week (maybe it's needed to refactor the entity definition
-        try {
-            techDataCalendarWeek = techDataCalendar.getRelatedOne("TechDataCalendarWeek", true);
-        } catch (GenericEntityException e) {
-            Debug.logError("Pb reading Calendar Week associated with calendar"+e.getMessage(), module);
-            return 0;
-        }
-        // TODO read TechDataCalendarExcDay to manage execption day
-        Calendar cDateTrav =  Calendar.getInstance();
-        cDateTrav.setTime(dateFrom);
-        Map<String, Object> position = dayEndCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
-        int moveDay = (Integer) position.get("moveDay");
-        if (moveDay != 0) return 0;
-        Time startTime = (Time) position.get("startTime");
-        Double capacity = (Double) position.get("capacity");
-        Timestamp startAvailablePeriod = new Timestamp(UtilDateTime.getDayStart(dateFrom).getTime() + startTime.getTime() + cDateTrav.get(Calendar.ZONE_OFFSET) + cDateTrav.get(Calendar.DST_OFFSET));
-        if (dateFrom.before(startAvailablePeriod)) return 0;
-        Timestamp endAvailablePeriod = new Timestamp(startAvailablePeriod.getTime()+capacity.longValue());
-        if (dateFrom.after(endAvailablePeriod)) return 0;
-        return  dateFrom.getTime() - startAvailablePeriod.getTime();
+        GenericValue techDataCalendarWeek = getCalendarWeek(techDataCalendar);
+        if (techDataCalendarWeek == null) return 0;
+        Map<String, Object> dayInfo = getDayCapacity(techDataCalendar, techDataCalendarWeek, dateFrom);
+        Double capacity = (Double) dayInfo.get("capacity");
+        if (capacity == null || capacity == 0) return 0;
+        Timestamp periodStart = (Timestamp) dayInfo.get("periodStart");
+        Timestamp periodEnd = (Timestamp) dayInfo.get("periodEnd");
+        if (dateFrom.before(periodStart) || dateFrom.after(periodEnd)) return 0;
+        return dateFrom.getTime() - periodStart.getTime();
     }
+
     /** Used to move in a TechDataCalenda, produce the Timestamp for the end of the previous day available and its associated capacity.
      * If the dateFrom (param in) is not  in an available TechDataCalendar period, the return value is the previous day available
+     * SCIPIO: honors exception days and exception weeks.
      *
      * @param techDataCalendar        The TechDataCalendar cover
      * @param dateFrom                        the date
      * @return a map with Timestamp dateTo, Double previousCapacity
      */
     public static Map<String, Object> endPreviousDay(GenericValue techDataCalendar,  Timestamp  dateFrom) {
-        Map<String, Object> result = new HashMap<String, Object>();
-        Timestamp dateTo = null;
-        GenericValue techDataCalendarWeek = null;
-        // TODO read TechDataCalendarExcWeek to manage exception week (maybe it's needed to refactor the entity definition
-        try {
-            techDataCalendarWeek = techDataCalendar.getRelatedOne("TechDataCalendarWeek", true);
-        } catch (GenericEntityException e) {
-            Debug.logError("Pb reading Calendar Week associated with calendar"+e.getMessage(), module);
+        Map<String, Object> result = new HashMap<>();
+        GenericValue techDataCalendarWeek = getCalendarWeek(techDataCalendar);
+        if (techDataCalendarWeek == null) {
             return ServiceUtil.returnError("Pb reading Calendar Week associated with calendar");
         }
-        // TODO read TechDataCalendarExcDay to manage execption day
-        Calendar cDateTrav =  Calendar.getInstance();
-        cDateTrav.setTime(dateFrom);
-        Map<String, Object> position = dayEndCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
-        Time startTime = (Time) position.get("startTime");
-        int moveDay = (Integer) position.get("moveDay");
-        Double capacity = (Double) position.get("capacity");
-        dateTo = (moveDay == 0) ? dateFrom : UtilDateTime.getDayEnd(dateFrom, (long) moveDay);
-        Timestamp endAvailablePeriod = new Timestamp(UtilDateTime.getDayStart(dateTo).getTime() + startTime.getTime() + capacity.longValue() + cDateTrav.get(Calendar.ZONE_OFFSET) + cDateTrav.get(Calendar.DST_OFFSET));
-        if (dateTo.after(endAvailablePeriod)) {
-            dateTo = endAvailablePeriod;
+        Timestamp day = dateFrom;
+        for (int i = 0; i < MAX_CALENDAR_SCAN_DAYS; i++) {
+            Map<String, Object> dayInfo = getDayCapacity(techDataCalendar, techDataCalendarWeek, day);
+            Double capacity = (Double) dayInfo.get("capacity");
+            Timestamp periodEnd = (Timestamp) dayInfo.get("periodEnd");
+            if (capacity != null && capacity > 0 && periodEnd.before(dateFrom)) {
+                result.put("dateTo", periodEnd);
+                result.put("previousCapacity", capacity);
+                return result;
+            }
+            day = UtilDateTime.getDayStart(day, -1);
         }
-        else {
-            dateTo = UtilDateTime.getDayStart(dateTo, -1);
-            cDateTrav.setTime(dateTo);
-            position = dayEndCapacityAvailable(techDataCalendarWeek, cDateTrav.get(Calendar.DAY_OF_WEEK));
-            startTime = (Time) position.get("startTime");
-            moveDay = (Integer) position.get("moveDay");
-            capacity = (Double) position.get("capacity");
-            if (moveDay != 0) dateTo = UtilDateTime.getDayStart(dateTo,moveDay);
-            dateTo.setTime(dateTo.getTime() + startTime.getTime() + capacity.longValue() + cDateTrav.get(Calendar.ZONE_OFFSET) + cDateTrav.get(Calendar.DST_OFFSET));
-        }
-        result.put("dateTo",dateTo);
-        result.put("previousCapacity",position.get("capacity"));
-        return result;
+        throw new IllegalStateException("Calendar " + techDataCalendar.getString("calendarId") + " has no available day within "
+                + MAX_CALENDAR_SCAN_DAYS + " days before " + dateFrom);
     }
+
     /** Used to move backward in a TechDataCalendar, start from the dateFrom and move backward only on available period.
      * If the dateFrom (param in) is not  a available TechDataCalendar period, the startDate is the end of the previous day available
      *

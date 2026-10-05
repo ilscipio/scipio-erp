@@ -1,0 +1,461 @@
+# Scipio ERP - Gradle Version Catalog
+# Centralized dependency management migrated from framework/base/ivy.xml
+
+[versions]
+# Apache Commons
+commons-beanutils = "1.9.4"
+commons-codec = "1.16.0"
+commons-collections = "3.2.2"
+commons-collections4 = "4.4"
+commons-compress = "1.25.0"
+commons-csv = "1.10.0"
+commons-fileupload = "1.5"
+commons-io = "2.15.1"
+commons-lang = "2.6"
+commons-lang3 = "3.14.0"
+commons-logging = "1.3.0"
+commons-math3 = "3.6.1"
+commons-net = "3.10.0"
+commons-pool2 = "2.12.0"
+commons-text = "1.11.0"
+commons-validator = "1.8.0"
+commons-dbcp2 = "2.11.0"
+
+# Logging
+log4j = "2.22.0"
+log4j-nosql = "2.9.1"
+slf4j = "2.0.9"
+sentry = "7.0.0"
+
+# XML Processing
+xerces = "2.12.2"
+xml-apis = "2.0.2"
+xml-apis-ext = "1.3.04"
+xalan = "2.7.3"
+xmlbeans = "5.2.0"
+
+# Apache Tomcat
+tomcat = "9.0.84"
+
+# Servlet/J2EE Specs (the servlet and JSP API come from Tomcat, tomcat-servlet-api and tomcat-jsp-api)
+annotation-api = "1.3.2"
+json-api = "1.1.4"
+
+
+# JasperReports
+jasperreports = "6.17.0"
+
+# Geronimo Specs
+geronimo-activation = "1.1"
+geronimo-jca = "1.0"
+geronimo-jaxr = "2.1"
+geronimo-jaxrpc = "2.1"
+geronimo-jms = "1.1.1"
+geronimo-jta = "1.1.1"
+geronimo-saaj = "1.1"
+geronimo-transaction = "3.1.5"
+
+# Apache Axis2 / Web Services
+axis2 = "1.8.2"
+axiom = "1.2.22"
+xmlschema = "2.3.1"
+wsdl4j = "1.6.3"
+
+# Apache HTTP Client
+httpclient = "4.5.14"
+httpcore = "4.4.16"
+httpasyncclient = "4.1.5"
+
+# Scripting
+groovy = "3.0.19"
+bsf = "2.4.0"
+nashorn = "15.4"
+
+# Template Engines
+freemarker = "2.3.32"
+
+# Jackson JSON
+jackson = "2.16.0"
+
+# Google Libraries
+guava = "32.1.3-jre"
+gson = "2.10.1"
+libphonenumber = "8.13.27"
+zxing = "3.5.2"
+
+# Security
+esapi = "2.5.3.1"
+antisamy = "1.7.4"
+owasp-html-sanitizer = "20220608.1"
+bouncycastle = "1.77"
+shiro = "1.4.2"
+
+# XML Graphics
+batik = "1.17"
+fop = "2.9"
+xmlgraphics-commons = "2.9"
+barcode4j = "2.1"
+
+# Apache POI (Office)
+poi = "5.2.5"
+
+# PDF
+pdfbox = "2.0.30"
+jempbox = "1.8.17"
+# SCIPIO: L-06b: OpenPDF (a fork of iText 2.1.7 with the same com.lowagie packages; LGPL-2.1 or MPL-2.0) replaces com.lowagie:itext 2.1.7 (MPL-1.1)
+openpdf = "1.3.43"
+
+# Apache Tika
+# SCIPIO: L-06b: Tika 2.x with the parser modules that the code uses (text encoding, PDF); no tika-parsers (junrar, jhighlight, UCAR, CXF)
+tika = "2.9.4"
+
+# Image Processing
+thumbnailator = "0.4.20"
+java-image-scaling = "0.8.6"
+imgscalr = "4.2"
+filters = "2.0.235-1"
+twelvemonkeys = "3.10.1"
+webp-imageio = "0.1.6"
+tinify = "1.8.3"
+
+# Data/Utility
+icu4j = "74.2"
+javolution = "5.5.1"
+juel = "2.2.7"
+xstream = "1.4.20"
+joda-time = "2.12.5"
+avalon-framework = "4.3.1"
+juniversalchardet = "1.0.3"
+concurrentlinkedhashmap = "1.4.2"
+ical4j = "2.2.7"
+dom4j = "2.1.4"
+jdom = "1.1.3"
+nekohtml = "1.9.22"
+ez-vcard = "0.12.1"
+reflections = "0.9.11"
+reflections8 = "0.11.7"
+
+# Database
+derby = "10.14.2.0"
+postgresql = "42.3.3"
+
+# Testing
+junit = "4.13.2"
+junit5 = "5.8.2"
+hamcrest = "1.3"
+mockito = "2.23.4"
+spring = "5.3.31"
+
+# Web
+rome = "2.1.0"
+urlrewritefilter = "4.0.4"
+jsoup = "1.17.1"
+gravatar4java = "1.2"
+
+# Solr (7.5.0 for ScipioHttpSolrClient API compatibility)
+solr = "7.5.0"
+# SCIPIO: 4.0.0: the embedded Solr server webapp (WEB-INF/lib), mirrored by gradlew syncSolrWebappLibs
+solr-server = "7.7.3"
+metrics = "3.2.6"
+
+# Mail
+jakarta-mail = "1.6.7"
+
+# Misc
+jfairy = "0.5.9"
+okhttp = "2.7.5"
+sshd = "2.1.0"
+jaxb-api = "2.4.0-b180830.0359"
+jaxb-impl = "4.0.4"
+
+# Optional/External
+activemq = "5.17.4"
+cobertura = "2.1.1"
+jacoco = "0.8.1"
+sonar-ant-task = "2.2"
+
+[libraries]
+# Apache Commons
+commons-beanutils = { module = "commons-beanutils:commons-beanutils", version.ref = "commons-beanutils" }
+commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons-codec" }
+commons-collections = { module = "commons-collections:commons-collections", version.ref = "commons-collections" }
+commons-collections4 = { module = "org.apache.commons:commons-collections4", version.ref = "commons-collections4" }
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commons-compress" }
+commons-csv = { module = "org.apache.commons:commons-csv", version.ref = "commons-csv" }
+commons-fileupload = { module = "commons-fileupload:commons-fileupload", version.ref = "commons-fileupload" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
+commons-lang = { module = "commons-lang:commons-lang", version.ref = "commons-lang" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
+commons-logging = { module = "commons-logging:commons-logging", version.ref = "commons-logging" }
+commons-math3 = { module = "org.apache.commons:commons-math3", version.ref = "commons-math3" }
+commons-net = { module = "commons-net:commons-net", version.ref = "commons-net" }
+commons-pool2 = { module = "org.apache.commons:commons-pool2", version.ref = "commons-pool2" }
+commons-text = { module = "org.apache.commons:commons-text", version.ref = "commons-text" }
+commons-validator = { module = "commons-validator:commons-validator", version.ref = "commons-validator" }
+commons-dbcp2 = { module = "org.apache.commons:commons-dbcp2", version.ref = "commons-dbcp2" }
+
+# Logging
+log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+log4j-1-2-api = { module = "org.apache.logging.log4j:log4j-1.2-api", version.ref = "log4j" }
+log4j-slf4j-impl = { module = "org.apache.logging.log4j:log4j-slf4j-impl", version.ref = "log4j" }
+log4j-nosql = { module = "org.apache.logging.log4j:log4j-nosql", version.ref = "log4j-nosql" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+sentry-log4j2 = { module = "io.sentry:sentry-log4j2", version.ref = "sentry" }
+
+# XML Processing
+xerces = { module = "xerces:xercesImpl", version.ref = "xerces" }
+xml-apis = { module = "xml-apis:xml-apis", version.ref = "xml-apis" }
+xml-apis-ext = { module = "xml-apis:xml-apis-ext", version.ref = "xml-apis-ext" }
+xalan = { module = "xalan:xalan", version.ref = "xalan" }
+xalan-serializer = { module = "xalan:serializer", version.ref = "xalan" }
+xmlbeans = { module = "org.apache.xmlbeans:xmlbeans", version.ref = "xmlbeans" }
+
+# Tomcat
+tomcat-api = { module = "org.apache.tomcat:tomcat-api", version.ref = "tomcat" }
+tomcat-catalina = { module = "org.apache.tomcat:tomcat-catalina", version.ref = "tomcat" }
+tomcat-catalina-ha = { module = "org.apache.tomcat:tomcat-catalina-ha", version.ref = "tomcat" }
+tomcat-coyote = { module = "org.apache.tomcat:tomcat-coyote", version.ref = "tomcat" }
+tomcat-jasper = { module = "org.apache.tomcat:tomcat-jasper", version.ref = "tomcat" }
+tomcat-jni = { module = "org.apache.tomcat:tomcat-jni", version.ref = "tomcat" }
+tomcat-tribes = { module = "org.apache.tomcat:tomcat-tribes", version.ref = "tomcat" }
+tomcat-util = { module = "org.apache.tomcat:tomcat-util", version.ref = "tomcat" }
+tomcat-util-scan = { module = "org.apache.tomcat:tomcat-util-scan", version.ref = "tomcat" }
+tomcat-websocket = { module = "org.apache.tomcat:tomcat-websocket", version.ref = "tomcat" }
+tomcat-websocket-api = { module = "org.apache.tomcat:tomcat-websocket-api", version.ref = "tomcat" }
+tomcat-servlet-api = { module = "org.apache.tomcat:tomcat-servlet-api", version.ref = "tomcat" }
+tomcat-jsp-api = { module = "org.apache.tomcat:tomcat-jsp-api", version.ref = "tomcat" }
+tomcat-el-api = { module = "org.apache.tomcat:tomcat-el-api", version.ref = "tomcat" }
+tomcat-annotations-api = { module = "org.apache.tomcat:tomcat-annotations-api", version.ref = "tomcat" }
+
+# Servlet/J2EE API
+annotation-api = { module = "javax.annotation:javax.annotation-api", version.ref = "annotation-api" }
+json-api = { module = "javax.json:javax.json-api", version.ref = "json-api" }
+json-impl = { module = "org.glassfish:javax.json", version.ref = "json-api" }
+
+# Geronimo
+geronimo-activation = { module = "org.apache.geronimo.specs:geronimo-activation_1.1_spec", version.ref = "geronimo-activation" }
+geronimo-jca = { module = "org.apache.geronimo.specs:geronimo-j2ee-connector_1.6_spec", version.ref = "geronimo-jca" }
+geronimo-jaxr = { module = "org.apache.geronimo.specs:geronimo-jaxr_1.0_spec", version.ref = "geronimo-jaxr" }
+geronimo-jaxrpc = { module = "org.apache.geronimo.specs:geronimo-jaxrpc_1.1_spec", version.ref = "geronimo-jaxrpc" }
+geronimo-jms = { module = "org.apache.geronimo.specs:geronimo-jms_1.1_spec", version.ref = "geronimo-jms" }
+geronimo-jta = { module = "org.apache.geronimo.specs:geronimo-jta_1.1_spec", version.ref = "geronimo-jta" }
+geronimo-saaj = { module = "org.apache.geronimo.specs:geronimo-saaj_1.3_spec", version.ref = "geronimo-saaj" }
+geronimo-transaction = { module = "org.apache.geronimo.components:geronimo-transaction", version.ref = "geronimo-transaction" }
+
+
+# JasperReports
+jasperreports = { module = "net.sf.jasperreports:jasperreports", version.ref = "jasperreports" }
+
+# Axis2 / Web Services
+axis2-adb = { module = "org.apache.axis2:axis2-adb", version.ref = "axis2" }
+axis2-kernel = { module = "org.apache.axis2:axis2-kernel", version.ref = "axis2" }
+axis2-transport-http = { module = "org.apache.axis2:axis2-transport-http", version.ref = "axis2" }
+axis2-transport-local = { module = "org.apache.axis2:axis2-transport-local", version.ref = "axis2" }
+axis2-saaj = { module = "org.apache.axis2:axis2-saaj", version.ref = "axis2" }
+axis2-xmlbeans = { module = "org.apache.axis2:axis2-xmlbeans", version.ref = "axis2" }
+axiom-api = { module = "org.apache.ws.commons.axiom:axiom-api", version.ref = "axiom" }
+axiom-impl = { module = "org.apache.ws.commons.axiom:axiom-impl", version.ref = "axiom" }
+xmlschema-core = { module = "org.apache.ws.xmlschema:xmlschema-core", version.ref = "xmlschema" }
+wsdl4j = { module = "wsdl4j:wsdl4j", version.ref = "wsdl4j" }
+
+# HTTP Client
+httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "httpclient" }
+httpclient-cache = { module = "org.apache.httpcomponents:httpclient-cache", version.ref = "httpclient" }
+httpcore = { module = "org.apache.httpcomponents:httpcore", version.ref = "httpcore" }
+httpcore-nio = { module = "org.apache.httpcomponents:httpcore-nio", version.ref = "httpcore" }
+httpmime = { module = "org.apache.httpcomponents:httpmime", version.ref = "httpclient" }
+httpasyncclient = { module = "org.apache.httpcomponents:httpasyncclient", version.ref = "httpasyncclient" }
+
+# Scripting
+# SCIPIO: L-06b: the Groovy modules that the code uses, not groovy-all (which brought JUnit 4 and 5, TestNG, Swing, Ant)
+groovy = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
+groovy-jsr223 = { module = "org.codehaus.groovy:groovy-jsr223", version.ref = "groovy" }
+groovy-test = { module = "org.codehaus.groovy:groovy-test", version.ref = "groovy" }
+groovy-dateutil = { module = "org.codehaus.groovy:groovy-dateutil", version.ref = "groovy" }
+bsf = { module = "bsf:bsf", version.ref = "bsf" }
+nashorn-core = { module = "org.openjdk.nashorn:nashorn-core", version.ref = "nashorn" }
+
+# Template Engines
+freemarker = { module = "org.freemarker:freemarker", version.ref = "freemarker" }
+
+# Jackson
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
+jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+
+# Google
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+jsr305 = { module = "com.google.code.findbugs:jsr305", version = "3.0.2" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+libphonenumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref = "libphonenumber" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
+
+# Security
+esapi = { module = "org.owasp.esapi:esapi", version.ref = "esapi" }
+antisamy = { module = "org.owasp.antisamy:antisamy", version.ref = "antisamy" }
+owasp-html-sanitizer = { module = "com.googlecode.owasp-java-html-sanitizer:owasp-java-html-sanitizer", version.ref = "owasp-html-sanitizer" }
+bcpkix = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
+bcmail = { module = "org.bouncycastle:bcmail-jdk18on", version.ref = "bouncycastle" }
+bcprov = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
+shiro-core = { module = "org.apache.shiro:shiro-core", version.ref = "shiro" }
+
+# XML Graphics
+batik-all = { module = "org.apache.xmlgraphics:batik-all", version.ref = "batik" }
+fop = { module = "org.apache.xmlgraphics:fop", version.ref = "fop" }
+xmlgraphics-commons = { module = "org.apache.xmlgraphics:xmlgraphics-commons", version.ref = "xmlgraphics-commons" }
+barcode4j = { module = "net.sf.barcode4j:barcode4j", version.ref = "barcode4j" }
+barcode4j-fop = { module = "net.sf.barcode4j:barcode4j-fop-ext", version.ref = "barcode4j" }
+
+# POI
+poi = { module = "org.apache.poi:poi", version.ref = "poi" }
+poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi" }
+
+# PDF
+pdfbox = { module = "org.apache.pdfbox:pdfbox", version.ref = "pdfbox" }
+fontbox = { module = "org.apache.pdfbox:fontbox", version.ref = "pdfbox" }
+jempbox = { module = "org.apache.pdfbox:jempbox", version.ref = "jempbox" }
+openpdf = { module = "com.github.librepdf:openpdf", version.ref = "openpdf" }
+
+# Tika
+tika-core = { module = "org.apache.tika:tika-core", version.ref = "tika" }
+tika-parser-text = { module = "org.apache.tika:tika-parser-text-module", version.ref = "tika" }
+tika-parser-pdf = { module = "org.apache.tika:tika-parser-pdf-module", version.ref = "tika" }
+
+# Image Processing
+thumbnailator = { module = "net.coobird:thumbnailator", version.ref = "thumbnailator" }
+java-image-scaling = { module = "com.mortennobel:java-image-scaling", version.ref = "java-image-scaling" }
+imgscalr = { module = "org.imgscalr:imgscalr-lib", version.ref = "imgscalr" }
+filters = { module = "com.jhlabs:filters", version.ref = "filters" }
+twelvemonkeys-common-image = { module = "com.twelvemonkeys.common:common-image", version.ref = "twelvemonkeys" }
+webp-imageio = { module = "org.sejda.imageio:webp-imageio", version.ref = "webp-imageio" }
+tinify = { module = "com.tinify:tinify", version.ref = "tinify" }
+
+# Data/Utility
+icu4j = { module = "com.ibm.icu:icu4j", version.ref = "icu4j" }
+javolution = { module = "javolution:javolution", version.ref = "javolution" }
+juel-impl = { module = "de.odysseus.juel:juel-impl", version.ref = "juel" }
+juel-spi = { module = "de.odysseus.juel:juel-spi", version.ref = "juel" }
+xstream = { module = "com.thoughtworks.xstream:xstream", version.ref = "xstream" }
+joda-time = { module = "joda-time:joda-time", version.ref = "joda-time" }
+avalon-framework-impl = { module = "org.apache.avalon.framework:avalon-framework-impl", version.ref = "avalon-framework" }
+avalon-framework-api = { module = "org.apache.avalon.framework:avalon-framework-api", version.ref = "avalon-framework" }
+juniversalchardet = { module = "com.googlecode.juniversalchardet:juniversalchardet", version.ref = "juniversalchardet" }
+concurrentlinkedhashmap = { module = "com.googlecode.concurrentlinkedhashmap:concurrentlinkedhashmap-lru", version.ref = "concurrentlinkedhashmap" }
+ical4j = { module = "org.mnode.ical4j:ical4j", version.ref = "ical4j" }
+dom4j = { module = "org.dom4j:dom4j", version.ref = "dom4j" }
+jdom = { module = "org.jdom:jdom", version.ref = "jdom" }
+nekohtml = { module = "net.sourceforge.nekohtml:nekohtml", version.ref = "nekohtml" }
+ez-vcard = { module = "com.googlecode.ez-vcard:ez-vcard", version.ref = "ez-vcard" }
+reflections = { module = "org.reflections:reflections", version.ref = "reflections" }
+reflections8 = { module = "net.oneandone.reflections8:reflections8", version.ref = "reflections8" }
+
+# Database
+derby = { module = "org.apache.derby:derby", version.ref = "derby" }
+derbytools = { module = "org.apache.derby:derbytools", version.ref = "derby" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+
+# Testing
+junit = { module = "junit:junit", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit5" }
+hamcrest-all = { module = "org.hamcrest:hamcrest-all", version.ref = "hamcrest" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+spring-core = { module = "org.springframework:spring-core", version.ref = "spring" }
+spring-test = { module = "org.springframework:spring-test", version.ref = "spring" }
+
+# Web
+rome = { module = "com.rometools:rome", version.ref = "rome" }
+urlrewritefilter = { module = "org.tuckey:urlrewritefilter", version.ref = "urlrewritefilter" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+gravatar4java = { module = "de.bripkens:gravatar4java", version.ref = "gravatar4java" }
+
+# Solr
+solr-solrj = { module = "org.apache.solr:solr-solrj", version.ref = "solr" }
+solr-core = { module = "org.apache.solr:solr-core", version.ref = "solr-server" }
+metrics-core = { module = "io.dropwizard.metrics:metrics-core", version.ref = "metrics" }
+metrics-graphite = { module = "io.dropwizard.metrics:metrics-graphite", version.ref = "metrics" }
+metrics-jvm = { module = "io.dropwizard.metrics:metrics-jvm", version.ref = "metrics" }
+
+# Mail
+jakarta-mail = { module = "com.sun.mail:jakarta.mail", version.ref = "jakarta-mail" }
+
+# Misc
+jfairy = { module = "io.codearte.jfairy:jfairy", version.ref = "jfairy" }
+okhttp = { module = "com.squareup.okhttp:okhttp", version.ref = "okhttp" }
+okhttp-logging = { module = "com.squareup.okhttp:logging-interceptor", version.ref = "okhttp" }
+sshd-common = { module = "org.apache.sshd:sshd-common", version.ref = "sshd" }
+sshd-core = { module = "org.apache.sshd:sshd-core", version.ref = "sshd" }
+sshd-sftp = { module = "org.apache.sshd:sshd-sftp", version.ref = "sshd" }
+
+# JAXB (JDK 11+)
+jaxb-api = { module = "javax.xml.bind:jaxb-api", version.ref = "jaxb-api" }
+jaxb-core = { module = "com.sun.xml.bind:jaxb-core", version.ref = "jaxb-impl" }
+jaxb-impl = { module = "com.sun.xml.bind:jaxb-impl", version.ref = "jaxb-impl" }
+
+# Optional/External (download-*)
+activemq-all = { module = "org.apache.activemq:activemq-all", version.ref = "activemq" }
+cobertura = { module = "net.sourceforge.cobertura:cobertura", version.ref = "cobertura" }
+jacoco-ant = { module = "org.jacoco:org.jacoco.ant", version.ref = "jacoco" }
+sonar-ant-task = { module = "org.codehaus.sonar-plugins:sonar-ant-task", version.ref = "sonar-ant-task" }
+
+[bundles]
+# Common groupings for convenience
+commons = [
+    "commons-beanutils", "commons-codec", "commons-collections", "commons-collections4",
+    "commons-compress", "commons-csv", "commons-fileupload", "commons-io",
+    "commons-lang", "commons-lang3", "commons-logging", "commons-math3", "commons-net",
+    "commons-pool2", "commons-text", "commons-validator"
+]
+
+logging = ["log4j-api", "log4j-core", "log4j-1-2-api", "log4j-slf4j-impl", "slf4j-api"]
+
+xml-processing = ["xerces", "xml-apis", "xml-apis-ext", "xalan", "xalan-serializer", "xmlbeans"]
+
+tomcat = [
+    "tomcat-api", "tomcat-catalina", "tomcat-catalina-ha", "tomcat-coyote",
+    "tomcat-jasper", "tomcat-jni", "tomcat-tribes", "tomcat-util", "tomcat-util-scan",
+    "tomcat-websocket", "tomcat-websocket-api"
+]
+
+# SCIPIO: 4.0.0: the EL API from Tomcat, not javax.el:javax.el-api: that jar also holds javax.el.ExpressionFactory, reads
+# only the first line of META-INF/services/javax.el.ExpressionFactory (the licence comment in tomcat-jasper-el) and then
+# falls back to the absent com.sun.el.ExpressionFactoryImpl; where it wins the jar order (Linux), no JSP compiled.
+servlet-api = ["tomcat-servlet-api", "tomcat-jsp-api", "tomcat-el-api", "annotation-api"]
+
+geronimo = [
+    "geronimo-activation", "geronimo-jca", "geronimo-jaxr", "geronimo-jaxrpc",
+    "geronimo-jms", "geronimo-jta", "geronimo-saaj"
+]
+
+axis2 = [
+    "axis2-adb", "axis2-kernel", "axis2-transport-http", "axis2-transport-local",
+    "axis2-saaj", "axis2-xmlbeans", "axiom-api", "axiom-impl",
+    "xmlschema-core", "wsdl4j"
+]
+
+httpclient = ["httpclient", "httpclient-cache", "httpcore", "httpcore-nio", "httpmime", "httpasyncclient"]
+
+groovy = ["groovy", "groovy-jsr223", "groovy-dateutil"]
+
+jackson = ["jackson-annotations", "jackson-core", "jackson-databind"]
+
+security = ["esapi", "antisamy", "owasp-html-sanitizer", "bcpkix", "bcmail", "bcprov", "shiro-core"]
+
+xml-graphics = ["batik-all", "fop", "xmlgraphics-commons", "barcode4j", "barcode4j-fop"]
+
+poi = ["poi", "poi-ooxml"]
+
+pdf = ["pdfbox", "fontbox", "jempbox", "openpdf"]
+
+tika = ["tika-core", "tika-parser-text", "tika-parser-pdf"]
+
+image-processing = ["thumbnailator", "java-image-scaling", "imgscalr", "filters", "twelvemonkeys-common-image", "webp-imageio", "tinify"]
+
+testing = ["junit", "junit-jupiter", "hamcrest-all", "mockito-core", "spring-core", "spring-test"]
+
+# SCIPIO: L-06b: no gmetric4j and metrics-ganglia (Ganglia reporting; oncrpc is LGPL and nothing uses it)
+solr = ["solr-solrj", "metrics-core", "metrics-graphite", "metrics-jvm"]
+
+jaxb = ["jaxb-api", "jaxb-core", "jaxb-impl"]
+
+sshd = ["sshd-common", "sshd-core", "sshd-sftp"]

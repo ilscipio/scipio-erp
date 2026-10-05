@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.service.eca;
 
 import java.lang.reflect.Method;
@@ -156,7 +162,9 @@ public final class ServiceEcaRule implements java.io.Serializable {
 
         // Actions and local assignments
         List<SecaAction> actions = new ArrayList<>(Arrays.asList(secaDef.actions()));
-        if (actions.isEmpty()) {
+        if (actions.isEmpty() && serviceDef != null) {
+            // Default action (invoke the annotated service) only applies when @Seca sits on a
+            // @Service definition; standalone Secas classes may define assignments-only rules
             actions.add(SecaAction.DefaultType.class.getAnnotation(SecaAction.class));
         }
         for (SecaAction action : actions) {
@@ -239,6 +247,25 @@ public final class ServiceEcaRule implements java.io.Serializable {
                         Debug.logVerbose("For Service ECA [" + this.serviceName + "] on [" + this.eventName + "] got true for condition: " + ec, module);
                     }
                 }
+            }
+        }
+
+        // SCIPIO: 4.0.0: annotation condition expression (e.g. "!empty(productId)"); ignored before, so every rule fired
+        if (allCondTrue && conditionExpr != null && !EcaConditionExpression.isBlank(conditionExpr.getOriginal())) {
+            Map<String, Object> exprVars = new java.util.HashMap<>();
+            if (context != null) exprVars.putAll(context);
+            if (result != null) exprVars.putAll(result);
+            exprVars.put("parameters", context);
+            exprVars.put("result", result);
+            exprVars.put("isError", isError);
+            exprVars.put("isFailure", isFailure);
+            exprVars.put("serviceName", serviceName);
+            exprVars.put("dctx", dctx);
+            exprVars.put("delegator", dctx.getDelegator());
+            allCondTrue = EcaConditionExpression.eval(conditionExpr.getOriginal(), exprVars,
+                    "Service ECA [" + this.serviceName + "] on [" + this.eventName + "]");
+            if (!allCondTrue && Debug.infoOn()) {
+                Debug.logInfo("For Service ECA [" + this.serviceName + "] on [" + this.eventName + "] got false for condition: " + conditionExpr.getOriginal(), module);
             }
         }
 

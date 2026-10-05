@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.ce.base.component;
 
 import com.ilscipio.scipio.ce.lang.reflect.ReflectQuery;
@@ -62,20 +78,30 @@ public class WebappReflectRegistry {
      * component jars only.
      */
     public static ReflectQuery getReflectQueryForResource(Object location) {
+        Debug.logInfo("getReflectQueryForResource: location=[" + location + "]", module);
         ComponentConfig.WebappInfo webappInfo = ComponentConfig.getWebappInfoFromResource(location, false);
+        Debug.logInfo("getReflectQueryForResource: webappInfo=[" + (webappInfo != null ? webappInfo.getName() : "null") + "]", module);
         if (webappInfo != null) {
             WebappReflectInfo wri = WebappReflectRegistry.getReflectInfo(webappInfo);
+            Debug.logInfo("getReflectQueryForResource: WebappReflectInfo found=[" + (wri != null) + "]", module);
             if (wri != null) {
                 return wri.getReflectQuery();
+            } else {
+                Debug.logWarning("getReflectQueryForResource: No WebappReflectInfo registered for webapp [" +
+                        webappInfo.getComponentConfig().getGlobalName() + "::" + webappInfo.getName() + "]", module);
+                Debug.logInfo("getReflectQueryForResource: Registered webapps: " + NAME_REGISTRY.keySet(), module);
             }
         }
         ComponentConfig componentConfig = ComponentConfig.getComponentConfigFromResource(location);
+        Debug.logInfo("getReflectQueryForResource: componentConfig=[" + (componentConfig != null ? componentConfig.getComponentName() : "null") + "]", module);
         if (componentConfig != null) {
             ComponentReflectInfo cri = ComponentReflectRegistry.getReflectInfo(componentConfig);
+            Debug.logInfo("getReflectQueryForResource: ComponentReflectInfo found=[" + (cri != null) + "]", module);
             if (cri != null) {
                 return cri.getReflectQuery();
             }
         }
+        Debug.logWarning("getReflectQueryForResource: No ReflectQuery found for location [" + location + "]", module);
         return null;
     }
 }

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.manufacturing.jobshopmgt;
 
 import java.math.BigDecimal;
@@ -2228,7 +2234,15 @@ public class ProductionRunServices {
         }
         String inventoryItemTypeId = (String)context.get("inventoryItemTypeId");
 
-        // TODO: if the task is not running, then return an error message.
+        // SCIPIO: material can be returned only while the task is running
+        try {
+            GenericValue task = EntityQuery.use(delegator).from("WorkEffort").where("workEffortId", productionRunTaskId).queryOne();
+            if (task == null || !"PRUN_RUNNING".equals(task.getString("currentStatusId"))) {
+                return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingProductionRunTaskNotRunning", UtilMisc.toMap("productionRunTaskId", productionRunTaskId), locale));
+            }
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
 
         try {
             Map<String, Object> inventoryResult = dispatcher.runSync("productionRunTaskProduce",
@@ -2253,9 +2267,10 @@ public class ProductionRunServices {
         // Mandatory input fields
         String productionRunId = (String) context.get("productionRunId");
         String workEffortId = (String) context.get("productionRunTaskId");
-        String partyId = userLogin.getString("partyId");
-        if (UtilValidate.isNotEmpty(partyId)) {
-            partyId = (String) context.get("partyId");
+        // SCIPIO: an explicit partyId wins; otherwise the worker is the current user
+        String partyId = (String) context.get("partyId");
+        if (UtilValidate.isEmpty(partyId)) {
+            partyId = userLogin.getString("partyId");
         }
 
         try {
@@ -2266,8 +2281,9 @@ public class ProductionRunServices {
             }
             GenericValue userEmployeeRole = EntityUtil.getFirst(EntityQuery.use(delegator).from("RoleTypeAndParty").where(roleTypeAndPartyCond).cache().queryList());
             if (UtilValidate.isEmpty(userEmployeeRole)) {
-                return ServiceUtil.returnError(UtilProperties.getMessage("ManufacturingUiLabels", "ManufacturingProductionRunTaskInvalidWorkerRole", locale));
-            }
+                // SCIPIO: a worker without an employee role does not block the declaration; the assignment is skipped
+                Debug.logWarning("Party [" + partyId + "] has no employee role; no WorkEffortPartyAssignment created for task [" + workEffortId + "]", module);
+            } else {
 
             // SCIPIO (2019-02-11): PartyId is not used at all and it is supposed to represent the person (worker) of that given task. 
             // We must create/update the corresponding WorkeffortPartyAssignment record to make this meaningful
@@ -2295,6 +2311,7 @@ public class ProductionRunServices {
                 GenericValue newWorkEffortPartyAssignment = delegator.makeValidValue("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", partyId,
                     "roleTypeId", userEmployeeRole.getString("roleTypeId"), "fromDate", UtilDateTime.nowTimestamp(), "statusId", "PRTYASGN_ASSIGNED"));
                 newWorkEffortPartyAssignment.create();
+            }
             }
         } catch (GenericEntityException e1) {
             Debug.logError(e1.getMessage(), module);

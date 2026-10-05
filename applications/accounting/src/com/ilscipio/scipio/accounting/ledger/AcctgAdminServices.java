@@ -1,21 +1,19 @@
-/*******************************************************************************
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *******************************************************************************/
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.accounting.ledger;
 
 import java.util.Map;
@@ -30,6 +28,7 @@ import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 
 public class AcctgAdminServices {
@@ -57,7 +56,15 @@ public class AcctgAdminServices {
         long quoteCount = EntityQuery.use(delegator).from("Quote").queryCount();
 
         try {
-            result = dispatcher.runSync("updatePartyAcctgPreference", context);
+            // SCIPIO: 4.0.0: the entity-auto service excludes the sequence and fiscal fields; pass only what it declares
+            Map<String, Object> updateContext = dctx.makeValidContext("updatePartyAcctgPreference", ModelService.IN_PARAM, context);
+            // SCIPIO: 4.0.0: a new organization has no PartyAcctgPreference yet and entity-auto update needs one
+            if (delegator.findOne("PartyAcctgPreference", UtilMisc.toMap("partyId", context.get("partyId")), false) == null) {
+                GenericValue newPreference = delegator.makeValidValue("PartyAcctgPreference", updateContext);
+                newPreference.set("partyId", context.get("partyId"));
+                delegator.create(newPreference);
+            }
+            result = dispatcher.runSync("updatePartyAcctgPreference", updateContext);
         } catch (GenericServiceException e) {
             Debug.logError(e.getMessage(), module);
         }

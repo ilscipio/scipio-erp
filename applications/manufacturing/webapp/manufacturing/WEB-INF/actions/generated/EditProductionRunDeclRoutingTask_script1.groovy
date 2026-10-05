@@ -1,0 +1,1 @@
+routingTaskData.comments = org.ofbiz.manufacturing.jobshopmgt.ProductionRun.getCommentsFromProductionRunTask(delegator, routingTaskId);

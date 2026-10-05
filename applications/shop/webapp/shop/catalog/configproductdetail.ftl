@@ -1,7 +1,18 @@
 <#--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
@@ -613,24 +624,19 @@ ${virtualJavaScript!}
     <#assign productDetailProductAttribContentString><@productDetailProductAttribContent /></#assign>
     <#assign productConfiguratorString><@productConfigurator /></#assign>
     
-    <#if productDetailLongDescContentString?has_content || productDetailProductAttribContentString?has_content || productConfiguratorString?has_content>
-        <@tabs>
-            <#if productDetailLongDescContentString?has_content>
-                <@tab title=uiLabelMap.CommonOverview>
-                    ${productDetailLongDescContentString}
-                </@tab>
-            </#if>
-            <#if productDetailProductAttribContentString?has_content>
-                <@tab title=uiLabelMap.CommonSpecifications>
-                    ${productDetailProductAttribContentString}
-                </@tab>
-            </#if>
-            <#if productConfiguratorString?has_content>
-                <@tab title=uiLabelMap.CommonOptions>
-                    ${productConfiguratorString}
-                </@tab>
-            </#if>
-        </@tabs>
+    <#-- SCIPIO: 4.0.0: the shopper must choose the options before buying: the configurator is an open section right
+        below the buy box, never a hidden tab; description and specifications fold (details/summary, no script) -->
+    <#if productConfiguratorString?trim?has_content>
+        <div id="product-configurator-section" class="product-configurator-section">
+            <h2 class="product-section-title">${escapeVal(raw(uiLabelMap.CommonConfigure)?remove_ending(":"), "html")}</h2>
+            ${productConfiguratorString}
+        </div>
+    </#if>
+    <#if productDetailLongDescContentString?trim?has_content>
+        <details class="as-acc" open="open"><summary>${uiLabelMap.CommonOverview}</summary><div class="as-acc-body">${productDetailLongDescContentString}</div></details>
+    </#if>
+    <#if productDetailProductAttribContentString?trim?has_content>
+        <details class="as-acc"><summary>${uiLabelMap.CommonSpecifications}</summary><div class="as-acc-body">${productDetailProductAttribContentString}</div></details>
     </#if>
 </@section>
 

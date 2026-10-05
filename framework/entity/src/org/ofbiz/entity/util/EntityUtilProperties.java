@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.entity.util;
 
 import java.io.IOException;
@@ -241,7 +247,7 @@ public final class EntityUtilProperties implements Serializable {
             Debug.logError("Could not get a delegator. Using the 'default' delegator", module);
             // this will be the common case for now as the delegator isn't available where we want to do this
             // we'll cheat a little here and assume the default delegator
-            delegator = DelegatorFactory.getDelegator("default");
+            delegator = TenantScope.currentDelegator("default"); // SCIPIO: 4.0.0: pooled runtime: the store of the thread (G13)
             Debug.logError("Could not get a delegator. Using the 'default' delegator", module);
             if (delegator == null) {
                 Debug.logError("Could not get a system property for " + name + ". Reason: the delegator is null", module);
@@ -365,7 +371,7 @@ public final class EntityUtilProperties implements Serializable {
             Debug.logError("Could not get a delegator. Using the 'default' delegator", module);
             // this will be the common case for now as the delegator isn't available where we want to do this
             // we'll cheat a little here and assume the default delegator
-            delegator = DelegatorFactory.getDelegator("default");
+            delegator = TenantScope.currentDelegator("default"); // SCIPIO: 4.0.0: pooled runtime: the store of the thread (G13)
             Debug.logError("Could not get a delegator. Using the 'default' delegator", module);
             if (delegator == null) {
                 Debug.logError("Could not get a system property for " + name + ". Reason: the delegator is null", module);

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.base.util;
 
 import org.ofbiz.base.location.FlexibleLocation;
@@ -236,7 +242,7 @@ public final class UtilURL {
             if (FlexibleLocation.isUrlLocation(locationStr)) {
                 try {
                     URL url = FlexibleLocation.resolveLocation(locationStr);
-                    return url.getPath();
+                    return getFilePathFromUrl(url);
                 } catch (MalformedURLException e) {
                     throw new IllegalArgumentException(e);
                 }
@@ -258,14 +264,59 @@ public final class UtilURL {
                 }
             }
         } else if (location instanceof URI) {
-            return ((URI) location).getPath();
+            return getFilePathFromUri((URI) location);
         } else if (location instanceof URL) {
-            return ((URL) location).getPath();
+            return getFilePathFromUrl((URL) location);
         } else if (location == null) {
             return null;
         } else {
             throw new IllegalArgumentException("Not a path, URI or URL: " + location.getClass().getName());
         }
+    }
+
+    /**
+     * Extracts the proper file system path from a URL.
+     *
+     * <p>On Windows, URL.getPath() returns paths like "/C:/path/to/file" with an extra
+     * leading slash that needs to be stripped for file system operations.</p>
+     *
+     * <p>SCIPIO: 4.0.0: Added to fix Windows file:// URL handling.</p>
+     */
+    private static String getFilePathFromUrl(URL url) {
+        String path = url.getPath();
+        return normalizeUrlPath(path);
+    }
+
+    /**
+     * Extracts the proper file system path from a URI.
+     *
+     * <p>On Windows, URI.getPath() returns paths like "/C:/path/to/file" with an extra
+     * leading slash that needs to be stripped for file system operations.</p>
+     *
+     * <p>SCIPIO: 4.0.0: Added to fix Windows file:// URL handling.</p>
+     */
+    private static String getFilePathFromUri(URI uri) {
+        String path = uri.getPath();
+        return normalizeUrlPath(path);
+    }
+
+    /**
+     * Normalizes a URL/URI path for file system use.
+     *
+     * <p>On Windows, URL/URI paths look like "/C:/path/to/file" with an extra leading slash.
+     * This method detects and removes that extra slash for proper file system operations.</p>
+     *
+     * <p>SCIPIO: 4.0.0: Added to fix Windows file:// URL handling.</p>
+     */
+    private static String normalizeUrlPath(String path) {
+        if (path == null) {
+            return null;
+        }
+        // On Windows, URL.getPath() returns "/C:/..." - strip the leading slash if followed by a drive letter
+        if (path.length() >= 3 && path.charAt(0) == '/' && Character.isLetter(path.charAt(1)) && path.charAt(2) == ':') {
+            return path.substring(1);
+        }
+        return path;
     }
 
 }

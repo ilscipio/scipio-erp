@@ -40,6 +40,19 @@ modern HTML frameworks.
 * Supports Caching & Clustering
 * Can be rolled out internationally
 
+## New in 4.0
+* **Annotations instead of XML.** Screens, forms, menus, trees, services, entities, ECA rules and
+  controllers are Java annotations (`@Screen`, `@Request`, `@Service`, `@Entity`, ...). The IDE completes
+  them and the compiler checks them. A converter migrates existing XML components.
+* **Agent access built in.** Every application answers the Model Context Protocol at
+  `POST /<webapp>/mcp` with curated tools, bearer tokens, permissions and an audit log.
+  See `docs/AGENT-QUICKSTART.md`, `docs/AGENT-SECURITY.md` and `docs/EXTENDING-AGENTIC.md`.
+* **Aurora.** A new default backend theme without a CSS framework, with a light and a dark scheme.
+* **Manufacturing, rebuilt.** Production lines, fabrication orders, lot reservation, barcode capture,
+  MRP with supplier lead times, product costing and a shop floor board.
+* **Gradle build on Java 11, 17 and 21.** Ant is gone. Components under `hot-deploy/` and `addons/`
+  are discovered automatically; `./gradlew createComponent` scaffolds an annotation-based component.
+
 ## What's included
 * Business Applications & functions for
   * Accounting
@@ -95,14 +108,12 @@ contains the desirable setup for most demo, server and client usages.
 In order to install on a client system or start on a server, the following steps should be used:
 
 1. Open your command line, go to the extracted folder and run:
-  * Linux ./install.sh
-  * OS X: ./install.sh
-  * Windows: install.bat
+  * Linux/OS X: `./gradlew build loadDemo`
+  * Windows: `gradlew.bat build loadDemo`
 
 2. From the same command line run:
-  * Linux ./start.sh
-  * OS X: bash ./start.sh
-  * Windows: start.bat
+  * Linux/OS X: `./gradlew start`
+  * Windows: `gradlew.bat start`
 
 3. To access the application visit the SCIPIO ERP Dashboard:
   https://localhost:8443/admin
@@ -110,9 +121,6 @@ In order to install on a client system or start on a server, the following steps
 4. To access the SCIPIO ERP applications from the Dashboard use:
   Username: admin
   Password: scipio
-
-Note: On JDK 15 or later, the Nashorn Javascript engine is automatically downloaded on first build.
-If issues occur, you can manually run: ./ant download-ant-js (or ant.bat download-ant-js on Windows)
 
 Note: These steps are typically too limited for developers; see section below.
 
@@ -155,46 +163,50 @@ you can create a container with the following command:
 ### Development
 For developers, the install/start commands above are typically too limited.
 The JetBrains IntelliJ IDEA integrated development environment with Scipio ERP Plugin
-(found in the integrated IDEA plugin store) is highly recommended and, for compilation and 
-development tasks, the traditional bundled Apache Ant commands may and sometimes should be used instead:
+(found in the integrated IDEA plugin store) is highly recommended.
 
-1. Clear local database (Derby), clean out old JARs, build, load demo data to database and start:
-  * Linux: ./ant clean-all build load-demo start-debug
-  * OS X: ./ant clean-all build load-demo start-debug
-  * Windows: ant.bat clean-all build load-demo start-debug
+#### Gradle Build System
 
-Note: On JDK 15+, Nashorn is auto-downloaded. If issues occur: ./ant download-ant-js
+SCIPIO ERP uses Gradle for building and dependency management.
 
-Commands can be listed using: ant -p (./ant -p)
+1. Clear local database (Derby), clean out old JARs, build, load demo data and start with debug:
+  * Linux/OS X: `./gradlew clean build loadDemo startDebug`
+  * Windows: `gradlew.bat clean build loadDemo startDebug`
 
-Commonly used and useful Ant developer commands:
-  * clean-all (implies clean-data clean-logs)
-  * clean-data (Warning: This deletes local Derby database demo data, but not PostgreSQL/external)
-  * clean-logs
-  * build
-  * rebuild
-  * lib-clean-cache-full (in case of maven/ivy issues)
-  * lib-update-force (in case of maven/ivy issues)
-  * start-debug
-  * restart-debug
-  * rebuild-debug
-  * stop-wait
+Commands can be listed using: `./gradlew tasks` (or `gradlew.bat tasks`)
+
+Commonly used Gradle developer commands:
+  * `clean` - Clean build artifacts
+  * `build` - Compile and build all components
+  * `compileJava` - Compile only (faster)
+  * `loadDemo` - Load demo data to database
+  * `loadSeed` - Load seed data only
+  * `start` - Start the server
+  * `startDebug` - Start with debug port 5005
+  * `stop` - Stop the server
+
+Key build files:
+  * `settings.gradle.kts` - Multi-project configuration
+  * `build.gradle.kts` - Root build configuration
+  * `gradle/libs.versions.toml` - Centralized dependency versions
+
+#### Creating New Components
+Create a new component in hot-deploy:
+```bash
+./gradlew createComponent -PcomponentName=mycomponent -PresourceName=MyComponent
+```
+
+Create a shop component:
+```bash
+./gradlew createShopComponent -PcomponentName=myshop -PresourceName=MyShop
+```
+
+Optional parameters: `-PwebappName=name`, `-PbasePermission=PERMISSION`, `-PcomponentPackage=org.example`
+
+#### Addon Compatibility
+Existing Ant-based addons remain compatible with the Gradle-built framework.
 
 This is a quick cheat sheet and further information for developers can be found on the website documentation.
-
-#### Automatically Download Jar Sources ####
-
-In order for build, lib-update and lib-update-force commands to automatically download third-party JAR sources 
-under component libsrc folders for their corresponding binaries under lib, simply create a file named 
-"build.scp.local.properties" under project root that sets "lib.update.sources=true".
-* Linux/OS X: echo "lib.update.sources=true" >> build.scp.local.properties
-
-After build/lib-update-force is run, IntelliJ IDEA using the Scipio ERP plugin can be instructed to refer to 
-these sources and automatically expand into them using Ctrl+B (a good test is HttpServletRequest):
-* Tools -> Scipio ERP -> Reload Resource Directories
-
-See build.properties for other options; build.scp.local.properties and other *.scp.local.properties files are 
-ignored for version control by .gitignore.
 
 ## Support
 For detailed information and changes about the SCIPIO ERP suite, visit the official website at:
@@ -213,15 +225,22 @@ For more details about OFBiz please visit the OFBiz Documentation page:
   http://ofbiz.apache.org/documentation.html
 
 ## License
-The source code that makes up The SCIPIO ERP Community Edition
-(hereinafter referred to as "SCIPIO ERP") and the majority of the
-libraries distributed with it are licensed under the Apache License v2.0.
+The Scipio 4.0 core (Scipio Commerce) is licensed under the GNU Affero General
+Public License, version 3 (AGPL-3.0). Ilscipio GmbH also offers a commercial
+license. The file LICENSE holds the full AGPL-3.0 text and a note on the
+commercial license.
 
-Other licenses used by libraries distributed with SCIPIO ERP are listed
-in the LICENSE file. This file includes a list of all libraries distributed with SCIPIO
-ERP and the full text of the license used for each.
+Files that came from Apache OFBiz keep their Apache header and stay under the
+Apache License, version 2.0. The Apache License text is in the file LICENSE
+(part B). The file NOTICE holds the notices that the Apache License requires.
 
-For additional details, see the NOTICE file.
+Libraries have their own licenses. The file THIRD-PARTY-NOTICES.md lists them
+with their license texts and NOTICE texts. Run `gradlew generateThirdPartyNotices`
+to write it again.
+
+Each source file has a license header. The task `gradlew checkLicenseHeaders`
+fails on a file without a header. The rules are in `buildSrc/license-headers/rules.txt`
+and in `docs/wp/L-01.md`.
 
 ## Disclaimer
 This software is provided as is and free of charge. There is no warranty

@@ -1,21 +1,19 @@
-/*******************************************************************************
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *******************************************************************************/
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
@@ -540,9 +538,15 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
             // WARN: this is only a superficial check to prevent endless loops while refactoring menus.
             // it does not resolve to the actual file, but since almost everything is a component://
             // we're probably fine.
-            if (resource != null && !resource.isEmpty() && !(menuLocation.equals(resource))) {
+            // SCIPIO: 4.0.0: For class:// resources, always use MenuFactory.getMenuFromLocation even when
+            // resource equals menuLocation, because class files can contain multiple menu definitions
+            // as nested interfaces (e.g., Menus$SetupAppSideBar and Menus$SetupStepsSideBar).
+            boolean isClassResource = resource != null && resource.startsWith("class://");
+            if (resource != null && !resource.isEmpty() && (isClassResource || !(menuLocation.equals(resource)))) {
                 try {
-                    modelMenu = MenuFactory.getMenuFromLocation(resource, name);
+                    // SCIPIO: 4.0.0: Strip hashtag from resource before lookup
+                    String cleanResource = WidgetLocationResolver.extractResourceLocation(resource);
+                    modelMenu = MenuFactory.getMenuFromLocation(cleanResource, name);
                 } catch (Exception e) {
                     Debug.logError(e, "Failed to load menu definition '" + name + "' at resource '" + resource
                             + "'", module);
@@ -550,13 +554,25 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
             } else {
                 resource = menuLocation;
 
-                // try to find a menu definition in the same file
+                // try to find a menu definition in the same file (XML only)
                 Element rootElement = anyMenuElement.getOwnerDocument().getDocumentElement();
                 List<? extends Element> menuElements = UtilXml.childElementList(rootElement, "menu");
                 for (Element menuElementEntry : menuElements) {
                     if (menuElementEntry.getAttribute("name").equals(name)) {
                         modelMenu = new ModelMenu(menuElementEntry, resource);
                         break;
+                    }
+                }
+                // SCIPIO: 4.0.0: Fallback to annotation menus if not found in same document
+                // This handles forward references where extends target is defined after this menu
+                if (modelMenu == null) {
+                    try {
+                        modelMenu = MenuFactory.getAnnotationMenu(name);
+                        if (modelMenu != null) {
+                            Debug.logInfo("Menu '" + name + "' not found in same document, using annotation fallback", module);
+                        }
+                    } catch (Exception e) {
+                        Debug.logWarning("Failed to get annotation fallback for menu '" + name + "': " + e.getMessage(), module);
                     }
                 }
                 if (modelMenu == null) {
@@ -744,7 +760,9 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
                         CurrentMenuDefBuildArgs includedNextCurrentMenuDefBuildArgs = new CurrentMenuDefBuildArgs(includedMenuModel != null ? includedMenuModel : this);
 
                         String includedForceSubMenuModelScope = forceSubMenuModelScope;
-                        if (UtilValidate.isEmpty(includedForceSubMenuModelScope)) {
+                        // SCIPIO: 4.0.0: the included menu model may be unavailable while it is itself being built
+                        // (annotation menus resolved on demand); the element-based include still works without it
+                        if (UtilValidate.isEmpty(includedForceSubMenuModelScope) && includedMenuModel != null) {
                             includedForceSubMenuModelScope = includedMenuModel.forceAllSubMenuModelScope;
                         }
 
@@ -762,7 +780,7 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
 
                                 String extendedForceSubMenuModelScope = includedForceSubMenuModelScope;
                                 if (UtilValidate.isEmpty(extendedForceSubMenuModelScope)) {
-                                    extendedForceSubMenuModelScope = includedMenuModel.forceExtendsSubMenuModelScope;
+                                    extendedForceSubMenuModelScope = (includedMenuModel != null) ? includedMenuModel.forceExtendsSubMenuModelScope : null;
                                     if (UtilValidate.isEmpty(extendedForceSubMenuModelScope)) {
                                         extendedForceSubMenuModelScope = extendedMenuModel.forceAllSubMenuModelScope;
                                     }
@@ -948,13 +966,37 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
         else {
             if (true) { // UtilValidate.isNotEmpty(resource)
                 try {
-                    URL menuFileUrl = FlexibleLocation.resolveLocation(targetResource);
-                    Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
-                    // SCIPIO: New: Save original location as user data in Document
-                    if (menuFileDoc != null) {
-                        WidgetDocumentInfo.retrieveAlways(menuFileDoc).setResourceLocation(targetResource);
+                    // SCIPIO: 4.0.0: Handle class:// locations - build Document from annotation class
+                    if (targetResource != null && targetResource.startsWith("class://")) {
+                        // For class:// resources, get the menu Element directly from the class
+                        // This builds a synthetic Document from the annotation
+                        inclMenuElem = MenuFactory.getMenuElementFromClass(targetResource, menuName);
+                        // SCIPIO: 4.0.0: Annotation menus use isolated per-class documents. If not found
+                        // in the specific class, fall back to the global annotation menu cache.
+                        if (inclMenuElem == null) {
+                            ModelMenu annMenu = MenuFactory.getAnnotationMenu(menuName);
+                            if (annMenu != null) {
+                                inclMenuElem = MenuFactory.getMenuElementFromClass(annMenu.getMenuLocation(), menuName);
+                            }
+                        }
+                    } else {
+                        // SCIPIO: 4.0.0: annotation-only locations (no XML file) resolve through the location alias first
+                        if (MenuFactory.hasLocationAlias(targetResource) || WidgetLocationResolver.resolveWidgetLocation(targetResource, "menu") == null) {
+                            inclMenuElem = MenuFactory.getMenuElementFromLocation(targetResource, menuName);
+                            if (inclMenuElem == null && WidgetLocationResolver.resolveWidgetLocation(targetResource, "menu") == null) {
+                                throw new IllegalArgumentException("Could not find menu [" + menuName + "] at annotation location [" + targetResource + "]");
+                            }
+                        }
+                        if (inclMenuElem == null) {
+                        URL menuFileUrl = FlexibleLocation.resolveLocation(targetResource);
+                        Document menuFileDoc = UtilXml.readXmlDocument(menuFileUrl, true, true);
+                        // SCIPIO: New: Save original location as user data in Document
+                        if (menuFileDoc != null) {
+                            WidgetDocumentInfo.retrieveAlways(menuFileDoc).setResourceLocation(targetResource);
+                        }
+                        inclRootElem = menuFileDoc.getDocumentElement();
+                        }
                     }
-                    inclRootElem = menuFileDoc.getDocumentElement();
                 } catch (Exception e) {
                     Debug.logError(e, "Failed to load include-menu-items resource: " + resource, module);
                 }
@@ -966,7 +1008,8 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
                 //inclRootElem = currMenuElem.getOwnerDocument().getDocumentElement();
             //}
 
-            if (inclRootElem != null) {
+            // SCIPIO: 4.0.0: For non-class:// resources, search in the root element
+            if (inclMenuElem == null && inclRootElem != null) {
                 List<? extends Element> menuElements = UtilXml.childElementList(inclRootElem, "menu");
                 for (Element menuElementEntry : menuElements) {
                     if (menuElementEntry.getAttribute("name").equals(menuName)) {
@@ -975,6 +1018,21 @@ public class ModelMenu extends ModelMenuCommon implements ModelWidget.IdAttrWidg
                     }
                 }
             }
+
+            // SCIPIO: 4.0.0: Annotation fallback - if XML not found, try annotation menus
+            if (inclMenuElem == null && targetResource != null && !targetResource.startsWith("class://")) {
+                try {
+                    inclMenuElem = MenuFactory.getMenuElementFromLocation(targetResource, menuName);
+                    if (inclMenuElem != null) {
+                        Debug.logWarning("Menu [" + menuName + "] not found in XML [" + targetResource +
+                            "], using annotation fallback", module);
+                    }
+                } catch (Exception e) {
+                    Debug.logWarning("Failed to get annotation fallback for menu [" + menuName +
+                        "] from [" + targetResource + "]: " + e.getMessage(), module);
+                }
+            }
+
             if (useCache && !cacheConsume) {
                 menuElemCache.put(fullLocation, inclMenuElem);
             }

@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <property key="ComplianceApplication">
+        <value xml:lang="de">Compliance Anwendung</value>
+        <value xml:lang="en">Compliance Application</value>
+        <value xml:lang="es">Aplicación Compliance</value>
+        <value xml:lang="fr">Application Compliance</value>
+        <value xml:lang="it">Applicazione Compliance</value>
+        <value xml:lang="zh">Compliance应用程序</value>
+        <value xml:lang="zh-TW">Compliance應用程式</value>
+    </property>
+    <property key="ComplianceCompanyName">
+        <value xml:lang="de">SCIPIO - Compliance</value>
+        <value xml:lang="en">SCIPIO - Compliance</value>
+        <value xml:lang="es">SCIPIO - Compliance</value>
+        <value xml:lang="fr">SCIPIO - Compliance</value>
+        <value xml:lang="it">SCIPIO - Compliance</value>
+        <value xml:lang="zh-TW">SCIPIO - Compliance</value>
+    </property>
+    <property key="ComplianceCompanySubtitle">
+        <value xml:lang="de">Teil der SCIPIO ERP Familie von Open Source Software</value>
+        <value xml:lang="en">Part of the SCIPIO ERP Family of Open Source Software</value>
+        <value xml:lang="es">Parte de la familia de software SCIPIO ERP de código abierto</value>
+        <value xml:lang="fr">Un module de la famille SCIPIO ERP, logiciel libre de gestion d'entreprise.</value>
+        <value xml:lang="it">Un modulo della famiglia di software open source SCIPIO ERP</value>
+        <value xml:lang="zh">开源软件SCIPIO ERP的组成部分</value>
+        <value xml:lang="zh-TW">開源軟體SCIPIO ERP的組成部分</value>
+    </property>
+    <property key="ComplianceViewPermissionError">
+        <value xml:lang="de">Sie haben nicht die Berechtigung, diese Seite anzusehen.</value>
+        <value xml:lang="en">You are not allowed to view this page.</value>
+        <value xml:lang="es">No tiene permiso para ver esta página.</value>
+        <value xml:lang="fr">Vous n'avez pas l'autorisation de voir cette page.</value>
+        <value xml:lang="it">Tu non sei autorizzato a vedere questa pagina.</value>
+        <value xml:lang="zh">不允许你浏览这个页面。</value>
+        <value xml:lang="zh-TW">不允許您檢視這個頁面.</value>
+    </property>
+    <property key="ComplianceLegal">
+        <value xml:lang="de">Rechtliches</value>
+        <value xml:lang="en">Legal</value>
+    </property>
+    <property key="ComplianceTemplateNotice">
+        <value xml:lang="de">Diese Seite zeigt die mitgelieferte Vorlage mit Ihren Shop-Daten. Sie ist keine Rechtsberatung. Prüfen, bearbeiten und veröffentlichen Sie sie unter Compliance > Rechtstexte.</value>
+        <value xml:lang="en">This page shows the shipped template with your store data. It is not legal advice. Check it, edit it and publish it in Compliance > Legal texts.</value>
+    </property>
+    <property key="ComplianceVersion">
+        <value xml:lang="de">Fassung</value>
+        <value xml:lang="en">Version</value>
+    </property>
+    <property key="ComplianceInEffectSince">
+        <value xml:lang="de">gültig seit</value>
+        <value xml:lang="en">in effect since</value>
+    </property>
+    <property key="ComplianceDocumentNotFound">
+        <value xml:lang="de">Diesen Rechtstext gibt es nicht.</value>
+        <value xml:lang="en">This legal text does not exist.</value>
+    </property>
+    <property key="ComplianceCookieSettings">
+        <value xml:lang="de">Cookie-Einstellungen</value>
+        <value xml:lang="en">Cookie settings</value>
+    </property>
+    <property key="ComplianceWithdrawHere">
+        <value xml:lang="de">Vertrag hier widerrufen</value>
+        <value xml:lang="en">Withdraw from contract here</value>
+    </property>
+    <property key="ComplianceYourPrivacyChoices">
+        <value xml:lang="de">Ihre Datenschutzoptionen</value>
+        <value xml:lang="en">Your Privacy Choices</value>
+    </property>
+    <property key="CompliancePrivacyCenter">
+        <value xml:lang="de">Datenschutz-Center</value>
+        <value xml:lang="en">Privacy center</value>
+    </property>
+    <property key="ComplianceGuaranteeRights">
+        <value xml:lang="de">Ihre gesetzlichen Gewährleistungsrechte</value>
+        <value xml:lang="en">Your legal guarantee rights</value>
+    </property>
+    <property key="ComplianceOnThisPage">
+        <value xml:lang="de">Rechtstexte</value>
+        <value xml:lang="en">Legal texts</value>
+    </property>
+    <property key="ComplianceConsentTitle">
+        <value xml:lang="de">Ihre Cookie-Auswahl</value>
+        <value xml:lang="en">Your cookie choices</value>
+    </property>
+    <property key="ComplianceConsentText">
+        <value xml:lang="de">Wir verwenden notwendige Cookies für den Shop. Mit Ihrer Einwilligung nutzen wir auch die folgenden Dienste. Ihre Auswahl können Sie jederzeit über Cookie-Einstellungen am Ende jeder Seite ändern.</value>
+        <value xml:lang="en">We use necessary cookies to run the shop. With your consent we also use the services below. You can change your choice at any time under Cookie settings at the bottom of every page.</value>
+    </property>
+    <property key="ComplianceUsNoticeTitle">
+        <value xml:lang="de">Ihre Privatsphäre</value>
+        <value xml:lang="en">Your privacy</value>
+    </property>
+    <property key="ComplianceUsNoticeText">
+        <value xml:lang="de">Wir verwenden Cookies für den Shop und für Besuchsstatistiken. Sie können dem Verkauf oder der Weitergabe Ihrer Daten jederzeit widersprechen.</value>
+        <value xml:lang="en">We use cookies to run the shop and to count visits. You can opt out of the sale or sharing of your personal information at any time.</value>
+    </property>
+    <property key="ComplianceCookiePolicy">
+        <value xml:lang="de">Cookie-Richtlinie</value>
+        <value xml:lang="en">Cookie policy</value>
+    </property>
+    <property key="ComplianceGpcDetected">
+        <value xml:lang="de">Ihr Browser sendet ein Global-Privacy-Control-Signal. Wir beachten es: Verkauf und Weitergabe Ihrer Daten sind aus.</value>
+        <value xml:lang="en">Your browser sends a Global Privacy Control signal. We honour it: sale and sharing of your data are off.</value>
+    </property>
+    <property key="ComplianceRejectAll">
+        <value xml:lang="de">Alle ablehnen</value>
+        <value xml:lang="en">Reject all</value>
+    </property>
+    <property key="ComplianceAcceptAll">
+        <value xml:lang="de">Alle akzeptieren</value>
+        <value xml:lang="en">Accept all</value>
+    </property>
+    <property key="ComplianceSaveChoices">
+        <value xml:lang="de">Auswahl speichern</value>
+        <value xml:lang="en">Save choices</value>
+    </property>
+    <property key="ComplianceSettings">
+        <value xml:lang="de">Einstellungen</value>
+        <value xml:lang="en">Settings</value>
+    </property>
+    <property key="ComplianceOk">
+        <value xml:lang="de">OK</value>
+        <value xml:lang="en">OK</value>
+    </property>
+    <property key="ComplianceAlwaysOn">
+        <value xml:lang="de">Immer an</value>
+        <value xml:lang="en">Always on</value>
+    </property>
+    <property key="ComplianceNoneInUse">
+        <value xml:lang="de">Kein Dienst im Einsatz</value>
+        <value xml:lang="en">No service in use</value>
+    </property>
+    <property key="ComplianceCat_necessary">
+        <value xml:lang="de">Notwendig</value>
+        <value xml:lang="en">Necessary</value>
+    </property>
+    <property key="ComplianceCat_preferences">
+        <value xml:lang="de">Präferenzen</value>
+        <value xml:lang="en">Preferences</value>
+    </property>
+    <property key="ComplianceCat_statistics">
+        <value xml:lang="de">Statistik</value>
+        <value xml:lang="en">Statistics</value>
+    </property>
+    <property key="ComplianceCat_marketing">
+        <value xml:lang="de">Marketing</value>
+        <value xml:lang="en">Marketing</value>
+    </property>
+    <property key="ComplianceCatDesc_necessary">
+        <value xml:lang="de">Sitzung, Warenkorb, Kasse, Sicherheit und Ihre Cookie-Auswahl.</value>
+        <value xml:lang="en">Session, bag, checkout, security and your cookie choices.</value>
+    </property>
+    <property key="ComplianceCatDesc_preferences">
+        <value xml:lang="de">Sprache und Anmeldedienste.</value>
+        <value xml:lang="en">Language and sign-in services.</value>
+    </property>
+    <property key="ComplianceCatDesc_statistics">
+        <value xml:lang="de">Besuchszahlen und Seitenleistung.</value>
+        <value xml:lang="en">Visit counts and page performance.</value>
+    </property>
+    <property key="ComplianceCatDesc_marketing">
+        <value xml:lang="de">Werbung und deren Messung.</value>
+        <value xml:lang="en">Advertising and its measurement.</value>
+    </property>
+    <property key="CompliancePrivacyChoicesIntro">
+        <value xml:lang="de">Wählen Sie, wie wir Ihre Daten nutzen dürfen. Ihre Auswahl gilt für diesen Browser.</value>
+        <value xml:lang="en">Choose how we may use your personal information. Your choice applies to this browser.</value>
+    </property>
+    <property key="ComplianceGpcHonoured">
+        <value xml:lang="de">Global-Privacy-Control-Signal erkannt und beachtet</value>
+        <value xml:lang="en">Global Privacy Control signal detected and honoured</value>
+    </property>
+    <property key="ComplianceSaleShare">
+        <value xml:lang="de">Verkauf oder Weitergabe meiner Daten</value>
+        <value xml:lang="en">Sale or sharing of my personal information</value>
+    </property>
+    <property key="ComplianceSaleShareDesc">
+        <value xml:lang="de">Umfasst kontextübergreifende verhaltensbasierte Werbung.</value>
+        <value xml:lang="en">Includes cross-context behavioral advertising.</value>
+    </property>
+    <property key="ComplianceTargetedAds">
+        <value xml:lang="de">Personalisierte Werbung</value>
+        <value xml:lang="en">Targeted advertising</value>
+    </property>
+    <property key="ComplianceTargetedAdsDesc">
+        <value xml:lang="de">Werbung auf Grund Ihrer Aktivität auf anderen Seiten.</value>
+        <value xml:lang="en">Ads based on your activity on other sites.</value>
+    </property>
+    <property key="ComplianceSpi">
+        <value xml:lang="de">Nutzung sensibler Daten</value>
+        <value xml:lang="en">Use of sensitive personal information</value>
+    </property>
+    <property key="ComplianceSpiDesc">
+        <value xml:lang="de">Wir nutzen sie nur, soweit das Gesetz es erlaubt, z. B. für eine Zahlung. Keine Auswahl nötig.</value>
+        <value xml:lang="en">We use it only as the law allows, for example to process a payment. No choice is needed.</value>
+    </property>
+    <property key="ComplianceSaveMyChoices">
+        <value xml:lang="de">Meine Auswahl speichern</value>
+        <value xml:lang="en">Save my choices</value>
+    </property>
+    <property key="ComplianceChoicesSaved">
+        <value xml:lang="de">Ihre Auswahl ist gespeichert.</value>
+        <value xml:lang="en">Your choices are saved.</value>
+    </property>
+    <property key="ComplianceMakeRequest">
+        <value xml:lang="de">Anfrage stellen</value>
+        <value xml:lang="en">Make a request</value>
+    </property>
+    <property key="ComplianceRequestIntro">
+        <value xml:lang="de">Wir bestätigen Ihre Anfrage binnen 10 Werktagen und antworten binnen 45 Tagen. Ein Bevollmächtigter kann mit Ihrer schriftlichen Erlaubnis für Sie anfragen.</value>
+        <value xml:lang="en">We confirm your request within 10 business days and answer within 45 days. An authorized agent can make a request for you with your written permission.</value>
+    </property>
+    <property key="ComplianceOn">
+        <value xml:lang="de">An</value>
+        <value xml:lang="en">On</value>
+    </property>
+    <property key="ComplianceOff">
+        <value xml:lang="de">Aus</value>
+        <value xml:lang="en">Off</value>
+    </property>
+    <property key="ComplianceGaranTitle">
+        <value xml:lang="de">EU-GARAN-Label: Haltbarkeitsgarantie des Herstellers</value>
+        <value xml:lang="en">EU GARAN label: producer guarantee of durability</value>
+    </property>
+    <property key="ComplianceNoticeAlt">
+        <value xml:lang="de">EU-Hinweis zur gesetzlichen Gewährleistung</value>
+        <value xml:lang="en">EU harmonised notice on the legal guarantee of conformity</value>
+    </property>
+    <property key="ComplianceLegalGuaranteeLine">
+        <value xml:lang="de">Gesetzliche Gewährleistung: mindestens {0} Jahre.</value>
+        <value xml:lang="en">Legal guarantee of conformity: at least {0} years.</value>
+    </property>
+    <property key="ComplianceGaranLine">
+        <value xml:lang="de">Haltbarkeitsgarantie des Herstellers: {0} Jahre</value>
+        <value xml:lang="en">Producer guarantee of durability: {0} years</value>
+    </property>
+    <property key="ComplianceGaranNestedAlt">
+        <value xml:lang="de">EU-GARAN-Label: Herstellergarantie {0} Jahre. Ganzes Label öffnen.</value>
+        <value xml:lang="en">EU GARAN label: producer guarantee of {0} years. Open the full label.</value>
+    </property>
+    <property key="ComplianceWithdrawalLine">
+        <value xml:lang="de">{0} Tage Widerrufsrecht.</value>
+        <value xml:lang="en">{0}-day right of withdrawal.</value>
+    </property>
+    <property key="CompliancePriorPrice">
+        <value xml:lang="de">Niedrigster Preis der letzten 30 Tage: {0}</value>
+        <value xml:lang="en">Lowest price in the last 30 days: {0}</value>
+    </property>
+    <property key="ComplianceProductSafety">
+        <value xml:lang="de">Produktsicherheit</value>
+        <value xml:lang="en">Product safety</value>
+    </property>
+    <property key="ComplianceSoldBy">
+        <value xml:lang="de">Verkauft von</value>
+        <value xml:lang="en">Sold by</value>
+    </property>
+    <property key="ComplianceBusinessSeller">
+        <value xml:lang="de">gewerblicher Verkäufer</value>
+        <value xml:lang="en">business seller</value>
+    </property>
+    <property key="CompliancePrivateSeller">
+        <value xml:lang="de">privater Verkäufer: EU-Verbraucherrecht gilt nicht</value>
+        <value xml:lang="en">private seller: EU consumer law does not apply</value>
+    </property>
+    <property key="ComplianceTradeRegister">
+        <value xml:lang="de">Handelsregister</value>
+        <value xml:lang="en">Trade register</value>
+    </property>
+    <property key="ComplianceVatId">
+        <value xml:lang="de">USt-IdNr.</value>
+        <value xml:lang="en">VAT ID</value>
+    </property>
+    <property key="ComplianceManufacturer">
+        <value xml:lang="de">Hersteller</value>
+        <value xml:lang="en">Manufacturer</value>
+    </property>
+    <property key="ComplianceNotGiven">
+        <value xml:lang="de">Nicht angegeben</value>
+        <value xml:lang="en">Not given</value>
+    </property>
+    <property key="ComplianceEuResponsible">
+        <value xml:lang="de">Verantwortliche Person in der EU</value>
+        <value xml:lang="en">EU responsible person</value>
+    </property>
+    <property key="ComplianceProductIdentifier">
+        <value xml:lang="de">Produktkennung</value>
+        <value xml:lang="en">Product identifier</value>
+    </property>
+    <property key="CompliancePackaging">
+        <value xml:lang="de">Verpackung</value>
+        <value xml:lang="en">Packaging</value>
+    </property>
+    <property key="ComplianceRightOfWithdrawal">
+        <value xml:lang="de">Widerrufsrecht</value>
+        <value xml:lang="en">Right of withdrawal</value>
+    </property>
+    <property key="ComplianceSteps">
+        <value xml:lang="de">Schritte</value>
+        <value xml:lang="en">Steps</value>
+    </property>
+    <property key="ComplianceStepOrder">
+        <value xml:lang="de">Ihre Bestellung</value>
+        <value xml:lang="en">Your order</value>
+    </property>
+    <property key="ComplianceStepConfirm">
+        <value xml:lang="de">Bestätigen</value>
+        <value xml:lang="en">Confirm</value>
+    </property>
+    <property key="ComplianceStepReceipt">
+        <value xml:lang="de">Bestätigung</value>
+        <value xml:lang="en">Receipt</value>
+    </property>
+    <property key="ComplianceWithdrawIntro">
+        <value xml:lang="de">Sie können einen Kauf binnen {0} Tagen nach Lieferung ohne Angabe von Gründen widerrufen. Zwei Schritte: Bestellung angeben, dann bestätigen. Kein Konto nötig.</value>
+        <value xml:lang="en">You can withdraw from a purchase within {0} days of delivery, without a reason. Two steps: tell us which order, then confirm. No account needed.</value>
+    </property>
+    <property key="ComplianceName">
+        <value xml:lang="de">Ihr Name</value>
+        <value xml:lang="en">Your name</value>
+    </property>
+    <property key="ComplianceOrderEmail">
+        <value xml:lang="de">E-Mail-Adresse der Bestellung</value>
+        <value xml:lang="en">E-mail used for the order</value>
+    </property>
+    <property key="ComplianceOrderNumber">
+        <value xml:lang="de">Bestellnummer</value>
+        <value xml:lang="en">Order number</value>
+    </property>
+    <property key="ComplianceWithdrawScope">
+        <value xml:lang="de">Was möchten Sie widerrufen?</value>
+        <value xml:lang="en">What do you withdraw from?</value>
+    </property>
+    <property key="ComplianceWholeOrder">
+        <value xml:lang="de">Die ganze Bestellung</value>
+        <value xml:lang="en">The whole order</value>
+    </property>
+    <property key="ComplianceSomeItems">
+        <value xml:lang="de">Einzelne Artikel</value>
+        <value xml:lang="en">Some items</value>
+    </property>
+    <property key="ComplianceOrder">
+        <value xml:lang="de">Bestellung</value>
+        <value xml:lang="en">Order</value>
+    </property>
+    <property key="ComplianceReceiptTo">
+        <value xml:lang="de">Bestätigung an</value>
+        <value xml:lang="en">Confirmation to</value>
+    </property>
+    <property key="ComplianceChooseItems">
+        <value xml:lang="de">Artikel wählen</value>
+        <value xml:lang="en">Choose the items</value>
+    </property>
+    <property key="ComplianceWithdrawStatement">
+        <value xml:lang="de">Hiermit widerrufe ich meinen Vertrag über die oben genannten Artikel.</value>
+        <value xml:lang="en">I withdraw from my contract for the items above.</value>
+    </property>
+    <property key="ComplianceConfirmWithdrawal">
+        <value xml:lang="de">Widerruf bestätigen</value>
+        <value xml:lang="en">Confirm withdrawal</value>
+    </property>
+    <property key="ComplianceWithdrawReceivedTitle">
+        <value xml:lang="de">Widerruf eingegangen</value>
+        <value xml:lang="en">Withdrawal received</value>
+    </property>
+    <property key="ComplianceWithdrawReceivedAt">
+        <value xml:lang="de">Ihr Widerruf ist am {0} bei uns eingegangen.</value>
+        <value xml:lang="en">We received your withdrawal on {0}.</value>
+    </property>
+    <property key="ComplianceReference">
+        <value xml:lang="de">Referenz</value>
+        <value xml:lang="en">Reference</value>
+    </property>
+    <property key="ComplianceWithdrawEmailSent">
+        <value xml:lang="de">Wir haben diese Bestätigung mit Inhalt und Zeitpunkt an {0} gesendet.</value>
+        <value xml:lang="en">We sent this confirmation with its content and time to {0}.</value>
+    </property>
+    <property key="ComplianceWithdrawEmailNotSent">
+        <value xml:lang="de">Bitte bewahren Sie diese Seite auf: Die Bestätigungs-E-Mail konnte nicht gesendet werden. Drucken Sie sie oder speichern Sie sie als PDF.</value>
+        <value xml:lang="en">Please keep this page: we could not send the confirmation e-mail. Print it or save it as PDF.</value>
+    </property>
+    <property key="ComplianceWithdrawNextSteps">
+        <value xml:lang="de">Senden Sie die Artikel binnen 14 Tagen zurück. Wir erstatten binnen 14 Tagen nach Ihrem Widerruf über das ursprüngliche Zahlungsmittel.</value>
+        <value xml:lang="en">Send the items back within 14 days. We refund within 14 days of your withdrawal, to the original payment method.</value>
+    </property>
+    <property key="ComplianceWithdrawError_noMatch">
+        <value xml:lang="de">Wir haben keine Bestellung mit dieser Nummer und E-Mail-Adresse gefunden. Bitte prüfen Sie beides.</value>
+        <value xml:lang="en">We found no order with this number and e-mail address. Check both and try again.</value>
+    </property>
+    <property key="ComplianceWithdrawError_noItems">
+        <value xml:lang="de">Wählen Sie mindestens einen Artikel.</value>
+        <value xml:lang="en">Choose at least one item.</value>
+    </property>
+    <property key="ComplianceWithdrawError_failed">
+        <value xml:lang="de">Der Widerruf konnte nicht gespeichert werden. Bitte versuchen Sie es erneut oder schreiben Sie uns eine E-Mail.</value>
+        <value xml:lang="en">The withdrawal could not be saved. Please try again or write to us by e-mail.</value>
+    </property>
+    <property key="ComplianceBeforeYouOrder">
+        <value xml:lang="de">Vor Ihrer Bestellung</value>
+        <value xml:lang="en">Before you order</value>
+    </property>
+    <property key="ComplianceWithdrawalPolicy">
+        <value xml:lang="de">Widerrufsbelehrung und Muster-Widerrufsformular</value>
+        <value xml:lang="en">Withdrawal policy and model form</value>
+    </property>
+    <property key="ComplianceAcceptTermsPrefix">
+        <value xml:lang="de">Ich akzeptiere die</value>
+        <value xml:lang="en">I accept the</value>
+    </property>
+    <property key="ComplianceTermsLink">
+        <value xml:lang="de">Allgemeinen Geschäftsbedingungen</value>
+        <value xml:lang="en">Terms and conditions</value>
+    </property>
+    <property key="ComplianceReadPrivacyPrefix">
+        <value xml:lang="de">Ich habe die</value>
+        <value xml:lang="en">I have read the</value>
+    </property>
+    <property key="CompliancePrivacyLink">
+        <value xml:lang="de">Datenschutzerklärung gelesen</value>
+        <value xml:lang="en">Privacy policy</value>
+    </property>
+    <property key="ComplianceNoticeAtCollection">
+        <value xml:lang="de">Hinweis zur Datenerhebung</value>
+        <value xml:lang="en">Notice at collection</value>
+    </property>
+    <property key="ComplianceOrderButton">
+        <value xml:lang="de">Zahlungspflichtig bestellen</value>
+        <value xml:lang="en">Order with obligation to pay</value>
+    </property>
+    <property key="ComplianceAcceptTermsFirst">
+        <value xml:lang="de">Bitte akzeptieren Sie die AGB, um die Bestellung abzuschicken.</value>
+        <value xml:lang="en">Please accept the terms and conditions to place the order.</value>
+    </property>
+    <property key="ComplianceSeller">
+        <value xml:lang="de">Verkäufer</value>
+        <value xml:lang="en">Seller</value>
+    </property>
+    <property key="ComplianceVerified">
+        <value xml:lang="de">geprüft</value>
+        <value xml:lang="en">verified</value>
+    </property>
+    <property key="ComplianceJoined">
+        <value xml:lang="de">Dabei seit</value>
+        <value xml:lang="en">Joined</value>
+    </property>
+    <property key="ComplianceTraderInformation">
+        <value xml:lang="de">Angaben zum Händler</value>
+        <value xml:lang="en">Trader information</value>
+    </property>
+    <property key="ComplianceLegalName">
+        <value xml:lang="de">Name</value>
+        <value xml:lang="en">Legal name</value>
+    </property>
+    <property key="ComplianceAddress">
+        <value xml:lang="de">Anschrift</value>
+        <value xml:lang="en">Address</value>
+    </property>
+    <property key="ComplianceContact">
+        <value xml:lang="de">Kontakt</value>
+        <value xml:lang="en">Contact</value>
+    </property>
+    <property key="ComplianceSelfCertification">
+        <value xml:lang="de">Selbstverpflichtung</value>
+        <value xml:lang="en">Self-certification</value>
+    </property>
+    <property key="ComplianceSelfCertified">
+        <value xml:lang="de">Der Verkäufer bestätigt, nur Produkte anzubieten, die dem EU-Recht entsprechen.</value>
+        <value xml:lang="en">The seller confirms that it offers only products that comply with EU law.</value>
+    </property>
+    <property key="ComplianceReportSeller">
+        <value xml:lang="de">Diesen Verkäufer melden</value>
+        <value xml:lang="en">Report this seller</value>
+    </property>
+    <property key="ComplianceHowWeCheckSellers">
+        <value xml:lang="de">So prüfen wir Verkäufer</value>
+        <value xml:lang="en">How we check sellers</value>
+    </property>
+    <property key="ComplianceProductsOfSeller">
+        <value xml:lang="de">Produkte dieses Verkäufers</value>
+        <value xml:lang="en">Products of this seller</value>
+    </property>
+    <property key="ComplianceSellerNotFound">
+        <value xml:lang="de">Diesen Verkäufer gibt es nicht.</value>
+        <value xml:lang="en">This seller does not exist.</value>
+    </property>
+    <property key="ComplianceNewSellers">
+        <value xml:lang="de">Neue Verkäufer</value>
+        <value xml:lang="en">New sellers</value>
+    </property>
+    <property key="ComplianceSellerInfoNote">
+        <value xml:lang="de">Jede Verkäuferseite zeigt Name, Anschrift und Kontakt und ob der Verkäufer gewerblich ist.</value>
+        <value xml:lang="en">Each seller page shows the legal name, address and contact, and whether the seller is a business.</value>
+    </property>
+    <property key="ComplianceAccount">
+        <value xml:lang="de">Konto</value>
+        <value xml:lang="en">Account</value>
+    </property>
+    <property key="CompliancePrivacy">
+        <value xml:lang="de">Datenschutz</value>
+        <value xml:lang="en">Privacy</value>
+    </property>
+    <property key="CompliancePrivacyCenterIntro">
+        <value xml:lang="de">Sehen und steuern Sie, was wir über Sie speichern.</value>
+        <value xml:lang="en">See and control what we keep about you.</value>
+    </property>
+    <property key="ComplianceDownloadData">
+        <value xml:lang="de">Ihre Daten herunterladen</value>
+        <value xml:lang="en">Download your data</value>
+    </property>
+    <property key="ComplianceDownloadDataText">
+        <value xml:lang="de">Eine JSON-Datei mit Profil, Adressen, Bestellungen, Bewertungen und Einwilligungen.</value>
+        <value xml:lang="en">A JSON file with your profile, addresses, orders, reviews and consent records.</value>
+    </property>
+    <property key="ComplianceDownloadJson">
+        <value xml:lang="de">Herunterladen (JSON)</value>
+        <value xml:lang="en">Download (JSON)</value>
+    </property>
+    <property key="ComplianceYourChoices">
+        <value xml:lang="de">Ihre Auswahl</value>
+        <value xml:lang="en">Your choices</value>
+    </property>
+    <property key="ComplianceNewsletterAndContact">
+        <value xml:lang="de">Newsletter und Kontaktwünsche</value>
+        <value xml:lang="en">Newsletter and contact preferences</value>
+    </property>
+    <property key="ComplianceYourRequests">
+        <value xml:lang="de">Ihre Anfragen</value>
+        <value xml:lang="en">Your requests</value>
+    </property>
+    <property key="ComplianceRequest">
+        <value xml:lang="de">Anfrage</value>
+        <value xml:lang="en">Request</value>
+    </property>
+    <property key="ComplianceReceived">
+        <value xml:lang="de">Eingegangen</value>
+        <value xml:lang="en">Received</value>
+    </property>
+    <property key="ComplianceAnswerBy">
+        <value xml:lang="de">Antwort bis</value>
+        <value xml:lang="en">Answer by</value>
+    </property>
+    <property key="ComplianceStatus">
+        <value xml:lang="de">Status</value>
+        <value xml:lang="en">Status</value>
+    </property>
+    <property key="ComplianceConsentHistory">
+        <value xml:lang="de">Einwilligungsverlauf</value>
+        <value xml:lang="en">Consent history</value>
+    </property>
+    <property key="ComplianceWhen">
+        <value xml:lang="de">Wann</value>
+        <value xml:lang="en">When</value>
+    </property>
+    <property key="ComplianceChoice">
+        <value xml:lang="de">Auswahl</value>
+        <value xml:lang="en">Choice</value>
+    </property>
+    <property key="ComplianceWhere">
+        <value xml:lang="de">Wo</value>
+        <value xml:lang="en">Where</value>
+    </property>
+    <property key="ComplianceTextVersion">
+        <value xml:lang="de">Textfassung</value>
+        <value xml:lang="en">Text version</value>
+    </property>
+    <property key="ComplianceConsentVersionShort">
+        <value xml:lang="de">Einwilligung</value>
+        <value xml:lang="en">consent</value>
+    </property>
+    <property key="ComplianceNoConsents">
+        <value xml:lang="de">Für Ihr Konto ist noch keine Einwilligung gespeichert.</value>
+        <value xml:lang="en">No consent choices are recorded for your account yet.</value>
+    </property>
+    <property key="ComplianceDeleteAccount">
+        <value xml:lang="de">Konto löschen</value>
+        <value xml:lang="en">Delete account</value>
+    </property>
+    <property key="ComplianceDeleteAccountText">
+        <value xml:lang="de">Wir löschen Profil, Adressen, Wunschlisten und gespeicherte Daten und entfernen Ihren Namen aus Bewertungen. Das Steuerrecht verpflichtet uns, Bestell- und Rechnungsunterlagen für die Aufbewahrungsfrist zu behalten; wir sperren sie und nutzen sie für nichts anderes.</value>
+        <value xml:lang="en">We delete your profile, addresses, wish lists and saved data, and remove your name from reviews. Tax law makes us keep order and invoice records for the retention period; we lock them and use them for nothing else.</value>
+    </property>
+    <property key="ComplianceDeleteConfirm">
+        <value xml:lang="de">Ich verstehe, dass dies nicht rückgängig gemacht werden kann.</value>
+        <value xml:lang="en">I understand that this cannot be undone.</value>
+    </property>
+    <property key="ComplianceDeleteConfirmFirst">
+        <value xml:lang="de">Bitte bestätigen Sie zuerst die Löschung.</value>
+        <value xml:lang="en">Please confirm the deletion first.</value>
+    </property>
+    <property key="ComplianceDeleteMyAccount">
+        <value xml:lang="de">Mein Konto löschen</value>
+        <value xml:lang="en">Delete my account</value>
+    </property>
+    <property key="CompliancePrivacyRequest">
+        <value xml:lang="de">Datenschutzanfrage</value>
+        <value xml:lang="en">Privacy request</value>
+    </property>
+    <property key="CompliancePrivacyRequestIntro">
+        <value xml:lang="de">Fordern Sie eine Kopie Ihrer Daten, deren Löschung oder Berichtigung an oder widersprechen Sie. Wir bestätigen per E-Mail und antworten binnen 30 Tagen (EU) bzw. 45 Tagen (USA).</value>
+        <value xml:lang="en">Ask for a copy of your data, its deletion or correction, or opt out. We confirm your request by e-mail and answer within 30 days (EU) or 45 days (US).</value>
+    </property>
+    <property key="ComplianceWhatDoYouNeed">
+        <value xml:lang="de">Was möchten Sie?</value>
+        <value xml:lang="en">What do you need?</value>
+    </property>
+    <property key="ComplianceEmailAddress">
+        <value xml:lang="de">Ihre E-Mail-Adresse</value>
+        <value xml:lang="en">Your e-mail address</value>
+    </property>
+    <property key="ComplianceDetailsOptional">
+        <value xml:lang="de">Details (optional)</value>
+        <value xml:lang="en">Details (optional)</value>
+    </property>
+    <property key="ComplianceSendRequest">
+        <value xml:lang="de">Anfrage senden</value>
+        <value xml:lang="en">Send request</value>
+    </property>
+    <property key="CompliancePrivacyCheckEmail">
+        <value xml:lang="de">Bitte prüfen Sie Ihre E-Mails und bestätigen Sie die Anfrage über den Link.</value>
+        <value xml:lang="en">Please check your e-mail and confirm the request with the link in it.</value>
+    </property>
+    <property key="CompliancePrivacyReceived">
+        <value xml:lang="de">Wir haben Ihre Anfrage erhalten und antworten in der gesetzlichen Frist.</value>
+        <value xml:lang="en">We received your request and answer within the legal period.</value>
+    </property>
+    <property key="CompliancePrivacyVerified">
+        <value xml:lang="de">Danke. Ihre Anfrage ist bestätigt; wir antworten in der gesetzlichen Frist.</value>
+        <value xml:lang="en">Thank you. Your request is confirmed; we answer within the legal period.</value>
+    </property>
+    <property key="ComplianceAccountDeleted">
+        <value xml:lang="de">Ihr Konto ist gelöscht. Bestell- und Rechnungsunterlagen bleiben für die gesetzliche Frist gesperrt.</value>
+        <value xml:lang="en">Your account is deleted. Order and invoice records stay locked for the legal retention period.</value>
+    </property>
+    <property key="CompliancePrivacyInvalidToken">
+        <value xml:lang="de">Dieser Link ist ungültig oder wurde schon verwendet.</value>
+        <value xml:lang="en">This link is not valid or was already used.</value>
+    </property>
+    <property key="CompliancePrivacyInvalid">
+        <value xml:lang="de">Bitte geben Sie eine gültige E-Mail-Adresse ein und wählen Sie eine Anfrage.</value>
+        <value xml:lang="en">Please enter a valid e-mail address and choose a request.</value>
+    </property>
+    <property key="CompliancePrivacyVerifySubject">
+        <value xml:lang="de">Bitte bestätigen Sie Ihre Datenschutzanfrage</value>
+        <value xml:lang="en">Please confirm your privacy request</value>
+    </property>
+    <property key="CompliancePrivacyVerifyText">
+        <value xml:lang="de">Wir haben eine Datenschutzanfrage für diese E-Mail-Adresse erhalten. Bitte öffnen Sie diesen Link zur Bestätigung:</value>
+        <value xml:lang="en">We received a privacy request for this e-mail address. Open this link to confirm it:</value>
+    </property>
+    <property key="CompliancePrivacyVerifyIgnore">
+        <value xml:lang="de">Wenn Sie diese Anfrage nicht gestellt haben, ignorieren Sie diese E-Mail.</value>
+        <value xml:lang="en">If you did not make this request, ignore this e-mail.</value>
+    </property>
+</resource>

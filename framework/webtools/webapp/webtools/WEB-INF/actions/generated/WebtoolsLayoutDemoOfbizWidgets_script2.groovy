@@ -1,0 +1,1 @@
+org.ofbiz.base.util.Debug.logInfo("clearFieldTest1 (post-clear-field, should be null): " + context.clearFieldTest1, "InlineClearFieldTest.groovy");

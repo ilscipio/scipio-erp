@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
 package org.ofbiz.manufacturing.mrp;
 
@@ -32,6 +38,7 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.manufacturing.bom.BOMNode;
@@ -196,10 +203,26 @@ public class ProposedOrder {
             }
         } else {
             // the product is purchased
-            // TODO: REVIEW this code
+            // SCIPIO: the supplier lead time (SupplierProduct.standardLeadTimeDays of the preferred current supplier)
+            // is used when it exceeds the days to ship; both count in working days of the SUPPLIER calendar (8h per day).
+            long timeToPurchase = timeToShip;
+            try {
+                GenericValue supplierProduct = EntityQuery.use(product.getDelegator()).from("SupplierProduct")
+                        .where("productId", product.getString("productId"))
+                        .filterByDate("availableFromDate", "availableThruDate")
+                        .orderBy("supplierPrefOrderId", "-standardLeadTimeDays").queryFirst();
+                if (supplierProduct != null && supplierProduct.get("standardLeadTimeDays") != null) {
+                    long leadTime = supplierProduct.getBigDecimal("standardLeadTimeDays").longValue() * 8L * 60L * 60L * 1000L;
+                    if (leadTime > timeToPurchase) {
+                        timeToPurchase = leadTime;
+                    }
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error reading the supplier lead time for product " + product.getString("productId") + ": " + e.getMessage(), module);
+            }
             try {
                 GenericValue techDataCalendar = product.getDelegator().findOne("TechDataCalendar", UtilMisc.toMap("calendarId", "SUPPLIER"), true);
-                startDate = TechDataServices.addBackward(techDataCalendar, endDate, timeToShip);
+                startDate = TechDataServices.addBackward(techDataCalendar, endDate, timeToPurchase);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error : reading SUPPLIER TechDataCalendar: " + e.getMessage(), module);
             }

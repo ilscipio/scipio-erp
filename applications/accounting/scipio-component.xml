@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <ofbiz-component name="accounting"
@@ -13,10 +24,6 @@ code package.
     <classpath type="dir" location="config"/>
     <classpath type="jar" location="lib/*"/>
 
-    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
-    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel_reports.xml"/>
-    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel_old.xml"/>
-    <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/AccountingTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/AccountingHelpData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/UsTaxAccountGroups.xml"/>
@@ -38,48 +45,15 @@ code package.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/AccountingDatevData.xml"/>
 
     <!-- General Payment Service Definitions -->
-    <service-resource type="model" loader="main" location="servicedef/services_agreement.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_admin.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_billing.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_budget.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_finaccount.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_fixedasset.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_invoice.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_ledger.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_payment.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_paymentmethod.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_paymentgateway.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_tax.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_rate.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_cost.xml"/>
 
     <!-- Payment Processor/Gateway Service Definitions -->
-    <service-resource type="model" loader="main" location="servicedef/services_sagepay.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_authorizedotnet.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_clearcommerce.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_cybersource.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_paypal.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_pccharge.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_rita.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_valuelink.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_verisign.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_orbital.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_securepay.xml"/>
 
     <!-- Accounting Permission Services -->
-    <service-resource type="model" loader="main" location="servicedef/services_perm.xml"/>
 
     <!-- Accounting Migration Service Definition -->
-    <service-resource type="model" loader="main" location="servicedef/services_upgrade.xml"/>
     
     <!-- Accounting Accounting Entries import/export Service Definition -->
-    <service-resource type="model" loader="main" location="servicedef/services_datev.xml"/>
 
-    <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
-    <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
-    <service-resource type="eca" loader="main" location="servicedef/secas_payment.xml"/>
-    <service-resource type="eca" loader="main" location="servicedef/secas_ledger.xml"/>
-    <service-resource type="eca" loader="main" location="servicedef/secas_invoice.xml"/>
 
     <test-suite loader="main" location="testdef/accountingtests.xml"/>
     <test-suite loader="main" location="testdef/paymenttests.xml"/>

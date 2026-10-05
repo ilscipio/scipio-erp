@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.catalina.container;
 
 import java.io.File;
@@ -521,6 +527,17 @@ public class CatalinaContainer implements Container {
     private StandardContext configureContext(Engine engine, Host host, ComponentConfig.WebappInfo appInfo) throws ContainerException {
         // webapp settings
         Map<String, String> initParameters = appInfo.getInitParameters();
+
+        // SCIPIO: 4.0.0: Set solr.solr.home system property for the Solr webapp
+        // Solr needs this to find solr.xml and cores which are in the component root, not the webapp folder
+        if ("solr".equals(appInfo.name) && System.getProperty("solr.solr.home") == null) {
+            String solrHome = appInfo.componentConfig.getRootLocation();
+            if (solrHome.endsWith("/") || solrHome.endsWith("\\")) {
+                solrHome = solrHome.substring(0, solrHome.length() - 1);
+            }
+            System.setProperty("solr.solr.home", solrHome);
+            Debug.logInfo("Set solr.solr.home system property to: " + solrHome, module);
+        }
 
         // set the root location (make sure we set the paths correctly)
         String location = appInfo.componentConfig.getRootLocation() + appInfo.location;

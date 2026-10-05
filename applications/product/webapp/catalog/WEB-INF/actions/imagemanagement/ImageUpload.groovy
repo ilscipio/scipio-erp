@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
@@ -122,6 +128,7 @@ if (fileType) {
                 Debug.logError(e, "error deleting existing file (not neccessarily a problem)", module);
             }
             file.renameTo(file1);
+            org.ofbiz.entity.tenant.TenantFiles.mirrorImage(file1); // SCIPIO: 4.0.0: pooled runtime: object storage (G7)
         } catch (Exception e) {
             Debug.logError(e, module);
         }

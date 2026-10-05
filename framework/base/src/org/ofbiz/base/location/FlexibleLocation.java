@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.base.location;
 
 import java.io.File;
@@ -133,17 +139,48 @@ public abstract class FlexibleLocation {
     }
 
     public static URL resolveLocation(String location, ClassLoader loader) throws MalformedURLException {
+        return resolveLocation(location, loader, true);
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Enhanced location resolution with hashtag stripping support.
+     * Resolves the given location into a URL object, optionally stripping hashtag fragments.
+     *
+     * Widget locations often include hashtag fragments (e.g., component://setup/widget/SetupScreens.xml#TestScreen)
+     * where the hashtag separates the resource location from the widget name. This method can automatically
+     * strip the hashtag fragment before URL resolution to prevent file system errors.
+     *
+     * @param location The location String to parse and create a URL from
+     * @param loader Optional ClassLoader for classpath resolution
+     * @param stripHashtag If true, strips hashtag fragments before resolving; if false, uses location as-is
+     * @return URL object corresponding to the location String passed in
+     * @throws MalformedURLException if the location cannot be resolved
+     */
+    public static URL resolveLocation(String location, ClassLoader loader, boolean stripHashtag) throws MalformedURLException {
         if (UtilValidate.isEmpty(location)) {
             return null;
         }
-        String locationType = getLocationType(location);
+
+        // SCIPIO: 4.0.0: Strip hashtag fragment if present (widget references like component://path#WidgetName)
+        String cleanLocation = location;
+        if (stripHashtag) {
+            int hashIndex = location.lastIndexOf('#');
+            if (hashIndex > 0) {
+                cleanLocation = location.substring(0, hashIndex);
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Stripped hashtag from location [" + location + "] -> [" + cleanLocation + "]", module);
+                }
+            }
+        }
+
+        String locationType = getLocationType(cleanLocation);
         LocationResolver resolver = locationResolvers.get(locationType);
         if (resolver != null) {
             if (loader != null && resolver instanceof ClasspathLocationResolver) {
                 ClasspathLocationResolver cplResolver = (ClasspathLocationResolver) resolver;
-                return cplResolver.resolveLocation(location, loader);
+                return cplResolver.resolveLocation(cleanLocation, loader);
             } else {
-                return resolver.resolveLocation(location);
+                return resolver.resolveLocation(cleanLocation);
             }
         } else {
             throw new MalformedURLException("Could not find a LocationResolver for the location type: " + locationType);

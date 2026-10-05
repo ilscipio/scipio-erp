@@ -1,159 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<!--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <!-- SCIPIO: CommonScreens.xml for the application.
-        For more information on the patterns herein, refer to the common screens and menu files of the Admin and Common apps,
-        as well as the widget language definitions files (component://widget/dtd/widget-*.xsd). -->
+    <!-- SCIPIO: 4.0.0: Screen definitions are Java annotations in
+        src/.../widget/@component-resource-name@Screens.java. This file retains only the
+        screen-settings blocks, which are an XML-only feature. -->
 
-    <!-- SCIPIO: Common settings for other *Screens.xml files in this app (that primarily use decorators referenced using parameters.mainDecoratorLocation) -->
-    <screen-settings name="common-settings"><!-- All settings are currently valid/needed for this file as well, so omit: active="false" -->
-        <!-- When a decorator-screen lookup fails to find a decorator using parameters.mainDecoratorLocation (or other), it will look in our file instead. This prevents extensibility issues. -->
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app (those that primarily use decorators referenced using parameters.mainDecoratorLocation) -->
+    <screen-settings name="common-settings">
         <decorator-screen-settings default-fallback-location="component://@component-name@/widget/CommonScreens.xml"/>
-        <!-- Static (webapp-agnostic) auto-included actions: these actions will be included at start of render for all top-level screens we define, regardless of which webapp they're rendered through -->
-        <render-init><local><actions><include-screen-actions name="static-common-actions" location="component://@component-name@/widget/CommonScreens.xml"/></actions></local></render-init>
     </screen-settings>
-        
-    <!-- SCIPIO: The settings for this file (active) (if the above are also active, they are merged together to provide effective settings for this file) -->
+
+    <!-- SCIPIO: The settings for this file (active). -->
     <screen-settings name="local-settings">
-        <!-- These settings are automatically included in all *Screens.xml files in the same folder as this CommonScreens.xml file or any subfolder without its own CommonScreens.xml (through a special lookup by renderer) -->
         <auto-include-settings>
-            <!-- Every *Screens.xml file in same folder should include our common-settings defined above -->
             <include-settings as-name="local-settings" name="common-settings" location="component://@component-name@/widget/CommonScreens.xml"/>
         </auto-include-settings>
     </screen-settings>
 
-    <!-- SCIPIO: Actions automatically included at beginning of every render request, for our webapp (discovered via web.xml, mainDecoratorLocation) (webapp-aware auto-included actions) -->
-    <screen name="webapp-common-actions">
-        <actions>
-            <!-- Make the main side bar name/location available to all (without need for globals) 
-                NOTE: these won't be set if our screens are invoked by another webapp, unless it provides some of its own -->
-            <include-screen-actions name="MainSideBarMenu"/>
-            <set field="mainSideBarMenuCfg" from-field="menuCfg"/>
-            <set field="mainComplexMenuCfg" from-field="menuCfg"/>
-            <set field="menuCfg" value=""/>
-        </actions>
-    </screen>
-    
-    <!-- SCIPIO: Actions automatically included at beginning of the first local screen rendered in a request, regardless of webapp (static, webapp-agnostic auto-included actions) -->
-    <screen name="static-common-actions">
-        <actions>
-        </actions>
-    </screen>
-
-    <screen name="main-decorator">
-        <section>
-            <actions>
-                <property-map resource="@component-resource-name@UiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
-
-                <set field="layoutSettings.companyName" from-field="uiLabelMap['@component-resource-name@CompanyName']" global="true"/>
-                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap['@component-resource-name@CompanySubtitle']" global="true"/>
-
-                <set field="activeApp" value="@webapp-name@" global="true"/>
-                <set field="applicationMenuName" value="MainAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://@component-name@/widget/@component-resource-name@Menus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap['@component-resource-name@Application']}" global="true"/>
-                
-                <!-- SCIPIO: This uses activeSubMenu/activeSubMenuItem to automatically determine activeMainMenuItem -->
-                <set field="menuCfg" from-field="mainComplexMenuCfg"/>
-                <include-screen-actions name="DeriveComplexSideBarMenuItems" location="component://common/widget/CommonScreens.xml"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="GlobalDecorator" location="component://common/widget/CommonScreens.xml">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
-                        <section>
-                            <condition>
-                                <not><if-empty-section section-name="left-column" /></not>
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="left-column"/>
-                            </widgets>
-                            <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-screen name="DefMainSideBarMenu" location="${parameters.mainDecoratorLocation}"/>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <decorator-section-include name="body"/>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-
-    <!-- SCIPIO: App-wide common decorator, wrapper around main-decorator; expected to have globally unique name. See Admin app CommonScreens.xml for more info. -->
-    <screen name="Common@component-resource-name@AppDecorator">
-        <section>
-            <actions>
-                <condition-to-field field="common@component-resource-name@AppBasePermCond" type="Boolean" only-if-field="empty">
-                    <if-has-permission permission="@base-permission@" action="_VIEW"/>
-                </condition-to-field>
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <include-screen name="Common@component-resource-name@AppSideBarMenu"/>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-true field="common@component-resource-name@AppBasePermCond"/> 
-                            </condition>
-                            <widgets>
-                                <decorator-section-include name="body"/>
-                            </widgets>
-                            <fail-widgets>
-                                <label style="common-msg-error-perm">${uiLabelMap['@component-resource-name@ViewPermissionError']}</label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!-- SCIPIO: Main SideBar Menu (see component://common/widget/CommonScreens.xml#ComplexSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
-    <screen name="MainSideBarMenu">
-        <section>
-            <actions>
-                <set field="menuCfg.location" value="component://@component-name@/widget/@component-resource-name@Menus.xml"/>
-                <set field="menuCfg.name" value="MainAppSideBar"/>
-                <set field="menuCfg.defLocation" value="component://@component-name@/widget/@component-resource-name@Menus.xml"/>
-            </actions>
-            <widgets>
-                <include-screen location="component://common/widget/CommonScreens.xml" name="ComplexSideBarMenu"/>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!-- SCIPIO: Default Main SideBar Menu, version of MainSideBarMenu that disregards screen's selected/active sub-menu -->
-    <screen name="DefMainSideBarMenu">
-        <section>
-            <actions>
-                <script location="component://common/webcommon/WEB-INF/actions/includes/scipio/PrepareDefComplexSideBarMenu.groovy"/>
-            </actions>
-            <widgets>
-                <include-screen name="MainSideBarMenu"/>
-            </widgets>
-        </section>
-    </screen>
-    
-    <!-- SCIPIO: Common SideBar Menu inclusion logic, for/from Common*AppDecorator, with application-specific logic 
-        (see component://common/widget/CommonScreens.xml#CommonSideBarMenu for available arguments and Admin app CommonScreens.xml for more info) -->
-    <screen name="Common@component-resource-name@AppSideBarMenu">
-        <section>
-            <actions>
-                <condition-to-field field="common@component-resource-name@AppBasePermCond" type="Boolean" only-if-field="empty">
-                    <if-has-permission permission="@base-permission@" action="_VIEW"/>
-                </condition-to-field>
-                <set field="commonSideBarMenu.cond" from-field="commonSideBarMenu.cond" type="Boolean" default-value="${common@component-resource-name@AppBasePermCond}"/>
-            </actions>
-            <widgets>
-                <include-screen name="CommonSideBarMenu" location="component://common/widget/CommonScreens.xml"/>
-            </widgets>
-        </section>
-    </screen>
-    
 </screens>

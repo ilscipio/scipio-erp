@@ -1,8 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<!--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
 -->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -334,6 +353,14 @@ code package.
                 <if-empty field="partyAcctgPreference">
                     <log level="warning" message="The internal organization with id [${acctgTransEntry.organizationPartyId}] has no PartyAcctgPreference setting; the following accounting transaction will be ignored: ${acctgTransEntry}"/>
                 <else>
+                <!-- SCIPIO: 4.0.0: an organization without a chart of accounts (no GlAccountOrganization row, for example a hosted store that
+                     keeps its books outside) ignores the entry as above, instead of failing the business process (a shipment, an invoice) -->
+                <entity-and entity-name="GlAccountOrganization" list="orgGlAccounts" use-cache="true">
+                    <field-map field-name="organizationPartyId" from-field="acctgTransEntry.organizationPartyId"/>
+                </entity-and>
+                <if-empty field="orgGlAccounts">
+                    <log level="warning" message="The internal organization with id [${acctgTransEntry.organizationPartyId}] has no chart of accounts (GlAccountOrganization); the following accounting transaction will be ignored: ${acctgTransEntry}"/>
+                <else>
                     <!-- if the amount field is empty, then determine it from the origAmount and origCurrencyUomId fields:
                          if origCurrencyUomId is different from the base currency of the organization, then the amount value will be converted -->
                     <if-empty field="acctgTransEntry.amount">
@@ -387,6 +414,8 @@ code package.
                         <clear-field field="acctgTransEntry.glAccountTypeId"/>
                     </if-empty>
                     <set field="normalizedAcctgTransEntries[]" from-field="acctgTransEntry"/>
+                </else>
+                </if-empty>
                 </else>
                 </if-empty>
             </else>

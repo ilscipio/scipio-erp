@@ -1,7 +1,18 @@
 <#--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 <#import "component://accounting/webapp/accounting/common/acctlib.ftl" as acctlib>
@@ -208,8 +219,8 @@ code package.
                 <#assign origProductId = Static["org.ofbiz.product.product.ProductWorker"].getMainProductId(delegator, orderItem.productId, false)!"">
                 <#if !printable>
                     <#-- SCIPIO -->
-                    <a href="<@catalogAltUrl productId=origProductId?has_content?then(origProductId, orderItem.productId)/>" class="${styles.link_nav_info_desc!}" target="_blank"><#t/>
-                </#if><#lt/>${orderItem.productId}<#if origProductId?has_content> (${origProductId})</#if> - ${orderItem.itemDescription!""}<#if !printable></a></#if>
+                    <a href="<@catalogAltUrl productId=origProductId?has_content?then(origProductId, orderItem.productId)/>" class="${styles.link_nav_info_desc!}"><#t/>
+                </#if><#lt/><#-- SCIPIO: 4.0.0: shoppers see the item name, not product ids -->${orderItem.itemDescription!orderItem.productId}<#if !printable></a></#if>
                 <#-- SCIPIO: Link to downloads to consume -->
                 <#-- TODO: delegate status tests -->
                 <#if !printable && orderHeader?has_content && !["ORDER_REJECTED", "ORDER_CANCELLED"]?seq_contains(orderHeader.statusId!)>

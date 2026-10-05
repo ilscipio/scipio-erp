@@ -18,6 +18,12 @@
     specific language governing permissions and limitations
     under the License.
 -->
+<!--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="SecurityGroup.description.ASSETMAINTADMIN">
         <value xml:lang="de">Administratorgruppe für die Anlagenverwaltung, hat alle Wartungsberechtigungen.</value>
@@ -773,8 +779,8 @@
         <value xml:lang="zh-TW">通用元件中的檢視操作.</value>
     </property>
     <property key="SecurityPermission.description.CONTENTMGR_ADMIN">
-        <value xml:lang="de">ALLE Berechtigungen im Content Manager / CMS.</value>
-        <value xml:lang="en">ALL operations in the Content Manager.</value>
+        <value xml:lang="de">ALLE Berechtigungen im Content Management / CMS.</value>
+        <value xml:lang="en">ALL operations in the Content Management.</value>
         <value xml:lang="es">TODAS las operaciones en el Administrador de Contenido.</value>
         <value xml:lang="fr">TOUTES les opérations en gestion de catalogue.</value>
         <value xml:lang="it">Tutte le operazioni nella gestione contenuti.</value>
@@ -785,8 +791,8 @@
         <value xml:lang="zh-TW">內容管理中的全部操作.</value>
     </property>
     <property key="SecurityPermission.description.CONTENTMGR_CREATE">
-        <value xml:lang="de">CREATE von Datensätzen im Content Manager / CMS.</value>
-        <value xml:lang="en">Create operations in the Content Manager.</value>
+        <value xml:lang="de">CREATE von Datensätzen im Content Management / CMS.</value>
+        <value xml:lang="en">Create operations in the Content Management.</value>
         <value xml:lang="es">Operaciones de Creación en el Administrador de Contenido.</value>
         <value xml:lang="fr">Création d'opérations en gestion de catalogue.</value>
         <value xml:lang="it">Operazioni di creazione nella gestione contenuti.</value>
@@ -797,8 +803,8 @@
         <value xml:lang="zh-TW">內容管理中的新建操作.</value>
     </property>
     <property key="SecurityPermission.description.CONTENTMGR_DELETE">
-        <value xml:lang="de">DELETE von Datensätzen im Content Manager / CMS.</value>
-        <value xml:lang="en">Delete operations in the Content Manager.</value>
+        <value xml:lang="de">DELETE von Datensätzen im Content Management / CMS.</value>
+        <value xml:lang="en">Delete operations in the Content Management.</value>
         <value xml:lang="es">Operaciones de Eliminación en el Administrador de Contenido.</value>
         <value xml:lang="fr">Suppression d'opérations en gestion de catalogue.</value>
         <value xml:lang="it">Operazioni di cancellazione nella gestione contenuti.</value>
@@ -809,40 +815,40 @@
         <value xml:lang="zh-TW">內容管理中的刪除操作.</value>
     </property>
     <property key="SecurityPermission.description.CONTENTMGR_ROLE_CREATE">
-        <value xml:lang="de">Eingeschränktes CREATE von Datensätzen im Content Manager / CMS.</value>
-        <value xml:lang="en">Limited Create operations in the Content Manager.</value>
+        <value xml:lang="de">Eingeschränktes CREATE von Datensätzen im Content Management / CMS.</value>
+        <value xml:lang="en">Limited Create operations in the Content Management.</value>
         <value xml:lang="it">Operazioni limitate di creazione nella gestione contenuti.</value>
         <value xml:lang="ja">コンテンツ管理での限定された作成操作。</value>
         <value xml:lang="zh">内容管理中有限的创建操作。</value>
         <value xml:lang="zh-TW">內容管理中有限的新建操作.</value>
     </property>
     <property key="SecurityPermission.description.CONTENTMGR_ROLE_DELETE">
-        <value xml:lang="de">Eingeschränktes DELETE von Datensätzen im Content Manager / CMS.</value>
-        <value xml:lang="en">Limited Delete operations in the Content Manager.</value>
+        <value xml:lang="de">Eingeschränktes DELETE von Datensätzen im Content Management / CMS.</value>
+        <value xml:lang="en">Limited Delete operations in the Content Management.</value>
         <value xml:lang="it">Operazioni limitate di cancellazione nella gestione contenuti.</value>
         <value xml:lang="ja">コンテンツ管理での限定された削除操作。</value>
         <value xml:lang="zh">内容管理中有限的删除操作。</value>
         <value xml:lang="zh-TW">內容管理中有限的刪除操作.</value>
     </property>
     <property key="SecurityPermission.description.CONTENTMGR_ROLE_UPDATE">
-        <value xml:lang="de">Eingeschränktes UPDATE von Datensätzen im Content Manager / CMS.</value>
-        <value xml:lang="en">Limited Update operations in the Content Manager.</value>
+        <value xml:lang="de">Eingeschränktes UPDATE von Datensätzen im Content Management / CMS.</value>
+        <value xml:lang="en">Limited Update operations in the Content Management.</value>
         <value xml:lang="it">Operazioni limitate di aggiornamento nella gestione contenuti.</value>
         <value xml:lang="ja">コンテンツ管理での限定された更新操作。</value>
         <value xml:lang="zh">内容管理中有限的更新操作。</value>
         <value xml:lang="zh-TW">內容管理中有限的更新操作.</value>
     </property>
     <property key="SecurityPermission.description.CONTENTMGR_ROLE_VIEW">
-        <value xml:lang="de">Eingeschränktes LESEN von Datensätzen im Content Manager / CMS.</value>
-        <value xml:lang="en">Limited View operations in the Content Manager.</value>
+        <value xml:lang="de">Eingeschränktes LESEN von Datensätzen im Content Management / CMS.</value>
+        <value xml:lang="en">Limited View operations in the Content Management.</value>
         <value xml:lang="it">Operazioni limitate di visualizzazione nella gestione contenuti.</value>
         <value xml:lang="ja">コンテンツ管理での限定された表示操作。</value>
         <value xml:lang="zh">内容管理中有限的浏览操作。</value>
         <value xml:lang="zh-TW">內容管理中有限的檢視操作.</value>
     </property>
     <property key="SecurityPermission.description.CONTENTMGR_UPDATE">
-        <value xml:lang="de">UPDATE von Datensätzen im Content Manager / CMS.</value>
-        <value xml:lang="en">Update operations in the Content Manager.</value>
+        <value xml:lang="de">UPDATE von Datensätzen im Content Management / CMS.</value>
+        <value xml:lang="en">Update operations in the Content Management.</value>
         <value xml:lang="es">Operaciones de Actualización en el Administrador de Contenido.</value>
         <value xml:lang="fr">Mise à jour d'opérations en gestion de catalogue.</value>
         <value xml:lang="it">Operazioni di aggiornamento nella gestione contenuti.</value>
@@ -853,8 +859,8 @@
         <value xml:lang="zh-TW">內容管理中的更新操作.</value>
     </property>
     <property key="SecurityPermission.description.CONTENTMGR_VIEW">
-        <value xml:lang="de">LESEN von Datensätzen im Content Manager / CMS.</value>
-        <value xml:lang="en">View operations in the Content Manager.</value>
+        <value xml:lang="de">LESEN von Datensätzen im Content Management / CMS.</value>
+        <value xml:lang="en">View operations in the Content Management.</value>
         <value xml:lang="es">Operaciones de Visualización en el Administrador de Contenido.</value>
         <value xml:lang="fr">Visualisation d'opérations en gestion de catalogue.</value>
         <value xml:lang="it">Operazioni di visualizzazione nella gestione contenuti.</value>

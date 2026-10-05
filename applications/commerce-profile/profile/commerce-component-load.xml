@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+
+<!-- SCIPIO: Scipio Commerce: the component list of a store pod (blueprint section 5): the list of applications/component-load.xml
+     without manufacturing and humanres, plus commerce-profile/pod-model (entity stubs for the dropped components). workeffort and marketing stay (the kept applications refer to them; they are hidden from menus
+     and MCP and removed after the spike, see docs/wp/W1-02.md). A pod image copies this file over applications/component-load.xml:
+     bin/use-profile.sh commerce. A unit test checks that this file and the full list differ by these three entries only. -->
+<component-loader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/component-loader.xsd">
+    <load-component component-location="party"/>
+    <load-component component-location="securityext"/>
+    <load-component component-location="content"/>
+    <load-component component-location="workeffort"/>
+    <load-component component-location="product"/>
+    <load-component component-location="accounting"/>
+    <load-component component-location="order"/>
+    <load-component component-location="marketing"/>
+    <load-component component-location="compliance"/><!-- SCIPIO: 4.0.0: store compliance (legal pages, consent, privacy rights); before shop -->
+    <load-component component-location="channel-core"/><!-- SCIPIO: 4.0.0: W1-08: store side of the channel hub (listings, stock rules, order intake) -->
+    <load-component component-location="country-packs"/><!-- SCIPIO: 4.0.0: W1-03: country packs (us, de, at): setup tasks and legal texts from templates; after compliance -->
+    
+    <!-- SCIPIO components -->
+    <load-component component-location="cms"/>
+    <load-component component-location="shop"/>
+    
+    <!-- common component used by most other components last because it uses info from most components-->
+    <load-component component-location="commonext"/>
+    <load-component component-location="setup"/><!-- SCIPIO: new setup component; depends on common-ext -->
+    
+    <!-- SCIPIO common components -->
+    <load-component component-location="solr"/>
+
+    <!-- SCIPIO: Scipio Commerce: the commerce profile (W1-02): hosted security groups and guard rules; last, its seed data uses permissions of the components above -->
+    <load-component component-location="commerce-profile"/>
+    <!-- SCIPIO: entity stubs for the pod: the entities of humanres and manufacturing that kept components refer to (W0-04) -->
+    <load-component component-location="commerce-profile/pod-model"/>
+</component-loader>

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.base.util;
 
 import java.io.BufferedReader;
@@ -79,13 +85,23 @@ public final class ScriptUtil {
     private static final Map<String, String> LEGACY_SCRIPT_NAMES_IMPLMAP = UtilMisc.toMap("bsh", "groovy");
     /**
      * SCIPIO: New (2017-01-30) static ScriptEnginerManager instance, instead of recreating at every invocation.
-     * NOTE: For this to be safe, we MUST use the static ClassLoader, and NOT the thread context classloader,
-     * because the latter may be a Tomcat webapp classloader for an arbitrary webapp.
      * NOTE: This singleton means it is not possible for a webapp to provide its own script engines, but generally
      * speaking, this was never supported or tested in ofbiz; to support webapp-specific languages with singleton instances,
      * there would probably have to be a ScriptEngineManager cached in every ServletContext as attribute (TODO?).
+     * <p>
+     * SCIPIO: 4.0.0: Now uses thread context classloader (set by Start.java) to support separate component JARs
+     * where base module can't directly see service/entity module classes. At static init time, the thread context
+     * classloader is the one set by Start.java (containing all component JARs), not a Tomcat webapp classloader.
      */
-    private static final ScriptEngineManager scriptEngineManager = new ScriptEngineManager(ScriptUtil.class.getClassLoader());
+    private static final ScriptEngineManager scriptEngineManager = new ScriptEngineManager(getScriptParentClassLoader());
+
+    private static ClassLoader getScriptParentClassLoader() {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        if (cl == null) {
+            cl = ScriptUtil.class.getClassLoader();
+        }
+        return cl;
+    }
     private static final int SCRIPT_MAX_DISPLAY = UtilProperties.getPropertyAsInteger("debug", "script.maxDisplayLength", 150); // SCIPIO: keep logs and exceptions from going crazy - only verbose mode can override
 
     static {

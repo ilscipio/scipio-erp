@@ -1,21 +1,19 @@
-/*******************************************************************************
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *******************************************************************************/
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.ofbiz.widget.model;
 
 import java.io.Serializable;
@@ -28,10 +26,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Matcher;
+import java.util.regex.PatternSyntaxException;
+import java.util.regex.Pattern;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
@@ -410,7 +406,7 @@ public abstract class ModelWidgetCondition implements Serializable {
             Pattern pattern;
             try {
                 pattern = PatternFactory.createOrGetPerl5CompiledPattern(expr, true);
-            } catch (MalformedPatternException e) {
+            } catch (PatternSyntaxException e) {
                 String errMsg = "Error in evaluation in if-regexp in screen: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
@@ -426,8 +422,7 @@ public abstract class ModelWidgetCondition implements Serializable {
             if (fieldString == null) {
                 fieldString = "";
             }
-            PatternMatcher matcher = new Perl5Matcher();
-            return matcher.matches(fieldString, pattern);
+            return pattern.matcher(fieldString).matches();
         }
     }
 

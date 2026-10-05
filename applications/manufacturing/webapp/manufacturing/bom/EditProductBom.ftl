@@ -1,7 +1,26 @@
 <#--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<#--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
 -->
 
 <@script>
@@ -76,7 +95,7 @@ function lookupBom() {
     
 
     <#if !(productAssoc??)>
-          <@field type="select" label=uiLabelMap.ManufacturingBomType name="productAssocTypeId" size="1">
+          <@field type="select" label=uiLabelMap.ManufacturingBomType name="productAssocTypeId" size="1" tooltip=uiLabelMap.ManufacturingBomTypeTooltip>
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findOne("ProductAssocType", {"productAssocTypeId":productAssocTypeId}, false)>
                     <#if curAssocType??>
@@ -104,12 +123,12 @@ function lookupBom() {
       <#assign value = request.getParameter("thruDate")!>
     </#if>
     <@field type="datetime" label=uiLabelMap.CommonThruDate value=value!'' name="thruDate" size="30" maxlength="30" id="fromDate_2"/>
-    <@field type="input" label=uiLabelMap.CommonSequenceNum name="sequenceNum" value=useValues?string("${(productAssoc.sequenceNum)!}", "${(request.getParameter('sequenceNum'))!}") size="5" maxlength="10"/>
+    <@field type="input" label=uiLabelMap.CommonSequenceNum name="sequenceNum" value=useValues?string("${(productAssoc.sequenceNum)!}", "${(request.getParameter('sequenceNum'))!}") size="5" maxlength="10" tooltip=uiLabelMap.ManufacturingSequenceNumTooltip/>
     <@field type="input" label=uiLabelMap.ManufacturingReason name="reason" value=useValues?string("${(productAssoc.reason)!}", "${(request.getParameter('reason'))!}") size="60" maxlength="255"/>
     <@field type="input" label=uiLabelMap.ManufacturingInstruction name="instruction" value=useValues?string("${(productAssoc.instruction)!}", "${(request.getParameter('instruction'))!}") size="60" maxlength="255"/>
-    <@field type="input" label=uiLabelMap.ManufacturingQuantity name="quantity" value=useValues?string("${(productAssoc.quantity)!}", "${(request.getParameter('quantity'))!}") size="10" maxlength="15"/>
-    <@field type="input" label=uiLabelMap.ManufacturingScrapFactor name="scrapFactor" value=useValues?string("${(productAssoc.scrapFactor)!}", "${(request.getParameter('scrapFactor'))!}") size="10" maxlength="15"/>
-    <@field type="select" label=uiLabelMap.ManufacturingFormula name="estimateCalcMethod">
+    <@field type="input" label=uiLabelMap.ManufacturingQuantity name="quantity" value=useValues?string("${(productAssoc.quantity)!}", "${(request.getParameter('quantity'))!}") size="10" maxlength="15" tooltip=uiLabelMap.ManufacturingQuantityTooltip/>
+    <@field type="input" label=uiLabelMap.ManufacturingScrapFactor name="scrapFactor" value=useValues?string("${(productAssoc.scrapFactor)!}", "${(request.getParameter('scrapFactor'))!}") size="10" maxlength="15" tooltip=uiLabelMap.ManufacturingScrapFactorTooltip/>
+    <@field type="select" label=uiLabelMap.ManufacturingFormula name="estimateCalcMethod" tooltip=uiLabelMap.ManufacturingFormulaTooltip>
         <option value=""></option>
         <#assign selectedFormula = "">
         <#if useValues>
@@ -127,9 +146,9 @@ function lookupBom() {
       <#assign value = request.getParameter("routingWorkEffortId")!>
     </#if>
   <#if value?has_content>
-    <@field type="lookup" label=uiLabelMap.ManufacturingRoutingTask value=value formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
+    <@field type="lookup" label=uiLabelMap.ManufacturingRoutingTask value=value formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask" tooltip=uiLabelMap.ManufacturingRoutingTaskTooltip/>
   <#else>
-    <@field type="lookup" label=uiLabelMap.ManufacturingRoutingTask formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
+    <@field type="lookup" label=uiLabelMap.ManufacturingRoutingTask formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask" tooltip=uiLabelMap.ManufacturingRoutingTaskTooltip/>
   </#if>
     
     <#if !(productAssoc??)>
@@ -143,6 +162,9 @@ function lookupBom() {
 </@section>
 
 <#if productId?? && product??>
+  <@section title=uiLabelMap.ManufacturingBomStructure>
+    <#include "component://manufacturing/webapp/manufacturing/bom/BomTree.ftl">
+  </@section>
   <@section title=uiLabelMap.ManufacturingProductComponents>
     <a name="components"></a>
     <@table type="data-list" autoAltRows=true>

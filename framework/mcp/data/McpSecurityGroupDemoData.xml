@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: MCP permissions for the demo admin group. FULLADMIN is demo data (SecurityGroupDemoData.xml), so
+     these grants cannot live in the seed file: on a fresh database the seed load comes first, the insert breaks the
+     group foreign key, and the whole seed file rolls back. -->
+<entity-engine-xml>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MCP_ACCESS"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MCP_GATEWAY"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MCP_ENTITY_READ"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MCP_ENTITY_WRITE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MCP_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MCP_CODE_WRITE"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MCP_MAIL_SEND"/>
+</entity-engine-xml>

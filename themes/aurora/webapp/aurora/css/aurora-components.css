@@ -1,0 +1,1196 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+/* ==========================================================================
+   Aurora - components
+   Every element the widget engine and the application templates emit. The class
+   names are the contract of the style map (includes/themeStyles.groovy); the
+   rules are this theme's own.
+   ========================================================================== */
+
+/* ---- Buttons ------------------------------------------------------------- */
+
+.button, button.button, a.button, input[type="submit"], input[type="reset"], input[type="button"], .force-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .375rem;
+    height: var(--au-control-h);
+    padding: 0 .75rem;
+    background: var(--au-surface);
+    color: var(--au-ink);
+    font-family: inherit;
+    font-size: var(--au-fs-ui);
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: middle;
+    border: 1px solid var(--au-rule-strong);
+    border-radius: var(--au-r-control);
+    box-shadow: none;
+    cursor: pointer;
+    transition: background var(--au-speed) ease, border-color var(--au-speed) ease,
+                color var(--au-speed) ease, transform var(--au-speed) ease;
+}
+.button:hover, input[type="reset"]:hover, input[type="button"]:hover {
+    background: var(--au-surface-3);
+    border-color: var(--au-rule-strong);
+    color: var(--au-ink);
+    text-decoration: none;
+}
+.button:active, input[type="submit"]:active { transform: translateY(1px); }
+.button[disabled], .button.is-disabled, input[type="submit"][disabled] {
+    opacity: .55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Colour: a solid fill, with the ink chosen so the fill stays a fill. */
+/* Brass is the primary action: a submit, or a button marked primary. */
+.button.is-primary, input[type="submit"], button[type="submit"].button {
+    background: var(--au-primary); border-color: var(--au-primary); color: var(--au-on-primary);
+}
+.button.is-primary:hover, input[type="submit"]:hover, button[type="submit"].button:hover {
+    background: var(--au-primary-hover); border-color: var(--au-primary-hover); color: var(--au-on-primary);
+}
+.button.is-secondary { background: var(--au-accent-2); border-color: var(--au-accent-2); color: var(--au-on-accent); }
+.button.is-success   { background: var(--au-ok);       border-color: var(--au-ok);       color: var(--au-on-accent); }
+.button.is-info      { background: var(--au-info);     border-color: var(--au-info);     color: var(--au-on-accent); }
+.button.is-warning   { background: var(--au-warn);     border-color: var(--au-warn);     color: var(--au-on-accent); }
+.button.is-danger    { background: var(--au-danger);   border-color: var(--au-danger);   color: var(--au-on-accent); }
+.button.is-dark      { background: var(--au-ink);      border-color: var(--au-ink);      color: var(--au-surface); }
+.button.is-white     { background: var(--au-surface);  border-color: var(--au-rule);     color: var(--au-ink); }
+.button.is-link      { background: var(--au-surface-2); border-color: var(--au-rule-strong); color: var(--au-ink); }
+.button.is-text      { background: transparent;        border-color: transparent;        color: var(--au-ink-2); box-shadow: none; }
+
+.button.is-secondary:hover,
+.button.is-success:hover, .button.is-info:hover,
+.button.is-warning:hover, .button.is-danger:hover,
+.button.is-dark:hover      { filter: brightness(1.08); color: var(--au-on-accent); }
+.button.is-link:hover      { background: var(--au-surface-3); color: var(--au-ink); border-color: var(--au-accent-line); }
+
+/* A control often carries a colour class and is-link together. The colour is
+   the meaning, so it wins. Without this an "add" or a "delete" would lose its
+   fill and read as plain text. */
+.button.is-link.is-primary   { background: var(--au-primary);    border-color: var(--au-primary);    color: var(--au-on-primary); }
+.button.is-link.is-secondary { background: var(--au-accent-2); border-color: var(--au-accent-2); color: var(--au-on-accent); }
+.button.is-link.is-success   { background: var(--au-ok);       border-color: var(--au-ok);       color: var(--au-on-accent); }
+.button.is-link.is-info      { background: var(--au-info);     border-color: var(--au-info);     color: var(--au-on-accent); }
+.button.is-link.is-warning   { background: var(--au-warn);     border-color: var(--au-warn);     color: var(--au-on-accent); }
+.button.is-link.is-danger    { background: var(--au-danger);   border-color: var(--au-danger);   color: var(--au-on-accent); }
+.button.is-text:hover      { background: var(--au-surface-2); }
+
+.button.is-outlined { background: transparent; }
+.button.is-outlined.is-primary { color: var(--au-accent); border-color: var(--au-accent-line); }
+
+.button.is-tiny   { height: 1.5rem;    padding: 0 .5rem;   font-size: var(--au-fs-tiny); }
+.button.is-small  { height: 1.75rem;   padding: 0 .625rem; font-size: var(--au-fs-small); }
+.button.is-medium { height: 2.375rem;  padding: 0 1rem;    font-size: .875rem; }
+.button.is-large  { height: 2.75rem;   padding: 0 1.25rem; font-size: 1rem; }
+.button.is-rounded { border-radius: var(--au-r-pill); }
+.button.is-fullwidth { display: flex; width: 100%; }
+.button .fa, .button i { font-size: .9em; }
+.button.is-loading { color: transparent !important; pointer-events: none; }
+.button.is-loading::after {
+    content: "";
+    position: absolute;
+    width: .875rem;
+    height: .875rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: au-spin .6s linear infinite;
+}
+@keyframes au-spin { to { transform: rotate(360deg); } }
+
+/* A KPI tile is a button that wraps a heading: the number sits over the
+   label, fills its grid cell so the row keeps a consistent gap and width,
+   and wraps a long label instead of running into the next tile. */
+.button:has(> h1), .button:has(> h2), .button:has(> h3), .button:has(> h4) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: .1875rem;
+    width: 100%;
+    height: auto;
+    min-height: calc(var(--au-control-h) * 1.7);
+    padding: .625rem .875rem;
+    white-space: normal;
+    text-align: left;
+}
+.button:has(> h1) > h1, .button:has(> h2) > h2,
+.button:has(> h3) > h3, .button:has(> h4) > h4 { margin: 0; line-height: 1.15; }
+
+/* The number takes the tile's own contrast colour, never a semantic text
+   colour meant for a plain surface: a warning/info/alert number on a
+   warning/info/alert-coloured tile is unreadable. */
+.button h1, .button h2, .button h3, .button h4,
+.button .has-text-info, .button .has-text-warning, .button .has-text-alert,
+.button .has-text-success, .button .has-text-danger,
+.button .text_color_info, .button .text_color_warning,
+.button .text_color_alert, .button .text_color_success,
+.button .text_color_error { color: inherit !important; }
+
+/* A group of buttons reads as one control. */
+.buttons { display: flex; flex-wrap: wrap; gap: .375rem; align-items: center; }
+.field.is-grouped > .control > .button { margin: 0; }
+
+/* The button menu: buttons joined edge to edge. */
+.menu-type-button.has-addons, .menu-type-button {
+    display: inline-flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: .375rem;
+    margin: 0 0 .5rem;
+    padding: 0;
+    list-style: none;
+}
+.menu-type-button > .control { margin: 0; }
+.menu-type-button.has-addons { gap: 0; }
+.menu-type-button.has-addons > .control:not(:first-child) > .button { border-radius: 0; margin-left: -1px; }
+.menu-type-button.has-addons > .control:first-child > .button { border-radius: var(--au-r-control) 0 0 var(--au-r-control); }
+.menu-type-button.has-addons > .control:last-child > .button  { border-radius: 0 var(--au-r-control) var(--au-r-control) 0; }
+.menu-type-button.has-addons > .control:only-child > .button  { border-radius: var(--au-r-control); }
+.menu-type-button .is-active > .button, .menu-type-button .button.is-active {
+    background: var(--au-accent-soft);
+    border-color: var(--au-accent-line);
+    color: var(--au-accent);
+}
+
+/* Links that the widget engine marks as actions */
+a.link-type-text, .hyperlink { color: var(--au-accent); }
+.link-long { word-break: break-word; }
+.action-remove:not(.button), .action-delete:not(.button) { color: var(--au-danger); }
+.action-add:not(.button) { color: var(--au-ok); }
+.text-entry { color: var(--au-ink-2); }
+
+/* ---- Dropdown menus ------------------------------------------------------ */
+
+.dropdown, .button-dropdown { position: relative; display: inline-flex; }
+.dropdown-toggle::after {
+    content: "";
+    display: inline-block;
+    width: .3125rem;
+    height: .3125rem;
+    margin-left: .375rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-1px) rotate(45deg);
+}
+.dropdown-menu, .menu-type-button-dropdown, .menu-type-main {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 70;
+    display: none;
+    min-width: 12rem;
+    margin: 0;
+    padding: .3125rem;
+    list-style: none;
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    box-shadow: var(--au-shadow-float), var(--au-bezel);
+}
+.dropdown.is-active > .dropdown-menu,
+.dropdown:hover > .dropdown-menu,
+.button-dropdown.is-active > .menu-type-button-dropdown,
+.button-dropdown:hover > .menu-type-button-dropdown,
+.dropdown-menu.is-active,
+li.is-active > .menu-type-main,
+li:hover > .menu-type-main { display: block; }
+.dropdown-menu.is-right { left: auto; right: 0; }
+.dropdown-menu > li, .menu-type-button-dropdown > li { display: block; }
+.dropdown-item, .dropdown-menu a, .menu-type-button-dropdown a {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .375rem .5rem;
+    border-radius: var(--au-r-control);
+    color: var(--au-ink-2);
+    font-size: var(--au-fs-ui);
+    white-space: nowrap;
+    text-decoration: none;
+}
+.dropdown-item:hover, .dropdown-menu a:hover {
+    background: var(--au-accent-soft);
+    color: var(--au-accent);
+    text-decoration: none;
+}
+.dropdown-item.is-active, .dropdown-menu .is-active > a { background: var(--au-accent-soft); color: var(--au-accent); }
+.dropdown-item.is-disabled, .dropdown-menu .is-disabled > a { color: var(--au-ink-4); pointer-events: none; }
+.dropdown-divider { height: 1px; margin: .25rem 0; background: var(--au-rule); }
+
+/* ---- Generic menus ------------------------------------------------------- */
+
+.menu-type-generic, .menu-type-default, .menu-type-section, .menu-type-section-inline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .375rem;
+    margin: 0 0 .5rem;
+    padding: 0;
+    list-style: none;
+}
+.menu-type-section-inline { display: inline-flex; margin: 0; }
+.menu-type-generic > li, .menu-type-default > li, .menu-type-section > li { display: inline-flex; }
+.menu-no-clear { clear: none; }
+
+/* The tab strip that the section menus render as */
+.menu-type-tab, .nav.nav-tabs, .menu-type-subtab {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: .125rem;
+    margin: 0 0 .75rem;
+    padding: 0 0 0;
+    list-style: none;
+    border-bottom: 1px solid var(--au-rule);
+}
+.menu-type-tab > .control, .menu-type-tab > li,
+.menu-type-subtab > li, .nav-tabs > li { display: inline-flex; margin-bottom: -1px; }
+.menu-type-tab .button, .menu-type-subtab .button, .nav-tabs .button {
+    height: 2.125rem;
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    box-shadow: none;
+    color: var(--au-ink-3);
+    font-weight: 500;
+}
+.menu-type-tab .button:hover, .menu-type-subtab .button:hover { background: transparent; color: var(--au-ink); }
+.menu-type-tab .is-active > .button, .menu-type-tab .button.is-active,
+.menu-type-subtab .is-active > .button, .menu-type-subtab .button.is-active {
+    color: var(--au-accent);
+    border-bottom-color: var(--au-accent);
+    background: transparent;
+}
+
+.sub-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: 0 0 .75rem;
+    padding: 0;
+    list-style: none;
+    font-size: var(--au-fs-small);
+}
+
+/* ---- Tabs (the @tabs macro) ---------------------------------------------- */
+
+.tabs {
+    display: block;
+    margin: 0 0 .75rem;
+    border-bottom: 1px solid var(--au-rule);
+    overflow-x: auto;
+}
+.tabs ul {
+    display: flex;
+    align-items: stretch;
+    gap: .125rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.tabs li { display: inline-flex; }
+.tabs li a {
+    display: flex;
+    align-items: center;
+    height: 2.125rem;
+    padding: 0 .875rem;
+    border-bottom: 2px solid transparent;
+    color: var(--au-ink-3);
+    font-weight: 500;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.tabs li a:hover { color: var(--au-ink); text-decoration: none; }
+.tabs li.is-active a { color: var(--au-accent); border-bottom-color: var(--au-accent); }
+.tabs.is-fullwidth ul { width: 100%; }
+.tabs.is-fullwidth li { flex: 1 1 0; }
+.tabs.is-fullwidth li a { justify-content: center; }
+
+.content-tab > .tab-content { display: none; }
+.content-tab > .tab-content.is-active { display: block; animation: au-fade var(--au-speed) ease; }
+@keyframes au-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---- Tables -------------------------------------------------------------- */
+
+.table-container { width: 100%; margin-bottom: .75rem; overflow-x: auto; }
+
+table, .table, .basic-table, .dark-grid {
+    width: 100%;
+    margin: 0 0 .5rem;
+    border-collapse: collapse;
+    background: transparent;
+    color: var(--au-ink);
+    font-size: var(--au-fs-ui);
+}
+.table.is-fullwidth { width: 100%; }
+
+/* The ledger: column heads over a single strong rule, rows on green
+   hairlines, figures in tabular lining numerals. */
+.table th, table th {
+    padding: var(--au-pad-cell);
+    background: transparent;
+    color: var(--au-ink-2);
+    font-size: var(--au-fs-small);
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--au-rule-strong);
+}
+.table thead th, table thead th {
+    position: sticky;
+    top: var(--au-topbar-h);
+    z-index: 2;
+    background: var(--au-surface);
+}
+/* In a scroll container the offset counts from the container, not the page:
+   it would push the header down over the first rows. */
+:is(.table-container, .dataTables_scroll, .table-responsive, .scrollable-table-container) thead th { top: 0; }
+.table td, table td {
+    height: var(--au-row-h);
+    padding: var(--au-pad-cell);
+    border-bottom: 1px solid var(--au-rule-soft);
+    vertical-align: middle;
+    font-family: var(--au-font);
+    font-variant-numeric: tabular-nums lining-nums;
+}
+.table td.amount, .table td.number, td.align-right, th.align-right, .table td.text-right, .table th.text-right,
+td[class*="amount"], td[class*="price"], td[class*="total"], td[class*="quantity"] { text-align: right; }
+.table tbody tr:hover > td { background: var(--au-accent-soft); }
+
+/* A data table cell keeps a value on one line (a date must not break on its
+   hyphen or its space); a value too long to fit is clipped with an ellipsis
+   rather than pushed onto a second line. Monospace stays reserved for code. */
+.table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 22rem;
+}
+.table tbody tr:last-child td { border-bottom: 0; }
+
+/* code/kbd/samp/pre/.is-monospace already take the mono face (aurora-base.css);
+   that still wins here since those rules target the element directly. */
+.table td a, table td a, .table td .button, table td .button,
+.table td label, .table td select, .table td input, .table td textarea { font-family: var(--au-font); }
+
+.table.is-bordered, .table.is-bordered th, .table.is-bordered td { border: 1px solid var(--au-rule); }
+.table.is-striped tbody tr:nth-child(even), tr.even, tr.odd:nth-child(even) { background: transparent; }
+.table.is-narrow td, .table.is-narrow th,
+.table.is-condensed td, .table.is-condensed th { padding: .3125rem .5rem; }
+.table tr.is-selected, tr.is-selected > td { background: var(--au-accent-soft); }
+.table tfoot td, table tfoot td, .table tr.total > td, table tr.summary > td {
+    border-top: 1px solid var(--au-rule-strong);
+    border-bottom: 3px double var(--au-rule-strong);
+    font-weight: 600;
+}
+.table caption { padding: .5rem 0; color: var(--au-ink-3); text-align: left; }
+
+/* A table that is a panel of its own */
+.table-type-data-list, .table-type-data, .table-type-summary, .table-type-generic {
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+}
+.table-type-data-list th:first-child, .table-type-data th:first-child { padding-left: 1rem; }
+.table-type-data-list td:first-child, .table-type-data td:first-child { padding-left: 1rem; }
+
+/* The form widget grid carries no chrome: it is a layout, not a table. */
+.dark-grid, .table-type-formwidget, .table-type-fields, .table-type-fields-vert {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+.dark-grid > tbody > tr > td, .table-type-formwidget > tbody > tr > td,
+.table-type-fields td, .table-type-fields th {
+    border: 0;
+    padding: .1875rem .3125rem;
+    font-family: var(--au-font);
+    background: transparent;
+}
+.table-noborder, .table-noborder td, .table-noborder th { border: 0; }
+.table-nocellspacing { border-spacing: 0; }
+.table-spacing-tiny td   { padding: .125rem .25rem; }
+.table-spacing-small td  { padding: .25rem .375rem; }
+.table-spacing-medium td { padding: .4375rem .625rem; }
+.table-spacing-large td  { padding: .625rem .875rem; }
+
+/* ---- Notifications and messages ------------------------------------------ */
+
+.notification, .alert, .error-msg, .info-msg, .warning-msg, .result-msg, .fail-msg, .generic-msg {
+    position: relative;
+    display: block;
+    margin: 0 0 .75rem;
+    padding: .625rem .875rem;
+    border: 1px solid var(--au-rule);
+    border-left: 3px solid var(--au-ink-4);
+    border-radius: var(--au-r-control);
+    background: var(--au-surface);
+    color: var(--au-ink-2);
+    box-shadow: var(--au-bezel);
+}
+.notification > .delete, .notification > .modal-close { position: absolute; top: .5rem; right: .5rem; }
+
+.notification.is-info,    .info-msg    { background: var(--au-info-soft);   border-color: var(--au-info-line);   border-left-color: var(--au-info);   color: var(--au-ink); }
+.notification.is-success, .result-msg  { background: var(--au-ok-soft);     border-color: var(--au-ok-line);     border-left-color: var(--au-ok);     color: var(--au-ink); }
+.notification.is-warning, .warning-msg { background: var(--au-warn-soft);   border-color: var(--au-warn-line);   border-left-color: var(--au-warn);   color: var(--au-ink); }
+.notification.is-danger,  .error-msg,
+.fail-msg                              { background: var(--au-danger-soft); border-color: var(--au-danger-line); border-left-color: var(--au-danger); color: var(--au-ink); }
+.notification.is-secondary             { background: var(--au-accent-soft); border-color: var(--au-accent-line); border-left-color: var(--au-accent-2); color: var(--au-ink); }
+.notification.is-primary               { background: var(--au-accent-soft); border-color: var(--au-accent-line); border-left-color: var(--au-accent); color: var(--au-ink); }
+
+.info-important { font-weight: 600; }
+.error-perm, .error-security { border-left-width: 4px; }
+/* An empty result is not a notification: a muted line of text, no box,
+   no border colour borrowed from the success palette. */
+.result-no-record-msg {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: .1875rem 0;
+    color: var(--au-ink-3);
+}
+
+/* The close cross, shared by notifications and modals */
+.delete, .modal-close {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.375rem;
+    height: 1.375rem;
+    padding: 0;
+    background: var(--au-rule-soft);
+    border: 0;
+    border-radius: 50%;
+    color: transparent;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.delete::before, .delete::after,
+.modal-close::before, .modal-close::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 1.5px;
+    background: var(--au-ink-2);
+    transform-origin: center;
+}
+.delete::before, .modal-close::before { transform: translate(-50%, -50%) rotate(45deg); }
+.delete::after,  .modal-close::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+.delete:hover, .modal-close:hover { background: var(--au-rule); }
+.modal-close.is-large { width: 2rem; height: 2rem; }
+.modal-close.is-large::before, .modal-close.is-large::after { width: 15px; background: #fff; }
+
+/* ---- Modal --------------------------------------------------------------- */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+.modal.is-active { display: flex; }
+.modal-background {
+    position: absolute;
+    inset: 0;
+    background: var(--au-overlay);
+    backdrop-filter: blur(2px);
+}
+.modal-card, .modal-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 720px;
+    max-height: calc(100vh - 3rem);
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-large);
+    box-shadow: var(--au-shadow-float), var(--au-bezel);
+    overflow: hidden;
+    animation: au-rise var(--au-speed) ease;
+}
+@keyframes au-rise { from { opacity: 0; transform: translateY(8px) scale(.99); } to { opacity: 1; transform: none; } }
+.modal-content { background: transparent; border: 0; box-shadow: none; overflow: visible; }
+.modal-content > .box { max-height: calc(100vh - 3rem); overflow: auto; margin: 0; }
+.modal-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    padding: .75rem 1rem;
+    background: var(--au-surface-2);
+    border-bottom: 1px solid var(--au-rule);
+}
+.modal-card-title {
+    margin: 0;
+    color: var(--au-ink);
+    font-size: var(--au-fs-h3);
+    font-weight: 600;
+}
+.modal-card-body { flex: 1 1 auto; padding: 1rem; overflow: auto; }
+.modal-card-foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: .5rem;
+    flex-shrink: 0;
+    padding: .75rem 1rem;
+    background: var(--au-surface-2);
+    border-top: 1px solid var(--au-rule);
+}
+.modal .modal-close.is-large { position: absolute; top: 1rem; right: 1rem; z-index: 2; }
+body.au-modal-open { overflow: hidden; }
+
+/* ---- Pagination ---------------------------------------------------------- */
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin: .75rem 0;
+}
+.pagination-list {
+    display: flex;
+    align-items: center;
+    gap: .1875rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.pagination-list li { display: inline-flex; }
+.pagination-link, .pagination-previous, .pagination-next,
+.pagination a, .pagination-list a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.875rem;
+    height: 1.875rem;
+    padding: 0 .5rem;
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-control);
+    color: var(--au-ink-2);
+    font-size: var(--au-fs-small);
+    text-decoration: none;
+}
+.pagination a:hover { border-color: var(--au-accent-line); color: var(--au-accent); text-decoration: none; }
+.pagination .is-active > a, .pagination a.is-active, .pagination-link.is-active {
+    background: var(--au-accent);
+    border-color: var(--au-accent);
+    color: var(--au-on-accent);
+    font-weight: 600;
+}
+.pagination .is-disabled, .pagination .is-disabled > a, .pagination-link.is-disabled {
+    opacity: .45;
+    pointer-events: none;
+}
+.pagination .pagination-control, .pagination .pull-right { margin-left: auto; }
+
+/* ---- Breadcrumb ---------------------------------------------------------- */
+
+.breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .25rem;
+    margin: 0 0 .625rem;
+    padding: 0;
+    list-style: none;
+    font-size: var(--au-fs-small);
+    color: var(--au-ink-3);
+}
+.breadcrumb li { display: inline-flex; align-items: center; gap: .25rem; }
+.breadcrumb li + li::before {
+    content: "/";
+    margin-right: .25rem;
+    color: var(--au-ink-4);
+}
+.breadcrumb a { color: var(--au-ink-3); }
+.breadcrumb a:hover { color: var(--au-accent); }
+.breadcrumb .is-active a, .breadcrumb li.is-active { color: var(--au-ink); font-weight: 600; }
+
+/* ---- Steps --------------------------------------------------------------- */
+
+.steps {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+}
+.steps-segment {
+    position: relative;
+    flex: 1 1 0;
+    padding: 0 .5rem 0 0;
+    text-align: center;
+    color: var(--au-ink-3);
+    font-size: var(--au-fs-small);
+}
+.steps-segment::before {
+    content: "";
+    position: absolute;
+    top: .6875rem;
+    left: 50%;
+    right: -50%;
+    height: 2px;
+    background: var(--au-rule);
+}
+.steps-segment:last-child::before { display: none; }
+.steps-marker, .steps-segment > a::before {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0 auto .375rem;
+    background: var(--au-surface);
+    border: 2px solid var(--au-rule-strong);
+    border-radius: 50%;
+    color: var(--au-ink-3);
+    font-size: var(--au-fs-tiny);
+    font-weight: 600;
+}
+.steps-segment.is-active { color: var(--au-ink); font-weight: 600; }
+.steps-segment.is-active .steps-marker { border-color: var(--au-accent); color: var(--au-accent); }
+.steps-segment.completed::before { background: var(--au-ok); }
+.steps-segment.completed .steps-marker { background: var(--au-ok); border-color: var(--au-ok); color: var(--au-on-accent); }
+.steps-segment.is-disabled { opacity: .5; }
+.steps-content { padding: .5rem 0; }
+.steps-segment a { color: inherit; text-decoration: none; }
+
+/* ---- Tags ---------------------------------------------------------------- */
+
+.tags { display: inline-flex; align-items: center; gap: .25rem; flex-wrap: wrap; }
+.tags.has-addons { gap: 0; }
+.tags.has-addons .tag:not(:first-child) { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+.tags.has-addons .tag:not(:last-child)  { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .3125rem;
+    height: 1.5rem;
+    padding: 0 .5rem;
+    background: var(--au-surface-2);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-control);
+    color: var(--au-ink-2);
+    font-size: var(--au-fs-tiny);
+    font-weight: 600;
+    white-space: nowrap;
+}
+.tag.is-medium { height: 1.75rem; font-size: var(--au-fs-small); }
+.tag.is-large  { height: 2rem;    font-size: var(--au-fs-ui); }
+.tag.is-rounded { border-radius: var(--au-r-pill); }
+.tag.is-primary { background: var(--au-accent-soft); border-color: var(--au-accent-line); color: var(--au-accent); }
+.tag.is-info    { background: var(--au-info-soft);   border-color: var(--au-info-line);   color: var(--au-info); }
+.tag.is-success { background: var(--au-ok-soft);     border-color: var(--au-ok-line);     color: var(--au-ok); }
+.tag.is-warning { background: var(--au-warn-soft);   border-color: var(--au-warn-line);   color: var(--au-warn); }
+.tag.is-danger  { background: var(--au-danger-soft); border-color: var(--au-danger-line); color: var(--au-danger); }
+.tag.is-dark    { background: var(--au-surface-3);   border-color: var(--au-rule);        color: var(--au-ink); }
+
+/* ---- Progress ------------------------------------------------------------ */
+
+.progress, progress {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: .5rem;
+    margin: 0 0 .5rem;
+    border: 0;
+    border-radius: var(--au-r-pill);
+    background: var(--au-surface-3);
+    overflow: hidden;
+    color: var(--au-accent);
+}
+progress::-webkit-progress-bar   { background: var(--au-surface-3); }
+progress::-webkit-progress-value { background: var(--au-accent); border-radius: var(--au-r-pill); }
+progress::-moz-progress-bar      { background: var(--au-accent); }
+.progress.is-danger::-webkit-progress-value  { background: var(--au-danger); }
+.progress.is-info::-webkit-progress-value    { background: var(--au-info); }
+.progress.is-success::-webkit-progress-value { background: var(--au-ok); }
+
+/* A progress bar built from div elements */
+.progress > div, .progress-bar {
+    height: 100%;
+    background: var(--au-accent);
+    border-radius: var(--au-r-pill);
+    transition: width .3s ease;
+}
+
+/* ---- Tooltip ------------------------------------------------------------- */
+
+[data-tooltip] { position: relative; cursor: help; }
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    z-index: 120;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    transform: translateX(-50%) translateY(3px);
+    max-width: 18rem;
+    padding: .3125rem .5rem;
+    background: var(--au-ink);
+    color: var(--au-surface);
+    border-radius: var(--au-r-control);
+    font-size: var(--au-fs-tiny);
+    font-weight: 400;
+    line-height: 1.4;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    box-shadow: var(--au-shadow-float);
+    transition: opacity var(--au-speed) ease, transform var(--au-speed) ease;
+}
+[data-tooltip]:hover::after, [data-tooltip]:focus-visible::after { opacity: 1; transform: translateX(-50%); }
+.has-tooltip-multiline::after { white-space: normal; width: 16rem; }
+.has-tooltip-bottom::after { bottom: auto; top: calc(100% + 6px); }
+.has-tooltip-left::after   { left: auto; right: calc(100% + 6px); bottom: auto; top: 50%; transform: translateY(-50%); }
+.has-tooltip-left:hover::after { transform: translateY(-50%); }
+.has-tooltip-right::after  { left: calc(100% + 6px); bottom: auto; top: 50%; transform: translateY(-50%); }
+.has-tooltip-right:hover::after { transform: translateY(-50%); }
+.field-tooltip-wrap { display: inline-flex; align-items: center; gap: .25rem; }
+.extralabel { color: var(--au-ink-4); font-size: var(--au-fs-tiny); }
+
+/* ---- Field groups that fold ---------------------------------------------- */
+
+/* A collapsible group is a disclosure line, not an empty box; open, its fields hang on a rule. */
+.toggleField > fieldset { margin: 0 0 1rem; padding: 0; border: 0; background: none; box-shadow: none; }
+.toggleField > fieldset > legend { padding: 0; }
+.au-disclose {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    min-height: var(--au-control-h);
+    margin-left: -.625rem;
+    padding: 0 .75rem 0 .625rem;
+    border: 0;
+    border-radius: var(--au-r-control);
+    background: none;
+    color: var(--au-ink);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+.au-disclose:hover { background: var(--au-nav-on); }
+.au-disclose:focus-visible { outline: 2px solid var(--au-focus); outline-offset: 2px; }
+.au-disclose > i { color: var(--au-ink-3); font-size: .75em; transition: transform .15s ease; }
+.au-disclose[aria-expanded="true"] > i { transform: rotate(90deg); }
+.toggleField .fieldgroup-body { margin-top: .25rem; padding: .5rem 0 0 1rem; border-left: 2px solid var(--au-rule); }
+@media (prefers-reduced-motion: reduce) { .au-disclose > i { transition: none; } }
+
+/* ---- The multi select (asmSelect) ---------------------------------------- */
+
+.asmContainer { display: block; }
+.asmSelect { margin-bottom: .375rem; }
+.asmList {
+    list-style: none;
+    margin: .375rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .25rem;
+}
+.asmListItem {
+    display: inline-flex;
+    align-items: center;
+    gap: .375rem;
+    padding: .1875rem .5rem;
+    background: var(--au-accent-soft);
+    border: 1px solid var(--au-accent-line);
+    border-radius: var(--au-r-pill);
+    color: var(--au-ink);
+    font-size: var(--au-fs-small);
+}
+.asmListItemRemove { color: var(--au-ink-3); font-weight: 700; }
+.asmListItemRemove:hover { color: var(--au-danger); }
+.asmHighlight { color: var(--au-ink-3); font-size: var(--au-fs-tiny); }
+.asmOptionDisabled { color: var(--au-ink-4); }
+
+/* ---- Slider -------------------------------------------------------------- */
+
+.hero.has-carousel { position: relative; overflow: hidden; border-radius: var(--au-r-panel); }
+.hero-carousel { display: flex; scroll-snap-type: x mandatory; overflow-x: auto; }
+.carousel-item, .hero-carousel > div { flex: 0 0 100%; scroll-snap-align: start; position: relative; min-height: 10rem; background: var(--au-surface-2); }
+.hero-carousel > div > a { display: block; position: relative; height: 100%; color: inherit; text-decoration: none; }
+.hero-carousel img { display: block; width: 100%; height: auto; }
+.hero-carousel .title { position: relative; z-index: 1; margin: 0; padding: 1rem 1rem 0; }
+.carousel-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    background: linear-gradient(to top, var(--au-overlay), transparent);
+    color: var(--au-on-accent);
+}
+
+/* ---- Pricing ------------------------------------------------------------- */
+
+.price {
+    display: block;
+    font-family: var(--au-font-mono);
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -.02em;
+    color: var(--au-ink);
+}
+
+/* ---- Odds and ends ------------------------------------------------------- */
+
+.ribbon {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+    padding: .125rem .5rem;
+    background: var(--au-accent);
+    color: var(--au-on-accent);
+    border-radius: var(--au-r-pill);
+    font-size: var(--au-fs-tiny);
+    font-weight: 600;
+}
+.media-preview { max-width: 220px; border-radius: var(--au-r-control); border: 1px solid var(--au-rule); }
+.gallery-title-bg, .gallery-overlay-bg { background: var(--au-surface-2); }
+.selectBox { min-width: 10rem; }
+.content > *:last-child { margin-bottom: 0; }
+.list-item { display: block; }
+.is-hoverable > tbody > tr:hover { background: var(--au-accent-soft); }
+
+/* The screen renders a spinner while an area reloads. */
+.au-busy { position: relative; pointer-events: none; opacity: .6; }
+
+/* Print: the shell disappears, the content stays. */
+@media print {
+    .au-nav, .au-bar, .au-scrim, .au-skip, .au-jump-dialog { display: none !important; }
+    .au-shell { display: block; }
+    .scp-content { padding: 0; }
+    .scp-content { margin: 0 !important; padding: 0 !important; }
+    body { background: #fff; color: #000; }
+    .panel, .card, .box, .tile { break-inside: avoid; box-shadow: none; }
+}
+
+/* ---- The horizontal field -------------------------------------------------
+   The form macros put the label in its own column. A fixed column width makes
+   the controls line up down the form, which is what a data entry screen needs.
+   ------------------------------------------------------------------------- */
+
+.field.is-horizontal { align-items: flex-start; gap: 0; margin-bottom: .5rem; }
+.field.is-horizontal > .field-label {
+    flex: 0 0 12rem;
+    width: 12rem;
+    padding: .375rem .75rem 0 0;
+    text-align: right;
+}
+.field.is-horizontal > .field-label .label { margin: 0; line-height: 1.3; }
+.field.is-horizontal > .field-body { flex: 1 1 auto; min-width: 0; }
+.field.is-horizontal > .field-body > .field { margin-bottom: 0; }
+.field.is-horizontal > .field-body .input,
+.field.is-horizontal > .field-body .select,
+.field.is-horizontal > .field-body .textarea { max-width: 34rem; }
+/* An addon group (lookup, prefix, postfix) takes the width limit as a whole, so
+   the button sits on the input and does not drift to the far edge. */
+.field.is-horizontal > .field-body .has-addons { max-width: 34rem; }
+.has-addons > .control.is-expanded { flex: 1 1 auto; width: auto; min-width: 0; }
+.has-addons .input, .has-addons .select, .has-addons .select select { max-width: none; }
+.has-addons > .control.is-expanded > .input:not([type="color"]),
+.has-addons > .control.is-expanded > .select,
+.has-addons > .control.is-expanded > .select select { width: 100%; }
+/* A find field: operator select, value, range, "ignore case". More parts get more room. */
+.field.is-horizontal > .field-body .has-addons:has(.control:nth-child(3)) { max-width: 48rem; }
+.has-addons > .control:has(> input[type="checkbox"]),
+.has-addons > .control:has(> .field-label) { display: flex; align-items: center; padding-left: .75rem; }
+.has-addons > .control > .field-label { flex: none; width: auto; padding: 0; text-align: left; }
+.has-addons > .control > .field-label .label { margin: 0; white-space: nowrap; }
+
+@media (max-width: 768px) {
+    .field.is-horizontal { display: block; }
+    .field.is-horizontal > .field-label { width: auto; text-align: left; padding: 0 0 .25rem; }
+}
+
+/* ==========================================================================
+   Graphite discipline
+   These rules come last on purpose: they give every widget the look of the
+   theme. Only the main action is filled (graphite; light in the dark scheme).
+   A colour class on a button is an outline in the colour of its meaning.
+   ========================================================================== */
+
+/* ---- Buttons ---- */
+.button, button.button, a.button, input[type="submit"], input[type="reset"], input[type="button"], .force-button {
+    height: var(--au-control-h);
+    padding: 0 16px;
+    border: 1px solid var(--au-rule-strong);
+    border-radius: var(--au-r-control);
+    background: var(--au-surface);
+    color: var(--au-ink);
+    font-weight: 600;
+    box-shadow: none;
+}
+.button:hover, input[type="reset"]:hover, input[type="button"]:hover { background: var(--au-surface-2); border-color: var(--au-rule-strong); color: var(--au-ink); }
+.button.is-primary, input[type="submit"], button[type="submit"].button, .button.is-link.is-primary {
+    background: var(--au-primary);
+    border-color: var(--au-primary);
+    color: var(--au-on-primary);
+}
+.button.is-primary:hover, input[type="submit"]:hover, button[type="submit"].button:hover, .button.is-link.is-primary:hover {
+    background: var(--au-primary-hover);
+    border-color: var(--au-primary-hover);
+    color: var(--au-on-primary);
+}
+.button.is-secondary, .button.is-success, .button.is-info, .button.is-warning, .button.is-danger, .button.is-dark, .button.is-link, .button.is-white,
+.button.is-link.is-secondary, .button.is-link.is-success, .button.is-link.is-info, .button.is-link.is-warning, .button.is-link.is-danger {
+    background: var(--au-surface);
+    border-color: var(--au-rule-strong);
+    color: var(--au-ink);
+    filter: none;
+}
+.button.is-secondary:hover, .button.is-success:hover, .button.is-info:hover, .button.is-warning:hover,
+.button.is-dark:hover, .button.is-link:hover, .button.is-white:hover { background: var(--au-surface-2); color: var(--au-ink); filter: none; }
+.button.is-danger, .button.is-link.is-danger { color: var(--au-danger); border-color: var(--au-danger-line); }
+.button.is-danger:hover, .button.is-link.is-danger:hover { background: var(--au-danger-soft); color: var(--au-danger); }
+/* An explicit colour keeps its meaning as an outline. An action class (add, hold,
+   update status) also carries a colour; actions stay neutral, or every "New ..."
+   in the backend turns green. */
+.button.is-success:where(:not([class*="action-"])) { color: var(--au-ok); border-color: var(--au-ok-line); }
+.button.is-info:where(:not([class*="action-"]))    { color: var(--au-info); border-color: var(--au-info-line); }
+.button.is-warning:where(:not([class*="action-"])) { color: var(--au-warn); border-color: var(--au-warn-line); }
+.button.is-secondary:where(:not([class*="action-"])) { color: var(--au-ink-2); }
+.button.is-success:where(:not([class*="action-"])):hover { background: var(--au-ok-soft); color: var(--au-ok); }
+.button.is-info:where(:not([class*="action-"])):hover    { background: var(--au-info-soft); color: var(--au-info); }
+.button.is-warning:where(:not([class*="action-"])):hover { background: var(--au-warn-soft); color: var(--au-warn); }
+/* The macros mark a disabled link with the class, not the attribute. */
+.button.disabled, a.button.disabled { opacity: .5; pointer-events: none; cursor: not-allowed; }
+.button.is-text { border-color: transparent; background: transparent; color: var(--au-ink-2); }
+.button.is-small { height: 2rem; padding: 0 12px; border-radius: 8px; }
+
+/* ---- Action bars (button menus) and section menus: equal outline buttons ---- */
+.menu-type-button, .menu-type-button.has-addons { gap: 8px; margin: 0 0 1.25rem; }
+.menu-type-button.has-addons > .control > .button,
+.menu-type-button.has-addons > .control:is(:first-child, :last-child, :not(:first-child)) > .button { margin-left: 0; border-radius: var(--au-r-control); }
+/* Any addon group of buttons only (no field): separate buttons, not a joined bar.
+   The :has(.input) argument lifts the specificity over the joined-bar rules. */
+.has-addons:not(:has(.input, .select, .textarea, input, select, textarea)) { flex-wrap: wrap; gap: 8px; width: auto; }
+.has-addons:not(:has(.input, .select, .textarea, input, select, textarea)) > .control:is(:first-child, :last-child, :not(:first-child)) > .button { margin-left: 0; border-radius: var(--au-r-control); }
+.menu-type-button .button, .menu-type-button .button.is-primary, .menu-type-button .button.is-success,
+.menu-type-section .button, .menu-type-section .button.is-primary, .menu-type-section .button.is-success {
+    background: var(--au-surface);
+    border-color: var(--au-rule-strong);
+    color: var(--au-ink);
+}
+.menu-type-section .button { height: 2.125rem; padding: 0 12px; border-radius: 8px; font-size: var(--au-fs-small); }
+.menu-type-button .button.is-danger, .menu-type-section .button.is-danger { color: var(--au-danger); border-color: var(--au-danger-line); }
+.menu-type-button .button:hover, .menu-type-section .button:hover { background: var(--au-surface-2); color: var(--au-ink); }
+.menu-type-button .is-active > .button, .menu-type-button .button.is-active { background: var(--au-nav-on); border-color: var(--au-rule-strong); color: var(--au-ink); }
+
+/* ---- Tabs: the section tab bar and the @tabs macro ---- */
+.menu-type-tab, .nav.nav-tabs, .menu-type-subtab { gap: 4px; margin: 0 0 1.25rem; border-bottom: 1px solid var(--au-rule); }
+.menu-type-tab .button, .menu-type-subtab .button, .nav-tabs .button {
+    position: relative;
+    height: 2.75rem;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--au-ink-2);
+    font-weight: 500;
+}
+.menu-type-tab .button:hover, .menu-type-subtab .button:hover, .nav-tabs .button:hover { background: transparent; color: var(--au-ink); }
+.menu-type-tab .is-active > .button, .menu-type-tab .button.is-active,
+.menu-type-subtab .is-active > .button, .menu-type-subtab .button.is-active,
+.tabs li.is-active a { border-bottom-color: transparent; background: transparent; color: var(--au-ink); font-weight: 600; }
+.menu-type-tab .is-active > .button::after, .menu-type-tab .button.is-active::after,
+.menu-type-subtab .is-active > .button::after, .menu-type-subtab .button.is-active::after,
+.tabs li.is-active a::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: -1px;
+    height: 3px;
+    border-radius: 3px 3px 0 0;
+    background: var(--au-bar);
+}
+.tabs li a { position: relative; height: 2.75rem; color: var(--au-ink-2); }
+/* Every item of a tab bar reads as a tab, whatever the macro emits: a submit, a
+   text entry, a colour class. The bar holds them on one baseline. */
+.menu-type-tab, .nav.nav-tabs, .menu-type-subtab { display: flex; flex-wrap: wrap; align-items: flex-end; }
+:is(.menu-type-tab, .menu-type-subtab, .nav-tabs) :is(.text-entry, button, input[type="submit"]) {
+    display: inline-flex;
+    align-items: center;
+    height: 2.75rem;
+    padding: 0 14px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: var(--au-ink-2);
+    font: inherit;
+    font-weight: 500;
+}
+:is(.menu-type-tab, .menu-type-subtab, .nav-tabs) :is(.is-disabled, .disabled, [disabled]) { opacity: .5; pointer-events: none; }
+/* A colour class on a tab (is-link, is-success) must not give it a box. */
+:is(.menu-type-tab, .menu-type-subtab, .nav-tabs) .button:is([class]) { border: 0; background: transparent; box-shadow: none; }
+
+/* ---- Tables ---- */
+.table th, table th {
+    height: 2.5rem;
+    padding: 0 14px;
+    background: transparent;
+    color: var(--au-ink-3);
+    font-size: .78125rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--au-rule);
+}
+.table thead th, table thead th { background: var(--au-surface); }
+.table td, table td { height: var(--au-row-h); padding: 6px 14px; border-bottom: 1px solid var(--au-rule); }
+.table tbody tr:hover > td { background: var(--au-surface-2); }
+.table tfoot td, table tfoot td, .table tr.total > td, table tr.summary > td {
+    border-top: 1px solid var(--au-rule-strong);
+    border-bottom: 0;
+    font-weight: 700;
+}
+.table.table-type-fields td, .table.table-type-summary td, .table.table-type-generic td,
+.table-type-fields td, .table-type-summary td { white-space: normal; overflow: visible; max-width: none; }
+.table-container { scrollbar-width: thin; scrollbar-color: var(--au-rule-strong) transparent; }
+/* A table without a head is a label and value list: its cells wrap. */
+.table:not(:has(> thead)) td, table:not(:has(> thead)) td { white-space: normal; overflow: visible; max-width: none; }
+
+/* ---- Messages ---- */
+.notification, .alert, .error-msg, .info-msg, .warning-msg, .fail-msg, .generic-msg, .result-msg {
+    padding: 14px 16px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    color: var(--au-ink);
+}
+.notification.is-info, .info-msg { background: var(--au-info-soft); border-color: var(--au-info-line); }
+.notification.is-success, .result-msg { background: var(--au-ok-soft); border-color: var(--au-ok-line); }
+.notification.is-warning, .warning-msg { background: var(--au-warn-soft); border-color: var(--au-warn-line); }
+.notification.is-danger, .error-msg, .fail-msg { background: var(--au-danger-soft); border-color: var(--au-danger-line); }
+/* One frame per level (see aurora-layout.css): a message in a section or a box
+   keeps its tint, not its outline; a message inside a message is only its text. */
+:is(.section-screenlet, .panel, .card, .box) :is(.notification, .alert, .error-msg, .info-msg, .warning-msg, .result-msg, .fail-msg, .generic-msg) { border-color: transparent; box-shadow: none; }
+:is(.notification, .alert) :is(.error-msg, .info-msg, .warning-msg, .result-msg, .fail-msg, .generic-msg) { margin: 0; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+/* An empty result is a quiet line, not a success message. */
+.result-msg.result-no-record-msg, .result-no-record-msg {
+    margin: 0;
+    padding: 4px 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    color: var(--au-ink-3);
+}
+
+/* ---- Pagination ---- */
+.pagination a, .pagination-list a, .pagination-link, .pagination-previous, .pagination-next {
+    min-width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--au-rule-strong);
+    border-radius: 8px;
+    background: var(--au-surface);
+    color: var(--au-ink);
+}
+.pagination a:hover { border-color: var(--au-rule-strong); background: var(--au-surface-2); color: var(--au-ink); }
+.pagination .is-active > a, .pagination a.is-active, .pagination-link.is-active {
+    background: var(--au-primary);
+    border-color: var(--au-primary);
+    color: var(--au-on-primary);
+}
+
+/* ---- Tiles: a dashboard button that wraps a heading is a figure on a card ---- */
+.button.button:has(> h1, > h2, > h3, > h4) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 6px;
+    width: 100%;
+    height: auto;
+    min-height: 7rem;
+    padding: 18px 20px;
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    box-shadow: var(--au-shadow-raise);
+    color: var(--au-ink-2);
+    font-weight: 400;
+    font-size: .84375rem;
+    text-align: left;
+    white-space: normal;
+}
+.button.button:has(> h1, > h2, > h3, > h4):hover { background: var(--au-surface); border-color: var(--au-rule-strong); color: var(--au-ink-2); }
+.button.button:has(> h1, > h2, > h3, > h4) > :is(h1, h2, h3, h4) {
+    margin: 0;
+    color: var(--au-ink) !important;
+    font-family: var(--au-font-display);
+    font-size: 2.375rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---- DataTables: a quiet info line; a header row with no label (aurora.js
+   marks it) is not shown. ---- */
+.dataTables_wrapper .dataTables_info { padding-top: 12px; color: var(--au-ink-3); font-size: var(--au-fs-small); }
+.dataTables_wrapper.au-no-head .dataTables_scrollHead,
+table.au-no-head > thead { display: none; }
+
+/* ---- A plain list of actions (side-nav): no bullets, the buttons stack ---- */
+ul.side-nav, .side-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.side-nav > li { display: block; margin: 0; padding: 0; }
+.side-nav > li > a:not(.button) { display: block; padding: 6px 0; }
+
+/* ---- Forms ---- */
+.field-entry-title .label, .field-entry-title label, .field-label .label { color: var(--au-ink-2); font-weight: 600; }
+/* A form row nests two full-width columns around each label/widget pair. Their padding and the inner
+   .columns margin stacked up to 96px per 40px control; only the label/widget pair keeps its padding. */
+.form-field-row > .column.is-12,
+.form-field-row > .column.is-12 > .columns > .column.is-12 { padding-top: 0; padding-bottom: 0; }
+.form-field-row > .column.is-12 > .columns { margin-bottom: 0; }
+/* The label sits on the middle line of a 40px control, not on its top edge */
+.form-field-entry:has(> .field-entry-widget :is(input.input, select, .select, textarea)) > .field-entry-title > .label {
+    padding-top: .6rem;
+    margin-bottom: 0;
+}
+/* A data table that does not fit lets its long text cells wrap (aurora.js fitWideTable) */
+.table td.au-wrap { white-space: normal; text-overflow: clip; min-width: 8rem; }

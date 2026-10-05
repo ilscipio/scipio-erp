@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.webapp;
 
 import java.io.IOException;
@@ -80,7 +86,7 @@ public final class OfbizUrlBuilder {
             ControllerConfig config = (url != null) ? ConfigXMLReader.getControllerConfig(url, true) : null; // SCIPIO: 2017-11-18: controller now fully optional (2 change)
             // SCIPIO: Use more reliable call
             //String servletPath = (String) request.getAttribute("_CONTROL_PATH_");
-            String servletPath = RequestHandler.getControlPath(request);
+            String servletPath = RequestHandler.getControlLinkPath(request); // SCIPIO: 4.0.0: root controller links
             String contextPath = request.getContextPath();
             builder = new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath); // SCIPIO
             request.setAttribute("_OFBIZ_URL_BUILDER_", builder);
@@ -98,7 +104,7 @@ public final class OfbizUrlBuilder {
     public static OfbizUrlBuilder from(ExtWebappInfo extWebappInfo, HttpServletRequest request) throws GenericEntityException, WebAppConfigurationException {
         WebSiteProperties webSiteProps = WebSiteProperties.from(extWebappInfo, request);
         ControllerConfig config = extWebappInfo.getControllerConfig();
-        String servletPath = extWebappInfo.getFullControlPath();
+        String servletPath = extWebappInfo.getControlLinkPath(); // SCIPIO: 4.0.0: root controller links
         String contextPath = extWebappInfo.getContextPath();
         return new OfbizUrlBuilder(config, webSiteProps, servletPath, contextPath);
     }
@@ -193,7 +199,7 @@ public final class OfbizUrlBuilder {
                 }
             }
             config = extWebAppInfo.getControllerConfig();
-            servletPath = extWebAppInfo.getFullControlPath();
+            servletPath = extWebAppInfo.getControlLinkPath(); // SCIPIO: 4.0.0: root controller links
             contextPath = extWebAppInfo.getContextPath();
         }
         if (webSiteProps == null) {
@@ -224,7 +230,7 @@ public final class OfbizUrlBuilder {
         if (extWebAppInfo != null) {
             Assert.notNull("delegator", delegator);
             config = extWebAppInfo.getControllerConfig();
-            servletPath = extWebAppInfo.getFullControlPath();
+            servletPath = extWebAppInfo.getControlLinkPath(); // SCIPIO: 4.0.0: root controller links
             contextPath = extWebAppInfo.getContextPath();
         }
         if (webSiteProps == null) {

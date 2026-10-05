@@ -1,20 +1,18 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 import org.ofbiz.accounting.payment.*;
@@ -92,6 +90,16 @@ if (userLogin) {
 
 // can anybody view an anonymous order?  this is set in the screen widget and should only be turned on by an email confirmation screen
 allowAnonymousView = context.allowAnonymousView;
+// SCIPIO: 4.0.0: the signed pay link of the order mail (W1-10d review): a guest who lost the session sees the order and pays
+// W1-17d: the link opens the order for a guest order and for the order of a logged-out customer (any createdBy), and the
+// screen condition (ordercomplete: hubPayLinkValid or userIsKnown) shows the page without a login or a party in the session
+def hubPayRequest = context.request;
+hubPayLinkValid = (orderId && hubPayRequest != null && com.ilscipio.scipio.order.payment.HubCheckout.payLinkValid(hubPayRequest, delegator, orderId)) ? true : false;
+if (hubPayLinkValid) {
+    allowAnonymousView = "Y";
+}
+context.hubPayLinkValid = hubPayLinkValid;
+globalContext.hubPayLinkValid = hubPayLinkValid;
 
 isDemoStore = true;
 if (orderId) {
@@ -106,7 +114,7 @@ if (orderId) {
     context.roleTypeId = roleTypeId;
     // check OrderRole to make sure the user can view this order.  This check must be done for any order which is not anonymously placed and
     // any anonymous order when the allowAnonymousView security flag (see above) is not set to Y, to prevent peeking
-    if (orderHeader && (!"anonymous".equals(orderHeader.createdBy) || ("anonymous".equals(orderHeader.createdBy) && !"Y".equals(allowAnonymousView)))) {
+    if (orderHeader && !hubPayLinkValid && (!"anonymous".equals(orderHeader.createdBy) || ("anonymous".equals(orderHeader.createdBy) && !"Y".equals(allowAnonymousView)))) {
         orderRole = from("OrderRole").where("orderId", orderId, "partyId", partyId, "roleTypeId", roleTypeId).queryFirst();
 
         if (!userLogin || !orderRole) {

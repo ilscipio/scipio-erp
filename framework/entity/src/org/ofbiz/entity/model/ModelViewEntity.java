@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.entity.model;
 
 import java.io.Serializable;
@@ -247,6 +253,54 @@ public class ModelViewEntity extends ModelEntity {
         // finalize stuff
         // note that this doesn't result in a call to populateReverseLinks because a DynamicViewEntity should never be cached anyway, and will blow up when attempting to make the reverse links to the DynamicViewEntity
         this.populateFieldsBasic(modelReader);
+    }
+
+    /**
+     * Factory method to create a ModelViewEntity from annotations.
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public static ModelViewEntity createForAnnotation(ModelReader reader, String entityName, String packageName,
+                                                       String title, String description, boolean neverCache, boolean autoClearCache) {
+        ModelViewEntity viewEntity = new ModelViewEntity(reader, entityName, packageName, title, description);
+        viewEntity.setNeverCache(neverCache);
+        viewEntity.setAutoClearCache(autoClearCache);
+        return viewEntity;
+    }
+
+    /**
+     * Protected constructor for annotation-based creation.
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    protected ModelViewEntity(ModelReader reader, String entityName, String packageName, String title, String description) {
+        super(reader, new ModelInfo(title, description, ModelInfo.DEFAULT.getCopyright(),
+                ModelInfo.DEFAULT.getAuthor(), ModelInfo.DEFAULT.getVersion(), null));
+        this.entityName = entityName;
+        this.packageName = packageName;
+        this.tableName = null; // view entities don't have tables
+    }
+
+    /**
+     * Adds an alias-all to this view entity.
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public void addAliasAll(ModelAliasAll aliasAll) {
+        this.aliasAlls.add(aliasAll);
+    }
+
+    /**
+     * Adds an alias to this view entity.
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public void addAlias(ModelAlias alias) {
+        this.aliases.add(alias);
+    }
+
+    /**
+     * Adds a group-by field to this view entity.
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public void addGroupByField(String fieldName) {
+        this.groupByFields.add(fieldName);
     }
 
     public Map<String, ModelMemberEntity> getMemberModelMemberEntities() {
@@ -1353,7 +1407,11 @@ public class ModelViewEntity extends ModelEntity {
             this(entityAlias, name, field, colAlias, isPk, groupBy, function, fieldSet, false, null);
         }
 
-        protected ModelAlias(String entityAlias, String name, String field, String colAlias, Boolean isPk, Boolean groupBy, String function, String fieldSet, boolean isFromAliasAll, Boolean select) {
+        /**
+         * Full constructor for programmatic creation.
+         * <p>SCIPIO: 4.0.0: Changed from protected to public for annotation support.</p>
+         */
+        public ModelAlias(String entityAlias, String name, String field, String colAlias, Boolean isPk, Boolean groupBy, String function, String fieldSet, boolean isFromAliasAll, Boolean select) {
             this.entityAlias = entityAlias;
             this.name = name;
             this.field = UtilXml.checkEmpty(field, this.name);

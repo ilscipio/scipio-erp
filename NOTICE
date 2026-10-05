@@ -3,8 +3,18 @@
 ==  Version 2.0.                                                       ==
 =========================================================================
 
-Scipio ERP 
-Copyright 2001-2018 Ilscipio GmbH
+Scipio Commerce (Scipio ERP 4.0)
+Copyright 2014-2026 Ilscipio GmbH (https://www.ilscipio.com)
+
+This product includes software developed at Ilscipio GmbH.
+
+The Scipio 4.0 core is licensed under the GNU Affero General Public License, version 3,
+and under a commercial license from Ilscipio GmbH. See the file LICENSE. Files that came
+from Apache OFBiz keep their Apache header and stay under the Apache License, version 2.0.
+Third-party libraries are listed in the file THIRD-PARTY-NOTICES.md.
+
+This product is a fork of Apache OFBiz. The notices of Apache OFBiz and of the libraries
+that it includes follow.
 
 =========================================================================
 ==  Apache General Notice (Covers OFBiz and all ASF libraries)         ==

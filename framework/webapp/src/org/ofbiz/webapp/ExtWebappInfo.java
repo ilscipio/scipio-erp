@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.ofbiz.webapp;
 
 import java.io.File;
@@ -444,6 +460,19 @@ public class ExtWebappInfo implements Serializable {
      */
     public String getFullControlPath() {
         return fullControlPath;
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Returns the path prefix for controller links to this webapp: the context path when the
+     * webapp serves controller URIs at its root (validated forwardRootControllerUris), otherwise
+     * {@link #getFullControlPath()}.
+     */
+    public String getControlLinkPath() {
+        if (Boolean.TRUE.equals(getForwardRootControllerUrisValidated())) {
+            String contextPath = getContextPath();
+            return (contextPath != null) ? contextPath : "";
+        }
+        return getFullControlPath();
     }
 
     /**

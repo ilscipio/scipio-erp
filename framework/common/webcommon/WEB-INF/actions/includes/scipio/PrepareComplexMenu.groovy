@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 /**
  * SCIPIO: Prepares complex menu.
  */
@@ -168,9 +184,18 @@ if (!useCplxMenu) {
     }
     
     if (warnFallback) {
+        // SCIPIO: 4.0.0: list the sub-menus the model actually has, so a lost sub-menu (e.g. annotation include
+        // resolution problems) can be diagnosed from the log
+        def availSubMenus = null;
+        try {
+            availSubMenus = (cplxMenuModel != null) ? cplxMenuModel.getMenuItemList().collect { it.getName() + ":" + it.getSubMenuList().collect { sm -> sm.getEffectiveName() } } : null;
+        } catch(Exception e) {
+            availSubMenus = "(error: " + e + ")";
+        }
         Debug.logWarning("Could not find (active) sub menu '" + activeSubMenuName + "'" +
             " in complex menu '" + cplxLoc + "#" + cplxName + "'; falling back to '" +
-            smplLoc + "#" + smplName + "'", module);
+            smplLoc + "#" + smplName + "'; model=" + (cplxMenuModel != null ? cplxMenuModel.getClass().getSimpleName() + "@" + cplxMenuModel.getMenuLocation() : "null") +
+            " items/subMenus=" + availSubMenus, module);
     }
 }
 

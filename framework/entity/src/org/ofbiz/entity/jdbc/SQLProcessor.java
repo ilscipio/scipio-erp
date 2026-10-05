@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.entity.jdbc;
 
 import java.io.ByteArrayInputStream;
@@ -42,6 +48,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.config.model.Datasource;
 import org.ofbiz.entity.config.model.EntityConfig;
 import org.ofbiz.entity.datasource.GenericHelperInfo;
+import org.ofbiz.entity.tenant.TenantLoad;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionFactoryLoader;
 import org.ofbiz.entity.transaction.TransactionUtil;
@@ -394,6 +401,7 @@ public class SQLProcessor implements AutoCloseable {
      * @throws GenericDataSourceException
      */
     public ResultSet executeQuery() throws GenericDataSourceException {
+        TenantLoad.charge(); // SCIPIO: W1-01c: heavy work pays its run time into its store's budget; it never waits here (G17)
         try {
             // if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.executeQuery] ps=" + _ps.toString(), module);
             _rs = _ps.executeQuery();
@@ -424,6 +432,7 @@ public class SQLProcessor implements AutoCloseable {
      * @throws GenericDataSourceException
      */
     public int executeUpdate() throws GenericDataSourceException {
+        TenantLoad.charge(); // SCIPIO: W1-01c: heavy work pays its run time into its store's budget; it never waits here (G17)
         try {
             // if (Debug.verboseOn()) Debug.logVerbose("[SQLProcessor.executeUpdate] ps=" + _ps.toString(), module);
             //TransactionUtil.printAllThreadsTransactionBeginStacks();
@@ -442,6 +451,7 @@ public class SQLProcessor implements AutoCloseable {
      * @throws GenericDataSourceException
      */
     public int executeUpdate(String sql) throws GenericDataSourceException {
+        TenantLoad.charge(); // SCIPIO: W1-01c: heavy work pays its run time into its store's budget; it never waits here (G17)
         try (Statement stmt = _connection.createStatement()) {
             return stmt.executeUpdate(sql);
         } catch (SQLException sqle) {
@@ -458,6 +468,7 @@ public class SQLProcessor implements AutoCloseable {
      * @throws GenericDataSourceException
      */
     public boolean next() throws GenericDataSourceException {
+        TenantLoad.charge(); // SCIPIO: W1-01c: heavy work pays its run time into its store's budget; it never waits here (G17)
         try {
             return _rs.next();
         } catch (SQLException sqle) {

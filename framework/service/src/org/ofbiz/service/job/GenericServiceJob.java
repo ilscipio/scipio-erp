@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.service.job;
 
 import java.io.Serializable;
@@ -24,6 +30,7 @@ import java.util.Map;
 import org.ofbiz.base.util.Assert;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.tenant.TenantLoad;
 import org.ofbiz.service.AsyncOptions;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.MemoryAsyncOptions;
@@ -84,6 +91,9 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
         JobPoller jobPoller = JobPoller.getInstance();
         JobPoller.CurrentServiceStats currentServiceStats = null;
         // no transaction is necessary since runSync handles this
+        // SCIPIO: W1-01c: a heavy job (reindex, export, import) waits here while its store is over its time budget
+        // (no transaction yet), then pays its run time into the budget (G17)
+        TenantLoad.Ticket heavyTicket = TenantLoad.isPooled() ? TenantLoad.enterJob(getTenantId(), serviceName) : null;
         try {
             try {
                 currentServiceStats = jobPoller.registerCurrentServiceCall(serviceName, this, startTime);
@@ -92,6 +102,7 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
                 result = dispatcher.runSync(serviceName, getContext());
             } finally {
                 jobPoller.deregisterCurrentServiceCall(currentServiceStats);
+                TenantLoad.exit(heavyTicket);
             }
             jobPoller.registerGlobalServiceCall(serviceName, this, result, null, startTime, System.currentTimeMillis() - startTime);
             // check for a failure
@@ -211,4 +222,13 @@ public class GenericServiceJob extends AbstractJob implements Serializable {
     @Override
     public String getJobPool() { return jobPool; }
 
+
+    /** SCIPIO: W1-01c: the store of the job in the pooled runtime (null: the base delegator or no store). */
+    public String getTenantId() {
+        try {
+            return (dctx != null && dctx.getDelegator() != null) ? dctx.getDelegator().getDelegatorTenantId() : null;
+        } catch (RuntimeException e) {
+            return null;
+        }
+    }
 }

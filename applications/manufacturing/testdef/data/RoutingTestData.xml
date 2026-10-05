@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+
+<!--
+    SCIPIO: Fixture data for RoutingSimpleServicesTest (com.ilscipio.scipio.manufacturing.test).
+    All ids are prefixed MFT_ to keep them clearly separated from seed/demo data.
+    Loaded directly by the test (via EntitySaxReader) rather than through productionruntests.xml.
+-->
+<entity-engine-xml>
+
+    <!-- Calendar week referenced by the calendar create/update/remove tests -->
+    <TechDataCalendarWeek calendarWeekId="MFT_CAL_WEEK_01" description="MFT Test Calendar Week"/>
+    <TechDataCalendarWeek calendarWeekId="MFT_CAL_WEEK_UPD" description="MFT Test Calendar Week (to update)"/>
+    <TechDataCalendarWeek calendarWeekId="MFT_CAL_WEEK_DEL" description="MFT Test Calendar Week (to remove)"/>
+
+    <!-- Calendars already existing, used by the update/remove/exception tests -->
+    <TechDataCalendar calendarId="MFT_CAL_UPD" calendarWeekId="MFT_CAL_WEEK_01" description="MFT Test Calendar (to update)"/>
+    <TechDataCalendar calendarId="MFT_CAL_DEL" calendarWeekId="MFT_CAL_WEEK_01" description="MFT Test Calendar (to remove)"/>
+    <TechDataCalendar calendarId="MFT_CAL_EXC" calendarWeekId="MFT_CAL_WEEK_01" description="MFT Test Calendar (exception day/week host)"/>
+
+    <!-- Calendar exception days, used by the update/remove tests -->
+    <TechDataCalendarExcDay calendarId="MFT_CAL_EXC" exceptionDateStartTime="2030-06-02 08:00:00.0" description="MFT Test Exception Day (to update)"/>
+    <TechDataCalendarExcDay calendarId="MFT_CAL_EXC" exceptionDateStartTime="2030-06-03 08:00:00.0" description="MFT Test Exception Day (to remove)"/>
+
+    <!-- Calendar exception weeks, used by the update/remove tests -->
+    <TechDataCalendarExcWeek calendarId="MFT_CAL_EXC" exceptionDateStart="2030-07-02" calendarWeekId="MFT_CAL_WEEK_01" description="MFT Test Exception Week (to update)"/>
+    <TechDataCalendarExcWeek calendarId="MFT_CAL_EXC" exceptionDateStart="2030-07-03" calendarWeekId="MFT_CAL_WEEK_01" description="MFT Test Exception Week (to remove)"/>
+
+    <!-- Product with an explicit routing -->
+    <Product productId="MFT_PROD_ROUTED" productTypeId="FINISHED_GOOD" productName="MFT Test Routed Product"/>
+    <!-- Product with no routing of its own, used to test the DEFAULT_ROUTING fallback -->
+    <Product productId="MFT_PROD_DEFAULT" productTypeId="FINISHED_GOOD" productName="MFT Test Default-Routing Product"/>
+
+    <!-- Routing and routing tasks for MFT_PROD_ROUTED -->
+    <WorkEffort workEffortId="MFT_ROUTING_01" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE" workEffortName="MFT Test Routing" quantityToProduce="0"/>
+    <WorkEffort workEffortId="MFT_TASK_01" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="MFT Test Task 1"/>
+    <WorkEffort workEffortId="MFT_TASK_02" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="MFT Test Task 2"/>
+    <WorkEffort workEffortId="MFT_TASK_03" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="MFT Test Task 3 (not yet in routing)"/>
+
+    <WorkEffortGoodStandard workEffortId="MFT_ROUTING_01" productId="MFT_PROD_ROUTED" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2020-01-01 00:00:00.0"/>
+    <WorkEffortAssoc workEffortIdFrom="MFT_ROUTING_01" workEffortIdTo="MFT_TASK_01" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2020-01-01 00:00:00.0"/>
+    <WorkEffortAssoc workEffortIdFrom="MFT_ROUTING_01" workEffortIdTo="MFT_TASK_02" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2020-01-01 00:00:00.0"/>
+
+</entity-engine-xml>

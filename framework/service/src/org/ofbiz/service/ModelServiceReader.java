@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.service;
 
 import java.io.IOException;
@@ -456,9 +462,14 @@ public class ModelServiceReader implements Serializable {
         service.definitionLocation = (serviceMethod != null) ? serviceMethod.getDeclaringClass().getName() :
                 (serviceClass.getEnclosingClass() != null ? serviceClass.getEnclosingClass().getName() : serviceClass.getName());
         service.serviceClass = serviceClass;
-        service.engineName = "java";
-        service.location = (serviceMethod != null) ? serviceMethod.getDeclaringClass().getName() : serviceClass.getName();
-        service.invoke = (serviceMethod != null) ? serviceMethod.getName() : "exec";
+        String annEngine = UtilValidate.nullIfEmpty(serviceDef.engine());
+        String annLocation = UtilValidate.nullIfEmpty(serviceDef.location());
+        String annInvoke = UtilValidate.nullIfEmpty(serviceDef.invoke());
+        service.engineName = (annEngine != null) ? annEngine : "java";
+        service.location = (annLocation != null) ? annLocation :
+                ((serviceMethod != null) ? serviceMethod.getDeclaringClass().getName() : serviceClass.getName());
+        service.invoke = (annInvoke != null) ? annInvoke :
+                ((serviceMethod != null) ? serviceMethod.getName() : "exec");
         service.semaphore = serviceDef.semaphore();
         service.defaultEntityName = serviceDef.defaultEntityName();
         service.fromLoader = "annotations";
@@ -894,7 +905,35 @@ public class ModelServiceReader implements Serializable {
     }
 
     private void createGroupDefs(Service serviceDef, Class<?> serviceClass, Method serviceMethod, ModelService service) {
-        // SCIPIO: 3.0.0: Not for annotations
+        Service.GroupInvoke[] invokes = serviceDef.invokes();
+        if (invokes != null && invokes.length > 0) {
+            String groupName = "_" + service.name + ".group";
+            StringBuilder sb = new StringBuilder();
+            sb.append("<group name=\"").append(groupName).append("\">");
+            for (Service.GroupInvoke gi : invokes) {
+                sb.append("<invoke name=\"").append(gi.name()).append("\" mode=\"").append(gi.mode()).append("\"");
+                if (!"true".equals(gi.resultToContext())) {
+                    sb.append(" result-to-context=\"").append(gi.resultToContext()).append("\"");
+                }
+                sb.append("/>");
+            }
+            sb.append("</group>");
+            try {
+                org.w3c.dom.Document doc = javax.xml.parsers.DocumentBuilderFactory.newInstance()
+                        .newDocumentBuilder().parse(new org.xml.sax.InputSource(new java.io.StringReader(sb.toString())));
+                org.w3c.dom.Element groupElement = doc.getDocumentElement();
+                service.internalGroup = new GroupModel(groupElement);
+                service.invoke = service.internalGroup.getGroupName();
+                // SCIPIO: 4.0.0: also register under the service name and location so a duplicate group-engine
+                // definition without invokes (converted services.xml entry) still resolves through ServiceGroupReader
+                org.ofbiz.service.group.ServiceGroupReader.addGroupModel(service.name, service.internalGroup);
+                if (UtilValidate.isNotEmpty(serviceDef.location())) {
+                    org.ofbiz.service.group.ServiceGroupReader.addGroupModel(serviceDef.location(), service.internalGroup);
+                }
+            } catch (Exception e) {
+                Debug.logError(e, "Error creating group model for @Service [" + service.name + "]", module);
+            }
+        }
     }
 
     private void createImplDefs(Element baseElement, ModelService service) {
@@ -1199,11 +1238,11 @@ public class ModelServiceReader implements Serializable {
             }
         }
 
-        // Remove duplicates
+        // Remove duplicates (keyed by name + mode to preserve both IN and OUT for same param)
         Map<String, Attribute> attributeMap = new LinkedHashMap<>();
         for (Attribute attributeDef : attributes) {
             if (!attributeDef.mode().isEmpty()) { // skip those missing mode
-                attributeMap.put(attributeDef.name(), attributeDef);
+                attributeMap.put(attributeDef.name() + "|" + attributeDef.mode(), attributeDef);
             }
         }
 

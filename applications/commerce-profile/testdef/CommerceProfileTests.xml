@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: Tests of the commerce profile. Run in a server with the pod component list (bin/use-profile.sh commerce).
+     hosted-profile-server-test: W1-02. order-to-invoice-smoke-test: W0-04. See docs/wp/W1-02.md. -->
+<test-suite suite-name="commerceprofiletests"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/test-suite.xsd">
+    <test-case case-name="hosted-profile-server-test">
+        <junit-test-suite class-name="com.ilscipio.scipio.commerceprofile.test.HostedProfileServerTest"/>
+    </test-case>
+    <test-case case-name="order-to-invoice-smoke-test">
+        <junit-test-suite class-name="com.ilscipio.scipio.commerceprofile.test.OrderToInvoiceSmokeTest"/>
+    </test-case>
+</test-suite>

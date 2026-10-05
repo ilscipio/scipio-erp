@@ -1,0 +1,57 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+/* ==========================================================================
+   Aurora - right to left
+   Loaded only when the locale is right to left. The shell is flex, so the rail
+   and the app panel move to the right by themselves. The drawer, the nested
+   lists, the fold arrows and the bars need help.
+   ========================================================================== */
+@media (max-width: 1023.98px) {
+    [dir="rtl"] .au-nav,
+    [dir="rtl"] .au-shell.is-side-hidden .au-nav { inset: 0 0 0 auto; transform: translateX(100%); }
+    [dir="rtl"] .au-shell.is-side-open .au-nav { transform: none; }
+}
+[dir="rtl"] .au-panel { border-right: 0; border-left: 1px solid var(--au-rule); }
+[dir="rtl"] .au-rail-item.is-current::before { left: auto; right: -14px; border-radius: 4px 0 0 4px; }
+[dir="rtl"] .au-rail-foot .au-pop-panel { left: auto; right: calc(100% + 12px); }
+[dir="rtl"] .au-side-menu li > ul { margin-left: 0; margin-right: 18px; border-left: 0; border-right: 2px solid var(--au-rule); }
+[dir="rtl"] .au-side-menu li > ul > li { padding-left: 0; padding-right: 10px; }
+[dir="rtl"] .au-side-menu li.is-active > a::before, [dir="rtl"] .au-side-menu li > a.is-active::before { left: auto; right: 0; border-radius: 3px 0 0 3px; }
+[dir="rtl"] .au-fold .fa { transform: rotate(180deg); }
+[dir="rtl"] .au-fold[aria-expanded="true"] .fa { transform: rotate(90deg); }
+[dir="rtl"] .au-menu-find .fa { left: auto; right: 26px; }
+[dir="rtl"] .au-filter { padding: 0 34px 0 12px; }
+[dir="rtl"] .au-pop-panel { right: auto; left: 0; }
+[dir="rtl"] .au-dot { right: auto; left: 9px; }
+[dir="rtl"] .au-crumb-sep { transform: rotate(180deg); }
+[dir="rtl"] .au-login-input > .fa { left: auto; right: 16px; }
+[dir="rtl"] .au-login-input input { padding: 0 44px 0 48px; }
+[dir="rtl"] .au-login-reveal { right: auto; left: 6px; }
+[dir="rtl"] .table th, [dir="rtl"] table th { text-align: right; }
+[dir="rtl"] .column.is-offset-1  { margin-left: 0; margin-right: 8.3333%; }
+[dir="rtl"] .column.is-offset-2  { margin-left: 0; margin-right: 16.6666%; }
+[dir="rtl"] .column.is-offset-3  { margin-left: 0; margin-right: 25%; }
+[dir="rtl"] .column.is-offset-4  { margin-left: 0; margin-right: 33.3333%; }
+[dir="rtl"] .column.is-offset-6  { margin-left: 0; margin-right: 50%; }
+[dir="rtl"] .notification > .delete { right: auto; left: .5rem; }
+[dir="rtl"] blockquote { border-left: 0; border-right: 3px solid var(--au-accent-line); padding: .5rem 1rem .5rem 0; }
+[dir="rtl"] .select select { padding-right: .625rem; padding-left: 1.875rem; }
+[dir="rtl"] .select::after { right: auto; left: .6875rem; }
+[dir="rtl"] .has-addons > .control:not(:first-child) > .input,
+[dir="rtl"] .has-addons > .control:not(:first-child) > .button { margin-left: 0; margin-right: -1px; }
+[dir="rtl"] .breadcrumb li + li::before { content: "\\"; }
+[dir="rtl"] .CodeMirror { direction: ltr; text-align: left; }

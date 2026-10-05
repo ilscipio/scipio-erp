@@ -1,0 +1,1 @@
+globalContext.isSolrWebappLocal = com.ilscipio.scipio.solr.SolrUtil.isSolrWebappLocal();

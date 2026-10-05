@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.product.category;
 
 import java.sql.Timestamp;
@@ -722,7 +728,7 @@ public final class CategoryWorker {
     public static List<String> getProductstoreCategoryCatalogIds(Delegator delegator, String productStoreId, String productCategoryId) {
         List<String> productStoreCategoryCatalogIds = new ArrayList<String>();
         try {
-            String cacheKey = productStoreId+SEPARATOR+productCategoryId;
+            String cacheKey = delegator.getDelegatorName()+SEPARATOR+productStoreId+SEPARATOR+productCategoryId; // SCIPIO: 4.0.0: per store (G14)
 
             List<String> cachedValue = CAT_IN_CATALOG.get(cacheKey);
             if (cachedValue != null) {

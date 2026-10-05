@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: Hosted profile (W1-02): security groups of a store and of our operators. See docs/wp/W1-02.md.
+     Rule: no TENANT_* group gets FULLADMIN, a WEBTOOLS permission, MCP_CODE_WRITE, MCP_ENTITY_WRITE, MCP_ENTITY_READ, MCP_ADMIN,
+     CMS_CODE_* or HOSTED_OPS. The unit test HostedSeedDataTest checks this file. -->
+<entity-engine-xml>
+    <SecurityPermission permissionId="CMS_CODE_VIEW" description="View the code of CMS templates, scripts and assets (hosted profile: operators only)."/>
+    <SecurityPermission permissionId="CMS_CODE_UPDATE" description="Write the code of CMS templates, scripts and assets, and import CMS data (hosted profile: operators only). The content permissions are CMS_VIEW, CMS_CREATE, CMS_UPDATE and CMS_DELETE."/>
+    <SecurityPermission permissionId="HOSTED_OPS" description="Run code and file services in a hosted store. Only the SCIPIO_OPS group holds it."/>
+
+    <SecurityGroup groupId="TENANT_OWNER" description="Owner of a hosted store: the whole store, no code and no server access."/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="MCP_ACCESS"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="MCP_GATEWAY"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="MCP_MAIL_SEND"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CATALOG_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CATALOG_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CATALOG_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CATALOG_PRICE_MAINT"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_NOTE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_RETURN"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_SEND_CONFIRMATION"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_SALES_PRICEMOD"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ORDERMGR_ROLE_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_NOTE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_PCM_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_PCM_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_PCM_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_ROLE_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_REL_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_REL_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_REL_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_STS_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="PARTYMGR_GRP_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="FACILITY_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="FACILITY_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="FACILITY_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="FACILITY_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ACCOUNTING_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ACCOUNTING_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ACCOUNTING_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="ACCOUNTING_COMM_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CONTENTMGR_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CONTENTMGR_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CONTENTMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CONTENTMGR_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CMS_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CMS_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CMS_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="CMS_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="COMPLIANCE_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="COMPLIANCE_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="COMPLIANCE_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="COMPLIANCE_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="SETUP_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_OWNER" permissionId="SETUP_ADMIN"/>
+
+    <SecurityGroup groupId="TENANT_STAFF" description="Staff of a hosted store: orders, customers, stock and catalog updates."/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="MCP_ACCESS"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="CATALOG_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ORDERMGR_NOTE"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ORDERMGR_RETURN"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ORDERMGR_SEND_CONFIRMATION"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ORDERMGR_SALES_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ORDERMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="PARTYMGR_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="PARTYMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="PARTYMGR_NOTE"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="FACILITY_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="FACILITY_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="ACCOUNTING_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="CONTENTMGR_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="CMS_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_STAFF" permissionId="COMPLIANCE_VIEW"/>
+
+    <SecurityGroup groupId="TENANT_CONTENT" description="Content editor of a hosted store: pages, media and catalog text, no code."/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="MCP_ACCESS"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="CATALOG_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="CONTENTMGR_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="CONTENTMGR_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="CONTENTMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="CONTENTMGR_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="CMS_VIEW"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="CMS_CREATE"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="CMS_UPDATE"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="CMS_DELETE"/>
+    <SecurityGroupPermission groupId="TENANT_CONTENT" permissionId="COMPLIANCE_VIEW"/>
+
+    <SecurityGroup groupId="SCIPIO_OPS" description="Scipio operators through the desk (scipio-ops login). Every session writes an audit row."/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="HOSTED_OPS"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="CMS_CODE_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="CMS_CODE_UPDATE"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="CMS_ADMIN"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="MCP_ACCESS"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="MCP_GATEWAY"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="MCP_ENTITY_READ"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="MCP_ENTITY_WRITE"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="MCP_ADMIN"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="MCP_CODE_WRITE"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="MCP_MAIL_SEND"/>
+    <SecurityGroupPermission groupId="SCIPIO_OPS" permissionId="OFBTOOLS_VIEW"/>
+
+</entity-engine-xml>

@@ -1,8 +1,14 @@
-/applications/*/build
-/framework/*/build
-/hot-deploy/*/build
-/addons/*/build
-/specialpurpose/*/build
+# Gradle
+.gradle/
+buildSrc/build/
+
+# Build outputs (all components)
+**/build/
+!/framework/resources/templates/build.xml
+
+# Temporary files
+*.tmp.*
+tmp/
 /applications/content/index/
 /bin/
 /ofbiz.jar
@@ -47,3 +53,16 @@ desktop.ini
 /build.local.properties
 /git-addons-config-local
 /.settings
+/.claude/*
+/.gradle/*
+/hot-deploy/convertertest/
+/CLAUDE.md
+
+# Pooled runtime: per-store upload folders (images/<tenantId>/)
+/framework/images/webapp/images/t*/
+
+# unit test runs of framework components write logs here
+/framework/*/runtime/
+
+# Pooled runtime: per-store sitemaps (sitemaps/tenants/<tenantId>/)
+/applications/shop/webapp/shop/sitemaps/tenants/

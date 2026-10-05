@@ -16,6 +16,12 @@
   specific language governing permissions and limitations
   under the License.
   -->
+<#--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 <form name="editContentTree" action="<#if parameters.rename?has_content><@pageUrl>updateDocumentTree</@pageUrl><#else><@pageUrl>addDocumentToTree</@pageUrl></#if>" method="post">
     <#assign content  = delegator.findOne("Content",{"contentId":parameters.contentId}, false)/>
     <#if parameters.rename?has_content>

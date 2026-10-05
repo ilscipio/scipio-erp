@@ -16,10 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
 import java.sql.Timestamp;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.manufacturing.bom.BOMTree;
 
 context.nowDate = UtilDateTime.nowDate();
 context.nowTimestampString = UtilHttp.encodeBlanks(UtilDateTime.nowTimestamp().toString());
@@ -35,8 +43,8 @@ updateMode = parameters.UPDATE_MODE;
 
 if (productIdTo) context.productIdTo = productIdTo;
 
-productAssocTypeId = parameters.productAssocTypeId;
-if (productAssocTypeId) context.productAssocTypeId = productAssocTypeId;
+productAssocTypeId = parameters.productAssocTypeId ?: "MANUF_COMPONENT";
+context.productAssocTypeId = productAssocTypeId;
 
 fromDateStr = parameters.fromDate;
 
@@ -70,5 +78,19 @@ if (product) {
 
     assocToProducts = product.getRelated("AssocProductAssoc", (productAssocTypeId ? [productAssocTypeId : productAssocTypeId]: [:]), ["sequenceNum","productId"], false);
     if (assocToProducts) context.assocToProducts = assocToProducts;
+
+    // SCIPIO: Structure panel: explode the BOM for the current product, same service as BomSimulation.
+    structureBomType = productAssocTypeId ?: "MANUF_COMPONENT";
+    try {
+        structureOutMap = runService('getBOMTree', [productId : productId, bomType : structureBomType, type : 0, userLogin : userLogin]);
+        BOMTree productStructureTree = (BOMTree)structureOutMap.tree;
+        if (productStructureTree) {
+            productBomTreeArray = [];
+            productStructureTree.print(productBomTreeArray);
+            context.productBomTree = productBomTreeArray;
+        }
+    } catch (Exception e) {
+        Debug.logError("Error retrieving product BOM structure for productId=" + productId + ": " + e.getMessage(), "EditProductBom");
+    }
 }
 

@@ -1,0 +1,513 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+/* ==========================================================================
+   Aurora - the vendor skin
+   The backend keeps six third-party widgets: jQuery UI, CodeMirror, jstree,
+   DataTables, Trumbowyg and flatpickr. Each one arrives with its own colours.
+   This file gives them the Aurora tokens, so the CMS editors and the find
+   screens hold the theme in both schemes.
+
+   This file loads last, on purpose.
+   ========================================================================== */
+
+/* ---- The scheme switch --------------------------------------------------- */
+
+.au-scheme-switch {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    margin: 0 .25rem;
+    padding: 0;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--au-r-control);
+    color: var(--au-ink-3);
+    cursor: pointer;
+    transition: color var(--au-speed) ease, background var(--au-speed) ease, border-color var(--au-speed) ease;
+}
+.au-scheme-switch:hover {
+    background: var(--au-surface-2);
+    border-color: var(--au-rule);
+    color: var(--au-accent);
+}
+.au-scheme-switch .fa { font-size: .9375rem; line-height: 1; }
+/* The icon shows the scheme the click will bring, not the one in force. */
+.au-scheme-switch .au-icon-dark { display: inline-block; }
+.au-scheme-switch .au-icon-light { display: none; }
+:root[data-theme="dark"] .au-scheme-switch .au-icon-dark,
+:root[data-theme="dark"] .au-scheme-switch .au-icon-light { display: none; }
+:root[data-theme="dark"] .au-scheme-switch .au-icon-light { display: inline-block; }
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .au-scheme-switch .au-icon-dark { display: none; }
+    :root:not([data-theme="light"]) .au-scheme-switch .au-icon-light { display: inline-block; }
+}
+
+/* ---- jQuery UI ----------------------------------------------------------- */
+/* The theme carries no jQuery UI stylesheet; these rules are the whole look of
+   the lookup dialog, the autocomplete list and the date picker. */
+
+.ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+    font-family: var(--au-font);
+    font-size: var(--au-fs-ui);
+}
+.ui-widget-content {
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    color: var(--au-ink);
+}
+.ui-widget-header {
+    background: var(--au-surface-2);
+    border: 0;
+    border-bottom: 1px solid var(--au-rule);
+    color: var(--au-ink);
+    font-weight: 600;
+}
+.ui-widget-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--au-overlay);
+    opacity: 1;
+}
+
+.ui-dialog {
+    position: absolute;
+    z-index: 210;
+    padding: 0;
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-large);
+    box-shadow: var(--au-shadow-float), var(--au-bezel);
+    overflow: hidden;
+}
+.ui-dialog .ui-dialog-titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .625rem 1rem;
+    background: var(--au-surface-2);
+    border-bottom: 1px solid var(--au-rule);
+    border-radius: 0;
+}
+.ui-dialog .ui-dialog-title { color: var(--au-ink); font-size: var(--au-fs-h4); font-weight: 600; }
+.ui-dialog .ui-dialog-titlebar-close {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0;
+    background: var(--au-rule-soft);
+    border: 0;
+    border-radius: 50%;
+    color: transparent;
+    cursor: pointer;
+}
+.ui-dialog .ui-dialog-titlebar-close::before,
+.ui-dialog .ui-dialog-titlebar-close::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 1.5px;
+    background: var(--au-ink-2);
+}
+.ui-dialog .ui-dialog-titlebar-close::before { transform: translate(-50%, -50%) rotate(45deg); }
+.ui-dialog .ui-dialog-titlebar-close::after  { transform: translate(-50%, -50%) rotate(-45deg); }
+.ui-dialog .ui-dialog-titlebar-close .ui-icon, .ui-dialog .ui-dialog-titlebar-close span { display: none; }
+.ui-dialog .ui-dialog-content { padding: 1rem; background: var(--au-surface); color: var(--au-ink); }
+.ui-dialog .ui-dialog-buttonpane {
+    padding: .75rem 1rem;
+    background: var(--au-surface-2);
+    border-top: 1px solid var(--au-rule);
+    text-align: right;
+}
+.ui-dialog .ui-resizable-handle { display: none; }
+
+/* The lookup opens an iframe dialog; it must not carry a second border. */
+.ui-dialog iframe { width: 100%; border: 0; background: var(--au-surface); }
+
+.ui-autocomplete, .ui-menu {
+    z-index: 220;
+    max-height: 20rem;
+    padding: .25rem;
+    overflow-y: auto;
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    box-shadow: var(--au-shadow-float), var(--au-bezel);
+    list-style: none;
+}
+.ui-menu .ui-menu-item { margin: 0; }
+.ui-menu .ui-menu-item-wrapper, .ui-menu .ui-menu-item a {
+    display: block;
+    padding: .3125rem .5rem;
+    border: 0;
+    border-radius: var(--au-r-control);
+    color: var(--au-ink-2);
+    line-height: 1.4;
+    cursor: pointer;
+}
+.ui-menu .ui-menu-item-wrapper.ui-state-active,
+.ui-menu .ui-menu-item-wrapper:hover,
+.ui-state-focus, .ui-state-active, .ui-state-hover {
+    background: var(--au-accent-soft) !important;
+    border: 0 !important;
+    color: var(--au-accent) !important;
+    margin: 0;
+}
+.ui-helper-hidden-accessible { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+/* jQuery UI date picker, still used by a few legacy fields */
+.ui-datepicker {
+    width: 17rem;
+    padding: .5rem;
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    box-shadow: var(--au-shadow-float), var(--au-bezel);
+    z-index: 230 !important;
+}
+.ui-datepicker .ui-datepicker-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 0 .5rem;
+    background: transparent;
+    border: 0;
+}
+.ui-datepicker .ui-datepicker-title { color: var(--au-ink); font-weight: 600; }
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
+    width: 1.5rem;
+    height: 1.5rem;
+    background: transparent;
+    border: 0;
+    color: var(--au-ink-3);
+    cursor: pointer;
+}
+.ui-datepicker table { width: 100%; border-collapse: collapse; }
+.ui-datepicker th { padding: .25rem; background: transparent; border: 0; color: var(--au-ink-4); font-size: var(--au-fs-tiny); }
+.ui-datepicker td { padding: 1px; border: 0; }
+.ui-datepicker td a, .ui-datepicker td span {
+    display: block;
+    padding: .3125rem;
+    border-radius: var(--au-r-control);
+    color: var(--au-ink-2);
+    font-family: var(--au-font-mono);
+    text-align: center;
+    text-decoration: none;
+}
+.ui-datepicker td a:hover { background: var(--au-accent-soft); color: var(--au-accent); }
+.ui-datepicker .ui-state-active, .ui-datepicker td a.ui-state-active {
+    background: var(--au-accent) !important;
+    color: var(--au-on-accent) !important;
+}
+.ui-datepicker .ui-datepicker-today a { border: 1px solid var(--au-accent-line); }
+
+/* ---- flatpickr ----------------------------------------------------------- */
+
+.flatpickr-calendar {
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    box-shadow: var(--au-shadow-float), var(--au-bezel);
+    color: var(--au-ink);
+    font-family: var(--au-font);
+    font-size: var(--au-fs-ui);
+}
+.flatpickr-calendar.arrowTop::before, .flatpickr-calendar.arrowTop::after,
+.flatpickr-calendar.arrowBottom::before, .flatpickr-calendar.arrowBottom::after { display: none; }
+.flatpickr-months { padding: .375rem 0 0; }
+.flatpickr-months .flatpickr-month, .flatpickr-current-month { color: var(--au-ink); fill: var(--au-ink); }
+.flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month { color: var(--au-ink-3); fill: var(--au-ink-3); }
+.flatpickr-months .flatpickr-prev-month:hover svg, .flatpickr-months .flatpickr-next-month:hover svg { fill: var(--au-accent); }
+.flatpickr-current-month .flatpickr-monthDropdown-months { background: var(--au-surface); color: var(--au-ink); }
+.flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month { background: var(--au-surface); color: var(--au-ink); }
+.flatpickr-current-month input.cur-year { color: var(--au-ink); font-family: var(--au-font-mono); }
+.flatpickr-weekdays { background: transparent; }
+span.flatpickr-weekday { background: transparent; color: var(--au-ink-4); font-size: var(--au-fs-tiny); font-weight: 600; }
+.flatpickr-day {
+    border-radius: var(--au-r-control);
+    color: var(--au-ink-2);
+    font-family: var(--au-font-mono);
+}
+.flatpickr-day:hover, .flatpickr-day:focus { background: var(--au-accent-soft); border-color: transparent; color: var(--au-accent); }
+.flatpickr-day.today { border-color: var(--au-accent-line); }
+.flatpickr-day.selected, .flatpickr-day.selected:hover, .flatpickr-day.startRange, .flatpickr-day.endRange {
+    background: var(--au-accent);
+    border-color: var(--au-accent);
+    color: var(--au-on-accent);
+}
+.flatpickr-day.inRange { background: var(--au-accent-soft); border-color: transparent; box-shadow: none; }
+.flatpickr-day.flatpickr-disabled, .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay { color: var(--au-ink-4); }
+.flatpickr-time input, .flatpickr-time .flatpickr-am-pm {
+    background: transparent;
+    color: var(--au-ink);
+    font-family: var(--au-font-mono);
+}
+.flatpickr-time input:hover, .flatpickr-time .flatpickr-am-pm:hover { background: var(--au-surface-2); }
+.flatpickr-time .numInputWrapper span.arrowUp::after { border-bottom-color: var(--au-ink-3); }
+.flatpickr-time .numInputWrapper span.arrowDown::after { border-top-color: var(--au-ink-3); }
+.flatpickr-innerContainer, .flatpickr-time { border-color: var(--au-rule); }
+.flatpickr-input[readonly] { cursor: pointer; background: var(--au-surface); }
+
+/* ---- CodeMirror ---------------------------------------------------------- */
+/* The CMS registers the CodeMirror stylesheet itself and asks for no theme, so
+   these rules retune the default theme in place. */
+
+.CodeMirror {
+    height: auto;
+    min-height: 22rem;
+    background: var(--au-surface-2);
+    color: var(--au-ink);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    font-family: var(--au-font-mono);
+    font-size: var(--au-fs-ui);
+    line-height: 1.55;
+}
+.CodeMirror-scroll { min-height: 22rem; }
+.CodeMirror-gutters {
+    background: var(--au-surface-3);
+    border-right: 1px solid var(--au-rule);
+}
+.CodeMirror-linenumber { color: var(--au-ink-4); }
+.CodeMirror-cursor { border-left: 2px solid var(--au-accent); }
+.CodeMirror-selected { background: var(--au-accent-soft); }
+.CodeMirror-focused .CodeMirror-selected { background: var(--au-accent-soft); }
+.CodeMirror-activeline-background { background: var(--au-rule-soft); }
+.CodeMirror-matchingbracket { color: var(--au-accent) !important; border-bottom: 1px solid var(--au-accent); }
+.CodeMirror-nonmatchingbracket { color: var(--au-danger) !important; }
+.CodeMirror-guttermarker, .CodeMirror-guttermarker-subtle { color: var(--au-ink-4); }
+.CodeMirror-foldmarker {
+    color: var(--au-accent);
+    text-shadow: none;
+    font-family: var(--au-font);
+}
+.CodeMirror-foldgutter-open::after, .CodeMirror-foldgutter-folded::after { color: var(--au-ink-3); }
+
+.cm-s-default .cm-keyword    { color: var(--au-accent-2); font-weight: 600; }
+.cm-s-default .cm-atom       { color: var(--au-info); }
+.cm-s-default .cm-number     { color: var(--au-warn); }
+.cm-s-default .cm-def        { color: var(--au-ink); }
+.cm-s-default .cm-variable   { color: var(--au-ink); }
+.cm-s-default .cm-variable-2 { color: var(--au-accent); }
+.cm-s-default .cm-variable-3, .cm-s-default .cm-type { color: var(--au-ok); }
+.cm-s-default .cm-property   { color: var(--au-accent); }
+.cm-s-default .cm-operator   { color: var(--au-ink-2); }
+.cm-s-default .cm-comment    { color: var(--au-ink-4); font-style: italic; }
+.cm-s-default .cm-string     { color: var(--au-ok); }
+.cm-s-default .cm-string-2   { color: var(--au-warn); }
+.cm-s-default .cm-meta       { color: var(--au-ink-3); }
+.cm-s-default .cm-qualifier  { color: var(--au-warn); }
+.cm-s-default .cm-builtin    { color: var(--au-accent-2); }
+.cm-s-default .cm-bracket    { color: var(--au-ink-3); }
+.cm-s-default .cm-tag        { color: var(--au-accent-2); }
+.cm-s-default .cm-attribute  { color: var(--au-accent); }
+.cm-s-default .cm-link       { color: var(--au-accent); }
+.cm-s-default .cm-error      { color: var(--au-danger); }
+
+.CodeMirror-hints {
+    z-index: 240;
+    padding: .25rem;
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    box-shadow: var(--au-shadow-float), var(--au-bezel);
+    font-family: var(--au-font-mono);
+    font-size: var(--au-fs-small);
+}
+.CodeMirror-hint { padding: .25rem .5rem; border-radius: var(--au-r-control); color: var(--au-ink-2); }
+li.CodeMirror-hint-active { background: var(--au-accent); color: var(--au-on-accent); }
+
+/* ---- jstree -------------------------------------------------------------- */
+/* The CMS registers the jstree default stylesheet, whose sprite is a grey
+   image. In the dark scheme the sprite is inverted rather than replaced. */
+
+.jstree-default, .jstree {
+    background: transparent;
+    color: var(--au-ink-2);
+    font-family: var(--au-font);
+    font-size: var(--au-fs-ui);
+}
+.jstree-default .jstree-anchor {
+    color: var(--au-ink-2);
+    border-radius: var(--au-r-control);
+    line-height: 1.6rem;
+    height: 1.6rem;
+}
+.jstree-default .jstree-anchor:hover, .jstree-default .jstree-hovered {
+    background: var(--au-surface-2);
+    box-shadow: none;
+    color: var(--au-ink);
+}
+.jstree-default .jstree-clicked, .jstree-default .jstree-anchor.jstree-clicked {
+    background: var(--au-accent-soft);
+    box-shadow: none;
+    color: var(--au-accent);
+    font-weight: 600;
+}
+.jstree-default .jstree-wholerow-hovered { background: var(--au-surface-2); }
+.jstree-default .jstree-wholerow-clicked { background: var(--au-accent-soft); }
+.jstree-default .jstree-search { color: var(--au-warn); font-style: normal; font-weight: 600; }
+.jstree-default .jstree-disabled { background: transparent; color: var(--au-ink-4); }
+.jstree-rename-input {
+    background: var(--au-surface) !important;
+    border: 1px solid var(--au-accent) !important;
+    border-radius: 4px;
+    color: var(--au-ink) !important;
+    font-family: var(--au-font) !important;
+}
+.jstree-default .jstree-icon.jstree-folder { color: var(--au-accent); }
+.vakata-context, .vakata-context ul {
+    padding: .25rem;
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    box-shadow: var(--au-shadow-float), var(--au-bezel);
+}
+.vakata-context li > a { color: var(--au-ink-2); border-radius: var(--au-r-control); }
+.vakata-context li > a:hover, .vakata-context .vakata-context-hover > a {
+    background: var(--au-accent-soft) !important;
+    box-shadow: none !important;
+    color: var(--au-accent) !important;
+}
+.vakata-context li > a .vakata-contextmenu-sep { background: var(--au-rule); }
+
+:root[data-theme="dark"] .jstree-default .jstree-icon:not(.jstree-themeicon-custom),
+:root[data-theme="dark"] .jstree-default .jstree-ocl,
+:root[data-theme="dark"] #vakata-dnd .jstree-icon { filter: invert(.86); }
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .jstree-default .jstree-icon:not(.jstree-themeicon-custom),
+    :root:not([data-theme="light"]) .jstree-default .jstree-ocl,
+    :root:not([data-theme="light"]) #vakata-dnd .jstree-icon { filter: invert(.86); }
+}
+
+/* ---- DataTables ---------------------------------------------------------- */
+
+.dataTables_wrapper {
+    color: var(--au-ink-2);
+    font-size: var(--au-fs-ui);
+}
+.dataTables_wrapper .dataTables_length,
+.dataTables_wrapper .dataTables_filter,
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_paginate { color: var(--au-ink-3); padding: .375rem 0; }
+.dataTables_wrapper .dataTables_filter input,
+.dataTables_wrapper .dataTables_length select {
+    display: inline-block;
+    width: auto;
+    margin-left: .375rem;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.875rem;
+    height: 1.875rem;
+    margin: 0 1px;
+    padding: 0 .5rem;
+    background: var(--au-surface) !important;
+    border: 1px solid var(--au-rule) !important;
+    border-radius: var(--au-r-control);
+    color: var(--au-ink-2) !important;
+    font-size: var(--au-fs-small);
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: var(--au-surface-2) !important;
+    border-color: var(--au-accent-line) !important;
+    color: var(--au-accent) !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background: var(--au-accent) !important;
+    border-color: var(--au-accent) !important;
+    color: var(--au-on-accent) !important;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled { opacity: .45; }
+table.dataTable thead th.sorting,
+table.dataTable thead th.sorting_asc,
+table.dataTable thead th.sorting_desc { cursor: pointer; }
+table.dataTable thead th { border-bottom: 1px solid var(--au-rule); }
+table.dataTable tbody tr { background: transparent; }
+table.dataTable tbody tr.odd  { background: var(--au-surface-2); }
+table.dataTable tbody tr:hover { background: var(--au-accent-soft); }
+.dataTables_wrapper .dataTables_processing {
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    box-shadow: var(--au-shadow-float);
+    color: var(--au-ink);
+}
+.dataTables_scrollHead, .dataTables_scrollBody { background: transparent; }
+
+/* ---- Trumbowyg ----------------------------------------------------------- */
+
+.trumbowyg-box, .trumbowyg-editor {
+    margin: 0 0 .75rem;
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    background: var(--au-surface);
+    color: var(--au-ink);
+}
+.trumbowyg-box.trumbowyg-editor-visible .trumbowyg-editor { border: 0; }
+.trumbowyg-editor { min-height: 16rem; padding: .875rem 1rem; font-family: var(--au-font); }
+.trumbowyg-editor[contenteditable="true"]:empty:not(:focus)::before { color: var(--au-ink-4); }
+.trumbowyg-button-pane {
+    background: var(--au-surface-2);
+    border-bottom: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel) var(--au-r-panel) 0 0;
+}
+.trumbowyg-button-pane::after { background: var(--au-rule); }
+.trumbowyg-button-pane .trumbowyg-button-group::after { background: var(--au-rule); }
+.trumbowyg-button-pane button { border-radius: var(--au-r-control); }
+.trumbowyg-button-pane button:not(.trumbowyg-disable):hover,
+.trumbowyg-button-pane button.trumbowyg-active { background: var(--au-accent-soft); }
+.trumbowyg-button-pane button svg { fill: var(--au-ink-2); }
+.trumbowyg-button-pane button:hover svg, .trumbowyg-button-pane button.trumbowyg-active svg { fill: var(--au-accent); }
+.trumbowyg-dropdown {
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    box-shadow: var(--au-shadow-float);
+}
+.trumbowyg-dropdown button { background: transparent; color: var(--au-ink-2); }
+.trumbowyg-dropdown button:hover { background: var(--au-accent-soft); color: var(--au-accent); }
+.trumbowyg-modal-box {
+    background: var(--au-surface);
+    border: 1px solid var(--au-rule);
+    border-radius: var(--au-r-panel);
+    box-shadow: var(--au-shadow-float);
+    color: var(--au-ink);
+}
+.trumbowyg-modal-box .trumbowyg-modal-title {
+    background: var(--au-surface-2);
+    border-bottom: 1px solid var(--au-rule);
+    color: var(--au-ink);
+}
+.trumbowyg-modal-box label .trumbowyg-input-infos span { background: var(--au-surface); color: var(--au-ink-3); }
+.trumbowyg-modal-box .trumbowyg-modal-button.trumbowyg-modal-submit { background: var(--au-accent); color: var(--au-on-accent); }
+.trumbowyg-modal-box .trumbowyg-modal-button.trumbowyg-modal-reset { background: transparent; color: var(--au-ink-2); }
+.trumbowyg-overlay { background: var(--au-overlay); opacity: 1 !important; }
+
+/* Dark: the two editors that paint their own white ground get the panel ground
+   instead, so a night shift is not blinded by an editor. */
+:root[data-theme="dark"] .trumbowyg-editor,
+:root[data-theme="dark"] .CodeMirror { background: var(--au-surface-2); }
+
+/* The page editor keeps its toolbar in reach: long content scrolls inside the
+   editor, not the page (full-screen mode has no limit). */
+.trumbowyg-box:not(.trumbowyg-fullscreen) .trumbowyg-editor,
+.trumbowyg-box:not(.trumbowyg-fullscreen) .trumbowyg-textarea { max-height: 70vh; overflow-y: auto; }

@@ -16,16 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.minilang.operation;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Matcher;
+import java.util.regex.PatternSyntaxException;
+import java.util.regex.Pattern;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
@@ -46,7 +50,7 @@ public class Regexp extends SimpleMapOperation {
         expr = element.getAttribute("expr");
         try {
             pattern = PatternFactory.createOrGetPerl5CompiledPattern(expr, true);
-        } catch (MalformedPatternException e) {
+        } catch (PatternSyntaxException e) {
             Debug.logError(e, module);
         }
     }
@@ -65,8 +69,7 @@ public class Regexp extends SimpleMapOperation {
             messages.add("Could not compile regular expression \"" + expr + "\" for validation");
             return;
         }
-        PatternMatcher matcher = new Perl5Matcher();
-        if (!matcher.matches(fieldValue, pattern)) {
+        if (!pattern.matcher(fieldValue).matches()) {
             addMessage(messages, loader, locale);
         }
     }

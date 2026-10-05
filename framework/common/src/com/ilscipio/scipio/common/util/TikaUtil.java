@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.common.util;
 
 import java.io.BufferedInputStream;
@@ -18,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.detect.EncodingDetector;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaCoreProperties;
 import org.apache.tika.mime.MediaType;
 import org.apache.tika.mime.MediaTypeRegistry;
 import org.apache.tika.mime.MimeType;
@@ -128,7 +145,7 @@ public abstract class TikaUtil {
             AutoDetectParser parser = new AutoDetectParser();
             Detector detector = parser.getDetector();
             Metadata md = new Metadata();
-            md.add(Metadata.RESOURCE_NAME_KEY, fileName);
+            md.add(TikaCoreProperties.RESOURCE_NAME_KEY, fileName);
             MediaType mediaType = detector.detect(bis, md);
             return mediaType;
         } finally {
@@ -331,7 +348,7 @@ public abstract class TikaUtil {
         try {
             EncodingDetector detector = encodingDetectorClass.getConstructor().newInstance();
             Metadata md = new Metadata();
-            md.add(Metadata.RESOURCE_NAME_KEY, fileName);
+            md.add(TikaCoreProperties.RESOURCE_NAME_KEY, fileName);
             if (UtilValidate.isNotEmpty(mediaType)) {
                 md.add(Metadata.CONTENT_TYPE, mediaType.getType() + "/" + mediaType.getSubtype());
             }

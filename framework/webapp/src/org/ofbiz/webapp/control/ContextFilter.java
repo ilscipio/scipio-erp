@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.webapp.control;
 
 import static org.ofbiz.base.util.UtilGenerics.checkMap;
@@ -24,6 +30,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -32,6 +39,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.ServletRegistration;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.websocket.server.ServerEndpoint;
@@ -39,6 +47,7 @@ import javax.websocket.server.ServerEndpoint;
 import com.ilscipio.scipio.ce.base.component.ServerEndpointRegistry;
 import com.ilscipio.scipio.ce.util.PathUtil;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
 import org.apache.tomcat.util.descriptor.web.WebXml;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.util.*;
@@ -67,12 +76,24 @@ public class ContextFilter implements Filter {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     private static final String contextFilterClassName = ContextFilter.class.getSimpleName();
     public static final String FORWARDED_FROM_SERVLET = "_FORWARDED_FROM_SERVLET_";
+    /**
+     * SCIPIO: 4.0.0: Request attribute (Boolean.TRUE) set when the webapp serves controller URIs at its root
+     * (forwardRootControllerUris); the link builder then omits the control servlet path ("/control").
+     */
+    public static final String ROOT_CONTROLLER_LINKS_ATTR = "_SCP_ROOTCTRLLINKS_";
+    /**
+     * SCIPIO: 4.0.0: Servlet context attribute (Set of String): the first path elements that a servlet mapping
+     * owns in a webapp with forwardRootControllerUris. A link to a request of that name keeps the control path.
+     */
+    public static final String SERVLET_MAPPED_ROOT_ELEMS_ATTR = "_SCP_SERVLETROOTELEMS_";
 
     protected FilterConfig config = null;
     protected boolean debug = false;
     protected Set<String> allowedPaths = null; // SCIPIO: new: prevent parsing at every request
     protected Set<String> webSocketPaths = null; // SCIPIO
     protected boolean forwardRootControllerUris = false; // SCIPIO: new
+    /** SCIPIO: 4.0.0: First path elements owned by a servlet mapping (e.g. "media" for /media/*); never forwarded to the controller. */
+    protected Set<String> servletMappedRootElems = Collections.emptySet();
 
     // default charset used to decode requests body data if no encoding is specified in the request
     private String defaultCharacterEncoding;
@@ -159,13 +180,53 @@ public class ContextFilter implements Filter {
         Debug.logInfo("Allowed paths for webapp " + extWebappInfo + ": " + this.allowedPaths, module);
 
         // SCIPIO: new
-        this.forwardRootControllerUris = getForwardRootControllerUrisSetting(ServletUtil.getInitParamsMapAdapter(config), false);
+        // SCIPIO: 4.0.0: When web.xml does not set it, the default comes from url.properties
+        // (webapp.forwardRootControllerUris.default), but only for a webapp whose ContextFilter mapping also
+        // handles the FORWARD dispatcher; without it the forwarded request would skip this filter.
+        Object forwardRootParam = ServletUtil.getInitParamsMapAdapter(config).get("forwardRootControllerUris");
+        Boolean forwardRootSetting = (forwardRootParam != null && !forwardRootParam.toString().isEmpty())
+                ? UtilMisc.booleanValueVersatile(forwardRootParam) : null;
+        if (forwardRootSetting == null) {
+            // Subclasses (CatalogUrlFilter, ContentUrlFilter, ...) keep their own behaviour: they opt in explicitly.
+            forwardRootSetting = getClass() == ContextFilter.class && isForwardRootControllerUrisDefault() && extWebappInfo != null
+                    && hasForwardDispatcherMapping(extWebappInfo.getWebXml(), config.getFilterName());
+        }
+        this.forwardRootControllerUris = forwardRootSetting;
+        if (this.forwardRootControllerUris) {
+            this.servletMappedRootElems = readServletMappedRootElems(config.getServletContext());
+            config.getServletContext().setAttribute(SERVLET_MAPPED_ROOT_ELEMS_ATTR, this.servletMappedRootElems);
+            Debug.logInfo("Webapp " + extWebappInfo + " serves controller URIs at its root (forwardRootControllerUris);"
+                    + " paths kept for servlets: " + this.servletMappedRootElems, module);
+        }
     }
 
     /**
      * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
      */
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // SCIPIO: 4.0.0: pooled runtime: the store is resolved first, from the Host header only (TenantResolver)
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        if (!TenantResolver.resolve(httpRequest, (HttpServletResponse) response, config.getServletContext())) {
+            return;
+        }
+        boolean slotHeld = httpRequest.getAttribute(TenantResolver.SLOT_ATTR) != null;
+        if (!TenantResolver.acquireSlot(httpRequest, (HttpServletResponse) response)) { // G17: request slots per store
+            return;
+        }
+        try {
+            doFilterResolved(request, response, chain);
+        } finally {
+            if (!slotHeld) {
+                TenantResolver.releaseSlot(httpRequest);
+            }
+            // the REQUEST pass wraps every FORWARD pass of this request
+            if (request.getDispatcherType() == DispatcherType.REQUEST) {
+                TenantResolver.clear();
+            }
+        }
+    }
+
+    protected void doFilterResolved(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
@@ -176,16 +237,35 @@ public class ContextFilter implements Filter {
         // FIXME: 2017-11: This setting currently can't auto-detect if a request URI is already in use by a servlet mapping
         String controlServletPath = RequestHandler.getControlServletPath(httpRequest);
         if (forwardRootControllerUris && controlServletPath != null && controlServletPath.length() > 1) {
+            httpRequest.setAttribute(ROOT_CONTROLLER_LINKS_ATTR, Boolean.TRUE); // SCIPIO: 4.0.0: links omit the control path
             // previous filter may request custom forwards using _SCP_FWDROOTURIS_
             @SuppressWarnings("unchecked")
             Set<String> customRootRedirects = (Set<String>) request.getAttribute("_SCP_FWDROOTURIS_");
             Map<String, ?> reqUris = getControllerRequestUriMap(httpRequest);
             String servletAndPathInfo = RequestLinkUtil.getServletAndPathInfo(httpRequest);
             String firstPathElem = RequestLinkUtil.getFirstPathElem(servletAndPathInfo);
-            if (reqUris.containsKey(firstPathElem) || (customRootRedirects != null && customRootRedirects.contains(firstPathElem))) {
+            if ((reqUris.containsKey(firstPathElem) && !servletMappedRootElems.contains(firstPathElem)) // SCIPIO: 4.0.0: a servlet mapping wins
+                    || (customRootRedirects != null && customRootRedirects.contains(firstPathElem))) {
                 RequestDispatcher rd = request.getRequestDispatcher(controlServletPath + servletAndPathInfo);
                 rd.forward(request, response);
                 return;
+            }
+        }
+
+        // SCIPIO: 4.0.0: Generic webapp path handlers (e.g. /mcp). Runs before any session is created
+        // and before allowedPaths, so one central definition serves every webapp.
+        if (httpRequest.getAttribute(ContextFilter.FORWARDED_FROM_SERVLET) == null) {
+            WebappPathHandler pathHandler = WebappPathHandlerRegistry.findHandler(
+                    RequestLinkUtil.getFirstPathElem(RequestLinkUtil.getServletAndPathInfo(httpRequest)));
+            if (pathHandler != null) {
+                httpRequest.setAttribute("servletContext", config.getServletContext());
+                if (TenantResolver.fromRequest(httpRequest) == null) { // SCIPIO: pooled runtime: the store objects are already set (G2)
+                    httpRequest.setAttribute("delegator", config.getServletContext().getAttribute("delegator"));
+                    httpRequest.setAttribute("dispatcher", config.getServletContext().getAttribute("dispatcher"));
+                }
+                if (pathHandler.handle(httpRequest, httpResponse)) {
+                    return;
+                }
             }
         }
 
@@ -198,6 +278,7 @@ public class ContextFilter implements Filter {
         if (UtilValidate.isEmpty(httpRequest.getSession().getAttribute("webSiteId"))){
             httpRequest.getSession().setAttribute("webSiteId", WebSiteWorker.getWebSiteId(httpRequest));
         }
+        TenantResolver.bindSession(httpRequest); // SCIPIO: pooled runtime: a new session belongs to the store of this request
 
         // set the filesystem path of context root.
         httpRequest.setAttribute("_CONTEXT_ROOT_", config.getServletContext().getRealPath("/"));
@@ -361,75 +442,12 @@ public class ContextFilter implements Filter {
 
         setAttributesFromRequestBody(request);
 
-        request.setAttribute("delegator", config.getServletContext().getAttribute("delegator"));
-        request.setAttribute("dispatcher", config.getServletContext().getAttribute("dispatcher"));
-        request.setAttribute("security", config.getServletContext().getAttribute("security"));
-
-        if (isMultitenant) {
-            // get tenant delegator by domain name
-            String serverName = httpRequest.getServerName();
-            try {
-                // if tenant was specified, replace delegator with the new per-tenant delegator and set tenantId to session attribute
-                Delegator delegator = getDelegator(config.getServletContext());
-
-                //Use base delegator for fetching data from entity of entityGroup org.ofbiz.tenant
-                Delegator baseDelegator = DelegatorFactory.getDelegator(delegator.getDelegatorBaseName());
-                GenericValue tenantDomainName = EntityQuery.use(baseDelegator).from("TenantDomainName").where("domainName", serverName).queryOne();
-                String tenantId = null;
-                if(UtilValidate.isNotEmpty(tenantDomainName)) {
-                    tenantId = tenantDomainName.getString("tenantId");
-                }
-
-                if(UtilValidate.isEmpty(tenantId)) {
-                    tenantId = (String) httpRequest.getAttribute("userTenantId");
-                }
-                if(UtilValidate.isEmpty(tenantId)) {
-                    tenantId = httpRequest.getParameter("userTenantId");
-                }
-                if (UtilValidate.isNotEmpty(tenantId)) {
-                    // if the request path is a root mount then redirect to the initial path
-                    if ("".equals(httpRequest.getContextPath()) && "".equals(httpRequest.getServletPath())) {
-                        GenericValue tenant = EntityQuery.use(baseDelegator).from("Tenant").where("tenantId", tenantId).queryOne();
-                        String initialPath = tenant.getString("initialPath");
-                        if (UtilValidate.isNotEmpty(initialPath) && !"/".equals(initialPath)) {
-                            encodeAndSendRedirectURL(httpResponse, initialPath); // SCIPIO
-                            return;
-                        }
-                    }
-
-                    // make that tenant active, setup a new delegator and a new dispatcher
-                    String tenantDelegatorName = delegator.getDelegatorBaseName() + "#" + tenantId;
-                    httpRequest.getSession().setAttribute("delegatorName", tenantDelegatorName);
-
-                    // after this line the delegator is replaced with the new per-tenant delegator
-                    delegator = DelegatorFactory.getDelegator(tenantDelegatorName);
-                    config.getServletContext().setAttribute("delegator", delegator);
-
-                    // clear web context objects
-                    config.getServletContext().setAttribute("security", null);
-                    config.getServletContext().setAttribute("dispatcher", null);
-
-                    // initialize security
-                    Security security = getSecurity();
-                    // initialize the services dispatcher
-                    LocalDispatcher dispatcher = getDispatcher(config.getServletContext());
-
-                    // set web context objects
-                    request.setAttribute("delegator", delegator);
-                    request.setAttribute("dispatcher", dispatcher);
-                    request.setAttribute("security", security);
-
-                    request.setAttribute("userTenantId", tenantId);
-                }
-
-                // NOTE DEJ20101130: do NOT always put the delegator name in the user's session because the user may
-                // have logged in and specified a tenant, and even if no Tenant record with a matching domainName field
-                // is found this will change the user's delegator back to the base one instead of the one for the
-                // tenant specified on login
-                // httpRequest.getSession().setAttribute("delegatorName", delegator.getDelegatorName());
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, "Unable to get Tenant", module);
-            }
+        // SCIPIO: 4.0.0: pooled runtime: TenantResolver put the store objects on the request. The shared ServletContext
+        // never holds a store delegator (G1), and no request parameter selects a store (G3).
+        if (TenantResolver.fromRequest(httpRequest) == null) {
+            request.setAttribute("delegator", config.getServletContext().getAttribute("delegator"));
+            request.setAttribute("dispatcher", config.getServletContext().getAttribute("dispatcher"));
+            request.setAttribute("security", config.getServletContext().getAttribute("security"));
         }
 
         // we're done checking; continue on
@@ -671,9 +689,76 @@ public class ContextFilter implements Filter {
                 }
             }
         } else {
+            // SCIPIO: 4.0.0: No explicit setting: the url.properties default applies to a webapp that has a
+            // ContextFilter mapped for the FORWARD dispatcher (same rule as ContextFilter#init).
+            if (isForwardRootControllerUrisDefault()) {
+                for (FilterDef filter : webXml.getFilters().values()) {
+                    if (ContextFilter.class.getName().equals(filter.getFilterClass())
+                            && hasForwardDispatcherMapping(webXml, filter.getFilterName())) {
+                        if (logPrefix != null) Debug.logInfo(logPrefix+"web.xml ContextFilter init-param forwardRootControllerUris not set;"
+                                + " using url.properties default (true)", module);
+                        return true;
+                    }
+                }
+            }
             if (logPrefix != null) Debug.logInfo(logPrefix+"web.xml ContextFilter init-param forwardRootControllerUris setting not found", module);
         }
         return null;
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Returns the first path elements of the path-prefix servlet mappings of the webapp
+     * ("/media/*" gives "media", "/control/*" gives "control"). Extension and default mappings give none.
+     */
+    public static Set<String> readServletMappedRootElems(ServletContext servletContext) {
+        Set<String> elems = new HashSet<>();
+        try {
+            for (ServletRegistration registration : servletContext.getServletRegistrations().values()) {
+                for (String mapping : registration.getMappings()) {
+                    if (mapping == null || !mapping.startsWith("/") || mapping.length() < 2) {
+                        continue;
+                    }
+                    String elem = mapping.substring(1);
+                    int slash = elem.indexOf('/');
+                    if (slash >= 0) {
+                        elem = elem.substring(0, slash);
+                    }
+                    if (!elem.isEmpty() && !elem.contains("*")) {
+                        elems.add(elem);
+                    }
+                }
+            }
+        } catch (RuntimeException e) {
+            Debug.logWarning("Could not read the servlet mappings of " + servletContext.getContextPath() + ": " + e.toString(), module);
+        }
+        return Collections.unmodifiableSet(elems);
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Default of forwardRootControllerUris for a webapp whose web.xml does not set it
+     * (url.properties: webapp.forwardRootControllerUris.default).
+     */
+    public static boolean isForwardRootControllerUrisDefault() {
+        return UtilProperties.getPropertyAsBoolean("url", "webapp.forwardRootControllerUris.default", false);
+    }
+
+    /**
+     * SCIPIO: 4.0.0: True when web.xml maps the named filter for the FORWARD dispatcher.
+     */
+    public static boolean hasForwardDispatcherMapping(WebXml webXml, String filterName) {
+        if (webXml == null || filterName == null) {
+            return false;
+        }
+        for (FilterMap filterMap : webXml.getFilterMappings()) {
+            if (filterName.equals(filterMap.getFilterName())) {
+                for (String dispatcher : filterMap.getDispatcherNames()) {
+                    if ("FORWARD".equals(dispatcher)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**

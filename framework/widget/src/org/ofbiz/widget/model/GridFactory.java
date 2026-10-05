@@ -1,21 +1,19 @@
-/*******************************************************************************
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *******************************************************************************/
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
@@ -29,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.location.FlexibleLocation;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
@@ -51,7 +50,7 @@ import org.xml.sax.SAXException;
 @SuppressWarnings("serial")
 public class GridFactory extends WidgetFactory {
 
-    //private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
     // SCIPIO: 2018-12-05: These caches are modified to hold whole file instead of individual ModelForm
     private static final UtilCache<String, Map<String, ModelGrid>> gridLocationCache = UtilCache.createUtilCache("widget.grid.locationResource", 0, 0, false);
     private static final UtilCache<String, Map<String, ModelGrid>> gridWebappCache = UtilCache.createUtilCache("widget.grid.webappResource", 0, 0, false);
@@ -78,8 +77,29 @@ public class GridFactory extends WidgetFactory {
      */
     public static ModelGrid getGridFromLocation(String resourceName, String gridName, ModelReader entityModelReader, DispatchContext dispatchContext)
             throws IOException, SAXException, ParserConfigurationException {
+        // SCIPIO: 4.0.0: Handle annotation-based grids with class:// prefix
+        if (FormFactory.isClassLocation(resourceName)) {
+            ModelForm modelForm = FormFactory.getAnnotationFormFromClass(resourceName, gridName); // SCIPIO: 4.0.0: class-exact
+            if (modelForm instanceof ModelGrid) {
+                return (ModelGrid) modelForm;
+            }
+            throw new IllegalArgumentException("Could not find annotation-based grid with name [" + gridName + "] from class [" + resourceName + "]");
+        }
+        // SCIPIO: 4.0.0: Check location aliases first (allows annotation-based grids to replace XML)
+        ModelForm aliasForm = FormFactory.getFormFromLocationAlias(resourceName, gridName);
+        if (aliasForm instanceof ModelGrid) {
+            return (ModelGrid) aliasForm;
+        }
+
         ModelGrid modelGrid = getGridFromLocationOrNull(resourceName, gridName, entityModelReader, dispatchContext);
         if (modelGrid == null) {
+            // SCIPIO: 4.0.0: Final fallback - try to find grid by name in all annotation forms
+            ModelForm modelForm = FormFactory.getAnnotationForm(gridName);
+            if (modelForm instanceof ModelGrid) {
+                Debug.logWarning("Grid [" + gridName + "] not found at [" + resourceName +
+                    "] but found as annotation grid; consider updating the reference to use class:// location", module);
+                return (ModelGrid) modelForm;
+            }
             throw new IllegalArgumentException("Could not find grid with name [" + gridName + "] in resource [" + resourceName + "]");
         }
         return modelGrid;
@@ -90,6 +110,16 @@ public class GridFactory extends WidgetFactory {
      */
     public static ModelGrid getGridFromLocationOrNull(String resourceName, String gridName, ModelReader entityModelReader, DispatchContext dispatchContext)
             throws IOException, SAXException, ParserConfigurationException {
+        // SCIPIO: 4.0.0: Handle annotation-based grids with class:// prefix
+        if (FormFactory.isClassLocation(resourceName)) {
+            // SCIPIO: 4.0.0: reuse only a grid already built from exactly this class (a same-named grid of another
+            // class must not be substituted); while this document is being resolved, null = build from the element
+            ModelForm modelForm = FormFactory.getCachedAnnotationForm(resourceName, gridName);
+            if (modelForm instanceof ModelGrid) {
+                return (ModelGrid) modelForm;
+            }
+            return null;
+        }
         StringBuilder sb = new StringBuilder(dispatchContext.getDelegator().getDelegatorName());
         sb.append(":").append(resourceName); // .append("#").append(gridName);
         String cacheKey = sb.toString();
@@ -111,12 +141,34 @@ public class GridFactory extends WidgetFactory {
                 modelGridMap = gridLocationCache.get(cacheKey);
                 if (modelGridMap == null) {
                     URL gridFileUrl = FlexibleLocation.resolveLocation(resourceName);
+
+                    // SCIPIO: 4.0.0: Fallback logic to try with/without .xml extension
                     if (gridFileUrl == null) {
-                        throw new IllegalArgumentException("Could not resolve grid file location [" + resourceName + "]");
+                        String fallbackResourceName = null;
+                        if (resourceName.endsWith(".xml")) {
+                            // Try without .xml extension (annotation-based)
+                            fallbackResourceName = resourceName.substring(0, resourceName.length() - 4);
+                        } else {
+                            // Try with .xml extension (XML file)
+                            fallbackResourceName = resourceName + ".xml";
+                        }
+
+                        // Try the fallback location
+                        URL fallbackUrl = FlexibleLocation.resolveLocation(fallbackResourceName);
+                        if (fallbackUrl != null) {
+                            Debug.logInfo("Grid location [" + resourceName + "] not found, using fallback [" + fallbackResourceName + "]", module);
+                            gridFileUrl = fallbackUrl;
+                            resourceName = fallbackResourceName; // Update resourceName for caching
+                        }
+                    }
+
+                    // SCIPIO: 4.0.0: Return null instead of throwing - this is "OrNull" method
+                    if (gridFileUrl == null) {
+                        return null;
                     }
                     Document gridFileDoc = UtilXml.readXmlDocument(gridFileUrl, true, true);
                     if (gridFileDoc == null) {
-                        throw new IllegalArgumentException("Could not read grid file at resource [" + resourceName + "]");
+                        return null;
                     }
                     // SCIPIO: New: Save original location as user data in Document
                     WidgetDocumentInfo.retrieveAlways(gridFileDoc).setResourceLocation(resourceName);

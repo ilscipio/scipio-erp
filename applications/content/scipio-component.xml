@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <ofbiz-component name="content"
@@ -14,8 +25,7 @@ code package.
     <classpath type="jar" location="lib/*"/>
     <classpath type="jar" location="lib/uno/*"/>
     <classpath type="jar" location="build/lib/*"/>
-    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
-    <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/>
+    <!-- SCIPIO: entity model/eca migrated to Java annotations -->
     <entity-resource type="data" reader-name="seed" loader="main" location="data/ContentTypeData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/ContentOperationData.xml"/>
     <!-- SCIPIO: 2017-08-02: new base Tika MimeTypes -->
@@ -48,20 +58,8 @@ code package.
     <!-- SCIPIO: Unneeded
     <entity-resource type="data" reader-name="demo" loader="main" location="data/ForumDemoData.xml"/>
     -->
-    <service-resource type="model" loader="main" location="servicedef/services.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_content.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_contenttypes.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_data.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_document.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_ftp.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_output.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_survey.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_commevent.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_website.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_image.xml"/><!-- SCIPIO -->
-    <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
-    <service-resource type="mca" loader="main" location="servicedef/mca.xml"/>
-    
+    <!-- SCIPIO: service model/eca/mca definitions migrated to Java annotations (@Service/@Seca) -->
+
     <!-- SCIPIO: NOTE: Even if hidden, this webapp must never be removed because it hosts some
         essential application-agnostic content access requests (such as streaming) part of common rendering -->
     <webapp name="content"

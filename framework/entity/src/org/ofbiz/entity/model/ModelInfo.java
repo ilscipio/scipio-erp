@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.entity.model;
 
 import java.io.Serializable;
@@ -109,6 +115,46 @@ public final class ModelInfo implements Serializable { // SCIPIO: added Serializ
     private static String getCopyrightString() {
         int year = UtilDateTime.getYear(UtilDateTime.nowTimestamp(), TimeZone.getDefault(), Locale.getDefault());
         return "Copyright 2001-" + year + " The Apache Software Foundation";
+    }
+
+    /**
+     * Creates a new ModelInfo from annotation values.
+     *
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public static ModelInfo createFromAnnotation(String title, String description, String copyright,
+                                                  String author, String version, String defaultResourceName) {
+        if (title == null || title.isEmpty()) {
+            title = DEFAULT.getTitle();
+        }
+        if (description == null || description.isEmpty()) {
+            description = DEFAULT.getDescription();
+        }
+        if (copyright == null || copyright.isEmpty()) {
+            copyright = getCopyrightString();
+        }
+        if (author == null || author.isEmpty()) {
+            author = DEFAULT.getAuthor();
+        }
+        if (version == null || version.isEmpty()) {
+            version = DEFAULT.getVersion();
+        }
+        if (defaultResourceName == null) {
+            defaultResourceName = "";
+        }
+        return new ModelInfo(title, description, copyright, author, version, defaultResourceName);
+    }
+
+    /**
+     * Creates a copy with a new description.
+     *
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public ModelInfo withDescription(String description) {
+        if (description == null) {
+            description = "";
+        }
+        return new ModelInfo(this.title, description, this.copyright, this.author, this.version, this.defaultResourceName);
     }
 
     /*

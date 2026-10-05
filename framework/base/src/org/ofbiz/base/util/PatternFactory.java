@@ -16,11 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.base.util;
 
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.Perl5Compiler;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
 import org.ofbiz.base.util.cache.UtilCache;
 
 /**
@@ -38,18 +44,14 @@ public class PatternFactory {
      * @param stringPattern a Perl5 pattern string
      * @param caseSensitive case sensitive true/false
      * @return a <code>Pattern</code> instance for the given string pattern
-     * @throws MalformedPatternException
+     * @throws PatternSyntaxException
      */
 
-    public static Pattern createOrGetPerl5CompiledPattern(String stringPattern, boolean caseSensitive) throws MalformedPatternException {
+    public static Pattern createOrGetPerl5CompiledPattern(String stringPattern, boolean caseSensitive) throws PatternSyntaxException {
         Pattern pattern = compiledPerl5Patterns.get(stringPattern);
         if (pattern == null) {
-            Perl5Compiler compiler = new Perl5Compiler();
-            if (caseSensitive) {
-                pattern = compiler.compile(stringPattern, Perl5Compiler.READ_ONLY_MASK); // READ_ONLY_MASK guarantees immutability
-            } else {
-                pattern = compiler.compile(stringPattern, Perl5Compiler.CASE_INSENSITIVE_MASK | Perl5Compiler.READ_ONLY_MASK);
-            }
+            // SCIPIO: L-06b: java.util.regex replaces Jakarta ORO (retired in 2010); a Pattern is immutable
+            pattern = caseSensitive ? Pattern.compile(stringPattern) : Pattern.compile(stringPattern, Pattern.CASE_INSENSITIVE);
             pattern = compiledPerl5Patterns.putIfAbsentAndGet(stringPattern, pattern);
             if (Debug.verboseOn()) {
                 Debug.logVerbose("Compiled and cached the pattern: '" + stringPattern, module);

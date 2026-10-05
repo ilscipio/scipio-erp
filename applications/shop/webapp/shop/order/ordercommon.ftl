@@ -1,4 +1,20 @@
 <#--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<#--
 SCIPIO: Local order template common defs
 -->
 <#include "component://shop/webapp/shop/common/common.ftl">
@@ -172,6 +188,23 @@ SCIPIO: Local order template common defs
                 <p>${uiLabelMap.OrderPaymentDescOffline}</p>
               </@payMethInfoPanel>
               <@payMethAmountField payMethId="EXT_OFFLINE"/>
+            </@section>
+          </#if>
+        </#if>
+        <#-- SCIPIO: 4.0.0: card payment of a hosted store through the hub (W1-10d); the pay step follows on the order page -->
+        <#if productStorePaymentMethodTypeIdMap.EXT_STRIPE_HUB??>
+          <#assign methodLabel>${raw(getLabel('PaymentMethodType.description.EXT_STRIPE_HUB', 'AccountingEntityLabels'))}</#assign>
+          <#if showSelect>
+            <#assign dummy = registerFieldContent({"fieldId":"checkOutPaymentId_STRIPE_HUB", "contentId":"content_STRIPE_HUB"})>
+            <@field type="radio" id="checkOutPaymentId_STRIPE_HUB" name="checkOutPaymentId" value="EXT_STRIPE_HUB" checked=(selectedCheckOutPaymentIdList?seq_contains("EXT_STRIPE_HUB"))
+              class="+pay-select-radio pay-select-field" label=methodLabel />
+          </#if>
+          <#if showDetails>
+            <@section containerId="content_STRIPE_HUB" containerClass="+pay-meth-content" containerStyle="display:none;">
+              <@payMethInfoPanel title=methodLabel>
+                <p>${uiLabelMap.OrderHubPayChoiceDesc}</p>
+              </@payMethInfoPanel>
+              <@payMethAmountField payMethId="EXT_STRIPE_HUB"/>
             </@section>
           </#if>
         </#if>

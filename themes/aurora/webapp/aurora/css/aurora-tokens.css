@@ -1,0 +1,194 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+/* ==========================================================================
+   Aurora - tokens
+   Every colour, size and font of the theme lives here. Nothing else holds a
+   colour.
+
+   The look: graphite chrome that lets the red Scipio logo lead, warm white
+   paper, big bold type. Crimson (from the logo) never carries text on
+   graphite; it marks the current app, menu item and tab with thin bars, and
+   the notification dot. Every text pair passes WCAG AA (4.5:1), bars 3:1.
+
+   The palette appears three times:
+   1. :root                                   - light, the default
+   2. @media (prefers-color-scheme: dark)     - the operating system
+   3. :root[data-theme="dark"]                - the switch, which always wins
+   ========================================================================== */
+
+:root {
+    color-scheme: light;
+
+    /* Ground and surfaces */
+    --au-ground:      #f6f5f3;
+    --au-surface:     #ffffff;
+    --au-surface-2:   #f9f8f6;
+    --au-surface-3:   #efedea;
+    --au-overlay:     rgba(8, 9, 11, .55);
+
+    /* Chrome: the application rail, the phone bar, dark cards */
+    --au-chrome:        #16171b;
+    --au-chrome-2:      #202127;
+    --au-chrome-ink:    #d4d5da;
+    --au-chrome-ink-2:  #a6a7ae;
+    --au-chrome-strong: #ffffff;
+    --au-chrome-hover:  #2c2d34;
+    --au-chrome-active: #2c2d34;
+    --au-chrome-rule:   rgba(255, 255, 255, .12);
+
+    /* Ink */
+    --au-ink:         #16171b;
+    --au-ink-2:       #4d4e54;
+    --au-ink-3:       #5f6066;
+    --au-ink-4:       #85868c;
+    --au-on-accent:   #ffffff;
+
+    /* Lines */
+    --au-rule:        #e7e4e0;
+    --au-rule-soft:   #efedea;
+    --au-rule-strong: #d6d2cd;
+
+    /* Links, selection, focus: ink, not a colour */
+    --au-accent:      #16171b;
+    --au-accent-2:    #1f4fb8;
+    --au-accent-soft: rgba(22, 23, 27, .06);
+    --au-accent-line: rgba(22, 23, 27, .28);
+    --au-focus:       #16171b;
+
+    /* The primary action */
+    --au-primary:       #16171b;
+    --au-primary-hover: #2c2d34;
+    --au-on-primary:    #ffffff;
+
+    /* Crimson: the logo and the "you are here" bars */
+    --au-signal:   #d20025;
+    --au-bar:      #d20025;
+    --au-bar-rail: #ff4d66;
+    --au-nav-on:   #efedea;
+    --au-tint:     #fdecef;
+    --au-tint-ink: #a3001c;
+
+    /* States: text on the soft fill passes AA */
+    --au-ok:          #1a6e44;
+    --au-ok-soft:     #e3f3ea;
+    --au-ok-line:     rgba(26, 110, 68, .32);
+    --au-warn:        #8a4e00;
+    --au-warn-soft:   #fdf0da;
+    --au-warn-line:   rgba(138, 78, 0, .32);
+    --au-danger:      #b93a0b;
+    --au-danger-soft: #fdebe2;
+    --au-danger-line: rgba(185, 58, 11, .34);
+    --au-info:        #1f4fb8;
+    --au-info-soft:   #e7eefc;
+    --au-info-line:   rgba(31, 79, 184, .30);
+
+    /* Depth */
+    --au-bezel:        0 0 0 0 transparent;
+    --au-shadow-raise: 0 1px 2px rgba(22, 23, 27, .05), 0 12px 30px -18px rgba(22, 23, 27, .25);
+    --au-shadow-float: 0 18px 44px -12px rgba(22, 23, 27, .30), 0 2px 6px rgba(22, 23, 27, .08);
+
+    /* Charts */
+    --chart-1: #d20025;
+    --chart-2: #16171b;
+    --chart-3: #1f4fb8;
+    --chart-4: #c98a00;
+    --chart-5: #1a6e44;
+    --chart-6: #7a4e7e;
+    --chart-7: #0f7b8a;
+    --chart-8: #85868c;
+    --chart-dot: #ffffff;
+
+    /* Type: all three are SIL Open Font License 1.1, shipped in fonts/ */
+    --au-font:         "Geist Variable", "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --au-font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque", "Geist Variable", system-ui, sans-serif;
+    --au-font-mono:    "Geist Mono Variable", "Geist Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+    --au-font-serif:   var(--au-font-display);
+    --au-fs-tiny:  .75rem;      /* 12 */
+    --au-fs-small: .8125rem;    /* 13 */
+    --au-fs-ui:    .875rem;     /* 14 */
+    --au-fs-h4:    1rem;        /* 16 */
+    --au-fs-h3:    1.125rem;    /* 18 */
+    --au-fs-h2:    1.375rem;    /* 22 */
+    --au-fs-h1:    2.75rem;     /* 44 */
+
+    /* Measures */
+    --au-control-h:  2.5rem;    /* 40 */
+    --au-row-h:      3rem;      /* 48 */
+    --au-topbar-h:   4rem;      /* 64 */
+    --au-rail-w:     4.5rem;    /* 72 */
+    --au-sidebar-w:  15.5rem;   /* 248 */
+    --au-sidebar-w-collapsed: 0rem;
+    --au-pad-panel:  1.25rem;
+    --au-pad-cell:   .5rem .875rem;
+    --au-gap:        1rem;
+    --au-r-control:  10px;
+    --au-r-panel:    16px;
+    --au-r-large:    20px;
+    --au-r-pill:     999px;
+    --au-speed:      160ms;
+
+    /* The shared widget fixes (/base-theme/css/scipio-common.css) take their colours from these. */
+    --scp-ink:         var(--au-ink);
+    --scp-muted:       var(--au-ink-3);
+    --scp-rule:        var(--au-rule);
+    --scp-surface-alt: var(--au-surface-2);
+    --scp-accent:      var(--au-ink);
+    --scp-warn:        var(--au-warn);
+    --scp-danger:      var(--au-danger);
+}
+
+/* ---- Dark: the operating system asks for it ------------------------------ */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --au-ground: #0e0f12; --au-surface: #16171b; --au-surface-2: #1c1d22; --au-surface-3: #24252c; --au-overlay: rgba(0, 0, 0, .65);
+        --au-chrome: #08090b; --au-chrome-2: #111216; --au-chrome-ink: #d4d5da; --au-chrome-ink-2: #a6a7ae; --au-chrome-strong: #ffffff;
+        --au-chrome-hover: #24252c; --au-chrome-active: #24252c; --au-chrome-rule: rgba(255, 255, 255, .09);
+        --au-ink: #f2f2f4; --au-ink-2: #c0c1c7; --au-ink-3: #9d9ea5; --au-ink-4: #7a7b82; --au-on-accent: #16171b;
+        --au-rule: #2a2b31; --au-rule-soft: #22232a; --au-rule-strong: #3a3b42;
+        --au-accent: #f2f2f4; --au-accent-2: #a3bfff; --au-accent-soft: rgba(255, 255, 255, .07); --au-accent-line: rgba(255, 255, 255, .30); --au-focus: #f2f2f4;
+        --au-primary: #f2f2f4; --au-primary-hover: #ffffff; --au-on-primary: #16171b;
+        --au-bar: #ff4d66; --au-nav-on: rgba(255, 255, 255, .07); --au-tint: rgba(255, 77, 102, .16); --au-tint-ink: #ffc2cb;
+        --au-ok: #6fdca6; --au-ok-soft: rgba(111, 220, 166, .14); --au-ok-line: rgba(111, 220, 166, .38);
+        --au-warn: #f5c06a; --au-warn-soft: rgba(245, 192, 106, .14); --au-warn-line: rgba(245, 192, 106, .38);
+        --au-danger: #ff9a70; --au-danger-soft: rgba(255, 154, 112, .14); --au-danger-line: rgba(255, 154, 112, .40);
+        --au-info: #a3bfff; --au-info-soft: rgba(163, 191, 255, .14); --au-info-line: rgba(163, 191, 255, .38);
+        --au-shadow-raise: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 30px -18px rgba(0, 0, 0, .8);
+        --au-shadow-float: 0 18px 44px -12px rgba(0, 0, 0, .7), 0 2px 6px rgba(0, 0, 0, .4);
+        --chart-1: #ff4d66; --chart-2: #d4d5da; --chart-3: #a3bfff; --chart-4: #f5c06a; --chart-5: #6fdca6; --chart-6: #c9a0cf; --chart-7: #6fd3df; --chart-8: #9d9ea5; --chart-dot: #16171b;
+    }
+}
+
+/* ---- Dark: the switch ----------------------------------------------------- */
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --au-ground: #0e0f12; --au-surface: #16171b; --au-surface-2: #1c1d22; --au-surface-3: #24252c; --au-overlay: rgba(0, 0, 0, .65);
+    --au-chrome: #08090b; --au-chrome-2: #111216; --au-chrome-ink: #d4d5da; --au-chrome-ink-2: #a6a7ae; --au-chrome-strong: #ffffff;
+    --au-chrome-hover: #24252c; --au-chrome-active: #24252c; --au-chrome-rule: rgba(255, 255, 255, .09);
+    --au-ink: #f2f2f4; --au-ink-2: #c0c1c7; --au-ink-3: #9d9ea5; --au-ink-4: #7a7b82; --au-on-accent: #16171b;
+    --au-rule: #2a2b31; --au-rule-soft: #22232a; --au-rule-strong: #3a3b42;
+    --au-accent: #f2f2f4; --au-accent-2: #a3bfff; --au-accent-soft: rgba(255, 255, 255, .07); --au-accent-line: rgba(255, 255, 255, .30); --au-focus: #f2f2f4;
+    --au-primary: #f2f2f4; --au-primary-hover: #ffffff; --au-on-primary: #16171b;
+    --au-bar: #ff4d66; --au-nav-on: rgba(255, 255, 255, .07); --au-tint: rgba(255, 77, 102, .16); --au-tint-ink: #ffc2cb;
+    --au-ok: #6fdca6; --au-ok-soft: rgba(111, 220, 166, .14); --au-ok-line: rgba(111, 220, 166, .38);
+    --au-warn: #f5c06a; --au-warn-soft: rgba(245, 192, 106, .14); --au-warn-line: rgba(245, 192, 106, .38);
+    --au-danger: #ff9a70; --au-danger-soft: rgba(255, 154, 112, .14); --au-danger-line: rgba(255, 154, 112, .40);
+    --au-info: #a3bfff; --au-info-soft: rgba(163, 191, 255, .14); --au-info-line: rgba(163, 191, 255, .38);
+    --au-shadow-raise: 0 1px 2px rgba(0, 0, 0, .4), 0 12px 30px -18px rgba(0, 0, 0, .8);
+    --au-shadow-float: 0 18px 44px -12px rgba(0, 0, 0, .7), 0 2px 6px rgba(0, 0, 0, .4);
+    --chart-1: #ff4d66; --chart-2: #d4d5da; --chart-3: #a3bfff; --chart-4: #f5c06a; --chart-5: #6fdca6; --chart-6: #c9a0cf; --chart-7: #6fd3df; --chart-8: #9d9ea5; --chart-dot: #16171b;
+}

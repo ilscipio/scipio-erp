@@ -1,21 +1,19 @@
-/*******************************************************************************
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *******************************************************************************/
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
@@ -259,6 +257,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
             }
         }
 
+        boolean transactionEnded = false; // SCIPIO
         try {
             // If transaction timeout is not present (i.e. is equal to -1), the default transaction timeout is used
             // If transaction timeout is present, use it to start the transaction
@@ -274,6 +273,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
             // render the screen, starting with the top-level section
             this.section.renderWidgetString(writer, context, screenStringRenderer);
             TransactionUtil.commit(beganTransaction);
+            transactionEnded = true; // SCIPIO
         // SCIPIO: 2018-09-04: TODO: REVIEW: this is from upstream, but I believe it's at least
         // half an error because it bypasses the rollback...
         //} catch (RuntimeException e) {
@@ -290,6 +290,7 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
             } catch (GenericEntityException e2) {
                 Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
+            transactionEnded = true; // SCIPIO
 
             // throw nested exception, don't need to log details here: Debug.logError(e, errMsg, module);
 
@@ -300,6 +301,18 @@ public class ModelScreen extends ModelWidget implements ModelScreens.ScreenEntry
                 throw ((ScreenRenderException) e);
             } else {
                 throw new ScreenRenderException(errMsg, e);
+            }
+        } finally {
+            // SCIPIO: the transaction we began must be ended on every exit path, including Throwables
+            // that are not Exceptions, otherwise it stays in place on the (pooled) thread
+            if (!transactionEnded && beganTransaction) {
+                String errMsg = "Error rendering screen [" + this.sourceLocation + "#" + getName() + "]";
+                Debug.logError(errMsg + ". Rolling back transaction.", module);
+                try {
+                    TransactionUtil.rollback(beganTransaction, errMsg, null);
+                } catch (GenericEntityException e2) {
+                    Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+                }
             }
         }
     }

@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.ce.base.component;
 
 import org.ofbiz.base.component.ComponentConfig;
@@ -192,47 +208,68 @@ public class ComponentReflectConfig {
 
     public ComponentReflectConfig readComponentLibScanJars(ComponentConfig component) {
         String configRoot = component.getRootLocation();
-        //configRoot = configRoot.replace('\\', '/');  // Not applicable here - always forward thanks to constructor
+        Set<String> scannedDirs = new LinkedHashSet<>();
+
+        // SCIPIO: 4.0.0: First, automatically scan all default JAR directories (build/lib) even without
+        // explicit classpath entries. This is convention-over-configuration for Gradle builds.
+        Set<String> defaultJarScanDirs = getDefaultJarScanDirs();
+        if (defaultJarScanDirs != null) {
+            for (String defaultDir : defaultJarScanDirs) {
+                scanJarDirectory(configRoot, defaultDir);
+                scannedDirs.add(defaultDir);
+            }
+        }
+
+        // Also scan any explicitly configured classpath entries that match default scan dirs
+        // (this maintains backward compatibility with existing scipio-component.xml configurations)
         for (ComponentConfig.ClasspathInfo info : component.getClasspathInfos()) {
             if (!"jar".equals(info.getType())) {
                 continue;
             }
-            String location = info.getLocation(); //.replace('\\', '/'); // Not applicable here - always forward
+            String location = info.getLocation();
             if (location.startsWith("/")) {
                 location = location.substring(1);
             }
             String dirLoc = location;
             if (dirLoc.endsWith("/*")) {
-                // strip off the slash splat
                 dirLoc = location.substring(0, location.length() - 2);
             }
-            Set<String> defaultJarScanDirs = getDefaultJarScanDirs();
+            // Skip if already scanned via default dirs or not in default scan dirs
+            if (scannedDirs.contains(dirLoc)) {
+                continue;
+            }
             if (defaultJarScanDirs != null && !defaultJarScanDirs.contains(dirLoc)) {
                 continue;
             }
-
-            // Even on Windows, the forward slash operator should work since both dirLoc and configRoot are always forward slashes
-            //String fileNameSeparator = "\\".equals(File.separator) ? "\\" + File.separator : File.separator;
-            //File path = new File(configRoot, dirLoc.replaceAll("/+|\\\\+", fileNameSeparator));
-            File path = new File(configRoot, dirLoc);
-            if (path.exists()) {
-                if (path.isDirectory()) {
-                    File[] files = path.listFiles();
-                    if (files != null) {
-                        for (File file : files) {
-                            if (file.getName().toLowerCase().endsWith(".jar")) {
-                                UtilMisc.add(platformJars, file);
-                                UtilMisc.add(webserverJars, file);
-                            }
-                        }
-                    }
-                } else {
-                    UtilMisc.add(platformJars, path);
-                    UtilMisc.add(webserverJars, path);
-                }
-            }
+            scanJarDirectory(configRoot, dirLoc);
+            scannedDirs.add(dirLoc);
         }
         return this;
+    }
+
+    /**
+     * Scans a directory for JAR files and adds them to the platform and webserver JAR collections.
+     *
+     * <p>SCIPIO: 4.0.0: Extracted from readComponentLibScanJars for reuse.</p>
+     */
+    private void scanJarDirectory(String configRoot, String dirLoc) {
+        File path = new File(configRoot, dirLoc);
+        if (path.exists()) {
+            if (path.isDirectory()) {
+                File[] files = path.listFiles();
+                if (files != null) {
+                    for (File file : files) {
+                        if (file.getName().toLowerCase().endsWith(".jar")) {
+                            UtilMisc.add(platformJars, file);
+                            UtilMisc.add(webserverJars, file);
+                        }
+                    }
+                }
+            } else {
+                UtilMisc.add(platformJars, path);
+                UtilMisc.add(webserverJars, path);
+            }
+        }
     }
 
     public ComponentReflectConfig readWebappLibScanJars(ComponentConfig.WebappInfo webappInfo) {

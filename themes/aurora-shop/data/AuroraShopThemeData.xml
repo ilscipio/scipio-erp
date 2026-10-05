@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: Aurora Shop storefront theme -->
+<entity-engine-xml>
+    <!-- A theme may give the shop home page its own template (the main request uses it when present) -->
+    <Enumeration enumId="VT_SHOP_HOME" description="Shop home page template" enumTypeId="VT_RES_TYPE" sequenceId="90"/>
+
+    <VisualTheme visualThemeId="AURORA_SHOP" visualThemeSetId="ECOMMERCE" description="Aurora Shop - modern storefront on the Aurora design system"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="component://aurora-shop-theme/data/AuroraShopThemeData.xml" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_NAME" resourceValue="AURORA_SHOP" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://aurora-shop-theme/includes/header.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://aurora-theme/includes/messages.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://aurora-shop-theme/includes/footer.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://aurora-shop-theme/includes/appbar.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://aurora-shop-theme/includes/appbarOpen.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://aurora-shop-theme/includes/appbarClose.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://aurora-shop-theme/includes/themeStyles.groovy" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://aurora-shop-theme/includes/themeTemplate.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_MENU_MACRO_LIB" resourceValue="component://aurora-theme/includes/htmlMenuMacroLibrary.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_SHOP_HOME" resourceValue="component://aurora-shop-theme/includes/home.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/aurora-shop/images/favicon.ico" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/aurora/images/scipio-logo-small.svg" sequenceId="01"/>
+
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery/dist/jquery.min.js" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" sequenceId="02"/>
+
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-fonts.css" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-tokens.css" sequenceId="02"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/css/scipio-common.css" sequenceId="03"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-base.css" sequenceId="04"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-layout.css" sequenceId="05"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-components.css" sequenceId="06"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/font-awesome/css/font-awesome.min.css" sequenceId="07"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora-shop/css/aurora-shop.css" sequenceId="08"/>
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora-shop/css/aurora-shop-store.css" sequenceId="10"/>
+
+    <VisualThemeResource visualThemeId="AURORA_SHOP" resourceTypeEnumId="VT_FTR_JAVASCRIPT" resourceValue="/aurora-shop/js/aurora-shop.js" sequenceId="01"/>
+</entity-engine-xml>

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.service.job;
 
 import java.io.Serializable;
@@ -39,6 +45,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.LongAccumulator;
 import java.util.stream.Collectors;
 
+import org.ofbiz.entity.tenant.TenantLoad;
+import org.ofbiz.entity.util.Tenants;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.start.Start;
 import org.ofbiz.base.util.Assert;
@@ -75,6 +83,9 @@ public final class JobPoller implements ServiceConfigListener {
     private final long startupPollSleepWarnInterval = UtilProperties.getPropertyAsLong("service", "jobManager.debug.poll.startupPollSleepWarnInterval", -1);
     private final boolean startupPollSleepWarnIntervalVerbose = UtilProperties.getPropertyAsBoolean("service", "jobManager.debug.poll.startupPollSleepWarnInterval.verbose", false);
     private final int debugJobStatsTopServiceCount = UtilProperties.getPropertyAsInteger("service", "jobManager.debug.stats.topServiceCount", 10);
+    /** SCIPIO: 4.0.0: pooled runtime: at most this many jobs of one JobManager (store) per poll cycle; -1 = the plan of the
+     * store sets the cap (Tenants.Plan.getJobsPerPoll) in the pooled runtime, no cap otherwise (G17) */
+    private final int maxJobsPerManager = UtilProperties.getPropertyAsInteger("service", "jobManager.poll.maxJobsPerManager", -1);
 
     // SCIPIO: Global service stats, by service name
     private final Map<String, Map<String, GlobalServiceStats>> globalServiceStats = new ConcurrentHashMap<>();
@@ -149,6 +160,11 @@ public final class JobPoller implements ServiceConfigListener {
     public void registerJobManager(JobManager jm) {
         Assert.notNull("jm", jm);
         jobManagers.putIfAbsent(jm.getDelegator().getDelegatorName(), jm);
+    }
+
+    /** SCIPIO: 4.0.0: Pooled runtime: removes the JobManager of a delegator (a suspended store) from the poll cycle. */
+    public void unregisterJobManager(String delegatorName) {
+        jobManagers.remove(delegatorName);
     }
 
     private JobPoller() {
@@ -384,8 +400,15 @@ public final class JobPoller implements ServiceConfigListener {
      */
     public void queueNow(Job job) throws InvalidJobException {
         job.queue();
+        // SCIPIO: W1-01c: count the queued and running jobs of each store (plan jobThreads, G17)
+        if (job instanceof GenericServiceJob && Tenants.isPooled()) {
+            String tenantId = ((GenericServiceJob) job).getTenantId();
+            if (tenantId != null) {
+                ((AbstractJob) job).setDoneCallback(TenantLoad.jobQueued(tenantId));
+            }
+        }
         try {
-            executor.execute(job);
+            AbstractJob.execute(executor, job); // SCIPIO: W1-01c: ends the count when the executor does not take the job
         } catch (RejectedExecutionException e) { // SCIPIO: NOTE: This happens normally, as other comments indicate
             if (JobManager.isDebug()) {
                 Debug.log(JobManager.getDebugProblemLevel(), "Job [" + job.toLogId() + "] execution rejected by thread pool, will be dequeued and rescheduled: " + e.toString()
@@ -420,6 +443,8 @@ public final class JobPoller implements ServiceConfigListener {
                 } else {
                     Debug.logWarning("Problem while dequeueing job [" + queuedJob.toLogId() + "]: " + e.toString(), module);
                 }
+            } finally {
+                AbstractJob.endCount(task); // SCIPIO: W1-01c: the job count of the store (G17)
             }
         }
         Debug.logInfo("JobPoller shutdown completed.", module);
@@ -484,8 +509,31 @@ public final class JobPoller implements ServiceConfigListener {
                                 }
                                 continue;
                             }
+                            // SCIPIO: 4.0.0: pooled runtime: no jobs of a suspended store; a cap of jobs per store and
+                            // poll cycle from the store's plan (G10, G11, G17)
+                            String tenantId = jm.getDelegator().getDelegatorTenantId();
+                            int maxJobs = maxJobsPerManager;
+                            if (tenantId != null && Tenants.isPooled()) {
+                                if (!Tenants.isActive(tenantId)) {
+                                    continue;
+                                }
+                                if (maxJobs < 0) {
+                                    maxJobs = Tenants.getPlan(tenantId).getJobsPerPoll();
+                                }
+                                // W1-01c: crashed jobs of the store come back also while the store is at its cap
+                                jm.reloadCrashedJobs();
+                                // W1-01c: at most jobThreads queued or running jobs of the store in this JVM
+                                int jobThreads = Tenants.getPlan(tenantId).getJobThreads();
+                                if (jobThreads > 0) {
+                                    int free = jobThreads - TenantLoad.getActiveJobs(tenantId);
+                                    if (free <= 0) {
+                                        continue;
+                                    }
+                                    maxJobs = (maxJobs > 0) ? Math.min(maxJobs, free) : free;
+                                }
+                            }
                             jm.reloadCrashedJobs();
-                            pollResults.add(jm.poll(remainingCapacity).iterator());
+                            pollResults.add(jm.poll((maxJobs > 0) ? Math.min(remainingCapacity, maxJobs) : remainingCapacity).iterator());
                         }
                         // Create queue candidate list from "list of lists"
                         List<Job> queueCandidates = new ArrayList<>();

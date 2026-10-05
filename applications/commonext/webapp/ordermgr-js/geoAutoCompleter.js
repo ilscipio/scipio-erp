@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
 function getCountryList() {
     countryTargetField = jQuery('#shipToCountryGeo');
@@ -136,6 +142,13 @@ function getAssociatedStateListEx(options) {
                 }
                 stateSelect.append(jQuery('<option value="'+geoValues[1]+'"'+selectedStr+'>'+geoValues[0]+'</option>'));
             });
+            // SCIPIO: 4.0.0: with no earlier choice the first state was silently selected (e.g. "Armed Forces Americas");
+            // an empty first entry makes the shopper choose (the field's own placeholder text, else a dash)
+            if (!selected && stateList.length > 1) {
+                var placeholder = stateSelect.attr("data-placeholder") || "\u2014";
+                stateSelect.prepend(jQuery('<option value="" selected="selected"></option>').text(placeholder));
+                stateSelect.val("");
+            }
             // Scipio: FIXED for ID bugs
             if (stateList.length <= 1) {
                 if (jQuery("#" + divId).is(':visible') || jQuery("#" + errorId).is(':visible')) {

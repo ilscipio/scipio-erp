@@ -1,0 +1,1 @@
+context.shoppingCart = org.ofbiz.order.shoppingcart.ShoppingCartEvents.getCartObjectIfExists(request);

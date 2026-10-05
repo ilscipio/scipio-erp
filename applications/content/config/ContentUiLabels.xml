@@ -18,6 +18,12 @@
     specific language governing permissions and limitations
     under the License.
 -->
+<!--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="CannotFindCmsform">
         <value xml:lang="de">Die CMS Form kann nicht gefunden werden!</value>
@@ -1054,12 +1060,12 @@
         <value xml:lang="ar">تطبيق تسيير المحتوى</value>
         <value xml:lang="da">Indholdsadministraton applikation</value>
         <value xml:lang="de">Inhaltsverwaltung Anwendung</value>
-        <value xml:lang="en">Content Manager Application</value>
+        <value xml:lang="en">Content Management Application</value>
         <value xml:lang="es">Aplicación de Administración de Contenidos</value>
         <value xml:lang="fr">Application de gestion de contenu</value>
         <value xml:lang="it">Applicazione gestione contenuti</value>
         <value xml:lang="ja">コンテンツ管理業務</value>
-        <value xml:lang="nl">Content Manager Applicatie</value>
+        <value xml:lang="nl">Content Management Applicatie</value>
         <value xml:lang="pt">Aplicativo do Gerenciador de conteúdo</value>
         <value xml:lang="ro">Aplicatie Gestiune Continuturi</value>
         <value xml:lang="th">หัวข้อการจัดการที่นำไปประยุกต์ใช้</value>
@@ -4067,13 +4073,13 @@
         <value xml:lang="it">SEO Sito Web</value>
     </property>
     <property key="ContentWelcome">
-        <value xml:lang="da">Velkommen til Content Manager</value>
+        <value xml:lang="da">Velkommen til Content Management</value>
         <value xml:lang="de">Wilkommen im CMS!</value>
-        <value xml:lang="en">Welcome to the Content Manager!</value>
+        <value xml:lang="en">Welcome to the Content Management!</value>
         <value xml:lang="fr">Gestionnaire de contenu : bienvenue !</value>
         <value xml:lang="it">Benvenuti nella gestione contenuti!</value>
         <value xml:lang="ja">コンテンツ管理へようこそ!</value>
-        <value xml:lang="nl">Welkom in de Content Manager</value>
+        <value xml:lang="nl">Welkom in de Content Management</value>
         <value xml:lang="pt">Bem-vindo ao Gerenciador de conteúdo!</value>
         <value xml:lang="vi">Chào mừng bạn đến với khu vực Quản trị nội dung!</value>
         <value xml:lang="zh">欢迎使用内容管理程序！</value>

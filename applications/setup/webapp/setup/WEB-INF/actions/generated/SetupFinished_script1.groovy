@@ -1,0 +1,1 @@
+context.incompleteSteps = context.setupWorker?.getIncompleteSteps();

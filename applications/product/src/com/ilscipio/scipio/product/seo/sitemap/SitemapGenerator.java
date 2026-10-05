@@ -1,5 +1,22 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.product.seo.sitemap;
 
+import org.ofbiz.entity.tenant.TenantFiles;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -113,7 +130,9 @@ public class SitemapGenerator extends SeoCatalogTraverser {
         this.urlRewriter = urlRewriteConf;
         this.urlRewriterCtx = urlRewriterCtx;
         this.webappInfo = FullWebappInfo.fromWebapp(ExtWebappInfo.fromWebSiteId(webSiteId), delegator, null);
-        this.fullSitemapDir = sitemapConfig.getSitemapDirUrlLocation(webappInfo.getWebappInfo().getLocation());
+        // SCIPIO: 4.0.0: pooled runtime: each store writes its sitemaps into <sitemapDir>/tenants/<tenantId> (G7);
+        // TenantPathFilter serves /sitemaps/<file> from the folder of the host's store
+        this.fullSitemapDir = TenantFiles.scopePath(sitemapConfig.getSitemapDirUrlLocation(webappInfo.getWebappInfo().getLocation()), delegator);
         this.servCtxOpts = servCtxOpts;
         getSitemapDirFile(); // test this for exception
         reset();
@@ -1181,6 +1200,11 @@ public class SitemapGenerator extends SeoCatalogTraverser {
     public void commitSitemapsAndIndex() throws IOException, URISyntaxException {
         commitSitemaps();
         generateSitemapIndex(getAllSitemapFilenames());
+        // SCIPIO: 4.0.0: pooled runtime: the web JVMs read the store's sitemaps from the object storage (G7)
+        String tenantId = getDelegator().getDelegatorTenantId();
+        if (tenantId != null) {
+            TenantFiles.mirrorFolder(tenantId, TenantFiles.AREA_SITEMAPS, "", getSitemapDirFile());
+        }
     }
 
     // old, unused

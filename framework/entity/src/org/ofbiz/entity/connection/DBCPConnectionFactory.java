@@ -16,15 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.entity.connection;
 
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.transaction.TransactionManager;
 
@@ -37,6 +48,7 @@ import org.apache.commons.dbcp2.managed.XAConnectionFactory;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericEntityConfException;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.config.model.EntityConfig;
@@ -45,6 +57,7 @@ import org.ofbiz.entity.config.model.JdbcElement;
 import org.ofbiz.entity.datasource.GenericHelperInfo;
 import org.ofbiz.entity.transaction.TransactionFactoryLoader;
 import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.util.Tenants;
 
 /**
  * Apache Commons DBCP connection factory.
@@ -59,8 +72,19 @@ public class DBCPConnectionFactory implements ConnectionFactory {
     protected static final ConcurrentHashMap<String, DebugManagedDataSource<? extends Connection>> dsCache =
             new ConcurrentHashMap<>();
 
+    /** SCIPIO: 4.0.0: Pooled runtime: last borrow time per store pool (key: helper full name with "#tenantId") (G12). */
+    private static final ConcurrentHashMap<String, AtomicLong> tenantPoolLastUse = new ConcurrentHashMap<>();
+    /** SCIPIO: 4.0.0: Pooled runtime: close the pool of a store after this many seconds without a borrow (0 = never). */
+    private static final long TENANT_POOL_IDLE_CLOSE_MS = UtilProperties.getPropertyAsLong("general", "tenant.pool.idleCloseSeconds", 900L) * 1000L;
+    private static final long TENANT_POOL_CLOSE_GRACE_MS = 30000L;
+    private static volatile ScheduledExecutorService tenantPoolReaper;
+
     public Connection getConnection(GenericHelperInfo helperInfo, JdbcElement abstractJdbc) throws SQLException, GenericEntityException {
         String cacheKey = helperInfo.getHelperFullName();
+        boolean tenantPool = !helperInfo.getTenantId().isEmpty();
+        if (tenantPool) {
+            markTenantPoolUse(cacheKey);
+        }
         DebugManagedDataSource<? extends Connection> mds = dsCache.get(cacheKey);
         if (mds != null) {
             return TransactionUtil.getCursorConnection(helperInfo, mds.getConnection());
@@ -79,6 +103,13 @@ public class DBCPConnectionFactory implements ConnectionFactory {
 
         // pool settings
         int maxSize = jdbcElement.getPoolMaxsize();
+        if (tenantPool && Tenants.isPooled()) {
+            // SCIPIO: 4.0.0: pooled runtime: the plan of the store sets the size of its pool (G12, G17)
+            int planMax = Tenants.getPlan(helperInfo.getTenantId()).getDbPoolMax();
+            if (planMax > 0) {
+                maxSize = planMax;
+            }
+        }
         int minSize = jdbcElement.getPoolMinsize();
         int maxIdle = jdbcElement.getIdleMaxsize();
         // maxIdle must be greater than pool-minsize
@@ -153,10 +184,128 @@ public class DBCPConnectionFactory implements ConnectionFactory {
         mds.setAccessToUnderlyingConnectionAllowed(true);
 
         // cache the pool
-        dsCache.putIfAbsent(cacheKey, mds);
-        mds = dsCache.get(cacheKey);
+        DebugManagedDataSource<? extends Connection> prev = dsCache.putIfAbsent(cacheKey, mds);
+        if (prev != null) {
+            closeQuietly(cacheKey, mds); // SCIPIO: 4.0.0: another thread created the pool first; do not leak this one
+            mds = prev;
+        } else if (tenantPool) {
+            startTenantPoolReaper();
+        }
 
         return TransactionUtil.getCursorConnection(helperInfo, mds.getConnection());
+    }
+
+    private static void markTenantPoolUse(String cacheKey) {
+        AtomicLong last = tenantPoolLastUse.get(cacheKey);
+        if (last == null) {
+            last = tenantPoolLastUse.computeIfAbsent(cacheKey, k -> new AtomicLong());
+        }
+        last.set(System.currentTimeMillis());
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Pooled runtime: closes the connection pools of one store (all its datasources), for example when
+     * the store is suspended. The next connection request of the store creates a new pool. Returns the number of pools.
+     */
+    public static int closeTenantPools(String tenantId) {
+        int closed = 0;
+        String suffix = "#" + tenantId;
+        for (String key : new ArrayList<>(dsCache.keySet())) {
+            if (key.endsWith(suffix)) {
+                DebugManagedDataSource<? extends Connection> mds = dsCache.remove(key);
+                tenantPoolLastUse.remove(key);
+                if (mds != null) {
+                    scheduleClose(key, mds);
+                    closed++;
+                }
+            }
+        }
+        return closed;
+    }
+
+    /** SCIPIO: 4.0.0: Pooled runtime: the number of open store pools and of all pools (for the samplers). */
+    public static Map<String, Object> getPoolCounts() {
+        int tenantPools = 0;
+        for (String key : dsCache.keySet()) {
+            if (key.indexOf('#') >= 0) {
+                tenantPools++;
+            }
+        }
+        Map<String, Object> counts = new HashMap<>();
+        counts.put("pools", dsCache.size());
+        counts.put("tenantPools", tenantPools);
+        return counts;
+    }
+
+    private static void startTenantPoolReaper() {
+        if (tenantPoolReaper != null) {
+            return;
+        }
+        synchronized (DBCPConnectionFactory.class) {
+            if (tenantPoolReaper != null) {
+                return;
+            }
+            ScheduledExecutorService reaper = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "Scipio-TenantPoolReaper");
+                t.setDaemon(true);
+                return t;
+            });
+            if (TENANT_POOL_IDLE_CLOSE_MS > 0) {
+                long period = Math.max(10000L, Math.min(60000L, TENANT_POOL_IDLE_CLOSE_MS / 4));
+                reaper.scheduleWithFixedDelay(DBCPConnectionFactory::closeIdleTenantPools, period, period, TimeUnit.MILLISECONDS);
+            }
+            tenantPoolReaper = reaper;
+        }
+    }
+
+    /**
+     * Closes the pools of stores without a borrow for tenant.pool.idleCloseSeconds, so that the number of pools follows
+     * the active stores, not all stores (G12). A pool with a connection in use stays open.
+     */
+    private static void closeIdleTenantPools() {
+        try {
+            long limit = System.currentTimeMillis() - TENANT_POOL_IDLE_CLOSE_MS;
+            for (Map.Entry<String, AtomicLong> entry : tenantPoolLastUse.entrySet()) {
+                String key = entry.getKey();
+                if (entry.getValue().get() >= limit) {
+                    continue;
+                }
+                DebugManagedDataSource<? extends Connection> mds = dsCache.get(key);
+                if (mds == null) {
+                    tenantPoolLastUse.remove(key, entry.getValue());
+                    continue;
+                }
+                if (mds.getNumActive() > 0) {
+                    continue;
+                }
+                if (dsCache.remove(key, mds)) {
+                    tenantPoolLastUse.remove(key, entry.getValue());
+                    scheduleClose(key, mds);
+                }
+            }
+        } catch (RuntimeException e) {
+            Debug.logWarning(e, "Could not close idle store connection pools", module);
+        }
+    }
+
+    /**
+     * Closes a pool that is no longer in dsCache after a grace time: a thread that read the pool from dsCache just
+     * before the removal still gets its connection. Connections returned after the close are destroyed.
+     */
+    private static void scheduleClose(String key, DebugManagedDataSource<? extends Connection> mds) {
+        startTenantPoolReaper();
+        tenantPoolReaper.schedule(() -> closeQuietly(key, mds), TENANT_POOL_CLOSE_GRACE_MS, TimeUnit.MILLISECONDS);
+    }
+
+    private static void closeQuietly(String key, DebugManagedDataSource<? extends Connection> mds) {
+        try {
+            mds.close();
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Closed connection pool " + key, module);
+            }
+        } catch (Exception e) {
+            Debug.logWarning("Could not close connection pool " + key + ": " + e.getMessage(), module);
+        }
     }
 
     public void closeAll() {

@@ -1,7 +1,18 @@
 <#--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 <#include "component://shop/webapp/shop/customer/customercommon.ftl">
 
@@ -146,10 +157,10 @@ code package.
           <@fieldErrors fieldName="USERNAME"/>
           <@field type="checkbox" checkboxType="simple-standard" name="UNUSEEMAIL" id="UNUSEEMAIL" value="on" 
             onClick="setEmailUsername();" onFocus="setLastFocused(this);" label=uiLabelMap.EcommerceUseEmailAddress 
-            checked=((parameters.UNUSEEMAIL!) == "on")/>
+            checked=((parameters.UNUSEEMAIL!"on") == "on")/>
         </#macro>
         <#assign fieldStyle = "">
-        <#if ((parameters.UNUSEEMAIL!) == "on")>
+        <#if ((parameters.UNUSEEMAIL!"on") == "on")>
           <#assign fieldStyle = "display:none;">
         </#if>
         <@field type="text" name="USERNAME" id="USERNAME" style=fieldStyle value=(parameters.USERNAME!) onFocus="clickUsername();" onchange="changeEmail();" 
@@ -173,7 +184,7 @@ code package.
       <#macro extraFieldContent args={}>
         <@fieldErrors fieldName="PASSWORD_HINT"/>
       </#macro>
-      <@field type="input" name="PASSWORD_HINT" id="PASSWORD_HINT" value=(parameters.PASSWORD_HINT!) 
+      <@field type="input" name="PASSWORD_HINT" id="PASSWORD_HINT" value=(parameters.PASSWORD_HINT!) containerClass="+${styles.field_extra!}" 
         maxlength="100"label=uiLabelMap.PartyPasswordHint postWidgetContent=extraFieldContent/>
     <#else>
       <@commonMsg type="info-important">${uiLabelMap.PartyReceivePasswordByEmail}.</@commonMsg>
@@ -189,7 +200,7 @@ code package.
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_TITLE"/>
     </#macro>
-    <@personalTitleField name="USER_TITLE" label=uiLabelMap.CommonTitle postWidgetContent=extraFieldContent/> 
+    <@personalTitleField name="USER_TITLE" label=uiLabelMap.CommonTitle postWidgetContent=extraFieldContent containerClass="+${styles.field_extra!}"/> 
     
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_FIRST_NAME"/>
@@ -200,7 +211,7 @@ code package.
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_MIDDLE_NAME"/>
     </#macro>
-    <@field type="input" name="USER_MIDDLE_NAME" id="USER_MIDDLE_NAME" value=(parameters.USER_MIDDLE_NAME!) 
+    <@field type="input" name="USER_MIDDLE_NAME" id="USER_MIDDLE_NAME" value=(parameters.USER_MIDDLE_NAME!) containerClass="+${styles.field_extra!}" 
         label=uiLabelMap.PartyMiddleInitial postWidgetContent=extraFieldContent/>
 
     <#macro extraFieldContent args={}>
@@ -212,7 +223,7 @@ code package.
     <#macro extraFieldContent args={}>
       <@fieldErrors fieldName="USER_SUFFIX"/>
     </#macro>
-    <@field type="input" name="USER_SUFFIX" id="USER_SUFFIX" value=(parameters.USER_SUFFIX!) 
+    <@field type="input" name="USER_SUFFIX" id="USER_SUFFIX" value=(parameters.USER_SUFFIX!) containerClass="+${styles.field_extra!}" 
         label=uiLabelMap.PartySuffix postWidgetContent=extraFieldContent containerClass="+${styles.field_extra!}"/>
 
   </fieldset>
@@ -293,7 +304,7 @@ code package.
       </@fields>
     </@telecomNumberField>
 
-    <@telecomNumberField label=uiLabelMap.PartyBusinessPhone fieldNamePrefix="CUSTOMER_WORK_" showExt=true
+    <@telecomNumberField label=uiLabelMap.PartyBusinessPhone fieldNamePrefix="CUSTOMER_WORK_" showExt=true containerClass="+${styles.field_extra!}"
         countryCodeName="COUNTRY" areaCodeName="AREA" contactNumberName="CONTACT" extensionName="EXT">
       <@fields type="default-compact" ignoreParentField=true>
         <@allowSolicitationField name="CUSTOMER_WORK_ALLOW_SOL" containerClass="+${styles.field_extra!}" />

@@ -1,0 +1,98 @@
+{
+  "id": "at",
+  "version": 1,
+  "name": "Austria",
+  "country": "AT",
+  "locale": "de",
+  "currency": "EUR",
+  "dataRegion": "EU",
+  "jurisdictions": ["EU", "AT"],
+  "profile": {
+    "countryGeoId": "AUT",
+    "consentMode": "EU_OPT_IN",
+    "withdrawalDays": "14",
+    "returnDays": "14",
+    "legalGuaranteeYears": "2",
+    "retentionYears": "7",
+    "euOrderButton": "Y"
+  },
+  "sellerFields": [
+    {"id": "legalForm", "label": "Legal form and company name (for example GmbH, e.U.)", "required": true, "target": "StoreComplianceProfile.legalName"},
+    {"id": "address", "label": "Address of the seat", "required": true, "target": "StoreComplianceProfile.addressLine"},
+    {"id": "contact", "label": "E-mail and phone", "required": true, "target": "StoreComplianceProfile.contactEmail"},
+    {"id": "register", "label": "Firmenbuchnummer and Firmenbuchgericht (companies)", "required": false, "target": "StoreComplianceProfile.registerNumber"},
+    {"id": "vatId", "label": "UID number (ATU...)", "required": false, "target": "StoreComplianceProfile.vatId"},
+    {"id": "authority", "label": "Chamber (Kammer), trade authority (Aufsichtsbehörde) and trade rules, when they apply", "required": false, "target": "StoreComplianceProfile.supervisoryAuthority"}
+  ],
+  "legalTemplates": [
+    {"slug": "imprint", "docTypeId": "LEGDOC_IMPRINT"},
+    {"slug": "terms", "docTypeId": "LEGDOC_TERMS"},
+    {"slug": "privacy", "docTypeId": "LEGDOC_PRIVACY"},
+    {"slug": "cookies", "docTypeId": "LEGDOC_COOKIES"},
+    {"slug": "withdrawal", "docTypeId": "LEGDOC_WITHDRAWAL"},
+    {"slug": "returns", "docTypeId": "LEGDOC_RETURNS"},
+    {"slug": "accessibility", "docTypeId": "LEGDOC_ACCESSIBILITY"}
+  ],
+  "tasks": [
+    {
+      "id": "seller-data", "title": "Enter the seller data for the imprint", "kind": "info", "required": true,
+      "detail": "The imprint needs your name or company name, address, e-mail, phone, and the Firmenbuch and UID data when you have them. Until you do, the live imprint shows marked gaps."
+    },
+    {
+      "id": "packaging-scheme", "title": "License your packaging with a collection and recovery scheme", "kind": "registration", "required": true,
+      "numberLabel": "Licence or contract number of the scheme",
+      "eprScheme": "EPR_PACKAGING", "eprCountry": "AUT",
+      "detail": "A seller that ships packed goods to buyers in Austria licenses the packaging with an approved collection and recovery scheme. Austria has its own scheme; it is not LUCID. Enter the number here."
+    },
+    {
+      "id": "gpsr", "title": "Name the product-safety contact in the EU (GPSR)", "kind": "info", "required": true,
+      "detail": "Each product needs the name and address of the manufacturer and, for a maker outside the EU, an EU responsible person. Enter them on the product."
+    },
+    {
+      "id": "small-business", "title": "Decide on the small-business rule (Kleinunternehmerregelung)", "kind": "decision", "required": false,
+      "detail": "Austria has its own small-business rule with its own threshold. With the rule, invoices carry the note that no VAT is charged. Ask your tax adviser."
+    },
+    {
+      "id": "oss", "title": "Register for the EU One-Stop-Shop when your EU distance sales pass 10,000 euro a year", "kind": "registration", "required": false,
+      "numberLabel": "OSS VAT number",
+      "detail": "Above the threshold, VAT of the buyer country applies to sales to consumers in other EU countries. Register the OSS through FinanzOnline."
+    },
+    {
+      "id": "weee", "title": "Register electrical products in Austria (WEEE)", "kind": "registration", "required": false,
+      "numberLabel": "WEEE registration number",
+      "eprScheme": "EPR_WEEE", "eprCountry": "AUT",
+      "detail": "Only when you sell electrical or electronic products. Mark the task NOT_NEEDED when you do not."
+    }
+  ],
+  "storefrontRules": [
+    "Order button text: 'Zahlungspflichtig bestellen' (or 'Kaufen'); the checkout says it clearly.",
+    "Total price with VAT and shipping cost before the order.",
+    "Unit price for goods sold by weight, volume, length or area.",
+    "Withdrawal within 14 days (FAGG); the withdrawal button is reachable at the bottom of every page.",
+    "Product-safety contact on the product page.",
+    "Cookie consent only when non-necessary trackers run."
+  ],
+  "tax": {
+    "provider": "stripe-tax",
+    "ossThresholdEur": 10000,
+    "notes": [
+      {"id": "kleinunternehmer", "text": "Austrian small-business rule: own threshold and invoice note; it differs from section 19 UStG in Germany."},
+      {"id": "oss", "text": "EU One-Stop-Shop: above 10,000 euro of EU distance sales a year, VAT of the destination country applies."},
+      {"id": "marketplace", "text": "On eBay and Amazon the marketplace collects and reports VAT as facilitator where the law says so."}
+    ]
+  },
+  "invoiceNotes": [
+    "Invoice with UID of the seller and, for B2B sales, the UID of the buyer.",
+    "E-invoicing to public bodies: structured invoice through the federal portal (verify)."
+  ],
+  "payments": ["Cards", "SEPA direct debit", "PayPal", "Klarna", "EPS", "Apple Pay", "Google Pay"],
+  "carriers": ["Austrian Post", "DHL", "DPD"],
+  "books": "accountingat",
+  "verify": [
+    "The name and the duty of the Austrian packaging scheme (gap analysis 4.9: AT has its own scheme)",
+    "Threshold and invoice note of the Austrian small-business rule",
+    "Retention of 7 years (BAO)",
+    "Austrian Post coverage",
+    "Whether the imprint needs more items for the trade of the seller (Gewerbeordnung, chamber)"
+  ]
+}

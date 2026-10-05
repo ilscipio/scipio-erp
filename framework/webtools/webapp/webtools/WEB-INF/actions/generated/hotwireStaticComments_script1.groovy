@@ -1,0 +1,1 @@
+context.hotwireComments = session.getAttribute('hotwireComments');

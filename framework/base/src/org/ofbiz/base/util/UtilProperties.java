@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.base.util;
 
 import java.io.BufferedInputStream;
@@ -1996,7 +2002,9 @@ public final class UtilProperties implements Serializable {
         // SCIPIO: Attempt to integrate LocalizedProperty entries
         if (entityResourceToPropertiesMethod == null) {
             try {
-                entityResourceToPropertiesMethod = Class.forName("org.ofbiz.entity.util.EntityUtilProperties")
+                // SCIPIO: 4.0.0: Use thread context classloader for cross-module class loading
+                ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+                entityResourceToPropertiesMethod = Class.forName("org.ofbiz.entity.util.EntityUtilProperties", true, tccl)
                         .getMethod("entityResourceToProperties", String.class, Locale.class, Properties.class, Object.class, boolean.class);
             } catch (Exception e) {
                 Debug.logError(e, module);
@@ -2017,7 +2025,9 @@ public final class UtilProperties implements Serializable {
     public static Map<String, Map<String, String>> entityResourceToLocalePropertyMap(String resourceName, boolean sort, Object delegator, boolean useCache, Map<String, Map<String, String>> out) throws IOException, InvalidPropertiesFormatException {
         if (entityResourceToLocalePropertyMapMethod == null) {
             try {
-                entityResourceToLocalePropertyMapMethod = Class.forName("org.ofbiz.entity.util.EntityUtilProperties")
+                // SCIPIO: 4.0.0: Use thread context classloader for cross-module class loading
+                ClassLoader tccl = Thread.currentThread().getContextClassLoader();
+                entityResourceToLocalePropertyMapMethod = Class.forName("org.ofbiz.entity.util.EntityUtilProperties", true, tccl)
                         .getMethod("entityResourceToLocalePropertyMap", String.class, boolean.class, Object.class, boolean.class, Map.class);
             } catch (Exception e) {
                 Debug.logError(e, module);

@@ -1,0 +1,64 @@
+# Header rules for L-01 (docs/wp/L-01.md). Read by the header check (buildSrc, task checkLicenseHeaders)
+# and by apply_headers.py. One rule per line: "<kind> <value>". A line that starts with # is a comment.
+
+# Source file types that carry a header (extension, lower case) and the comment style of each.
+type .java block
+type .groovy block
+type .kt block
+type .kts block
+type .js block
+type .css block
+type .scss block
+type .less block
+type .xml xml
+type .xsd xml
+type .ftl ftl
+type .jsp jsp
+type .properties hash
+type .sh hash
+type .py hash
+type .bat rem
+
+# A directory with one of these names, at any depth, is skipped (third-party, generated or build output).
+skip-dir node_modules
+skip-dir bower_components
+skip-dir lib
+skip-dir libs
+skip-dir vendor
+skip-dir dist
+skip-dir build
+skip-dir runtime
+skip-dir .gradle
+skip-dir .idea
+skip-dir .git
+skip-dir generated
+
+# A path prefix is skipped for every file type (a repository in its own right, or the Gradle wrapper).
+skip-prefix addons/
+skip-prefix gradle/wrapper/
+# OFBiz file that has no header in the OFBiz tree; it keeps none (rule 3 in docs/wp/L-01.md).
+skip-prefix framework/resources/templates/build.xml
+# The header tools hold the header texts as data.
+skip-prefix buildSrc/license-headers/
+# W3C and DocBook schemas.
+skip-prefix applications/content/dtd/docbook.xsd
+skip-prefix applications/content/dtd/xlink.xsd
+skip-prefix applications/content/dtd/xml.xsd
+
+# A path prefix is skipped for web assets only (js, css, scss, less): vendored themes and third-party web apps.
+skip-web-prefix themes/ignite-admin/webapp/ignite/
+skip-web-prefix themes/ignite-shop/webapp/ignite/
+skip-web-prefix framework/images/webapp/images/
+skip-web-prefix applications/solr/webapp/
+# Compiled CSS (the source is the scss folder next to it).
+skip-web-prefix themes/base/webapp/base/stylesheets/
+skip-web-prefix themes/base/webapp/base/rtl/
+skip-web-prefix themes/metro/webapp/metro/stylesheets/
+skip-web-prefix themes/metro/webapp/metro/rtl/
+
+# A file name (glob) is skipped: dot files (IDE and tool files), minified and map files, the Gradle wrapper scripts.
+skip-name .*
+skip-name *.min.js
+skip-name *.min.css
+skip-name gradlew
+skip-name gradlew.bat

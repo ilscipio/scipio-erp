@@ -16,6 +16,12 @@
   specific language governing permissions and limitations
   under the License.
   -->
+<#--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 <object type="application/x-shockwave-flash" data="/images/FlowPlayerLP.swf" width="320" height="263" id="FlowPlayer">
     <param name="movie" value="/images/FlowPlayerLP.swf" />
     <param name="quality" value="high" />

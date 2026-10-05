@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.cms.template;
 
 import java.io.IOException;
@@ -408,8 +424,20 @@ public abstract class CmsTemplate extends CmsDataObject {
             }
 
             // force this for now: dataResource.getString("mimeTypeId")
-            String effectiveBody = DataResourceWorker.getDataResourceText(dataResource,
-                    "text/plain", Locale.getDefault(), new HashMap<>(), delegator, useCache);
+            String effectiveBody;
+            try {
+                effectiveBody = DataResourceWorker.getDataResourceText(dataResource,
+                        "text/plain", Locale.getDefault(), new HashMap<>(), delegator, useCache);
+            } catch (Exception e) {
+                // SCIPIO: 4.0.0: widget screen locations (*Screens.xml) may exist only as annotation classes (no file);
+                // their body is never needed (executed via ScreenFactory by location), so tolerate the missing file
+                String loc = dataResource.getString("objectInfo");
+                if (loc != null && loc.endsWith("Screens.xml")) {
+                    effectiveBody = null;
+                } else {
+                    throw new CmsException("Could not get template content for " + contentId, e);
+                }
+            }
 
             String storedBody = null;
             String location = null;
@@ -435,7 +463,7 @@ public abstract class CmsTemplate extends CmsDataObject {
             return new TemplateBodySource(dataResourceTypeId, effectiveBody, storedBody, location);
         } catch (GenericEntityException e) {
             throw new CmsException("Could not get template content", e);
-        } catch (IOException e) {
+        } catch (RuntimeException e) {
             throw new CmsException("Could not get template content", e);
         } catch (GeneralException e) {
             throw new CmsException("Could not get template content", e);

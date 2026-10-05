@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.service.def;
 
 import com.ilscipio.scipio.ce.base.metrics.def.Metric;
@@ -289,5 +305,36 @@ public @interface Service {
      * <p>May also be specified by repeatable {@link Property} annotations on @Service.</p>
      */
     Property[] properties() default {};
+
+    /**
+     * Service engine type (java, entity-auto, simple, groovy, script, interface, group, etc.).
+     */
+    String engine() default "";
+
+    /**
+     * Service implementation location (class name, script path, etc.).
+     */
+    String location() default "";
+
+    /**
+     * Service method/function to invoke.
+     */
+    String invoke() default "";
+
+    /**
+     * Group service invocations (for engine="group").
+     */
+    GroupInvoke[] invokes() default {};
+
+    /**
+     * Defines a group service invocation entry.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({})
+    @interface GroupInvoke {
+        String name();
+        String mode() default "sync";
+        String resultToContext() default "true";
+    }
 
 }

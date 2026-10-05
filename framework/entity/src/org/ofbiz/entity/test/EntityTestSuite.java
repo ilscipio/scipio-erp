@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.entity.test;
 
 import java.math.BigDecimal;
@@ -1301,5 +1307,91 @@ public class EntityTestSuite extends EntityTestCase {
             this.observable = observable;
             this.arg = arg;
         }
+    }
+
+    /**
+     * Tests annotation-based view entities.
+     *
+     * <p>SCIPIO: 4.0.0: Added to verify @ViewEntity annotation support works correctly.</p>
+     */
+    public void testAnnotationBasedViewEntities() throws Exception {
+        // Test 1: Verify TestingViewPksAnnotated view entity exists and works
+        // First, ensure we have test data
+        delegator.removeByCondition("TestingSubtype", EntityCondition.makeCondition("testingTypeId", EntityOperator.LIKE, "TEST-ANN-VIEW-%"));
+        delegator.removeByCondition("TestingType", EntityCondition.makeCondition("testingTypeId", EntityOperator.LIKE, "TEST-ANN-VIEW-%"));
+
+        // Create test data
+        delegator.create("TestingType", "testingTypeId", "TEST-ANN-VIEW-1", "description", "Testing Type for Annotation View #1");
+        delegator.create("TestingSubtype", "testingTypeId", "TEST-ANN-VIEW-1", "subtypeDescription", "Testing Subtype for Annotation View #1");
+
+        // Query using the annotation-based view entity
+        GenericValue viewResult = EntityQuery.use(delegator)
+                .from("TestingViewPksAnnotated")
+                .where("testingTypeId", "TEST-ANN-VIEW-1")
+                .queryOne();
+
+        assertNotNull("TestingViewPksAnnotated returned a result", viewResult);
+        assertEquals("TestingViewPksAnnotated has correct testingTypeId",
+                "TEST-ANN-VIEW-1", viewResult.getString("testingTypeId"));
+        assertEquals("TestingViewPksAnnotated has correct description from TestingType",
+                "Testing Type for Annotation View #1", viewResult.getString("description"));
+        assertEquals("TestingViewPksAnnotated has correct subtypeDescription from TestingSubtype",
+                "Testing Subtype for Annotation View #1", viewResult.getString("subtypeDescription"));
+
+        // Test 2: Verify the view entity model exists
+        ModelEntity modelEntity = delegator.getModelEntity("TestingViewPksAnnotated");
+        assertNotNull("TestingViewPksAnnotated model entity exists", modelEntity);
+        assertTrue("TestingViewPksAnnotated is a view entity", modelEntity instanceof org.ofbiz.entity.model.ModelViewEntity);
+
+        // Cleanup
+        delegator.removeByCondition("TestingSubtype", EntityCondition.makeCondition("testingTypeId", EntityOperator.LIKE, "TEST-ANN-VIEW-%"));
+        delegator.removeByCondition("TestingType", EntityCondition.makeCondition("testingTypeId", EntityOperator.LIKE, "TEST-ANN-VIEW-%"));
+
+        Debug.logInfo("testAnnotationBasedViewEntities: All annotation-based view entity tests passed", module);
+    }
+
+    /**
+     * Tests annotation-based view entity with complex-alias.
+     *
+     * <p>SCIPIO: 4.0.0: Added to verify @ViewEntity with @ComplexAlias annotation support.</p>
+     */
+    public void testAnnotationBasedViewEntityComplexAlias() throws Exception {
+        // Verify TestingCryptoRawViewAnnotated view entity exists
+        ModelEntity modelEntity = delegator.getModelEntity("TestingCryptoRawViewAnnotated");
+        assertNotNull("TestingCryptoRawViewAnnotated model entity exists", modelEntity);
+        assertTrue("TestingCryptoRawViewAnnotated is a view entity", modelEntity instanceof org.ofbiz.entity.model.ModelViewEntity);
+
+        org.ofbiz.entity.model.ModelViewEntity viewEntity = (org.ofbiz.entity.model.ModelViewEntity) modelEntity;
+
+        // Verify the complex-alias fields exist
+        ModelField rawEncryptedField = viewEntity.getField("rawEncryptedValue");
+        assertNotNull("rawEncryptedValue field exists in TestingCryptoRawViewAnnotated", rawEncryptedField);
+
+        ModelField rawSaltedField = viewEntity.getField("rawSaltedEncryptedValue");
+        assertNotNull("rawSaltedEncryptedValue field exists in TestingCryptoRawViewAnnotated", rawSaltedField);
+
+        Debug.logInfo("testAnnotationBasedViewEntityComplexAlias: All complex-alias annotation tests passed", module);
+    }
+
+    /**
+     * Tests annotation-based extend-entity.
+     *
+     * <p>SCIPIO: 4.0.0: Added to verify @ExtendEntity annotation support works correctly.</p>
+     */
+    public void testAnnotationBasedExtendEntity() throws Exception {
+        // Verify TestingType has the annotated extension field added by @ExtendEntity
+        ModelEntity modelEntity = delegator.getModelEntity("TestingType");
+        assertNotNull("TestingType model entity exists", modelEntity);
+
+        // Check that the extension field was added via annotation
+        ModelField extField = modelEntity.getField("annotatedExtField");
+        assertNotNull("annotatedExtField field exists in TestingType (added via @ExtendEntity annotation)", extField);
+        assertEquals("annotatedExtField field has correct type", "description", extField.getType());
+
+        // Verify index was added
+        boolean hasIndex = modelEntity.getIndex("TST_TYPE_ANN_EXT") != null;
+        assertTrue("TST_TYPE_ANN_EXT index exists in TestingType (added via @ExtendEntity annotation)", hasIndex);
+
+        Debug.logInfo("testAnnotationBasedExtendEntity: @ExtendEntity annotation tests passed", module);
     }
 }

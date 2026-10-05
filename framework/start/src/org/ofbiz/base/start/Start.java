@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.base.start;
 
 import java.io.BufferedReader;
@@ -95,6 +101,11 @@ public final class Start {
     }
 
     public static void main(String[] args) throws StartupException {
+        // SCIPIO: 4.0.0: load the installed NIO file system providers first. When one provider fails to load (a jar
+        // conflict once broke sshd's SftpFileSystemProvider), the JDK leaves its loading flag set, and every later
+        // call - Groovy's first compile in ScriptUtil, for one - throws "Circular loading of installed providers
+        // detected", far from the cause. Here the real error stops the start.
+        java.nio.file.spi.FileSystemProvider.installedProviders();
         Command command = null;
         List<String> loaderArgs = new ArrayList<String>(args.length);
         boolean shutdownWait = false; // SCIPIO

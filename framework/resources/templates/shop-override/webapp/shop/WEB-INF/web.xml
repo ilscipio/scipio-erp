@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
 <web-app version="3.0">
     <display-name>SCIPIO ERP - @component-resource-name@ Component</display-name>
     <description>@component-resource-name@ Component of the SCIPIO ERP Project</description>
@@ -104,6 +120,21 @@
 
     <!-- SCIPIO: UrlRewriteFilter - processes urlrewrite.xml
         NOTE: 2017-11-01: SimpleRedirectFilter is replaced by UrlRewriteFilter. -->
+    <!-- SCIPIO: 4.0.0: pooled runtime: resolves the store from the Host header before the URL, CMS and SEO filters
+        read a delegator (no-op when multitenant=N) -->
+    <filter>
+        <filter-name>TenantFilter</filter-name>
+        <filter-class>org.ofbiz.webapp.control.TenantFilter</filter-class>
+    </filter>
+    <!-- SCIPIO: 4.0.0: pooled runtime: /sitemaps/<file> serves the sitemaps of the host's store (sitemaps/tenants/<tenantId>/),
+        read from the object storage when this JVM lacks them (no-op when multitenant=N) -->
+    <filter>
+        <filter-name>TenantSitemapFilter</filter-name>
+        <filter-class>org.ofbiz.webapp.control.TenantPathFilter</filter-class>
+        <init-param><param-name>prefix</param-name><param-value>/sitemaps</param-value></init-param>
+        <init-param><param-name>layout</param-name><param-value>host</param-value></init-param>
+        <init-param><param-name>area</param-name><param-value>sitemaps</param-value></init-param>
+    </filter>
     <filter>
         <filter-name>UrlRewriteFilter</filter-name>
         <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
@@ -210,6 +241,17 @@
             <param-value>N</param-value>
         </init-param>
     </filter>
+    <filter-mapping>
+        <filter-name>TenantFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>TenantSitemapFilter</filter-name>
+        <url-pattern>/sitemaps/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
     <filter-mapping>
         <filter-name>UrlRewriteFilter</filter-name>
         <url-pattern>/*</url-pattern>

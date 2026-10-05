@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: seed types of the compliance component -->
+<entity-engine-xml>
+    <!-- Legal document types; enumCode is the URL slug of the shop page legal/<slug> -->
+    <EnumerationType enumTypeId="LEGAL_DOC_TYPE" hasTable="N" description="Legal document type"/>
+    <Enumeration enumId="LEGDOC_IMPRINT" enumTypeId="LEGAL_DOC_TYPE" enumCode="imprint" sequenceId="01" description="Imprint"/>
+    <Enumeration enumId="LEGDOC_TERMS" enumTypeId="LEGAL_DOC_TYPE" enumCode="terms" sequenceId="02" description="Terms and conditions"/>
+    <Enumeration enumId="LEGDOC_PRIVACY" enumTypeId="LEGAL_DOC_TYPE" enumCode="privacy" sequenceId="03" description="Privacy policy"/>
+    <Enumeration enumId="LEGDOC_COOKIES" enumTypeId="LEGAL_DOC_TYPE" enumCode="cookies" sequenceId="04" description="Cookie policy"/>
+    <Enumeration enumId="LEGDOC_WITHDRAWAL" enumTypeId="LEGAL_DOC_TYPE" enumCode="withdrawal" sequenceId="05" description="Withdrawal policy and model form"/>
+    <Enumeration enumId="LEGDOC_RETURNS" enumTypeId="LEGAL_DOC_TYPE" enumCode="returns" sequenceId="06" description="Shipping and returns"/>
+    <Enumeration enumId="LEGDOC_ACCESSIBILITY" enumTypeId="LEGAL_DOC_TYPE" enumCode="accessibility" sequenceId="07" description="Accessibility statement"/>
+    <Enumeration enumId="LEGDOC_CA_NOTICE" enumTypeId="LEGAL_DOC_TYPE" enumCode="notice-at-collection" sequenceId="08" description="Notice at collection (US)"/>
+    <Enumeration enumId="LEGDOC_REVIEWS" enumTypeId="LEGAL_DOC_TYPE" enumCode="reviews" sequenceId="09" description="How we check reviews"/>
+    <Enumeration enumId="LEGDOC_SELLERS" enumTypeId="LEGAL_DOC_TYPE" enumCode="sellers" sequenceId="10" description="How we check sellers"/>
+
+    <StatusType statusTypeId="LEGAL_DOC_STATUS" hasTable="N" description="Legal document status"/>
+    <StatusItem statusId="LDS_DRAFT" statusTypeId="LEGAL_DOC_STATUS" statusCode="DRAFT" sequenceId="01" description="Draft"/>
+    <StatusItem statusId="LDS_PUBLISHED" statusTypeId="LEGAL_DOC_STATUS" statusCode="PUBLISHED" sequenceId="02" description="Published"/>
+    <StatusItem statusId="LDS_ARCHIVED" statusTypeId="LEGAL_DOC_STATUS" statusCode="ARCHIVED" sequenceId="03" description="Archived"/>
+
+    <!-- Consent log -->
+    <EnumerationType enumTypeId="CONSENT_TYPE" hasTable="N" description="Consent type"/>
+    <Enumeration enumId="CONSENT_PREFERENCES" enumTypeId="CONSENT_TYPE" enumCode="preferences" sequenceId="01" description="Preference cookies and services"/>
+    <Enumeration enumId="CONSENT_STATISTICS" enumTypeId="CONSENT_TYPE" enumCode="statistics" sequenceId="02" description="Statistics cookies and services"/>
+    <Enumeration enumId="CONSENT_MARKETING" enumTypeId="CONSENT_TYPE" enumCode="marketing" sequenceId="03" description="Marketing cookies and services"/>
+    <Enumeration enumId="CONSENT_SALE_SHARE" enumTypeId="CONSENT_TYPE" enumCode="sale-share" sequenceId="04" description="Sale or sharing of personal information (N = opted out)"/>
+    <Enumeration enumId="CONSENT_TARGETED_ADS" enumTypeId="CONSENT_TYPE" enumCode="targeted-ads" sequenceId="05" description="Targeted advertising"/>
+    <Enumeration enumId="CONSENT_TERMS" enumTypeId="CONSENT_TYPE" enumCode="terms" sequenceId="06" description="Terms and conditions accepted"/>
+    <Enumeration enumId="CONSENT_PRIVACY_NOTICE" enumTypeId="CONSENT_TYPE" enumCode="privacy-notice" sequenceId="07" description="Privacy policy shown"/>
+    <Enumeration enumId="CONSENT_NEWSLETTER" enumTypeId="CONSENT_TYPE" enumCode="newsletter" sequenceId="08" description="Newsletter"/>
+    <Enumeration enumId="CONSENT_AUTO_RENEWAL" enumTypeId="CONSENT_TYPE" enumCode="auto-renewal" sequenceId="09" description="Automatic renewal of a subscription"/>
+    <Enumeration enumId="CONSENT_PERSONALIZATION" enumTypeId="CONSENT_TYPE" enumCode="personalization" sequenceId="10" description="Personal recommendations"/>
+
+    <EnumerationType enumTypeId="CONSENT_SOURCE" hasTable="N" description="Where a consent choice was made"/>
+    <Enumeration enumId="CONSRC_BANNER" enumTypeId="CONSENT_SOURCE" enumCode="banner" sequenceId="01" description="Cookie choices dialog"/>
+    <Enumeration enumId="CONSRC_GPC" enumTypeId="CONSENT_SOURCE" enumCode="gpc" sequenceId="02" description="Global Privacy Control signal"/>
+    <Enumeration enumId="CONSRC_CHECKOUT" enumTypeId="CONSENT_SOURCE" enumCode="checkout" sequenceId="03" description="Checkout"/>
+    <Enumeration enumId="CONSRC_SIGNUP" enumTypeId="CONSENT_SOURCE" enumCode="signup" sequenceId="04" description="Account sign-up"/>
+    <Enumeration enumId="CONSRC_ACCOUNT" enumTypeId="CONSENT_SOURCE" enumCode="account" sequenceId="05" description="Privacy center"/>
+    <Enumeration enumId="CONSRC_PRIVACY_CHOICES" enumTypeId="CONSENT_SOURCE" enumCode="privacy-choices" sequenceId="06" description="Your Privacy Choices page"/>
+    <Enumeration enumId="CONSRC_EMAIL" enumTypeId="CONSENT_SOURCE" enumCode="email" sequenceId="07" description="Confirmation e-mail"/>
+
+    <!-- Privacy requests (GDPR Art. 15-21, CCPA) -->
+    <EnumerationType enumTypeId="PRIVACY_REQ_TYPE" hasTable="N" description="Privacy request type"/>
+    <Enumeration enumId="PRVREQ_ACCESS" enumTypeId="PRIVACY_REQ_TYPE" enumCode="access" sequenceId="01" description="Access / copy of my data"/>
+    <Enumeration enumId="PRVREQ_DELETE" enumTypeId="PRIVACY_REQ_TYPE" enumCode="delete" sequenceId="02" description="Delete my data"/>
+    <Enumeration enumId="PRVREQ_CORRECT" enumTypeId="PRIVACY_REQ_TYPE" enumCode="correct" sequenceId="03" description="Correct my data"/>
+    <Enumeration enumId="PRVREQ_OPT_OUT" enumTypeId="PRIVACY_REQ_TYPE" enumCode="opt-out" sequenceId="04" description="Opt out of sale or sharing"/>
+    <Enumeration enumId="PRVREQ_LIMIT_SPI" enumTypeId="PRIVACY_REQ_TYPE" enumCode="limit-spi" sequenceId="05" description="Limit use of sensitive personal information"/>
+
+    <StatusType statusTypeId="PRIVACY_REQ_STATUS" hasTable="N" description="Privacy request status"/>
+    <StatusItem statusId="PRS_UNVERIFIED" statusTypeId="PRIVACY_REQ_STATUS" statusCode="UNVERIFIED" sequenceId="01" description="Waiting for e-mail confirmation"/>
+    <StatusItem statusId="PRS_RECEIVED" statusTypeId="PRIVACY_REQ_STATUS" statusCode="RECEIVED" sequenceId="02" description="Received"/>
+    <StatusItem statusId="PRS_IN_PROGRESS" statusTypeId="PRIVACY_REQ_STATUS" statusCode="IN_PROGRESS" sequenceId="03" description="In progress"/>
+    <StatusItem statusId="PRS_COMPLETED" statusTypeId="PRIVACY_REQ_STATUS" statusCode="COMPLETED" sequenceId="04" description="Completed"/>
+    <StatusItem statusId="PRS_REJECTED" statusTypeId="PRIVACY_REQ_STATUS" statusCode="REJECTED" sequenceId="05" description="Rejected"/>
+
+    <!-- Packaging (PPWR) and EPR -->
+    <EnumerationType enumTypeId="EPR_SCHEME" hasTable="N" description="Extended producer responsibility scheme"/>
+    <Enumeration enumId="EPR_PACKAGING" enumTypeId="EPR_SCHEME" enumCode="packaging" sequenceId="01" description="Packaging"/>
+    <Enumeration enumId="EPR_WEEE" enumTypeId="EPR_SCHEME" enumCode="weee" sequenceId="02" description="Electrical and electronic equipment"/>
+    <Enumeration enumId="EPR_BATTERIES" enumTypeId="EPR_SCHEME" enumCode="batteries" sequenceId="03" description="Batteries"/>
+    <Enumeration enumId="EPR_TEXTILES" enumTypeId="EPR_SCHEME" enumCode="textiles" sequenceId="04" description="Textiles"/>
+
+    <EnumerationType enumTypeId="PACKAGING_MATERIAL" hasTable="N" description="Packaging material (PPWR categories)"/>
+    <Enumeration enumId="PKGMAT_PAPER" enumTypeId="PACKAGING_MATERIAL" enumCode="paper" sequenceId="01" description="Paper and cardboard"/>
+    <Enumeration enumId="PKGMAT_GLASS" enumTypeId="PACKAGING_MATERIAL" enumCode="glass" sequenceId="02" description="Glass"/>
+    <Enumeration enumId="PKGMAT_ALUMINIUM" enumTypeId="PACKAGING_MATERIAL" enumCode="aluminium" sequenceId="03" description="Aluminium"/>
+    <Enumeration enumId="PKGMAT_STEEL" enumTypeId="PACKAGING_MATERIAL" enumCode="steel" sequenceId="04" description="Steel"/>
+    <Enumeration enumId="PKGMAT_PLASTIC_PET" enumTypeId="PACKAGING_MATERIAL" enumCode="pet" sequenceId="05" description="Plastic: PET"/>
+    <Enumeration enumId="PKGMAT_PLASTIC_PE" enumTypeId="PACKAGING_MATERIAL" enumCode="pe" sequenceId="06" description="Plastic: PE"/>
+    <Enumeration enumId="PKGMAT_PLASTIC_PP" enumTypeId="PACKAGING_MATERIAL" enumCode="pp" sequenceId="07" description="Plastic: PP"/>
+    <Enumeration enumId="PKGMAT_PLASTIC_OTHER" enumTypeId="PACKAGING_MATERIAL" enumCode="plastic-other" sequenceId="08" description="Plastic: other"/>
+    <Enumeration enumId="PKGMAT_WOOD" enumTypeId="PACKAGING_MATERIAL" enumCode="wood" sequenceId="09" description="Wood"/>
+    <Enumeration enumId="PKGMAT_COMPOSITE" enumTypeId="PACKAGING_MATERIAL" enumCode="composite" sequenceId="10" description="Composite"/>
+    <Enumeration enumId="PKGMAT_TEXTILE" enumTypeId="PACKAGING_MATERIAL" enumCode="textile" sequenceId="11" description="Textile"/>
+    <Enumeration enumId="PKGMAT_OTHER" enumTypeId="PACKAGING_MATERIAL" enumCode="other" sequenceId="12" description="Other"/>
+
+    <EnumerationType enumTypeId="PACKAGING_LEVEL" hasTable="N" description="Packaging level"/>
+    <Enumeration enumId="PKGLVL_PRIMARY" enumTypeId="PACKAGING_LEVEL" enumCode="primary" sequenceId="01" description="Sales packaging"/>
+    <Enumeration enumId="PKGLVL_SECONDARY" enumTypeId="PACKAGING_LEVEL" enumCode="secondary" sequenceId="02" description="Grouped packaging"/>
+    <Enumeration enumId="PKGLVL_TRANSPORT" enumTypeId="PACKAGING_LEVEL" enumCode="transport" sequenceId="03" description="Transport packaging"/>
+    <Enumeration enumId="PKGLVL_ECOMMERCE" enumTypeId="PACKAGING_LEVEL" enumCode="ecommerce" sequenceId="04" description="E-commerce packaging"/>
+
+    <!-- Marketplace sellers (DSA Art. 30, CRD Art. 6a, INFORM Act) -->
+    <EnumerationType enumTypeId="SELLER_TYPE" hasTable="N" description="Marketplace seller type"/>
+    <Enumeration enumId="SELLER_BUSINESS" enumTypeId="SELLER_TYPE" enumCode="business" sequenceId="01" description="Business seller (trader)"/>
+    <Enumeration enumId="SELLER_PRIVATE" enumTypeId="SELLER_TYPE" enumCode="private" sequenceId="02" description="Private seller (consumer law does not apply)"/>
+    <StatusType statusTypeId="MKT_SELLER_STATUS" hasTable="N" description="Marketplace seller status"/>
+    <StatusItem statusId="MSS_PENDING" statusTypeId="MKT_SELLER_STATUS" statusCode="PENDING" sequenceId="01" description="Pending verification"/>
+    <StatusItem statusId="MSS_VERIFIED" statusTypeId="MKT_SELLER_STATUS" statusCode="VERIFIED" sequenceId="02" description="Verified"/>
+    <StatusItem statusId="MSS_SUSPENDED" statusTypeId="MKT_SELLER_STATUS" statusCode="SUSPENDED" sequenceId="03" description="Suspended"/>
+    <RoleType roleTypeId="MARKETPLACE_SELLER" hasTable="N" description="Marketplace seller"/>
+
+    <!-- Product safety (GPSR) and returns -->
+    <RoleType roleTypeId="EU_RESP_PERSON" hasTable="N" description="EU responsible person (GPSR)"/>
+    <ReturnReason returnReasonId="RTN_WITHDRAWAL" sequenceId="01" description="Withdrawal from the contract (EU right of withdrawal)"/>
+    <Enumeration enumId="PRDS_ODR_WITHDRAWAL" enumTypeId="PRDS_EMAIL" enumCode="ODR_WITHDRAWAL" sequenceId="40" description="Withdrawal confirmation"/>
+    <Enumeration enumId="PRDS_PRIVACY_VERIFY" enumTypeId="PRDS_EMAIL" enumCode="PRIVACY_VERIFY" sequenceId="41" description="Privacy request confirmation"/>
+</entity-engine-xml>

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
 package org.ofbiz.manufacturing.mrp;
 
@@ -40,6 +46,8 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityQuery;
+import org.ofbiz.entity.transaction.GenericTransactionException;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.manufacturing.bom.BOMNode;
 import org.ofbiz.order.order.OrderReadHelper;
@@ -476,7 +484,7 @@ public class MrpServices {
                             continue;
                         }
                         eventQuantityTmp = eventQuantityTmp.negate();
-                        parameters = UtilMisc.toMap("mrpId", mrpId, "productId", productId, "eventDate", customTimePeriod.getDate("fromDate"), "mrpEventTypeId", "SALES_FORECAST");
+                        parameters = UtilMisc.toMap("mrpId", mrpId, "productId", productId, "eventDate", new Timestamp(((java.util.Date) customTimePeriod.get("fromDate")).getTime()), "mrpEventTypeId", "SALES_FORECAST"); // SCIPIO: fromDate may be a Date or a Timestamp
                         try {
                             InventoryEventPlannedServices.createOrUpdateMrpEvent(parameters, eventQuantityTmp, null, sfd.getString("salesForecastDetailId"), false, delegator);
                         } catch (GenericEntityException e) {
@@ -598,6 +606,91 @@ public class MrpServices {
     public static Map<String, Object> executeMrp(DispatchContext ctx, Map<String, ? extends Object> context) {
         Debug.logInfo("executeMrp called", module);
         Delegator delegator = ctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        // SCIPIO: one MrpRun header per execution, stored in its own transaction so a failed run keeps its record
+        String mrpId = delegator.getNextSeqId("MrpRun");
+        GenericValue mrpRun = delegator.makeValue("MrpRun");
+        mrpRun.put("mrpId", mrpId);
+        mrpRun.put("mrpName", context.get("mrpName"));
+        mrpRun.put("facilityId", context.get("facilityId"));
+        mrpRun.put("facilityGroupId", context.get("facilityGroupId"));
+        mrpRun.put("statusId", "MRP_RUNNING");
+        mrpRun.put("startDate", UtilDateTime.nowTimestamp());
+        mrpRun.put("runByUserLoginId", userLogin != null ? userLogin.getString("userLoginId") : null);
+        storeMrpRunInNewTransaction(delegator, mrpRun, true);
+        Map<String, Object> innerContext = new HashMap<String, Object>(context);
+        innerContext.put("mrpId", mrpId);
+        Map<String, Object> result;
+        try {
+            result = executeMrpInternal(ctx, innerContext);
+        } catch (RuntimeException e) {
+            Debug.logError(e, "executeMrp failed for MrpRun " + mrpId, module);
+            result = ServiceUtil.returnError(e.toString());
+        }
+        boolean failed = ServiceUtil.isError(result);
+        mrpRun.put("statusId", failed ? "MRP_FAILED" : "MRP_FINISHED");
+        mrpRun.put("finishDate", UtilDateTime.nowTimestamp());
+        mrpRun.put("message", failed ? ServiceUtil.getErrorMessage(result) : null);
+        if (!failed) {
+            mrpRun.put("eventCount", countMrpEvents(delegator, mrpId, null));
+            mrpRun.put("proposedProductionRuns", countMrpEvents(delegator, mrpId, "PROP_MANUF_O_RECP"));
+            mrpRun.put("proposedPurchases", countMrpEvents(delegator, mrpId, "PROP_PUR_O_RECP"));
+            mrpRun.put("errorCount", countMrpEvents(delegator, mrpId, "ERROR"));
+        }
+        storeMrpRunInNewTransaction(delegator, mrpRun, false);
+        if (!failed) {
+            result.put("mrpId", mrpId);
+        }
+        return result;
+    }
+
+    /** SCIPIO: Counts the MrpEvent rows of a run, optionally of one event type. */
+    private static Long countMrpEvents(Delegator delegator, String mrpId, String mrpEventTypeId) {
+        try {
+            EntityQuery query = (mrpEventTypeId != null)
+                    ? EntityQuery.use(delegator).from("MrpEvent").where("mrpId", mrpId, "mrpEventTypeId", mrpEventTypeId)
+                    : EntityQuery.use(delegator).from("MrpEvent").where("mrpId", mrpId);
+            return query.queryCount();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Could not count MrpEvent rows for " + mrpId, module);
+            return null;
+        }
+    }
+
+    /** SCIPIO: Creates or stores a MrpRun row in a new transaction, so the row survives a rollback of the MRP run. */
+    private static void storeMrpRunInNewTransaction(Delegator delegator, GenericValue mrpRun, boolean create) {
+        javax.transaction.Transaction parent = null;
+        boolean began = false;
+        try {
+            parent = TransactionUtil.suspend();
+            began = TransactionUtil.begin();
+            if (create) {
+                mrpRun.create();
+            } else {
+                mrpRun.store();
+            }
+            TransactionUtil.commit(began);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Could not store MrpRun " + mrpRun.get("mrpId"), module);
+            try {
+                TransactionUtil.rollback(began, "MrpRun store failed", e);
+            } catch (GenericTransactionException e2) {
+                Debug.logError(e2, "Could not roll back MrpRun store", module);
+            }
+        } finally {
+            if (parent != null) {
+                try {
+                    TransactionUtil.resume(parent);
+                } catch (GenericTransactionException e) {
+                    Debug.logError(e, "Could not resume the MRP transaction", module);
+                }
+            }
+        }
+    }
+
+    /** SCIPIO: The MRP algorithm; the caller supplies the mrpId of the MrpRun header. */
+    private static Map<String, Object> executeMrpInternal(DispatchContext ctx, Map<String, ? extends Object> context) {
+        Delegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         Timestamp now = UtilDateTime.nowTimestamp();
@@ -606,7 +699,7 @@ public class MrpServices {
         Integer defaultYearsOffset = (Integer)context.get("defaultYearsOffset");
         String facilityGroupId = (String)context.get("facilityGroupId");
         String facilityId = (String)context.get("facilityId");
-        String manufacturingFacilityId = null;
+        String manufacturingFacilityId = (String) context.get("manufacturingFacilityId"); // SCIPIO: optional plant; empty = derived below
         if (UtilValidate.isEmpty(facilityId) && UtilValidate.isEmpty(facilityGroupId)) {
             return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingMrpFacilityNotAvailable", locale));
         }
@@ -632,7 +725,7 @@ public class MrpServices {
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingMrpFacilityGroupCannotBeLoad", UtilMisc.toMap("errorString", e.getMessage()), locale));
             }
-        } else {
+        } else if (UtilValidate.isEmpty(manufacturingFacilityId)) {
             manufacturingFacilityId = facilityId;
         }
 
@@ -655,7 +748,7 @@ public class MrpServices {
         boolean isBuilt = false;
         GenericValue routing = null;
 
-        String mrpId = delegator.getNextSeqId("MrpEvent");
+        String mrpId = (String) context.get("mrpId");
 
         Map<String, Object> result = null;
         Map<String, Object> parameters = null;

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.content;
 
 import java.sql.Timestamp;
@@ -414,13 +420,14 @@ public final class ContentManagementWorker {
         // SCIPIO: 2018-03-28: rewritten for concurrency fix
         GenericValue webSitePublishPoint = null;
         if (!ignoreCache) {
-            webSitePublishPoint = cachedWebSitePublishPoints.get(contentId);
+            String cacheKey = delegator.getDelegatorName() + "::" + contentId; // SCIPIO: 4.0.0: key per store (G14)
+            webSitePublishPoint = cachedWebSitePublishPoints.get(cacheKey);
             if (webSitePublishPoint == null) {
                 synchronized (ContentManagementWorker.class) {
-                    webSitePublishPoint = cachedWebSitePublishPoints.get(contentId);
+                    webSitePublishPoint = cachedWebSitePublishPoints.get(cacheKey);
                     if (webSitePublishPoint == null) {
                         webSitePublishPoint = readWebSitePublishPoint(delegator, contentId);
-                        cachedWebSitePublishPoints.put(contentId, webSitePublishPoint);
+                        cachedWebSitePublishPoints.put(cacheKey, webSitePublishPoint);
                     }
                 }
             }
@@ -480,13 +487,14 @@ public final class ContentManagementWorker {
     public static GenericValue getStaticValue(Delegator delegator, String parentPlaceholderId, String webSitePublishPointId, boolean ignoreCache) throws GenericEntityException {
         GenericValue webSitePublishPoint = null;
         if (!ignoreCache) {
-            Map<String, Object> subStaticValueMap = cachedStaticValues.get(parentPlaceholderId);
+            String cacheKey = delegator.getDelegatorName() + "::" + parentPlaceholderId; // SCIPIO: 4.0.0: key per store (G14)
+            Map<String, Object> subStaticValueMap = cachedStaticValues.get(cacheKey);
             if (subStaticValueMap == null) {
                 synchronized(ContentManagementWorker.class) { // SCIPIO: 2018-03-28: concurrency fix
-                    subStaticValueMap = cachedStaticValues.get(parentPlaceholderId);
+                    subStaticValueMap = cachedStaticValues.get(cacheKey);
                     if (subStaticValueMap == null) {
                         subStaticValueMap = new HashMap<String, Object>();
-                        cachedStaticValues.put(parentPlaceholderId, subStaticValueMap);
+                        cachedStaticValues.put(cacheKey, subStaticValueMap);
                     }
                 }
             }

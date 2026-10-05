@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: MCP permissions and the default agent security group. -->
+<entity-engine-xml>
+    <SecurityPermission description="Use any MCP endpoint (required for every token)." permissionId="MCP_ACCESS"/>
+    <SecurityPermission description="Call arbitrary services through scipio_call_service." permissionId="MCP_GATEWAY"/>
+    <SecurityPermission description="Read entities outside the server allowlist through scipio_find_entity." permissionId="MCP_ENTITY_READ"/>
+    <SecurityPermission description="Create, update and remove entity records through the MCP entity tools." permissionId="MCP_ENTITY_WRITE"/>
+    <SecurityPermission description="Manage MCP tokens of any user and view the MCP audit log." permissionId="MCP_ADMIN"/>
+    <SecurityPermission description="Write executable code through an agent tool: CMS Groovy scripts and template bodies. Remote code execution by design; grant with care." permissionId="MCP_CODE_WRITE"/>
+    <SecurityPermission description="Send email through the mail_send_template tool (approved templates only)." permissionId="MCP_MAIL_SEND"/>
+    <SecurityPermission description="Shop floor device: declare, scan and complete production run tasks without MANUFACTURING_UPDATE." permissionId="MANUFACTURING_FLOOR"/>
+
+    <SecurityGroup groupId="SCIPIO_AGENT" description="Default group for AI agent user logins. Read-only across the main applications (OFBTOOLS_VIEW plus each application's _VIEW, as a human back-office user). Extend it with the normal security group tools."/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="MCP_ACCESS"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="MCP_GATEWAY"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="CMS_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="FACILITY_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="ACCOUNTING_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="WORKEFFORTMGR_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="CONTENTMGR_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="HUMANRES_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="MANUFACTURING_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_AGENT" permissionId="MARKETING_VIEW"/>
+
+    <SecurityGroup groupId="SCIPIO_CUSTOMER_AGENT" description="Shop customers who use an AI shopping assistant through /shop/mcp. Only MCP access; no backend permissions."/>
+    <SecurityGroupPermission groupId="SCIPIO_CUSTOMER_AGENT" permissionId="MCP_ACCESS"/>
+    <!-- The FULLADMIN grants are in McpSecurityGroupDemoData.xml: FULLADMIN is demo data -->
+
+    <SecurityGroup groupId="SCIPIO_FLOOR" description="Shop floor devices (QR device tokens): read manufacturing and declare, scan, start and complete production run tasks. No other write."/>
+    <SecurityGroupPermission groupId="SCIPIO_FLOOR" permissionId="MCP_ACCESS"/>
+    <SecurityGroupPermission groupId="SCIPIO_FLOOR" permissionId="OFBTOOLS_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_FLOOR" permissionId="MANUFACTURING_VIEW"/>
+    <SecurityGroupPermission groupId="SCIPIO_FLOOR" permissionId="MANUFACTURING_FLOOR"/>
+</entity-engine-xml>

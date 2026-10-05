@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.service.job;
 
 import java.sql.Timestamp;
@@ -49,6 +55,7 @@ import org.ofbiz.entity.util.EntityFilter;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityQuery;
 import org.ofbiz.entity.util.EntityUtilProperties;
+import org.ofbiz.entity.util.Tenants;
 import org.ofbiz.entity.util.FlexibleEntityFilter;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -113,6 +120,43 @@ public final class JobManager {
             }
         }
         return jm;
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Pooled runtime: the default startup ignore filter of a store's JobManager: ignores every startup
+     * job except the services in service.properties job.startup.tenant.allow.
+     */
+    private static EntityFilter getTenantStartupIgnoreFilter() {
+        java.util.Set<String> allow = new java.util.HashSet<>(org.ofbiz.base.util.StringUtil.split(
+                UtilProperties.getPropertyValue("service", "job.startup.tenant.allow", "rebuildSolrIndexAuto"), ","));
+        return new EntityFilter() {
+            @Override
+            public boolean matches(org.ofbiz.entity.GenericEntity entity, Map<String, Object> context) {
+                return !allow.contains(entity.getString("serviceName"));
+            }
+            @Override
+            public String toString() {
+                return "tenant startup filter (allow " + allow + ")";
+            }
+        };
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Pooled runtime: stops polling the jobs of the delegator (a suspended store). Its running jobs finish.
+     * Returns true when a JobManager was registered.
+     */
+    public static boolean unregister(String delegatorName) {
+        JobManager jm = registeredManagers.remove(delegatorName);
+        if (jm != null) {
+            jm.getJobPoller().unregisterJobManager(delegatorName);
+            return true;
+        }
+        return false;
+    }
+
+    /** SCIPIO: 4.0.0: Pooled runtime: true when a JobManager exists for the delegator. */
+    public static boolean isRegistered(String delegatorName) {
+        return registeredManagers.containsKey(delegatorName);
     }
 
     /**
@@ -276,9 +320,16 @@ public final class JobManager {
                 if (UtilValidate.isEmpty(startupIgnoreFilterExpr)) {
                     startupIgnoreFilterExpr = EntityUtilProperties.getPropertyValue("service", "job.startup.ignore.filter", delegator);
                 }
-                EntityFilter startupIgnoreFilter = FlexibleEntityFilter.fromExpr(startupIgnoreFilterExpr,
+                EntityFilter startupIgnoreFilter;
+                if (UtilValidate.isEmpty(startupIgnoreFilterExpr) && Tenants.isPooled() && delegator.getDelegatorTenantId() != null) {
+                    // SCIPIO: 4.0.0: pooled runtime default (G10, G17): a store's startup jobs do not run when the store
+                    // activates, except the services in job.startup.tenant.allow (the store's own Solr index check)
+                    startupIgnoreFilter = getTenantStartupIgnoreFilter();
+                } else {
+                    startupIgnoreFilter = FlexibleEntityFilter.fromExpr(startupIgnoreFilterExpr,
                         UtilMisc.toMap("delegator", delegator, "dispatcher", getDispatcher(), "nowTimestamp", now),
                         "job");
+                }
                 try (EntityListIterator jobsIterator = queryStartupJobs(startupCondition)) {
                     // NOTE: due to synchronization, we could have null here
                     if (jobsIterator != null) {
@@ -414,6 +465,8 @@ public final class JobManager {
                 // SCIPIO: filter
                 if (ignoreFilter != null && ignoreFilter.matches(jobValue)) {
                     result.ignored++;
+                    // SCIPIO: 4.0.0: read the next job first; the loop spun forever on an ignored job and stalled the poller
+                    jobValue = jobsIterator.next();
                     continue;
                 }
                 // Claim ownership of this value. Using storeByCondition to avoid a race condition.

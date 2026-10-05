@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: Default agent user. It has no password. It can only act through MCP access tokens. -->
+<entity-engine-xml>
+    <Party partyId="SCP_AGENT" partyTypeId="PERSON" statusId="PARTY_ENABLED" description="Scipio AI agent"/>
+    <Person partyId="SCP_AGENT" firstName="Scipio" lastName="Agent"/>
+    <UserLogin userLoginId="scp-agent" partyId="SCP_AGENT" enabled="Y" requirePasswordChange="N"/>
+    <UserLoginSecurityGroup groupId="SCIPIO_AGENT" userLoginId="scp-agent" fromDate="2026-01-01 00:00:00.0"/>
+</entity-engine-xml>

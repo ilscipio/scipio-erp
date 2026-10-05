@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.entityext.eca;
 
 import java.lang.reflect.Method;
@@ -55,6 +61,7 @@ public final class EntityEcaRule implements java.io.Serializable {
     private final String eventName;
     private final boolean runOnError;
     private final List<EntityEcaCondition> conditions;
+    private final String conditionExpr; // SCIPIO: 4.0.0: annotation condition expression
     private final List<Object> actionsAndSets;
     private boolean enabled = true;
     private final List<String> conditionFieldNames  = new ArrayList<String>();
@@ -90,6 +97,7 @@ public final class EntityEcaRule implements java.io.Serializable {
         }
         conditions.trimToSize();
         this.conditions = Collections.unmodifiableList(conditions);
+        this.conditionExpr = null;
         actionsAndSets.trimToSize();
         this.actionsAndSets = Collections.unmodifiableList(actionsAndSets);
         this.reloadValue = reloadValue; // SCIPIO
@@ -139,6 +147,7 @@ public final class EntityEcaRule implements java.io.Serializable {
         }
 
         this.conditions = List.of();
+        this.conditionExpr = eecaDef.condition();
         actionsAndSets.trimToSize();
         this.actionsAndSets = Collections.unmodifiableList(actionsAndSets);
         this.reloadValue = reloadValue;
@@ -228,6 +237,17 @@ public final class EntityEcaRule implements java.io.Serializable {
                     break;
                 }
             }
+        }
+        // SCIPIO: 4.0.0: annotation condition expression (e.g. "!empty(quoteId)"); ignored before, so every rule fired
+        if (allCondTrue && !org.ofbiz.service.eca.EcaConditionExpression.isBlank(conditionExpr)) {
+            Map<String, Object> exprVars = new HashMap<String, Object>(context);
+            exprVars.put("value", value);
+            exprVars.put("operation", currentOperation);
+            exprVars.put("isError", isError);
+            exprVars.put("dctx", dctx);
+            exprVars.put("delegator", dctx.getDelegator());
+            allCondTrue = org.ofbiz.service.eca.EcaConditionExpression.eval(conditionExpr, exprVars,
+                    "Entity ECA [" + this.entityName + "] on [" + this.eventName + "]");
         }
 
         if (allCondTrue) {

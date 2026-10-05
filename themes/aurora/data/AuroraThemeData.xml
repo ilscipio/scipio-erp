@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<entity-engine-xml>
+    <VisualTheme visualThemeId="AURORA" visualThemeSetId="BACKOFFICE" description="Aurora - the default backend theme (light and dark)"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="AuroraThemeData.xml" sequenceId="01"/>
+
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_NAME" resourceValue="AURORA" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/aurora/screenshot.jpg" sequenceId="01"/>
+
+    <!-- Templates -->
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_HDR_TMPLT_LOC" resourceValue="component://aurora-theme/includes/header.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_MSG_TMPLT_LOC" resourceValue="component://aurora-theme/includes/messages.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_FTR_TMPLT_LOC" resourceValue="component://aurora-theme/includes/footer.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://aurora-theme/includes/appbar.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://aurora-theme/includes/appbarOpen.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://aurora-theme/includes/appbarClose.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STL_VAR_LOC" resourceValue="component://aurora-theme/includes/themeStyles.groovy" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STL_TMPLT_LOC" resourceValue="component://aurora-theme/includes/themeTemplate.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_MENU_MACRO_LIB" resourceValue="component://aurora-theme/includes/htmlMenuMacroLibrary.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://aurora-theme/includes/login.ftl" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_ERROR_TMPLT_LOC" resourceValue="component://aurora-theme/includes/error.ftl" sequenceId="01"/>
+
+    <!-- Branding -->
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_SHORTCUT_ICON" resourceValue="/aurora/images/favicon.ico" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_HDR_IMAGE_URL" resourceValue="/aurora/images/scipio-logo.svg" sequenceId="01"/>
+
+    <!-- Scripts: jQuery must load first, the backend macros and the CMS editors assume it is global -->
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery/dist/jquery.min.js" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-ui/jquery-ui.min.js" sequenceId="02"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_TOP_JAVASCRIPT" resourceValue="/base-theme/bower_components/jquery-migrate/jquery-migrate.min.js" sequenceId="03"/>
+
+    <!-- Styles: fonts, tokens, base, layout, components; the vendor skin comes last -->
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-fonts.css" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-tokens.css" sequenceId="02"/>
+    <!-- The widget fixes that every theme needs; the SASS themes compile the same rules from scss/shared -->
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/css/scipio-common.css" sequenceId="025"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-base.css" sequenceId="03"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-layout.css" sequenceId="04"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-components.css" sequenceId="05"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/font-awesome/css/font-awesome.min.css" sequenceId="06"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/vendor/flatpickr.min.css" sequenceId="07"/>
+    <!-- The CMS page editor (Trumbowyg) needs its own base styles; aurora-vendor.css, after it, gives them the theme tokens -->
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/base-theme/bower_components/trumbowyg/dist/ui/trumbowyg.min.css" sequenceId="08"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_STYLESHEET" resourceValue="/aurora/css/aurora-vendor.css" sequenceId="09"/>
+
+    <!-- Right to left -->
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_RTL_STYLESHEET" resourceValue="/aurora/css/aurora-rtl.css" sequenceId="01"/>
+
+    <!-- Footer scripts -->
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/aurora/js/vendor/flatpickr.min.js" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/datatables/DataTables-1.10.10/js/jquery.dataTables.min.js" sequenceId="02"/>
+    <!-- Chart.js loads on demand (Aurora.withChart); the tile grid is CSS, freetile is not needed.
+         The delete block removes the two rows from a database that was seeded before. -->
+    <delete>
+        <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" sequenceId="03"/>
+        <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" sequenceId="05"/>
+    </delete>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/moment/min/moment.min.js" sequenceId="04"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/aurora/js/aurora.js" sequenceId="06"/>
+</entity-engine-xml>

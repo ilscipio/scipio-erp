@@ -18,6 +18,12 @@
     specific language governing permissions and limitations
     under the License.
 -->
+<!--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="BirtOrderReportsWarning">
         <value xml:lang="de">Vier Birt-Berichte (letzte drei Monate Umsatz, Umsatz, Rabattcode für Verkaufsaufträge, Produktanforderung) erfordern die Bereitstellung der BI-Datenbank (beachten Sie, dass die Datei bi.properties nach September 2026 aktualisiert werden muss). Dann werden nur neue genehmigte Bestellungen berücksichtigt.</value>
@@ -16512,5 +16518,45 @@
     <property key="ReasonForReturns">
         <value xml:lang="de">Gründe für eine Retoure</value>
         <value xml:lang="en">The reasons for your returns</value>
+    </property>
+    <property key="OrderHubPayTitle">
+        <value xml:lang="de">Mit Karte bezahlen</value>
+        <value xml:lang="en">Pay by card</value>
+    </property>
+    <property key="OrderHubPayDesc">
+        <value xml:lang="de">Ihre Bestellung ist aufgegeben. Bezahlen Sie jetzt mit Karte, Apple Pay oder Google Pay. Die Zahlung geht an den Shop.</value>
+        <value xml:lang="en">Your order is placed. Pay now by card, Apple Pay or Google Pay. The payment goes to the store.</value>
+    </property>
+    <property key="OrderHubPayChoiceDesc">
+        <value xml:lang="de">Sie bezahlen nach der Bestellung mit Karte, Apple Pay oder Google Pay.</value>
+        <value xml:lang="en">You pay by card, Apple Pay or Google Pay after you place the order.</value>
+    </property>
+    <property key="OrderHubPayButton">
+        <value xml:lang="de">Bezahlen</value>
+        <value xml:lang="en">Pay</value>
+    </property>
+    <property key="OrderHubPayConfirming">
+        <value xml:lang="de">Danke. Stripe bestaetigt Ihre Zahlung. Die Bestellung zeigt sie in Kuerze.</value>
+        <value xml:lang="en">Thank you. Stripe confirms your payment. The order shows it in a moment.</value>
+    </property>
+    <property key="OrderHubPayPaid">
+        <value xml:lang="de">Die Bestellung ist bezahlt.</value>
+        <value xml:lang="en">The order is paid.</value>
+    </property>
+    <property key="OrderHubPayFailed">
+        <value xml:lang="de">Die Zahlung ist nicht durchgegangen. Versuchen Sie es erneut oder nutzen Sie eine andere Karte.</value>
+        <value xml:lang="en">The payment did not go through. Try again or use another card.</value>
+    </property>
+    <property key="OrderHubPayUnavailable">
+        <value xml:lang="de">Die Kartenzahlung ist jetzt nicht verfuegbar. Der Shop meldet sich wegen der Zahlung.</value>
+        <value xml:lang="en">Card payment is not available now. The store contacts you about the payment.</value>
+    </property>
+    <property key="OrderHubPayLinkText">
+        <value xml:lang="de">Die Zahlung fehlt noch. Sie koennen hier mit Karte bezahlen:</value>
+        <value xml:lang="en">The payment is still open. You can pay by card here:</value>
+    </property>
+    <property key="OrderHubPayLinkAction">
+        <value xml:lang="de">Jetzt bezahlen</value>
+        <value xml:lang="en">Pay now</value>
     </property>
 </resource>

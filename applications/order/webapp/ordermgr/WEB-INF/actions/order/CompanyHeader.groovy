@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
  // this script is used to get the company's logo header information for orders, invoices, and returns.  It can either take order, invoice, returnHeader from
  // parameters or use orderId, invoiceId, or returnId to look them up.

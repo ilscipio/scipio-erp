@@ -1,0 +1,1 @@
+org.ofbiz.base.util.Debug.logInfo('Test: Hello from LayoutDemoNestedButton menu actions', "LayoutDemoNestedButton.groovy");

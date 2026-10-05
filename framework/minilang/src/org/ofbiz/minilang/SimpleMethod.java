@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.minilang;
 
 import java.net.MalformedURLException;
@@ -196,6 +202,31 @@ public final class SimpleMethod extends MiniLangElement {
         } catch (MalformedURLException e) {
             throw new MiniLangException("Could not find SimpleMethod XML document in resource: " + xmlResource + "; error was: " + e.toString(), e);
         }
+
+        // SCIPIO: 4.0.0: Fallback logic to try with/without .xml extension
+        if (xmlURL == null) {
+            String fallbackResourceName = null;
+            if (xmlResource.endsWith(".xml")) {
+                // Try without .xml extension (annotation-based)
+                fallbackResourceName = xmlResource.substring(0, xmlResource.length() - 4);
+            } else {
+                // Try with .xml extension (XML file)
+                fallbackResourceName = xmlResource + ".xml";
+            }
+
+            // Try the fallback location
+            try {
+                URL fallbackUrl = FlexibleLocation.resolveLocation(fallbackResourceName, loader);
+                if (fallbackUrl != null) {
+                    Debug.logInfo("SimpleMethod location [" + xmlResource + "] not found, using fallback [" + fallbackResourceName + "]", module);
+                    xmlURL = fallbackUrl;
+                    xmlResource = fallbackResourceName; // Update xmlResource for error messages
+                }
+            } catch (MalformedURLException e) {
+                // Ignore fallback errors, will throw original error below
+            }
+        }
+
         if (xmlURL == null) {
             throw new MiniLangException("Could not find SimpleMethod XML document in resource: " + xmlResource);
         }

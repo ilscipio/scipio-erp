@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.base.util.cache;
 
 import java.io.NotSerializableException;
@@ -1090,6 +1096,13 @@ public class UtilCache<K, V> implements Serializable, EvictionListener<Object, C
         } catch (Exception e) {
             Debug.logWarning(e, "Unable to compute memory size for object of " + o.getClass()
                     + " for key '" + key + "' in cache: " + getName(), module);
+            return 0;
+        } catch (Throwable t) {
+            // SCIPIO: 4.0.0: the serialization of one deep or cyclic entry can raise StackOverflowError
+            // or OutOfMemoryError; the page that asks for the cache size must not die with it. The
+            // stack trace of such an error holds thousands of frames, so log the type only.
+            Debug.logWarning("Unable to compute memory size for object of " + o.getClass()
+                    + " for key '" + key + "' in cache: " + getName() + ": " + t.getClass().getName(), module);
             return 0;
         }
     }

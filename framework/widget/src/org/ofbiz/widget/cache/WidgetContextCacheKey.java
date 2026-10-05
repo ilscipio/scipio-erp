@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.widget.cache;
 
 import java.util.Collections;
@@ -42,7 +48,6 @@ public final class WidgetContextCacheKey {
         fieldNamesToSkip.add("delegator");
         fieldNamesToSkip.add("dispatcher");
         fieldNamesToSkip.add("security");
-        fieldNamesToSkip.add("webSiteId");
         fieldNamesToSkip.add("userLogin");
         fieldNamesToSkip.add("screens");
         fieldNamesToSkip.add("nullField");
@@ -94,8 +99,13 @@ public final class WidgetContextCacheKey {
 
     private final Map<String, Object> context;
 
+    /** SCIPIO: 4.0.0: pooled runtime: the delegator (store) of the render; a cached screen of store A never serves store B (G14) */
+    private final String delegatorName;
+
     public WidgetContextCacheKey(Map<String, ? extends Object> context) {
         this.context = Collections.unmodifiableMap(new HashMap<>(context));
+        Object delegator = context.get("delegator");
+        this.delegatorName = (delegator instanceof org.ofbiz.entity.Delegator) ? ((org.ofbiz.entity.Delegator) delegator).getDelegatorName() : null;
     }
 
     @Override
@@ -113,6 +123,9 @@ public final class WidgetContextCacheKey {
             return this.context == null;
         }
         if (this.context == null) {
+            return false;
+        }
+        if (!java.util.Objects.equals(this.delegatorName, key.delegatorName)) {
             return false;
         }
 

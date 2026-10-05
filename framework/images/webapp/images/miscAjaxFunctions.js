@@ -35,15 +35,16 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
 //             this is to handle a specific case where an input field is needed instead of a drop-down when no values are returned by the request
 //             this will be maybe extended later to use an auto-completed drop-down or a lookup, instead of straight drop-down currently, when there are too much values to populate
 //             this is e.g. currently used in the Product Price Rules screen
-    target = '[id^=' + targetField + ']';
+    // SCIPIO: 4.0.0: form controls only: a field container carries the id plus "_container" and would match the prefix too
+    target = 'select[id^=' + targetField + '], input[id^=' + targetField + '], textarea[id^=' + targetField + ']';
     input = '#' + inputField;
-    targetTitle = target + '_title'
+    targetTitle = '[id^=' + targetField + '_title]'
     optionList = '';
     jQuery.ajax({
         url: request,
         data: [{
             name: paramKey,
-            value: jQuery('[id^=' + paramField + ']').val()
+            value: jQuery('select[id^=' + paramField + '], input[id^=' + paramField + ']').val()
         }], // get requested value from parent drop-down field
         async: false,
         type: 'POST',
@@ -74,7 +75,9 @@ function getDependentDropdownValues(request, paramKey, paramField, targetField, 
                         }
                     }
                 })
-                if(allowEmpty) {
+                // SCIPIO: 4.0.0: with no earlier choice an empty first entry makes the user choose (the first entry
+                // was selected silently, e.g. "Armed Forces Americas" for the United States)
+                if (allowEmpty || (!selected && list.length > 1)) {
                     var preOptionList = "";
                     // Allow null selection in dependent and set it as default if no selection exists.
                     if (!selected || selected === "_none_") { // Scipio: check fixed

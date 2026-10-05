@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.product.config;
 
 import java.util.Enumeration;
@@ -68,7 +74,7 @@ public final class ProductConfigWorker {
              * productId::catalogId::webSiteId::currencyUomId, or whatever the SEPARATOR is defined above to be.
              */
             Delegator delegator = (Delegator) request.getAttribute("delegator");
-            String cacheKey = productId + SEPARATOR + productStoreId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId + SEPARATOR + delegator;
+            String cacheKey = productId + SEPARATOR + productStoreId + SEPARATOR + catalogId + SEPARATOR + webSiteId + SEPARATOR + currencyUomId + SEPARATOR + (delegator != null ? delegator.getDelegatorName() : null); // SCIPIO: 4.0.0: delegator name (G14)
             configWrapper = productConfigCache.get(cacheKey);
             if (configWrapper == null) {
                 configWrapper = ProductConfigFactory.createProductConfigWrapper((Delegator)request.getAttribute("delegator"),

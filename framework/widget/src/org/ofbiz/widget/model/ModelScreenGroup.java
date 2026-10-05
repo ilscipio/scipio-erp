@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.ofbiz.widget.model;
 
 import java.io.Serializable;
@@ -68,8 +84,10 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
         Map<String, ModelScreen> screenMap = new LinkedHashMap<>();
 
         // NOTE: auto settings only supported on root group currently (TODO? other groups? probably not worth it)
-        if (rootGroup && useAutoIncludeSettings && !modelScreens.isAutoIncludeSettingsConfigFile(sourceLocation)) {
-            String configFilePath = modelScreens.getAutoIncludeSettingsConfigFilePath(sourceLocation);
+        // SCIPIO: 4.0.0: a class:// source looks its folder settings up through the XML location the class declares
+        String settingsSource = modelScreens.getSettingsLookupLocation(sourceLocation);
+        if (rootGroup && useAutoIncludeSettings && settingsSource != null && !modelScreens.isAutoIncludeSettingsConfigFile(settingsSource)) {
+            String configFilePath = modelScreens.getAutoIncludeSettingsConfigFilePath(settingsSource);
             if (configFilePath != null) {
                 ModelScreens configScreens = null;
                 try {
@@ -83,7 +101,7 @@ public class ModelScreenGroup extends ModelWidget implements ModelScreens.Screen
                     if (autoIncludeSettings != null && !autoIncludeSettings.isEmpty()) {
                         // get the source location path relative to the dir the config file (CommonScreens.xml) is in
                         String configFileDir = configFilePath.substring(configFilePath.lastIndexOf('/') + 1);
-                        String relScreenFileLoc = sourceLocation.substring(configFileDir.length());
+                        String relScreenFileLoc = settingsSource.substring(configFileDir.length()); // SCIPIO: 4.0.0: was sourceLocation
                         if (autoIncludeSettings.appliesTo(relScreenFileLoc)) {
                             for(IncludeSettings inclSettings : autoIncludeSettings.getIncludeSettingsList()) {
                                 addSettings(screenSettingsMap, inclSettings.getSettingsAlways());

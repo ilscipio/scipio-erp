@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.product.category;
 
 import java.io.IOException;
@@ -40,6 +46,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.common.UrlServletHelper;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.webapp.control.TenantResolver;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityQuery;
@@ -79,7 +86,12 @@ public class CatalogUrlFilter extends ContextFilter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
-        Delegator delegator = (Delegator) httpRequest.getServletContext().getAttribute("delegator"); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
+        // SCIPIO: 4.0.0: pooled runtime: the store of the Host header (TenantResolver), never the shared ServletContext (G1)
+        if (!TenantResolver.resolve(httpRequest, httpResponse, config.getServletContext())) {
+            return;
+        }
+        Delegator delegator = (TenantResolver.fromRequest(httpRequest) != null) ? (Delegator) httpRequest.getAttribute("delegator")
+                : (Delegator) httpRequest.getServletContext().getAttribute("delegator");
 
         // SCIPIO: 2017-11-08: factored out
         prepareRequestAlways(httpRequest, httpResponse, delegator);

@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.cms.webapp;
 
 import java.util.ArrayList;
@@ -222,7 +238,7 @@ public class ComponentUtil {
      */
     public static void generateMapFromRequestUri(String pageId, String path, String type, List<Map<String, Object>> pages, Map<String, Object> state, String icon,
             String parent, String webSiteId) {
-        Delegator delegator = DelegatorFactory.getDelegator("default");
+        Delegator delegator = org.ofbiz.entity.util.TenantScope.currentDelegator("default"); // SCIPIO: 4.0.0: pooled runtime: the store of the request (G13)
 
         if (path == null) { // sanity checks
             throw new IllegalArgumentException("generateMapFromRequestUri: received null path");

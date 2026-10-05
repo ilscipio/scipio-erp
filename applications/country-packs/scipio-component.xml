@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: W1-03: country packs (blueprint section 6). The pack files are the folders us/, de/, at/ ... next to this file.
+     Load after compliance (legal documents) and before commerce-profile. -->
+<ofbiz-component name="country-packs"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
+    <resource-loader name="main" type="component"/>
+
+    <classpath type="jar" location="build/lib/*"/>
+    <classpath type="jar" location="lib/*"/>
+
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/CountryPackSecuritySeedData.xml"/>
+
+    <test-suite loader="main" location="testdef/CountryPackTests.xml"/>
+
+    <!-- carries the MCP server "country-packs"; no screens -->
+    <webapp name="country-packs"
+        title="Country packs"
+        server="default-server"
+        location="webapp/country-packs"
+        base-permission="OFBTOOLS,COUNTRYPACK"
+        mount-point="/country-packs"
+        app-bar-display="false"/>
+</ofbiz-component>

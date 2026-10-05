@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: Stubs of the entities of the dropped components humanres and manufacturing that kept components refer to
+     (W0-04, W1-02). Without them the delegator does not start (a relation or a view of a kept entity names a missing entity)
+     or a seed file of a kept component fails to load (party/data/PartyTypeData.xml holds PartyQualType rows).
+     Each stub has the fields and the key of the original and no relation; its table stays empty in a pod.
+     List of the kept references: docs/wp/W1-02.md, section 4. The full component list does not load this file. -->
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/entitymodel.xsd">
+    <title>Commerce profile: stubs</title>
+    <version>1.0</version>
+
+    <entity entity-name="Employment" package-name="org.ofbiz.humanres.employment" title="Employment (stub)">
+        <field name="roleTypeIdFrom" type="id-ne"/>
+        <field name="roleTypeIdTo" type="id-ne"/>
+        <field name="partyIdFrom" type="id-ne"/>
+        <field name="partyIdTo" type="id-ne"/>
+        <field name="fromDate" type="date-time"/>
+        <field name="thruDate" type="date-time"/>
+        <field name="terminationReasonId" type="id"/>
+        <field name="terminationTypeId" type="id"/>
+        <prim-key field="roleTypeIdFrom"/>
+        <prim-key field="roleTypeIdTo"/>
+        <prim-key field="partyIdFrom"/>
+        <prim-key field="partyIdTo"/>
+        <prim-key field="fromDate"/>
+    </entity>
+
+    <entity entity-name="PartyQualType" package-name="org.ofbiz.humanres.ability" title="Party Qualification Type (stub)">
+        <field name="partyQualTypeId" type="id-ne"/>
+        <field name="parentTypeId" type="id-ne"/>
+        <field name="hasTable" type="indicator"/>
+        <field name="description" type="description"/>
+        <prim-key field="partyQualTypeId"/>
+    </entity>
+
+    <entity entity-name="SkillType" package-name="org.ofbiz.humanres.ability" title="Skill Type (stub)">
+        <field name="skillTypeId" type="id-ne"/>
+        <field name="parentTypeId" type="id-ne"/>
+        <field name="hasTable" type="indicator"/>
+        <field name="description" type="description"/>
+        <prim-key field="skillTypeId"/>
+    </entity>
+
+    <entity entity-name="EmplPositionType" package-name="org.ofbiz.humanres.position" title="EmplPosition Type (stub)">
+        <field name="emplPositionTypeId" type="id-ne"/>
+        <field name="parentTypeId" type="id-ne"/>
+        <field name="hasTable" type="indicator"/>
+        <field name="description" type="description"/>
+        <prim-key field="emplPositionTypeId"/>
+    </entity>
+
+    <entity entity-name="TechDataCalendar" package-name="org.ofbiz.manufacturing.techdata" title="Calendar (stub)">
+        <field name="calendarId" type="id-ne"/>
+        <field name="description" type="description"/>
+        <field name="calendarWeekId" type="id-ne"/>
+        <prim-key field="calendarId"/>
+    </entity>
+
+    <entity entity-name="TechDataCalendarExcDay" package-name="org.ofbiz.manufacturing.techdata" title="Calendar Exception Day (stub)">
+        <field name="calendarId" type="id-ne"/>
+        <field name="exceptionDateStartTime" type="date-time"/>
+        <field name="exceptionCapacity" type="fixed-point"/>
+        <field name="usedCapacity" type="fixed-point"/>
+        <field name="description" type="description"/>
+        <prim-key field="calendarId"/>
+        <prim-key field="exceptionDateStartTime"/>
+    </entity>
+</entitymodel>

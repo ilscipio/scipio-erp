@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.common.email;
 
 
@@ -158,6 +164,18 @@ public class EmailServices {
         }
 
         String sendFrom = (String) context.get("sendFrom");
+        // SCIPIO: 4.0.0: pooled runtime: sender domain and daily quota per store (G9)
+        if (TenantMailPolicy.applies(delegator)) {
+            TenantMailPolicy.Decision decision = TenantMailPolicy.check(delegator, sendFrom);
+            if (decision.getError() != null) {
+                return ServiceUtil.returnError(decision.getError());
+            }
+            sendFrom = decision.getSendFrom();
+            if (decision.getReplyTo() != null) {
+                replyTo = (replyTo != null) ? new java.util.ArrayList<>(replyTo) : new java.util.ArrayList<>();
+                replyTo.add(decision.getReplyTo());
+            }
+        }
         String sendType = (String) context.get("sendType");
         String port = (String) context.get("port");
         String socketFactoryClass = (String) context.get("socketFactoryClass");
@@ -226,7 +244,10 @@ public class EmailServices {
         Session session;
         MimeMessage mail;
         try {
-            Properties props = System.getProperties();
+            // SCIPIO: 4.0.0: a copy per call, with the system properties as defaults. The shared System properties object
+            // let concurrent sends overwrite each other's SMTP host and settings: in the pooled runtime, the mail of one
+            // store went out through the relay of another store (isolation suite, mail case; G9)
+            Properties props = new Properties(System.getProperties());
             props.put(sendType, sendVia);
             if (UtilValidate.isNotEmpty(port)) {
                 props.put("mail.smtp.port", port);
@@ -358,6 +379,13 @@ public class EmailServices {
             return results;
         }
 
+        // SCIPIO: 4.0.0: pooled runtime: a mail that goes to the relay takes one unit of the store's daily quota (G9)
+        if (TenantMailPolicy.applies(delegator)) {
+            String quotaError = TenantMailPolicy.takeQuota(delegator);
+            if (quotaError != null) {
+                return ServiceUtil.returnError(quotaError);
+            }
+        }
         Transport trans = null;
         try {
             trans = session.getTransport("smtp");

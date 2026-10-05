@@ -1,0 +1,73 @@
+{
+  "id": "us",
+  "version": 2,
+  "name": "United States",
+  "country": "US",
+  "locale": "en",
+  "currency": "USD",
+  "dataRegion": "US",
+  "jurisdictions": ["US", "US-CA"],
+  "profile": {
+    "countryGeoId": "USA",
+    "consentMode": "US_OPT_OUT",
+    "returnDays": "30",
+    "retentionYears": "7"
+  },
+  "sellerFields": [
+    {"id": "legalName", "label": "Legal name of the business", "required": true, "target": "StoreComplianceProfile.legalName"},
+    {"id": "address", "label": "Business address", "required": true, "target": "StoreComplianceProfile.addressLine"},
+    {"id": "contact", "label": "Contact e-mail", "required": true, "target": "StoreComplianceProfile.contactEmail"},
+    {"id": "ein", "label": "EIN, when you have one (not shown to buyers)", "required": false, "target": "PartyIdentification"}
+  ],
+  "legalTemplates": [
+    {"slug": "terms", "docTypeId": "LEGDOC_TERMS"},
+    {"slug": "privacy", "docTypeId": "LEGDOC_PRIVACY"},
+    {"slug": "returns", "docTypeId": "LEGDOC_RETURNS"},
+    {"slug": "notice-at-collection", "docTypeId": "LEGDOC_CA_NOTICE"},
+    {"slug": "accessibility", "docTypeId": "LEGDOC_ACCESSIBILITY"}
+  ],
+  "tasks": [
+    {
+      "id": "seller-data", "title": "Enter the business data for the legal pages", "kind": "info", "required": true,
+      "detail": "The terms and the privacy policy name your business and its address. Until you enter them, the live pages show marked gaps."
+    },
+    {
+      "id": "sales-tax", "title": "Register for sales tax in each state where you have a tax duty", "kind": "registration", "required": false,
+      "link": "https://www.taxadmin.org/state-tax-agencies", "numberLabel": "Sales tax permit number",
+      "detail": "A state can require a permit when your sales or orders there pass its limit (economic nexus). Marketplaces such as eBay and Amazon collect and pay the tax on their own orders. Stripe Tax shows where you cross a limit. Enter a permit number for each state you register in."
+    },
+    {
+      "id": "state-notices", "title": "Check the state notices for your products", "kind": "decision", "required": false,
+      "detail": "Some products need a notice in some states, for example California Proposition 65 for products with listed chemicals. Add the notice on the product page."
+    },
+    {
+      "id": "privacy-laws", "title": "Check if the state privacy laws apply to you", "kind": "decision", "required": false,
+      "detail": "California and other states set limits (revenue or number of consumers) for the privacy laws. When they apply, keep the notice at collection and the opt-out of sale and sharing that the shop shows."
+    }
+  ],
+  "storefrontRules": [
+    "Prices without sales tax; tax shown at the checkout from the ship-to address.",
+    "Notice at collection and the link 'Your Privacy Choices'; the shop honors Global Privacy Control.",
+    "Return terms shown before the order.",
+    "State notices where a product needs them."
+  ],
+  "tax": {
+    "provider": "stripe-tax",
+    "notes": [
+      {"id": "sales-tax", "text": "Sales tax by state. Stripe Tax on the connected account calculates it. You register and file in each state where you have a duty."},
+      {"id": "marketplace", "text": "Marketplace facilitators (eBay, Amazon, Etsy) collect and pay sales tax on orders from their channel."}
+    ]
+  },
+  "invoiceNotes": [],
+  "payments": ["Cards", "Apple Pay", "Google Pay", "Link", "Klarna", "Affirm", "Afterpay", "ACH", "Cash App Pay"],
+  "carriers": ["USPS", "UPS", "FedEx"],
+  "books": null,
+  "verify": [
+    "The link of the state tax agencies list",
+    "Retention of 7 years",
+    "returnDays 30 is a business default of the pack, not a legal fact: the seller sets the return period",
+    "US-CA: the California notice at collection applies when you sell to California residents and reach the limits of the state privacy law; check with your adviser",
+    "The US chart of accounts: the gap analysis 4.9 names accountingde*, accountingat and accountinges only",
+    "Payment methods per market (Stripe)"
+  ]
+}

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.entity.model;
 
 import java.io.PrintWriter;
@@ -611,6 +617,124 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
         this.populateRelated(reader, extendEntityElement);
         this.populateIndexes(extendEntityElement);
         this.dependentOn = UtilXml.checkEmpty(extendEntityElement.getAttribute("dependent-on")).intern();
+    }
+
+    /**
+     * Extends this entity with additional fields, relations, and indexes from annotation.
+     *
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public void addExtendEntityFromAnnotation(ModelReader reader,
+                                               com.ilscipio.scipio.entity.def.ExtendEntityAnnotationReader.ExtendEntityInfo extendInfo) {
+        // Process boolean overrides
+        String enableLock = extendInfo.getEnableLock();
+        if (UtilValidate.isNotEmpty(enableLock)) {
+            this.doLock = "true".equals(enableLock);
+        }
+
+        String noAutoStampStr = extendInfo.getNoAutoStamp();
+        if (UtilValidate.isNotEmpty(noAutoStampStr)) {
+            this.noAutoStamp = "true".equals(noAutoStampStr);
+        }
+
+        String autoClearCacheStr = extendInfo.getAutoClearCache();
+        if (UtilValidate.isNotEmpty(autoClearCacheStr)) {
+            this.autoClearCache = "true".equals(autoClearCacheStr);
+        }
+
+        String neverCacheStr = extendInfo.getNeverCache();
+        if (UtilValidate.isNotEmpty(neverCacheStr)) {
+            this.neverCache = "true".equals(neverCacheStr);
+        }
+
+        int sequenceBankSize = extendInfo.getSequenceBankSize();
+        if (sequenceBankSize > 0) {
+            this.sequenceBankSize = sequenceBankSize;
+        }
+
+        // Process fields
+        com.ilscipio.scipio.entity.def.Field[] fieldDefs = extendInfo.getFields();
+        if (fieldDefs != null && fieldDefs.length > 0) {
+            synchronized (fieldsLock) {
+                Map<String, ModelField> fieldsMap = new LinkedHashMap<>(this.fields.fieldsMap);
+                List<String> pkFieldNames = new ArrayList<>(this.fields.pkFieldNames);
+
+                for (com.ilscipio.scipio.entity.def.Field fieldDef : fieldDefs) {
+                    ModelField existingField = this.getField(fieldDef.name());
+                    ModelField newField;
+
+                    if (existingField != null) {
+                        // Override existing field
+                        String type = UtilValidate.isNotEmpty(fieldDef.type()) ? fieldDef.type() : existingField.getType();
+                        String colName = UtilValidate.isNotEmpty(fieldDef.colName()) ? fieldDef.colName() : existingField.getColName();
+                        String description = UtilValidate.isNotEmpty(fieldDef.description()) ? fieldDef.description() : existingField.getDescription();
+                        boolean enableAuditLog = fieldDef.enableAuditLog() || existingField.getEnableAuditLog();
+
+                        newField = ModelField.create(this, description, existingField.getName(), type, colName,
+                                existingField.getColValue(), existingField.getFieldSet(),
+                                existingField.getIsNotNull(), existingField.getIsPk(), existingField.getEncryptMethod(),
+                                existingField.getIsAutoCreatedInternal(), enableAuditLog, existingField.getValidators());
+                        fieldsMap.remove(existingField.getName());
+                    } else {
+                        // Create new field
+                        ModelField.EncryptMethod encryptMethod = ModelField.EncryptMethod.FALSE;
+                        if (UtilValidate.isNotEmpty(fieldDef.encrypt()) && !"false".equalsIgnoreCase(fieldDef.encrypt())) {
+                            encryptMethod = ModelField.EncryptMethod.valueOf(fieldDef.encrypt().toUpperCase(Locale.getDefault()));
+                        }
+                        newField = ModelField.create(this, fieldDef.description(), fieldDef.name(), fieldDef.type(),
+                                fieldDef.colName(), null, fieldDef.fieldSet(), fieldDef.notNull(), false,
+                                encryptMethod, false, fieldDef.enableAuditLog(), null);
+                    }
+
+                    fieldsMap.put(newField.getName(), newField);
+                    if (newField.getIsPk() && !pkFieldNames.contains(newField.getName())) {
+                        pkFieldNames.add(newField.getName());
+                    }
+                }
+
+                this.fields = new Fields(fieldsMap, pkFieldNames);
+            }
+        }
+
+        // Process relations
+        com.ilscipio.scipio.entity.def.Relation[] relationDefs = extendInfo.getRelations();
+        if (relationDefs != null && relationDefs.length > 0) {
+            for (com.ilscipio.scipio.entity.def.Relation relationDef : relationDefs) {
+                List<ModelKeyMap> keyMaps = new ArrayList<>();
+                for (com.ilscipio.scipio.entity.def.KeyMap keyMapDef : relationDef.keyMaps()) {
+                    String relFieldName = UtilValidate.isNotEmpty(keyMapDef.relFieldName()) ?
+                            keyMapDef.relFieldName() : keyMapDef.fieldName();
+                    keyMaps.add(new ModelKeyMap(keyMapDef.fieldName(), relFieldName));
+                }
+                ModelRelation relation = ModelRelation.create(this, relationDef.description(),
+                        relationDef.type().getXmlValue(), relationDef.title(), relationDef.relEntityName(),
+                        relationDef.fkName(), keyMaps, false);
+                this.addRelation(relation);
+            }
+        }
+
+        // Process indexes
+        com.ilscipio.scipio.entity.def.Index[] indexDefs = extendInfo.getIndexes();
+        if (indexDefs != null && indexDefs.length > 0) {
+            for (com.ilscipio.scipio.entity.def.Index indexDef : indexDefs) {
+                List<ModelIndex.Field> indexFields = new ArrayList<>();
+                for (com.ilscipio.scipio.entity.def.IndexField indexFieldDef : indexDef.fields()) {
+                    ModelIndex.Function function = null;
+                    if (indexFieldDef.function() != com.ilscipio.scipio.entity.def.IndexFunction.NONE) {
+                        function = ModelIndex.Function.valueOf(indexFieldDef.function().getXmlValue().toUpperCase(Locale.getDefault()));
+                    }
+                    indexFields.add(new ModelIndex.Field(indexFieldDef.name(), function));
+                }
+                ModelIndex index = ModelIndex.create(this, indexDef.description(), indexDef.name(), indexFields, indexDef.unique());
+                this.addIndex(index);
+            }
+        }
+
+        // Update dependent-on
+        String dependentOn = extendInfo.getDependentOn();
+        if (UtilValidate.isNotEmpty(dependentOn)) {
+            this.dependentOn = dependentOn.intern();
+        }
     }
 
     // ===== GETTERS/SETTERS =====
@@ -1736,6 +1860,48 @@ public class ModelEntity implements Comparable<ModelEntity>, Serializable {
      */
     public void setNoAutoStamp(boolean noAutoStamp) {
         this.noAutoStamp = noAutoStamp;
+    }
+
+    /**
+     * Sets the sequence bank size.
+     *
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public void setSequenceBankSize(Integer sequenceBankSize) {
+        this.sequenceBankSize = sequenceBankSize;
+    }
+
+    /**
+     * Sets the description via modelInfo.
+     *
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public void setDescription(String description) {
+        this.modelInfo = this.modelInfo.withDescription(description);
+    }
+
+    /**
+     * Creates a new ModelEntity for annotation-based definition.
+     *
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public static ModelEntity createForAnnotation(ModelReader reader, String entityName, String tableName, String packageName) {
+        ModelEntity entity = new ModelEntity(reader, ModelInfo.DEFAULT);
+        entity.entityName = entityName.intern();
+        entity.tableName = tableName.intern();
+        entity.packageName = packageName.intern();
+        return entity;
+    }
+
+    /**
+     * Sets the fields from annotation processing.
+     *
+     * <p>SCIPIO: 4.0.0: Added for entity annotations support.</p>
+     */
+    public void setFieldsFromAnnotation(Map<String, ModelField> fieldsMap, List<String> pkFieldNames) {
+        synchronized (fieldsLock) {
+            this.fields = new Fields(fieldsMap, pkFieldNames);
+        }
     }
 
     @Override

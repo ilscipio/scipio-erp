@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+
+    <!-- SCIPIO: 4.0.0: Screen definitions are Java annotations in
+        src/.../widget/ComplianceScreens.java. This file retains only the
+        screen-settings blocks, which are an XML-only feature. -->
+
+    <!-- SCIPIO: Common settings for other *Screens.xml files in this app (those that primarily use decorators referenced using parameters.mainDecoratorLocation) -->
+    <screen-settings name="common-settings">
+        <decorator-screen-settings default-fallback-location="component://compliance/widget/CommonScreens.xml"/>
+    </screen-settings>
+
+    <!-- SCIPIO: The settings for this file (active). -->
+    <screen-settings name="local-settings">
+        <auto-include-settings>
+            <include-settings as-name="local-settings" name="common-settings" location="component://compliance/widget/CommonScreens.xml"/>
+        </auto-include-settings>
+    </screen-settings>
+
+</screens>

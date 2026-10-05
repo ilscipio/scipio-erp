@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.service.eca;
 
 import java.lang.reflect.Method;
@@ -124,7 +130,7 @@ public class ServiceEcaAction implements java.io.Serializable {
         this.resultToContext = !"false".equals(actionDef.resultToContext());
         // default is false, so anything but true is false
         this.resultToResult = "true".equals(actionDef.resultToResult());
-        this.newTransaction = !"false".equals(actionDef.newTransaction());
+        this.newTransaction = "true".equals(actionDef.newTransaction()); // SCIPIO: 4.0.0: XSD default is false; "" must not mean true
         this.ignoreFailure = !"false".equals(actionDef.ignoreFailure());
         this.ignoreError = !"false".equals(actionDef.ignoreError());
         this.persist = "true".equals(actionDef.persist());

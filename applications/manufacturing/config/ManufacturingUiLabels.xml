@@ -18,6 +18,12 @@
     specific language governing permissions and limitations
     under the License.
 -->
+<!--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
     <property key="AddParty">
         <value xml:lang="de">Party hinzufügen</value>
@@ -3541,8 +3547,8 @@
         <value xml:lang="zh-TW">產品不存在</value>
     </property>
     <property key="ManufacturingProductRoutingNotExist">
-        <value xml:lang="de">Arbeitsplan-Verbindung nicht vorhanden</value>
-        <value xml:lang="en">Product Routing link doesn't exist</value>
+        <value xml:lang="de">Arbeitsplan-Verbindung nicht vorhanden. Verknüpfen Sie einen Arbeitsplan mit dem Produkt unter Routing > Product link.</value>
+        <value xml:lang="en">Product Routing link doesn't exist. Link a routing to the product under Routing > Product link.</value>
         <value xml:lang="es">La relación con la ruta no existe</value>
         <value xml:lang="fr">Le lien article-gamme saisi, n'existe pas</value>
         <value xml:lang="it">Link ciclo-prodotto inesistente</value>
@@ -6007,5 +6013,845 @@
         <value xml:lang="nl">Productierun koppelen</value>
         <value xml:lang="zh">链接到生产运行</value>
         <value xml:lang="zh-TW">連結生產運行</value>
+    </property>
+    <property key="ManufacturingActualMinutes">
+        <value xml:lang="de">Tatsächliche Minuten</value>
+        <value xml:lang="en">Actual Minutes</value>
+    </property>
+    <property key="ManufacturingCapacityMinutes">
+        <value xml:lang="de">Kapazität (Min.)</value>
+        <value xml:lang="en">Capacity (min)</value>
+    </property>
+    <property key="ManufacturingCostComponents">
+        <value xml:lang="de">Kostenkomponenten</value>
+        <value xml:lang="en">Cost Components</value>
+    </property>
+    <property key="ManufacturingCreateProductionRunFromOrder">
+        <value xml:lang="de">Produktionsläufe aus Kundenauftrag anlegen</value>
+        <value xml:lang="en">Create production runs from sales order</value>
+    </property>
+    <property key="ManufacturingCreatedAndScheduled">
+        <value xml:lang="de">Erstellt + Geplant</value>
+        <value xml:lang="en">Created + Scheduled</value>
+    </property>
+    <property key="ManufacturingDashboard">
+        <value xml:lang="de">Übersicht</value>
+        <value xml:lang="en">Dashboard</value>
+    </property>
+    <property key="ManufacturingDaysLate">
+        <value xml:lang="de">Tage verspätet</value>
+        <value xml:lang="en">Days Late</value>
+    </property>
+    <property key="ManufacturingErrorCount">
+        <value xml:lang="de">Fehlerzahl</value>
+        <value xml:lang="en">Error Count</value>
+    </property>
+    <property key="ManufacturingErrorEvents">
+        <value xml:lang="de">Fehlerereignisse</value>
+        <value xml:lang="en">Error Events</value>
+    </property>
+    <property key="ManufacturingEventCount">
+        <value xml:lang="de">Ereigniszahl</value>
+        <value xml:lang="en">Event Count</value>
+    </property>
+    <property key="ManufacturingGantt">
+        <value xml:lang="de">Gantt-Diagramm</value>
+        <value xml:lang="en">Gantt Chart</value>
+    </property>
+    <property key="ManufacturingIncludeClosed">
+        <value xml:lang="de">Geschlossene einschließen</value>
+        <value xml:lang="en">Include Closed</value>
+    </property>
+    <property key="ManufacturingIncludeCompleted">
+        <value xml:lang="de">Abgeschlossene einschließen</value>
+        <value xml:lang="en">Include Completed</value>
+    </property>
+    <property key="ManufacturingIsLate">
+        <value xml:lang="de">Verspätet</value>
+        <value xml:lang="en">Late</value>
+    </property>
+    <property key="ManufacturingIssueComponentsBackflush">
+        <value xml:lang="de">Komponenten ausbuchen (Rückwärtsbuchung)</value>
+        <value xml:lang="en">Issue Components (Backflush)</value>
+    </property>
+    <property key="ManufacturingLaborCost">
+        <value xml:lang="de">Arbeitskosten</value>
+        <value xml:lang="en">Labor Cost</value>
+    </property>
+    <property key="ManufacturingLastCalculatedDate">
+        <value xml:lang="de">Zuletzt berechnet</value>
+        <value xml:lang="en">Last Calculated</value>
+    </property>
+    <property key="ManufacturingLastMrpRun">
+        <value xml:lang="de">Letzter MRP-Lauf</value>
+        <value xml:lang="en">Last MRP Run</value>
+    </property>
+    <property key="ManufacturingLateRuns">
+        <value xml:lang="de">Verspätete Aufträge</value>
+        <value xml:lang="en">Late Runs</value>
+    </property>
+    <property key="ManufacturingLegend">
+        <value xml:lang="de">Legende</value>
+        <value xml:lang="en">Legend</value>
+    </property>
+    <property key="ManufacturingLineCost">
+        <value xml:lang="de">Zeilenkosten</value>
+        <value xml:lang="en">Line Cost</value>
+    </property>
+    <property key="ManufacturingLoadMinutes">
+        <value xml:lang="de">Auslastung (Min.)</value>
+        <value xml:lang="en">Load (min)</value>
+    </property>
+    <property key="ManufacturingLoadNormal">
+        <value xml:lang="de">Normale Auslastung</value>
+        <value xml:lang="en">Normal Load</value>
+    </property>
+    <property key="ManufacturingLoadOverload">
+        <value xml:lang="de">Überlastung (über 100%)</value>
+        <value xml:lang="en">Overload (over 100%)</value>
+    </property>
+    <property key="ManufacturingLoadPercent">
+        <value xml:lang="de">Auslastung %</value>
+        <value xml:lang="en">Load %</value>
+    </property>
+    <property key="ManufacturingLoadWarning">
+        <value xml:lang="de">Hohe Auslastung (über 80%)</value>
+        <value xml:lang="en">High Load (over 80%)</value>
+    </property>
+    <property key="ManufacturingLot">
+        <value xml:lang="de">Charge</value>
+        <value xml:lang="en">Lot</value>
+    </property>
+    <property key="ManufacturingMaterialCost">
+        <value xml:lang="de">Materialkosten</value>
+        <value xml:lang="en">Material Cost</value>
+    </property>
+    <property key="ManufacturingMrpPRunsComponentsByFeature">
+        <value xml:lang="de">MRP-Komponenten nach Merkmal</value>
+        <value xml:lang="en">MRP Components by Feature</value>
+    </property>
+    <property key="ManufacturingMrpPRunsProductsByFeature">
+        <value xml:lang="de">MRP-Aufträge nach Produktmerkmal</value>
+        <value xml:lang="en">MRP Runs by Product Feature</value>
+    </property>
+    <property key="ManufacturingMrpProposals">
+        <value xml:lang="de">MRP-Vorschläge</value>
+        <value xml:lang="en">MRP Proposals</value>
+    </property>
+    <property key="ManufacturingMrpReports">
+        <value xml:lang="de">MRP-Berichte</value>
+        <value xml:lang="en">MRP Reports</value>
+    </property>
+    <property key="ManufacturingMrpRuns">
+        <value xml:lang="de">MRP-Läufe</value>
+        <value xml:lang="en">MRP runs</value>
+    </property>
+    <property key="ManufacturingOverheadCost">
+        <value xml:lang="de">Gemeinkosten</value>
+        <value xml:lang="en">Overhead Cost</value>
+    </property>
+    <property key="ManufacturingPRunsInfoAndOrder">
+        <value xml:lang="de">Auftragsinfo und Bestellung</value>
+        <value xml:lang="en">Run Info and Order</value>
+    </property>
+    <property key="ManufacturingPRunsProductsAndOrder">
+        <value xml:lang="de">Produkte und Auftrag</value>
+        <value xml:lang="en">Products and Order</value>
+    </property>
+    <property key="ManufacturingPRunsProductsStacks">
+        <value xml:lang="de">Produktstapel</value>
+        <value xml:lang="en">Product Stacks</value>
+    </property>
+    <property key="ManufacturingParentProduct">
+        <value xml:lang="de">Übergeordnetes Produkt</value>
+        <value xml:lang="en">Parent Product</value>
+    </property>
+    <property key="ManufacturingPlannedMinutes">
+        <value xml:lang="de">Geplante Minuten</value>
+        <value xml:lang="en">Planned Minutes</value>
+    </property>
+    <property key="ManufacturingPrintProductionRunDoc">
+        <value xml:lang="de">Fertigungsauftrag drucken</value>
+        <value xml:lang="en">Print Production Run</value>
+    </property>
+    <property key="ManufacturingProductStandardCost">
+        <value xml:lang="de">Standardkosten</value>
+        <value xml:lang="en">Standard cost</value>
+    </property>
+    <property key="ManufacturingProductionRunDocuments">
+        <value xml:lang="de">Fertigungsauftragsdokumente</value>
+        <value xml:lang="en">Production Run Documents</value>
+    </property>
+    <property key="ManufacturingProductionRuns">
+        <value xml:lang="de">Fertigungsaufträge</value>
+        <value xml:lang="en">Production Runs</value>
+    </property>
+    <property key="ManufacturingProposedProductionRuns">
+        <value xml:lang="de">Vorgeschlagene Fertigungsaufträge</value>
+        <value xml:lang="en">Proposed Production Runs</value>
+    </property>
+    <property key="ManufacturingProposedPurchases">
+        <value xml:lang="de">Vorgeschlagene Einkäufe</value>
+        <value xml:lang="en">Proposed Purchases</value>
+    </property>
+    <property key="ManufacturingPurchases">
+        <value xml:lang="de">Einkäufe</value>
+        <value xml:lang="en">Purchases</value>
+    </property>
+    <property key="ManufacturingQuickLinks">
+        <value xml:lang="de">Schnellzugriffe</value>
+        <value xml:lang="en">Quick Links</value>
+    </property>
+    <property key="ManufacturingRecalculate">
+        <value xml:lang="de">Neu berechnen</value>
+        <value xml:lang="en">Recalculate</value>
+    </property>
+    <property key="ManufacturingReject">
+        <value xml:lang="de">Ablehnen</value>
+        <value xml:lang="en">Reject</value>
+    </property>
+    <property key="ManufacturingRejectReason">
+        <value xml:lang="de">Ausschussgrund</value>
+        <value xml:lang="en">Reject Reason</value>
+    </property>
+    <property key="ManufacturingRejectReasonRequired">
+        <value xml:lang="de">Bei einer Ausschussmenge ist ein Ausschussgrund erforderlich</value>
+        <value xml:lang="en">A reject reason is required when rejecting a quantity</value>
+    </property>
+    <property key="ManufacturingRejects">
+        <value xml:lang="de">Ausschuss</value>
+        <value xml:lang="en">Rejects</value>
+    </property>
+    <property key="ManufacturingRequiredByDate">
+        <value xml:lang="de">Benötigt bis Datum</value>
+        <value xml:lang="en">Required By Date</value>
+    </property>
+    <property key="ManufacturingRequirementType">
+        <value xml:lang="de">Bedarfstyp</value>
+        <value xml:lang="en">Requirement Type</value>
+    </property>
+    <property key="ManufacturingRoutingCost">
+        <value xml:lang="de">Arbeitsplankosten</value>
+        <value xml:lang="en">Routing Cost</value>
+    </property>
+    <property key="ManufacturingRunByUser">
+        <value xml:lang="de">Ausgeführt von</value>
+        <value xml:lang="en">Run By</value>
+    </property>
+    <property key="ManufacturingRunning">
+        <value xml:lang="de">Laufend</value>
+        <value xml:lang="en">Running</value>
+    </property>
+    <property key="ManufacturingRunningTasks">
+        <value xml:lang="de">Laufende Aufgaben</value>
+        <value xml:lang="en">Running Tasks</value>
+    </property>
+    <property key="ManufacturingSetupMinutes">
+        <value xml:lang="de">Rüstzeit (Minuten)</value>
+        <value xml:lang="en">Setup Minutes</value>
+    </property>
+    <property key="ManufacturingShipGroup">
+        <value xml:lang="de">Versandgruppe</value>
+        <value xml:lang="en">Ship Group</value>
+    </property>
+    <property key="ManufacturingShipmentReports">
+        <value xml:lang="de">Versandberichte</value>
+        <value xml:lang="en">Shipment Reports</value>
+    </property>
+    <property key="ManufacturingShopFloor">
+        <value xml:lang="de">Werkstatt</value>
+        <value xml:lang="en">Shop floor</value>
+    </property>
+    <property key="ManufacturingShortages">
+        <value xml:lang="de">Fehlmengen</value>
+        <value xml:lang="en">Shortages</value>
+    </property>
+    <property key="ManufacturingSpPRunsComponentsByFeature">
+        <value xml:lang="de">Versandkomponenten nach Merkmal</value>
+        <value xml:lang="en">Shipment Components by Feature</value>
+    </property>
+    <property key="ManufacturingSpPRunsProductsByFeature">
+        <value xml:lang="de">Versandaufträge nach Produktmerkmal</value>
+        <value xml:lang="en">Shipment Runs by Product Feature</value>
+    </property>
+    <property key="ManufacturingTaskList">
+        <value xml:lang="de">Aufgabenliste</value>
+        <value xml:lang="en">Task List</value>
+    </property>
+    <property key="ManufacturingTaskMinutes">
+        <value xml:lang="de">Aufgabenzeit (Minuten)</value>
+        <value xml:lang="en">Task Minutes</value>
+    </property>
+    <property key="ManufacturingUpcomingRuns">
+        <value xml:lang="de">Anstehende Aufträge</value>
+        <value xml:lang="en">Upcoming Runs</value>
+    </property>
+    <property key="ManufacturingUser">
+        <value xml:lang="de">Benutzer</value>
+        <value xml:lang="en">User</value>
+    </property>
+    <property key="ManufacturingWhereUsed">
+        <value xml:lang="de">Verwendungsnachweis</value>
+        <value xml:lang="en">Where used</value>
+    </property>
+    <property key="ManufacturingWorkCenter">
+        <value xml:lang="de">Arbeitsplatz</value>
+        <value xml:lang="en">Work Center</value>
+    </property>
+    <property key="ManufacturingWorkCenterLoad">
+        <value xml:lang="de">Arbeitsplatzauslastung</value>
+        <value xml:lang="en">Work Center Load</value>
+    </property>
+    <property key="PageTitleAddCalendarExceptionDay">
+        <value xml:lang="de">Kalender-Ausnahmetag hinzufügen</value>
+        <value xml:lang="en">Add Calendar Exception Day</value>
+    </property>
+    <property key="PageTitleMrpProposals">
+        <value xml:lang="de">MRP-Vorschläge</value>
+        <value xml:lang="en">MRP Proposals</value>
+    </property>
+    <property key="PageTitleMrpRunDetail">
+        <value xml:lang="de">MRP-Lauf-Detail</value>
+        <value xml:lang="en">MRP Run Detail</value>
+    </property>
+    <property key="PageTitleMrpRuns">
+        <value xml:lang="de">MRP-Läufe</value>
+        <value xml:lang="en">MRP Runs</value>
+    </property>
+    <property key="PageTitlePRunsProductsAndOrder">
+        <value xml:lang="de">Fertigungsaufträge, Produkte und Bestellungen</value>
+        <value xml:lang="en">Production Runs, Products and Orders</value>
+    </property>
+    <property key="PageTitleProductCost">
+        <value xml:lang="de">Produktkosten</value>
+        <value xml:lang="en">Product Cost</value>
+    </property>
+    <property key="PageTitleProductWhereUsed">
+        <value xml:lang="de">Verwendungsnachweis</value>
+        <value xml:lang="en">Where Used</value>
+    </property>
+    <property key="ManufacturingBomTypeTooltip">
+        <value xml:lang="de">Fertigungskomponente: für Fertigungsaufträge und MRP. Konstruktionskomponente: nur für die Konstruktion.</value>
+        <value xml:lang="en">Manufacturing component: used by production runs and MRP. Engineering component: design only.</value>
+    </property>
+    <property key="ManufacturingQuantityTooltip">
+        <value xml:lang="de">pro einer Einheit des übergeordneten Produkts</value>
+        <value xml:lang="en">per one unit of the parent product</value>
+    </property>
+    <property key="ManufacturingScrapFactorTooltip">
+        <value xml:lang="de">Prozentsatz an zusätzlicher Ausgabe zum Ausgleich von Ausschuss</value>
+        <value xml:lang="en">percent extra issued to cover waste</value>
+    </property>
+    <property key="ManufacturingFormulaTooltip">
+        <value xml:lang="de">optionaler Dienst, der die Menge berechnet</value>
+        <value xml:lang="en">optional service that computes the quantity</value>
+    </property>
+    <property key="ManufacturingSequenceNumTooltip">
+        <value xml:lang="de">Reihenfolge in der Liste und in der Stücklistenauflösung</value>
+        <value xml:lang="en">order in the list and in the explosion</value>
+    </property>
+    <property key="ManufacturingRoutingTaskTooltip">
+        <value xml:lang="de">der Arbeitsgang, der die Komponente verbraucht; leer = erster Arbeitsgang</value>
+        <value xml:lang="en">the task that consumes the component; empty = first task</value>
+    </property>
+    <property key="ManufacturingBomStructure">
+        <value xml:lang="de">Struktur</value>
+        <value xml:lang="en">Structure</value>
+    </property>
+    <property key="ManufacturingBomStructureNoComponents">
+        <value xml:lang="de">Dieses Produkt hat noch keine Komponenten.</value>
+        <value xml:lang="en">This product has no components yet.</value>
+    </property>
+    <property key="ManufacturingBomSetupGuideTitle">
+        <value xml:lang="de">So erstellen Sie eine Stückliste</value>
+        <value xml:lang="en">How to set up a bill of materials</value>
+    </property>
+    <property key="ManufacturingBomSetupStep1">
+        <value xml:lang="de">1. Erstellen Sie die Produkte.</value>
+        <value xml:lang="en">1. Create the products.</value>
+    </property>
+    <property key="ManufacturingBomSetupStep2">
+        <value xml:lang="de">2. Fügen Sie die Komponenten mit dem Typ Fertigungskomponente hinzu.</value>
+        <value xml:lang="en">2. Add the components with type Manufacturing component.</value>
+    </property>
+    <property key="ManufacturingBomSetupStep3">
+        <value xml:lang="de">3. Verknüpfen Sie einen Arbeitsplan unter Routing > Product link.</value>
+        <value xml:lang="en">3. Link a routing under Routing > Product link.</value>
+    </property>
+    <property key="ManufacturingBomSetupStep4">
+        <value xml:lang="de">4. Prüfen Sie die Stücklistenauflösung in der BOM-Simulation.</value>
+        <value xml:lang="en">4. Check the explosion in BOM Simulation.</value>
+    </property>
+    <property key="ManufacturingRoutingIdTooltip">
+        <value xml:lang="de">Leer = der mit dem Produkt verknüpfte Arbeitsplan. Das Produkt braucht einen Arbeitsplan unter Routing > Product link.</value>
+        <value xml:lang="en">Empty = the routing linked to the product. The product needs a routing under Routing > Product link.</value>
+    </property>
+    <property key="ManufacturingProductionRunQuantityTooltip">
+        <value xml:lang="de">Anzahl der zu fertigenden Einheiten des Produkts</value>
+        <value xml:lang="en">units of the product to build</value>
+    </property>
+    <property key="ManufacturingCreateDependentProductionRunsTooltip">
+        <value xml:lang="de">erstellt auch Aufträge für Baugruppen aus der Stückliste</value>
+        <value xml:lang="en">also create runs for sub-assemblies of the BOM</value>
+    </property>
+    <property key="ManufacturingCostTypeStandard">
+        <value xml:lang="de">Standard</value>
+        <value xml:lang="en">Standard</value>
+    </property>
+    <property key="ManufacturingCostTypeActual">
+        <value xml:lang="de">Ist</value>
+        <value xml:lang="en">Actual</value>
+    </property>
+    <property key="ManufacturingCostTypeVariance">
+        <value xml:lang="de">Abweichung</value>
+        <value xml:lang="en">Variance</value>
+    </property>
+    <property key="ManufacturingProductionRunCostsExplanation">
+        <value xml:lang="de">Standard ist der geplante Wert aus den Kostenberechnungen der Arbeitsgänge; Ist wird bei Abschluss des Arbeitsgangs aus den Anlagen- und Nutzungssätzen gebucht.</value>
+        <value xml:lang="en">Standard is the planned cost from the routing task cost calculations; actual is booked at task completion from the fixed asset setup and usage rates.</value>
+    </property>
+    <property key="ManufacturingProductionRunTotalCosts">
+        <value xml:lang="de">Gesamtkosten des Fertigungsauftrags</value>
+        <value xml:lang="en">Total Costs for the Run</value>
+    </property>
+    <property key="ManufacturingCostTypeMaterial">
+        <value xml:lang="de">Material</value>
+        <value xml:lang="en">Material</value>
+    </property>
+    <property key="ManufacturingCostTypeRouting">
+        <value xml:lang="de">Arbeitsplan</value>
+        <value xml:lang="en">Routing</value>
+    </property>
+    <property key="ManufacturingCostTypeLabor">
+        <value xml:lang="de">Arbeit</value>
+        <value xml:lang="en">Labor</value>
+    </property>
+    <property key="ManufacturingCostTypeOverheadGeneral">
+        <value xml:lang="de">Allgemeine Gemeinkosten</value>
+        <value xml:lang="en">General Overhead</value>
+    </property>
+    <property key="ManufacturingCostTypeOverheadIndirect">
+        <value xml:lang="de">Indirekte Gemeinkosten</value>
+        <value xml:lang="en">Indirect Overhead</value>
+    </property>
+    <property key="ManufacturingCostTypeOther">
+        <value xml:lang="de">Sonstiges</value>
+        <value xml:lang="en">Other</value>
+    </property>
+    <property key="ManufacturingCostSources">
+        <value xml:lang="de">Quellen</value>
+        <value xml:lang="en">Sources</value>
+    </property>
+    <property key="ManufacturingCostSourceMaterialDesc">
+        <value xml:lang="de">Material: Stücklistenkomponenten multipliziert mit ihren Standardkosten.</value>
+        <value xml:lang="en">Material: bill of materials components times their standard cost.</value>
+    </property>
+    <property key="ManufacturingCostSourceLaborMachineDesc">
+        <value xml:lang="de">Arbeit und Maschine: Kostenberechnungen der Arbeitsgänge und Standardkostensätze des Arbeitsplatzes.</value>
+        <value xml:lang="en">Labor and machine: routing task cost calculations and the standard cost rates of the work center.</value>
+    </property>
+    <property key="ManufacturingCostSourceOverheadDesc">
+        <value xml:lang="de">Gemeinkosten: Zeilen der Produktkostenberechnung.</value>
+        <value xml:lang="en">Overhead: product cost component calculation rows.</value>
+    </property>
+    <property key="ManufacturingCostSourceRoutingDesc">
+        <value xml:lang="de">Arbeitsplan: der mit dem Produkt verknüpfte Arbeitsplan.</value>
+        <value xml:lang="en">Routing: the routing linked to the product.</value>
+    </property>
+    <property key="ManufacturingCostSetupHintTitle">
+        <value xml:lang="de">Dieses Produkt hat keine Kostenkomponente. Erstellen Sie Folgendes in dieser Reihenfolge:</value>
+        <value xml:lang="en">This product has no cost component. Create the following in order:</value>
+    </property>
+    <property key="ManufacturingCostSetupHintStep1">
+        <value xml:lang="de">Stücklistenkomponenten mit Standardkosten hinzufügen</value>
+        <value xml:lang="en">Add bill of materials components with a standard cost</value>
+    </property>
+    <property key="ManufacturingCostSetupHintStep2">
+        <value xml:lang="de">Arbeitsplan und Arbeitsgänge definieren</value>
+        <value xml:lang="en">Define the routing and its routing tasks</value>
+    </property>
+    <property key="ManufacturingCostSetupHintStep3">
+        <value xml:lang="de">Kostenkomponentenberechnungen für Arbeit und Gemeinkosten definieren</value>
+        <value xml:lang="en">Define the cost component calculations for labor and overhead</value>
+    </property>
+    <property key="ManufacturingCostSetupHintStep4">
+        <value xml:lang="de">Produktkosten neu berechnen</value>
+        <value xml:lang="en">Recalculate the product cost</value>
+    </property>
+    <property key="ManufacturingProductionRunResources">
+        <value xml:lang="de">Ressourcen (Maschinen und Mitarbeiter)</value>
+        <value xml:lang="en">Resources (Machines and Workers)</value>
+    </property>
+    <property key="ManufacturingProductionRunWorkers">
+        <value xml:lang="de">Mitarbeiter</value>
+        <value xml:lang="en">Workers</value>
+    </property>
+    <property key="ManufacturingAssignWorker">
+        <value xml:lang="de">Mitarbeiter zuweisen</value>
+        <value xml:lang="en">Assign Worker</value>
+    </property>
+    <property key="ManufacturingInputsConsumed">
+        <value xml:lang="de">Eingänge (verbraucht)</value>
+        <value xml:lang="en">Inputs (consumed)</value>
+    </property>
+    <property key="ManufacturingOutputsProduced">
+        <value xml:lang="de">Ausgänge (produziert)</value>
+        <value xml:lang="en">Outputs (produced)</value>
+    </property>
+    <property key="ManufacturingQoh">
+        <value xml:lang="de">Bestand</value>
+        <value xml:lang="en">QOH</value>
+    </property>
+    <property key="ManufacturingAtp">
+        <value xml:lang="de">Verfügbar</value>
+        <value xml:lang="en">ATP</value>
+    </property>
+    <property key="ManufacturingComponentShortage">
+        <value xml:lang="de">Fehlmenge</value>
+        <value xml:lang="en">Shortage</value>
+    </property>
+    <property key="ManufacturingPlannedQuantity">
+        <value xml:lang="de">Geplante Menge</value>
+        <value xml:lang="en">Planned Quantity</value>
+    </property>
+    <property key="ManufacturingAddCoProduct">
+        <value xml:lang="de">Kuppelprodukt oder Nebenprodukt hinzufügen</value>
+        <value xml:lang="en">Add a co-product or by-product</value>
+    </property>
+    <property key="ManufacturingAddCoProductHelp">
+        <value xml:lang="de">Ein zusätzliches Produkt, das diese Aufgabe neben dem Hauptprodukt erzeugt.</value>
+        <value xml:lang="en">An extra product that this task produces next to the main product.</value>
+    </property>
+    <property key="ManufacturingProduceLocationSeqIdTooltip">
+        <value xml:lang="de">Ziellagerort in der Fertigungsstätte; leer = kein Lagerort.</value>
+        <value xml:lang="en">Target location in the run facility; empty = no location.</value>
+    </property>
+    <property key="ManufacturingIssueLotIdTooltip">
+        <value xml:lang="de">Charge wählen; leer = beliebige Charge.</value>
+        <value xml:lang="en">Pick a lot; empty = any lot.</value>
+    </property>
+    <property key="ManufacturingIssueLocationSeqIdTooltip">
+        <value xml:lang="de">Lagerort wählen; leer = beliebiger Lagerort.</value>
+        <value xml:lang="en">Pick a location; empty = any location.</value>
+    </property>
+    <property key="ManufacturingReplaceWithProduct">
+        <value xml:lang="de">Neues Produkt</value>
+        <value xml:lang="en">New Product</value>
+    </property>
+    <property key="ManufacturingReplace">
+        <value xml:lang="de">Ersetzen</value>
+        <value xml:lang="en">Replace</value>
+    </property>
+    <property key="ManufacturingComponentAlreadyIssued">
+        <value xml:lang="de">Diese Komponente wurde bereits ausgegeben und kann nicht ersetzt werden.</value>
+        <value xml:lang="en">This component was already issued and cannot be replaced.</value>
+    </property>
+    <property key="ManufacturingComponentNotFound">
+        <value xml:lang="de">Die Komponente wurde nicht gefunden.</value>
+        <value xml:lang="en">The component was not found.</value>
+    </property>
+    <property key="ManufacturingRunMrpFacilityTooltip">
+        <value xml:lang="de">Wählen Sie eins. Eine Gruppe nutzt ihr WAREHOUSE-Mitglied für den Bestand und ihr PLANT-Mitglied für die Produktion.</value>
+        <value xml:lang="en">Choose one. A group uses its WAREHOUSE member for stock and its PLANT member for production.</value>
+    </property>
+    <property key="ManufacturingDefaultYearsOffset">
+        <value xml:lang="de">Planungshorizont (Jahre)</value>
+        <value xml:lang="en">Planning Horizon (Years)</value>
+    </property>
+    <property key="ManufacturingDefaultYearsOffsetTooltip">
+        <value xml:lang="de">Planungshorizont in Jahren ab heute.</value>
+        <value xml:lang="en">Planning horizon in years from today.</value>
+    </property>
+    <property key="ManufacturingMrpInfoBox">
+        <value xml:lang="de">MRP liest genehmigte Verkaufsaufträge, Bestellungen, Fertigungsaufträge, Bedarfe, Absatzprognosen sowie je Produkt und Standort den Mindestbestand, die Nachbestellmenge und die Versandtage (Katalog > Produkt > Standorte).</value>
+        <value xml:lang="en">MRP reads approved sales orders, purchase orders, production runs, requirements, sales forecasts, and per product and facility the minimum stock, reorder quantity and days to ship (Catalog > Product > Facilities).</value>
+    </property>
+    <property key="ManufacturingMrpProposalsInfo">
+        <value xml:lang="de">Die Genehmigung eines Fertigungsvorschlags erstellt einen Fertigungsauftrag; die Genehmigung eines Kaufvorschlags genehmigt einen Bedarf; Bestellungen werden unter Auftrag > Bedarfe > Genehmigt nach Lieferant erstellt.</value>
+        <value xml:lang="en">Approve of a make proposal creates a production run; approve of a buy proposal approves a purchase requirement; purchase orders are created under Order > Requirements > Approved by Vendor.</value>
+    </property>
+    <property key="ManufacturingCreatePurchaseOrders">
+        <value xml:lang="de">Bestellungen erstellen</value>
+        <value xml:lang="en">Create Purchase Orders</value>
+    </property>
+    <property key="ManufacturingMake">
+        <value xml:lang="de">Fertigen</value>
+        <value xml:lang="en">Make</value>
+    </property>
+    <property key="ManufacturingBuy">
+        <value xml:lang="de">Kaufen</value>
+        <value xml:lang="en">Buy</value>
+    </property>
+    <property key="ManufacturingStockSettings">
+        <value xml:lang="de">Bestandseinstellungen</value>
+        <value xml:lang="en">Stock Settings</value>
+    </property>
+    <property key="ManufacturingAddInputComponent">
+        <value xml:lang="de">Eingangskomponente hinzufügen</value>
+        <value xml:lang="en">Add an input component</value>
+    </property>
+    <property key="ManufacturingManufacturingFacility">
+        <value xml:lang="de">Produktionsstandort (Werk)</value>
+        <value xml:lang="en">Manufacturing facility (plant)</value>
+    </property>
+    <property key="ManufacturingManufacturingFacilityTooltip">
+        <value xml:lang="de">Standort, an dem die vorgeschlagenen Produktionsaufträge laufen. Leer = das gewählte Lager, oder das PLANT-Mitglied der Standortgruppe.</value>
+        <value xml:lang="en">Facility where proposed production runs take place. Empty = the chosen warehouse, or the PLANT member of the facility group.</value>
+    </property>
+    <property key="ManufacturingSupplier">
+        <value xml:lang="de">Lieferant</value>
+        <value xml:lang="en">Supplier</value>
+    </property>
+    <property key="ManufacturingCreatePurchaseOrder">
+        <value xml:lang="de">Bestellung anlegen</value>
+        <value xml:lang="en">Create purchase order</value>
+    </property>
+
+    <!-- SCIPIO: Fabrication orders -->
+    <property key="ManufacturingFabricationOrder">
+        <value xml:lang="de">Fertigungsauftrag</value>
+        <value xml:lang="en">Fabrication order</value>
+    </property>
+    <property key="ManufacturingFabricationOrders">
+        <value xml:lang="de">Fertigungsaufträge</value>
+        <value xml:lang="en">Fabrication orders</value>
+    </property>
+    <property key="ManufacturingFindFabricationOrders">
+        <value xml:lang="de">Fertigungsaufträge suchen</value>
+        <value xml:lang="en">Find fabrication orders</value>
+    </property>
+    <property key="ManufacturingEditFabricationOrder">
+        <value xml:lang="de">Fertigungsauftrag bearbeiten</value>
+        <value xml:lang="en">Edit fabrication order</value>
+    </property>
+    <property key="ManufacturingFabricationOrderHelp">
+        <value xml:lang="de">Ein Fertigungsauftrag bündelt mehrere Produktionsaufträge, damit du ihre Gesamtmenge, Zeit und den Status zusammen siehst.</value>
+        <value xml:lang="en">A fabrication order groups several production runs so you can see their combined quantity, time, and status together.</value>
+    </property>
+    <property key="ManufacturingFabricationOrderId">
+        <value xml:lang="de">Fertigungsauftrag-ID</value>
+        <value xml:lang="en">Fabrication order ID</value>
+    </property>
+    <property key="ManufacturingFabricationOrderRuns">
+        <value xml:lang="de">Produktionsaufträge</value>
+        <value xml:lang="en">Production runs</value>
+    </property>
+    <property key="ManufacturingFabricationOrderTotals">
+        <value xml:lang="de">Summen</value>
+        <value xml:lang="en">Totals</value>
+    </property>
+    <property key="ManufacturingRunCount">
+        <value xml:lang="de">Anzahl Aufträge</value>
+        <value xml:lang="en">Run count</value>
+    </property>
+    <property key="ManufacturingTotalQuantity">
+        <value xml:lang="de">Gesamtmenge</value>
+        <value xml:lang="en">Total quantity</value>
+    </property>
+    <property key="ManufacturingPlannedMinutes">
+        <value xml:lang="de">Geplante Minuten</value>
+        <value xml:lang="en">Planned minutes</value>
+    </property>
+    <property key="ManufacturingWorkCenters">
+        <value xml:lang="de">Arbeitsplätze</value>
+        <value xml:lang="en">Work centers</value>
+    </property>
+    <property key="ManufacturingEarliestStart">
+        <value xml:lang="de">Frühester Start</value>
+        <value xml:lang="en">Earliest start</value>
+    </property>
+    <property key="ManufacturingLatestCompletion">
+        <value xml:lang="de">Spätester Abschluss</value>
+        <value xml:lang="en">Latest completion</value>
+    </property>
+    <property key="ManufacturingAddExistingRun">
+        <value xml:lang="de">Bestehenden Auftrag hinzufügen</value>
+        <value xml:lang="en">Add existing run</value>
+    </property>
+    <property key="ManufacturingCreateRunInOrder">
+        <value xml:lang="de">Auftrag in diesem Fertigungsauftrag anlegen</value>
+        <value xml:lang="en">Create run in this order</value>
+    </property>
+    <property key="ManufacturingScheduleAll">
+        <value xml:lang="de">Alle einplanen</value>
+        <value xml:lang="en">Schedule all</value>
+    </property>
+    <property key="ManufacturingPrintAll">
+        <value xml:lang="de">Alle drucken</value>
+        <value xml:lang="en">Print all</value>
+    </property>
+    <property key="ManufacturingStartAll">
+        <value xml:lang="de">Alle starten</value>
+        <value xml:lang="en">Start all</value>
+    </property>
+    <property key="ManufacturingCompleteAll">
+        <value xml:lang="de">Alle abschließen</value>
+        <value xml:lang="en">Complete all</value>
+    </property>
+    <property key="ManufacturingScan">
+        <value xml:lang="de">Scannen</value>
+        <value xml:lang="en">Scan</value>
+    </property>
+    <property key="ManufacturingLabelsPdf">
+        <value xml:lang="de">Etiketten (PDF)</value>
+        <value xml:lang="en">Labels (PDF)</value>
+    </property>
+    <property key="ManufacturingFabricationOrderNotFound">
+        <value xml:lang="de">Fertigungsauftrag nicht gefunden:</value>
+        <value xml:lang="en">Fabrication order not found:</value>
+    </property>
+    <property key="ManufacturingFabricationOrderProductionRunNotFound">
+        <value xml:lang="de">Produktionsauftrag nicht gefunden:</value>
+        <value xml:lang="en">Production run not found:</value>
+    </property>
+    <property key="ManufacturingFabricationOrderStatusChangeErrors">
+        <value xml:lang="de">Einige Produktionsaufträge konnten nicht aktualisiert werden:</value>
+        <value xml:lang="en">Some production runs could not be updated:</value>
+    </property>
+    <property key="ManufacturingProductionLine">
+        <value xml:lang="de">Fertigungslinie</value>
+        <value xml:lang="en">Production Line</value>
+    </property>
+    <property key="ManufacturingSwitchMachine">
+        <value xml:lang="de">Anlage wechseln</value>
+        <value xml:lang="en">Switch Machine</value>
+    </property>
+    <property key="ManufacturingLineHelp">
+        <value xml:lang="de">Sie sehen eine Fertigungslinie: die Aufgaben aller Mitgliedsanlagen erscheinen zusammen unten.</value>
+        <value xml:lang="en">You are viewing a production line: tasks from all member machines appear together below.</value>
+    </property>
+    <property key="ManufacturingMachineNotInLine">
+        <value xml:lang="de">Die gewählte Anlage ist nicht die aktuelle Anlage, die übergeordnete Linie oder eine Schwesteranlage der Aufgabe.</value>
+        <value xml:lang="en">The chosen asset is not the task's current asset, its line, or a sibling machine in the same line.</value>
+    </property>
+    <property key="ManufacturingRoutingTaskFixedAssetTooltip">
+        <value xml:lang="de">Eine einzelne Anlage oder eine Fertigungslinie: eine Anlage, deren Mitglieder Anlagen sind. Der Bediener wählt das Mitglied auf dem Fertigungsboden.</value>
+        <value xml:lang="en">A single machine or a production line: a fixed asset whose members are machines. The operator picks the member on the shop floor.</value>
+    </property>
+
+    <!-- SCIPIO: Lot reservation by weight -->
+    <property key="ManufacturingReservedLots">
+        <value xml:lang="de">Reservierte Chargen</value>
+        <value xml:lang="en">Reserved Lots</value>
+    </property>
+    <property key="ManufacturingReserveALot">
+        <value xml:lang="de">Charge reservieren</value>
+        <value xml:lang="en">Reserve a Lot</value>
+    </property>
+    <property key="ManufacturingReservationHelp">
+        <value xml:lang="de">Die gesamte Charge wird für den Arbeitsschritt reserviert. Verbrauchen Sie sie nach Gewicht auf dem Meldebildschirm; der Rest bleibt reserviert, bis Sie ihn freigeben oder der Auftrag geschlossen wird.</value>
+        <value xml:lang="en">The whole lot is held for the task. Issue by weight from it on the declaration screen; the rest stays reserved until you release it or the run closes.</value>
+    </property>
+    <property key="ManufacturingLot">
+        <value xml:lang="de">Charge</value>
+        <value xml:lang="en">Lot</value>
+    </property>
+    <property key="ManufacturingReservedQuantity">
+        <value xml:lang="de">Reservierte Menge</value>
+        <value xml:lang="en">Reserved Quantity</value>
+    </property>
+    <property key="ManufacturingReservedDate">
+        <value xml:lang="de">Reserviert am</value>
+        <value xml:lang="en">Reserved Date</value>
+    </property>
+    <property key="ManufacturingProductionRunLotComponentNotFound">
+        <value xml:lang="de">Das Produkt ist keine Komponente dieses Arbeitsschritts.</value>
+        <value xml:lang="en">The product is not a component of this task.</value>
+    </property>
+    <property key="ManufacturingProductionRunLotNotFound">
+        <value xml:lang="de">Für diese Charge wurde in diesem Standort kein Lagerbestand gefunden.</value>
+        <value xml:lang="en">No inventory item was found for this lot at this facility.</value>
+    </property>
+    <property key="ManufacturingProductionRunLotNoAvailableToPromise">
+        <value xml:lang="de">Für diese Charge ist nichts verfügbar; eine Reservierung ist nicht möglich.</value>
+        <value xml:lang="en">Nothing is available to promise on this lot; it cannot be reserved.</value>
+    </property>
+    <property key="ManufacturingProductionRunLotAlreadyReserved">
+        <value xml:lang="de">Dieser Lagerbestand ist für diesen Arbeitsschritt bereits reserviert.</value>
+        <value xml:lang="en">This inventory item is already reserved for this task.</value>
+    </property>
+    <property key="ManufacturingProductionRunReservationNotFound">
+        <value xml:lang="de">Die Reservierung wurde nicht gefunden oder ist bereits freigegeben.</value>
+        <value xml:lang="en">The reservation was not found or is already released.</value>
+    </property>
+    <property key="ManufacturingScanCode">
+        <value xml:lang="de">Scancode</value>
+        <value xml:lang="en">Scan code</value>
+    </property>
+    <property key="ManufacturingScanCodeHelp">
+        <value xml:lang="de">Scannen Sie den QR-Code auf dem Auftragsetikett, oder geben Sie die Auftrags-ID ein.</value>
+        <value xml:lang="en">Scan the QR code on the task label, or type the task id.</value>
+    </property>
+    <property key="ManufacturingScanAction">
+        <value xml:lang="de">Aktion</value>
+        <value xml:lang="en">Action</value>
+    </property>
+    <property key="ManufacturingScanActionStart">
+        <value xml:lang="de">Starten</value>
+        <value xml:lang="en">Start</value>
+    </property>
+    <property key="ManufacturingScanActionComplete">
+        <value xml:lang="de">Abschließen</value>
+        <value xml:lang="en">Complete</value>
+    </property>
+    <property key="ManufacturingScanActionProduce">
+        <value xml:lang="de">Produzieren</value>
+        <value xml:lang="en">Produce</value>
+    </property>
+    <property key="ManufacturingScanActionInfo">
+        <value xml:lang="de">Info</value>
+        <value xml:lang="en">Info</value>
+    </property>
+    <property key="ManufacturingLastScans">
+        <value xml:lang="de">Letzte Scans</value>
+        <value xml:lang="en">Last scans</value>
+    </property>
+    <property key="ManufacturingScanDate">
+        <value xml:lang="de">Scandatum</value>
+        <value xml:lang="en">Scan date</value>
+    </property>
+    <property key="ManufacturingScanCodeRequired">
+        <value xml:lang="de">Geben Sie einen Code ein, oder scannen Sie ihn.</value>
+        <value xml:lang="en">Enter or scan a code.</value>
+    </property>
+    <property key="ManufacturingScanCodeNotRecognized">
+        <value xml:lang="de">Der Code ist ungültig.</value>
+        <value xml:lang="en">The code is not valid.</value>
+    </property>
+    <property key="ManufacturingScanTaskNotFound">
+        <value xml:lang="de">Auftrag nicht gefunden: ${workEffortId}</value>
+        <value xml:lang="en">Task not found: ${workEffortId}</value>
+    </property>
+    <property key="ManufacturingScanRunNotFound">
+        <value xml:lang="de">Produktionsauftrag nicht gefunden: ${productionRunId}</value>
+        <value xml:lang="en">Production run not found: ${productionRunId}</value>
+    </property>
+    <property key="ManufacturingScanTaskRequired">
+        <value xml:lang="de">Diese Aktion braucht einen Auftragscode, keinen Produktionsauftragscode.</value>
+        <value xml:lang="en">This action needs a task code, not a run code.</value>
+    </property>
+    <property key="ManufacturingScanProductNotFound">
+        <value xml:lang="de">Der Produktionsauftrag hat kein Produkt zum Produzieren.</value>
+        <value xml:lang="en">The production run has no product to produce.</value>
+    </property>
+    <property key="ManufacturingScanTaskStarted">
+        <value xml:lang="de">Auftrag gestartet.</value>
+        <value xml:lang="en">Task started.</value>
+    </property>
+    <property key="ManufacturingScanTaskCompleted">
+        <value xml:lang="de">Auftrag abgeschlossen.</value>
+        <value xml:lang="en">Task completed.</value>
+    </property>
+    <property key="ManufacturingScanTaskProduced">
+        <value xml:lang="de">Ausbringung erfasst.</value>
+        <value xml:lang="en">Output declared.</value>
+    </property>
+    <property key="ManufacturingScanInfoOnly">
+        <value xml:lang="de">Nur Auftragsinformation; keine Aktion ausgeführt.</value>
+        <value xml:lang="en">Task information only; no action taken.</value>
+    </property>
+    <property key="ManufacturingTaskLabels">
+        <value xml:lang="de">Etiketten für Aufträge</value>
+        <value xml:lang="en">Task labels</value>
     </property>
 </resource>

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.webapp.control;
 
 import static org.ofbiz.base.util.UtilGenerics.checkMap;
@@ -466,49 +472,9 @@ public class LoginWorker {
         Delegator delegator = (Delegator) request.getAttribute("delegator");
         ServletContext servletContext = session.getServletContext();
 
-        // if a tenantId was passed in, see if the userLoginId is associated with that tenantId (can use any delegator for this, entity is not tenant-specific)
-        String tenantId = request.getParameter("userTenantId");
-        if (UtilValidate.isEmpty(tenantId)) {
-            tenantId = (String) request.getAttribute("userTenantId");
-        }
-        if (UtilValidate.isNotEmpty(tenantId)) {
-            // see if we need to activate a tenant delegator, only do if the current delegatorName has a hash symbol in it, and if the passed in tenantId doesn't match the one in the delegatorName
-            String oldDelegatorName = delegator.getDelegatorName();
-            int delegatorNameHashIndex = oldDelegatorName.indexOf('#');
-            String currentDelegatorTenantId = null;
-            if (delegatorNameHashIndex > 0) {
-                currentDelegatorTenantId = oldDelegatorName.substring(delegatorNameHashIndex + 1);
-                if (currentDelegatorTenantId != null) currentDelegatorTenantId = currentDelegatorTenantId.trim();
-            }
-
-            if (delegatorNameHashIndex == -1 || (currentDelegatorTenantId != null && !tenantId.equals(currentDelegatorTenantId))) {
-                // make that tenant active, setup a new delegator and a new dispatcher
-                String delegatorName = delegator.getDelegatorBaseName() + "#" + tenantId;
-
-                try {
-                    // after this line the delegator is replaced with the new per-tenant delegator
-                    delegator = DelegatorFactory.getDelegator(delegatorName);
-                    dispatcher = ContextFilter.makeWebappDispatcher(servletContext, delegator);
-                } catch (NullPointerException e) {
-                    Debug.logError(e, "Error getting tenant delegator", module);
-                    Map<String, String> messageMap = UtilMisc.toMap("errorMessage", "Tenant [" + tenantId + "]  not found...");
-                    String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                    return "error";
-                }
-
-                // SCIPIO: stop if delegator null, for now
-                if(delegator == null){
-                    Map<String, String> messageMap = UtilMisc.toMap("errorMessage", "Tenant [" + tenantId + "]  not found...");
-                    String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.following_error_occurred_during_login", messageMap, UtilHttp.getLocale(request));
-                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                    return "error";
-                }
-
-                // NOTE: these will be local for now and set in the request and session later, after we've verified that the user
-                setupNewDelegatorEtc = true;
-            }
-        } else {
+        // SCIPIO: 4.0.0: pooled runtime: a login field or request parameter never selects a store (G3). In pooled mode
+        // TenantResolver put the store of the Host header on the request; single-store mode uses the default delegator.
+        if (TenantResolver.fromRequest(request) == null) {
             // Set default delegator
             if (Debug.infoOn()) {
                 Debug.logInfo("Setting default delegator", module);
@@ -525,8 +491,8 @@ public class LoginWorker {
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
-            setupNewDelegatorEtc = true;
         }
+        setupNewDelegatorEtc = true;
 
         Map<String, Object> result = null;
         try {
@@ -656,6 +622,8 @@ public class LoginWorker {
     public static String doMainLogin(HttpServletRequest request, HttpServletResponse response, GenericValue userLogin, Map<String, Object> userLoginSession) {
         HttpSession session = request.getSession();
         if (userLogin != null && hasBasePermission(userLogin, request)) {
+            // SCIPIO: 4.0.0: public demo: the shipped account gets its shipped settings back, before the session reads them
+            com.ilscipio.scipio.ce.webapp.control.util.DemoLoginReset.resetUser(response, userLogin);
             doBasicLogin(userLogin, request);
         } else {
             String errMsg = UtilProperties.getMessage(resourceWebapp, "loginevents.unable_to_login_this_application", UtilHttp.getLocale(request));
@@ -780,6 +748,7 @@ public class LoginWorker {
         // now empty out the session
         session.invalidate();
         session = request.getSession(true);
+        TenantResolver.bindSession(request); // SCIPIO: 4.0.0: pooled runtime: the new session belongs to the same store
 
         if (EntityUtilProperties.propertyValueEquals("security", "security.login.tomcat.sso", "true")){
             try {

@@ -1,4 +1,24 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.solr;
+
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import org.ofbiz.entity.util.TenantScope;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,6 +27,8 @@ import java.util.Map;
 import javax.transaction.Transaction;
 
 import org.apache.solr.client.solrj.SolrRequest;
+import org.apache.solr.client.solrj.request.CoreAdminRequest;
+import org.apache.solr.client.solrj.response.CoreAdminResponse;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.SolrPing;
 import org.apache.solr.client.solrj.response.SolrPingResponse;
@@ -102,8 +124,49 @@ public abstract class SolrUtil {
         return version;
     }
 
+    /**
+     * The default core; SCIPIO: 4.0.0: pooled runtime: in the scope of a store (TenantScope) the store's own core
+     * ({@code <default>_<tenantId>}, created on first use), so that no store reads or writes another store's index (G8).
+     */
     public static String getSolrDefaultCore() {
-        return solrDefaultCore;
+        String tenantId = TenantScope.current();
+        return (tenantId != null) ? getTenantCore(tenantId) : solrDefaultCore;
+    }
+
+    private static final Set<String> knownTenantCores = ConcurrentHashMap.newKeySet();
+
+    /** SCIPIO: 4.0.0: pooled runtime: the core of a store; creates it from the default core's configset when missing. */
+    public static String getTenantCore(String tenantId) {
+        String core = solrDefaultCore + "_" + tenantId;
+        if (!knownTenantCores.contains(core)) {
+            ensureTenantCore(core);
+        }
+        return core;
+    }
+
+    private static synchronized void ensureTenantCore(String core) {
+        if (knownTenantCores.contains(core)) {
+            return;
+        }
+        try {
+            HttpSolrClient admin = getAdminHttpSolrClientFromUrl(getSolrWebappUrl());
+            CoreAdminResponse status = CoreAdminRequest.getStatus(core, admin);
+            if (status.getCoreStatus(core) == null || status.getCoreStatus(core).get("name") == null) {
+                CoreAdminRequest.Create create = new CoreAdminRequest.Create();
+                create.setCoreName(core);
+                create.setInstanceDir("cores/stores/" + core);
+                create.setConfigSet(UtilProperties.getPropertyValue(solrConfigName, "solr.core.tenant.configSet", "product_configs"));
+                // transient: Solr keeps only solr.xml transientCacheSize store cores open (least recently used first)
+                create.setIsTransient(true);
+                create.setIsLoadOnStartup(false);
+                create.process(admin);
+                Debug.logInfo("Solr: created store core " + core, module);
+            }
+            knownTenantCores.add(core);
+        } catch (Exception e) {
+            // no fallback to the shared core: without its own core the store gets errors, never another store's data
+            Debug.logError(e, "Solr: could not check or create store core " + core + ": " + e.getMessage(), module);
+        }
     }
 
     public static String getSolrWebappProtocol() {
@@ -170,7 +233,7 @@ public abstract class SolrUtil {
     }
 
     public static String getSolrDefaultCoreUrl() {
-        return solrFullUrl;
+        return (TenantScope.current() != null) ? getSolrCoreUrl(getSolrDefaultCore()) : solrFullUrl; // SCIPIO: 4.0.0: store core (G8)
     }
 
     private static String makeSolrDefaultCoreUrl() {
@@ -814,10 +877,13 @@ public abstract class SolrUtil {
             }
 
             public static CachedSolrClientFactory create(SolrConnectConfig connectConfig) {
+                // SCIPIO: 4.0.0: pooled runtime: the default client uses the base core URL, never the core of the store
+                // whose thread happens to load this class (the store core check would recurse into this class init)
+                String baseCoreUrl = makeSolrDefaultCoreUrl();
                 String defaultClientCacheKey = (connectConfig.getSolrUsername() != null) ?
-                        (connectConfig.getSolrCoreUrl() + ":" + connectConfig.getSolrUsername() + ":" + connectConfig.getSolrPassword())
-                        : connectConfig.getSolrCoreUrl();
-                HttpSolrClient defaultClient = NewSolrClientFactory.makeClient(connectConfig, connectConfig.getSolrCoreUrl(),
+                        (baseCoreUrl + ":" + connectConfig.getSolrUsername() + ":" + connectConfig.getSolrPassword())
+                        : baseCoreUrl;
+                HttpSolrClient defaultClient = NewSolrClientFactory.makeClient(connectConfig, baseCoreUrl,
                         connectConfig.getSolrUsername(), connectConfig.getSolrPassword());
                 return new CachedSolrClientFactory(connectConfig, defaultClientCacheKey, defaultClient);
             }

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.service.job;
 
 import java.util.Date;
@@ -80,8 +86,54 @@ public abstract class AbstractJob implements Job {
      */
     public abstract void exec() throws InvalidJobException;
 
+    /** SCIPIO: W1-01c: called once when the job ends or leaves the queue (the job count per store, G17). */
+    private volatile Runnable doneCallback;
+
+    void setDoneCallback(Runnable doneCallback) {
+        this.doneCallback = doneCallback;
+    }
+
+    void runDoneCallback() {
+        Runnable callback = doneCallback;
+        doneCallback = null;
+        if (callback != null) {
+            callback.run();
+        }
+    }
+
+    /**
+     * SCIPIO: W1-01c: hands the job to the executor. When the executor does not take the job (any exception), the
+     * job count of its store ends here; when it takes the job, {@link #run} ends the count (G17).
+     */
+    static void execute(java.util.concurrent.Executor executor, Job job) {
+        boolean taken = false;
+        try {
+            executor.execute(job);
+            taken = true;
+        } finally {
+            if (!taken) {
+                endCount(job);
+            }
+        }
+    }
+
+    /** SCIPIO: W1-01c: ends the job count of a task that leaves the queue without a run (G17). */
+    static void endCount(Object task) {
+        if (task instanceof AbstractJob) {
+            ((AbstractJob) task).runDoneCallback();
+        }
+    }
+
     @Override
     public void run() {
+        try {
+            runJob();
+        } finally {
+            runDoneCallback();
+        }
+    }
+
+    private void runJob() {
         long startMillis = System.currentTimeMillis();
         try {
             exec();

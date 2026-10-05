@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<ofbiz-component name="compliance"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-component.xsd">
+    <!-- define resource loaders; most common is to use the component resource loader -->
+    <resource-loader name="main" type="component"/>
+
+    <!-- place the config directory on the classpath to access configuration files -->
+    <classpath type="dir" location="config"/>
+    
+    <!-- load single or multiple external libraries -->
+    <classpath type="jar" location="build/lib/*"/>
+    <classpath type="jar" location="lib/*"/>
+
+    <!-- entity resources: model(s), eca(s), group, and data definitions -->
+    <!-- <entity-resource type="eca" reader-name="main" loader="main" location="entitydef/eecas.xml"/> -->
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ComplianceTypeData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/ComplianceSecurityPermissionSeedData.xml"/>
+    <entity-resource type="data" reader-name="seed-initial" loader="main" location="data/ComplianceScheduledJobs.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/ComplianceSecurityGroupDemoData.xml"/>
+    <!-- ext-demo: the profile, sellers and product data refer to the shop demo store and products (demo reader of shop, which loads later) -->
+    <entity-resource type="data" reader-name="ext-demo" loader="main" location="data/ComplianceDemoData.xml"/>
+
+    <!-- service resources: model(s), eca(s) and group definitions -->
+    <!--
+    <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
+    <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
+    -->
+
+    <test-suite loader="main" location="testdef/ComplianceTests.xml"/>
+
+    <!-- web applications; will be mounted when using the embedded container -->
+    <!-- public CSS, JS and official EU images for the storefront (no login) -->
+    <webapp name="compliance-static"
+        title="Compliance static files"
+        server="default-server"
+        location="webapp/compliance-static"
+        mount-point="/compliance-static"
+        app-bar-display="false"/>
+
+    <webapp name="compliance"
+        title="Compliance"
+        server="default-server"
+        location="webapp/compliance"
+        base-permission="OFBTOOLS,COMPLIANCE"
+        mount-point="/compliance"/>
+</ofbiz-component>

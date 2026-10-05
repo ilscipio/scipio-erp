@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!--
+SCIPIO: 4.0.0: catalog of third-party services that can receive shopper data.
+The registry (ThirdPartyServiceRegistry) lists a service for a store when its trigger matches:
+  always="true"               - every store
+  component="x"               - component x is installed and enabled
+  web-analytics-type="X"      - a WebAnalyticsConfig row of a web site of the store has this type
+  payment-gateway-type="X"    - a payment setting of the store uses a PaymentGatewayConfig of this type
+  carrier-party="X"           - the store ships with this carrier (ProductStoreShipmentMeth.partyId)
+Any component can add or override entries with its own config/third-party-services.xml (same format;
+entries there need no trigger). Merchants add or hide services per store with the ThirdPartyService entity.
+category: NECESSARY | PREFERENCES | STATISTICS | MARKETING (all but NECESSARY need consent in the EU).
+Provider data: check before a release; the privacy policy shows these values.
+-->
+<third-party-services>
+    <service id="this-store" always="true" name="This store" provider="" category="NECESSARY"
+        purpose="Session, bag, checkout, security and your cookie choices"
+        data="Session ID, cart, cookie choices" countries="" legal-basis="Contract / legitimate interest"
+        cookies="JSESSIONID (session), scpConsent (your cookie choices, 12 months)"/>
+
+    <!-- Addons -->
+    <service id="stripe" component="stripe" name="Stripe" provider="Stripe Payments Europe, Ltd." category="NECESSARY"
+        purpose="Card payments and fraud checks" data="Name, e-mail, billing address, card data, device and IP data"
+        countries="Ireland, USA" legal-basis="Contract" privacy-url="https://stripe.com/privacy"
+        cookies="__stripe_mid, __stripe_sid" script-domains="js.stripe.com,api.stripe.com,m.stripe.network,hooks.stripe.com"/>
+    <service id="google-sign-in" component="auth-google" name="Google Sign-In" provider="Google Ireland Limited" category="PREFERENCES"
+        purpose="Sign in with a Google account" data="Name, e-mail, profile picture"
+        countries="Ireland, USA" legal-basis="Consent" privacy-url="https://policies.google.com/privacy"
+        script-domains="accounts.google.com,apis.google.com"/>
+    <service id="facebook-login" component="auth-facebook" name="Facebook Login" provider="Meta Platforms Ireland Limited" category="PREFERENCES"
+        purpose="Sign in with a Facebook account" data="Name, e-mail, profile picture"
+        countries="Ireland, USA" legal-basis="Consent" privacy-url="https://www.facebook.com/privacy/policy/"
+        script-domains="connect.facebook.net,www.facebook.com"/>
+
+    <!-- Web analytics (WebAnalyticsConfig) -->
+    <service id="google-analytics" web-analytics-type="GOOGLE_ANALYTICS" name="Google Analytics" provider="Google Ireland Limited" category="STATISTICS"
+        purpose="Visit statistics" data="Pseudonymous usage data, device data, shortened IP address"
+        countries="Ireland, USA" legal-basis="Consent" privacy-url="https://policies.google.com/privacy"
+        cookies="_ga, _ga_* (up to 24 months)" script-domains="www.googletagmanager.com,www.google-analytics.com,*.google-analytics.com,*.analytics.google.com"/>
+    <service id="microsoft-uet" web-analytics-type="BING_ANALYTICS" name="Microsoft Advertising UET" provider="Microsoft Ireland Operations Limited" category="MARKETING"
+        purpose="Visit statistics and ad measurement" data="Pseudonymous usage data, device data, IP address"
+        countries="Ireland, USA" legal-basis="Consent" privacy-url="https://privacy.microsoft.com/privacystatement"
+        cookies="_uetsid, _uetvid, MUID" script-domains="bat.bing.com"/>
+
+    <!-- Payment gateways (PaymentGatewayConfig type) -->
+    <service id="paypal" payment-gateway-type="PAYPAL" name="PayPal" provider="PayPal (Europe) S.à r.l. et Cie, S.C.A." category="NECESSARY"
+        purpose="Payment with PayPal" data="Name, e-mail, address, order amount" countries="Luxembourg, USA" legal-basis="Contract"
+        privacy-url="https://www.paypal.com/privacy" script-domains="www.paypal.com,www.paypalobjects.com"/>
+    <service id="payflow-pro" payment-gateway-type="PAYFLOWPRO" name="PayPal Payflow Pro" provider="PayPal" category="NECESSARY"
+        purpose="Card payments" data="Name, billing address, card data" countries="USA" legal-basis="Contract" privacy-url="https://www.paypal.com/privacy"/>
+    <service id="authorize-net" payment-gateway-type="AUTHORIZE_NET" name="Authorize.net" provider="Visa Inc." category="NECESSARY"
+        purpose="Card payments" data="Name, billing address, card data" countries="USA" legal-basis="Contract" privacy-url="https://www.authorize.net/about-us/privacy/"/>
+    <service id="cybersource" payment-gateway-type="CYBERSOURCE" name="Cybersource" provider="Visa Inc." category="NECESSARY"
+        purpose="Card payments and fraud checks" data="Name, billing address, card data, device data" countries="USA" legal-basis="Contract"/>
+    <service id="worldpay" payment-gateway-type="WORLDPAY" name="Worldpay" provider="Worldpay" category="NECESSARY"
+        purpose="Card payments" data="Name, billing address, card data" countries="United Kingdom, USA" legal-basis="Contract"/>
+    <service id="sagepay" payment-gateway-type="SAGEPAY" name="Opayo" provider="Elavon" category="NECESSARY"
+        purpose="Card payments" data="Name, billing address, card data" countries="United Kingdom" legal-basis="Contract"/>
+    <service id="ideal" payment-gateway-type="IDEAL" name="iDEAL" provider="Your bank (Currence iDEAL)" category="NECESSARY"
+        purpose="Bank payment" data="Name, bank account, order amount" countries="Netherlands" legal-basis="Contract"/>
+
+    <!-- Carriers (ProductStoreShipmentMeth.partyId) -->
+    <service id="carrier-dhl" carrier-party="DHL" name="DHL" provider="DHL" category="NECESSARY"
+        purpose="Delivery of your order" data="Name, delivery address, e-mail and phone for delivery notices" countries="Germany and the destination country" legal-basis="Contract"/>
+    <service id="carrier-ups" carrier-party="UPS" name="UPS" provider="United Parcel Service" category="NECESSARY"
+        purpose="Delivery of your order" data="Name, delivery address, e-mail and phone for delivery notices" countries="USA and the destination country" legal-basis="Contract"/>
+    <service id="carrier-fedex" carrier-party="FEDEX" name="FedEx" provider="Federal Express" category="NECESSARY"
+        purpose="Delivery of your order" data="Name, delivery address, e-mail and phone for delivery notices" countries="USA and the destination country" legal-basis="Contract"/>
+    <service id="carrier-usps" carrier-party="USPS" name="USPS" provider="United States Postal Service" category="NECESSARY"
+        purpose="Delivery of your order" data="Name, delivery address" countries="USA" legal-basis="Contract"/>
+</third-party-services>

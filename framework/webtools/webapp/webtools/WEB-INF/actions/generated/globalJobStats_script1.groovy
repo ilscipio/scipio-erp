@@ -1,0 +1,1 @@
+context.jobList = org.ofbiz.service.job.JobPoller.getInstance().getGlobalServiceStatsMapList(context.jobType ?: parameters.jobType);

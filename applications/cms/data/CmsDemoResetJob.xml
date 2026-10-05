@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: public demo: the CMS goes back to the data files every hour (service cmsDemoReset). The service does
+     nothing unless general.properties demo.reset.enabled=true, so the job is harmless in other demo databases. -->
+<entity-engine-xml>
+    <RecurrenceRule recurrenceRuleId="CMS_DEMO_RESET" frequency="HOURLY" intervalNumber="1" countNumber="-1" untilDateTime=""/>
+    <RecurrenceInfo recurrenceInfoId="CMS_DEMO_RESET" startDateTime="2026-01-01 00:00:00.000" recurrenceRuleId="CMS_DEMO_RESET" recurrenceCount="0"/>
+    <JobSandbox jobId="CMS_DEMO_RESET" jobName="CMS demo reset (public demo only)" runTime="2026-01-01 00:00:00.000" serviceName="cmsDemoReset"
+        poolId="pool" runAsUser="system" recurrenceInfoId="CMS_DEMO_RESET" maxRecurrenceCount="-1" statusId="SERVICE_PENDING"/>
+</entity-engine-xml>

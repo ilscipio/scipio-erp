@@ -16,7 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.entity.util;
+
+import org.ofbiz.base.util.UtilProperties;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -86,11 +94,16 @@ public class SequenceUtil {
         bank.refresh(staggerMax);
     }
 
+    /** SCIPIO: 4.0.0: general.properties entity.sequence.defaultBankSize (10). A refill takes a second connection in its
+        own transaction; with small per-store connection pools (pooled runtime) fewer refills are safer. */
+    private static final long DEFAULT_BANK_SIZE = Math.min(UtilProperties.getPropertyAsLong("general", "entity.sequence.defaultBankSize",
+            EntityUtil.isMultiTenantEnabled() ? 200L : 10L), 5000L); // pooled runtime default: 200
+
     private SequenceBank getBank(String seqName, ModelEntity seqModelEntity) {
         SequenceBank bank = sequences.get(seqName);
 
         if (bank == null) {
-            long bankSize = SequenceBank.defaultBankSize;
+            long bankSize = DEFAULT_BANK_SIZE;
             if (seqModelEntity != null && seqModelEntity.getSequenceBankSize() != null) {
                 bankSize = seqModelEntity.getSequenceBankSize().longValue();
                 if (bankSize > SequenceBank.maxBankSize) bankSize = SequenceBank.maxBankSize;

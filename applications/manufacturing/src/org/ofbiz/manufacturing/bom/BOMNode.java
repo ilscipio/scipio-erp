@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
 package org.ofbiz.manufacturing.bom;
 
@@ -140,6 +146,9 @@ public class BOMNode {
             List<GenericValue> productPartRules) throws GenericEntityException {
         if (productPartRules != null) {
             GenericValue rule = null;
+            // SCIPIO: consecutive AND rules with the same substitution form a chain; every rule in the chain must be satisfied
+            String andChainSubst = null;
+            boolean andChainSatisfied = true;
             for (int i = 0; i < productPartRules.size(); i++) {
                 rule = productPartRules.get(i);
                 String ruleCondition = (String)rule.get("productFeature");
@@ -167,7 +176,26 @@ public class BOMNode {
                         }
                     }
                 }
-                if (ruleSatisfied && "OR".equals(ruleOperator)) {
+                boolean applyRule;
+                if ("AND".equals(ruleOperator)) {
+                    String subst = UtilValidate.isEmpty(newPart) ? "" : newPart;
+                    if (andChainSubst == null || !andChainSubst.equals(subst)) {
+                        andChainSubst = subst;
+                        andChainSatisfied = true;
+                    }
+                    andChainSatisfied = andChainSatisfied && ruleSatisfied;
+                    boolean lastInChain = true;
+                    if (i + 1 < productPartRules.size()) {
+                        GenericValue nextRule = productPartRules.get(i + 1);
+                        String nextSubst = UtilValidate.isEmpty(nextRule.getString("productIdInSubst")) ? "" : nextRule.getString("productIdInSubst");
+                        lastInChain = !("AND".equals(nextRule.getString("ruleOperator")) && nextSubst.equals(subst));
+                    }
+                    applyRule = lastInChain && andChainSatisfied;
+                } else {
+                    andChainSubst = null;
+                    applyRule = ruleSatisfied && "OR".equals(ruleOperator);
+                }
+                if (applyRule) {
                     BOMNode tmpNode = oneChildNode;
                     if (newPart == null || newPart.equals("")) {
                         oneChildNode = null;
@@ -187,7 +215,6 @@ public class BOMNode {
                     }
                     break;
                 }
-                // FIXME: AND operator still not implemented
             } // end of for
 
         }

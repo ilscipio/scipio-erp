@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.product.product;
 
 import java.io.IOException;
@@ -142,7 +148,7 @@ public class ProductPromoContentWrapper extends CommonContentWrapper {
         /* caching: there is one cache created, "product.promo.content"  Each productPromo's content is cached with a key of
          * contentTypeId::locale::mimeType::productPromoId, or whatever the SEPARATOR is defined above to be.
          */
-        String cacheKey = (useCache) ? productPromoContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productPromo.get("productPromoId") + SEPARATOR + encoder.getLang() + SEPARATOR + delegator : null;
+        String cacheKey = (useCache) ? productPromoContentTypeId + SEPARATOR + locale + SEPARATOR + mimeTypeId + SEPARATOR + productPromo.get("productPromoId") + SEPARATOR + encoder.getLang() + SEPARATOR + (delegator != null ? delegator.getDelegatorName() : null) : null; // SCIPIO: 4.0.0: delegator name (G14)
         try {
             if (useCache) {
                 String cachedValue = productPromoContentCache.get(cacheKey);

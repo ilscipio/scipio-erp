@@ -1,0 +1,375 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+/*
+ * SCIPIO: 4.0.0: Aurora Shop - the store pages outside the home page: product, category and search, cart and
+ * checkout, sign-in and registration, the customer account, forms and the widgets of the shared macros.
+ * Loads after aurora-shop.css (VisualThemeResource sequence 10). Tokens: aurora-tokens.css.
+ * The shared shop templates emit back-office markup (Bulma-like classes from the Aurora style map); these rules
+ * give it the storefront look of the Aurora Shop canvas: no box in a box, large type, pill controls.
+ */
+
+/* ---- Base ------------------------------------------------------------------------------------------------ */
+.as-main { --st-field-h: 48px; --st-r-field: 14px; --st-gap: 24px; }
+.as-main h2.title, .as-main .section-screenlet > h2, .as-main .section-screenlet > h3 {
+  margin: 0 0 18px; font-family: var(--au-font-display); font-weight: 700; letter-spacing: -0.02em;
+  font-size: clamp(22px, 2.2vw, 30px); line-height: 1.15; color: var(--au-ink);
+}
+.as-main .section-screenlet { margin-bottom: 40px; }
+.as-main .section-screenlet .section-screenlet { margin-bottom: 28px; }
+.as-main hr { border: 0; border-top: 1px solid var(--au-rule-soft); margin: 28px 0; }
+.as-main nav.breadcrumb ul { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.as-main nav.breadcrumb li, .as-main nav.breadcrumb a { font-family: var(--au-font-mono); font-size: 12.5px; letter-spacing: .04em; color: var(--au-ink-3) !important; text-decoration: none; }
+.as-main nav.breadcrumb a:hover { color: var(--au-ink) !important; text-decoration: underline; }
+.as-main nav.breadcrumb li.is-active { color: var(--au-ink); }
+/* the shop templates mark optional contact fields as extra; the storefront does not show them */
+.as-main div.field-extra, .as-main .field.field-extra { display: none !important; }
+
+/* ---- Messages ---------------------------------------------------------------------------------------------- */
+.as-main .notification { position: relative; border-radius: 16px; padding: 14px 48px 14px 18px; border: 1px solid var(--au-rule);
+  background: var(--au-surface); color: var(--au-ink); font-size: 15px; line-height: 1.5; box-shadow: none; }
+.as-main .notification.is-info { background: var(--au-surface); border-color: var(--au-rule); }
+.as-main .notification.is-success { background: var(--au-ok-soft); border-color: var(--au-ok-line); }
+.as-main .notification.is-warning { background: var(--au-warn-soft); border-color: var(--au-warn-line); }
+.as-main .notification.is-danger { background: var(--au-danger-soft); border-color: var(--au-danger-line); }
+.as-main .notification > .delete { position: absolute; top: 12px; right: 12px; width: 28px; height: 28px; border-radius: 50%;
+  border: 0; background: transparent; cursor: pointer; color: var(--au-ink-2); }
+.as-main .notification > .delete::before { content: "\00d7"; font-size: 20px; line-height: 28px; }
+.as-main .notification > .delete:hover { background: var(--au-surface-3); }
+.as-main .notification .button, .as-main .notification a.button { min-height: 0; height: auto; padding: 0; border: 0; background: none;
+  color: var(--au-accent-2) !important; font-weight: 600; text-decoration: underline; box-shadow: none; }
+
+/* ---- Buttons --------------------------------------------------------------------------------------------- */
+.as-main .button, .as-main a.button, .as-main input[type=submit], .as-main button[type=submit],
+.as-main a[class*="action-"].button, .as-main .menu-type-button > .control > a, .as-main .menu-type-button > a, .as-main .menu-type-section > a {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: auto; min-height: 48px;
+  padding: 0 22px; border-radius: 999px; border: 1px solid var(--au-rule-strong); background: var(--au-surface);
+  color: var(--au-ink) !important; font-family: inherit; font-size: 15px; font-weight: 600; text-decoration: none !important;
+  cursor: pointer; box-shadow: none; transition: background var(--au-speed, .15s), border-color var(--au-speed, .15s), transform .1s;
+}
+.as-main .button:hover, .as-main input[type=submit]:hover, .as-main .menu-type-button > .control > a:hover, .as-main .menu-type-section > a:hover {
+  border-color: var(--au-ink); background: var(--au-surface); }
+.as-main .button:active, .as-main input[type=submit]:active { transform: translateY(1px); }
+.as-main .button.is-primary, .as-main input[type=submit], .as-main button[type=submit], .as-main a.action-continue,
+.as-main .menu-type-button > .control > a.is-primary, .as-main #addToCart, .as-main a.action-run.action-add, .as-main #processButton {
+  background: var(--au-primary); border-color: var(--au-primary); color: var(--au-on-primary) !important; }
+.as-main .button.is-primary:hover, .as-main input[type=submit]:hover, .as-main button[type=submit]:hover, .as-main a.action-continue:hover,
+.as-main #addToCart:hover { background: var(--au-primary-hover); border-color: var(--au-primary-hover); }
+/* a secondary action next to the main one is a quiet outline */
+.as-main a.action-cancel.button.is-primary { background: var(--au-surface); border-color: var(--au-rule-strong); color: var(--au-ink) !important; }
+.as-main a.action-clear, .as-main a.action-remove, .as-main a.action-remove.button { color: var(--au-danger) !important; }
+
+/* ---- Forms ------------------------------------------------------------------------------------------------- */
+.as-main .field { margin-bottom: 18px; }
+.as-main .field .field { margin-bottom: 0; }
+.as-main .label, .as-main .field-label label, .as-main label.label { display: block; margin: 0 0 7px; font-size: 13.5px; font-weight: 600;
+  color: var(--au-ink); letter-spacing: 0; text-align: left; }
+.as-main .input, .as-main .textarea, .as-main input[type=text], .as-main input[type=email], .as-main input[type=password],
+.as-main input[type=tel], .as-main input[type=number], .as-main input[type=search]:not(.as-search input), .as-main textarea {
+  width: 100%; max-width: 100%; height: var(--st-field-h); box-sizing: border-box; padding: 0 16px; border: 1px solid var(--au-rule-strong);
+  border-radius: var(--st-r-field); background: var(--au-surface); color: var(--au-ink); font: inherit; font-size: 16px; box-shadow: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.as-main textarea, .as-main .textarea { height: auto; min-height: 120px; padding: 12px 16px; }
+.as-main .input:focus, .as-main input:focus, .as-main textarea:focus, .as-main select:focus {
+  border-color: var(--au-ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--au-ink) 12%, transparent); outline: 0; }
+.as-main .select, .as-main .select select { width: 100%; }
+.as-main .select select, .as-main select { height: var(--st-field-h); box-sizing: border-box; padding: 0 40px 0 16px; border: 1px solid var(--au-rule-strong);
+  border-radius: var(--st-r-field); background-color: var(--au-surface); color: var(--au-ink); font: inherit; font-size: 16px; }
+.as-main .select:not(.is-multiple)::after { right: 18px; }
+.as-main .required > .label::after, .as-main label.required::after { color: var(--au-danger); }
+.as-main fieldset { border: 0; margin: 0 0 28px; padding: 0; min-width: 0; }
+.as-main fieldset > legend { margin: 0 0 16px; padding: 0; font-family: var(--au-font-display); font-size: 21px; font-weight: 700; letter-spacing: -0.01em; }
+.as-main .help { font-size: 13px; color: var(--au-ink-3); }
+/* checkboxes and radios: 20px; aurora-base.css draws the dot and the check at fixed offsets for 15px, so both are
+   drawn here again from the centre (the dot is an inset ring, the check is centred with translate) */
+.as-main input[type=checkbox]:not(.switch), .as-main input[type=radio] { width: 20px; height: 20px; margin: 0 2px 0 0; border: 1.5px solid var(--au-ink-4);
+  border-radius: 6px; background: var(--au-surface); transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease; }
+.as-main input[type=radio] { border-radius: 50%; }
+.as-main input[type=checkbox]:not(.switch):hover, .as-main input[type=radio]:hover { border-color: var(--au-ink-2); }
+.as-main input[type=checkbox]:not(.switch):checked, .as-main input[type=radio]:checked { border-color: var(--au-primary); background: var(--au-primary); }
+.as-main input[type=radio]:checked { box-shadow: inset 0 0 0 4px var(--au-surface); }
+.as-main input[type=radio]:checked::after { content: none; }
+.as-main input[type=checkbox]:not(.switch):checked::after { left: 50%; top: 45%; width: 5px; height: 10px; border-color: var(--au-on-primary);
+  border-width: 0 2px 2px 0; transform: translate(-50%, -50%) rotate(45deg); }
+/* the phone number: country code, area code, number and extension in one row */
+.as-main .field.has-addons { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.as-main .field.has-addons > .control { flex: 1 1 60px; }
+.as-main .field.has-addons > .control:has(input[name$=CONTACT]) { flex: 3 1 160px; }
+
+/* ---- Tables ------------------------------------------------------------------------------------------------ */
+.as-main .table-container { overflow-x: auto; }
+.as-main .table { width: 100%; border-collapse: collapse; background: transparent; font-size: 15px; }
+.as-main .table th { padding: 10px 14px; border-bottom: 1px solid var(--au-rule); font-family: var(--au-font-mono); font-size: 12px;
+  font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--au-ink-3); background: transparent; }
+.as-main .table td { padding: 16px 14px; border-bottom: 1px solid var(--au-rule-soft); vertical-align: middle; }
+.as-main .table.is-hoverable tbody tr:hover { background: color-mix(in srgb, var(--au-surface-2) 60%, transparent); }
+.as-main .table tr:has(> td:only-child:empty), .as-main .table tr:not(:has(td:not(:empty))) { display: none; }
+
+/* ---- Pagination and sorting ---------------------------------------------------------------------------------- */
+.as-main .pagination-area { align-items: center; margin: 0 0 20px; }
+.as-main .pagination-area > .column:first-child { font-family: var(--au-font-mono); font-size: 13px; letter-spacing: .04em; color: var(--au-ink-3); }
+.as-main .pagination-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.as-main .pagination-list li.pagination-link { min-width: 44px; height: 44px; padding: 0; border: 0; border-radius: 999px; background: none; display: inline-flex; }
+.as-main .pagination-list li.pagination-link > a, .as-main .pagination-list li.pagination-link > span { display: inline-flex; align-items: center;
+  justify-content: center; min-width: 44px; height: 44px; padding: 0 14px; box-sizing: border-box; border-radius: 999px;
+  border: 1px solid var(--au-rule); color: var(--au-ink) !important; text-decoration: none; font-size: 14px; font-weight: 500; }
+.as-main .pagination-list li.pagination-link > a:hover { border-color: var(--au-ink); }
+.as-main .pagination-list li.is-active > a { background: var(--au-primary); border-color: var(--au-primary); color: var(--au-on-primary) !important; }
+.as-main .pagination-list li.is-disabled { display: none; }
+.as-main .pcdsort-sortOrder-select-wrapper { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.as-main .pcdsort-sortOrder-select-wrapper label { font-size: 14px; color: var(--au-ink-2); white-space: nowrap; }
+.as-main .pcdsort-sortOrder-select-wrapper .select { width: auto; min-width: 200px; }
+
+/* ---- Product cards (category, search, related products): the image is the card ----------------------------- */
+.as-main ul.block-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 36px 24px; margin: 0; padding: 0; list-style: none; }
+.as-main ul.block-grid > li { width: auto !important; margin: 0 !important; padding: 0 !important; float: none !important; }
+.as-main .card-columns .panel.has-text-centered { position: relative; display: flex; flex-direction: column; gap: 6px; height: 100%;
+  margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; text-align: left; }
+.as-main .card-columns .panel.has-text-centered > .panel-heading { order: 2; margin: 10px 0 0; padding: 0; border: 0; background: none;
+  font-family: inherit; font-size: 17px; font-weight: 600; line-height: 1.3; color: var(--au-ink); text-align: left; }
+.as-main .card-columns .panel.has-text-centered > div:first-of-type:not(.panel-heading),
+.as-main .card-columns .panel.has-text-centered > div:has(.scipio-image-container) { order: 1; }
+.as-main .card-columns .panel .scipio-image-container { position: relative; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--as-radius, 24px);
+  background: var(--au-surface); }
+.as-main .card-columns .panel .scipio-image-container img { width: 100% !important; height: 100% !important; object-fit: cover; transition: transform .4s ease; }
+.as-main .card-columns .panel:hover .scipio-image-container img { transform: scale(1.04); }
+/* the whole card opens the product */
+.as-main .card-columns .panel .scipio-image-container a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.as-main .card-columns .panel .scipio-image-container a { position: static; }
+.as-main .card-columns .panel.has-text-centered > .has-text-centered { order: 3; text-align: left; font-size: 12px; color: var(--au-ink-3); }
+.as-main .card-columns .panel.has-text-centered > .has-text-centered:not(:has(.fa-star)) { display: none; }
+.as-main .card-columns .panel-block { order: 4; display: block; padding: 0; border: 0; background: none; font-size: 14px; color: var(--au-ink-2); line-height: 1.45; }
+.as-main .card-columns .panel-block.price { order: 5; margin-top: 2px; font-size: 17px; font-weight: 600; color: var(--au-ink); }
+.as-main .card-columns .panel-block .control { padding: 0; }
+.as-main .card-columns .panel-block.is-link { display: none; }
+.as-main .card-columns .panel-block:not(.price):not(.is-link) { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.as-main .card-columns .panel.has-text-centered > .panel-block + .panel-block:not(.price):not(.is-link) { display: none; }
+.as-main .card-columns .ribbon, .as-main .card-columns .panel .tag { position: absolute; top: 12px; left: 12px; z-index: 2; }
+
+/* ---- Tabs and collapsible sections -------------------------------------------------------------------------- */
+.as-main .tabs { margin: 0 0 18px; border-bottom: 1px solid var(--au-rule); }
+.as-main .tabs ul { display: flex; gap: 8px; margin: 0; padding: 0; border: 0; list-style: none; }
+.as-main .tabs.is-fullwidth li { flex: 0 0 auto; }
+.as-main .tabs li a { display: block; padding: 12px 4px; margin-right: 22px; border: 0; border-bottom: 2px solid transparent; font-size: 16px;
+  font-weight: 600; color: var(--au-ink-3) !important; text-decoration: none; }
+.as-main .tabs li.is-active a { color: var(--au-ink) !important; border-bottom-color: var(--au-signal, #d20025); }
+.as-main .content-tab > .tab-content { font-size: 16px; line-height: 1.65; color: var(--au-ink-2); }
+.as-main details.as-acc { border-top: 1px solid var(--au-rule); }
+.as-main details.as-acc:last-of-type { border-bottom: 1px solid var(--au-rule); }
+.as-main details.as-acc > summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 0; cursor: pointer;
+  list-style: none; font-family: var(--au-font-display); font-size: 21px; font-weight: 700; letter-spacing: -0.01em; }
+.as-main details.as-acc > summary::-webkit-details-marker { display: none; }
+.as-main details.as-acc > summary::after { content: "+"; font-family: var(--au-font); font-weight: 400; font-size: 26px; line-height: 1; }
+.as-main details.as-acc[open] > summary::after { content: "\2212"; }
+.as-main details.as-acc > .as-acc-body { padding: 0 0 26px; font-size: 16px; line-height: 1.65; color: var(--au-ink-2); }
+
+/* ---- Product page ------------------------------------------------------------------------------------------ */
+.as-main #productdetail .section-screenlet.section-level-1 { background: none; border: 0; box-shadow: none; padding: 0; border-radius: 0; }
+.as-main #productdetail > .section-screenlet:first-child > div > .columns { display: grid; grid-template-columns: minmax(0, 7fr) minmax(320px, 5fr);
+  gap: clamp(28px, 4vw, 64px); align-items: start; margin: 0 0 48px; }
+.as-main #productdetail > .section-screenlet:first-child > div > .columns > .column { width: auto; max-width: none; padding: 0; }
+.as-main #productdetail .product-image { background: var(--au-surface); border-radius: var(--as-radius-lg, 32px); overflow: hidden; }
+.as-main #productdetail .product-image-thumbs ul { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0 0; padding: 0; list-style: none; }
+.as-main #productdetail .product-image-thumbs li { width: 76px; }
+.as-main #productdetail .product-image-thumbs a { display: block; border-radius: 16px; overflow: hidden; border: 2px solid transparent; }
+.as-main #productdetail .product-image-thumbs a[aria-current=true] { border-color: var(--au-ink); }
+/* the buy box: no box, stays in view while the gallery scrolls */
+.as-main #productdetail .columns > .column > .panel { position: sticky; top: 100px; margin: 0; padding: 0; border: 0; background: none; box-shadow: none; }
+.as-main #productdetail .columns > .column > .panel > .panel-block { display: block; padding: 0; border: 0; background: none; }
+.as-main #product-info > p:first-child { margin: 0 0 14px; font-size: 18px; line-height: 1.5; color: var(--au-ink-2); }
+.as-main #product-info .price, .as-main #product-info #product-price { display: block; margin: 0 0 6px; }
+.as-main #product-info .scp-product-legal { margin: 18px 0 22px; padding: 14px 0; border: 0; border-top: 1px solid var(--au-rule); border-bottom: 1px solid var(--au-rule);
+  border-radius: 0; background: none; font-size: 14px; }
+.as-main #product-add-cart form { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+.as-main #product-add-cart form > .field, .as-main #product-add-cart form > div { flex: 1 1 100%; margin: 0; }
+.as-main #product-add-cart form > .field:has(#quantity) { flex: 0 0 120px; }
+.as-main #product-add-cart form > .field:has(#addToCart), .as-main #product-add-cart form > div:has(#addToCart) { flex: 1 1 200px; }
+.as-main #product-add-cart #quantity { text-align: center; font-weight: 600; }
+.as-main #product-add-cart #addToCart { width: 100%; min-height: 56px; font-size: 17px; }
+.as-main #product-add-cart .notification { flex: 1 1 100%; }
+.as-main #productdetail .shariff { margin-top: 18px; }
+.as-main .product-section-title { margin: 0 0 18px; font-family: var(--au-font-display); font-size: clamp(24px, 2.4vw, 32px); font-weight: 700; letter-spacing: -0.02em; }
+/* the configurator of a configurable product */
+.as-main .product-configurator-section { margin: 0 0 40px; padding: clamp(20px, 3vw, 36px); border-radius: var(--as-radius, 24px); background: var(--au-surface); }
+.as-main .product-configurator .product-config-question { margin: 0; padding: 18px 0; border-bottom: 1px solid var(--au-rule-soft); }
+.as-main .product-configurator .product-config-question:last-of-type { border-bottom: 0; }
+.as-main .product-configurator .product-config-question > div > .columns { display: grid; grid-template-columns: minmax(160px, 1fr) minmax(0, 2.4fr); gap: 16px 28px; margin: 0; }
+.as-main .product-configurator .product-config-question .column { width: auto; padding: 0; }
+.as-main .product-configurator .product-config-question label:first-child, .as-main .product-configurator .product-config-question .is-4 label { font-weight: 700; font-size: 16px; }
+.as-main .product-configurator .field { margin-bottom: 8px; }
+.as-main .product-configurator .radio, .as-main .product-configurator .checkbox { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 15px; }
+/* related products and reviews */
+.as-main #productdetail .section-level-2 > h2.title { font-size: clamp(22px, 2.2vw, 28px); }
+.as-main #productdetail .review.columns { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 20px; margin: 0 0 16px; padding: 20px 0;
+  border-bottom: 1px solid var(--au-rule-soft); }
+.as-main #productdetail .review .column { width: auto; padding: 0; }
+.as-main #productdetail .review .fa-user, .as-main #productdetail .review .fa-user-circle { font-size: 36px; color: var(--au-ink-4); }
+.as-main #productdetail .columns > .is-4.column > .panel:has(.fa-star, .fa-star-o) { padding: 24px; border-radius: var(--as-radius, 24px); background: var(--au-surface); text-align: center; }
+.as-main .scp-safety { margin-top: 8px; }
+
+@media (max-width: 900px) {
+  .as-main #productdetail > .section-screenlet:first-child > div > .columns { grid-template-columns: minmax(0, 1fr); }
+  .as-main #productdetail .columns > .column > .panel { position: static; }
+  .as-main .product-configurator .product-config-question > div > .columns { grid-template-columns: minmax(0, 1fr); }
+}
+/* no box in a box on the product page: its sections are plain blocks */
+.as-main #productdetail .section-screenlet { background: none; border: 0; box-shadow: none; border-radius: 0; padding: 0; }
+.as-main #productdetail .section-screenlet > h2.title { padding: 0; border: 0; }
+.as-main .product-configurator .product-config-question, .as-main .product-configurator .product-config-question > div { background: none; border: 0; border-radius: 0; box-shadow: none; padding-left: 0; padding-right: 0; }
+.as-main .product-configurator .product-config-question { border-bottom: 1px solid var(--au-rule-soft); }
+.as-main .product-configurator label, .as-main .product-configurator .radio, .as-main .product-configurator .checkbox,
+.as-main .product-configurator .control label { font-size: 15px !important; line-height: 1.4; }
+.as-main #product-price, .as-main #product-price strong, .as-main #totalPrice { font-family: var(--au-font-display); font-size: 40px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; }
+
+/* ---- Cards for page sections (sign-in, registration, cart, checkout, account) -------------------------------- */
+.as-main .section-screenlet.section-level-1 { border-radius: var(--as-radius, 24px); }
+.as-main .panel:not(.has-text-centered) { border: 0; box-shadow: none; }
+.as-main .menu-type-section { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 18px; }
+.as-main .menu-type-section > a.is-primary.action-update, .as-main .menu-type-section > a.action-update { background: var(--au-primary); border-color: var(--au-primary); color: var(--au-on-primary) !important; min-width: 180px; }
+.as-main .menu-type-section > a.action-cancel { border-color: transparent; background: none; color: var(--au-ink-2) !important; }
+.as-main .info-msg { margin: 0 0 16px; padding: 0; border: 0; background: none; font-size: 15px; color: var(--au-ink-2); }
+.as-main .info-msg a, .as-main .info-msg a.action-primary-inline { display: inline; min-height: 0; padding: 0; border: 0; background: none; box-shadow: none;
+  color: var(--au-accent-2) !important; font-weight: 600; text-decoration: underline !important; }
+.as-main .info-msg.info-important { font-size: 13px; color: var(--au-ink-3); }
+
+/* ---- Sign in ------------------------------------------------------------------------------------------------ */
+.as-main .Signlogin.columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin: 0; }
+.as-main .Signlogin.columns > .column { width: auto; padding: 0; }
+.as-main .Signlogin .section-screenlet { height: 100%; margin: 0; padding: clamp(24px, 3vw, 40px); box-sizing: border-box; background: var(--au-surface); border: 0; box-shadow: none; }
+.as-main .Signlogin .section-screenlet > h2.title { font-size: 28px; }
+.as-main .Signlogin form[name=loginform] .field > label.label { display: none; }
+.as-main .Signlogin form[name=loginform] .field { margin-bottom: 14px; }
+.as-main .Signlogin form[name=loginform] + .columns { display: flex; flex-direction: column-reverse; gap: 16px; margin: 6px 0 0; }
+.as-main .Signlogin form[name=loginform] + .columns > .column { width: auto; padding: 0; text-align: left !important; }
+.as-main .Signlogin form[name=loginform] + .columns a.action-primary { display: flex; width: 100%; min-height: 54px; justify-content: center; align-items: center;
+  border-radius: 999px; background: var(--au-primary); color: var(--au-on-primary) !important; font-size: 16px; font-weight: 600; text-decoration: none; }
+.as-main .Signlogin form[name=loginform] + .columns a.action-primary:hover { background: var(--au-primary-hover); }
+.as-main .Signlogin small a { font-size: 14px; }
+.as-main .Signlogin .panel, .as-main .Signlogin .panel-block { display: block; padding: 0; margin: 0; background: none; border: 0; }
+.as-main .Signlogin ul.checkmark { margin: 0 0 24px; padding: 0; list-style: none; display: grid; gap: 12px; font-size: 16px; }
+.as-main .Signlogin ul.checkmark li { display: flex; gap: 10px; align-items: baseline; }
+.as-main .Signlogin ul.checkmark li::before { content: "\2713"; font-weight: 700; color: var(--au-ok, #1a7f4b); }
+.as-main .Signlogin .has-text-right a.action-primary { display: inline-flex; min-height: 50px; padding: 0 26px; align-items: center; border-radius: 999px;
+  border: 1px solid var(--au-ink); color: var(--au-ink) !important; font-weight: 600; text-decoration: none; }
+.as-main .modal .box { border-radius: var(--as-radius, 24px); padding: 32px; }
+
+/* ---- Registration -------------------------------------------------------------------------------------------- */
+.as-main #newuserform { max-width: 1100px; }
+.as-main #newuserform > .columns > .column { padding: 0 20px 0 0; }
+/* solicitation choices are optional extras (the templates mark most of them field_extra) */
+.as-main .field:has(> .control > .select > select[name$=_ALLOW_SOL]), .as-main .field:has(> .control > .select > select[name$=AllowSolicitation]) { display: none; }
+.as-main #newuserform .info-important, .as-main .info-msg { padding: 0; border: 0; background: none; box-shadow: none; }
+.as-main #newuserform .info-important > .delete, .as-main #newuserform .info-important button { display: none; }
+.as-main #newuserform .field:has(select[name=USER_TITLE]) { display: none; }
+.as-main #newuserform .field:has(#USERNAME[style*="none"]) > .field-label,
+.as-main #newuserform .field:has(#USERNAME[style*="none"]) > label { display: none; }
+.as-main #newuserform .field:has(#USERNAME[style*="none"]) { margin-top: -10px; }
+
+/* ---- Cart ----------------------------------------------------------------------------------------------------- */
+.as-main form[name=cartform] .table td:first-child a { font-weight: 600; color: var(--au-ink) !important; text-decoration: none; }
+.as-main form[name=cartform] .table td:first-child a:hover { text-decoration: underline; }
+.as-main form[name=cartform] .table tr:not(.even) td:first-child { font-size: 14px; color: var(--au-ink-2); }
+.as-main form[name=cartform] .table tr:last-child td { border-bottom: 0; }
+.as-main form[name=cartform] .table tr:has(td[colspan]) td, .as-main form[name=cartform] .table tfoot td { font-size: 16px; }
+.as-main form[name=cartform] + .columns, .as-main form[name=cartform] ~ .columns { align-items: center; margin-top: 12px; }
+.as-main a.action-continue { min-height: 54px; padding: 0 30px; font-size: 16px; }
+@media (max-width: 800px) {
+  .as-main .Signlogin.columns { grid-template-columns: minmax(0, 1fr); }
+}
+.as-main .Signlogin .section-screenlet > h2.title { margin: 0 0 22px; padding: 0; border: 0; background: none; }
+.as-main .Signlogin .section-screenlet > div { padding: 0; }
+.as-main .Signlogin .panel, .as-main .Signlogin .panel-block, .as-main .Signlogin .panel .columns { background: none !important; padding: 0; margin: 0; }
+.as-main .Signlogin .has-text-right { text-align: left !important; }
+.as-main .Signlogin .has-text-right a.action-primary { background: transparent !important; border: 1px solid var(--au-ink) !important; color: var(--au-ink) !important; }
+.as-main .Signlogin .has-text-right a.action-primary:hover { background: var(--au-ink) !important; color: var(--au-surface) !important; }
+
+/* ---- Header: the account menu ------------------------------------------------------------------------------------ */
+.as-acct { position: relative; }
+.as-acct > summary { list-style: none; cursor: pointer; }
+.as-acct > summary::-webkit-details-marker { display: none; }
+.as-acct[open] > summary { background: var(--au-surface-3); }
+.as-acct-menu { position: absolute; right: 0; top: calc(100% + 10px); z-index: 60; min-width: 230px; padding: 10px; border-radius: 20px;
+  background: var(--au-surface); border: 1px solid var(--au-rule); box-shadow: var(--au-shadow-float, 0 18px 48px rgba(0,0,0,.14));
+  display: flex; flex-direction: column; animation: as-fade .15s ease; }
+.as-acct-menu a { padding: 10px 12px; border-radius: 12px; color: var(--au-ink) !important; text-decoration: none; font-size: 15px; font-weight: 500; }
+.as-acct-menu a:hover { background: var(--au-surface-2); }
+.as-acct-hello { margin: 4px 12px 8px; font-family: var(--au-font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--au-ink-3); }
+.as-acct-menu .as-acct-out { margin-top: 6px; border-top: 1px solid var(--au-rule-soft); border-radius: 0 0 12px 12px; color: var(--au-ink-2) !important; }
+
+/* ---- Customer account: the row of account links and quiet section cards ----------------------------------------- */
+.as-acct-nav { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 32px; }
+.as-acct-nav a { display: inline-flex; align-items: center; min-height: 42px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--au-rule);
+  background: var(--au-surface); color: var(--au-ink) !important; text-decoration: none; font-size: 15px; font-weight: 500; }
+.as-acct-nav a:hover { border-color: var(--au-ink); }
+.as-acct-nav a[aria-current=page] { background: var(--au-primary); border-color: var(--au-primary); color: var(--au-on-primary) !important; }
+.as-acct-nav .as-acct-nav-out { margin-left: auto; border-color: transparent; background: none; color: var(--au-ink-2) !important; }
+.as-main .section-screenlet.section-level-1.has-title, .as-account-page .section-screenlet.section-level-2.has-title { border: 0; box-shadow: none; }
+.as-main .section-screenlet.has-title > h2.title { border-bottom: 0; background: none; }
+.as-account-page .section-screenlet { margin-bottom: 20px; }
+
+/* ---- Inline groups: phone number parts, small inputs in a row ------------------------------------------------------ */
+.as-main .control:has(> input.field-inline) { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; color: var(--au-ink-3); }
+.as-main .control > input.field-inline { width: auto; flex: 1 1 96px; min-width: 88px; }
+.as-main .control > input.field-inline[name$=_CONTACT] { flex: 3 1 150px; }
+.as-main .control > span:has(> input.field-inline) { display: inline-flex; align-items: center; gap: 6px; flex: 1 1 110px; }
+.as-main .control > span > input.field-inline { width: 100%; }
+/* a note inside a closable box ("fields marked with * are required") is plain text */
+.as-main .container:has(> .notification > .info-important) { padding: 0; }
+.as-main .notification:has(> .info-important) { padding: 0; margin: 0 0 18px; border: 0; background: none; }
+.as-main .notification:has(> .info-important) > .delete { display: none; }
+
+/* ---- Checkout: an address (or new address) is a card the shopper selects -------------------------------------------- */
+.as-main .field:has(> .control .addr-select-radio) { display: flex; align-items: flex-start; gap: 14px; margin: 0 0 12px; padding: 18px 20px;
+  border: 1px solid var(--au-rule); border-radius: 18px; background: var(--au-surface); cursor: pointer; }
+.as-main .field:has(> .control .addr-select-radio) > .control { order: -1; flex: 0 0 auto; padding-top: 2px; }
+.as-main .field:has(> .control .addr-select-radio input:checked) { border-color: var(--au-ink); box-shadow: 0 0 0 1px var(--au-ink); }
+.as-main .field:has(> .control .addr-select-radio) > :not(.control) { flex: 1 1 auto; min-width: 0; background: none; padding: 0; }
+.as-main .field:has(> .control .addr-select-radio) .panel, .as-main .field:has(> .control .addr-select-radio) .panel-block { background: none; padding: 0; margin: 0; }
+.as-main .new-address-radio-label { font-weight: 600; }
+.as-main .cart-line-link { display: inline-flex; align-items: center; gap: 16px; }
+.as-main .cart-line-img { flex: 0 0 auto; width: 72px; height: 72px; object-fit: cover; border-radius: 14px; background: var(--au-surface-2); }
+.as-main .cart-line-name { font-weight: 600; }
+/* two ways to check out: the second one is the quiet choice */
+.as-main .has-text-right .control + .control a.action-continue { background: var(--au-surface); border-color: var(--au-rule-strong); color: var(--au-ink) !important; }
+@media (max-width: 760px) {
+  .as-main form[name=cartform] .table thead { display: none; }
+  .as-main form[name=cartform] .table, .as-main form[name=cartform] .table tbody { display: block; }
+  .as-main form[name=cartform] .table tr { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 14px 0; border-bottom: 1px solid var(--au-rule-soft); }
+  .as-main form[name=cartform] .table td { display: block; padding: 0; border: 0; }
+  .as-main form[name=cartform] .table tr.even td:first-child { flex: 1 1 100%; }
+  .as-main form[name=cartform] .table tr.even td:nth-child(2), .as-main form[name=cartform] .table tr.even td:nth-child(4),
+  .as-main form[name=cartform] .table tr.even td:nth-child(5) { display: none; }
+  .as-main form[name=cartform] .table tr.even td:nth-child(3) { flex: 0 0 auto; padding-left: 88px; }
+  .as-main form[name=cartform] .table tr.even td:nth-child(6) { margin-left: auto; font-weight: 600; }
+  .as-main form[name=cartform] .table tr:not(.even) td:first-child { flex: 1 1 60%; }
+  .as-main form[name=cartform] .table tr:not(.even) td:not(:first-child) { margin-left: auto; text-align: right; }
+  .as-main form[name=cartform] .table tr:not(.even):not(:has(td:not(:empty))) { display: none; }
+  .as-main .menu-type-section { gap: 8px; }
+  .as-main .menu-type-section > a { min-height: 42px; padding: 0 16px; font-size: 14px; }
+}
+
+/* ---- Checkout: choice lists, the legal block of the review step ---------------------------------------------------- */
+.as-main .radio-item, .as-main .checkbox-item { display: inline-flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 15px; }
+.as-main .radio-item label, .as-main .checkbox-item label { font-size: 15px; font-weight: 400; margin: 0; cursor: pointer; }
+.as-main .control:has(> .radio-item + .radio-item-separator) { display: flex; flex-direction: column; align-items: flex-start; }
+.as-main .control > br.radio-item-separator, .as-main .control > br.checkbox-item-separator { display: none; }
+.as-main .scp-checkout-legal { max-width: 640px; margin: 0 0 20px auto; padding: 22px 24px; border-radius: 20px; background: var(--au-surface); text-align: left; font-size: 15px; line-height: 1.55; }
+.as-main .scp-precontract { display: flex; flex-direction: column; gap: 6px; margin: 0 0 16px; }
+.as-main .scp-terms { display: flex; align-items: flex-start; gap: 12px; font-weight: 400; cursor: pointer; }
+.as-main .scp-terms input { margin-top: 3px; flex: 0 0 auto; }
+.as-main #orderreview { display: flex; flex-direction: column; align-items: flex-end; }
+.as-main #processButton { min-height: 56px; padding: 0 32px; font-size: 17px; }

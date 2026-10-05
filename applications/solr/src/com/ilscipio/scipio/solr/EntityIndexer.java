@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.solr;
 
 import org.ofbiz.base.SystemState;
@@ -12,6 +28,7 @@ import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
+import org.ofbiz.entity.util.TenantScope;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.model.ModelEntity;
@@ -420,7 +437,14 @@ public class EntityIndexer implements Runnable {
                                 UtilDateTime.formatDurationHMS((System.currentTimeMillis()) - startTime) +
                                 extraInfo + ")", module);
                     }
-                    readDocs(dctx, context, entries, docs, docsToRemove);
+                    // W1-08d: entries of other stores (pooled runtime) are read with the delegator of that store
+                    Map<String, List<Entry>> otherStores = extractOtherDelegatorEntries(entries, dctx.getDelegator().getDelegatorName());
+                    for (Map.Entry<String, List<Entry>> storeEntries : otherStores.entrySet()) {
+                        readStoreEntriesAndCommit(context, storeEntries.getValue());
+                    }
+                    if (!entries.isEmpty()) {
+                        readDocs(dctx, context, entries, docs, docsToRemove);
+                    }
                     entries.clear();
                 } else if (!flush) {
                     Thread.sleep(getSleepTime());
@@ -442,6 +466,41 @@ public class EntityIndexer implements Runnable {
                 Debug.logInfo("Entity indexer [" + getName() + "] run doc stats: [committed=" + docsCommitted + ", removed=" + docsRemoved +
                         ", entries=" + totalProcessedEntries + ", runTime=" + UtilDateTime.formatDurationHMS(nowTime - startTime) + "ms]", module);
             }
+        }
+    }
+
+    /**
+     * Removes from the list the entries whose PK belongs to another delegator than the named one, and returns them
+     * grouped by delegator name. Entries without delegator stay in the list. The queue is shared by all stores of a
+     * JVM, but a product only exists in the database of its own store (W1-08d).
+     */
+    static Map<String, List<Entry>> extractOtherDelegatorEntries(List<Entry> entries, String ownDelegatorName) {
+        Map<String, List<Entry>> others = new LinkedHashMap<>();
+        for (Iterator<Entry> it = entries.iterator(); it.hasNext();) {
+            Entry entry = it.next();
+            Delegator entryDelegator = (entry.getPk() != null) ? entry.getPk().getDelegator() : null;
+            if (entryDelegator == null || entryDelegator.getDelegatorName().equals(ownDelegatorName)) {
+                continue;
+            }
+            others.computeIfAbsent(entryDelegator.getDelegatorName(), k -> new ArrayList<>()).add(entry);
+            it.remove();
+        }
+        return others;
+    }
+
+    /** Reads and commits the entries of one other store, inside the scope of that store. */
+    protected void readStoreEntriesAndCommit(Map<String, Object> context, List<Entry> storeEntries) {
+        Delegator storeDelegator = storeEntries.get(0).getPk().getDelegator();
+        TenantScope.enter(storeDelegator);
+        try {
+            DispatchContext storeDctx = ServiceContainer.getLocalDispatcher(storeDelegator.getDelegatorName(), storeDelegator)
+                    .getDispatchContext();
+            readDocsAndCommit(storeDctx, context, storeEntries);
+        } catch (Exception e) {
+            Debug.logError(e, "Entity indexer [" + getName() + "]: error indexing entries of delegator "
+                    + storeDelegator.getDelegatorName() + ": " + e.getMessage(), module);
+        } finally {
+            TenantScope.exit();
         }
     }
 

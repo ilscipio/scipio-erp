@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <entity-engine-xml>
@@ -45,7 +56,7 @@ code package.
         headerApprovedStatus="ORDER_APPROVED" itemApprovedStatus="ITEM_APPROVED" digitalItemApprovedStatus="ITEM_APPROVED" headerDeclinedStatus="ORDER_REJECTED"
         itemDeclinedStatus="ITEM_REJECTED" headerCancelStatus="ORDER_CANCELLED" itemCancelStatus="ITEM_CANCELLED" orderNumberPrefix="WS"
         storeCreditValidDays="90" storeCreditAccountEnumId="FIN_ACCOUNT"
-        visualThemeId="IGNITE_SHOP" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"
+        visualThemeId="AURORA_SHOP" prodSearchExcludeVariants="Y" autoApproveInvoice="Y" shipIfCaptureFails="Y" autoApproveOrder="Y" showOutOfStockProducts="Y"
         isContentReference="Y"/>
         <!-- SCIPIO: 2019-03-07: These now default to localized values in OrderEntityLabels.xml:
         authDeclinedMessage="There has been a problem with your method of payment. Please try a different method or call customer service."
@@ -124,5 +135,14 @@ code package.
     <ProductStoreKeywordOvrd productStoreId="ScipioShop" keyword="businessphone" fromDate="2001-05-13 12:00:00.0" target="PH-1005" targetTypeEnumId="KOTT_PRODUCT"/>
     <ProductStoreKeywordOvrd productStoreId="ScipioShop" keyword="login" fromDate="2001-05-13 12:00:00.0" target="checkLogin" targetTypeEnumId="KOTT_OFBURL"/>
     <ProductStoreKeywordOvrd productStoreId="ScipioShop" keyword="faq" fromDate="2001-05-13 12:00:00.0" target="https://www.scipioerp.com/products/faq" targetTypeEnumId="KOTT_AURL"/>
+
+    <!-- SCIPIO: 4.0.0: the bar above the shop header (Aurora Shop) tells visitors that this is a demo store -->
+    <SystemProperty systemResourceId="shop" systemPropertyId="shop.announcement.badge" systemPropertyValue="Demo store" description="Announcement bar: badge"/>
+    <SystemProperty systemResourceId="shop" systemPropertyId="shop.announcement.badge.de" systemPropertyValue="Demo-Shop" description="Announcement bar: badge (German)"/>
+    <SystemProperty systemResourceId="shop" systemPropertyId="shop.announcement.text" systemPropertyValue="This shop shows what Scipio ERP can do. Orders are not delivered, so please do not enter real payment data." description="Announcement bar: text"/>
+    <SystemProperty systemResourceId="shop" systemPropertyId="shop.announcement.text.de" systemPropertyValue="Dieser Shop zeigt, was Scipio ERP kann. Bestellungen werden nicht ausgeliefert, bitte geben Sie keine echten Zahlungsdaten ein." description="Announcement bar: text (German)"/>
+    <SystemProperty systemResourceId="shop" systemPropertyId="shop.announcement.link" systemPropertyValue="https://www.scipioerp.com" description="Announcement bar: link"/>
+    <SystemProperty systemResourceId="shop" systemPropertyId="shop.announcement.linkText" systemPropertyValue="About Scipio ERP" description="Announcement bar: link text"/>
+    <SystemProperty systemResourceId="shop" systemPropertyId="shop.announcement.linkText.de" systemPropertyValue="Über Scipio ERP" description="Announcement bar: link text (German)"/>
 
 </entity-engine-xml>

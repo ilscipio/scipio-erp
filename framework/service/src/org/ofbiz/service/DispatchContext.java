@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.service;
 
 import java.io.Serializable;
@@ -431,6 +437,15 @@ public class DispatchContext implements Serializable {
                          ModelService modelService = servicesEntry.getValue();
                          ModelService prevModelService = serviceMap.get(serviceName);
                          if (prevModelService != null) {
+                             // SCIPIO: The minilang->Java @Service annotation conversion is incomplete
+                             // (many engine="java" defs point to event-signature or stub methods), so do
+                             // NOT let an annotation-based service override an existing XML/minilang
+                             // definition of the same name. The XML service defs (engine="simple"/entity-auto/etc.)
+                             // are intact and authoritative; annotation-only services (no XML def) still load.
+                             if ("annotations".equals(modelService.fromLoader)
+                                     && !"annotations".equals(prevModelService.fromLoader)) {
+                                 continue;
+                             }
                              modelService.updateOverriddenService(prevModelService);
                          }
                          serviceMap.put(serviceName, modelService);

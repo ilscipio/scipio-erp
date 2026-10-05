@@ -1,0 +1,102 @@
+{
+  "id": "de",
+  "version": 2,
+  "name": "Germany",
+  "country": "DE",
+  "locale": "de",
+  "currency": "EUR",
+  "dataRegion": "EU",
+  "jurisdictions": ["EU", "DE"],
+  "profile": {
+    "countryGeoId": "DEU",
+    "consentMode": "EU_OPT_IN",
+    "withdrawalDays": "14",
+    "returnDays": "14",
+    "legalGuaranteeYears": "2",
+    "retentionYears": "10",
+    "euOrderButton": "Y"
+  },
+  "sellerFields": [
+    {"id": "legalForm", "label": "Legal form (for example GmbH, e.K., sole trader)", "required": true, "target": "StoreComplianceProfile.legalName"},
+    {"id": "address", "label": "Address for service (no P.O. box)", "required": true, "target": "StoreComplianceProfile.addressLine"},
+    {"id": "fastContact", "label": "E-mail and a second fast way to contact you (phone or contact form)", "required": true, "target": "StoreComplianceProfile.contactEmail"},
+    {"id": "register", "label": "Register court and register number (companies)", "required": false, "target": "StoreComplianceProfile.registerNumber"},
+    {"id": "vatId", "label": "VAT id (Umsatzsteuer-Identifikationsnummer), when you have one", "required": false, "target": "StoreComplianceProfile.vatId"},
+    {"id": "smallBusiness", "label": "Small-business flag (Kleinunternehmer, section 19 UStG)", "required": false, "target": "tax decision"}
+  ],
+  "legalTemplates": [
+    {"slug": "imprint", "docTypeId": "LEGDOC_IMPRINT"},
+    {"slug": "terms", "docTypeId": "LEGDOC_TERMS"},
+    {"slug": "privacy", "docTypeId": "LEGDOC_PRIVACY"},
+    {"slug": "cookies", "docTypeId": "LEGDOC_COOKIES"},
+    {"slug": "withdrawal", "docTypeId": "LEGDOC_WITHDRAWAL"},
+    {"slug": "returns", "docTypeId": "LEGDOC_RETURNS"},
+    {"slug": "accessibility", "docTypeId": "LEGDOC_ACCESSIBILITY"}
+  ],
+  "tasks": [
+    {
+      "id": "seller-data", "title": "Enter the seller data for the imprint", "kind": "info", "required": true,
+      "detail": "The imprint needs your legal name, address, e-mail, a second fast way to contact you, and the register and VAT data when you have them. Until you do, the live imprint shows marked gaps."
+    },
+    {
+      "id": "lucid", "title": "Register your packaging in LUCID", "kind": "registration", "required": true,
+      "link": "https://lucid.verpackungsregister.org", "numberLabel": "LUCID registration number",
+      "eprScheme": "EPR_PACKAGING", "eprCountry": "DEU",
+      "detail": "A seller that ships packed goods to buyers in Germany registers in the LUCID packaging register before the first sale (VerpackG). Enter the registration number here. The imprint then shows it. Close the task as NOT_NEEDED, with a note, when your store sells only digital goods or only to business buyers and you checked that the duty does not apply to you."
+    },
+    {
+      "id": "dual-system", "title": "Sign a contract with a dual system for your sales packaging", "kind": "registration", "required": true,
+      "detail": "Sales packaging that reaches private buyers needs a licence with a dual system (VerpackG). Report the packaging quantities to the system and to LUCID. Close the task as NOT_NEEDED, with a note, when your store sells only digital goods or only to business buyers and you checked that the duty does not apply to you."
+    },
+    {
+      "id": "gpsr", "title": "Name the product-safety contact in the EU (GPSR)", "kind": "info", "required": true,
+      "detail": "Each product needs the name and address of the manufacturer and, for a maker outside the EU, an EU responsible person. Enter them on the product."
+    },
+    {
+      "id": "small-business", "title": "Decide on the small-business rule (section 19 UStG)", "kind": "decision", "required": false,
+      "detail": "With the rule, invoices carry the note that no VAT is charged, and VAT is not shown. Without it, Stripe Tax calculates VAT. Ask your tax adviser."
+    },
+    {
+      "id": "oss", "title": "Register for the EU One-Stop-Shop when your EU distance sales pass 10,000 euro a year", "kind": "registration", "required": false,
+      "link": "https://www.bzst.de", "numberLabel": "OSS VAT number",
+      "detail": "Above the threshold, VAT of the buyer's country applies to sales to consumers in other EU countries. Register the OSS at the Federal Central Tax Office (BZSt)."
+    },
+    {
+      "id": "weee", "title": "Register electrical products with stiftung ear (WEEE)", "kind": "registration", "required": false,
+      "link": "https://www.stiftung-ear.de", "numberLabel": "WEEE registration number",
+      "eprScheme": "EPR_WEEE", "eprCountry": "DEU",
+      "detail": "Only when you sell electrical or electronic products. Mark the task NOT_NEEDED when you do not."
+    }
+  ],
+  "storefrontRules": [
+    "Order button text: 'Zahlungspflichtig bestellen' (or 'Kaufen'); the checkout says it clearly.",
+    "Total price with VAT and shipping cost before the order.",
+    "Unit price (Grundpreis) for goods sold by weight, volume, length or area.",
+    "Withdrawal button 'Vertrag widerrufen' reachable at the bottom of every page (14 days).",
+    "Product-safety contact on the product page.",
+    "Cookie consent only when non-necessary trackers run (TDDDG section 25)."
+  ],
+  "tax": {
+    "provider": "stripe-tax",
+    "ossThresholdEur": 10000,
+    "notes": [
+      {"id": "ustg19", "text": "Small-business rule, section 19 UStG: invoice note 'Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.' and no VAT shown."},
+      {"id": "oss", "text": "EU One-Stop-Shop: above 10,000 euro of EU distance sales a year, VAT of the destination country applies."},
+      {"id": "marketplace", "text": "On eBay and Amazon the marketplace collects and reports VAT as facilitator where the law says so."},
+      {"id": "retention", "text": "Retention years in the profile (10) is a safe default, not a fact for all documents: since 2025 accounting vouchers need 8 years. Check with your tax adviser."}
+    ]
+  },
+  "invoiceNotes": [
+    "Invoice with VAT id of the seller and the buyer's VAT id for B2B sales.",
+    "B2B e-invoice in a structured format (XRechnung or ZUGFeRD) when the buyer is a business; receipt duty since 2025-01-01, send duty in steps from 2027."
+  ],
+  "payments": ["Cards", "SEPA direct debit", "PayPal", "Klarna", "Apple Pay", "Google Pay"],
+  "carriers": ["DHL", "DPD"],
+  "books": "accountingde",
+  "verify": [
+    "LUCID link and the registration duty text (VerpackG)",
+    "Retention of 10 years is not right for all documents: since 2025 the retention of accounting vouchers is 8 years. Check with your tax adviser",
+    "The e-invoice dates",
+    "Carrier list (gap analysis 4.9: verify coverage)"
+  ]
+}

@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <ofbiz-component name="common"
@@ -11,7 +22,7 @@ code package.
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
-    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/entitymodel.xml"/>
+    <!-- SCIPIO: 4.0.0: entitymodel.xml migrated to Java annotations (@Entity in common/entity/Entities.java) -->
     
     <!-- SCIPIO: Scheduled services -->
     <entity-resource type="data" reader-name="seed-initial" loader="main" location="data/ScheduledServices.xml"/>
@@ -55,24 +66,8 @@ code package.
     <entity-resource type="data" reader-name="seed" loader="main" location="data/PeriodData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/CommonPortletData.xml"/>
 
-    <service-resource type="model" loader="main" location="servicedef/services.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_cdyne.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_email.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_enum.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_media.xml"/><!-- SCIPIO -->
-    <service-resource type="model" loader="main" location="servicedef/services_method.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_geo.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_qrcode.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_property.xml"/><!-- SCIPIO -->
-    <service-resource type="model" loader="main" location="servicedef/services_security.xml"/>
-    <service-resource type="model" loader="main" location="servicedef/services_test.xml"/>
-    <service-resource type="group" loader="main" location="servicedef/groups_test.xml"/>
-    <service-resource type="eca" loader="main" location="servicedef/secas_test.xml"/>
-    <service-resource type="eca" loader="main" location="servicedef/secas_cdyne.xml"/>
-    <service-resource type="mca" loader="main" location="servicedef/smcas_test.xml"/>
+    <!-- SCIPIO: 4.0.0: smcas_test.xml migrated to Java annotations (@Mca in common/mca/TestMcas.java) -->
 
-    <service-resource type="model" loader="main" location="servicedef/services_scipio.xml"/>
-    <service-resource type="eca" loader="main" location="servicedef/secas_scipio.xml"/>
 
     <test-suite loader="main" location="testdef/UserLoginTests.xml"/>
     <test-suite loader="main" location="testdef/PerformFindTests.xml"/>

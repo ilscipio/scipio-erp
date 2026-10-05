@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
 package org.ofbiz.entity.condition;
 
@@ -23,11 +29,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.oro.text.perl.Perl5Util;
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Matcher;
+import java.util.regex.PatternSyntaxException;
+import java.util.regex.Pattern;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.PatternFactory;
 import org.ofbiz.base.util.UtilGenerics;
@@ -47,11 +50,11 @@ public abstract class EntityComparisonOperator<L, R> extends EntityOperator<L, R
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
 
     public static Pattern makeOroPattern(String sqlLike) {
-        Perl5Util perl5Util = new Perl5Util();
         try {
-            sqlLike = perl5Util.substitute("s/([$^.+*?])/\\\\$1/g", sqlLike);
-            sqlLike = perl5Util.substitute("s/%/.*/g", sqlLike);
-            sqlLike = perl5Util.substitute("s/_/./g", sqlLike);
+            // SCIPIO: L-06b: java.util.regex replaces the Jakarta ORO Perl5Util: escape $ ^ . + * ?, then % is .* and _ is .
+            sqlLike = sqlLike.replaceAll("([$^.+*?])", "\\\\$1");
+            sqlLike = sqlLike.replace("%", ".*");
+            sqlLike = sqlLike.replace("_", ".");
         } catch (Throwable t) {
             String errMsg = "Error in ORO pattern substitution for SQL like clause [" + sqlLike + "]: " + t.toString();
             Debug.logError(t, errMsg, module);
@@ -59,7 +62,7 @@ public abstract class EntityComparisonOperator<L, R> extends EntityOperator<L, R
         }
         try {
             return PatternFactory.createOrGetPerl5CompiledPattern(sqlLike, true);
-        } catch (MalformedPatternException e) {
+        } catch (PatternSyntaxException e) {
             Debug.logError(e, module);
         }
         return null;
@@ -268,14 +271,14 @@ public abstract class EntityComparisonOperator<L, R> extends EntityOperator<L, R
     }
 
     public static final <L,R> boolean compareLike(L lhs, R rhs) {
-        PatternMatcher matcher = new Perl5Matcher();
         if (lhs == null) {
             if (rhs != null) {
                 return false;
             }
         } else if (lhs instanceof String && rhs instanceof String) {
             //see if the lhs value is like the rhs value, rhs will have the pattern characters in it...
-            return matcher.matches((String) lhs, makeOroPattern((String) rhs));
+            Pattern pattern = makeOroPattern((String) rhs);
+            return pattern != null && pattern.matcher((String) lhs).matches();
         }
         return true;
     }

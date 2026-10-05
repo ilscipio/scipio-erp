@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.common;
 
 import java.io.IOException;
@@ -33,6 +39,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
+import org.ofbiz.webapp.control.TenantResolver;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -47,33 +54,11 @@ public final class UrlServletHelper extends ContextFilter {
 
     public static void setRequestAttributes(ServletRequest request, Delegator delegator, ServletContext servletContext) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        // check if multi tenant is enabled
-        boolean useMultitenant = EntityUtil.isMultiTenantEnabled();
-        if (useMultitenant) {
-            // get tenant delegator by domain name
-            String serverName = request.getServerName();
-            try {
-                // if tenant was specified, replace delegator with the new per-tenant delegator and set tenantId to session attribute
-                delegator = getDelegator(servletContext);
-
-                //Use base delegator for fetching data from entity of entityGroup org.ofbiz.tenant
-                Delegator baseDelegator = DelegatorFactory.getDelegator(delegator.getDelegatorBaseName());
-                GenericValue tenantDomainName = EntityQuery.use(baseDelegator).from("TenantDomainName").where("domainName", serverName).queryOne();
-
-                if (UtilValidate.isNotEmpty(tenantDomainName)) {
-                    String tenantId = tenantDomainName.getString("tenantId");
-                    // make that tenant active, setup a new delegator and a new dispatcher
-                    String tenantDelegatorName = delegator.getDelegatorBaseName() + "#" + tenantId;
-                    httpRequest.getSession().setAttribute("delegatorName", tenantDelegatorName);
-
-                    // after this line the delegator is replaced with the new per-tenant delegator
-                    delegator = DelegatorFactory.getDelegator(tenantDelegatorName);
-                    servletContext.setAttribute("delegator", delegator);
-                }
-
-            } catch (GenericEntityException e) {
-                Debug.logWarning(e, "Unable to get Tenant", module);
-            }
+        // SCIPIO: 4.0.0: pooled runtime: the store comes from TenantResolver (Host header only); this helper never
+        // writes a store delegator into the ServletContext, which all stores share (G1)
+        TenantResolver.TenantContext tenantCtx = TenantResolver.fromRequest(httpRequest);
+        if (tenantCtx != null) {
+            delegator = tenantCtx.getDelegator();
         }
 
         // set the web context in the request for future use
@@ -84,6 +69,7 @@ public final class UrlServletHelper extends ContextFilter {
         if (UtilValidate.isEmpty(httpRequest.getSession().getAttribute("webSiteId"))){
             httpRequest.getSession().setAttribute("webSiteId", httpRequest.getServletContext().getAttribute("webSiteId")); // SCIPIO: NOTE: no longer need getSession() for getServletContext(), since servlet API 3.0
         }
+        TenantResolver.bindSession(httpRequest);
     }
 
     public static void setViewQueryParameters(ServletRequest request, StringBuilder urlBuilder) {

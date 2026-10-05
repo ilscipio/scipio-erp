@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.content.data;
 
 import java.io.ByteArrayInputStream;
@@ -489,7 +495,8 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
     }
 
     public static String getDataResourceContentUploadPath(boolean absolute) {
-        String initialPath = UtilProperties.getPropertyValue("content", "content.upload.path.prefix");
+        // SCIPIO: 4.0.0: pooled runtime: <prefix>/tenants/<tenantId> for the store of the thread (G7)
+        String initialPath = org.ofbiz.entity.tenant.TenantFiles.scopePath(UtilProperties.getPropertyValue("content", "content.upload.path.prefix"));
         double maxFiles = UtilProperties.getPropertyNumber("content", "content.upload.max.files");
         if (maxFiles < 1) {
             maxFiles = 250;
@@ -499,7 +506,8 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
     }
 
     public static String getDataResourceContentUploadPath(Delegator delegator, boolean absolute) {
-        String initialPath = EntityUtilProperties.getPropertyValue("content", "content.upload.path.prefix", delegator);
+        // SCIPIO: 4.0.0: pooled runtime: <prefix>/tenants/<tenantId> for a store delegator (G7)
+        String initialPath = org.ofbiz.entity.tenant.TenantFiles.scopePath(EntityUtilProperties.getPropertyValue("content", "content.upload.path.prefix", delegator), delegator);
         double maxFiles = UtilProperties.getPropertyNumber("content", "content.upload.max.files");
         if (maxFiles < 1) {
             maxFiles = 250;
@@ -554,7 +562,8 @@ public class DataResourceWorker  implements org.ofbiz.widget.content.DataResourc
             }
         } else {
             // if the parent doesn't exist; create it now
-            boolean created = parent.mkdir();
+            // SCIPIO: 4.0.0: mkdirs: the per-store prefix <prefix>/tenants/<tenantId> may lack its parents (pooled runtime)
+            boolean created = parent.mkdirs();
             if (!created) {
                 Debug.logWarning("Unable to create top level upload directory [" + parentDir + "].", module);
             }

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.base.component;
 
 import java.io.File;
@@ -945,6 +951,15 @@ public final class ComponentConfig {
         }
         if (Debug.verboseOn()) {
             Debug.logVerbose("Read component config : [" + rootLocation + "]", module);
+        }
+        // SCIPIO: Check for Ant-based components and warn about migration to Gradle
+        File buildXml = new File(rootLocationDir, "build.xml");
+        File buildGradleKts = new File(rootLocationDir, "build.gradle.kts");
+        if (buildXml.exists() && !buildGradleKts.exists()) {
+            Debug.logWarning("Component '" + this.componentName + "' uses legacy Ant build system (build.xml). " +
+                    "Please migrate to Gradle by adding a build.gradle.kts file. " +
+                    "See framework/resources/templates/build.gradle.kts for a template. " +
+                    "Location: " + rootLocation, module);
         }
     }
 

@@ -16,6 +16,12 @@
   specific language governing permissions and limitations
   under the License.
   -->
+<#--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 <object classid="clsid:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B" codebase="http://www.apple.com/qtactivex/qtplugin.cab">
     <param name="SRC" value="<@serverUrl>/content/control/stream?contentId=${contentId}</@serverUrl>" />
     <param name="WIDTH" value="320" />

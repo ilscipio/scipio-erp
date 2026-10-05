@@ -16,15 +16,21 @@
   specific language governing permissions and limitations
   under the License.
   -->
+<!--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 
 <simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/simple-methods-v2.xsd">
 
-    <simple-method method-name="contentManagerPermission" short-description="Check user has Content Manager permission">
+    <simple-method method-name="contentManagerPermission" short-description="Check user has Content Management permission">
         <set field="primaryPermission" value="CONTENTMGR"/>
         <call-simple-method method-name="genericBasePermissionCheck" xml-resource="component://common/script/org/ofbiz/common/permission/CommonPermissionServices.xml"/>
     </simple-method>
-    <simple-method method-name="contentManagerRolePermission" short-description="Check user has Content Manager permission">
+    <simple-method method-name="contentManagerRolePermission" short-description="Check user has Content Management permission">
         <set field="primaryPermission" value="CONTENTMGR"/>
         <set field="altPermission" value="CONTENTMGR_ROLE"/>
         <call-simple-method method-name="genericBasePermissionCheck" xml-resource="component://common/script/org/ofbiz/common/permission/CommonPermissionServices.xml"/>

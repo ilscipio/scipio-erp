@@ -17,14 +17,51 @@
   specific language governing permissions and limitations
   under the License.
   -->
-
+<!--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 <test-suite suite-name="productionruntests"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/test-suite.xsd">
     <test-case case-name="manufacturing-tests-data-load">
         <entity-xml action="load" entity-xml-url="component://manufacturing/testdef/data/ManufacturingTestsData.xml"/>
     </test-case>
+    <test-case case-name="production-run-issue-tests-data-load">
+        <entity-xml action="load" entity-xml-url="component://manufacturing/testdef/data/ProductionRunIssueTestData.xml"/>
+    </test-case>
 
+    <!-- SCIPIO: calendar capacity with exception days and weeks -->
+    <test-case case-name="techdata-calendar-tests">
+        <junit-test-suite class-name="com.ilscipio.scipio.manufacturing.test.TechDataCalendarTest"/>
+    </test-case>
+    <!-- SCIPIO: converted minilang services -->
+    <test-case case-name="bom-simple-methods-tests">
+        <junit-test-suite class-name="com.ilscipio.scipio.manufacturing.test.BomSimpleMethodsTest"/>
+    </test-case>
+    <test-case case-name="routing-simple-services-tests">
+        <junit-test-suite class-name="com.ilscipio.scipio.manufacturing.test.RoutingSimpleServicesTest"/>
+    </test-case>
+    <test-case case-name="production-run-issue-tests">
+        <junit-test-suite class-name="com.ilscipio.scipio.manufacturing.test.ProductionRunIssueTest"/>
+    </test-case>
+    <!-- SCIPIO: new capabilities -->
+    <test-case case-name="costing-services-tests">
+        <junit-test-suite class-name="com.ilscipio.scipio.manufacturing.test.CostingServicesTest"/>
+    </test-case>
+    <test-case case-name="shop-floor-services-tests">
+        <junit-test-suite class-name="com.ilscipio.scipio.manufacturing.test.ShopFloorServicesTest"/>
+    </test-case>
+    <test-case case-name="planning-services-tests">
+        <junit-test-suite class-name="com.ilscipio.scipio.manufacturing.test.PlanningServicesTest"/>
+    </test-case>
+    <test-case case-name="mrp-run-tests">
+        <junit-test-suite class-name="com.ilscipio.scipio.manufacturing.test.MrpRunTest"/>
+    </test-case>
+
+    <!-- production run lifecycle regression suite (minilang) -->
     <test-case case-name="production-run-tests">
         <simple-method-test location="component://manufacturing/script/org/ofbiz/manufacturing/test/ProductionRunTests.xml"/>
     </test-case>

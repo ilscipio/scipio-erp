@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -23,9 +29,23 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.util.EntityUtilProperties;
 
 productId = parameters.productId;
+mrpId = parameters.mrpId;
+facilityId = parameters.facilityId;
 
-// get the lookup flag
+// SCIPIO: MRP runs for the mrpId filter dropdown, newest first; newest is the default selection
+mrpRunList = from("MrpRun").orderBy("-startDate").queryList();
+context.mrpRunList = mrpRunList;
+context.defaultMrpId = mrpRunList ? mrpRunList[0].mrpId : null;
+
+// SCIPIO: facilities for the facilityId filter dropdown
+context.facilityList = from("Facility").orderBy("facilityName").queryList();
+
+// get the lookup flag; a filter passed on the URL (e.g. a link from MrpRunDetail) also triggers the search
 lookupFlag = parameters.lookupFlag;
+if (!lookupFlag && (productId || mrpId || facilityId)) {
+    lookupFlag = "Y";
+}
+context.showResults = (lookupFlag ? true : false);
 
 // blank param list
 paramList = "";
@@ -51,6 +71,14 @@ if (lookupFlag) {
     if (productId) {
         paramList = paramList + "&productId=" + productId;
         andExprs.add(EntityCondition.makeCondition("productId", EntityOperator.EQUALS, productId));
+    }
+    if (mrpId) {
+        paramList = paramList + "&mrpId=" + mrpId;
+        andExprs.add(EntityCondition.makeCondition("mrpId", EntityOperator.EQUALS, mrpId));
+    }
+    if (facilityId) {
+        paramList = paramList + "&facilityId=" + facilityId;
+        andExprs.add(EntityCondition.makeCondition("facilityId", EntityOperator.EQUALS, facilityId));
     }
     andExprs.add(EntityCondition.makeCondition("mrpEventTypeId", EntityOperator.NOT_EQUAL, "INITIAL_QOH"));
     andExprs.add(EntityCondition.makeCondition("mrpEventTypeId", EntityOperator.NOT_EQUAL, "ERROR"));

@@ -1,7 +1,18 @@
 <#--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
 
@@ -315,7 +326,15 @@ code package.
                 
                 <p>
                 <#-- Only show the "old" price if the current price is lower (otherwise, bad advertisement) -->
-                <#if oldPrice?has_content && currentPrice?has_content && (oldPrice?double > currentPrice?double)>
+                <#-- SCIPIO: 4.0.0: with the compliance component the old price follows the store's rules
+                    (EU: only the lowest price of the last 30 days, Directive 98/6/EC Art. 6a) -->
+                <#assign scpPriceRef = {}>
+                <#if scpCompliance && currentPrice?has_content>
+                    <#assign scpPriceRef = compliance.priceReference(product, currentPrice, price.currencyUsed, oldPrice!0)>
+                    <#if scpPriceRef.oldPrice??>
+                        <span id="product-price_old"><del><@ofbizCurrency amount=scpPriceRef.oldPrice isoCode=price.currencyUsed /></del></span>
+                    </#if>
+                <#elseif oldPrice?has_content && currentPrice?has_content && (oldPrice?double > currentPrice?double)>
                     <span id="product-price_old"><del><@ofbizCurrency amount=oldPrice isoCode=price.currencyUsed /></del></span>
                 </#if>
                  
@@ -331,6 +350,13 @@ code package.
                         var baseCurrentPriceFmtd = "${escapeVal(currentPriceFmtd, 'js')}";
                     </@script>
                 </p>
+                <#if scpCompliance>
+                    <#if (scpPriceRef.rule!"") == "prior30">
+                        <#assign scpPriorFmtd><@ofbizCurrency amount=scpPriceRef.oldPrice isoCode=price.currencyUsed /></#assign>
+                        <p class="scp-prior-price">${rawString(uiLabelMap.CompliancePriorPrice)?replace("{0}", scpPriorFmtd)}</p>
+                    </#if>
+                    <@compliance.productLegalLines product=product/>
+                </#if>
                 
                 <#-- SCIPIO: Uncomment to display how much a user is saving by buying this product
                 <#if price.listPrice?? && price.price?? && (price.price < price.listPrice)>
@@ -579,22 +605,21 @@ code package.
     <#assign productDetailLongDescContentString><@productDetailLongDescContent /></#assign>
     <#assign productDetailProductAttribContentString><@productDetailProductAttribContent /></#assign>
     
-    <#if productDetailLongDescContentString?has_content || productDetailProductAttribContentString?has_content>
-        <@tabs>
-            <#if productDetailLongDescContentString?trim?has_content>
-                <@tab title=uiLabelMap.CommonOverview>
-                    ${productDetailLongDescContentString}
-                </@tab>
-            </#if>
-            <#if productDetailProductAttribContentString?trim?has_content>
-                <@tab title=uiLabelMap.CommonSpecifications>
-                    ${productDetailProductAttribContentString}
-                </@tab>
-            </#if>
-        </@tabs>
+    <#-- SCIPIO: 4.0.0: description and specifications fold open (details/summary, no script needed) -->
+    <#if productDetailLongDescContentString?trim?has_content>
+        <details class="as-acc" open="open"><summary>${uiLabelMap.CommonOverview}</summary><div class="as-acc-body">${productDetailLongDescContentString}</div></details>
     </#if>
-    
+    <#if productDetailProductAttribContentString?trim?has_content>
+        <details class="as-acc"><summary>${uiLabelMap.CommonSpecifications}</summary><div class="as-acc-body">${productDetailProductAttribContentString}</div></details>
+    </#if>
 </@section>
+
+<#-- SCIPIO: 4.0.0: product safety (GPSR), seller and packaging (compliance component) -->
+<#if scpCompliance>
+<@section>
+    <@compliance.productSafety product=product/>
+</@section>
+</#if>
 
 <@section>
         <#-- Prefill first select box (virtual products only)

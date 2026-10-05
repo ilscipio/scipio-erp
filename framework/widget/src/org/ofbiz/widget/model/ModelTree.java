@@ -1,21 +1,19 @@
-/*******************************************************************************
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *******************************************************************************/
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.ofbiz.widget.model;
 
 import java.io.IOException;
@@ -160,7 +158,14 @@ public class ModelTree extends ModelWidget {
     }
 
     public String getDefaultPkName(Map<String, Object> context) {
+        // entity-name is optional on <tree>; a tree whose nodes rely on entry-name maps has none
+        if (UtilValidate.isEmpty(this.defaultEntityName)) {
+            return null;
+        }
         ModelEntity modelEntity = WidgetWorker.getDelegator(context).getModelEntity(this.defaultEntityName);
+        if (modelEntity == null) {
+            return null;
+        }
         if (modelEntity.getPksSize() == 1) {
             ModelField modelField = modelEntity.getOnlyPk();
             return modelField.getName();
@@ -489,9 +494,10 @@ public class ModelTree extends ModelWidget {
             }
             String entName = this.getEntityName();
             Delegator delegator = WidgetWorker.getDelegator(context);
-            ModelEntity modelEntity = delegator.getModelEntity(entName);
+            // entity-name is optional on <tree> and <node>; without one there is no count field to consult
+            ModelEntity modelEntity = UtilValidate.isNotEmpty(entName) ? delegator.getModelEntity(entName) : null;
             ModelField modelField = null;
-            if (modelEntity.isField(countFieldName)) {
+            if (modelEntity != null && modelEntity.isField(countFieldName)) {
                 modelField = modelEntity.getField(countFieldName);
             }
             if (nodeCount == null && modelField != null || this.modelTree.forceChildCheck) {
@@ -499,13 +505,16 @@ public class ModelTree extends ModelWidget {
                 nodeCount = (long) subNodeValues.size();
                 String pkName = this.getPkName(context);
                 String id = null;
-                if (!this.entryName.isEmpty()) {
-                    id = UtilGenerics.<Map<String, String>> cast(context.get(this.entryName)).get(pkName);
-                } else {
-                    id = (String) context.get(pkName);
+                if (pkName != null) {
+                    if (!this.entryName.isEmpty()) {
+                        Map<String, String> entryMap = UtilGenerics.cast(context.get(this.entryName));
+                        id = (entryMap != null) ? entryMap.get(pkName) : null;
+                    } else {
+                        id = (String) context.get(pkName);
+                    }
                 }
                 try {
-                    if (id != null && modelEntity.getPksSize() == 1) {
+                    if (id != null && modelEntity != null && modelEntity.getPksSize() == 1) {
                         GenericValue entity = EntityQuery.use(delegator).from(entName).where(pkName, id).queryOne();
                         if (modelEntity.isField("childBranchCount")) {
                             entity.put("childBranchCount", nodeCount);
@@ -563,10 +572,13 @@ public class ModelTree extends ModelWidget {
                 ModelTreeAction.runSubActions(this.actions, context);
                 String pkName = getPkName(context);
                 String id = null;
-                if (!this.entryName.isEmpty()) {
-                    id = UtilGenerics.<Map<String, String>> cast(context.get(this.entryName)).get(pkName);
-                } else {
-                    id = (String) context.get(pkName);
+                if (pkName != null) {
+                    if (!this.entryName.isEmpty()) {
+                        Map<String, String> entryMap = UtilGenerics.cast(context.get(this.entryName));
+                        id = (entryMap != null) ? entryMap.get(pkName) : null;
+                    } else {
+                        id = (String) context.get(pkName);
+                    }
                 }
                 currentNodeTrail.add(id);
                 treeStringRenderer.renderNodeBegin(writer, context, this, depth);

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: demo data of the compliance component; legal texts come from the shipped templates -->
+<entity-engine-xml>
+    <StoreComplianceProfile productStoreId="ScipioShop" jurisdictions="EU,US,US-CA" consentMode="AUTO"
+        legalName="ilscipio GmbH" addressLine="Humboldtstr. 13" postalCode="65189" city="Wiesbaden" countryGeoId="DEU"
+        contactEmail="info@ilscipio.com" contactPhone="+49 611 945 89 441" registerCourt="Amtsgericht Wiesbaden" registerNumber="HRB 33406"
+        vatId="DE 266282339" representedBy="Paul Piper" dpoContact="[Data protection officer, or: not required]"
+        supervisoryAuthority="[Your data protection supervisory authority]" euRespPartyId="DemoEuRep"
+        withdrawalDays="14" returnDays="30" legalGuaranteeYears="2" retentionYears="10"
+        euOrderButton="Y" sellsSubscriptions="N" usesSensitivePi="N" aiChat="N" marketplaceMode="Y" consentVersion="1"/>
+
+    <!-- The imprint of the demo store (ilscipio GmbH runs it): a published version instead of the shipped template,
+         with a demo note and without producer registrations (the demo sells no goods). The {{tokens}} read the profile above. -->
+    <LegalDocument legalDocumentId="9DemoImprintEn" productStoreId="ScipioShop" docTypeId="LEGDOC_IMPRINT" localeString="en" versionNum="1"
+        statusId="LDS_PUBLISHED" title="Imprint" fromTemplate="N" changeNote="Imprint of ilscipio GmbH for the demo store"
+        publishedDate="2026-09-29 00:00:00.0" publishedByUserLogin="admin">
+        <bodyText><![CDATA[<h1>Imprint</h1>
+<p>This store is a demo of SCIPIO ERP. The products, sellers and prices are sample data, and no order is delivered.</p>
+<h2>Information according to § 5 DDG</h2>
+<p><strong>{{store.legalName}}</strong><br>{{store.addressLine}}<br>{{store.postalCode}} {{store.city}}<br>{{store.country}}</p>
+<h2>Contact</h2>
+<p>E-mail: {{store.email}}<br>Phone: {{store.phone}}<br>Web: <a href="https://www.ilscipio.com">www.ilscipio.com</a></p>
+<h2>Company register</h2>
+<p>Register court: {{store.registerCourt}}<br>Register number: {{store.registerNumber}}<br>VAT ID: {{store.vatId}}</p>
+<p>Managing director: {{store.representedBy}}</p>
+<h2>Responsible for the content according to § 18 (2) MStV</h2>
+<p>{{store.representedBy}}, {{store.address}}</p>
+<p>SCIPIO ERP and the SCIPIO logo are trademarks of ilscipio GmbH.</p>]]></bodyText>
+    </LegalDocument>
+    <LegalDocument legalDocumentId="9DemoImprintDe" productStoreId="ScipioShop" docTypeId="LEGDOC_IMPRINT" localeString="de" versionNum="1"
+        statusId="LDS_PUBLISHED" title="Impressum" fromTemplate="N" changeNote="Impressum der ilscipio GmbH für den Demo-Shop"
+        publishedDate="2026-09-29 00:00:00.0" publishedByUserLogin="admin">
+        <bodyText><![CDATA[<h1>Impressum</h1>
+<p>Dieser Shop ist eine Demo von SCIPIO ERP. Produkte, Verkäufer und Preise sind Beispieldaten; Bestellungen werden nicht ausgeliefert.</p>
+<h2>Angaben gemäß § 5 DDG</h2>
+<p><strong>{{store.legalName}}</strong><br>{{store.addressLine}}<br>{{store.postalCode}} {{store.city}}<br>{{store.country}}</p>
+<h2>Kontakt</h2>
+<p>E-Mail: {{store.email}}<br>Telefon: {{store.phone}}<br>Web: <a href="https://www.ilscipio.com">www.ilscipio.com</a></p>
+<h2>Registereintrag</h2>
+<p>Registergericht: {{store.registerCourt}}<br>Registernummer: {{store.registerNumber}}<br>Umsatzsteuer-Identifikationsnummer: {{store.vatId}}</p>
+<p>Geschäftsführer: {{store.representedBy}}</p>
+<h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+<p>{{store.representedBy}}, {{store.address}}</p>
+<p>SCIPIO ERP und das SCIPIO-Logo sind Marken der ilscipio GmbH.</p>]]></bodyText>
+    </LegalDocument>
+
+    <!-- Product safety (GPSR): manufacturer and EU responsible person of demo product PH-1001 -->
+    <Party partyId="DemoManufacturer" partyTypeId="PARTY_GROUP" statusId="PARTY_ENABLED"/>
+    <PartyGroup partyId="DemoManufacturer" groupName="Demo Manufacturer Ltd."/>
+    <PartyRole partyId="DemoManufacturer" roleTypeId="MANUFACTURER"/>
+    <ContactMech contactMechId="9DemoMfgAddr" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="9DemoMfgAddr" toName="Demo Manufacturer Ltd." address1="1 Example Road" city="Dublin" postalCode="D01 X0X0" countryGeoId="IRL"/>
+    <PartyContactMech partyId="DemoManufacturer" contactMechId="9DemoMfgAddr" fromDate="2026-01-01 00:00:00.0"/>
+    <PartyContactMechPurpose partyId="DemoManufacturer" contactMechId="9DemoMfgAddr" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2026-01-01 00:00:00.0"/>
+    <ContactMech contactMechId="9DemoMfgMail" contactMechTypeId="EMAIL_ADDRESS" infoString="safety@manufacturer.example"/>
+    <PartyContactMech partyId="DemoManufacturer" contactMechId="9DemoMfgMail" fromDate="2026-01-01 00:00:00.0"/>
+    <PartyContactMechPurpose partyId="DemoManufacturer" contactMechId="9DemoMfgMail" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2026-01-01 00:00:00.0"/>
+
+    <Party partyId="DemoEuRep" partyTypeId="PARTY_GROUP" statusId="PARTY_ENABLED"/>
+    <PartyGroup partyId="DemoEuRep" groupName="Demo EU Representative GmbH"/>
+    <PartyRole partyId="DemoEuRep" roleTypeId="EU_RESP_PERSON"/>
+    <ContactMech contactMechId="9DemoRepAddr" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="9DemoRepAddr" toName="Demo EU Representative GmbH" address1="Musterstrasse 1" city="Berlin" postalCode="10115" countryGeoId="DEU"/>
+    <PartyContactMech partyId="DemoEuRep" contactMechId="9DemoRepAddr" fromDate="2026-01-01 00:00:00.0"/>
+    <PartyContactMechPurpose partyId="DemoEuRep" contactMechId="9DemoRepAddr" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2026-01-01 00:00:00.0"/>
+    <ContactMech contactMechId="9DemoRepMail" contactMechTypeId="EMAIL_ADDRESS" infoString="gpsr@eu-rep.example"/>
+    <PartyContactMech partyId="DemoEuRep" contactMechId="9DemoRepMail" fromDate="2026-01-01 00:00:00.0"/>
+    <PartyContactMechPurpose partyId="DemoEuRep" contactMechId="9DemoRepMail" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2026-01-01 00:00:00.0"/>
+
+    <Product productId="PH-1001" manufacturerPartyId="DemoManufacturer"/>
+    <ProductRole productId="PH-1001" partyId="DemoEuRep" roleTypeId="EU_RESP_PERSON" fromDate="2026-01-01 00:00:00.0"/>
+    <GoodIdentification productId="PH-1001" goodIdentificationTypeId="EAN" idValue="4006381333931"/>
+    <!-- EU GARAN label: producer guarantee of durability of more than 2 years -->
+    <ProductAttribute productId="PH-1001" attrName="DURABILITY_GUARANTEE_YEARS" attrValue="5"/>
+    <ProductAttribute productId="PH-1001" attrName="GARAN_BRAND" attrValue="Demo Brand"/>
+    <ProductAttribute productId="PH-1001" attrName="GARAN_MODEL" attrValue="DM-6"/>
+    <!-- Packaging (PPWR) -->
+    <PackagingComponent packagingComponentId="9DemoPkg1" productId="PH-1001" levelId="PKGLVL_PRIMARY" materialId="PKGMAT_PAPER" weight="0.120" weightUomId="WT_kg" recycledPct="80" reusable="N" description="Box"/>
+    <PackagingComponent packagingComponentId="9DemoPkg2" productId="PH-1001" levelId="PKGLVL_PRIMARY" materialId="PKGMAT_PLASTIC_PE" weight="0.008" weightUomId="WT_kg" recycledPct="0" reusable="N" description="Protective film"/>
+
+    <!-- Producer registrations of the store owner (shown in the imprint) -->
+    <EprRegistration eprRegistrationId="9DemoEpr1" partyId="Company" countryGeoId="DEU" schemeId="EPR_PACKAGING" registrationNumber="DE0000000000000" fromDate="2026-01-01 00:00:00.0"/>
+
+    <!-- Marketplace sellers (DSA Art. 30, CRD Art. 6a); product PH-1004 is sold by Studio Halden -->
+    <RoleType roleTypeId="MARKETPLACE_SELLER" hasTable="N" description="Marketplace seller"/>
+    <Party partyId="DemoSellerHalden" partyTypeId="PARTY_GROUP" statusId="PARTY_ENABLED"/>
+    <PartyGroup partyId="DemoSellerHalden" groupName="Studio Halden GmbH"/>
+    <PartyRole partyId="DemoSellerHalden" roleTypeId="MARKETPLACE_SELLER"/>
+    <ContactMech contactMechId="9DemoSelAddr" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="9DemoSelAddr" toName="Studio Halden GmbH" address1="Werkstattweg 3" city="Hamburg" postalCode="20095" countryGeoId="DEU"/>
+    <PartyContactMech partyId="DemoSellerHalden" contactMechId="9DemoSelAddr" fromDate="2026-01-01 00:00:00.0"/>
+    <PartyContactMechPurpose partyId="DemoSellerHalden" contactMechId="9DemoSelAddr" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2026-01-01 00:00:00.0"/>
+    <ContactMech contactMechId="9DemoSelMail" contactMechTypeId="EMAIL_ADDRESS" infoString="shop@halden.example"/>
+    <PartyContactMech partyId="DemoSellerHalden" contactMechId="9DemoSelMail" fromDate="2026-01-01 00:00:00.0"/>
+    <PartyContactMechPurpose partyId="DemoSellerHalden" contactMechId="9DemoSelMail" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2026-01-01 00:00:00.0"/>
+    <MarketplaceSeller productStoreId="ScipioShop" partyId="DemoSellerHalden" sellerTypeId="SELLER_BUSINESS" statusId="MSS_VERIFIED" displayName="Studio Halden"
+        shortBio="[Two sentences the seller wrote about the workshop.]" category="Ceramics" tradeRegister="HRB 000000 (Hamburg)" vatId="DE000000000"
+        joinedDate="2026-09-24 10:00:00.0" verifiedDate="2026-09-25 09:00:00.0" selfCertified="Y" selfCertifiedDate="2026-09-24 10:00:00.0" highVolume="N"/>
+    <ProductRole productId="PH-1004" partyId="DemoSellerHalden" roleTypeId="MARKETPLACE_SELLER" fromDate="2026-01-01 00:00:00.0"/>
+
+    <Party partyId="DemoSellerField" partyTypeId="PARTY_GROUP" statusId="PARTY_ENABLED"/>
+    <PartyGroup partyId="DemoSellerField" groupName="Fieldworks Co."/>
+    <PartyRole partyId="DemoSellerField" roleTypeId="MARKETPLACE_SELLER"/>
+    <MarketplaceSeller productStoreId="ScipioShop" partyId="DemoSellerField" sellerTypeId="SELLER_BUSINESS" statusId="MSS_VERIFIED" displayName="Fieldworks Co."
+        category="Bags" joinedDate="2026-09-21 10:00:00.0" verifiedDate="2026-09-22 09:00:00.0" selfCertified="Y" highVolume="N"/>
+    <Party partyId="DemoSellerOak" partyTypeId="PARTY_GROUP" statusId="PARTY_ENABLED"/>
+    <PartyGroup partyId="DemoSellerOak" groupName="Oakline Workshop"/>
+    <PartyRole partyId="DemoSellerOak" roleTypeId="MARKETPLACE_SELLER"/>
+    <MarketplaceSeller productStoreId="ScipioShop" partyId="DemoSellerOak" sellerTypeId="SELLER_BUSINESS" statusId="MSS_VERIFIED" displayName="Oakline Workshop"
+        category="Furniture" joinedDate="2026-09-17 10:00:00.0" verifiedDate="2026-09-18 09:00:00.0" selfCertified="Y" highVolume="N"/>
+    <Party partyId="DemoSellerTern" partyTypeId="PARTY_GROUP" statusId="PARTY_ENABLED"/>
+    <PartyGroup partyId="DemoSellerTern" groupName="Tern Audio"/>
+    <PartyRole partyId="DemoSellerTern" roleTypeId="MARKETPLACE_SELLER"/>
+    <MarketplaceSeller productStoreId="ScipioShop" partyId="DemoSellerTern" sellerTypeId="SELLER_BUSINESS" statusId="MSS_VERIFIED" displayName="Tern Audio"
+        category="Audio" joinedDate="2026-09-09 10:00:00.0" verifiedDate="2026-09-10 09:00:00.0" selfCertified="Y" highVolume="N"/>
+</entity-engine-xml>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<web-app version="3.0">
+    <display-name>SCIPIO ERP - Aurora Shop Theme</display-name>
+    <description>Aurora Shop storefront theme of the SCIPIO ERP Project</description>
+
+    <session-config>
+        <session-timeout>1</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>true</secure>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+    
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>main.jsp</welcome-file>
+    </welcome-file-list>
+    
+    <filter>
+        <filter-name>ExpiresFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.ExpiresFilter</filter-class>
+        <init-param>
+            <param-name>ExpiresByType image</param-name>
+            <param-value>access plus 2 weeks</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExpiresByType text/css</param-name>
+            <param-value>access plus 1 hour</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ExpiresByType application/javascript</param-name>
+            <param-value>access plus 1 hour</param-value>
+        </init-param>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>ExpiresFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+    <security-constraint>
+        <display-name>Restricted</display-name>
+        <web-resource-collection>
+            <web-resource-name>Restricted</web-resource-name>
+            <url-pattern>/node_modules/*</url-pattern>
+            <url-pattern>/scss/*</url-pattern>
+            <url-pattern>/.bowerrc</url-pattern>
+            <url-pattern>/.gitignore</url-pattern>
+            <url-pattern>/.npmrc</url-pattern>
+            <url-pattern>/bower.json</url-pattern>
+            <url-pattern>/changelog.md</url-pattern>
+            <url-pattern>/changelog.txt</url-pattern>
+            <url-pattern>/CHANGELOG.md</url-pattern>
+            <url-pattern>/CHANGELOG.txt</url-pattern>
+            <url-pattern>/config.rb</url-pattern>
+            <url-pattern>/Gemfile</url-pattern>
+            <url-pattern>/Gemfile.lock</url-pattern>
+            <url-pattern>/gulpfile.js</url-pattern>
+            <url-pattern>/humans.txt</url-pattern>
+            <url-pattern>/index.html</url-pattern>
+            <url-pattern>/npm-shrinkwrap.json</url-pattern>
+            <url-pattern>/package.json</url-pattern>
+            <url-pattern>/package-lock.json</url-pattern>
+            <url-pattern>/readme.md</url-pattern>
+            <url-pattern>/readme.txt</url-pattern>
+            <url-pattern>/README.md</url-pattern>
+            <url-pattern>/README.txt</url-pattern>
+            <url-pattern>/README_ilscipio.md</url-pattern>
+            <url-pattern>/README_ilscipio.txt</url-pattern>
+        </web-resource-collection>
+        <auth-constraint />
+    </security-constraint>
+</web-app>

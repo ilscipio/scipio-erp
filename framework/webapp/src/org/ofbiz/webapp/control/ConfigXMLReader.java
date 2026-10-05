@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.webapp.control;
 
 import java.io.File;
@@ -36,6 +42,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
@@ -456,7 +463,18 @@ public class ConfigXMLReader {
             Builder builder = new Builder(url); // SCIPIO
 
             if (url != null) { // SCIPIO: Added condition (for ControllerConfig.NULL_CONFIG)
-                Element rootElement = loadDocument(url);
+                Element rootElement = null;
+                // SCIPIO: 4.0.0: Allow missing XML files when annotations may provide fallback
+                try {
+                    rootElement = loadDocument(url);
+                } catch (WebAppConfigurationException e) {
+                    if (e.getCause() instanceof java.io.FileNotFoundException) {
+                        Debug.logWarning("Controller XML not found, will use annotations only: " + url, module);
+                        // Continue with null rootElement - annotations will provide the definitions
+                    } else {
+                        throw e;
+                    }
+                }
                 if (rootElement != null) {
                     long startTime = System.currentTimeMillis();
                     builder.loadIncludes(rootElement);
@@ -469,8 +487,10 @@ public class ConfigXMLReader {
                         String locString = this.url.toExternalForm();
                         Debug.logInfo("controller loaded: " + totalSeconds + "s, " + builder.requestMapMap.size() + " requests, " + builder.viewMapMap.size() + " views in " + locString, module);
                     }
-                } else {
-                    Debug.logError("No root element found for controller: " + url, module); // SCIPIO: Added log line, hopefully never happens
+                } else if (url != null) {
+                    // SCIPIO: 4.0.0: Only log error if we expected an XML file but it had issues
+                    // If file was missing (caught above), this won't be reached as we continue silently
+                    Debug.logWarning("No root element found for controller (using annotations only): " + url, module);
                 }
             }
 
@@ -1782,18 +1802,188 @@ public class ConfigXMLReader {
             if (url == null) {
                 return;
             }
-            Debug.logInfo("Controller URL: [" + url + "] [" + url.getProtocol() + "] - loading request annotations", module);
-            ReflectQuery reflectQuery = WebappReflectRegistry.getReflectQueryForResource(url);
-            if (reflectQuery != null) {
-                for (Method method : reflectQuery.getAnnotatedMethods(Request.class)) {
-                    RequestMap requestMap = new RequestMap(method, null);
-                    this.requestMapMap.put(requestMap.uri, requestMap);
-                }
-                // TODO: class support
-                //for (Class<?> cls : reflectQuery.getAnnotatedClasses(Request.class)) {
-                //    Request requestAnnotation = cls.getAnnotation(Request.class);
-                //}
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Controller URL: [" + url + "] [" + url.getProtocol() + "] - loading request annotations", module);
             }
+            ReflectQuery reflectQuery = WebappReflectRegistry.getReflectQueryForResource(url);
+            if (reflectQuery == null) {
+                Debug.logWarning("No ReflectQuery found for controller URL: [" + url + "] - annotation scanning skipped", module);
+                return;
+            }
+            if (!reflectQuery.hasDefs()) {
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("ReflectQuery has no definitions for controller URL: [" + url + "]", module);
+                }
+                return;
+            }
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("ReflectQuery found with " + reflectQuery.getJarUrls().size() + " JAR(s) for controller URL: [" + url + "]", module);
+                Debug.logVerbose("ReflectQuery JAR URLs: " + reflectQuery.getJarUrls(), module);
+            }
+            // SCIPIO: 4.0.0: Get current webapp name for controller filtering
+            ComponentConfig.WebappInfo currentWebapp = ComponentConfig.getWebappInfoFromResource(url, false);
+            String currentWebappName = (currentWebapp != null) ? currentWebapp.getName() : null;
+            // SCIPIO: 4.0.0: Annotations name the controller by mount point (e.g. "ordermgr", "sfa", "webtools") which
+            // may differ from the webapp name ("order", "salesForceAutomation", "admin"); accept name + context root of
+            // every webapp sharing this controller file
+            Set<String> controllerNames = getControllerNames(currentWebapp, url);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Loading annotations for webapp: [" + currentWebappName + "]", module);
+            }
+
+            // Method-level @Request annotations
+            Set<Method> annotatedMethods = reflectQuery.getAnnotatedMethods(Request.class);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Found " + annotatedMethods.size() + " method(s) with @Request annotation", module);
+            }
+            for (Method method : annotatedMethods) {
+                Request request = method.getAnnotation(Request.class);
+                if (!matchesController(request, controllerNames)) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Skipping method @Request [" + request.uri() + "] - doesn't match controller [" + currentWebappName + "]", module);
+                    }
+                    continue;
+                }
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Loading method @Request: uri=[" + request.uri() + "] from method [" + method.getDeclaringClass().getName() + "." + method.getName() + "]", module);
+                }
+                RequestMap requestMap = new RequestMap(method, null);
+                this.requestMapMap.put(requestMap.uri, requestMap);
+            }
+            // SCIPIO: 4.0.0: Class-level @Request annotations
+            Set<Class<?>> annotatedClasses = reflectQuery.getAnnotatedClasses(Request.class);
+            if (Debug.verboseOn()) {
+                Debug.logVerbose("Found " + annotatedClasses.size() + " class(es) with @Request annotation", module);
+            }
+            for (Class<?> cls : annotatedClasses) {
+                Request request = cls.getAnnotation(Request.class);
+                if (!matchesController(request, controllerNames)) {
+                    if (Debug.verboseOn()) {
+                        Debug.logVerbose("Skipping class @Request [" + request.uri() + "] - doesn't match controller [" + currentWebappName + "]", module);
+                    }
+                    continue;
+                }
+                if (Debug.verboseOn()) {
+                    Debug.logVerbose("Loading class @Request: uri=[" + request.uri() + "] from class [" + cls.getName() + "]", module);
+                }
+                // Find the event method - look for @Event annotated method first
+                Method eventMethod = null;
+                for (Method method : cls.getDeclaredMethods()) {
+                    if (method.isAnnotationPresent(com.ilscipio.scipio.ce.webapp.control.def.Event.class)) {
+                        eventMethod = method;
+                        break;
+                    }
+                }
+                // If no @Event method found, look for a public method named "event" or similar
+                if (eventMethod == null) {
+                    for (Method method : cls.getDeclaredMethods()) {
+                        if (java.lang.reflect.Modifier.isPublic(method.getModifiers()) &&
+                                !java.lang.reflect.Modifier.isStatic(method.getModifiers())) {
+                            // Use the first public non-static method as the event method
+                            eventMethod = method;
+                            break;
+                        }
+                    }
+                }
+                // SCIPIO: 4.0.0: Allow requests without event methods (pure redirect requests)
+                try {
+                    RequestMap requestMap = new RequestMap(eventMethod, cls);
+                    this.requestMapMap.put(requestMap.uri, requestMap);
+                } catch (Exception e) {
+                    Debug.logError(e, "Error creating RequestMap from class annotation [" + cls.getName() + "]: " + e.getMessage(), module);
+                }
+            }
+        }
+
+        /**
+         * SCIPIO: 4.0.0: Check if a @Request annotation matches the current controller/webapp.
+         * @param request the Request annotation
+         * @param currentWebappName the current webapp name (e.g., "setup", "shop")
+         * @return true if the request should be loaded for this controller
+         */
+        private Set<String> getControllerNames(ComponentConfig.WebappInfo currentWebapp, URL controllerUrl) {
+            Set<String> names = new LinkedHashSet<>();
+            // the webapp directory name from the controller path itself (works even when no WebappInfo resolves,
+            // e.g. an included controller of a webapp whose mount point is shadowed by a redirect webapp)
+            if (controllerUrl != null) {
+                String path = controllerUrl.getPath().replace('\\', '/');
+                int webInf = path.indexOf("/WEB-INF/");
+                if (webInf > 0) {
+                    String dir = path.substring(0, webInf);
+                    dir = dir.substring(dir.lastIndexOf('/') + 1);
+                    if (!dir.isEmpty()) {
+                        names.add(dir);
+                    }
+                }
+            }
+            if (currentWebapp == null) {
+                return names;
+            }
+            for (ComponentConfig.WebappInfo webappInfo : ComponentConfig.getAllWebappResourceInfos()) {
+                if (webappInfo != currentWebapp && !Objects.equals(webappInfo.getLocation(), currentWebapp.getLocation())) {
+                    continue;
+                }
+                if (UtilValidate.isNotEmpty(webappInfo.getName())) {
+                    names.add(webappInfo.getName());
+                }
+                // the webapp directory name (e.g. webapp/sfa mounted as /crm; webapp/webtools mounted as /admin)
+                String location = webappInfo.getLocation();
+                if (location != null) {
+                    String dirName = location.replace('\\', '/');
+                    while (dirName.endsWith("/")) {
+                        dirName = dirName.substring(0, dirName.length() - 1);
+                    }
+                    dirName = dirName.substring(dirName.lastIndexOf('/') + 1);
+                    if (!dirName.isEmpty()) {
+                        names.add(dirName);
+                    }
+                }
+                String contextRoot = webappInfo.getContextRoot();
+                if (contextRoot != null) {
+                    contextRoot = contextRoot.startsWith("/") ? contextRoot.substring(1) : contextRoot;
+                    if (!contextRoot.isEmpty()) {
+                        names.add(contextRoot);
+                    }
+                }
+            }
+            return names;
+        }
+
+        private boolean matchesController(Request request, Set<String> controllerNames) {
+            if (request == null) {
+                return false;
+            }
+            return matchesControllerName(request.controller(), controllerNames);
+        }
+
+        /**
+         * SCIPIO: 4.0.0: Whether an annotation that names this controller belongs to this webapp.
+         * A component with several webapps (cms, backendsite, website) reaches every annotation class
+         * of the component through its reflect query, so an annotation that names another webapp must
+         * be skipped. Requests were filtered from the start; views were not, and the last view of a
+         * duplicated name won (the CMS dashboard rendered the 404 screen of the website webapp).
+         */
+        private boolean matchesControllerName(String controller, Set<String> controllerNames) {
+            // Empty controller or "default" means load for the webapp where the class/jar resides
+            // (this is handled by the ReflectQuery which is scoped to the webapp's component jars)
+            if (controller.isEmpty() || "default".equals(controller)) {
+                return true;
+            }
+            // If controller is specified as a webapp name, check if it matches
+            if (controllerNames.contains(controller)) {
+                return true;
+            }
+            // If controller is specified as a controller:// URL, check if the URL matches
+            if (controller.startsWith("controller://") && url != null) {
+                // TODO: Implement full URL matching if needed
+                for (String name : controllerNames) {
+                    if (controller.contains("/" + name + "/")) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return false;
         }
 
         private void loadViewMap(Element rootElement) {
@@ -1811,7 +2001,17 @@ public class ConfigXMLReader {
             Debug.logInfo("Controller URL: [" + url + "] [" + url.getProtocol() + "] - loading view annotations", module);
             ReflectQuery reflectQuery = WebappReflectRegistry.getReflectQueryForResource(url);
             if (reflectQuery != null) {
+                Set<String> controllerNames = getControllerNames(ComponentConfig.getWebappInfoFromResource(url, false), url);
                 for (Field field : reflectQuery.getAnnotatedFields(View.class)) {
+                    View view = field.getAnnotation(View.class);
+                    // SCIPIO: 4.0.0: skip a view that names another webapp of the same component
+                    if (view != null && !matchesControllerName(view.controller(), controllerNames)) {
+                        if (Debug.verboseOn()) {
+                            Debug.logVerbose("Skipping @View [" + view.name() + "] - it names controller ["
+                                    + view.controller() + "]", module);
+                        }
+                        continue;
+                    }
                     ViewMap viewMap = new ViewMap(field);
                     this.viewMapMap.put(viewMap.name, viewMap);
                 }
@@ -2245,8 +2445,12 @@ public class ConfigXMLReader {
             com.ilscipio.scipio.ce.webapp.control.def.Event event = annMethod.getAnnotation(com.ilscipio.scipio.ce.webapp.control.def.Event.class);
             String type = (event != null) ? event.type() : null;
             this.type = UtilValidate.isNotEmpty(type) ? type : "java";
-            this.path = (parentClass != null) ? parentClass.getName() : annMethod.getDeclaringClass().getName();
-            this.invoke = annMethod.getName();
+            // SCIPIO: 4.0.0: an explicit path/invoke on the annotation wins; the stub method name is only the default.
+            // Generated controllers declare e.g. @Event(type = "service", invoke = "createProductionRun") on a stub named createProductionRunSingle.
+            String annPath = (event != null) ? event.path() : "";
+            this.path = UtilValidate.isNotEmpty(annPath) ? annPath : ((parentClass != null) ? parentClass.getName() : annMethod.getDeclaringClass().getName());
+            String annInvoke = (event != null) ? event.invoke() : "";
+            this.invoke = UtilValidate.isNotEmpty(annInvoke) ? annInvoke : annMethod.getName();
             this.globalTransaction = !"false".equals(event != null ? event.globalTransaction() : "true");
             String tt = (event != null) ? event.transactionTimeout() : "";
             int transactionTimeout = DEFAULT_TRANSACTION_TIMEOUT; // SCIPIO: Locals
@@ -2626,9 +2830,11 @@ public class ConfigXMLReader {
         }
 
         public RequestMap(Method annMethod, Class<?> annClass) {
-            Request request = (annClass != null) ? annClass.getAnnotation(Request.class) : annMethod.getAnnotation(Request.class);
+            Request request = (annClass != null) ? annClass.getAnnotation(Request.class) :
+                    (annMethod != null ? annMethod.getAnnotation(Request.class) : null);
             if (request == null) {
-                throw new IllegalArgumentException("Missing request annotation on method [" + annMethod + "]");
+                throw new IllegalArgumentException("Missing request annotation on " +
+                        (annClass != null ? "class [" + annClass.getName() + "]" : "method [" + annMethod + "]"));
             }
             // Get the URI info
             this.uri = request.uri();
@@ -2686,19 +2892,31 @@ public class ConfigXMLReader {
             this.securitySpecified = !(request.secure().isEmpty() && request.auth().isEmpty() &&
                     request.cert().isEmpty() && request.externalView().isEmpty() && request.directRequest().isEmpty() &&
                     request.authCheckEvent().isEmpty());
-            // Check for event
-            this.event = new Event(annMethod, annClass);
+            // Check for event - SCIPIO: 4.0.0: Allow null method for event-less requests
+            this.event = (annMethod != null) ? new Event(annMethod, annClass) : null;
             // Check for description
             this.description = request.description();
-            // Get the response(s)
-            // SCIPIO: handled dynamically
-            //Map<String, RequestResponse> requestResponseMap = new HashMap<String, RequestResponse>(); // SCIPIO
-            //for (Element responseElement : UtilXml.childElementList(requestMapElement, "response")) {
-            //    RequestResponse response = new RequestResponse(responseElement);
-            //    requestResponseMap.put(response.name, response);
-            //}
-            //this.requestResponseMap = requestResponseMap;
-            this.requestResponseMap = Collections.emptyMap();
+            // Get the response(s) - SCIPIO: 4.0.0: Now reads @Response annotations from class and method
+            Map<String, RequestResponse> requestResponseMap = new HashMap<String, RequestResponse>();
+            // Check class-level @Response annotations
+            if (annClass != null) {
+                com.ilscipio.scipio.ce.webapp.control.def.Response[] classResponses = annClass.getAnnotationsByType(
+                        com.ilscipio.scipio.ce.webapp.control.def.Response.class);
+                for (com.ilscipio.scipio.ce.webapp.control.def.Response response : classResponses) {
+                    RequestResponse rr = new RequestResponse(response);
+                    requestResponseMap.put(rr.name, rr);
+                }
+            }
+            // Check method-level @Response annotations (override class-level)
+            if (annMethod != null) {
+                com.ilscipio.scipio.ce.webapp.control.def.Response[] methodResponses = annMethod.getAnnotationsByType(
+                        com.ilscipio.scipio.ce.webapp.control.def.Response.class);
+                for (com.ilscipio.scipio.ce.webapp.control.def.Response response : methodResponses) {
+                    RequestResponse rr = new RequestResponse(response);
+                    requestResponseMap.put(rr.name, rr);
+                }
+            }
+            this.requestResponseMap = requestResponseMap;
             // Get metrics.
             if (request.metric().length > 0) {
                 this.metrics = MetricsFactory.getInstance(request.metric()[0]);
@@ -3041,6 +3259,64 @@ public class ConfigXMLReader {
             this.redirectAttributes = spec;
             this.connectionState = cr.connectionState();
             this.allowCacheRedirect = cr.allowCacheRedirect();
+        }
+
+        /**
+         * Response annotation constructor.
+         * <p>SCIPIO: 4.0.0: Added for controller annotations support.</p>
+         */
+        public RequestResponse(com.ilscipio.scipio.ce.webapp.control.def.Response response) {
+            this.name = response.name();
+            this.type = response.type();
+            this.value = response.value();
+            this.statusCode = response.statusCode().isEmpty() ? null : response.statusCode();
+            Integer statusCodeNumber = null;
+            if (UtilValidate.isNotEmpty(this.statusCode)) {
+                try {
+                    statusCodeNumber = Integer.parseInt(this.statusCode);
+                } catch(NumberFormatException e) {
+                    Debug.logError("Invalid status-code (" + this.statusCode + ") for controller request response '" + this.name + "'", module);
+                }
+            }
+            this.statusCodeNumber = statusCodeNumber;
+            this.saveLastView = "true".equals(response.saveLastView());
+            this.saveCurrentView = "true".equals(response.saveCurrentView());
+            this.saveHomeView = "true".equals(response.saveHomeView());
+            // Process redirect parameters from annotation
+            Map<String, String> redirectParameterMap = new HashMap<>();
+            Map<String, String> redirectParameterValueMap = new HashMap<>();
+            Set<String> excludeParameterSet = new HashSet<>();
+            for (com.ilscipio.scipio.ce.webapp.control.def.RedirectParameter rp : response.redirectParameters()) {
+                if ("exclude".equals(rp.mode())) {
+                    excludeParameterSet.add(rp.name());
+                } else if (UtilValidate.isNotEmpty(rp.value())) {
+                    redirectParameterValueMap.put(rp.name(), rp.value());
+                } else {
+                    String from = UtilValidate.isNotEmpty(rp.from()) ? rp.from() : rp.name();
+                    redirectParameterMap.put(rp.name(), from);
+                }
+            }
+            this.redirectParameterMap = redirectParameterMap;
+            this.redirectParameterValueMap = redirectParameterValueMap;
+            this.excludeParameterSet = excludeParameterSet;
+            this.includeMode = "auto";
+            Boolean allowViewSave = UtilValidate.isNotEmpty(response.allowViewSave()) ?
+                    UtilMisc.booleanValue(response.allowViewSave()) : null;
+            this.allowViewSave = allowViewSave;
+            this.typeEnum = Type.fromName(this.type);
+            this.valueExpr = ValueExpr.getInstance(this.value);
+            // Redirect attributes
+            String saveRequestStr = response.saveRequest();
+            AttributesSpec spec = this.typeEnum.getRedirectAttributesDefault();
+            if (!saveRequestStr.isEmpty()) {
+                spec = AttributesSpec.getSpec(saveRequestStr, null, null);
+            }
+            this.redirectAttributes = spec;
+            String connectionState = response.connectionState();
+            this.connectionState = connectionState.isEmpty() ? null : connectionState;
+            Boolean allowCacheRedirect = UtilValidate.isNotEmpty(response.allowCacheRedirect()) ?
+                    UtilMisc.booleanValue(response.allowCacheRedirect()) : null;
+            this.allowCacheRedirect = allowCacheRedirect;
         }
 
         // SCIPIO: Added getters for languages that can't read public properties (2017-05-08)

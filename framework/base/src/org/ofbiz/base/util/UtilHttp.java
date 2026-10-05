@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.base.util;
 
 import java.io.BufferedInputStream;
@@ -67,10 +73,8 @@ import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
-import org.apache.oro.text.regex.MalformedPatternException;
-import org.apache.oro.text.regex.Pattern;
-import org.apache.oro.text.regex.PatternMatcher;
-import org.apache.oro.text.regex.Perl5Matcher;
+import java.util.regex.PatternSyntaxException;
+import java.util.regex.Pattern;
 
 import com.ibm.icu.util.Calendar;
 
@@ -437,7 +441,13 @@ public final class UtilHttp {
         Method method = getWebappRequestParamFilterMethod;
         if (method == null) {
             try {
-                Class<?> requestHandlerCls = UtilHttp.class.getClassLoader().loadClass("org.ofbiz.webapp.control.RequestHandler");
+                // SCIPIO: 4.0.0: Use thread context classloader (set by Tomcat) instead of UtilHttp's classloader
+                // to support separate component JARs where base module can't directly see webapp module classes
+                ClassLoader cl = Thread.currentThread().getContextClassLoader();
+                if (cl == null) {
+                    cl = UtilHttp.class.getClassLoader();
+                }
+                Class<?> requestHandlerCls = cl.loadClass("org.ofbiz.webapp.control.RequestHandler");
                 method = requestHandlerCls.getMethod("getWebappRequestParamFilter", HttpServletRequest.class);
             } catch(Exception e) {
                 throw new IllegalStateException(e);
@@ -2164,11 +2174,10 @@ public final class UtilHttp {
                 Pattern pattern = null;
                 try {
                     pattern = PatternFactory.createOrGetPerl5CompiledPattern(spiderNameElement, false);
-                } catch (MalformedPatternException e) {
+                } catch (PatternSyntaxException e) {
                     Debug.logError(e, module);
                 }
-                PatternMatcher matcher = new Perl5Matcher();
-                if (matcher.contains(initialUserAgent, pattern)) {
+                if (pattern != null && pattern.matcher(initialUserAgent).find()) {
                     request.setAttribute("_REQUEST_FROM_SPIDER_", "Y");
                     result = true;
                     break;

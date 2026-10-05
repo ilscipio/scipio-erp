@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.service.eca;
 
 import java.lang.reflect.Method;
@@ -192,32 +198,45 @@ public final class ServiceEcaUtil {
         List<ServiceEcaRule> ecaRules = new ArrayList<>(); // SCIPIO: switched to ArrayList
 
         for (Class<?> serviceClass : reflectInfo.getReflectQuery().getAnnotatedClasses(List.of(Seca.class, SecaList.class))) {
-            Service serviceDef = serviceClass.getAnnotation(Service.class);
-            SecaList secaDefList = serviceClass.getAnnotation(SecaList.class);
-            if (secaDefList != null) {
-                for (Seca secaDef : secaDefList.value()) {
-                    ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, serviceClass, null));
+            try {
+                Service serviceDef = serviceClass.getAnnotation(Service.class);
+                SecaList secaDefList = serviceClass.getAnnotation(SecaList.class);
+                if (secaDefList != null) {
+                    for (Seca secaDef : secaDefList.value()) {
+                        ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, serviceClass, null));
+                    }
+                } else {
+                    Seca secaDef = serviceClass.getAnnotation(Seca.class);
+                    if (secaDef != null) {
+                        ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, serviceClass, null));
+                    }
                 }
-            } else {
-                Seca secaDef = serviceClass.getAnnotation(Seca.class);
-                if (secaDef != null) {
-                    ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, serviceClass, null));
-                }
+            } catch (Exception e) {
+                // Isolate per class so one bad definition doesn't lose the component's whole rule set
+                Debug.logError(e, "Error loading Service ECA annotations from class [" + serviceClass.getName() +
+                        "] for component [" + reflectInfo.getComponent().getGlobalName() + "]", module);
             }
         }
 
         for (Method serviceMethod : reflectInfo.getReflectQuery().getAnnotatedMethods(List.of(Seca.class, SecaList.class))) {
-            Service serviceDef = serviceMethod.getAnnotation(Service.class);
-            SecaList secaDefList = serviceMethod.getAnnotation(SecaList.class);
-            if (secaDefList != null) {
-                for (Seca secaDef : secaDefList.value()) {
-                    ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, null, serviceMethod));
+            try {
+                Service serviceDef = serviceMethod.getAnnotation(Service.class);
+                SecaList secaDefList = serviceMethod.getAnnotation(SecaList.class);
+                if (secaDefList != null) {
+                    for (Seca secaDef : secaDefList.value()) {
+                        ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, null, serviceMethod));
+                    }
+                } else {
+                    Seca secaDef = serviceMethod.getAnnotation(Seca.class);
+                    if (secaDef != null) {
+                        ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, null, serviceMethod));
+                    }
                 }
-            } else {
-                Seca secaDef = serviceMethod.getAnnotation(Seca.class);
-                if (secaDef != null) {
-                    ecaRules.add(new ServiceEcaRule(secaDef, serviceDef, null, serviceMethod));
-                }
+            } catch (Exception e) {
+                // Isolate per method so one bad definition doesn't lose the component's whole rule set
+                Debug.logError(e, "Error loading Service ECA annotations from method [" +
+                        serviceMethod.getDeclaringClass().getName() + "." + serviceMethod.getName() +
+                        "] for component [" + reflectInfo.getComponent().getGlobalName() + "]", module);
             }
         }
 

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.entity.model;
 
 import java.io.Serializable;
@@ -31,6 +37,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.ilscipio.scipio.ce.base.component.ComponentReflectInfo;
+import com.ilscipio.scipio.ce.base.component.ComponentReflectRegistry;
+import com.ilscipio.scipio.entity.def.EntityAnnotationReader;
+import com.ilscipio.scipio.entity.def.ViewEntityAnnotationReader;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
@@ -220,10 +230,22 @@ public class ModelReader implements Serializable {
                         try {
                             document = entityResourceHandler.getDocument();
                         } catch (GenericConfigException e) {
+                            // SCIPIO: 4.0.0: Allow missing XML files when annotations may provide fallback
+                            Throwable cause = e.getCause();
+                            if (cause instanceof java.io.FileNotFoundException ||
+                                cause instanceof org.ofbiz.base.component.ComponentException ||
+                                (e.getMessage() != null && e.getMessage().contains("File Resource not found"))) {
+                                Debug.logWarning("Entity model XML not found, will try annotations: " +
+                                    entityResourceHandler.toString(), module);
+                                continue; // Skip this resource, annotations may provide the entities
+                            }
                             throw new GenericEntityConfException("Error getting document from resource handler", e);
                         }
                         if (document == null) {
-                            throw new GenericEntityConfException("Could not get document for " + entityResourceHandler.toString());
+                            // SCIPIO: 4.0.0: Treat null document as missing file (annotation fallback)
+                            Debug.logWarning("Entity model XML returned null document, will try annotations: " +
+                                entityResourceHandler.toString(), module);
+                            continue;
                         }
 
                         // utilTimer.timerString("Before getDocumentElement in " +
@@ -265,6 +287,54 @@ public class ModelReader implements Serializable {
                         utilTimer.timerString("Finished " + entityResourceHandler.toString() + " - Total Entities: " + i + " FINISHED");
                     }
 
+                    // SCIPIO: 4.0.0: Load entities from @Entity annotations
+                    for (ComponentReflectInfo cri : ComponentReflectRegistry.getReflectInfos()) {
+                        try {
+                            EntityAnnotationReader annotationReader = new EntityAnnotationReader(cri, this);
+                            Map<String, ModelEntity> annotationEntities = annotationReader.getModelEntities();
+                            for (Map.Entry<String, ModelEntity> entry : annotationEntities.entrySet()) {
+                                String entityName = entry.getKey();
+                                ModelEntity modelEntity = entry.getValue();
+                                // Check for duplicate - XML takes precedence
+                                if (entityCache.containsKey(entityName)) {
+                                    Debug.logWarning("Entity " + entityName + " from annotation in component [" +
+                                            cri.getComponent().getGlobalName() + "] conflicts with XML definition. " +
+                                            "XML definition takes precedence.", module);
+                                } else {
+                                    entityCache.put(entityName, modelEntity);
+                                    numEntities++;
+                                }
+                            }
+                        } catch (Exception e) {
+                            Debug.logError(e, "Error loading entity annotations from component [" +
+                                    cri.getComponent().getGlobalName() + "]", module);
+                        }
+                    }
+
+                    // SCIPIO: 4.0.0: Load view-entities from @ViewEntity annotations
+                    for (ComponentReflectInfo cri : ComponentReflectRegistry.getReflectInfos()) {
+                        try {
+                            ViewEntityAnnotationReader viewAnnotationReader = new ViewEntityAnnotationReader(cri, this);
+                            Map<String, ModelViewEntity> annotationViewEntities = viewAnnotationReader.getModelViewEntities();
+                            for (Map.Entry<String, ModelViewEntity> entry : annotationViewEntities.entrySet()) {
+                                String entityName = entry.getKey();
+                                ModelViewEntity modelViewEntity = entry.getValue();
+                                // Check for duplicate - XML takes precedence
+                                if (entityCache.containsKey(entityName)) {
+                                    Debug.logWarning("View-entity " + entityName + " from annotation in component [" +
+                                            cri.getComponent().getGlobalName() + "] conflicts with XML definition. " +
+                                            "XML definition takes precedence.", module);
+                                } else {
+                                    // Add to temp list for field population later
+                                    tempViewEntityList.add(modelViewEntity);
+                                }
+                            }
+                        } catch (Exception e) {
+                            Debug.logError(e, "Error loading view-entity annotations from component [" +
+                                    cri.getComponent().getGlobalName() + "]", module);
+                        }
+                    }
+
                     // all entity elements in, now go through extend-entity elements and add their stuff
                     for (Element extendEntityElement : tempExtendEntityElementList) {
                         String entityName = UtilXml.checkEmpty(extendEntityElement.getAttribute("entity-name"));
@@ -272,6 +342,29 @@ public class ModelReader implements Serializable {
                         if (modelEntity == null)
                             throw new GenericEntityConfException("Entity to extend does not exist: " + entityName);
                         modelEntity.addExtendEntity(this, extendEntityElement);
+                    }
+
+                    // SCIPIO: 4.0.0: Process extend-entity annotations after XML extend-entities
+                    for (ComponentReflectInfo cri : ComponentReflectRegistry.getReflectInfos()) {
+                        try {
+                            com.ilscipio.scipio.entity.def.ExtendEntityAnnotationReader extendAnnotationReader =
+                                    new com.ilscipio.scipio.entity.def.ExtendEntityAnnotationReader(cri, this);
+                            List<com.ilscipio.scipio.entity.def.ExtendEntityAnnotationReader.ExtendEntityInfo> extendInfos =
+                                    extendAnnotationReader.getExtendEntityInfos();
+                            for (com.ilscipio.scipio.entity.def.ExtendEntityAnnotationReader.ExtendEntityInfo extendInfo : extendInfos) {
+                                String entityName = extendInfo.getEntityName();
+                                ModelEntity modelEntity = entityCache.get(entityName);
+                                if (modelEntity == null) {
+                                    Debug.logError("Entity to extend from annotation does not exist: " + entityName +
+                                            " (from class " + extendInfo.getAnnotatedClass().getName() + ")", module);
+                                    continue;
+                                }
+                                modelEntity.addExtendEntityFromAnnotation(this, extendInfo);
+                            }
+                        } catch (Exception e) {
+                            Debug.logError(e, "Error processing extend-entity annotations for component [" +
+                                    cri.getComponent().getGlobalName() + "]", module);
+                        }
                     }
 
                     // do a pass on all of the view entities now that all of the entities have loaded and populate the fields

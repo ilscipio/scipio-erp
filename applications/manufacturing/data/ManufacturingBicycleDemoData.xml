@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+
+<!-- SCIPIO: 4.0.0: the MF_ bicycle scenario. It uses demo data of accounting (Company), order (DemoCustomer,
+     ScipioShop) and shop (ScipioShopWarehouse, CATALOG1), so it must load after them; ManufacturingExampleData.xml
+     loads before the shop, which needs its fixed assets (DEMO_BOOK_GROUP, DEMO_MACHINE_GROUP). -->
+<entity-engine-xml>
+    <!-- ================================================================= -->
+    <!-- MF_: Bicycle manufacturing demo scenario -->
+    <!-- ================================================================= -->
+    <!-- Finished goods and raw materials -->
+    <Product productId="MF_BIKE" productTypeId="FINISHED_GOOD" internalName="City bike" productName="City bike" description="City bike" isVirtual="N" isVariant="N" billOfMaterialLevel="0"/>
+    <Product productId="MF_WHEEL" productTypeId="FINISHED_GOOD" internalName="Wheel 28 inch" productName="Wheel 28 inch" description="Wheel 28 inch" isVirtual="N" isVariant="N" billOfMaterialLevel="1"/>
+    <Product productId="MF_FRAME" productTypeId="FINISHED_GOOD" internalName="Welded frame" productName="Welded frame" description="Welded frame" isVirtual="N" isVariant="N" billOfMaterialLevel="1"/>
+    <Product productId="MF_RIM" productTypeId="RAW_MATERIAL" internalName="Wheel rim 28 inch" productName="Wheel rim 28 inch" description="Wheel rim 28 inch" isVirtual="N" isVariant="N" billOfMaterialLevel="2"/>
+    <Product productId="MF_SPOKE" productTypeId="RAW_MATERIAL" internalName="Spoke" productName="Spoke" description="Spoke" isVirtual="N" isVariant="N" billOfMaterialLevel="2"/>
+    <Product productId="MF_HUB" productTypeId="RAW_MATERIAL" internalName="Wheel hub" productName="Wheel hub" description="Wheel hub" isVirtual="N" isVariant="N" billOfMaterialLevel="2"/>
+    <Product productId="MF_TIRE" productTypeId="RAW_MATERIAL" internalName="Tire 28 inch" productName="Tire 28 inch" description="Tire 28 inch" isVirtual="N" isVariant="N" billOfMaterialLevel="2"/>
+    <Product productId="MF_TUBE_SET" productTypeId="RAW_MATERIAL" internalName="Frame tube set" productName="Frame tube set" description="Frame tube set" isVirtual="N" isVariant="N" billOfMaterialLevel="2"/>
+    <Product productId="MF_PAINT" productTypeId="RAW_MATERIAL" internalName="Frame paint" productName="Frame paint" description="Frame paint" isVirtual="N" isVariant="N" billOfMaterialLevel="2" quantityUomId="VLIQ_L"/>
+    <Product productId="MF_SADDLE" productTypeId="RAW_MATERIAL" internalName="Saddle" productName="Saddle" description="Saddle" isVirtual="N" isVariant="N" billOfMaterialLevel="1"/>
+    <Product productId="MF_SADDLE_GEL" productTypeId="RAW_MATERIAL" internalName="Gel comfort saddle" productName="Gel comfort saddle" description="Gel comfort saddle" isVirtual="N" isVariant="N" billOfMaterialLevel="1"/>
+    <Product productId="MF_HANDLEBAR" productTypeId="RAW_MATERIAL" internalName="Handlebar" productName="Handlebar" description="Handlebar" isVirtual="N" isVariant="N" billOfMaterialLevel="1"/>
+    <Product productId="MF_DRIVETRAIN" productTypeId="RAW_MATERIAL" internalName="Drivetrain set" productName="Drivetrain set" description="Drivetrain set" isVirtual="N" isVariant="N" billOfMaterialLevel="1"/>
+    <!-- SCIPIO: lot reservation by weight demo: a steel coil raw material issued by weight from a held lot -->
+    <Product productId="MF_STEEL_COIL" productTypeId="RAW_MATERIAL" internalName="Steel coil S235" productName="Steel coil S235" description="Steel coil S235" isVirtual="N" isVariant="N" billOfMaterialLevel="2" quantityUomId="WT_kg"/>
+
+    <ProductPrice productId="MF_BIKE" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="499.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_BIKE" productPricePurposeId="PURCHASE" productPriceTypeId="LIST_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="599.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_RIM" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="15.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_SPOKE" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="0.30" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_HUB" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="12.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_TIRE" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="8.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_TUBE_SET" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="25.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_STEEL_COIL" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="2.10" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_PAINT" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="18.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_SADDLE" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="9.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_SADDLE_GEL" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="15.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_HANDLEBAR" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="7.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="MF_DRIVETRAIN" productPricePurposeId="PURCHASE" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2026-01-01 00:00:00.000" price="45.00" createdDate="2026-01-01 00:00:00.000" createdByUserLogin="admin" lastModifiedDate="2026-01-01 00:00:00.000" lastModifiedByUserLogin="admin"/>
+
+    <!-- Category: bicycles, rolled up under the demo catalog root used by CLOTH-100 -->
+    <ProductCategory description="Bicycles" longDescription="Bicycles" primaryParentCategoryId="CATALOG1" productCategoryId="MF_BICYCLES" productCategoryTypeId="CATALOG_CATEGORY"/>
+    <ProductCategoryRollup fromDate="2026-01-01 00:00:00.000" parentProductCategoryId="CATALOG1" productCategoryId="MF_BICYCLES"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_BIKE" sequenceNum="10" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_WHEEL" sequenceNum="20" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_FRAME" sequenceNum="30" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_RIM" sequenceNum="40" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_SPOKE" sequenceNum="50" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_HUB" sequenceNum="60" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_TIRE" sequenceNum="70" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_TUBE_SET" sequenceNum="80" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_PAINT" sequenceNum="90" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_SADDLE" sequenceNum="100" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_SADDLE_GEL" sequenceNum="110" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_HANDLEBAR" sequenceNum="120" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCategoryMember productCategoryId="MF_BICYCLES" productId="MF_DRIVETRAIN" sequenceNum="130" fromDate="2026-01-01 00:00:00.000"/>
+
+    <!-- Facility settings -->
+    <ProductFacility productId="MF_BIKE" facilityId="ScipioShopWarehouse" minimumStock="1" reorderQuantity="5" daysToShip="3"/>
+    <ProductFacility productId="MF_WHEEL" facilityId="ScipioShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="2"/>
+    <ProductFacility productId="MF_FRAME" facilityId="ScipioShopWarehouse" minimumStock="2" reorderQuantity="10" daysToShip="2"/>
+    <ProductFacility productId="MF_RIM" facilityId="ScipioShopWarehouse" minimumStock="20" reorderQuantity="100" daysToShip="5"/>
+    <ProductFacility productId="MF_SPOKE" facilityId="ScipioShopWarehouse" minimumStock="20" reorderQuantity="100" daysToShip="5"/>
+    <ProductFacility productId="MF_HUB" facilityId="ScipioShopWarehouse" minimumStock="20" reorderQuantity="100" daysToShip="5"/>
+    <ProductFacility productId="MF_TIRE" facilityId="ScipioShopWarehouse" minimumStock="20" reorderQuantity="100" daysToShip="5"/>
+    <ProductFacility productId="MF_TUBE_SET" facilityId="ScipioShopWarehouse" minimumStock="20" reorderQuantity="100" daysToShip="5"/>
+    <ProductFacility productId="MF_STEEL_COIL" facilityId="ScipioShopWarehouse" minimumStock="100" reorderQuantity="500" daysToShip="5"/>
+    <ProductFacility productId="MF_PAINT" facilityId="ScipioShopWarehouse" minimumStock="20" reorderQuantity="100" daysToShip="5"/>
+    <ProductFacility productId="MF_SADDLE" facilityId="ScipioShopWarehouse" minimumStock="20" reorderQuantity="100" daysToShip="5"/>
+    <ProductFacility productId="MF_SADDLE_GEL" facilityId="ScipioShopWarehouse" minimumStock="20" reorderQuantity="100" daysToShip="5"/>
+    <ProductFacility productId="MF_HANDLEBAR" facilityId="ScipioShopWarehouse" minimumStock="20" reorderQuantity="100" daysToShip="5"/>
+    <ProductFacility productId="MF_DRIVETRAIN" facilityId="ScipioShopWarehouse" minimumStock="20" reorderQuantity="100" daysToShip="5"/>
+
+    <!-- Suppliers for the 9 routinely-purchased raw materials (MF_SADDLE_GEL is a build-time upgrade option, not stocked from the main supplier) -->
+    <SupplierProduct standardLeadTimeDays="7" partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="1" currencyUomId="USD" productId="MF_RIM" lastPrice="15.00" supplierProductId="MF_SUP_RIM" supplierProductName="Wheel rim 28 inch" availableFromDate="2026-01-01 00:00:00.000"/>
+    <SupplierProduct standardLeadTimeDays="7" partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="1" currencyUomId="USD" productId="MF_SPOKE" lastPrice="0.30" supplierProductId="MF_SUP_SPOKE" supplierProductName="Spoke" availableFromDate="2026-01-01 00:00:00.000"/>
+    <SupplierProduct standardLeadTimeDays="7" partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="1" currencyUomId="USD" productId="MF_HUB" lastPrice="12.00" supplierProductId="MF_SUP_HUB" supplierProductName="Wheel hub" availableFromDate="2026-01-01 00:00:00.000"/>
+    <SupplierProduct standardLeadTimeDays="7" partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="1" currencyUomId="USD" productId="MF_TIRE" lastPrice="8.00" supplierProductId="MF_SUP_TIRE" supplierProductName="Tire 28 inch" availableFromDate="2026-01-01 00:00:00.000"/>
+    <SupplierProduct standardLeadTimeDays="7" partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="1" currencyUomId="USD" productId="MF_TUBE_SET" lastPrice="25.00" supplierProductId="MF_SUP_TUBE_SET" supplierProductName="Frame tube set" availableFromDate="2026-01-01 00:00:00.000"/>
+    <SupplierProduct standardLeadTimeDays="10" partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="1" currencyUomId="USD" productId="MF_STEEL_COIL" lastPrice="1.80" supplierProductId="MF_SUP_STEEL_COIL" supplierProductName="Steel coil S235" availableFromDate="2026-01-01 00:00:00.000"/>
+    <SupplierProduct standardLeadTimeDays="7" partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="1" currencyUomId="USD" productId="MF_PAINT" lastPrice="18.00" supplierProductId="MF_SUP_PAINT" supplierProductName="Frame paint" availableFromDate="2026-01-01 00:00:00.000"/>
+    <SupplierProduct standardLeadTimeDays="7" partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="1" currencyUomId="USD" productId="MF_SADDLE" lastPrice="9.00" supplierProductId="MF_SUP_SADDLE" supplierProductName="Saddle" availableFromDate="2026-01-01 00:00:00.000"/>
+    <SupplierProduct standardLeadTimeDays="7" partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="1" currencyUomId="USD" productId="MF_HANDLEBAR" lastPrice="7.00" supplierProductId="MF_SUP_HANDLEBAR" supplierProductName="Handlebar" availableFromDate="2026-01-01 00:00:00.000"/>
+    <SupplierProduct standardLeadTimeDays="7" partyId="DemoSupplier" supplierPrefOrderId="10_MAIN_SUPPL" minimumOrderQuantity="1" currencyUomId="USD" productId="MF_DRIVETRAIN" lastPrice="45.00" supplierProductId="MF_SUP_DRIVETRAIN" supplierProductName="Drivetrain set" availableFromDate="2026-01-01 00:00:00.000"/>
+
+    <!-- Bill of materials -->
+    <ProductAssoc productId="MF_BIKE" productIdTo="MF_WHEEL" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="10" quantity="2.0"/>
+    <ProductAssoc productId="MF_BIKE" productIdTo="MF_FRAME" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="20" quantity="1.0"/>
+    <ProductAssoc productId="MF_BIKE" productIdTo="MF_SADDLE" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="30" quantity="1.0"/>
+    <ProductAssoc productId="MF_BIKE" productIdTo="MF_HANDLEBAR" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="40" quantity="1.0"/>
+    <ProductAssoc productId="MF_BIKE" productIdTo="MF_DRIVETRAIN" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="50" quantity="1.0"/>
+    <ProductAssoc productId="MF_WHEEL" productIdTo="MF_RIM" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="10" quantity="1.0"/>
+    <ProductAssoc productId="MF_WHEEL" productIdTo="MF_SPOKE" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="20" quantity="32.0"/>
+    <ProductAssoc productId="MF_WHEEL" productIdTo="MF_HUB" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="30" quantity="1.0"/>
+    <ProductAssoc productId="MF_WHEEL" productIdTo="MF_TIRE" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="40" quantity="1.0"/>
+    <ProductAssoc productId="MF_FRAME" productIdTo="MF_TUBE_SET" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="10" quantity="1.0"/>
+    <ProductAssoc productId="MF_FRAME" productIdTo="MF_STEEL_COIL" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="5" quantity="12.5" scrapFactor="3"/>
+    <ProductAssoc productId="MF_FRAME" productIdTo="MF_PAINT" productAssocTypeId="MANUF_COMPONENT" fromDate="2026-01-01 00:00:00.000" sequenceNum="20" quantity="0.5" scrapFactor="5"/>
+
+    <!-- Manufacturing rule: comfort saddle substitution -->
+    <ProductFeatureType productFeatureTypeId="MF_OPTION" description="Bike option"/>
+    <ProductFeature productFeatureId="MF_COMFORT" productFeatureTypeId="MF_OPTION" description="Comfort saddle"/>
+    <ProductManufacturingRule ruleId="MF_RULE_SADDLE" productId="MF_BIKE" productIdFor="MF_BIKE" productIdIn="MF_SADDLE" productIdInSubst="MF_SADDLE_GEL" productFeature="MF_COMFORT" ruleOperator="OR" quantity="1.0" fromDate="2026-01-01 00:00:00.000" description="Comfort saddle substitution"/>
+
+    <!-- Calendar -->
+    <TechDataCalendarWeek calendarWeekId="MF_WEEK" description="Full shift, 8 hours/day, Monday to Friday, starting at 8h00" mondayStartTime="08:00:00" mondayCapacity="2.88E7" tuesdayStartTime="08:00:00" tuesdayCapacity="2.88E7" wednesdayStartTime="08:00:00" wednesdayCapacity="2.88E7" thursdayStartTime="08:00:00" thursdayCapacity="2.88E7" fridayStartTime="08:00:00" fridayCapacity="2.88E7"/>
+    <TechDataCalendarWeek calendarWeekId="MF_WEEK_SHORT" description="Short shift, 4 hours/day, Monday to Friday, starting at 8h00" mondayStartTime="08:00:00" mondayCapacity="1.44E7" tuesdayStartTime="08:00:00" tuesdayCapacity="1.44E7" wednesdayStartTime="08:00:00" wednesdayCapacity="1.44E7" thursdayStartTime="08:00:00" thursdayCapacity="1.44E7" fridayStartTime="08:00:00" fridayCapacity="1.44E7"/>
+    <TechDataCalendar calendarId="MF_CALENDAR" description="Bicycle plant calendar" calendarWeekId="MF_WEEK"/>
+    <TechDataCalendarExcDay calendarId="MF_CALENDAR" exceptionDateStartTime="2026-10-03 08:00:00.000" exceptionCapacity="0" description="German Unity Day"/>
+    <TechDataCalendarExcWeek calendarId="MF_CALENDAR" exceptionDateStart="2026-12-21" calendarWeekId="MF_WEEK_SHORT" description="Christmas week"/>
+
+    <!-- Work centers -->
+    <FixedAsset fixedAssetId="MF_WC_WHEEL" fixedAssetTypeId="PRODUCTION_EQUIPMENT" fixedAssetName="Wheel building station" calendarId="MF_CALENDAR" productionCapacity="1" locatedAtFacilityId="ScipioShopWarehouse"/>
+    <FixedAsset fixedAssetId="MF_WC_WELD" fixedAssetTypeId="PRODUCTION_EQUIPMENT" fixedAssetName="Frame welding cell" calendarId="MF_CALENDAR" productionCapacity="1" locatedAtFacilityId="ScipioShopWarehouse"/>
+    <FixedAsset fixedAssetId="MF_WC_PAINT" fixedAssetTypeId="PRODUCTION_EQUIPMENT" fixedAssetName="Paint booth" calendarId="MF_CALENDAR" productionCapacity="1" locatedAtFacilityId="ScipioShopWarehouse"/>
+    <FixedAsset fixedAssetId="MF_WC_ASSY" fixedAssetTypeId="PRODUCTION_EQUIPMENT" fixedAssetName="Final assembly line" calendarId="MF_CALENDAR" productionCapacity="1" locatedAtFacilityId="ScipioShopWarehouse"/>
+    <FixedAsset fixedAssetId="MF_WC_QC" fixedAssetTypeId="PRODUCTION_EQUIPMENT" fixedAssetName="Inspection bench" calendarId="MF_CALENDAR" productionCapacity="1" locatedAtFacilityId="ScipioShopWarehouse"/>
+
+    <FixedAssetStdCost fixedAssetId="MF_WC_WHEEL" fixedAssetStdCostTypeId="SETUP_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="30"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_WHEEL" fixedAssetStdCostTypeId="USAGE_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="45"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_WELD" fixedAssetStdCostTypeId="SETUP_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="40"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_WELD" fixedAssetStdCostTypeId="USAGE_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="60"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_PAINT" fixedAssetStdCostTypeId="SETUP_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="25"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_PAINT" fixedAssetStdCostTypeId="USAGE_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="50"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_ASSY" fixedAssetStdCostTypeId="SETUP_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="30"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_ASSY" fixedAssetStdCostTypeId="USAGE_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="40"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_QC" fixedAssetStdCostTypeId="SETUP_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="20"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_QC" fixedAssetStdCostTypeId="USAGE_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="35"/>
+
+    <!-- Routing: wheel -->
+    <WorkEffort workEffortId="MF_ROUT_WHEEL" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE" workEffortName="Wheel routing" description="Wheel routing" revisionNumber="1" quantityToProduce="0"/>
+    <WorkEffort workEffortId="MF_TASK_LACE" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Lace spokes" description="Lace spokes" revisionNumber="1" fixedAssetId="MF_WC_WHEEL" estimatedSetupMillis="600000" estimatedMilliSeconds="1200000"/>
+    <WorkEffort workEffortId="MF_TASK_TRUE" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="True wheel" description="True wheel" revisionNumber="1" fixedAssetId="MF_WC_WHEEL" estimatedSetupMillis="300000" estimatedMilliSeconds="600000"/>
+    <WorkEffortAssoc workEffortIdFrom="MF_ROUT_WHEEL" workEffortIdTo="MF_TASK_LACE" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2026-01-01 00:00:00.000"/>
+    <WorkEffortAssoc workEffortIdFrom="MF_ROUT_WHEEL" workEffortIdTo="MF_TASK_TRUE" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2026-01-01 00:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_ROUT_WHEEL" productId="MF_WHEEL" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2026-01-01 00:00:00.000"/>
+
+    <!-- Routing: frame -->
+    <WorkEffort workEffortId="MF_ROUT_FRAME" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE" workEffortName="Frame routing" description="Frame routing" revisionNumber="1" quantityToProduce="0"/>
+    <WorkEffort workEffortId="MF_TASK_WELD" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Weld frame" description="Weld frame" revisionNumber="1" fixedAssetId="MF_WC_WELD" estimatedSetupMillis="1800000" estimatedMilliSeconds="2700000"/>
+    <WorkEffort workEffortId="MF_TASK_PAINT" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Paint frame" description="Paint frame" revisionNumber="1" fixedAssetId="MF_WC_PAINT" estimatedSetupMillis="1200000" estimatedMilliSeconds="900000"/>
+    <WorkEffortAssoc workEffortIdFrom="MF_ROUT_FRAME" workEffortIdTo="MF_TASK_WELD" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2026-01-01 00:00:00.000"/>
+    <WorkEffortAssoc workEffortIdFrom="MF_ROUT_FRAME" workEffortIdTo="MF_TASK_PAINT" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2026-01-01 00:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_ROUT_FRAME" productId="MF_FRAME" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2026-01-01 00:00:00.000"/>
+
+    <!-- Routing: bike -->
+    <WorkEffort workEffortId="MF_ROUT_BIKE" workEffortTypeId="ROUTING" currentStatusId="ROU_ACTIVE" workEffortName="Bike routing" description="Bike routing" revisionNumber="1" quantityToProduce="0"/>
+    <WorkEffort workEffortId="MF_TASK_ASSY" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Assemble bike" description="Assemble bike" revisionNumber="1" fixedAssetId="MF_WC_ASSY" estimatedSetupMillis="900000" estimatedMilliSeconds="2400000"/>
+    <WorkEffort workEffortId="MF_TASK_QC" workEffortTypeId="ROU_TASK" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="ROU_ACTIVE" workEffortName="Inspect bike" description="Inspect bike" revisionNumber="1" fixedAssetId="MF_WC_QC" estimatedSetupMillis="0" estimatedMilliSeconds="600000"/>
+    <WorkEffortAssoc workEffortIdFrom="MF_ROUT_BIKE" workEffortIdTo="MF_TASK_ASSY" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="10" fromDate="2026-01-01 00:00:00.000"/>
+    <WorkEffortAssoc workEffortIdFrom="MF_ROUT_BIKE" workEffortIdTo="MF_TASK_QC" workEffortAssocTypeId="ROUTING_COMPONENT" sequenceNum="20" fromDate="2026-01-01 00:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_ROUT_BIKE" productId="MF_BIKE" workEffortGoodStdTypeId="ROU_PROD_TEMPLATE" statusId="WEGS_CREATED" fromDate="2026-01-01 00:00:00.000"/>
+
+    <!-- Cost calcs: labor per task (perMilliSecond=60000 -> variableCost is a rate per minute) -->
+    <CostComponentCalc costComponentCalcId="MF_CALC_LACE" description="Wheel-building labor (0.40 USD/min)" currencyUomId="USD" costGlAccountTypeId="OPERATING_EXPENSE" fixedCost="0" variableCost="0.40" perMilliSecond="60000"/>
+    <WorkEffortCostCalc workEffortId="MF_TASK_LACE" costComponentTypeId="LABOR_COST" costComponentCalcId="MF_CALC_LACE" fromDate="2026-01-01 00:00:00.000"/>
+    <CostComponentCalc costComponentCalcId="MF_CALC_TRUE" description="Wheel-truing labor (0.40 USD/min)" currencyUomId="USD" costGlAccountTypeId="OPERATING_EXPENSE" fixedCost="0" variableCost="0.40" perMilliSecond="60000"/>
+    <WorkEffortCostCalc workEffortId="MF_TASK_TRUE" costComponentTypeId="LABOR_COST" costComponentCalcId="MF_CALC_TRUE" fromDate="2026-01-01 00:00:00.000"/>
+    <CostComponentCalc costComponentCalcId="MF_CALC_WELD" description="Frame welding labor (0.60 USD/min)" currencyUomId="USD" costGlAccountTypeId="OPERATING_EXPENSE" fixedCost="0" variableCost="0.60" perMilliSecond="60000"/>
+    <WorkEffortCostCalc workEffortId="MF_TASK_WELD" costComponentTypeId="LABOR_COST" costComponentCalcId="MF_CALC_WELD" fromDate="2026-01-01 00:00:00.000"/>
+    <CostComponentCalc costComponentCalcId="MF_CALC_PAINT" description="Frame painting labor (0.40 USD/min)" currencyUomId="USD" costGlAccountTypeId="OPERATING_EXPENSE" fixedCost="0" variableCost="0.40" perMilliSecond="60000"/>
+    <WorkEffortCostCalc workEffortId="MF_TASK_PAINT" costComponentTypeId="LABOR_COST" costComponentCalcId="MF_CALC_PAINT" fromDate="2026-01-01 00:00:00.000"/>
+    <CostComponentCalc costComponentCalcId="MF_CALC_ASSY" description="Bike assembly labor (0.60 USD/min)" currencyUomId="USD" costGlAccountTypeId="OPERATING_EXPENSE" fixedCost="0" variableCost="0.60" perMilliSecond="60000"/>
+    <WorkEffortCostCalc workEffortId="MF_TASK_ASSY" costComponentTypeId="LABOR_COST" costComponentCalcId="MF_CALC_ASSY" fromDate="2026-01-01 00:00:00.000"/>
+    <CostComponentCalc costComponentCalcId="MF_CALC_QC" description="Bike inspection labor (0.30 USD/min)" currencyUomId="USD" costGlAccountTypeId="OPERATING_EXPENSE" fixedCost="0" variableCost="0.30" perMilliSecond="60000"/>
+    <WorkEffortCostCalc workEffortId="MF_TASK_QC" costComponentTypeId="LABOR_COST" costComponentCalcId="MF_CALC_QC" fromDate="2026-01-01 00:00:00.000"/>
+
+    <!-- Overhead cost for the manufactured products (8 percent of total cost), same shape as GEN_COST_CALC -->
+    <CostComponentCalc costComponentCalcId="MF_OVERHEAD_CALC" description="Overhead cost (8 percent of total cost) for general costs" currencyUomId="USD" costGlAccountTypeId="OPERATING_EXPENSE" fixedCost="0.08" costCustomMethodId="PROD_PERC_FORMULA"/>
+    <ProductCostComponentCalc productId="MF_BIKE" costComponentTypeId="GEN_COST" costComponentCalcId="MF_OVERHEAD_CALC" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCostComponentCalc productId="MF_WHEEL" costComponentTypeId="GEN_COST" costComponentCalcId="MF_OVERHEAD_CALC" fromDate="2026-01-01 00:00:00.000"/>
+    <ProductCostComponentCalc productId="MF_FRAME" costComponentTypeId="GEN_COST" costComponentCalcId="MF_OVERHEAD_CALC" fromDate="2026-01-01 00:00:00.000"/>
+
+    <!-- Inventory: raw materials on hand (enough for 10 bikes, MF_HUB deliberately short) -->
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_RIM" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_RIM" ownerPartyId="Company" currencyUomId="USD" unitCost="15.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_RIM" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="20" quantityOnHandDiff="20" accountingQuantityDiff="20"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_SPOKE" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_SPOKE" ownerPartyId="Company" currencyUomId="USD" unitCost="0.30"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_SPOKE" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="640" quantityOnHandDiff="640" accountingQuantityDiff="640"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_HUB" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_HUB" ownerPartyId="Company" currencyUomId="USD" unitCost="12.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_HUB" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="4" quantityOnHandDiff="4" accountingQuantityDiff="4"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_TIRE" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_TIRE" ownerPartyId="Company" currencyUomId="USD" unitCost="8.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_TIRE" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="20" quantityOnHandDiff="20" accountingQuantityDiff="20"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_TUBESET" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_TUBE_SET" ownerPartyId="Company" currencyUomId="USD" unitCost="25.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_TUBESET" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_PAINT" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_PAINT" ownerPartyId="Company" currencyUomId="USD" unitCost="18.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_PAINT" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="5" quantityOnHandDiff="5" accountingQuantityDiff="5"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_SADDLE" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_SADDLE" ownerPartyId="Company" currencyUomId="USD" unitCost="9.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_SADDLE" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_SADDLEGEL" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_SADDLE_GEL" ownerPartyId="Company" currencyUomId="USD" unitCost="15.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_SADDLEGEL" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="5" quantityOnHandDiff="5" accountingQuantityDiff="5"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_HANDLEBAR" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_HANDLEBAR" ownerPartyId="Company" currencyUomId="USD" unitCost="7.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_HANDLEBAR" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_DRIVETRAIN" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_DRIVETRAIN" ownerPartyId="Company" currencyUomId="USD" unitCost="45.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_DRIVETRAIN" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="10" quantityOnHandDiff="10" accountingQuantityDiff="10"/>
+
+    <!-- Inventory: 2 finished wheels on hand -->
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_WHEEL" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_WHEEL" ownerPartyId="Company" currencyUomId="USD" unitCost="62.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_WHEEL" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="2" quantityOnHandDiff="2" accountingQuantityDiff="2"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_FRAME" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_FRAME" ownerPartyId="Company" currencyUomId="USD" unitCost="62.00"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_FRAME" inventoryItemDetailSeqId="MF_IID_FRAME" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="5" quantityOnHandDiff="5" accountingQuantityDiff="5"/>
+
+    <!-- SCIPIO: lot reservation by weight demo: one steel coil lot held on hand, reservable and issuable by weight -->
+    <Lot lotId="MF_LOT_COIL_2409" creationDate="2026-01-01 00:00:00.000" quantity="500"/>
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_COIL_2409" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_STEEL_COIL" lotId="MF_LOT_COIL_2409" ownerPartyId="Company" currencyUomId="USD" unitCost="1.80" quantityOnHandTotal="500" availableToPromiseTotal="500"/>
+    <InventoryItemDetail inventoryItemId="MF_INV_COIL_2409" inventoryItemDetailSeqId="0001" effectiveDate="2026-01-01 00:00:00.000" availableToPromiseDiff="500" quantityOnHandDiff="500" accountingQuantityDiff="500"/>
+
+    <!-- Zero-quantity inventory item used only to carry the MF_ORDER_1 reservation below: the OrderHeaderItemAndShipGroup
+         view aliases its "facilityId" field from the (optionally) joined InventoryItem, not from OrderItemShipGroup, so
+         this reservation is what makes executeMrp see MF_ORDER_1 as demand at ScipioShopWarehouse. -->
+    <InventoryItem facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL02" datetimeReceived="2026-01-01 00:00:00.000" inventoryItemId="MF_INV_BIKE_BO" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MF_BIKE" ownerPartyId="Company" currencyUomId="USD" unitCost="350.00"/>
+
+    <!-- Demand: approved sales order for 5 bikes -->
+    <OrderHeader orderId="MF_ORDER_1" orderTypeId="SALES_ORDER" orderName="Demo Bicycle Sales Order 1" salesChannelEnumId="WEB_SALES_CHANNEL" orderDate="2026-01-01 00:00:00.000" entryDate="2026-01-01 00:00:00.000" priority="2" statusId="ORDER_APPROVED" createdBy="admin" currencyUom="USD" productStoreId="ScipioShop" remainingSubTotal="2495.0" grandTotal="2495.0"/>
+    <OrderItem orderId="MF_ORDER_1" orderItemSeqId="00001" orderItemTypeId="PRODUCT_ORDER_ITEM" productId="MF_BIKE" isPromo="N" quantity="5.0" selectedAmount="0.0" unitPrice="499.0" unitListPrice="599.0" isModifiedPrice="N" itemDescription="City bike" correspondingPoId="" statusId="ITEM_APPROVED"/>
+    <OrderRole orderId="MF_ORDER_1" partyId="DemoCustomer" roleTypeId="PLACING_CUSTOMER"/>
+    <OrderRole orderId="MF_ORDER_1" partyId="DemoCustomer" roleTypeId="BILL_TO_CUSTOMER"/>
+    <OrderRole orderId="MF_ORDER_1" partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
+    <OrderRole orderId="MF_ORDER_1" partyId="DemoCustomer" roleTypeId="SHIP_TO_CUSTOMER"/>
+    <OrderRole orderId="MF_ORDER_1" partyId="DemoCustomer" roleTypeId="END_USER_CUSTOMER"/>
+    <OrderItemShipGroup orderId="MF_ORDER_1" shipGroupSeqId="00001" shipmentMethodTypeId="NEXT_DAY" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" facilityId="ScipioShopWarehouse" contactMechId="9015" maySplit="N" giftMessage="" isGift="N" shipByDate="2026-09-30 00:00:00.000"/>
+    <OrderItemShipGroupAssoc orderId="MF_ORDER_1" orderItemSeqId="00001" shipGroupSeqId="00001" quantity="5.0"/>
+    <OrderItemShipGrpInvRes orderId="MF_ORDER_1" shipGroupSeqId="00001" orderItemSeqId="00001" inventoryItemId="MF_INV_BIKE_BO" reserveOrderEnumId="INVRO_FIFO_REC" quantity="5.0" reservedDatetime="2026-01-01 00:00:00.000" createdDatetime="2026-01-01 00:00:00.000" promisedDatetime="2026-09-30 00:00:00.000" priority="2"/>
+    <OrderStatus orderStatusId="MF_ORDER_1_01" statusId="ORDER_CREATED" orderId="MF_ORDER_1" statusDatetime="2026-01-01 00:00:00.000" statusUserLogin="admin"/>
+    <OrderStatus orderStatusId="MF_ORDER_1_02" statusId="ITEM_CREATED" orderId="MF_ORDER_1" orderItemSeqId="00001" statusDatetime="2026-01-01 00:00:00.000" statusUserLogin="admin"/>
+    <OrderStatus orderStatusId="MF_ORDER_1_03" statusId="ORDER_APPROVED" orderId="MF_ORDER_1" statusDatetime="2026-01-01 00:00:00.000" statusUserLogin="admin"/>
+    <OrderStatus orderStatusId="MF_ORDER_1_04" statusId="ITEM_APPROVED" orderId="MF_ORDER_1" orderItemSeqId="00001"/>
+    <OrderContactMech orderId="MF_ORDER_1" contactMechPurposeTypeId="SHIPPING_LOCATION" contactMechId="9015"/>
+    <OrderContactMech orderId="MF_ORDER_1" contactMechPurposeTypeId="ORDER_EMAIL" contactMechId="9026"/>
+
+    <!-- Sales forecast: 10 bikes forecast for October 2026, matched to ScipioShopWarehouse via the Company organization
+         party (executeMrpForecast filters SalesForecast by the facility's ownerPartyId, not by a facility/store field) -->
+    <CustomTimePeriod customTimePeriodId="MF_TP_202610" periodTypeId="FISCAL_MONTH" fromDate="2026-10-01 00:00:00.000" thruDate="2026-11-01 00:00:00.000" isClosed="N" periodNum="10" periodName="2026-10" organizationPartyId="Company"/>
+    <SalesForecast salesForecastId="MF_FORECAST_1" organizationPartyId="Company" customTimePeriodId="MF_TP_202610" currencyUomId="USD" forecastAmount="4990.00"/>
+    <SalesForecastDetail salesForecastId="MF_FORECAST_1" salesForecastDetailId="MF_FCD_1" productId="MF_BIKE" quantity="10.0" amount="4990.00"/>
+
+    <!-- Production run history: closed run (wheels for stock) -->
+    <WorkEffort workEffortId="MF_RUN_CLOSED" workEffortTypeId="PROD_ORDER_HEADER" workEffortPurposeTypeId="WEPT_PRODUCTION_RUN" currentStatusId="PRUN_CLOSED" facilityId="ScipioShopWarehouse" workEffortName="Wheels for stock" quantityToProduce="2" quantityProduced="2" quantityRejected="0" estimatedStartDate="2026-08-24 08:00:00.000" estimatedCompletionDate="2026-08-24 10:00:00.000" actualStartDate="2026-08-24 08:00:00.000" actualCompletionDate="2026-08-24 10:00:00.000"/>
+    <WorkEffort workEffortId="MF_RUN_CLOSED_T1" workEffortTypeId="PROD_ORDER_TASK" workEffortParentId="MF_RUN_CLOSED" priority="10" fixedAssetId="MF_WC_WHEEL" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="PRUN_COMPLETED" workEffortName="Lace spokes" estimatedSetupMillis="600000" estimatedMilliSeconds="1200000" estimatedStartDate="2026-08-24 08:00:00.000" estimatedCompletionDate="2026-08-24 08:30:00.000" actualSetupMillis="600000" actualMilliSeconds="1200000" actualStartDate="2026-08-24 08:00:00.000" actualCompletionDate="2026-08-24 08:30:00.000" quantityProduced="2"/>
+    <WorkEffort workEffortId="MF_RUN_CLOSED_T2" workEffortTypeId="PROD_ORDER_TASK" workEffortParentId="MF_RUN_CLOSED" priority="20" fixedAssetId="MF_WC_WHEEL" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="PRUN_COMPLETED" workEffortName="True wheel" estimatedSetupMillis="300000" estimatedMilliSeconds="600000" estimatedStartDate="2026-08-24 08:30:00.000" estimatedCompletionDate="2026-08-24 08:55:00.000" actualSetupMillis="300000" actualMilliSeconds="600000" actualStartDate="2026-08-24 08:30:00.000" actualCompletionDate="2026-08-24 08:55:00.000" quantityProduced="2"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_CLOSED" productId="MF_WHEEL" workEffortGoodStdTypeId="PRUN_PROD_DELIV" statusId="WEGS_COMPLETED" estimatedQuantity="2" fromDate="2026-08-24 08:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_CLOSED_T1" productId="MF_RIM" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" statusId="WEGS_COMPLETED" estimatedQuantity="2" fromDate="2026-08-24 08:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_CLOSED_T1" productId="MF_SPOKE" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" statusId="WEGS_COMPLETED" estimatedQuantity="64" fromDate="2026-08-24 08:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_CLOSED_T1" productId="MF_HUB" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" statusId="WEGS_COMPLETED" estimatedQuantity="2" fromDate="2026-08-24 08:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_CLOSED_T1" productId="MF_TIRE" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" statusId="WEGS_COMPLETED" estimatedQuantity="2" fromDate="2026-08-24 08:00:00.000"/>
+    <WorkEffortStatus workEffortId="MF_RUN_CLOSED" statusId="PRUN_CLOSED" statusDatetime="2026-08-24 10:00:00.000"/>
+
+    <!-- SCIPIO: fabrication order grouping the scheduled bike run above -->
+    <WorkEffort workEffortId="MF_FAB_1" workEffortTypeId="FAB_ORDER" currentStatusId="PRUN_SCHEDULED" facilityId="ScipioShopWarehouse" workEffortName="Project Nordhaven: 5 city bikes" estimatedStartDate="2026-09-14 08:00:00.000" estimatedCompletionDate="2026-09-20 17:00:00.000"/>
+
+    <!-- Production run history: scheduled run (bikes for MF_ORDER_1) -->
+    <WorkEffort workEffortId="MF_RUN_SCHED" workEffortTypeId="PROD_ORDER_HEADER" workEffortParentId="MF_FAB_1" workEffortPurposeTypeId="WEPT_PRODUCTION_RUN" currentStatusId="PRUN_SCHEDULED" facilityId="ScipioShopWarehouse" workEffortName="City bikes for MF_ORDER_1" quantityToProduce="5" estimatedStartDate="2026-09-14 08:00:00.000" estimatedCompletionDate="2026-09-15 12:00:00.000"/>
+    <WorkEffort workEffortId="MF_RUN_SCHED_T1" workEffortTypeId="PROD_ORDER_TASK" workEffortParentId="MF_RUN_SCHED" priority="10" fixedAssetId="MF_WC_ASSY" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="PRUN_SCHEDULED" workEffortName="Assemble bike" estimatedSetupMillis="900000" estimatedMilliSeconds="12000000" estimatedStartDate="2026-09-14 08:00:00.000" estimatedCompletionDate="2026-09-14 11:35:00.000"/>
+    <WorkEffort workEffortId="MF_RUN_SCHED_T2" workEffortTypeId="PROD_ORDER_TASK" workEffortParentId="MF_RUN_SCHED" priority="20" fixedAssetId="MF_WC_QC" workEffortPurposeTypeId="ROU_ASSEMBLING" currentStatusId="PRUN_SCHEDULED" workEffortName="Inspect bike" estimatedSetupMillis="0" estimatedMilliSeconds="3000000" estimatedStartDate="2026-09-14 11:35:00.000" estimatedCompletionDate="2026-09-14 12:25:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_SCHED" productId="MF_BIKE" workEffortGoodStdTypeId="PRUN_PROD_DELIV" statusId="WEGS_CREATED" estimatedQuantity="5" fromDate="2026-09-14 08:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_SCHED_T1" productId="MF_WHEEL" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" statusId="WEGS_CREATED" estimatedQuantity="10" fromDate="2026-09-14 08:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_SCHED_T1" productId="MF_FRAME" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" statusId="WEGS_CREATED" estimatedQuantity="5" fromDate="2026-09-14 08:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_SCHED_T1" productId="MF_SADDLE" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" statusId="WEGS_CREATED" estimatedQuantity="5" fromDate="2026-09-14 08:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_SCHED_T1" productId="MF_HANDLEBAR" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" statusId="WEGS_CREATED" estimatedQuantity="5" fromDate="2026-09-14 08:00:00.000"/>
+    <WorkEffortGoodStandard workEffortId="MF_RUN_SCHED_T1" productId="MF_DRIVETRAIN" workEffortGoodStdTypeId="PRUNT_PROD_NEEDED" statusId="WEGS_CREATED" estimatedQuantity="5" fromDate="2026-09-14 08:00:00.000"/>
+    <WorkEffortStatus workEffortId="MF_RUN_SCHED" statusId="PRUN_SCHEDULED" statusDatetime="2026-01-01 00:00:00.000"/>
+
+    <!-- Weekly MRP job -->
+    <RecurrenceRule recurrenceRuleId="MF_MRP_WEEKLY" frequency="WEEKLY" intervalNumber="1" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="MF_MRP_WEEKLY" startDateTime="2026-01-04 23:00:00.000" recurrenceRuleId="MF_MRP_WEEKLY" recurrenceCount="0"/>
+    <RuntimeData runtimeDataId="MF_MRP_RUNTIME">
+        <runtimeInfo><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<ofbiz-ser>
+  <map-HashMap>
+    <map-Entry>
+      <map-Key>
+        <std-String value="mrpName"/>
+      </map-Key>
+      <map-Value>
+        <std-String value="Weekly MRP"/>
+      </map-Value>
+    </map-Entry>
+    <map-Entry>
+      <map-Key>
+        <std-String value="facilityId"/>
+      </map-Key>
+      <map-Value>
+        <std-String value="ScipioShopWarehouse"/>
+      </map-Value>
+    </map-Entry>
+    <map-Entry>
+      <map-Key>
+        <std-String value="defaultYearsOffset"/>
+      </map-Key>
+      <map-Value>
+        <std-Integer value="1"/>
+      </map-Value>
+    </map-Entry>
+  </map-HashMap>
+</ofbiz-ser>
+        ]]></runtimeInfo>
+    </RuntimeData>
+    <JobSandbox jobId="MF_MRP_JOB" jobName="Weekly MRP" runTime="2026-01-04 23:00:00.000" serviceName="executeMrp" runtimeDataId="MF_MRP_RUNTIME" poolId="pool" runAsUser="system" recurrenceInfoId="MF_MRP_WEEKLY"/>
+    <!-- SCIPIO: cost rows of the closed wheel run (labor 0.40/min, wheel station 30/h setup + 45/h usage) -->
+    <CostComponent costComponentId="MF_CC_CLOSED_T1_LS" costComponentTypeId="EST_STD_LABOR_COST" workEffortId="MF_RUN_CLOSED_T1" costUomId="USD" cost="10.00" fromDate="2026-02-02 00:00:00.000"/>
+    <CostComponent costComponentId="MF_CC_CLOSED_T1_LA" costComponentTypeId="ACTUAL_LABOR_COST" workEffortId="MF_RUN_CLOSED_T1" costUomId="USD" cost="12.00" fromDate="2026-02-02 00:00:00.000"/>
+    <CostComponent costComponentId="MF_CC_CLOSED_T1_RS" costComponentTypeId="EST_STD_ROUTE_COST" workEffortId="MF_RUN_CLOSED_T1" fixedAssetId="MF_WC_WHEEL" costUomId="USD" cost="18.00" fromDate="2026-02-02 00:00:00.000"/>
+    <CostComponent costComponentId="MF_CC_CLOSED_T1_RA" costComponentTypeId="ACTUAL_ROUTE_COST" workEffortId="MF_RUN_CLOSED_T1" fixedAssetId="MF_WC_WHEEL" costUomId="USD" cost="20.00" fromDate="2026-02-02 00:00:00.000"/>
+    <CostComponent costComponentId="MF_CC_CLOSED_T2_LS" costComponentTypeId="EST_STD_LABOR_COST" workEffortId="MF_RUN_CLOSED_T2" costUomId="USD" cost="6.00" fromDate="2026-02-02 00:00:00.000"/>
+    <CostComponent costComponentId="MF_CC_CLOSED_T2_LA" costComponentTypeId="ACTUAL_LABOR_COST" workEffortId="MF_RUN_CLOSED_T2" costUomId="USD" cost="6.00" fromDate="2026-02-02 00:00:00.000"/>
+    <CostComponent costComponentId="MF_CC_CLOSED_T2_RS" costComponentTypeId="EST_STD_ROUTE_COST" workEffortId="MF_RUN_CLOSED_T2" fixedAssetId="MF_WC_WHEEL" costUomId="USD" cost="9.00" fromDate="2026-02-02 00:00:00.000"/>
+    <CostComponent costComponentId="MF_CC_CLOSED_T2_RA" costComponentTypeId="ACTUAL_ROUTE_COST" workEffortId="MF_RUN_CLOSED_T2" fixedAssetId="MF_WC_WHEEL" costUomId="USD" cost="10.00" fromDate="2026-02-02 00:00:00.000"/>
+    <!-- SCIPIO: production line members of MF_WC_WELD (the welding line); the operator picks the member on the shop floor -->
+    <FixedAsset fixedAssetId="MF_WC_WELD_1" fixedAssetTypeId="PRODUCTION_EQUIPMENT" fixedAssetName="Welding robot" parentFixedAssetId="MF_WC_WELD" calendarId="MF_CALENDAR" productionCapacity="1" locatedAtFacilityId="ScipioShopWarehouse"/>
+    <FixedAsset fixedAssetId="MF_WC_WELD_2" fixedAssetTypeId="PRODUCTION_EQUIPMENT" fixedAssetName="Manual welding bay" parentFixedAssetId="MF_WC_WELD" calendarId="MF_CALENDAR" productionCapacity="1" locatedAtFacilityId="ScipioShopWarehouse"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_WELD_1" fixedAssetStdCostTypeId="SETUP_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="40"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_WELD_1" fixedAssetStdCostTypeId="USAGE_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="60"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_WELD_2" fixedAssetStdCostTypeId="SETUP_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="20"/>
+    <FixedAssetStdCost fixedAssetId="MF_WC_WELD_2" fixedAssetStdCostTypeId="USAGE_COST" fromDate="2026-01-01 00:00:00.000" amountUomId="USD" amount="40"/>
+</entity-engine-xml>

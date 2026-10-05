@@ -1,7 +1,18 @@
 <#--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 <#include "component://shop/webapp/shop/cart/cartcommon.ftl">
 
@@ -62,7 +73,7 @@ code package.
                   <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
                   <img src="<@contentUrl ctxPrefix=true>${smallImageUrl}</@contentUrl>" alt="Product Image" />
                 -->
-                <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
+                <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}">${cartLine.getName()!}</a>
               <#else>
                 <#-- non-product item -->
                 ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!}  
@@ -185,7 +196,7 @@ code package.
                           <@img src=imgUrl width="150px;" height="75px"/>
                         </#if>
                       -->
-                    <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}" target="_blank">${cartLine.getProductId()!} - ${cartLine.getName()!}</a>
+                    <a href="<@catalogAltUrl productId=parentProductId/>" class="${styles.link_nav_info_idname!}">${cartLine.getName()!}</a>
                   <#else>
                     <#-- non-product item -->
                     ${cartLine.getItemTypeDescription()!}: ${cartLine.getName()!} 

@@ -17,6 +17,12 @@
     specific language governing permissions and limitations
     under the License.
 -->
+<!--
+Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+under the GNU Affero General Public License, version 3, or a commercial
+license from Ilscipio GmbH (file LICENSE). The original code stays under
+the Apache License, version 2.0, as stated above.
+-->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
 
     <property key="Accounting - AP">
@@ -11856,6 +11862,94 @@
         <value xml:lang="vi">Cỡ</value>
         <value xml:lang="zh">尺寸</value>
         <value xml:lang="zh-TW">尺寸</value>
+    </property>
+    <property key="CommonSkipToContent">
+        <value xml:lang="de">Zum Inhalt springen</value>
+        <value xml:lang="en">Skip to content</value>
+        <value xml:lang="es">Saltar al contenido</value>
+        <value xml:lang="fr">Aller au contenu</value>
+        <value xml:lang="it">Vai al contenuto</value>
+    </property>
+    <property key="CommonFindApplication">
+        <value xml:lang="de">Anwendung suchen</value>
+        <value xml:lang="en">Find an application</value>
+        <value xml:lang="es">Buscar una aplicación</value>
+        <value xml:lang="fr">Trouver une application</value>
+        <value xml:lang="it">Trova un'applicazione</value>
+    </property>
+    <property key="CommonFilterMenu">
+        <value xml:lang="de">Menü filtern</value>
+        <value xml:lang="en">Filter the menu</value>
+        <value xml:lang="es">Filtrar el menú</value>
+        <value xml:lang="fr">Filtrer le menu</value>
+        <value xml:lang="it">Filtra il menu</value>
+    </property>
+    <property key="CommonMenu">
+        <value xml:lang="de">Menü</value>
+        <value xml:lang="en">Menu</value>
+        <value xml:lang="es">Menú</value>
+        <value xml:lang="fr">Menu</value>
+        <value xml:lang="it">Menu</value>
+    </property>
+    <property key="CommonNoMenuMatch">
+        <value xml:lang="de">Kein Eintrag passt</value>
+        <value xml:lang="en">No item matches</value>
+        <value xml:lang="es">Ningún elemento coincide</value>
+        <value xml:lang="fr">Aucun élément ne correspond</value>
+        <value xml:lang="it">Nessuna voce corrisponde</value>
+    </property>
+    <property key="CommonLightDark">
+        <value xml:lang="de">Hell oder dunkel</value>
+        <value xml:lang="en">Light or dark</value>
+        <value xml:lang="es">Claro u oscuro</value>
+        <value xml:lang="fr">Clair ou sombre</value>
+        <value xml:lang="it">Chiaro o scuro</value>
+    </property>
+    <property key="CommonSignIn">
+        <value xml:lang="de">Anmelden</value>
+        <value xml:lang="en">Sign in</value>
+        <value xml:lang="es">Iniciar sesión</value>
+        <value xml:lang="fr">Se connecter</value>
+        <value xml:lang="it">Accedi</value>
+    </property>
+    <property key="CommonJumpTo">
+        <value xml:lang="de">Zu App oder Seite springen</value>
+        <value xml:lang="en">Jump to an app or page</value>
+        <value xml:lang="es">Ir a una aplicación o página</value>
+        <value xml:lang="fr">Aller à une application ou une page</value>
+        <value xml:lang="it">Vai a un'applicazione o pagina</value>
+    </property>
+    <property key="CommonLoginClaim">
+        <value xml:lang="de">Lassen Sie KI Ihr ganzes Unternehmen führen.</value>
+        <value xml:lang="en">Let AI run your whole business.</value>
+        <value xml:lang="es">Deje que la IA dirija todo su negocio.</value>
+        <value xml:lang="fr">Laissez l'IA gérer toute votre entreprise.</value>
+        <value xml:lang="it">Lascia che l'IA gestisca tutta la tua azienda.</value>
+    </property>
+    <property key="CommonLoginClaimText">
+        <value xml:lang="de">Menschen und KI-Agenten arbeiten Seite an Seite in Aufträgen, Lager, Produktion, Inhalten und Buchhaltung, jeweils mit den Rechten, die Sie ihnen geben.</value>
+        <value xml:lang="en">People and AI agents work side by side in orders, stock, production, content and accounts, each with the rights you give them.</value>
+    </property>
+    <property key="CommonWelcomeBack">
+        <value xml:lang="de">Willkommen zurück</value>
+        <value xml:lang="en">Welcome back</value>
+        <value xml:lang="es">Bienvenido de nuevo</value>
+        <value xml:lang="fr">Bon retour</value>
+        <value xml:lang="it">Bentornato</value>
+    </property>
+    <property key="CommonSignInToContinue">
+        <value xml:lang="de">Anmelden, weiter zu</value>
+        <value xml:lang="en">Sign in to continue to</value>
+        <value xml:lang="es">Inicie sesión para continuar en</value>
+        <value xml:lang="fr">Connectez-vous pour continuer vers</value>
+        <value xml:lang="it">Accedi per continuare su</value>
+    </property>
+    <property key="CommonShowPassword">
+        <value xml:lang="de">Passwort anzeigen</value>
+        <value xml:lang="en">Show the password</value>
+        <value xml:lang="es">Mostrar la contraseña</value>
+        <value xml:lang="fr">Afficher le mot de passe</value>
+        <value xml:lang="it">Mostra la password</value>
     </property>
     <property key="CommonSkipNavigation">
         <value xml:lang="ar">تخطي الملاحة</value>

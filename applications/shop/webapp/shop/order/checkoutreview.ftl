@@ -1,13 +1,29 @@
 <#--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 <#include "component://shop/webapp/shop/order/ordercommon.ftl">
 
 <@script>
     var clicked = 0;
     function processOrder() {
+        <#-- SCIPIO: 4.0.0: the form is submitted by script; check required fields (terms) first -->
+        var scpForm = document["${escapeVal(parameters.formNameValue, 'js')}"];
+        if (scpForm && scpForm.reportValidity && !scpForm.reportValidity()) {
+            return;
+        }
         if (clicked == 0) {
             clicked++;
             //window.location.replace("<@pageUrl>processorder</@pageUrl>");
@@ -46,7 +62,14 @@ code package.
       <#if (requestAttributes.issuerId)?has_content>
         <input type="hidden" name="issuerId" value="${requestAttributes.issuerId}" />
       </#if>
-      <@field type="submit" submitType="input-button" inline=true name="processButton" id="processButton" text=uiLabelMap.OrderSubmitOrder onClick="processOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
+      <#-- SCIPIO: 4.0.0: pre-contract information, terms and the EU order button label (compliance component) -->
+      <#assign scpOrderButtonText = uiLabelMap.OrderSubmitOrder>
+      <#if Static["org.ofbiz.base.component.ComponentConfig"].isComponentEnabled("compliance")>
+        <#import "component://compliance/templates/shop/complianceLib.ftl" as compliance>
+        <@compliance.checkoutBlock/>
+        <#assign scpOrderButtonText = compliance.orderButtonText()>
+      </#if>
+      <@field type="submit" submitType="input-button" inline=true name="processButton" id="processButton" text=scpOrderButtonText onClick="processOrder();" class="${styles.link_run_sys!} ${styles.action_add!} ${styles.action_importance_high!}" />
     </form>
   </@checkoutActionsMenu>
 <#else>

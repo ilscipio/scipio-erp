@@ -1,0 +1,137 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+/*
+ * Scipio common widget fixes. Plain CSS, no CSS framework, no build step.
+ *
+ * The Scipio macros and the widget renderer emit this markup in every theme. The rules here fix
+ * only the layout and spacing that no CSS framework knows about. Colours come from custom
+ * properties with a neutral fallback; a theme maps its own tokens to them:
+ *   --scp-ink, --scp-muted, --scp-rule, --scp-surface-alt, --scp-accent, --scp-warn, --scp-danger
+ *
+ * Source: the SASS partials in scss/shared (_base, _code, _calendar, _editor). A theme without
+ * SASS (Aurora) loads this file before its own styles. The SASS themes still compile their own
+ * copy; when a partial moves here, remove the rule from the partial.
+ */
+
+/* ---- Field items ---------------------------------------------------------- */
+
+/* The separators must stay hidden in every theme; use fields_default_inlineitems to change the default. */
+.radio-item-inline.radio-item-separator,
+.checkbox-item-inline.checkbox-item-separator { display: none; }
+
+/* A long radio or checkbox label wraps next to its box. */
+input[type="radio"] + label,
+.checkbox-type-simple-standard input[type="checkbox"] + label { display: inline; }
+
+input.field-inline, select.field-inline, textarea.field-inline { display: inline; width: auto; }
+.has-tip.field-tooltip-wrap { font-weight: normal; border-bottom: 0; }
+.new-item-selection-content { margin-top: .6rem; }
+.asmListItemRemove { margin-left: 1rem; }
+
+/* Localized text field: the last entry sits on the add button, which aligns right. */
+.stc-locfield .stc-locfield-entries .stc-locfield-entry:last-child,
+.stc-locfield .stc-locfield-entries .stc-locfield-entry:last-child select,
+.stc-locfield .stc-locfield-entries .stc-locfield-entry:last-child input { margin-bottom: 0; }
+.stc-locfield .stc-locfield-add-cnt { text-align: right; margin-bottom: 1rem; }
+
+/* ---- Tables --------------------------------------------------------------- */
+
+td, td.button-col,
+td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext { word-break: normal; }
+
+/* Tables where zero cell spacing is essential (rare). */
+table.table-nocellspacing, table.table-nocellspacing-hint { border-spacing: 0 !important; border-collapse: collapse !important; }
+table.table-noborder, table.table-noborder-hint { border: none !important; }
+
+/* ---- Lists ---------------------------------------------------------------- */
+
+.text-line-list ul, ul.text-line-list { list-style: none; margin-left: 0; padding-left: 0; }
+.text-line-list li:empty, .text-line-list .text-line:empty { display: none; }
+ul.chart-legend, ul.checkmark { list-style: none; }
+ul.checkmark { margin: 0; padding: 0; }
+ul.checkmark li::before { font-family: "FontAwesome"; content: "\f00c"; padding-right: 10px; }
+
+/* ---- Log output (webtools) ------------------------------------------------ */
+
+code .INFO  { color: var(--scp-ink, #333); }
+code .WARN  { color: var(--scp-warn, #8a4e00); }
+code .ERROR { color: var(--scp-danger, #b93a0b); }
+code .FATAL { color: var(--scp-danger, #b93a0b); font-weight: bold; }
+code .TRACE { color: var(--scp-muted, #6b6b6b); }
+pre.scrollable { max-height: 500px; overflow-x: auto; }
+
+/* ---- Catalog tree (catalog, CMS) ------------------------------------------ */
+
+ul.side-nav.ect-action-menu li.disabled, ul.side-nav.ect-action-menu a.disabled { color: var(--scp-muted, #6b6b6b); }
+.ect-dialogmsg-recordname { font-style: italic; }
+
+/* ---- Order items ---------------------------------------------------------- */
+
+ul.order-item-attrib-list.order-item-gift-card-info,
+.order-item-attrib-list.order-item-gift-card-info ul { margin-bottom: 0; }
+.order-item-attrib-list li { font-size: .8em; }
+
+/* ---- CMS editors ---------------------------------------------------------- */
+
+/* inline, not inline-block, so that the label detail wraps */
+.cms-edit-page .page-attr-field .field-entry-title label,
+.cms-edit-asset .editor-field label { display: inline; }
+.cms-edit-page .page-attr-field .field-entry-title .label-detail,
+.cms-edit-asset .editor-field .label-detail { display: inline; font-size: .8em; font-style: italic; margin-left: 1em; }
+.cms-edit-page .page-attr-field .trumbowyg { margin-top: 0; }
+
+/* ---- Calendars (work effort) ---------------------------------------------- */
+
+.month-calendar-full table.calendar .month-entry {
+    vertical-align: top;
+    padding: .5em;
+    border: 1px solid var(--scp-rule, #ddd);
+}
+.month-calendar-full table.calendar .month-entry-content-add { float: right; }
+.month-calendar-full table.calendar .month-entry-content-event {
+    display: block;
+    width: 100%;
+    padding: 0 .8em;
+    border-left: 4px solid var(--scp-accent, #333);
+    overflow: auto;
+    line-height: 1.5em;
+    background: var(--scp-surface-alt, #f5f5f5);
+    margin-bottom: 2px;
+}
+/* essential on small screens, else the square-cell workaround breaks */
+.month-calendar-full table.calendar th { word-break: break-all; }
+.month-calendar-full table.calendar td.month-entry:last-child { border-width: 1px 0 0 0; }
+.month-calendar-full table.calendar th.month-header-day,
+.month-calendar-full table.calendar td.month-entry-day { width: 13.5% !important; }
+.month-calendar-full table.calendar th.month-header-week,
+.month-calendar-full table.calendar td.month-entry-week { width: auto; }
+.month-calendar-full table.calendar td.month-entry-day .day-event-time,
+.month-calendar-full table.calendar td.month-entry-day .cal-entry-status { font-size: .8em; }
+/* a square day cell: the padding percentage comes from the width */
+.month-calendar-full table.calendar td.month-entry-day .month-entry-wrapper { position: relative; width: 100%; padding-bottom: 100%; overflow: hidden; }
+.month-calendar-full table.calendar td.month-entry-day .month-entry-abs { position: absolute; top: 0; right: 0; bottom: 0; left: 0; }
+.month-calendar-full table.calendar td.month-entry-day.other-month { background: var(--scp-surface-alt, #f5f5f5); }
+.month-calendar-full table.calendar td.month-entry-day.other-month a { color: var(--scp-muted, #6b6b6b); }
+.month-calendar-full table.calendar td.month-entry-day.current-period { border-bottom: 4px solid var(--scp-accent, #333); }
+.month-calendar-full table.calendar td.month-entry-day.current-period .month-entry-content-title { font-weight: bold; }
+.month-calendar-full table.calendar td.month-entry-day:hover { background: var(--scp-surface-alt, #f5f5f5); }
+/* hidden detail markup after the table, used by the day popups */
+.month-calendar-full .cal-detail-content .month-entry-content-event { margin-top: .5em; }
+.month-calendar-full .cal-detail-content .month-entry-content-event:first-child { margin-top: 0; }
+.month-calendar-full .cal-detail-content .day-entry-stats { margin-top: 1em; }
+.week-calendar-full table.calendar td.week-entry-event,
+.day-calendar-full table.calendar td.day-entry-event { border: 1px solid var(--scp-ink, #333); }

@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package org.ofbiz.widget.model;
 
 import java.io.Serializable;
@@ -10,6 +26,7 @@ import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FileUtil;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.widget.WidgetWorker;
 import org.w3c.dom.Element;
@@ -41,11 +58,34 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
     // duplicated from rootGroups, for faster access
     protected final ModelScreenSettings effectiveSettings;
 
+    // SCIPIO: 4.0.0: XML-style location used for the folder settings lookup of a class:// source (null: none)
+    protected String settingsLocation;
+
     public ModelScreens(Element rootElement, String sourceLocation) {
         this(rootElement, sourceLocation, true);
     }
 
     public ModelScreens(Element rootElement, String sourceLocation, boolean useAutoIncludeSettings) {
+        this(rootElement, sourceLocation, useAutoIncludeSettings, null);
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Builds from XML (settings + any XML screens) and merges extra (annotation-based) screens,
+     * so settings-only stub XML files keep their screen-settings (render-init, decorator fallback, auto-include).
+     */
+    public ModelScreens(Element rootElement, String sourceLocation, boolean useAutoIncludeSettings, Map<String, ModelScreen> extraScreens) {
+        this(rootElement, sourceLocation, useAutoIncludeSettings, extraScreens, null);
+    }
+
+    /**
+     * SCIPIO: 4.0.0: settingsLocation is the XML-style location an annotation screen class declares
+     * ({@code Screen.location()}, e.g. component://shop/widget/CatalogScreens.xml). It stands in for the
+     * class:// source when the folder's CommonScreens.xml auto-include settings (decorator fallback,
+     * render-init) are looked up, so annotation screens keep the settings their XML predecessors had.
+     */
+    public ModelScreens(Element rootElement, String sourceLocation, boolean useAutoIncludeSettings, Map<String, ModelScreen> extraScreens,
+            String settingsLocation) {
+        this.settingsLocation = UtilValidate.isNotEmpty(settingsLocation) ? settingsLocation : null;
         this.location = sourceLocation;
         Map<String, ModelScreen> screenMap = new HashMap<>();
         Map<String, ModelScreenGroup> screenGroupMap = new HashMap<>();
@@ -78,6 +118,7 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
         // This is safe because HashMap is read-only thread-safe after population when set in final field.
         // (doing extra copy here because screenMap/screenGroupMap may need to be changed to LinkedHashMap or other later
         // during construct)
+        if (extraScreens != null) { screenMap.putAll(extraScreens); } // SCIPIO: 4.0.0: annotation screens at this location
         this.screenMap = new HashMap<>(screenMap);
         this.screenGroupMap = new HashMap<>(screenGroupMap);
         this.rootGroup = rootGroup;
@@ -87,6 +128,19 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
     public ModelScreens() {
         this.location = null;
         this.screenMap = new HashMap<>();
+        this.screenGroupMap = new HashMap<>();
+        this.rootGroup = new ModelScreenGroup((String) null, true, this, this.location);
+        this.effectiveSettings = rootGroup.getEffectiveSettings();
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Constructor for annotation-based screens.
+     *
+     * <p>Creates a ModelScreens instance from a pre-populated map of screens.</p>
+     */
+    public ModelScreens(Map<String, ModelScreen> screenMap, String sourceLocation) {
+        this.location = sourceLocation;
+        this.screenMap = new HashMap<>(screenMap);
         this.screenGroupMap = new HashMap<>();
         this.rootGroup = new ModelScreenGroup((String) null, true, this, this.location);
         this.effectiveSettings = rootGroup.getEffectiveSettings();
@@ -211,14 +265,34 @@ public class ModelScreens implements Map<String, ModelScreen>, Serializable {
     }
 
     public boolean isAutoIncludeSettingsConfigFile(String sourceLocation) {
-        return sourceLocation.endsWith(SEP_COMMON_SCREENS_FILE);
+        sourceLocation = getSettingsLookupLocation(sourceLocation); // SCIPIO: 4.0.0
+        return sourceLocation != null && sourceLocation.endsWith(SEP_COMMON_SCREENS_FILE);
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Returns the location the folder settings (CommonScreens.xml) lookup runs against:
+     * the location itself for an XML file, the declared XML alias for a class:// source, or null when an
+     * annotation class declares no location (then no folder settings apply, as before).
+     */
+    public String getSettingsLookupLocation(String sourceLocation) {
+        if (sourceLocation != null && sourceLocation.startsWith("class://")) {
+            return settingsLocation;
+        }
+        return sourceLocation;
     }
 
     /**
      * Checks for a CommonScreens.xml (or equivalent) file in same dir as sourceLocation;
      * if not found, checks parent dir; etc; up to top widget folder.
+     *
+     * <p>SCIPIO: 4.0.0: A class:// path (annotation-based screens) is looked up through the XML location
+     * the class declares ({@link #getSettingsLookupLocation}); without one, returns null.</p>
      */
     public String getAutoIncludeSettingsConfigFilePath(String sourceLocation) throws IllegalArgumentException {
+        sourceLocation = getSettingsLookupLocation(sourceLocation); // SCIPIO: 4.0.0
+        if (sourceLocation == null) {
+            return null;
+        }
         String basePath = WidgetWorker.getBaseWidgetFolderFromComponentPath(sourceLocation);
         String remPath = sourceLocation;
         int i;

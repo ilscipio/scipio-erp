@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.webapp;
 
 import java.io.File;
@@ -182,6 +188,29 @@ public final class WebAppUtil {
     @Deprecated
     public static String getControlServletPathSafeSlash(WebappInfo webAppInfo) {
         return getControlServletPathSafe(webAppInfo);
+    }
+
+    /**
+     * SCIPIO: 4.0.0: Returns the prefix for a controller link to the given webapp, always with a
+     * terminating slash: "/cms/" when the webapp serves controller URIs at its root
+     * (forwardRootControllerUris), otherwise the control path ("/cms/control/"). Returns null
+     * when the webapp has no controller or cannot be resolved (never throws).
+     */
+    public static String getControlLinkPathSafeSlash(WebappInfo webAppInfo) {
+        try {
+            String controlPath = getControlServletPathSafe(webAppInfo);
+            if (controlPath == null) {
+                return null;
+            }
+            String linkPath = ExtWebappInfo.fromWebappInfo(webAppInfo).getControlLinkPath();
+            if (linkPath == null) {
+                linkPath = controlPath;
+            }
+            return linkPath.endsWith("/") ? linkPath : linkPath + "/";
+        } catch (Exception e) {
+            Debug.logWarning("Could not get the control link path of webapp " + webAppInfo.getName() + ": " + e.toString(), module);
+            return getControlServletPathSafe(webAppInfo);
+        }
     }
 
     /**
@@ -623,6 +652,12 @@ public final class WebAppUtil {
                                     + delegatorName + "'; cannot get a Security object!", module);
                             return null;
                         } else {
+                            if (org.ofbiz.entity.util.Tenants.isPooled()) {
+                                // SCIPIO: 4.0.0: pooled runtime: never the security of another delegator (G13)
+                                Debug.logError("Could not get Delegator for HttpSession delegatorName '"
+                                        + delegatorName + "'; cannot get a Security object!", module);
+                                return null;
+                            }
                             Debug.logError("Could not get Delegator for HttpSession delegatorName '" 
                                 + delegatorName + "'; using default delegator", module);
                             delegator = DelegatorFactory.getDelegator("default");
@@ -631,7 +666,7 @@ public final class WebAppUtil {
                 } else {
                     Debug.logWarning("No delegator or delegator name in HttpSession"
                             + "; using default delegator", module);
-                    delegator = DelegatorFactory.getDelegator("default");
+                    delegator = org.ofbiz.entity.util.TenantScope.currentDelegator("default"); // SCIPIO: 4.0.0: store of the thread (G13)
                 }
             }
             try {

@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 package org.ofbiz.webapp.control;
 
 import java.io.IOException;
@@ -47,7 +53,6 @@ import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.DelegatorFactory;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.LocalDispatcher;
@@ -184,9 +189,11 @@ public class ControlServlet extends HttpServlet {
 
         // for convenience, and necessity with event handlers, make security and delegator available in the request:
         // try to get it from the session first so that we can have a delegator/dispatcher/security for a certain user if desired
-        Delegator delegator = null;
+        // SCIPIO: 4.0.0: pooled runtime: the store objects of the request win over the session and the ServletContext (G1)
+        TenantResolver.TenantContext tenantCtx = TenantResolver.fromRequest(request);
+        Delegator delegator = (tenantCtx != null) ? tenantCtx.getDelegator() : null;
         String delegatorName = (String) session.getAttribute("delegatorName");
-        if (UtilValidate.isNotEmpty(delegatorName)) {
+        if (delegator == null && UtilValidate.isNotEmpty(delegatorName)) {
             delegator = DelegatorFactory.getDelegator(delegatorName);
         }
         if (delegator == null) {
@@ -204,7 +211,7 @@ public class ControlServlet extends HttpServlet {
             */
         }
 
-        LocalDispatcher dispatcher = (LocalDispatcher) session.getAttribute("dispatcher");
+        LocalDispatcher dispatcher = (tenantCtx != null) ? tenantCtx.getDispatcher() : (LocalDispatcher) session.getAttribute("dispatcher");
         if (dispatcher == null) {
             dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
         }
@@ -213,7 +220,7 @@ public class ControlServlet extends HttpServlet {
         }
         request.setAttribute("dispatcher", dispatcher);
 
-        Security security = (Security) session.getAttribute("security");
+        Security security = (tenantCtx != null) ? tenantCtx.getSecurity() : (Security) session.getAttribute("security");
         if (security == null) {
             security = (Security) getServletContext().getAttribute("security");
         }
@@ -247,153 +254,163 @@ public class ControlServlet extends HttpServlet {
 
         String errorPage = null;
         try {
-            // the ServerHitBin call for the event is done inside the doRequest method
-            requestHandler.doRequest(request, response, null, userLogin, delegator);
-        } catch (MethodNotAllowedException e) {
-            // SCIPIO: Use error page for this too; users can too easily trigger this
-            //response.setContentType("text/plain");
-            //response.setCharacterEncoding(request.getCharacterEncoding());
-            response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
-            //response.getWriter().print(e.getMessage());
-            Debug.logError("Error in request handler: " + e.getMessage(), module);
-            // SCIPIO: Here it should be safe to show a friendly message, no real need to fallback to 
-            // generic one in high security, this is safe enough
-            //request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e));
-            request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("WebappUiLabels", 
-                    "RequestMethodNotMatchConfigDesc", UtilHttp.getLocale(request)));
-            errorPage = requestHandler.getDefaultErrorPage(request);
-        } catch (RequestHandlerException e) {
-            Throwable throwable = e.getNested() != null ? e.getNested() : e;
-            if (throwable instanceof IOException) {
-                // when an IOException occurs (most of the times caused by the browser window being closed before the request is completed)
-                // the connection with the browser is lost and so there is no need to serve the error page; a message is logged to record the event
-                if (Debug.warningOn()) Debug.logWarning(e, "Communication error with the client while processing the request: " + request.getAttribute("_CONTROL_PATH_") + request.getPathInfo(), module);
-                if (Debug.verboseOn()) Debug.logVerbose(throwable, module);
-            } else {
-                // SCIPIO: 3.0.0: Some of these are very common and the exception gives little extra useful information most of the time
-                if (throwable instanceof InvalidRequestException || throwable instanceof RequestDeniedException) {
-                    if (Debug.verboseOn()) {
-                        Debug.logError(throwable, "Error in request handler", module);
-                    } else {
-                        // These are triggered by public requests, typically, so keep this to a minimum
-                        Debug.logError("Error in request handler: " + throwable, module);
-                    }
+            try {
+                // the ServerHitBin call for the event is done inside the doRequest method
+                requestHandler.doRequest(request, response, null, userLogin, delegator);
+            } catch (MethodNotAllowedException e) {
+                // SCIPIO: Use error page for this too; users can too easily trigger this
+                //response.setContentType("text/plain");
+                //response.setCharacterEncoding(request.getCharacterEncoding());
+                response.setStatus(HttpServletResponse.SC_METHOD_NOT_ALLOWED);
+                //response.getWriter().print(e.getMessage());
+                Debug.logError("Error in request handler: " + e.getMessage(), module);
+                // SCIPIO: Here it should be safe to show a friendly message, no real need to fallback to 
+                // generic one in high security, this is safe enough
+                //request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e));
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("WebappUiLabels", 
+                        "RequestMethodNotMatchConfigDesc", UtilHttp.getLocale(request)));
+                errorPage = requestHandler.getDefaultErrorPage(request);
+            } catch (RequestHandlerException e) {
+                Throwable throwable = e.getNested() != null ? e.getNested() : e;
+                if (throwable instanceof IOException) {
+                    // when an IOException occurs (most of the times caused by the browser window being closed before the request is completed)
+                    // the connection with the browser is lost and so there is no need to serve the error page; a message is logged to record the event
+                    if (Debug.warningOn()) Debug.logWarning(e, "Communication error with the client while processing the request: " + request.getAttribute("_CONTROL_PATH_") + request.getPathInfo(), module);
+                    if (Debug.verboseOn()) Debug.logVerbose(throwable, module);
                 } else {
-                    Debug.logError(throwable, "Error in request handler", module);
+                    // SCIPIO: 3.0.0: Some of these are very common and the exception gives little extra useful information most of the time
+                    if (throwable instanceof InvalidRequestException || throwable instanceof RequestDeniedException) {
+                        if (Debug.verboseOn()) {
+                            Debug.logError(throwable, "Error in request handler", module);
+                        } else {
+                            // These are triggered by public requests, typically, so keep this to a minimum
+                            Debug.logError("Error in request handler: " + throwable, module);
+                        }
+                    } else {
+                        Debug.logError(throwable, "Error in request handler", module);
+                    }
+                    request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, throwable)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
+                    errorPage = requestHandler.getDefaultErrorPage(request);
                 }
-                request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, throwable)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
+            } catch (RequestHandlerExceptionAllowExternalRequests e) {
+                errorPage = requestHandler.getDefaultErrorPage(request);
+                //Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
+            } catch (Exception e) {
+                Debug.logError(e, "Error in request handler", module);
+                request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
                 errorPage = requestHandler.getDefaultErrorPage(request);
             }
-        } catch (RequestHandlerExceptionAllowExternalRequests e) {
-            errorPage = requestHandler.getDefaultErrorPage(request);
-            //Debug.logInfo("Going to external page: " + request.getPathInfo(), module);
-        } catch (Exception e) {
-            Debug.logError(e, "Error in request handler", module);
-            request.setAttribute("_ERROR_MESSAGE_", RequestUtil.getSecureErrorMessage(request, e)); // SCIPIO: 2018-02-26: removed hard HTML escaping here, now handled by error.ftl/other (at point-of-use)
-            errorPage = requestHandler.getDefaultErrorPage(request);
-        }
 
-        // Forward to the JSP
-        // if (Debug.infoOn()) Debug.logInfo("[" + rname + "] Event done, rendering page: " + nextPage, module);
-        // if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
+            // Forward to the JSP
+            // if (Debug.infoOn()) Debug.logInfo("[" + rname + "] Event done, rendering page: " + nextPage, module);
+            // if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
 
-        if (errorPage != null) {
-            // SCIPIO: 3.0.0: This is redundant/unwanted in all of the above cases now, and already below (only need once)
-            //Debug.logError("An error occurred, going to the errorPage: " + errorPage, module);
+            if (errorPage != null) {
+                // SCIPIO: 3.0.0: This is redundant/unwanted in all of the above cases now, and already below (only need once)
+                //Debug.logError("An error occurred, going to the errorPage: " + errorPage, module);
 
-            RequestDispatcher rd = request.getRequestDispatcher(errorPage);
+                RequestDispatcher rd = request.getRequestDispatcher(errorPage);
 
-            // use this request parameter to avoid infinite looping on errors in the error page...
-            if (request.getAttribute("_ERROR_OCCURRED_") == null && rd != null) {
-                // SCIPIO: 2017-05-15: special case for targeted rendering of error page
-                Object scpErrorRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request, RenderTargetUtil.ERRORRENDERTARGETEXPR_REQPARAM);
-                if (scpErrorRenderTargetExpr != null) {
-                    RenderTargetUtil.setRawRenderTargetExpr(request, scpErrorRenderTargetExpr);
-                }
+                // use this request parameter to avoid infinite looping on errors in the error page...
+                if (request.getAttribute("_ERROR_OCCURRED_") == null && rd != null) {
+                    // SCIPIO: 2017-05-15: special case for targeted rendering of error page
+                    Object scpErrorRenderTargetExpr = RenderTargetUtil.getRawRenderTargetExpr(request, RenderTargetUtil.ERRORRENDERTARGETEXPR_REQPARAM);
+                    if (scpErrorRenderTargetExpr != null) {
+                        RenderTargetUtil.setRawRenderTargetExpr(request, scpErrorRenderTargetExpr);
+                    }
 
-                request.setAttribute("_ERROR_OCCURRED_", Boolean.TRUE);
-                // SCIPIO: 3.0.0: This is redundant/unwanted in all of the above cases now
-                Debug.logInfo("Including errorPage: " + errorPage, module);
-                //Debug.logError("Including errorPage: " + errorPage, module);
+                    request.setAttribute("_ERROR_OCCURRED_", Boolean.TRUE);
+                    // SCIPIO: 3.0.0: This is redundant/unwanted in all of the above cases now
+                    Debug.logInfo("Including errorPage: " + errorPage, module);
+                    //Debug.logError("Including errorPage: " + errorPage, module);
 
-                // NOTE DEJ20070727 after having trouble with all of these, try to get the page out and as a last resort just send something back
-                try {
-                    rd.forward(request, response); // SCIPIO: Changed from include to forward so that the response can be handled appropriately
-                } catch (Throwable t) {
+                    // NOTE DEJ20070727 after having trouble with all of these, try to get the page out and as a last resort just send something back
+                    try {
+                        rd.forward(request, response); // SCIPIO: Changed from include to forward so that the response can be handled appropriately
+                    } catch (Throwable t) {
+                        // SCIPIO: 2018-02-26: we must now HTML-encode the error here (at point-of-use) because no longer done above
+                        String causeMsg = RequestUtil.encodeErrorMessage(request, (String) request.getAttribute("_ERROR_MESSAGE_"));
+                        String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + causeMsg;
+                        // SCIPIO: 2017-03-23: ONLY print out the error if we're in DEBUG mode
+                        if (Boolean.FALSE.equals(errorFallbackPrint)) {
+                            Debug.logWarning("Error while trying to send error page using rd.forward, aborting (render.global.error.fallback.print == false): " + t.toString(), module);
+                        } else if (Boolean.TRUE.equals(errorFallbackPrint) || UtilRender.RenderExceptionMode.isDebug(UtilRender.getRenderExceptionMode(request))) {
+                            if (Boolean.TRUE.equals(errorFallbackPrint)) {
+                                Debug.logWarning("Error while trying to send error page using rd.forward, will print out instead (render.global.error.fallback.print == true): " + t.toString(), module);
+                            } else {
+                                Debug.logWarning("Error while trying to send error page using rd.forward, will print out instead (render.global.exception.mode == DEBUG*): " + t.toString(), module);
+                            }
+                            try {
+                                response.getWriter().print(errorMessage);
+                            } catch (Throwable t2) {
+                                try {
+                                    int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+                                    Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString() + "; sending error code [" + errorToSend + "], and message [" + errorMessage + "]", module);
+                                    response.sendError(errorToSend, errorMessage);
+                                } catch (Throwable t3) {
+                                    // wow, still bad... just throw an IllegalStateException with the message and let the servlet container handle it
+                                    throw new IllegalStateException(errorMessage);
+                                }
+                            }
+                        } else {
+                            Debug.logWarning("Error while trying to send error page using rd.forward, aborting (render.global.exception.mode != DEBUG*): " + t.toString(), module);
+                            /* SCIPIO: 2019-04-02: Do not print anything if we are not in debug mode, because it is usually
+                             * either a security issue or needlessly confusing/ugly for live users:
+                            // SCIPIO: NOTE: here all posted error messages to client must be completely generic, for security reasons.
+                            final String genericErrorMessage = RequestUtil.getGenericErrorMessage();
+                            try {
+                                response.getWriter().print(genericErrorMessage);
+                            } catch (Throwable t2) {
+                                try {
+                                    int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+                                    Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString()
+                                        + "; sending error code [" + errorToSend + "], but NOT message [" + errorMessage + "] because we are in secure RETHROW mode", module);
+                                    response.sendError(errorToSend, genericErrorMessage);
+                                } catch (Throwable t3) {
+                                    // wow, still bad... just throw an IllegalStateException with the message and let the servlet container handle it
+                                    throw new IllegalStateException(genericErrorMessage);
+                                }
+                            }
+                            */
+                        }
+                    }
+
+                } else {
+                    if (rd == null) {
+                        Debug.logError("Could not get RequestDispatcher for errorPage: " + errorPage, module);
+                    }
+
                     // SCIPIO: 2018-02-26: we must now HTML-encode the error here (at point-of-use) because no longer done above
                     String causeMsg = RequestUtil.encodeErrorMessage(request, (String) request.getAttribute("_ERROR_MESSAGE_"));
-                    String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + causeMsg;
-                    // SCIPIO: 2017-03-23: ONLY print out the error if we're in DEBUG mode
-                    if (Boolean.FALSE.equals(errorFallbackPrint)) {
-                        Debug.logWarning("Error while trying to send error page using rd.forward, aborting (render.global.error.fallback.print == false): " + t.toString(), module);
-                    } else if (Boolean.TRUE.equals(errorFallbackPrint) || UtilRender.RenderExceptionMode.isDebug(UtilRender.getRenderExceptionMode(request))) {
-                        if (Boolean.TRUE.equals(errorFallbackPrint)) {
-                            Debug.logWarning("Error while trying to send error page using rd.forward, will print out instead (render.global.error.fallback.print == true): " + t.toString(), module);
-                        } else {
-                            Debug.logWarning("Error while trying to send error page using rd.forward, will print out instead (render.global.exception.mode == DEBUG*): " + t.toString(), module);
-                        }
-                        try {
-                            response.getWriter().print(errorMessage);
-                        } catch (Throwable t2) {
-                            try {
-                                int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-                                Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString() + "; sending error code [" + errorToSend + "], and message [" + errorMessage + "]", module);
-                                response.sendError(errorToSend, errorMessage);
-                            } catch (Throwable t3) {
-                                // wow, still bad... just throw an IllegalStateException with the message and let the servlet container handle it
-                                throw new IllegalStateException(errorMessage);
-                            }
-                        }
-                    } else {
-                        Debug.logWarning("Error while trying to send error page using rd.forward, aborting (render.global.exception.mode != DEBUG*): " + t.toString(), module);
-                        /* SCIPIO: 2019-04-02: Do not print anything if we are not in debug mode, because it is usually
-                         * either a security issue or needlessly confusing/ugly for live users:
-                        // SCIPIO: NOTE: here all posted error messages to client must be completely generic, for security reasons.
-                        final String genericErrorMessage = RequestUtil.getGenericErrorMessage();
-                        try {
-                            response.getWriter().print(genericErrorMessage);
-                        } catch (Throwable t2) {
-                            try {
-                                int errorToSend = HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
-                                Debug.logWarning("Error while trying to write error message using response.getOutputStream or response.getWriter: " + t.toString()
-                                    + "; sending error code [" + errorToSend + "], but NOT message [" + errorMessage + "] because we are in secure RETHROW mode", module);
-                                response.sendError(errorToSend, genericErrorMessage);
-                            } catch (Throwable t3) {
-                                // wow, still bad... just throw an IllegalStateException with the message and let the servlet container handle it
-                                throw new IllegalStateException(genericErrorMessage);
-                            }
-                        }
-                        */
+                    String errorMessage = "<html><body>ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + causeMsg + "</body></html>";
+                    response.getWriter().print(errorMessage);
+                }
+            }
+        } finally {
+            // sanity check: make sure we don't have any transactions in place
+            try {
+                // roll back current TX first
+                // SCIPIO: any status other than STATUS_NO_TRANSACTION means a transaction is still
+                // attached to this (pooled) thread, notably STATUS_MARKED_ROLLBACK
+                if (TransactionUtil.getStatusSafe() != TransactionUtil.STATUS_NO_TRANSACTION) {
+                    Debug.logWarning("*** NOTICE: ControlServlet finished w/ a transaction in place! Rolling back.", module);
+                    // SCIPIO: DIAGNOSTIC: report where the leaked transaction was begun (begin stack is
+                    // tracked when INFO logging is on); remove once the leak source is fixed
+                    Exception beginStack = TransactionUtil.getTransactionBeginStack();
+                    if (beginStack != null) {
+                        Debug.logWarning(beginStack, "Leaked transaction was begun at (see stack):", module);
                     }
+                    TransactionUtil.rollback();
                 }
 
-            } else {
-                if (rd == null) {
-                    Debug.logError("Could not get RequestDispatcher for errorPage: " + errorPage, module);
+                // now resume/rollback any suspended txs
+                if (TransactionUtil.suspendedTransactionsHeld()) {
+                    int suspended = TransactionUtil.cleanSuspendedTransactions();
+                    Debug.logWarning("Resumed/Rolled Back [" + suspended + "] transactions.", module);
                 }
-
-                // SCIPIO: 2018-02-26: we must now HTML-encode the error here (at point-of-use) because no longer done above
-                String causeMsg = RequestUtil.encodeErrorMessage(request, (String) request.getAttribute("_ERROR_MESSAGE_"));
-                String errorMessage = "<html><body>ERROR in error page, (infinite loop or error page not found with name [" + errorPage + "]), but here is the text just in case it helps you: " + causeMsg + "</body></html>";
-                response.getWriter().print(errorMessage);
+            } catch (Throwable t) {
+                Debug.logWarning(t, module);
             }
-        }
-
-        // sanity check: make sure we don't have any transactions in place
-        try {
-            // roll back current TX first
-            if (TransactionUtil.isTransactionInPlace()) {
-                Debug.logWarning("*** NOTICE: ControlServlet finished w/ a transaction in place! Rolling back.", module);
-                TransactionUtil.rollback();
-            }
-
-            // now resume/rollback any suspended txs
-            if (TransactionUtil.suspendedTransactionsHeld()) {
-                int suspended = TransactionUtil.cleanSuspendedTransactions();
-                Debug.logWarning("Resumed/Rolled Back [" + suspended + "] transactions.", module);
-            }
-        } catch (GenericTransactionException e) {
-            Debug.logWarning(e, module);
         }
 
         // run these two again before the ServerHitBin.countRequest call because on a logout this will end up creating a new visit

@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
 <site-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/site-conf.xsd">
     <include location="component://common/webcommon/WEB-INF/common-controller.xml"/>
@@ -19,53 +35,22 @@
     </postprocessor>
     -->
 
-
     <!-- **************** -->
     <!-- REQUEST MAPPINGS -->
     <!-- **************** -->
     
     <!-- General -->
-    <request-map uri="error">
-        <security https="true" auth="false"/>
-        <response name="success" type="view" value="pagenotfound"/><!-- FIXME: not really appropriate -->
-    </request-map>
-    <request-map uri="pagenotfound">
-        <security https="true" auth="false"/>
-        <response name="success" type="view" value="pagenotfound"/>
-    </request-map>
-    <request-map uri="main">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="main" />
-    </request-map>
     
     <!-- Test requests -->
-    <request-map uri="testRequest1">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="testView1" />
-    </request-map>
-    <request-map uri="testRequest2">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="testView2" />
-    </request-map>
-    <request-map uri="testRequest3">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="testView3" />
-    </request-map>
     
     <!-- **************** -->
     <!--   VIEW MAPPINGS  -->
     <!-- **************** -->
     
     <!-- NOTE: main goes to 404 here, because there is no main. -->
-    <view-map name="main" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
-    <view-map name="pagenotfound" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
     
     <!-- CMS App view mappings -->
-    <view-map name="editPage" type="screen" page="component://cms/widget/CMSScreens.xml#editPage"/>
     
     <!-- test view-maps -->
-    <view-map name="testView1" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
-    <view-map name="testView2" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
-    <view-map name="testView3" type="screen" page="component://cms/widget/CommonScreens.xml#404"/>
 
 </site-conf>

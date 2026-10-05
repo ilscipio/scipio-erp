@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
 package org.ofbiz.entity.connection;
 
@@ -49,6 +55,11 @@ public class DebugManagedDataSource<C extends Connection> extends ManagedDataSou
             }
         }
         return super.getConnection();
+    }
+
+    /** SCIPIO: 4.0.0: connections in use (the pooled runtime closes an idle store pool only when none is in use). */
+    public int getNumActive() {
+        return super.getPool().getNumActive();
     }
 
     public Map<String, Object> getInfo() {

@@ -1,36 +1,36 @@
-# Contributing to Scipio ERP
-Scipio ERP came from us longing for a true ERP community where participation is truely appreciated. We encourage each and everyone to download, share and improve our work. We want to hear from you how you use the software and how we can improve it. If you want to contribute, you are more than welcome. 
+# Contributing to Scipio
 
-Join the discussion at at: [https://forum.scipioerp.com/](https://forum.scipioerp.com/)
+Scipio 4.0 uses two licenses: AGPL-3.0 and a commercial license from Ilscipio GmbH.
+Files from Apache OFBiz keep the Apache License 2.0.
 
-## Discuss
-We love exchanging with developers! For a quick chat we are always available at the [Community Forum](https://forum.scipioerp.com/). If you want to get in touch with a sales representative, [reach out to us](https://www.scipioerp.com/contact/).
+## Before you start
 
-## Report Bugs
-Open a new issue to report any problem you may find. When you do:
+- Read [SUPPORT.md](SUPPORT.md). We do not promise free support.
+- Open an issue only for a bug that you can reproduce.
+- For a large change, open an issue first and describe the change.
 
-* **Be descriptive**. The more you can tell us about it, the easier it is for us to fix the issue you are facing. Upload a screenshot if you can and tell us how we can reproduce the error you are seeing. 
-* **Post an abstract of the error logs** Our logs are usually quite informative as to the errors you are seeing.. You can find the error logs inside of /runtime/logs/error*.log
-* **Help us understand** It can be difficult to fully understand a problem - we know that this can be frustrating. Remember that we want to understand you the best we can, so if a discussion becomes lengthy, please bear with us. 
+## Contributor License Agreement (CLA)
 
-### Community Version
-For users of the community version we prefer to hear about your errors on the official [Community Forum](https://forum.scipioerp.com/). You can also open up a Github issue, but for us to quickly take notice the forum is preferred.
+Each outside contribution needs a signed CLA. This rule applies to each contributor.
 
-### Enterprise Version
-Enterprise Users can open up new issues at the official [Scipio ERP Extranet](https://gitlab.ilscipio.com/). You can share private information with us in your own project or open new issues for each project individually.
+- The CLA gives Ilscipio GmbH the right to distribute your contribution under AGPL-3.0 and under the commercial license.
+- You keep the copyright of your contribution.
+- The text is in [legal/CLA.md](legal/CLA.md).
+- A bot checks each pull request. The bot gives you a link to sign.
+- A pull request without a signed CLA is blocked.
 
-## Report Security Vulnerabilities
-Know of any security vulnaribility that could affect us? Please reach out to us: [Report Security Vulnaribilites](https://www.scipioerp.com/security/). 
+## Submit a pull request
 
-We do not require any personal information of yours and will handle any information discretely.
+1. Fork the repository and create a branch.
+2. Keep the change small. Make one change in one pull request.
+3. Add the license header that the file type needs.
+4. Open the pull request on GitHub.
+5. Sign the CLA when the bot asks.
 
-## Submit Improvements
-So you want to support us through your work? Awesome! There are many ways you can do this: 
+## Report a security problem
 
-* **Pull Request** Submit a pull request and we will take notice. If you can, start a discussion on either the forum from inside an issue so that you can provide us with additional information about your work and we can incorporate your changes quickly. 
-* **Patch** We do accept diff files with your changes. Simply create a new issue and attach any patch you may have.
+Do not open a public issue. Use [https://www.scipioerp.com/security/](https://www.scipioerp.com/security/).
 
+## Support
 
- 
- 
-Thanks!
+We answer issues when we have time. For guaranteed help, use a paid plan at [https://www.scipioerp.com](https://www.scipioerp.com).

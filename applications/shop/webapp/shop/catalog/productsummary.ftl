@@ -1,7 +1,18 @@
 <#--
-This file is subject to the terms and conditions defined in the
-files 'LICENSE' and 'NOTICE', which are part of this source
-code package.
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <#include "component://shop/webapp/shop/catalog/catalogcommon.ftl">
@@ -48,7 +59,7 @@ code package.
     <#if smallImageUrl?has_content>
         <#assign imgSrc = makeContentCtxPrefixUrl(smallImageUrl)>
     <#else>
-        <#assign imgSrc = "https://via.placeholder.com/300x100"/>
+        <#assign imgSrc = "https://placehold.co/300x100"/>
     </#if>
     <#assign imgLink><@catalogAltUrl rawParams=true productCategoryId=categoryId productId=productId/></#assign>
     <#assign productImage><@img src=imgSrc type="contain" link=imgLink width="100%" height="100px"/></#assign>
@@ -63,7 +74,9 @@ code package.
 
     <#assign productPrice>
         <#if hasProduct>
-            <#if totalPrice??>
+            <#-- SCIPIO: 4.0.0: totalPrice belongs to a configurable (AGGREGATED) product only; on the page of a configurable
+                product the page's own total must not reach the cards of other products -->
+            <#if totalPrice?? && (product.productTypeId!"")?starts_with("AGGREGATED")>
                 <@ofbizCurrency amount=totalPrice isoCode=price.currencyUsed/>
             <#else>
                 <#if ((price.price!0) > 0) && ((requireAmount!"N") == "N")>
@@ -73,7 +86,11 @@ code package.
                 <#else>
                     -
                 </#if>
-                <#if price.listPrice?? && price.price?? && (price.price?double < price.listPrice?double)>
+                <#-- SCIPIO: 4.0.0: with the compliance component the saving follows the store's rules (EU: 30-day prior price) -->
+                <#if scpCompliance && product?? && price.price??>
+                    <#assign scpPriceRef = compliance.priceReference(product, price.price, price.currencyUsed, price.listPrice!0)>
+                    <#if (scpPriceRef.percent!0) gt 0><sup><small>(-${scpPriceRef.percent}%)</small></sup></#if>
+                <#elseif price.listPrice?? && price.price?? && (price.price?double < price.listPrice?double)>
                     <#assign priceSaved = price.listPrice?double - price.price?double>
                     <#assign percentSaved = (priceSaved?double / price.listPrice?double) * 100>
                     <#--<@ofbizCurrency amount=priceSaved isoCode=price.currencyUsed/>--> 

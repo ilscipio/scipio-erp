@@ -1,3 +1,19 @@
+/*
+ * Scipio Commerce
+ * Copyright (C) Ilscipio GmbH
+ *
+ * This file is part of Scipio Commerce. Scipio Commerce is free software: you
+ * can redistribute it and modify it under the terms of the GNU Affero General
+ * Public License, version 3, as published by the Free Software Foundation.
+ * Scipio Commerce is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+ * for more details. You should have received a copy of the license with this
+ * work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+ * A commercial license is available from Ilscipio GmbH.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
 package com.ilscipio.scipio.ce.webapp.control.def;
 
 import com.ilscipio.scipio.ce.base.metrics.def.Metric;
@@ -116,5 +132,44 @@ public @interface Event {
      * @return Metric
      */
     Metric[] metric() default {};
+
+    /**
+     * Path for event. For service events, can be "async", "async-persist", "async-onetime" to run asynchronously.
+     * For groovy/script events, the path to the script file.
+     * For java events, the class name (usually derived from the method's class).
+     *
+     * <p>SCIPIO: 4.0.0: Added.</p>
+     */
+    String path() default "";
+
+    /**
+     * Name-value properties for the event handler.
+     *
+     * <p>SCIPIO: 4.0.0: Added.</p>
+     */
+    EventProperty[] properties() default {};
+
+    /**
+     * Parameter to attribute mappings. Transfers request parameters to request attributes before the event.
+     *
+     * <p>SCIPIO: 4.0.0: Added.</p>
+     */
+    ParamToAttr[] paramToAttr() default {};
+
+    /**
+     * Inline script body, alternative to script location in path.
+     *
+     * <p>NOTE: Currently, this is only supported for the "groovy" event type.
+     * Inline groovy events automatically import the following packages:
+     * <ul>
+     * <li>org.ofbiz.base.util.*</li>
+     * <li>org.ofbiz.entity.*</li>
+     * <li>org.ofbiz.service.*</li>
+     * <li>org.ofbiz.webapp.event.EventUtil</li>
+     * </ul></p>
+     *
+     * <p>SCIPIO: 4.0.0: Added.</p>
+     */
+    String script() default "";
 
 }

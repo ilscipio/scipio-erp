@@ -1,0 +1,1 @@
+org.ofbiz.base.util.Debug.logInfo("clearFieldTest1 (pre-clear-field): " + context.clearFieldTest1, "InlineClearFieldTest.groovy");

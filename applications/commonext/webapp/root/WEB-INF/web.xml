@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!-- SCIPIO: 4.0.0: The server root ("/"). It shows the login, then the application launcher:
+     every backend application the reader may open. Unknown root paths return 404. -->
+<web-app version="3.0">
+    <display-name>Scipio ERP - Applications</display-name>
+    <description>The application launcher at the server root</description>
+
+    <context-param>
+        <param-name>entityDelegatorName</param-name>
+        <param-value>default</param-value>
+    </context-param>
+    <context-param>
+        <param-name>localDispatcherName</param-name>
+        <param-value>root</param-value>
+    </context-param>
+    <context-param>
+        <param-name>mainDecoratorLocation</param-name>
+        <param-value>component://commonext/widget/RootScreens.xml</param-value>
+    </context-param>
+
+    <filter>
+        <display-name>ContextFilter</display-name>
+        <filter-name>ContextFilter</filter-name>
+        <filter-class>org.ofbiz.webapp.control.ContextFilter</filter-class>
+        <init-param>
+            <param-name>disableContextSecurity</param-name>
+            <param-value>N</param-value>
+        </init-param>
+        <init-param>
+            <param-name>allowedPaths</param-name>
+            <param-value>/error:/control:/index.jsp</param-value>
+        </init-param>
+        <init-param>
+            <param-name>errorCode</param-name>
+            <param-value>404</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>ContextFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+
+    <listener><listener-class>org.ofbiz.webapp.control.ControlEventListener</listener-class></listener>
+    <listener><listener-class>org.ofbiz.webapp.control.LoginEventListener</listener-class></listener>
+
+    <servlet>
+        <display-name>ControlServlet</display-name>
+        <servlet-name>ControlServlet</servlet-name>
+        <servlet-class>org.ofbiz.webapp.control.ControlServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ControlServlet</servlet-name>
+        <url-pattern>/control/*</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>60</session-timeout> <!-- in minutes -->
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>true</secure>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>

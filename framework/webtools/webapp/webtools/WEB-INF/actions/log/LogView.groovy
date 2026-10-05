@@ -16,6 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
+ * Changes to this file: Copyright (C) Ilscipio GmbH. The changes are licensed
+ * under the GNU Affero General Public License, version 3, or a commercial
+ * license from Ilscipio GmbH (file LICENSE). The original code stays under
+ * the Apache License, version 2.0, as stated above.
+ */
 
 import java.util.regex.Pattern
 import org.apache.commons.io.input.ReversedLinesFileReader;
@@ -33,11 +39,15 @@ final levelMap = [
 ];
 final levelPat = Pattern.compile(' |([A-Z])| ');
 
+// SCIPIO: Debug logging to trace script execution
+org.ofbiz.base.util.Debug.logInfo("LogView.groovy: Script starting, logFileName=" + logFileName, "LogView");
+
 List logLines = [];
 try {
     // SCIPIO: 2020-04-10 Added a reversed file reader and limitted the result so that only the last lines will be read. Improves page performance
     int n_lines = 200;
     File logFile = FileUtil.getFile(logFileName);
+    org.ofbiz.base.util.Debug.logInfo("LogView.groovy: logFile=" + logFile + ", exists=" + logFile?.exists(), "LogView");
     ReversedLinesFileReader fr = new ReversedLinesFileReader(logFile);
     for(int i=0;i<n_lines;i++){
         String line=fr.readLine();
@@ -52,6 +62,9 @@ try {
         }
         logLines.add([type: type, line:line.trim()]);
     }
-} catch (Exception exc) {}
+    org.ofbiz.base.util.Debug.logInfo("LogView.groovy: Read " + logLines.size() + " lines", "LogView");
+} catch (Exception exc) {
+    org.ofbiz.base.util.Debug.logError(exc, "LogView.groovy: Error reading log file: " + exc.getMessage(), "LogView");
+}
 
 context.logLines = logLines.reverse();

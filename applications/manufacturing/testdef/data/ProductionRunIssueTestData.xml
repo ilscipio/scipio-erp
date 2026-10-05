@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+
+<!-- SCIPIO: Dedicated on-hand inventory for MAT_A_COST / MAT_B_COST (see
+     applications/shop/data/DemoStandardCostingData.xml for PROD_MANUF / MAT_A_COST /
+     MAT_B_COST / ROUTING_COST) used by ProductionRunIssueTest, so the test does not depend
+     on how much of the shared demo inventory (inventoryItemId 9029/9030) other tests may
+     already have consumed. -->
+<entity-engine-xml>
+    <InventoryItem inventoryItemId="MFT_INV_A" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MAT_A_COST"
+        facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" ownerPartyId="Company" currencyUomId="USD"
+        unitCost="9.0" datetimeReceived="2010-01-01 08:00:00.000"/>
+    <InventoryItemDetail inventoryItemId="MFT_INV_A" inventoryItemDetailSeqId="0001" effectiveDate="2010-01-01 08:00:00.000"
+        availableToPromiseDiff="20" quantityOnHandDiff="20" accountingQuantityDiff="20"/>
+
+    <InventoryItem inventoryItemId="MFT_INV_B" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="MAT_B_COST"
+        facilityId="ScipioShopWarehouse" locationSeqId="TLTLTLUL01" ownerPartyId="Company" currencyUomId="USD"
+        unitCost="7.0" datetimeReceived="2010-01-01 08:00:00.000"/>
+    <InventoryItemDetail inventoryItemId="MFT_INV_B" inventoryItemDetailSeqId="0001" effectiveDate="2010-01-01 08:00:00.000"
+        availableToPromiseDiff="20" quantityOnHandDiff="20" accountingQuantityDiff="20"/>
+</entity-engine-xml>

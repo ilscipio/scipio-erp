@@ -1,5 +1,5 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/5/LICENSE
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
@@ -24,7 +24,7 @@ CodeMirror.defineMode("go", function(config) {
     "float32":true, "float64":true, "int8":true, "int16":true, "int32":true,
     "int64":true, "string":true, "uint8":true, "uint16":true, "uint32":true,
     "uint64":true, "int":true, "uint":true, "uintptr":true, "error": true,
-    "rune":true
+    "rune":true, "any":true, "comparable":true
   };
 
   var atoms = {
@@ -46,11 +46,11 @@ CodeMirror.defineMode("go", function(config) {
     }
     if (/[\d\.]/.test(ch)) {
       if (ch == ".") {
-        stream.match(/^[0-9]+([eE][\-+]?[0-9]+)?/);
+        stream.match(/^[0-9_]+([eE][\-+]?[0-9_]+)?/);
       } else if (ch == "0") {
-        stream.match(/^[xX][0-9a-fA-F]+/) || stream.match(/^0[0-7]+/);
+        stream.match(/^[xX][0-9a-fA-F_]+/) || stream.match(/^[0-7_]+/);
       } else {
-        stream.match(/^[0-9]*\.?[0-9]*([eE][\-+]?[0-9]+)?/);
+        stream.match(/^[0-9_]*\.?[0-9_]*([eE][\-+]?[0-9_]+)?/);
       }
       return "number";
     }
@@ -155,14 +155,14 @@ CodeMirror.defineMode("go", function(config) {
       else if (curPunc == "[") pushContext(state, stream.column(), "]");
       else if (curPunc == "(") pushContext(state, stream.column(), ")");
       else if (curPunc == "case") ctx.type = "case";
-      else if (curPunc == "}" && ctx.type == "}") ctx = popContext(state);
+      else if (curPunc == "}" && ctx.type == "}") popContext(state);
       else if (curPunc == ctx.type) popContext(state);
       state.startOfLine = false;
       return style;
     },
 
     indent: function(state, textAfter) {
-      if (state.tokenize != tokenBase && state.tokenize != null) return 0;
+      if (state.tokenize != tokenBase && state.tokenize != null) return CodeMirror.Pass;
       var ctx = state.context, firstChar = textAfter && textAfter.charAt(0);
       if (ctx.type == "case" && /^(?:case|default)\b/.test(textAfter)) {
         state.context.type = "}";

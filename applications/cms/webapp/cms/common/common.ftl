@@ -313,7 +313,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
     function setupCmsDeleteActionHooks() {
         <#-- Dialogs for Delete actions -->
-        $("a.action_delete, li.action_delete > a").live("click", function(event){
+        $(document).on("click", "a.action_delete, li.action_delete > a", function(event){
             var t = event.target;
             event.preventDefault();
             var href = $(this).attr("href");

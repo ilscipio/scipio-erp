@@ -1,5 +1,5 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/5/LICENSE
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
@@ -12,13 +12,13 @@
   "use strict";
 
   var keywords = ("this super static final const abstract class extends external factory " +
-    "implements get native operator set typedef with enum throw rethrow " +
-    "assert break case continue default in return new deferred async await " +
-    "try catch finally do else for if switch while import library export " +
-    "part of show hide is as").split(" ");
+    "implements mixin get native set typedef with enum throw rethrow assert break case " +
+    "continue default in return new deferred async await covariant try catch finally " +
+    "do else for if switch while import library export part of show hide is as extension " +
+    "on yield late required sealed base interface when").split(" ");
   var blockKeywords = "try catch finally do else for if switch while".split(" ");
   var atoms = "true false null".split(" ");
-  var builtins = "void bool num int double dynamic var String".split(" ");
+  var builtins = "void bool num int double dynamic var String Null Never".split(" ");
 
   function set(words) {
     var obj = {};
@@ -44,6 +44,8 @@
     blockKeywords: set(blockKeywords),
     builtin: set(builtins),
     atoms: set(atoms),
+    // clike numbers without the suffixes, and with '_' separators.
+    number: /^(?:0x[a-f\d_]+|(?:[\d_]+\.?[\d_]*|\.[\d_]+)(?:e[-+]?[\d_]+)?)/i,
     hooks: {
       "@": function(stream) {
         stream.eatWhile(/[\w\$_\.]/);
@@ -78,6 +80,15 @@
         if (!stream.eat("*")) return false
         state.tokenize = tokenNestedComment(1)
         return state.tokenize(stream, state)
+      },
+      token: function(stream, _, style) {
+        if (style == "variable") {
+          // Assume uppercase symbols are classes using variable-2
+          var isUpper = RegExp('^[_$]*[A-Z][a-zA-Z0-9_$]*$','g');
+          if (isUpper.test(stream.current())) {
+            return 'variable-2';
+          }
+        }
       }
     }
   });

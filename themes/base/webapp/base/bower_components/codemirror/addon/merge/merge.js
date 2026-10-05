@@ -1,5 +1,5 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/5/LICENSE
 
 // declare global: diff_match_patch, DIFF_INSERT, DIFF_DELETE, DIFF_EQUAL
 
@@ -43,23 +43,25 @@
         if (!this.edit.state.trackAlignable) this.edit.state.trackAlignable = new TrackAlignable(this.edit)
         this.orig.state.trackAlignable = new TrackAlignable(this.orig)
       }
+      this.lockButton.title = this.edit.phrase("Toggle locked scrolling");
+      this.lockButton.setAttribute("aria-label", this.lockButton.title);
 
       this.orig.state.diffViews = [this];
       var classLocation = options.chunkClassLocation || "background";
       if (Object.prototype.toString.call(classLocation) != "[object Array]") classLocation = [classLocation]
       this.classes.classLocation = classLocation
 
-      this.diff = getDiff(asString(orig), asString(options.value));
+      this.diff = getDiff(asString(orig), asString(options.value), this.mv.options.ignoreWhitespace);
       this.chunks = getChunks(this.diff);
       this.diffOutOfDate = this.dealigned = false;
       this.needsScrollSync = null
 
       this.showDifferences = options.showDifferences !== false;
     },
-    registerEvents: function() {
+    registerEvents: function(otherDv) {
       this.forceUpdate = registerUpdate(this);
       setScrollLock(this, true, false);
-      registerScroll(this);
+      registerScroll(this, otherDv);
     },
     setShowDifferences: function(val) {
       val = val !== false;
@@ -72,7 +74,7 @@
 
   function ensureDiff(dv) {
     if (dv.diffOutOfDate) {
-      dv.diff = getDiff(dv.orig.getValue(), dv.edit.getValue());
+      dv.diff = getDiff(dv.orig.getValue(), dv.edit.getValue(), dv.mv.options.ignoreWhitespace);
       dv.chunks = getChunks(dv.diff);
       dv.diffOutOfDate = false;
       CodeMirror.signal(dv.edit, "updateDiff", dv.diff);
@@ -128,6 +130,7 @@
     }
     function swapDoc() {
       dv.diffOutOfDate = true;
+      dv.dealigned = true;
       update("full");
     }
     dv.edit.on("change", change);
@@ -144,12 +147,13 @@
     return update;
   }
 
-  function registerScroll(dv) {
+  function registerScroll(dv, otherDv) {
     dv.edit.on("scroll", function() {
       syncScroll(dv, true) && makeConnections(dv);
     });
     dv.orig.on("scroll", function() {
       syncScroll(dv, false) && makeConnections(dv);
+      if (otherDv) syncScroll(otherDv, true) && makeConnections(otherDv);
     });
   }
 
@@ -209,7 +213,7 @@
   function setScrollLock(dv, val, action) {
     dv.lockScroll = val;
     if (val && action != false) syncScroll(dv, DIFF_INSERT) && makeConnections(dv);
-    dv.lockButton.innerHTML = val ? "\u21db\u21da" : "\u21db&nbsp;&nbsp;\u21da";
+    (val ? CodeMirror.addClass : CodeMirror.rmClass)(dv.lockButton, "CodeMirror-merge-scrolllock-enabled");
   }
 
   // Updating the marks for editor content
@@ -352,11 +356,11 @@
     var result = []
     for (var i = 0;; i++) {
       var chunk = chunks[i]
-      var chunkStart = !chunk ? cm.lastLine() + 1 : isOrig ? chunk.origFrom : chunk.editFrom
+      var chunkStart = !chunk ? 1e9 : isOrig ? chunk.origFrom : chunk.editFrom
       for (; trackI < tracker.alignable.length; trackI += 2) {
         var n = tracker.alignable[trackI] + 1
         if (n <= start) continue
-        if (n < chunkStart) result.push(n)
+        if (n <= chunkStart) result.push(n)
         else break
       }
       if (!chunk) break
@@ -370,14 +374,22 @@
   // lines that need to be aligned with each other.
   function mergeAlignable(result, origAlignable, chunks, setIndex) {
     var rI = 0, origI = 0, chunkI = 0, diff = 0
-    for (;; rI++) {
+    outer: for (;; rI++) {
       var nextR = result[rI], nextO = origAlignable[origI]
       if (!nextR && nextO == null) break
 
       var rLine = nextR ? nextR[0] : 1e9, oLine = nextO == null ? 1e9 : nextO
       while (chunkI < chunks.length) {
         var chunk = chunks[chunkI]
-        if (chunk.editTo > rLine) break
+        if (chunk.origFrom <= oLine && chunk.origTo > oLine) {
+          origI++
+          rI--
+          continue outer;
+        }
+        if (chunk.editTo > rLine) {
+          if (chunk.editFrom <= rLine) continue outer;
+          break
+        }
         diff += (chunk.origTo - chunk.origFrom) - (chunk.editTo - chunk.editFrom)
         chunkI++
       }
@@ -432,22 +444,26 @@
       aligners[i].clear();
     aligners.length = 0;
 
-    var cm = [dv.edit, dv.orig], scroll = [];
+    var cm = [dv.edit, dv.orig], scroll = [], offset = []
     if (other) cm.push(other.orig);
-    for (var i = 0; i < cm.length; i++)
+    for (var i = 0; i < cm.length; i++) {
       scroll.push(cm[i].getScrollInfo().top);
+      offset.push(-cm[i].getScrollerElement().getBoundingClientRect().top)
+    }
 
+    if (offset[0] != offset[1] || cm.length == 3 && offset[1] != offset[2])
+      alignLines(cm, offset, [0, 0, 0], aligners)
     for (var ln = 0; ln < linesToAlign.length; ln++)
-      alignLines(cm, linesToAlign[ln], aligners);
+      alignLines(cm, offset, linesToAlign[ln], aligners);
 
     for (var i = 0; i < cm.length; i++)
       cm[i].scrollTo(null, scroll[i]);
   }
 
-  function alignLines(cm, lines, aligners) {
-    var maxOffset = 0, offset = [];
+  function alignLines(cm, cmOffset, lines, aligners) {
+    var maxOffset = -1e8, offset = [];
     for (var i = 0; i < cm.length; i++) if (lines[i] != null) {
-      var off = cm[i].heightAtLine(lines[i], "local");
+      var off = cm[i].heightAtLine(lines[i], "local") - cmOffset[i];
       offset[i] = off;
       maxOffset = Math.max(maxOffset, off);
     }
@@ -467,7 +483,7 @@
     var elt = document.createElement("div");
     elt.className = "CodeMirror-merge-spacer";
     elt.style.height = size + "px"; elt.style.minWidth = "1px";
-    return cm.addLineWidget(line, elt, {height: size, above: above, mergeSpacer: true});
+    return cm.addLineWidget(line, elt, {height: size, above: above, mergeSpacer: true, handleMouseEvents: true});
   }
 
   function drawConnectorsForChunk(dv, chunk, sTopOrig, sTopEdit, w) {
@@ -490,9 +506,12 @@
       var copy = dv.copyButtons.appendChild(elt("div", dv.type == "left" ? "\u21dd" : "\u21dc",
                                                 "CodeMirror-merge-copy"));
       var editOriginals = dv.mv.options.allowEditingOriginals;
-      copy.title = editOriginals ? "Push to left" : "Revert chunk";
+      copy.title = dv.edit.phrase(editOriginals ? "Push to left" : "Revert chunk");
       copy.chunk = chunk;
       copy.style.top = (chunk.origTo > chunk.origFrom ? top : dv.edit.heightAtLine(chunk.editFrom, "local") - sTopEdit) + "px";
+      copy.setAttribute("role", "button");
+      copy.setAttribute("tabindex", "0");
+      copy.setAttribute("aria-label", copy.title);
 
       if (editOriginals) {
         var topReverse = dv.edit.heightAtLine(chunk.editFrom, "local") - sTopEdit;
@@ -503,6 +522,9 @@
                              origFrom: chunk.editFrom, origTo: chunk.editTo};
         copyReverse.style.top = topReverse + "px";
         dv.type == "right" ? copyReverse.style.left = "2px" : copyReverse.style.right = "2px";
+        copyReverse.setAttribute("role", "button");
+        copyReverse.setAttribute("tabindex", "0");
+        copyReverse.setAttribute("aria-label", copyReverse.title);
       }
     }
   }
@@ -567,8 +589,8 @@
       this.aligners = [];
       alignChunks(this.left || this.right, true);
     }
-    if (left) left.registerEvents()
-    if (right) right.registerEvents()
+    if (left) left.registerEvents(right)
+    if (right) right.registerEvents(left)
 
 
     var onResize = function() {
@@ -584,13 +606,15 @@
 
   function buildGap(dv) {
     var lock = dv.lockButton = elt("div", null, "CodeMirror-merge-scrolllock");
-    lock.title = "Toggle locked scrolling";
+    lock.setAttribute("role", "button");
+    lock.setAttribute("tabindex", "0");
     var lockWrap = elt("div", [lock], "CodeMirror-merge-scrolllock-wrap");
     CodeMirror.on(lock, "click", function() { setScrollLock(dv, !dv.lockScroll); });
+    CodeMirror.on(lock, "keyup", function(e) { (e.key === "Enter" || e.code === "Space") && setScrollLock(dv, !dv.lockScroll); });
     var gapElts = [lockWrap];
     if (dv.mv.options.revertButtons !== false) {
       dv.copyButtons = elt("div", null, "CodeMirror-merge-copybuttons-" + dv.type);
-      CodeMirror.on(dv.copyButtons, "click", function(e) {
+      var copyButtons = function(e) {
         var node = e.target || e.srcElement;
         if (!node.chunk) return;
         if (node.className == "CodeMirror-merge-copy-reverse") {
@@ -598,7 +622,9 @@
           return;
         }
         copyChunk(dv, dv.edit, dv.orig, node.chunk);
-      });
+      }
+      CodeMirror.on(dv.copyButtons, "click", copyButtons);
+      CodeMirror.on(dv.copyButtons, "keyup", function(e) { (e.key === "Enter" || e.code === "Space") && copyButtons(e); });
       gapElts.unshift(dv.copyButtons);
     }
     if (dv.mv.options.connect != "align") {
@@ -634,14 +660,15 @@
   }
 
   // Operations on diffs
+  var dmp;
+  function getDiff(a, b, ignoreWhitespace) {
+    if (!dmp) dmp = new diff_match_patch();
 
-  var dmp = new diff_match_patch();
-  function getDiff(a, b) {
     var diff = dmp.diff_main(a, b);
     // The library sometimes leaves in empty parts, which confuse the algorithm
     for (var i = 0; i < diff.length; ++i) {
       var part = diff[i];
-      if (!part[1]) {
+      if (ignoreWhitespace ? !/[^ \t]/.test(part[1]) : !part[1]) {
         diff.splice(i--, 1);
       } else if (i && diff[i - 1][0] == part[0]) {
         diff.splice(i--, 1);
@@ -653,12 +680,13 @@
 
   function getChunks(diff) {
     var chunks = [];
+    if (!diff.length) return chunks;
     var startEdit = 0, startOrig = 0;
     var edit = Pos(0, 0), orig = Pos(0, 0);
     for (var i = 0; i < diff.length; ++i) {
       var part = diff[i], tp = part[0];
       if (tp == DIFF_EQUAL) {
-        var startOff = startOfLineClean(diff, i) ? 0 : 1;
+        var startOff = !startOfLineClean(diff, i) || edit.line < startEdit || orig.line < startOrig ? 1 : 0;
         var cleanFromEdit = edit.line + startOff, cleanFromOrig = orig.line + startOff;
         moveOver(edit, part[1], null, orig);
         var endOff = endOfLineClean(diff, i) ? 1 : 0;
@@ -716,7 +744,7 @@
     cm.addLineClass(from, "wrap", "CodeMirror-merge-collapsed-line");
     var widget = document.createElement("span");
     widget.className = "CodeMirror-merge-collapsed-widget";
-    widget.title = "Identical text collapsed. Click to expand.";
+    widget.title = cm.phrase("Identical text collapsed. Click to expand.");
     var mark = cm.markText(Pos(from, 0), Pos(to - 1), {
       inclusiveLeft: true,
       inclusiveRight: true,
@@ -727,6 +755,9 @@
       mark.clear();
       cm.removeLineClass(from, "wrap", "CodeMirror-merge-collapsed-line");
     }
+    if (mark.explicitlyCleared) clear();
+    CodeMirror.on(widget, "click", clear);
+    mark.on("clear", clear);
     CodeMirror.on(widget, "click", clear);
     return {mark: mark, clear: clear};
   }
@@ -826,6 +857,7 @@
   function TrackAlignable(cm) {
     this.cm = cm
     this.alignable = []
+    this.height = cm.doc.height
     var self = this
     cm.on("markerAdded", function(_, marker) {
       if (!marker.collapsed) return
@@ -855,11 +887,15 @@
       self.check(end, F_MARKER, self.hasMarker)
       if (nBefore || nAfter) self.check(change.from.line, F_MARKER, self.hasMarker)
     })
+    cm.on("viewportChange", function() {
+      if (self.cm.doc.height != self.height) self.signal()
+    })
   }
 
   TrackAlignable.prototype = {
     signal: function() {
       CodeMirror.signal(this, "realign")
+      this.height = this.cm.doc.height
     },
 
     set: function(n, flags) {
@@ -898,7 +934,7 @@
     hasMarker: function(n) {
       var handle = this.cm.getLineHandle(n)
       if (handle.markedSpans) for (var i = 0; i < handle.markedSpans.length; i++)
-        if (handle.markedSpans[i].mark.collapsed && handle.markedSpans[i].to != null)
+        if (handle.markedSpans[i].marker.collapsed && handle.markedSpans[i].to != null)
           return true
       return false
     },

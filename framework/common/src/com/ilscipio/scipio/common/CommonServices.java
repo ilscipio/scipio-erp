@@ -28,6 +28,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import com.ilscipio.scipio.web.SocketSessionManager;
 import org.ofbiz.base.component.ComponentConfig;
+import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -78,11 +79,9 @@ public class CommonServices {
             // TODO: unhardcode locations into properties
             {
                 final String filename = "component://common/data/CommonVisualThemeTypeData.xml"; // TODO: Unhardcode
-                List<String> messages = new ArrayList<>();
                 Map<String, Object> servCtx = dctx.makeValidContext("entityImport", ModelService.IN_PARAM, context);
                 servCtx.put("filename", filename);
                 servCtx.put("isUrl", "Y");
-                servCtx.put("messages", messages);
                 Map<String, Object> servResult = dispatcher.runSync("entityImport", servCtx);
                 if (ServiceUtil.isError(servResult)) {
                     return ServiceUtil.returnError("Could not import common visual theme type data from " + filename + ": " +
@@ -132,16 +131,31 @@ public class CommonServices {
                     }
 
                     if (UtilValidate.isNotEmpty(themeFileLocations)) {
+                        // SCIPIO: 4.0.0: check each data file before the delete; entityImport skips a file it cannot
+                        // resolve without an error, and the theme would then lose all its resources
+                        for (String themeFileLocation : themeFileLocations) {
+                            java.net.URL themeFileUrl = FlexibleLocation.resolveLocation(themeFileLocation);
+                            boolean found = false;
+                            if (themeFileUrl != null) {
+                                try (java.io.InputStream in = themeFileUrl.openStream()) {
+                                    found = true;
+                                } catch (java.io.IOException e) {
+                                    found = false;
+                                }
+                            }
+                            if (!found) {
+                                return ServiceUtil.returnError("Could not reload visual theme " + visualThemeId
+                                        + ": data file not found: " + themeFileLocation);
+                            }
+                        }
                         delegator.removeByAnd("VisualThemeResource", UtilMisc.toMap("visualThemeId", visualThemeId));
                         // Don't do this line because technically violates foreign keys on other tables; not really needed anyway
                         //delegator.removeByAnd("VisualTheme", UtilMisc.toMap("visualThemeId", visualThemeId));
 
                         for(String themeFileLocation : themeFileLocations) {
-                            List<String> messages = new ArrayList<>();
                             Map<String, Object> servCtx = dctx.makeValidContext("entityImport", ModelService.IN_PARAM, context);
                             servCtx.put("filename", themeFileLocation);
                             servCtx.put("isUrl", "Y");
-                            servCtx.put("messages", messages);
                             Map<String, Object> servResult = dispatcher.runSync("entityImport", servCtx);
                             if (ServiceUtil.isError(servResult)) {
                                 return ServiceUtil.returnError("Could not load visual theme " + visualThemeId +

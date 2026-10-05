@@ -17,7 +17,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 <entity-engine-xml>
     <VisualTheme visualThemeId="AURORA" visualThemeSetId="BACKOFFICE" description="Aurora - the default backend theme (light and dark)"/>
-    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="AuroraThemeData.xml" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="component://aurora-theme/data/AuroraThemeData.xml" sequenceId="01"/>
 
     <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_NAME" resourceValue="AURORA" sequenceId="01"/>
     <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/aurora/screenshot.jpg" sequenceId="01"/>
@@ -63,7 +63,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 
     <!-- Footer scripts -->
     <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/aurora/js/vendor/flatpickr.min.js" sequenceId="01"/>
-    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/datatables/DataTables-1.10.10/js/jquery.dataTables.min.js" sequenceId="02"/>
+    <VisualThemeResource visualThemeId="AURORA" resourceTypeEnumId="VT_FTPR_JAVASCRIPT" resourceValue="/base-theme/bower_components/datatables/DataTables-1.13.11/js/jquery.dataTables.min.js" sequenceId="02"/>
     <!-- Chart.js loads on demand (Aurora.withChart); the tile grid is CSS, freetile is not needed.
          The delete block removes the two rows from a database that was seeded before. -->
     <delete>

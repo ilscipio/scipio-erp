@@ -5,7 +5,7 @@ Source of the table: the report of `gradlew checkLicensePolicy` (jk1 data and `g
 Source of the texts: the NOTICE and LICENSE files in the runtime jars, in the tracked jars and in the tracked web libraries.
 Each text is once in this file. The Apache License 2.0 text of this product is in `LICENSE`, part B.
 
-## 1. Entries (555)
+## 1. Entries (554)
 
 | Scope | Entry | Version | License |
 |---|---|---|---|
@@ -552,7 +552,6 @@ Each text is once in this file. The Apache License 2.0 text of this product is i
 | web | themes/ignite-shop/webapp/ignite/bower_components/fontawesome |  | MIT |
 | web | themes/ignite-shop/webapp/ignite/bower_components/jquery |  | MIT |
 | web | themes/ignite-shop/webapp/ignite/bower_components/moment |  | MIT |
-| web | themes/ignite-shop/webapp/ignite/bower_components/momentjs |  | MIT |
 | web | themes/ignite-shop/webapp/ignite/bower_components/pace |  | MIT |
 | web | themes/ignite-shop/webapp/ignite/bower_components/sass-to-js |  | MIT |
 | web | themes/ignite-shop/webapp/ignite/bower_components/simple-line-icons |  | MIT |
@@ -10457,7 +10456,7 @@ This product includes software developed at
 The Apache Software Foundation (http://www.apache.org/).
 ~~~~
 
-## 3. License texts (88)
+## 3. License texts (86)
 
 ### LICENSE 1: angus-activation-2.0.1.jar, jakarta.activation-1.2.2.jar, jakarta.activation-api-2.1.2.jar
 
@@ -22929,12 +22928,12 @@ with details of:
 <YEAR> = 2010-
 ~~~~
 
-### LICENSE 55: themes/base/webapp/base/bower_components/Chart.js/LICENSE.md
+### LICENSE 55: themes/base/webapp/base/bower_components/Chart.js/LICENSE.md, themes/ignite-shop/webapp/ignite/bower_components/Chart.js/LICENSE.md
 
 ~~~~
 The MIT License (MIT)
 
-Copyright (c) 2013-2017 Nick Downie
+Copyright (c) 2018 Chart.js Contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -22974,7 +22973,7 @@ SOFTWARE.
 ~~~~
 MIT License
 
-Copyright (C) 2017 by Marijn Haverbeke <marijnh@gmail.com> and others
+Copyright (C) 2017 by Marijn Haverbeke <marijn@haverbeke.berlin> and others
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23292,7 +23291,121 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ~~~~
 
-### LICENSE 63: themes/base/webapp/base/bower_components/jstree/LICENSE-MIT
+### LICENSE 63: themes/base/webapp/base/bower_components/jquery-migrate/LICENSE.txt
+
+~~~~
+Copyright OpenJS Foundation and other contributors, https://openjsf.org/
+
+This software consists of voluntary contributions made by many
+individuals. For exact contribution history, see the revision history
+available at https://github.com/jquery/jquery-migrate
+
+The following license applies to all parts of this software except as
+documented below:
+
+====
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+====
+
+All files located in the node_modules and external directories are
+externally maintained libraries used by this software which have their
+own licenses; we recommend you read them, as their terms may differ from
+the terms above.
+~~~~
+
+### LICENSE 64: themes/base/webapp/base/bower_components/jquery-ui/LICENSE.txt
+
+~~~~
+Copyright OpenJS Foundation and other contributors, https://openjsf.org/
+
+This software consists of voluntary contributions made by many
+individuals. For exact contribution history, see the revision history
+available at https://github.com/jquery/jquery-ui
+
+The following license applies to all parts of this software except as
+documented below:
+
+====
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+====
+
+Copyright and related rights for sample code are waived via CC0. Sample
+code is defined as all source code contained within the demos directory.
+
+CC0: http://creativecommons.org/publicdomain/zero/1.0/
+
+====
+
+All files located in the node_modules and external directories are
+externally maintained libraries used by this software which have their
+own licenses; we recommend you read them, as their terms may differ from
+the terms above.
+~~~~
+
+### LICENSE 65: themes/base/webapp/base/bower_components/jquery/LICENSE.txt, themes/ignite-shop/webapp/ignite/bower_components/jquery/LICENSE.txt
+
+~~~~
+Copyright OpenJS Foundation and other contributors, https://openjsf.org/
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+~~~~
+
+### LICENSE 66: themes/base/webapp/base/bower_components/jstree/LICENSE-MIT
 
 ~~~~
 Copyright (c) 2014 Ivan Bozhanov
@@ -23319,10 +23432,10 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 ~~~~
 
-### LICENSE 64: themes/base/webapp/base/bower_components/moment/LICENSE
+### LICENSE 67: themes/base/webapp/base/bower_components/moment/LICENSE, themes/ignite-shop/webapp/ignite/bower_components/moment/LICENSE
 
 ~~~~
-Copyright (c) 2011-2016 Tim Wood, Iskren Chernev, Moment.js contributors
+Copyright (c) OpenJS Foundation and other contributors
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -23346,7 +23459,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 ~~~~
 
-### LICENSE 65: themes/base/webapp/base/bower_components/owlcarousel/LICENSE
+### LICENSE 68: themes/base/webapp/base/bower_components/owlcarousel/LICENSE
 
 ~~~~
 The MIT License (MIT)
@@ -23371,7 +23484,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ~~~~
 
-### LICENSE 66: themes/base/webapp/base/bower_components/slick-carousel/LICENSE
+### LICENSE 69: themes/base/webapp/base/bower_components/slick-carousel/LICENSE
 
 ~~~~
 The MIT License (MIT)
@@ -23396,7 +23509,7 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ~~~~
 
-### LICENSE 67: themes/base/webapp/base/bower_components/Snap.svg/LICENSE
+### LICENSE 70: themes/base/webapp/base/bower_components/Snap.svg/LICENSE
 
 ~~~~
 Apache License
@@ -23602,7 +23715,7 @@ Apache License
    limitations under the License.
 ~~~~
 
-### LICENSE 68: themes/base/webapp/base/bower_components/trumbowyg/LICENSE
+### LICENSE 71: themes/base/webapp/base/bower_components/trumbowyg/LICENSE
 
 ~~~~
 The MIT License (MIT)
@@ -23628,7 +23741,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ~~~~
 
-### LICENSE 69: themes/base/webapp/base/bower_components/what-input/LICENSE
+### LICENSE 72: themes/base/webapp/base/bower_components/what-input/LICENSE
 
 ~~~~
 The MIT License (MIT)
@@ -23654,7 +23767,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ~~~~
 
-### LICENSE 70: themes/ignite-admin/webapp/ignite/dist/libs/datatables/license.txt
+### LICENSE 73: themes/ignite-admin/webapp/ignite/dist/libs/datatables/license.txt
 
 ~~~~
 Copyright (c) 2008-2015 SpryMedia Limited
@@ -23679,13 +23792,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ~~~~
 
-### LICENSE 71: themes/ignite-shop/webapp/ignite/bower_components/bootstrap/LICENSE
+### LICENSE 74: themes/ignite-shop/webapp/ignite/bower_components/bootstrap/LICENSE
 
 ~~~~
 The MIT License (MIT)
 
-Copyright (c) 2011-2017 Twitter, Inc.
-Copyright (c) 2011-2017 The Bootstrap Authors
+Copyright (c) 2011-2022 Twitter, Inc.
+Copyright (c) 2011-2022 The Bootstrap Authors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -23706,20 +23819,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ~~~~
 
-### LICENSE 72: themes/ignite-shop/webapp/ignite/bower_components/Chart.js/LICENSE.md
-
-~~~~
-The MIT License (MIT)
-Copyright (c) 2013-2016 Nick Downie
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-~~~~
-
-### LICENSE 73: themes/ignite-shop/webapp/ignite/bower_components/eonasdan-bootstrap-datetimepicker/LICENSE
+### LICENSE 75: themes/ignite-shop/webapp/ignite/bower_components/eonasdan-bootstrap-datetimepicker/LICENSE
 
 ~~~~
 The MIT License (MIT)
@@ -23745,143 +23845,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ~~~~
 
-### LICENSE 74: themes/ignite-shop/webapp/ignite/bower_components/jquery/external/sizzle/LICENSE.txt
-
-~~~~
-Copyright jQuery Foundation and other contributors, https://jquery.org/
-
-This software consists of voluntary contributions made by many
-individuals. For exact contribution history, see the revision history
-available at https://github.com/jquery/sizzle
-
-The following license applies to all parts of this software except as
-documented below:
-
-====
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-====
-
-All files located in the node_modules and external directories are
-externally maintained libraries used by this software which have their
-own licenses; we recommend you read them, as their terms may differ from
-the terms above.
-~~~~
-
-### LICENSE 75: themes/ignite-shop/webapp/ignite/bower_components/jquery/LICENSE.txt
-
-~~~~
-Copyright JS Foundation and other contributors, https://js.foundation/
-
-This software consists of voluntary contributions made by many
-individuals. For exact contribution history, see the revision history
-available at https://github.com/jquery/jquery
-
-The following license applies to all parts of this software except as
-documented below:
-
-====
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-====
-
-All files located in the node_modules and external directories are
-externally maintained libraries used by this software which have their
-own licenses; we recommend you read them, as their terms may differ from
-the terms above.
-~~~~
-
-### LICENSE 76: themes/ignite-shop/webapp/ignite/bower_components/moment/LICENSE
-
-~~~~
-Copyright (c) JS Foundation and other contributors
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-~~~~
-
-### LICENSE 77: themes/ignite-shop/webapp/ignite/bower_components/momentjs/LICENSE
-
-~~~~
-Copyright (c) 2011-2015 Tim Wood, Iskren Chernev, Moment.js contributors
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-~~~~
-
-### LICENSE 78: themes/ignite-shop/webapp/ignite/bower_components/pace/LICENSE
+### LICENSE 76: themes/ignite-shop/webapp/ignite/bower_components/pace/LICENSE
 
 ~~~~
 Copyright (c) 2013 HubSpot, Inc.
@@ -23893,7 +23857,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ~~~~
 
-### LICENSE 79: themes/ignite-shop/webapp/ignite/bower_components/simple-line-icons/LICENSE.md
+### LICENSE 77: themes/ignite-shop/webapp/ignite/bower_components/simple-line-icons/LICENSE.md
 
 ~~~~
 The MIT License (MIT)
@@ -23906,7 +23870,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ~~~~
 
-### LICENSE 80: themes/ignite-shop/webapp/ignite/bower_components/tether/LICENSE
+### LICENSE 78: themes/ignite-shop/webapp/ignite/bower_components/tether/LICENSE
 
 ~~~~
 Copyright (c) 2014-2017 HubSpot, Inc.
@@ -23918,7 +23882,7 @@ The above copyright notice and this permission notice shall be included in all c
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ~~~~
 
-### LICENSE 81: threetenbp-1.3.6.jar
+### LICENSE 79: threetenbp-1.3.6.jar
 
 ~~~~
 /*
@@ -23954,7 +23918,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
  */
 ~~~~
 
-### LICENSE 82: thumbnailator-0.4.20.jar
+### LICENSE 80: thumbnailator-0.4.20.jar
 
 ~~~~
 MIT License
@@ -23980,7 +23944,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ~~~~
 
-### LICENSE 83: tika-core-2.9.4.jar
+### LICENSE 81: tika-core-2.9.4.jar
 
 ~~~~
 Apache License
@@ -24244,7 +24208,7 @@ Council.
   16. This Specifications License Agreement is governed by the law of United Kingdom, as such law is applied to contracts made and fully performed in the United Kingdom. Any disputes arising from or relating to this Specifications License Agreement will be resolved in the courts of the United Kingdom. You consent to the jurisdiction of such courts over you and covenant not to assert before such courts any objection to proceeding in such forums.
 ~~~~
 
-### LICENSE 84: tomcat-servlet-api-9.0.84.jar
+### LICENSE 82: tomcat-servlet-api-9.0.84.jar
 
 ~~~~
 Apache License
@@ -24811,7 +24775,7 @@ COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
    California, with venue lying in Santa Clara County, California.
 ~~~~
 
-### LICENSE 85: urlrewritefilter-4.0.4.jar
+### LICENSE 83: urlrewritefilter-4.0.4.jar
 
 ~~~~
 Copyright (c) 2005-2012, Paul Tuckey
@@ -24853,7 +24817,7 @@ permissive licenses.
 ====================================================================
 ~~~~
 
-### LICENSE 86: woodstox-core-6.2.8.jar
+### LICENSE 84: woodstox-core-6.2.8.jar
 
 ~~~~
 This copy of Jackson JSON processor databind module is licensed under the
@@ -24866,7 +24830,7 @@ You may obtain a copy of the License at:
 http://www.apache.org/licenses/LICENSE-2.0
 ~~~~
 
-### LICENSE 87: woodstox-core-asl-4.4.1.jar
+### LICENSE 85: woodstox-core-asl-4.4.1.jar
 
 ~~~~
 This copy of Woodstox XML processor is licensed under the
@@ -24884,7 +24848,7 @@ that file should be located next to this file: in source distribution
 the location should be "release-notes/asl"; and in jar "META-INF/"
 ~~~~
 
-### LICENSE 88: xmlbeans-5.2.0.jar
+### LICENSE 86: xmlbeans-5.2.0.jar
 
 ~~~~
 Apache License

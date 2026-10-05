@@ -1,5 +1,5 @@
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: http://codemirror.net/LICENSE
+// Distributed under an MIT license: https://codemirror.net/5/LICENSE
 
 /*
 Gherkin mode - http://www.cukes.info/
@@ -153,6 +153,22 @@ CodeMirror.defineMode("gherkin", function () {
         state.allowPlaceholders = true;
         state.allowMultilineArgument = true;
         state.inKeywordLine = true;
+        return "keyword";
+
+        // RULE
+      } else if (state.allowScenario && stream.match(/(規則|ルール|قانون|قواعد|חוק|قاعدة|Правило|Правила|Reegel|Regel|Règle|Regola|Regla|Regulă|Regul|Regula|Regel|Regel|Regula|Правило|Правила|Regel|Regola|Regul|Reeglid|Rule):/)) {
+        state.allowPlaceholders = false;
+        state.allowSteps = true;
+        state.allowBackground = false;
+        state.allowMultilineArgument = true;
+        return "keyword";
+
+        // EXAMPLE
+      } else if (state.allowScenario && stream.match(/(例子|例|サンプル|예|דוגמה|مثال|Үрнәк|Пример|Παράδειγμα|Exemplo|Exemple|Beispiel|Ejemplo|Example|Esempio|Örnek|Példa|Pavyzdys|Paraugs|Voorbeeld|Příklad|Príklad|Exemplu|Esempi):/)) {
+        state.allowPlaceholders = false;
+        state.allowSteps = true;
+        state.allowBackground = false;
+        state.allowMultilineArgument = true;
         return "keyword";
 
       // INLINE STRING

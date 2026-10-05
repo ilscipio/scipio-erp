@@ -39,30 +39,17 @@ the Apache License, version 2.0, as stated above.
 jQuery.noConflict();-->
 jQuery(document).ready(function(){
     var angleHold = 0;
-    if((jQuery.browser.mozilla) || (jQuery.browser.msie)) {
-        var rot = jQuery('.cropbox img').rotate(angleHold);
-        jQuery('#rotate-left').click(function(){
-            angleHold = angleHold - 45;
-            rot[0].rotate(angleHold);
-            jQuery('#ImageRotating_angle').val(angleHold);
-        });
-        jQuery('#rotate-right').click(function(){
-            angleHold = angleHold + 45;
-            rot[0].rotate(angleHold);
-            jQuery('#ImageRotating_angle').val(angleHold);
-        });
-    } else {
-        var rot = jQuery('.cropbox img');
-            jQuery('#rotate-left').click(function(){
-            angleHold = angleHold - 45;
-            rot.rotate(angleHold);
-            jQuery('#ImageRotating_angle').val(angleHold);
-        });
-        jQuery('#rotate-right').click(function(){
-            angleHold = angleHold + 45;
-            rot.rotate(angleHold);
-            jQuery('#ImageRotating_angle').val(angleHold);
-        });
-    }
+    <#-- SCIPIO: 4.0.0: jQuery 3 has no jQuery.browser; the old Mozilla/IE branch is gone -->
+    var rot = jQuery('.cropbox img');
+    jQuery('#rotate-left').click(function(){
+        angleHold = angleHold - 45;
+        rot.rotate(angleHold);
+        jQuery('#ImageRotating_angle').val(angleHold);
+    });
+    jQuery('#rotate-right').click(function(){
+        angleHold = angleHold + 45;
+        rot.rotate(angleHold);
+        jQuery('#ImageRotating_angle').val(angleHold);
+    });
 });
 </@script>

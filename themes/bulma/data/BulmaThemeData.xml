@@ -17,7 +17,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 <entity-engine-xml>
     <VisualTheme visualThemeId="BULMATHEME" visualThemeSetId="BACKOFFICE" description="Bulma Theme"/>
-    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="BulmaThemeData.xml" sequenceId="01"/>
+    <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_THEME_DATA_RES" resourceValue="component://bulma-theme/data/BulmaThemeData.xml" sequenceId="01"/>
     
     <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_NAME" resourceValue="BULMATHEME" sequenceId="01"/>
     <VisualThemeResource visualThemeId="BULMATHEME" resourceTypeEnumId="VT_SCREENSHOT" resourceValue="/bulmatheme/screenshot.jpg" sequenceId="01"/>

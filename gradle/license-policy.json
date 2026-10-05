@@ -144,6 +144,7 @@
     { "path": "^applications/solr/webapp/libs/jquery-(1[.]7[.]2|2[.]1[.]3)[.]min[.]js$", "licenses": ["MIT"], "source": "jQuery (the file name gives the version): MIT" },
     { "path": "^applications/solr/webapp/libs/jquery-ui[.]min[.]js$", "licenses": ["MIT"], "source": "jQuery UI: MIT" },
     { "path": "^framework/images/webapp/images/jsgantt[.](js|css)$", "licenses": ["MIT"], "source": "jsGanttImproved 1.8.0 (github.com/jsGanttImproved/jsgantt-improved): MIT; lane A confirms the text in L-05" },
+    { "path": "^framework/common/webapp/common/dist/libs/@hotwired/turbo$", "licenses": ["MIT"], "source": "@hotwired/turbo 8.0.23 (package.json of the npm package): MIT; the dist header names no license" },
     { "path": "^framework/images/webapp/images/imagemanagement/sizzle[.]min[.]js$", "licenses": ["MIT"], "source": "Sizzle (jQuery Foundation): MIT" },
     { "path": "^themes/aurora/webapp/aurora/css/vendor/flatpickr[.]min[.]css$", "licenses": ["MIT"], "source": "flatpickr: MIT (the same theme ships flatpickr.min.js)" },
     { "path": "^themes/base/webapp/base/bower_components/rainbow$", "licenses": ["Apache-2.0"], "source": "Rainbow (Craig Campbell): Apache-2.0" },

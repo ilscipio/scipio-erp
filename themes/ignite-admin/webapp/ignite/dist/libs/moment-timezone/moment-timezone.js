@@ -1,5 +1,5 @@
 //! moment-timezone.js
-//! version : 0.5.25
+//! version : 0.5.48
 //! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -18,15 +18,21 @@
 }(this, function (moment) {
 	"use strict";
 
+	// Resolves es6 module loading issue
+	if (moment.version === undefined && moment.default) {
+		moment = moment.default;
+	}
+
 	// Do not load moment-timezone a second time.
 	// if (moment.tz !== undefined) {
 	// 	logError('Moment Timezone ' + moment.tz.version + ' was already loaded ' + (moment.tz.dataVersion ? 'with data from ' : 'without any data') + moment.tz.dataVersion);
 	// 	return moment;
 	// }
 
-	var VERSION = "0.5.25",
+	var VERSION = "0.5.48",
 		zones = {},
 		links = {},
+		countries = {},
 		names = {},
 		guesses = {},
 		cachedGuess;
@@ -144,6 +150,30 @@
 		}
 	}
 
+	function closest (num, arr) {
+		var len = arr.length;
+		if (num < arr[0]) {
+			return 0;
+		} else if (len > 1 && arr[len - 1] === Infinity && num >= arr[len - 2]) {
+			return len - 1;
+		} else if (num >= arr[len - 1]) {
+			return -1;
+		}
+
+		var mid;
+		var lo = 0;
+		var hi = len - 1;
+		while (hi - lo > 1) {
+			mid = Math.floor((lo + hi) / 2);
+			if (arr[mid] <= num) {
+				lo = mid;
+			} else {
+				hi = mid;
+			}
+		}
+		return hi;
+	}
+
 	Zone.prototype = {
 		_set : function (unpacked) {
 			this.name       = unpacked.name;
@@ -158,11 +188,17 @@
 				untils = this.untils,
 				i;
 
-			for (i = 0; i < untils.length; i++) {
-				if (target < untils[i]) {
-					return i;
-				}
+			i = closest(target, untils);
+			if (i >= 0) {
+				return i;
 			}
+		},
+
+		countries : function () {
+			var zone_name = this.name;
+			return Object.keys(countries).filter(function (country_code) {
+				return countries[country_code].zones.indexOf(zone_name) !== -1;
+			});
 		},
 
 		parse : function (timestamp) {
@@ -204,6 +240,15 @@
 			return this.offsets[this._index(mom)];
 		}
 	};
+
+	/************************************
+		Country object
+	************************************/
+
+	function Country (country_name, zone_names) {
+		this.name = country_name;
+		this.zones = zone_names;
+	}
 
 	/************************************
 		Current Timezone
@@ -264,17 +309,21 @@
 	function userOffsets() {
 		var startYear = new Date().getFullYear() - 2,
 			last = new OffsetAt(new Date(startYear, 0, 1)),
+			lastOffset = last.offset,
 			offsets = [last],
-			change, next, i;
+			change, next, nextOffset, i;
 
 		for (i = 1; i < 48; i++) {
-			next = new OffsetAt(new Date(startYear, i, 1));
-			if (next.offset !== last.offset) {
+			nextOffset = new Date(startYear, i, 1).getTimezoneOffset();
+			if (nextOffset !== lastOffset) {
+				// Create OffsetAt here to avoid unnecessary abbr parsing before checking offsets
+				next = new OffsetAt(new Date(startYear, i, 1));
 				change = findChange(last, next);
 				offsets.push(change);
 				offsets.push(new OffsetAt(new Date(change.at + 6e4)));
+				last = next;
+				lastOffset = nextOffset;
 			}
-			last = next;
 		}
 
 		for (i = 0; i < 4; i++) {
@@ -292,7 +341,10 @@
 		if (a.abbrScore !== b.abbrScore) {
 			return a.abbrScore - b.abbrScore;
 		}
-		return b.zone.population - a.zone.population;
+		if (a.zone.population !== b.zone.population) {
+			return b.zone.population - a.zone.population;
+		}
+		return b.zone.name.localeCompare(a.zone.name);
 	}
 
 	function addToGuesses (name, offsets) {
@@ -309,15 +361,21 @@
 		var offsetsLength = offsets.length,
 			filteredGuesses = {},
 			out = [],
-			i, j, guessesOffset;
+			checkedOffsets = {},
+			i, j, offset, guessesOffset;
 
 		for (i = 0; i < offsetsLength; i++) {
-			guessesOffset = guesses[offsets[i].offset] || {};
+			offset = offsets[i].offset;
+			if (checkedOffsets.hasOwnProperty(offset)) {
+				continue;
+			}
+			guessesOffset = guesses[offset] || {};
 			for (j in guessesOffset) {
 				if (guessesOffset.hasOwnProperty(j)) {
 					filteredGuesses[j] = true;
 				}
 			}
+			checkedOffsets[offset] = true;
 		}
 
 		for (i in filteredGuesses) {
@@ -397,7 +455,7 @@
 	}
 
 	function getZone (name, caller) {
-		
+
 		name = normalizeName(name);
 
 		var zone = zones[name];
@@ -436,6 +494,10 @@
 		return out.sort();
 	}
 
+	function getCountryNames () {
+		return Object.keys(countries);
+	}
+
 	function addLink (aliases) {
 		var i, alias, normal0, normal1;
 
@@ -457,9 +519,49 @@
 		}
 	}
 
+	function addCountries (data) {
+		var i, country_code, country_zones, split;
+		if (!data || !data.length) return;
+		for (i = 0; i < data.length; i++) {
+			split = data[i].split('|');
+			country_code = split[0].toUpperCase();
+			country_zones = split[1].split(' ');
+			countries[country_code] = new Country(
+				country_code,
+				country_zones
+			);
+		}
+	}
+
+	function getCountry (name) {
+		name = name.toUpperCase();
+		return countries[name] || null;
+	}
+
+	function zonesForCountry(country, with_offset) {
+		country = getCountry(country);
+
+		if (!country) return null;
+
+		var zones = country.zones.sort();
+
+		if (with_offset) {
+			return zones.map(function (zone_name) {
+				var zone = getZone(zone_name);
+				return {
+					name: zone_name,
+					offset: zone.utcOffset(new Date())
+				};
+			});
+		}
+
+		return zones;
+	}
+
 	function loadData (data) {
 		addZone(data.zones);
 		addLink(data.links);
+		addCountries(data.countries);
 		tz.dataVersion = data.version;
 	}
 
@@ -489,10 +591,10 @@
 	function tz (input) {
 		var args = Array.prototype.slice.call(arguments, 0, -1),
 			name = arguments[arguments.length - 1],
-			zone = getZone(name),
-			out  = moment.utc.apply(null, args);
+			out  = moment.utc.apply(null, args),
+			zone;
 
-		if (zone && !moment.isMoment(input) && needsOffset(out)) {
+		if (!moment.isMoment(input) && needsOffset(out) && (zone = getZone(name))) {
 			out.add(zone.parse(out), 'minutes');
 		}
 
@@ -506,6 +608,7 @@
 	tz._zones       = zones;
 	tz._links       = links;
 	tz._names       = names;
+	tz._countries	= countries;
 	tz.add          = addZone;
 	tz.link         = addLink;
 	tz.load         = loadData;
@@ -519,6 +622,8 @@
 	tz.needsOffset  = needsOffset;
 	tz.moveInvalidForward   = true;
 	tz.moveAmbiguousForward = false;
+	tz.countries    = getCountryNames;
+	tz.zonesForCountry = zonesForCountry;
 
 	/************************************
 		Interface with Moment.js
@@ -535,7 +640,7 @@
 			offset;
 
 		if (mom._z === undefined) {
-			if (zone && needsOffset(mom) && !mom._isUTC) {
+			if (zone && needsOffset(mom) && !mom._isUTC && mom.isValid()) {
 				mom._d = moment.utc(mom._a)._d;
 				mom.utc().add(zone.parse(mom), 'minutes');
 			}
@@ -598,7 +703,7 @@
 	fn.utc       = resetZoneWrap(fn.utc);
 	fn.local     = resetZoneWrap(fn.local);
 	fn.utcOffset = resetZoneWrap2(fn.utcOffset);
-	
+
 	moment.tz.setDefault = function(name) {
 		if (major < 2 || (major === 2 && minor < 9)) {
 			logError('Moment Timezone setDefault() requires Moment.js >= 2.9.0. You are using Moment.js ' + moment.version + '.');

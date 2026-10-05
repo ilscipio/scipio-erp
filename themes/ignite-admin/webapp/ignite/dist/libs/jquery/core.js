@@ -4,10 +4,9 @@
 
 define( [
 	"./var/arr",
-	"./var/document",
 	"./var/getProto",
 	"./var/slice",
-	"./var/concat",
+	"./var/flat",
 	"./var/push",
 	"./var/indexOf",
 	"./var/class2type",
@@ -20,14 +19,15 @@ define( [
 	"./var/isWindow",
 	"./core/DOMEval",
 	"./core/toType"
-], function( arr, document, getProto, slice, concat, push, indexOf,
+], function( arr, getProto, slice, flat, push, indexOf,
 	class2type, toString, hasOwn, fnToString, ObjectFunctionString,
 	support, isFunction, isWindow, DOMEval, toType ) {
 
 "use strict";
 
-var
-	version = "3.4.1",
+var version = "3.7.1",
+
+	rhtmlSuffix = /HTML$/i,
 
 	// Define a local copy of jQuery
 	jQuery = function( selector, context ) {
@@ -35,11 +35,7 @@ var
 		// The jQuery object is actually just the init constructor 'enhanced'
 		// Need init if jQuery is called (just allow error to be thrown if not included)
 		return new jQuery.fn.init( selector, context );
-	},
-
-	// Support: Android <=4.0 only
-	// Make sure we trim BOM and NBSP
-	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+	};
 
 jQuery.fn = jQuery.prototype = {
 
@@ -103,6 +99,18 @@ jQuery.fn = jQuery.prototype = {
 
 	last: function() {
 		return this.eq( -1 );
+	},
+
+	even: function() {
+		return this.pushStack( jQuery.grep( this, function( _elem, i ) {
+			return ( i + 1 ) % 2;
+		} ) );
+	},
+
+	odd: function() {
+		return this.pushStack( jQuery.grep( this, function( _elem, i ) {
+			return i % 2;
+		} ) );
 	},
 
 	eq: function( i ) {
@@ -238,9 +246,10 @@ jQuery.extend( {
 		return true;
 	},
 
-	// Evaluates a script in a global context
-	globalEval: function( code, options ) {
-		DOMEval( code, { nonce: options && options.nonce } );
+	// Evaluates a script in a provided context; falls back to the global one
+	// if not specified.
+	globalEval: function( code, options, doc ) {
+		DOMEval( code, { nonce: options && options.nonce }, doc );
 	},
 
 	each: function( obj, callback ) {
@@ -264,11 +273,36 @@ jQuery.extend( {
 		return obj;
 	},
 
-	// Support: Android <=4.0 only
-	trim: function( text ) {
-		return text == null ?
-			"" :
-			( text + "" ).replace( rtrim, "" );
+
+	// Retrieve the text value of an array of DOM nodes
+	text: function( elem ) {
+		var node,
+			ret = "",
+			i = 0,
+			nodeType = elem.nodeType;
+
+		if ( !nodeType ) {
+
+			// If no nodeType, this is expected to be an array
+			while ( ( node = elem[ i++ ] ) ) {
+
+				// Do not traverse comment nodes
+				ret += jQuery.text( node );
+			}
+		}
+		if ( nodeType === 1 || nodeType === 11 ) {
+			return elem.textContent;
+		}
+		if ( nodeType === 9 ) {
+			return elem.documentElement.textContent;
+		}
+		if ( nodeType === 3 || nodeType === 4 ) {
+			return elem.nodeValue;
+		}
+
+		// Do not include comment or processing instruction nodes
+
+		return ret;
 	},
 
 	// results is for internal usage only
@@ -279,7 +313,7 @@ jQuery.extend( {
 			if ( isArrayLike( Object( arr ) ) ) {
 				jQuery.merge( ret,
 					typeof arr === "string" ?
-					[ arr ] : arr
+						[ arr ] : arr
 				);
 			} else {
 				push.call( ret, arr );
@@ -291,6 +325,15 @@ jQuery.extend( {
 
 	inArray: function( elem, arr, i ) {
 		return arr == null ? -1 : indexOf.call( arr, elem, i );
+	},
+
+	isXMLDoc: function( elem ) {
+		var namespace = elem && elem.namespaceURI,
+			docElem = elem && ( elem.ownerDocument || elem ).documentElement;
+
+		// Assume HTML when documentElement doesn't yet exist, such as inside
+		// document fragments.
+		return !rhtmlSuffix.test( namespace || docElem && docElem.nodeName || "HTML" );
 	},
 
 	// Support: Android <=4.0 only, PhantomJS 1 only
@@ -357,7 +400,7 @@ jQuery.extend( {
 		}
 
 		// Flatten any nested arrays
-		return concat.apply( [], ret );
+		return flat( ret );
 	},
 
 	// A global GUID counter for objects
@@ -374,9 +417,9 @@ if ( typeof Symbol === "function" ) {
 
 // Populate the class2type map
 jQuery.each( "Boolean Number String Function Array Date RegExp Object Error Symbol".split( " " ),
-function( i, name ) {
-	class2type[ "[object " + name + "]" ] = name.toLowerCase();
-} );
+	function( _i, name ) {
+		class2type[ "[object " + name + "]" ] = name.toLowerCase();
+	} );
 
 function isArrayLike( obj ) {
 

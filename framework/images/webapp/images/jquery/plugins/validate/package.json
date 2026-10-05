@@ -5,7 +5,7 @@
   "version": "1.10.0",
   "homepage": "https://github.com/jzaefferer/jquery-validation",
   "author": {
-    "name": "Jörn Zaefferer",
+    "name": "J\u00f6rn Zaefferer",
     "email": "joern.zaefferer@gmail.com",
     "url": "http://bassistance.de"
   },
@@ -27,9 +27,5 @@
     }
   ],
   "dependencies": {},
-  "devDependencies": {
-    "grunt": "0.3.x",
-    "zipstream": "0.2.x"
-  },
   "keywords": []
 }

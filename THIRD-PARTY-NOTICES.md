@@ -5,7 +5,7 @@ Source of the table: the report of `gradlew checkLicensePolicy` (jk1 data and `g
 Source of the texts: the NOTICE and LICENSE files in the runtime jars, in the tracked jars and in the tracked web libraries.
 Each text is once in this file. The Apache License 2.0 text of this product is in `LICENSE`, part B.
 
-## 1. Entries (562)
+## 1. Entries (555)
 
 | Scope | Entry | Version | License |
 |---|---|---|---|
@@ -368,11 +368,6 @@ Each text is once in this file. The Apache License 2.0 text of this product is i
 | web | applications/party/webapp/partymgr/static/partymgr.css |  | Apache-2.0 |
 | web | applications/party/webapp/partymgr/static/partymgr.js |  | Apache-2.0 |
 | web | applications/party/webapp/partymgr/static/PartyProfileContent.js |  | Apache-2.0 |
-| web | applications/shop/webapp/shop/images/blog.css |  | Apache-2.0 |
-| web | applications/shop/webapp/shop/images/checkoutProcess.js |  | Apache-2.0 |
-| web | applications/shop/webapp/shop/images/productAdditionalView.js |  | Apache-2.0 |
-| web | applications/shop/webapp/shop/images/profile.js |  | Apache-2.0 |
-| web | applications/shop/webapp/shop/images/quickAnonCustSettings.js |  | Apache-2.0 |
 | web | applications/solr/webapp/css/angular/analysis.css |  | Apache-2.0 |
 | web | applications/solr/webapp/css/angular/chosen.css |  | MIT |
 | web | applications/solr/webapp/css/angular/cloud.css |  | Apache-2.0 |
@@ -471,7 +466,6 @@ Each text is once in this file. The Apache License 2.0 text of this product is i
 | web | framework/images/webapp/images/reset.css |  | Apache-2.0 |
 | web | framework/images/webapp/images/selectall.js |  | Apache-2.0 |
 | web | framework/images/webapp/images/selectMultipleRelatedValues.js |  | Apache-2.0 |
-| web | framework/webtools/webapp/webtools/images/ExamplePushNotifications.js |  | Apache-2.0 |
 | web | themes/aurora/webapp/aurora/css/vendor/flatpickr.min.css |  | MIT |
 | web | themes/aurora/webapp/aurora/js/vendor/Chart.min.js |  | MIT |
 | web | themes/aurora/webapp/aurora/js/vendor/flatpickr.min.js |  | MIT |
@@ -500,7 +494,6 @@ Each text is once in this file. The Apache License 2.0 text of this product is i
 | web | themes/base/webapp/base/bower_components/Snap.svg |  | Apache-2.0 |
 | web | themes/base/webapp/base/bower_components/trumbowyg |  | MIT |
 | web | themes/base/webapp/base/bower_components/what-input |  | MIT |
-| web | themes/base/webapp/base/js/app.js |  | Apache-2.0 |
 | web | themes/base/webapp/base/js/freetile.min.js |  | MIT |
 | web | themes/base/webapp/base/stylesheets/foundation-icons/foundation-icons.css |  | MIT |
 | web | themes/bulma/webapp/bulmatheme/css/main.css |  | MIT |
@@ -12982,6 +12975,7 @@ PIXABAY SHALL NOT BE LIABLE TO YOU OR TO ANY OTHER PERSON OR ENTITY FOR ANY GENE
     { "path": "^applications/solr/webapp/libs/jquery-(1[.]7[.]2|2[.]1[.]3)[.]min[.]js$", "licenses": ["MIT"], "source": "jQuery (the file name gives the version): MIT" },
     { "path": "^applications/solr/webapp/libs/jquery-ui[.]min[.]js$", "licenses": ["MIT"], "source": "jQuery UI: MIT" },
     { "path": "^framework/images/webapp/images/jsgantt[.](js|css)$", "licenses": ["MIT"], "source": "jsGanttImproved 1.8.0 (github.com/jsGanttImproved/jsgantt-improved): MIT; lane A confirms the text in L-05" },
+    { "path": "^framework/common/webapp/common/dist/libs/@hotwired/turbo$", "licenses": ["MIT"], "source": "@hotwired/turbo 8.0.23 (package.json of the npm package): MIT; the dist header names no license" },
     { "path": "^framework/images/webapp/images/imagemanagement/sizzle[.]min[.]js$", "licenses": ["MIT"], "source": "Sizzle (jQuery Foundation): MIT" },
     { "path": "^themes/aurora/webapp/aurora/css/vendor/flatpickr[.]min[.]css$", "licenses": ["MIT"], "source": "flatpickr: MIT (the same theme ships flatpickr.min.js)" },
     { "path": "^themes/base/webapp/base/bower_components/rainbow$", "licenses": ["Apache-2.0"], "source": "Rainbow (Craig Campbell): Apache-2.0" },

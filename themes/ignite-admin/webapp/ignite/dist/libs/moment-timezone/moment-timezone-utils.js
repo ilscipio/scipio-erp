@@ -1,5 +1,5 @@
 //! moment-timezone-utils.js
-//! version : 0.5.25
+//! version : 0.5.48
 //! Copyright (c) JS Foundation and other contributors
 //! license : MIT
 //! github.com/moment/moment-timezone
@@ -8,9 +8,9 @@
 	"use strict";
 
 	/*global define*/
-    if (typeof module === 'object' && module.exports) {
-        module.exports = factory(require('./'));     // Node
-    } else if (typeof define === 'function' && define.amd) {
+	if (typeof module === 'object' && module.exports) {
+		module.exports = factory(require('./'));     // Node
+	} else if (typeof define === 'function' && define.amd) {
 		define(['moment'], factory);                 // AMD
 	} else {
 		factory(root.moment);                        // Browser
@@ -122,11 +122,18 @@
 			return '';
 		}
 		if (number < 1000) {
-			return '|' + number;
+			return number;
 		}
 		var exponent = String(number | 0).length - 2;
 		var precision = Math.round(number / Math.pow(10, exponent));
-		return '|' + precision + 'e' + exponent;
+		return precision + 'e' + exponent;
+	}
+
+	function packCountries (countries) {
+		if (!countries) {
+			return '';
+		}
+		return countries.join(' ');
 	}
 
 	function validatePackData (source) {
@@ -145,9 +152,17 @@
 	function pack (source) {
 		validatePackData(source);
 		return [
+			source.name, // 0 - timezone name
+			packAbbrsAndOffsets(source), // 1 - abbrs, 2 - offsets, 3 - indices
+			packUntils(source.untils), // 4 - untils
+			packPopulation(source.population) // 5 - population
+		].join('|');
+	}
+
+	function packCountry (source) {
+		return [
 			source.name,
-			packAbbrsAndOffsets(source),
-			packUntils(source.untils) + packPopulation(source.population)
+			source.zones.join(' '),
 		].join('|');
 	}
 
@@ -186,8 +201,8 @@
 					if (a.population > b.population) {
 						group.unshift(a);
 					} else if (a.population === b.population && groupLeaders && groupLeaders[a.name]) {
-                        group.unshift(a);
-                    } else {
+						group.unshift(a);
+					} else {
 						group.push(a);
 					}
 					foundGroup = true;
@@ -219,9 +234,9 @@
 		findAndCreateLinks(source.zones, zones, links, groupLeaders);
 
 		return {
-			version : source.version,
-			zones   : zones,
-			links   : links.sort()
+			version 	: source.version,
+			zones   	: zones,
+			links   	: links.sort()
 		};
 	}
 
@@ -273,7 +288,8 @@
 			abbrs      : slice.apply(source.abbrs, indices),
 			untils     : untils,
 			offsets    : slice.apply(source.offsets, indices),
-			population : source.population
+			population : source.population,
+			countries  : source.countries
 		};
 	}
 
@@ -301,6 +317,10 @@
 			output.zones[i] = pack(output.zones[i]);
 		}
 
+		output.countries = input.countries ? input.countries.map(function (unpacked) {
+			return packCountry(unpacked);
+		}) : [];
+
 		return output;
 	}
 
@@ -313,6 +333,7 @@
 	moment.tz.createLinks    = createLinks;
 	moment.tz.filterYears    = filterYears;
 	moment.tz.filterLinkPack = filterLinkPack;
+	moment.tz.packCountry	 = packCountry;
 
 	return moment;
 }));

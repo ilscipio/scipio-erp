@@ -1,3 +1,7 @@
+NOTE (Scipio 4.0): the npm/Gulp build files (package.json, package-lock.json, gulpfile.js) are removed.
+The toolchain had known security problems and does not install on a current Node.js. The compiled CSS and
+JavaScript in this folder are final. To change the SCSS, take the build files from branch 3.x.
+
 -----------------
 Setup
 -----------------

@@ -18,6 +18,9 @@
  * Requires turbo.js
  */
 
+/* Turbo 8 prefetches a link on hover. A GET link in the backend can run an action, so prefetch is off. */
+document.addEventListener("turbo:before-prefetch", function(event) { event.preventDefault(); });
+
 /** Defines <turbo-stream-connection/> element */
 class TurboStreamConnection extends HTMLElement {
     get src() {

@@ -76,6 +76,15 @@ public final class Start {
         }
     }
 
+    private static boolean isClassPresent(String className) { // SCIPIO
+        try {
+            Class.forName(className, false, Start.class.getClassLoader());
+            return true;
+        } catch (ClassNotFoundException | LinkageError e) {
+            return false;
+        }
+    }
+
     /**
      * Returns the <code>Start</code> instance.
      */
@@ -106,6 +115,12 @@ public final class Start {
         // call - Groovy's first compile in ScriptUtil, for one - throws "Circular loading of installed providers
         // detected", far from the cause. Here the real error stops the start.
         java.nio.file.spi.FileSystemProvider.installedProviders();
+        // SCIPIO: 4.0.0: Saxon-HE (from the e-invoice library) also registers a JAXP TransformerFactory service, and the
+        // jar order would decide which one TransformerFactory.newInstance() returns. Keep Xalan as the default, as before;
+        // the e-invoice code creates its Saxon factory explicitly.
+        if (System.getProperty("javax.xml.transform.TransformerFactory") == null && isClassPresent("org.apache.xalan.processor.TransformerFactoryImpl")) {
+            System.setProperty("javax.xml.transform.TransformerFactory", "org.apache.xalan.processor.TransformerFactoryImpl");
+        }
         Command command = null;
         List<String> loaderArgs = new ArrayList<String>(args.length);
         boolean shutdownWait = false; // SCIPIO

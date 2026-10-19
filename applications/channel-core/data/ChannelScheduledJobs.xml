@@ -25,4 +25,6 @@ SPDX-License-Identifier: AGPL-3.0-only
     <RecurrenceInfo recurrenceInfoId="CHNL_DAILY_OB" startDateTime="2026-01-01 03:50:00.000" recurrenceRuleId="CHNL_DAILY" recurrenceCount="0"/>
     <JobSandbox jobId="CHNL_OUTBOX_PURGE" jobName="Channel outbox purge" runTime="2026-01-01 03:50:00.000" serviceName="channelPurgeOutbox"
         poolId="pool" runAsUser="system" recurrenceInfoId="CHNL_DAILY_OB" maxRecurrenceCount="-1" statusId="SERVICE_PENDING"/>
+    <!-- SCIPIO: 4.0.0: R4-15 (J5-01): the hourly job channelPauseSweep has no seed row: the first pause of a store registers it
+         (ECA channelEnsurePauseJobs), so stores that exist already get it too -->
 </entity-engine-xml>

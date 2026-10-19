@@ -236,7 +236,9 @@ val runtimeLibs: Configuration by configurations.creating {
     // ("signer information does not match"), which took the sshd file system provider and Groovy down with it.
     exclude(group = "bouncycastle")
     for (m in listOf("bcprov-jdk14", "bcmail-jdk14", "bctsp-jdk14", "bcprov-jdk15on", "bcpkix-jdk15on", "bcmail-jdk15on",
-            "bcutil-jdk15on", "bcprov-jdk15to18", "bcpkix-jdk15to18", "bcutil-jdk15to18")) {
+            "bcutil-jdk15on", "bcprov-jdk15to18", "bcpkix-jdk15to18", "bcutil-jdk15to18",
+            // Tika 3: the Jakarta Mail build of bcmail, the same org.bouncycastle.mail packages as bcmail-jdk18on
+            "bcjmail-jdk18on")) {
         exclude(group = "org.bouncycastle", module = m)
     }
     // Both carry their own org.apache.commons.logging.LogFactory next to commons-logging, and the jar order in a
@@ -365,7 +367,7 @@ tasks.register<JavaExec>("runTest") {
     val testArgs = mutableListOf("test")
     project.findProperty("testComponent")?.let { testArgs.add("-component=$it") }
     project.findProperty("testCase")?.let { testArgs.add("-case=$it") }
-    project.findProperty("testSuite")?.let { testArgs.add("-suite=$it") }
+    project.findProperty("testSuite")?.let { testArgs.add("-suitename=$it") } // TestRunContainer reads "suitename"
     args = testArgs
 
     dependsOn(javaSubprojects.map { it.tasks.named("build") })

@@ -33,6 +33,9 @@ import javax.servlet.ServletRequest;
  */
 public class RequestBodyMapHandlerFactory {
     private static final Debug.OfbizLogger module = Debug.getOfbizLogger(java.lang.invoke.MethodHandles.lookup().lookupClass());
+    /** SCIPIO: 4.0.0: Request attribute with the raw body text that a body map handler read (the stream is then consumed). */
+    public static final String REQUEST_BODY_TEXT_ATTR = "scpRequestBodyText";
+
     private final static Map<String, RequestBodyMapHandler> requestBodyMapHandlers = new HashMap<String, RequestBodyMapHandler>();
     static {
         requestBodyMapHandlers.put("application/json", new JSONRequestBodyMapHandler());

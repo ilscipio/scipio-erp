@@ -41,9 +41,12 @@ the Apache License, version 2.0, as stated above.
         <#if billingAddress.address2??>
             <fo:block wrap-option="wrap">${billingAddress.address2}</fo:block>
         </#if>
-        <#if delegator?has_content>
-       		<#assign stateProvinceGeo = delegator.findOne("Geo", {"geoId" : billingAddress.stateProvinceGeoId}, true)>
-       		<#assign stateProvinceName = stateProvinceGeo.get("geoName", "component://common/config/CommonEntityLabels.xml", locale)>
+        <#-- SCIPIO: 4.0.0: an address without a state (most EU addresses) failed the whole PDF -->
+        <#if delegator?has_content && billingAddress.stateProvinceGeoId?has_content>
+       		<#assign stateProvinceGeo = delegator.findOne("Geo", {"geoId" : billingAddress.stateProvinceGeoId}, true)!>
+       		<#if stateProvinceGeo?has_content>
+       		    <#assign stateProvinceName = stateProvinceGeo.get("geoName", "component://common/config/CommonEntityLabels.xml", locale)!>
+       		</#if>
        	</#if>
         <fo:block wrap-option="wrap">${billingAddress.city!} ${stateProvinceName!billingAddress.stateProvinceGeoId!} ${billingAddress.postalCode!}</fo:block>
         <#if billToPartyTaxId?has_content>

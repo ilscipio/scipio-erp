@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<entity-engine-xml>
+    <!-- SCIPIO: 4.0.0: ACP: expire open checkout sessions and old idempotency keys (hourly), deliver order webhooks (every 5 minutes), product feed (daily 04:10) -->
+    <RecurrenceRule recurrenceRuleId="ACP_HOURLY" frequency="HOURLY" intervalNumber="1" countNumber="-1" untilDateTime=""/>
+    <RecurrenceInfo recurrenceInfoId="ACP_HOURLY" startDateTime="2026-01-01 00:20:00.000" recurrenceRuleId="ACP_HOURLY" recurrenceCount="0"/>
+    <JobSandbox jobId="ACP_EXPIRE" jobName="ACP session expiry" runTime="2026-01-01 00:20:00.000" serviceName="acpExpireSessions"
+        poolId="pool" runAsUser="system" recurrenceInfoId="ACP_HOURLY" maxRecurrenceCount="-1" statusId="SERVICE_PENDING"/>
+    <RecurrenceRule recurrenceRuleId="ACP_5MIN" frequency="MINUTELY" intervalNumber="5" countNumber="-1" untilDateTime=""/>
+    <RecurrenceInfo recurrenceInfoId="ACP_5MIN" startDateTime="2026-01-01 00:00:00.000" recurrenceRuleId="ACP_5MIN" recurrenceCount="0"/>
+    <JobSandbox jobId="ACP_WEBHOOKS" jobName="ACP order webhooks" runTime="2026-01-01 00:00:00.000" serviceName="acpDeliverWebhooks"
+        poolId="pool" runAsUser="system" recurrenceInfoId="ACP_5MIN" maxRecurrenceCount="-1" statusId="SERVICE_PENDING"/>
+    <RecurrenceRule recurrenceRuleId="ACP_DAILY" frequency="DAILY" intervalNumber="1" countNumber="-1" untilDateTime=""/>
+    <RecurrenceInfo recurrenceInfoId="ACP_DAILY" startDateTime="2026-01-01 04:10:00.000" recurrenceRuleId="ACP_DAILY" recurrenceCount="0"/>
+    <JobSandbox jobId="ACP_FEED" jobName="ACP product feed" runTime="2026-01-01 04:10:00.000" serviceName="acpGenerateFeeds"
+        poolId="pool" runAsUser="system" recurrenceInfoId="ACP_DAILY" maxRecurrenceCount="-1" statusId="SERVICE_PENDING"/>
+</entity-engine-xml>

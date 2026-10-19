@@ -17,6 +17,12 @@
 package com.ilscipio.scipio.accounting.mcp;
 
 import java.io.IOException;
+import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.base.util.UtilMisc;
+import java.util.Base64;
+import java.nio.charset.StandardCharsets;
+import java.nio.ByteBuffer;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -223,6 +229,78 @@ public final class AccountingMcp {
             return out;
         } catch (GenericEntityException e) {
             throw new McpToolException("Failed to load invoice " + invoiceId + ": " + e.getMessage());
+        }
+    }
+
+    @McpTool(topic = "invoice", name = "einvoice_check", description = "Check if the e-invoice (XRechnung, ZUGFeRD, Peppol) of a sales invoice can be made; lists what is missing.", readOnly = true, order = 21)
+    public static Object checkEInvoice(McpCallContext ctx,
+            @McpParam(name = "invoiceId", required = true) String invoiceId,
+            @McpParam(name = "formatId", description = "Empty = the format of the customer",
+                    enumValues = {"XRECHNUNG_UBL", "XRECHNUNG_CII", "ZUGFERD", "PEPPOL_BIS3", "EN16931_UBL", "EN16931_CII"}, required = false) String formatId) throws McpToolException {
+        Map<String, Object> result = runEInvoiceService(ctx, "checkEInvoice", UtilMisc.toMap("invoiceId", invoiceId, "formatId", formatId));
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("formatId", result.get("formatId"));
+        out.put("valid", result.get("valid"));
+        out.put("errors", result.get("errors"));
+        out.put("warnings", result.get("warnings"));
+        return out;
+    }
+
+    @McpTool(topic = "invoice", name = "einvoice_generate", description = "Make the e-invoice file of a sales invoice; XML as text, the ZUGFeRD PDF as base64.", readOnly = false, destructive = "false", order = 22)
+    public static Object generateEInvoice(McpCallContext ctx,
+            @McpParam(name = "invoiceId", required = true) String invoiceId,
+            @McpParam(name = "formatId", description = "Empty = the format of the customer",
+                    enumValues = {"XRECHNUNG_UBL", "XRECHNUNG_CII", "ZUGFERD", "PEPPOL_BIS3", "EN16931_UBL", "EN16931_CII"}, required = false) String formatId) throws McpToolException {
+        Map<String, Object> result = runEInvoiceService(ctx, "generateEInvoice", UtilMisc.toMap("invoiceId", invoiceId, "formatId", formatId));
+        byte[] content = (byte[]) result.get("content");
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("formatId", result.get("formatId"));
+        out.put("fileName", result.get("fileName"));
+        out.put("contentType", result.get("contentType"));
+        if ("application/pdf".equals(result.get("contentType"))) {
+            out.put("contentBase64", Base64.getEncoder().encodeToString(content));
+        } else {
+            out.put("content", new String(content, StandardCharsets.UTF_8));
+        }
+        out.put("warnings", result.get("warnings"));
+        return out;
+    }
+
+    @McpTool(topic = "invoice", name = "einvoice_import", description = "Record a received e-invoice (CII or UBL XML, or ZUGFeRD PDF as base64) as a purchase invoice in process.", readOnly = false, destructive = "false", requiresConfirmation = true, order = 44)
+    public static Object importEInvoice(McpCallContext ctx,
+            @McpParam(name = "organizationPartyId", description = "The organization that received the invoice", required = true) String organizationPartyId,
+            @McpParam(name = "content", description = "The XML text (CII or UBL)", required = false) String content,
+            @McpParam(name = "contentBase64", description = "A ZUGFeRD / Factur-X PDF or an XML file, base64", required = false) String contentBase64,
+            @McpParam(name = "fileName", required = false) String fileName,
+            @McpParam(name = "supplierPartyId", description = "Empty = find the supplier by VAT ID", required = false) String supplierPartyId) throws McpToolException {
+        byte[] data;
+        if (contentBase64 != null && !contentBase64.isEmpty()) {
+            data = Base64.getDecoder().decode(contentBase64.trim());
+        } else if (content != null && !content.isEmpty()) {
+            data = content.getBytes(StandardCharsets.UTF_8);
+        } else {
+            throw new McpToolException("Provide content or contentBase64");
+        }
+        Map<String, Object> result = runEInvoiceService(ctx, "importEInvoice", UtilMisc.toMap("uploadedFile", ByteBuffer.wrap(data),
+                "_uploadedFile_fileName", fileName, "organizationPartyId", organizationPartyId, "supplierPartyId", supplierPartyId));
+        Map<String, Object> out = new LinkedHashMap<>();
+        out.put("invoiceId", result.get("invoiceId"));
+        out.put("warnings", result.get("warnings"));
+        return out;
+    }
+
+    private static Map<String, Object> runEInvoiceService(McpCallContext ctx, String serviceName, Map<String, Object> params) throws McpToolException {
+        params.values().removeIf(java.util.Objects::isNull);
+        params.put("userLogin", ctx.getUserLogin());
+        params.put("locale", ctx.getLocale());
+        try {
+            Map<String, Object> result = ctx.getDispatcher().runSync(serviceName, params);
+            if (ServiceUtil.isError(result)) {
+                throw new McpToolException(ServiceUtil.getErrorMessage(result));
+            }
+            return result;
+        } catch (GenericServiceException e) {
+            throw new McpToolException(serviceName + " failed: " + e.getMessage());
         }
     }
 

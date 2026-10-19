@@ -49,6 +49,11 @@ dependencies {
     // bank_statement_import MCP tool (CSV parsing)
     implementation(libs.commons.csv)
 
+    // E-invoicing: ZUGFeRD / Factur-X / XRechnung (CII), PDF/A-3, import of CII and UBL
+    implementation(libs.mustang.library)
+    // CII -> UBL 2.1 (XRechnung UBL, Peppol BIS Billing 3.0); also a Mustang dependency
+    implementation(libs.en16931.cii2ubl)
+
     // Testing
     testImplementation(libs.bundles.testing)
 }

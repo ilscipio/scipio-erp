@@ -63,6 +63,10 @@ desktop.ini
 
 # unit test runs of framework components write logs here
 /framework/*/runtime/
+/applications/acp/runtime/
+
+# ACP product feed files (runtime/acp/feed/<productStoreId>/)
+/runtime/acp/
 
 # Pooled runtime: per-store sitemaps (sitemaps/tenants/<tenantId>/)
 /applications/shop/webapp/shop/sitemaps/tenants/

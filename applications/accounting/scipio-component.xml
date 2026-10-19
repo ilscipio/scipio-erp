@@ -43,6 +43,8 @@ SPDX-License-Identifier: AGPL-3.0-only
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoAssetMaintData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoBudgetData.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/AccountingDatevData.xml"/>
+    <entity-resource type="data" reader-name="seed" loader="main" location="data/EInvoiceSeedData.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/EInvoiceDemoData.xml"/>
 
     <!-- General Payment Service Definitions -->
 
@@ -60,6 +62,7 @@ SPDX-License-Identifier: AGPL-3.0-only
     <test-suite loader="main" location="testdef/paymentappltests.xml"/>
     <test-suite loader="main" location="testdef/invoicetests.xml"/>
     <test-suite loader="main" location="testdef/fixedassettests.xml"/>
+    <test-suite loader="main" location="testdef/einvoicetests.xml"/>
 
     <webapp name="accounting"
         title="Accounting"

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<entity-engine-xml>
+    <!-- SCIPIO: 4.0.0: Agentic Commerce Protocol (ACP) -->
+    <SecurityPermission description="Agent checkout through the Agentic Commerce Protocol (ACP)." permissionId="ACP_CHECKOUT"/>
+    <SecurityPermission description="ALL operations of the Agentic Commerce Protocol component." permissionId="ACP_ADMIN"/>
+    <SecurityGroup groupId="SCIPIO_ACP_AGENT" groupName="ACP agent" description="Agents that buy through the Agentic Commerce Protocol (checkout sessions only)."/>
+    <SecurityGroupPermission groupId="SCIPIO_ACP_AGENT" permissionId="ACP_CHECKOUT" fromDate="2026-01-01 00:00:00.0"/>
+    <SecurityGroupPermission groupId="SUPER" permissionId="ACP_ADMIN" fromDate="2026-01-01 00:00:00.0"/>
+    <SecurityGroupPermission groupId="SUPER" permissionId="ACP_CHECKOUT" fromDate="2026-01-01 00:00:00.0"/>
+
+    <PaymentMethodType description="Card through an AI agent (ACP, Stripe Shared Payment Token on the store account)" paymentMethodTypeId="EXT_ACP_STRIPE"/>
+    <Enumeration description="AI agent (Agentic Commerce Protocol)" enumCode="ACP" enumId="ACP_SALES_CHANNEL" sequenceId="40" enumTypeId="ORDER_SALES_CHANNEL"/>
+</entity-engine-xml>

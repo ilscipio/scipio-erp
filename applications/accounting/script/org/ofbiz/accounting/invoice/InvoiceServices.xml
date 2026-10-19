@@ -289,6 +289,17 @@ the Apache License, version 2.0, as stated above.
         <set field="emailParams.bodyParameters.invoiceId" from-field="parameters.invoiceId"/>
         <set field="emailParams.bodyParameters.userLogin" from-field="parameters.userLogin"/>
         <set field="emailParams.bodyParameters.other" from-field="parameters.other"/><!-- to to print in 'other currency' -->
+        <!-- SCIPIO: 4.0.0: e-invoice of the customer (XRechnung, ZUGFeRD, Peppol); a hybrid PDF replaces the plain PDF.
+            An error (the customer wants e-invoices, but the e-invoice cannot be made) stops the email. -->
+        <set field="einvoiceParams.invoiceId" from-field="parameters.invoiceId"/>
+        <set field="einvoiceParams.formatId" from-field="parameters.einvoiceFormatId"/>
+        <call-service service-name="getEInvoiceEmailAttachments" in-map-name="einvoiceParams">
+            <result-to-field result-name="attachments" field="emailParams.attachments"/>
+            <result-to-field result-name="replacesPdf" field="einvoiceReplacesPdf"/>
+        </call-service>
+        <if-compare field="einvoiceReplacesPdf" operator="equals" value="true" type="Boolean">
+            <clear-field field="emailParams.xslfoAttachScreenLocation"/>
+        </if-compare>
         <call-service-asynch service-name="sendMailFromScreen" in-map-name="emailParams"/>
         <property-to-field resource="AccountingUiLabels" property="AccountingEmailScheduledToSend" field="successMessage"/>
     </simple-method>

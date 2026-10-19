@@ -612,6 +612,20 @@ SPDX-License-Identifier: AGPL-3.0-only
     <#if productDetailProductAttribContentString?trim?has_content>
         <details class="as-acc"><summary>${uiLabelMap.CommonSpecifications}</summary><div class="as-acc-body">${productDetailProductAttribContentString}</div></details>
     </#if>
+    <#-- SCIPIO: 4.0.0: the documents that the seller attached (catalog/product document_attach: ProductContent SPECIFICATION, a URL) as downloads -->
+    <#assign productDocs = Static["org.ofbiz.entity.util.EntityUtil"].filterByDate(delegator.findByAnd("ProductContent",
+        {"productId": raw(product.productId), "productContentTypeId": "SPECIFICATION"}, UtilMisc.toList("sequenceNum", "fromDate"), true))![]/>
+    <#if productDocs?has_content>
+        <details class="as-acc"><summary>${uiLabelMap.ShopDownloads}</summary><div class="as-acc-body"><ul class="as-downloads">
+        <#list productDocs as pc>
+            <#assign docContent = (pc.getRelatedOne("Content", true))!/>
+            <#assign docData = (docContent.getRelatedOne("DataResource", true))!/>
+            <#if docData?has_content && (docData.dataResourceTypeId!) == "URL_RESOURCE" && (docData.objectInfo!)?matches("https?://.+")>
+                <li><a href="${docData.objectInfo}" rel="nofollow noopener" download>${docData.dataResourceName!docContent.contentName!uiLabelMap.ShopDownloads}</a></li>
+            </#if>
+        </#list>
+        </ul></div></details>
+    </#if>
 </@section>
 
 <#-- SCIPIO: 4.0.0: product safety (GPSR), seller and packaging (compliance component) -->

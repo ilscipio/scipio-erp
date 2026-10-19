@@ -5255,7 +5255,9 @@ public class Entities {
             @Field(name = "nameOnAccount", type = "name"),
             @Field(name = "companyNameOnAccount", type = "name"),
             @Field(name = "contactMechId", type = "id-ne"),
-            @Field(name = "yearsAtBank", type = "numeric")
+            @Field(name = "yearsAtBank", type = "numeric"),
+            @Field(name = "ibanNumber", type = "short-varchar", description = "IBAN (ISO 13616); e-invoices: BT-84"),
+            @Field(name = "bicCode", type = "short-varchar", description = "BIC / SWIFT code (ISO 9362); e-invoices: BT-86")
         },
         primaryKeys = {
             @PrimaryKey(field = "paymentMethodId")
@@ -7147,7 +7149,10 @@ public class Entities {
             @Field(name = "taxPromotions", type = "indicator"),
             @Field(name = "fromDate", type = "date-time"),
             @Field(name = "thruDate", type = "date-time"),
-            @Field(name = "description", type = "description")
+            @Field(name = "description", type = "description"),
+            @Field(name = "vatCategoryCode", type = "id", description = "e-invoices: UNTDID 5305 VAT category (S, Z, E, AE, K, G, O, L, M); empty = derive from the rate"),
+            @Field(name = "exemptionReasonCode", type = "short-varchar", description = "e-invoices: VATEX exemption reason code (BT-121)"),
+            @Field(name = "exemptionReason", type = "description", description = "e-invoices: exemption reason text (BT-120)")
         },
         primaryKeys = {
             @PrimaryKey(field = "taxAuthorityRateSeqId")
@@ -9738,5 +9743,69 @@ public class Entities {
         }
     )
     public interface InventoryItemExtension {}
+
+    /**
+     * E-invoice settings of a party (EN 16931: XRechnung, ZUGFeRD / Factur-X, Peppol BIS, ...).
+     * For an internal organization (seller) and for a customer or supplier (buyer / seller of a received invoice).
+     */
+    @Entity(
+        name = "PartyEInvoicePref",
+        packageName = "com.ilscipio.scipio.accounting.einvoice",
+        title = "Party E-Invoice Preferences",
+        fields = {
+            @Field(name = "partyId", type = "id-ne"),
+            @Field(name = "formatEnumId", type = "id", description = "EINV_FORMAT enumeration: the format this customer receives; for the organization: the default format"),
+            @Field(name = "deliveryChannelEnumId", type = "id", description = "EINV_DELIVERY enumeration: how the e-invoice goes to this customer"),
+            @Field(name = "einvoiceEmail", type = "long-varchar", description = "Address that receives e-invoices by email; empty = billing email"),
+            @Field(name = "buyerReference", type = "long-varchar", description = "Default buyer reference (BT-10), e.g. the Leitweg-ID of a German public authority"),
+            @Field(name = "electronicAddress", type = "long-varchar", description = "Electronic address (BT-34 / BT-49), e.g. a Peppol participant ID"),
+            @Field(name = "electronicAddressScheme", type = "short-varchar", description = "EAS code of the electronic address (e.g. 0088, 0204, 9930, EM)"),
+            @Field(name = "contactName", type = "name", description = "Contact person (BG-6 / BG-9)"),
+            @Field(name = "contactPhone", type = "short-varchar"),
+            @Field(name = "contactEmail", type = "long-varchar"),
+            @Field(name = "paymentMethodId", type = "id", description = "Organization only: the EFT account (IBAN) that is printed as the payment account (BG-17)"),
+            @Field(name = "smallBusinessFlag", type = "indicator", description = "Organization only: small business that charges no VAT (Germany: Kleinunternehmer, section 19 UStG); lines without VAT are exempt with the small-business note")
+        },
+        primaryKeys = {
+            @PrimaryKey(field = "partyId")
+        },
+        relations = {
+            @Relation(
+                type = RelationType.ONE,
+                relEntityName = "Party",
+                fkName = "PTY_EINV_PTY",
+                keyMaps = {
+                    @KeyMap(fieldName = "partyId")
+                }
+            ),
+            @Relation(
+                type = RelationType.ONE,
+                relEntityName = "Enumeration",
+                title = "Format",
+                fkName = "PTY_EINV_FMT",
+                keyMaps = {
+                    @KeyMap(fieldName = "formatEnumId", relFieldName = "enumId")
+                }
+            ),
+            @Relation(
+                type = RelationType.ONE,
+                relEntityName = "Enumeration",
+                title = "DeliveryChannel",
+                fkName = "PTY_EINV_DLV",
+                keyMaps = {
+                    @KeyMap(fieldName = "deliveryChannelEnumId", relFieldName = "enumId")
+                }
+            ),
+            @Relation(
+                type = RelationType.ONE,
+                relEntityName = "PaymentMethod",
+                fkName = "PTY_EINV_PMTH",
+                keyMaps = {
+                    @KeyMap(fieldName = "paymentMethodId")
+                }
+            )
+        }
+    )
+    public interface PartyEInvoicePrefEntity {}
 
 }

@@ -22,7 +22,7 @@ commons-validator = "1.8.0"
 commons-dbcp2 = "2.11.0"
 
 # Logging
-log4j = "2.22.0"
+log4j = "2.24.3"
 log4j-nosql = "2.9.1"
 slf4j = "2.0.9"
 sentry = "7.0.0"
@@ -75,7 +75,8 @@ nashorn = "15.4"
 freemarker = "2.3.32"
 
 # Jackson JSON
-jackson = "2.16.0"
+jackson = "2.22.2"
+jackson-annotations = "2.22"
 
 # Google Libraries
 guava = "32.1.3-jre"
@@ -87,27 +88,32 @@ zxing = "3.5.2"
 esapi = "2.5.3.1"
 antisamy = "1.7.4"
 owasp-html-sanitizer = "20220608.1"
-bouncycastle = "1.77"
+bouncycastle = "1.85"
 shiro = "1.4.2"
 
 # XML Graphics
-batik = "1.17"
-fop = "2.9"
-xmlgraphics-commons = "2.9"
+batik = "1.19"
+fop = "2.11"
+xmlgraphics-commons = "2.11"
 barcode4j = "2.1"
 
 # Apache POI (Office)
 poi = "5.2.5"
 
 # PDF
-pdfbox = "2.0.30"
+pdfbox = "3.0.8"
 jempbox = "1.8.17"
 # SCIPIO: L-06b: OpenPDF (a fork of iText 2.1.7 with the same com.lowagie packages; LGPL-2.1 or MPL-2.0) replaces com.lowagie:itext 2.1.7 (MPL-1.1)
 openpdf = "1.3.43"
 
 # Apache Tika
-# SCIPIO: L-06b: Tika 2.x with the parser modules that the code uses (text encoding, PDF); no tika-parsers (junrar, jhighlight, UCAR, CXF)
-tika = "2.9.4"
+# SCIPIO: L-06b: Tika with the parser modules that the code uses (text encoding, PDF); no tika-parsers (junrar, jhighlight, UCAR, CXF)
+# SCIPIO: 3.x, not 2.x: the e-invoice library (Mustang) needs PDFBox 3, and the Tika 2 PDF module is built on PDFBox 2
+tika = "3.3.2"
+
+# E-invoicing (ZUGFeRD / Factur-X / XRechnung)
+mustang = "2.26.0"
+en16931-cii2ubl = "2.3.1"
 
 # Image Processing
 thumbnailator = "0.4.20"
@@ -280,7 +286,7 @@ nashorn-core = { module = "org.openjdk.nashorn:nashorn-core", version.ref = "nas
 freemarker = { module = "org.freemarker:freemarker", version.ref = "freemarker" }
 
 # Jackson
-jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson-annotations" }
 jackson-core = { module = "com.fasterxml.jackson.core:jackson-core", version.ref = "jackson" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 
@@ -321,6 +327,10 @@ openpdf = { module = "com.github.librepdf:openpdf", version.ref = "openpdf" }
 tika-core = { module = "org.apache.tika:tika-core", version.ref = "tika" }
 tika-parser-text = { module = "org.apache.tika:tika-parser-text-module", version.ref = "tika" }
 tika-parser-pdf = { module = "org.apache.tika:tika-parser-pdf-module", version.ref = "tika" }
+
+# E-invoicing
+mustang-library = { module = "org.mustangproject:library", version.ref = "mustang" }
+en16931-cii2ubl = { module = "com.helger:en16931-cii2ubl", version.ref = "en16931-cii2ubl" }
 
 # Image Processing
 thumbnailator = { module = "net.coobird:thumbnailator", version.ref = "thumbnailator" }

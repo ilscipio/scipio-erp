@@ -775,7 +775,8 @@ public class Entities {
             @Field(name = "uomTypeId", type = "id"),
             @Field(name = "abbreviation", type = "short-varchar"),
             @Field(name = "numericCode", type = "numeric"),
-            @Field(name = "description", type = "description")
+            @Field(name = "description", type = "description"),
+            @Field(name = "unCefactCode", type = "short-varchar", description = "UN/ECE Recommendation 20 / 21 unit code (e.g. H87, KGM, HUR); used by e-invoices")
         },
         primaryKeys = {
             @PrimaryKey(field = "uomId")

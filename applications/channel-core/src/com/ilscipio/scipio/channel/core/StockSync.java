@@ -63,6 +63,39 @@ public final class StockSync {
         return changed;
     }
 
+    /**
+     * R4-15 (J5-01): plans the pushes of each listing of the product store that takes stock (after a pause, after a resume, and
+     * the sweep). The quantity comes from the stock source at this moment (0 for a paused store), never from the caller. So a
+     * late run plans the newer state. {@code unknown} first forgets the value that the channel knows: the sweep of a paused
+     * store pushes 0 again, also when the seller changed the quantity on the marketplace.
+     *
+     * @param productStoreId the product store; null: all channels
+     */
+    public List<SyncTask> reconcileStore(String productStoreId, boolean unknown) {
+        Instant now = clock.instant();
+        List<SyncTask> changed = new ArrayList<>();
+        for (ChannelSetting setting : store.activeSettings()) {
+            if (productStoreId != null && !productStoreId.equals(setting.productStoreId)) {
+                continue;
+            }
+            StockRule rule = store.stockRule(setting.channelId);
+            for (Listing listing : store.listingsOfChannel(setting.channelId)) {
+                if (!listing.takesStock()) {
+                    continue;
+                }
+                if (unknown && listing.lastPushedQuantity != null) {
+                    store.clearPushedQuantity(listing.productId, listing.channelId);
+                    listing.lastPushedQuantity = null;
+                }
+                SyncTask task = plan(listing, rule.apply(stock.availableToPromise(listing.productId, setting.productStoreId)), now);
+                if (task != null) {
+                    changed.add(task);
+                }
+            }
+        }
+        return changed;
+    }
+
     private SyncTask plan(Listing listing, int qty, Instant now) {
         for (int attempt = 0; attempt < 3; attempt++) {
             SyncTask pending = null;

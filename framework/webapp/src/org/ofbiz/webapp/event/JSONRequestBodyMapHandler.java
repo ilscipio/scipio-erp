@@ -29,6 +29,13 @@ import org.ofbiz.base.util.UtilGenerics;
  */
 public class JSONRequestBodyMapHandler implements RequestBodyMapHandler {
     public Map<String, Object> extractMapFromRequestBody(ServletRequest request) throws IOException {
-        return UtilGenerics.<Map<String, Object>>cast(JSON.from(request.getInputStream()).toObject(Map.class));
+        // SCIPIO: 4.0.0: keep the raw text: a filter that parses the body before ContextFilter (SEO, CMS) consumes the
+        // stream, and a path handler (ACP, signed requests) needs the exact bytes
+        String text = new String(request.getInputStream().readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+        request.setAttribute(RequestBodyMapHandlerFactory.REQUEST_BODY_TEXT_ATTR, text);
+        if (text.trim().isEmpty()) {
+            return null;
+        }
+        return UtilGenerics.<Map<String, Object>>cast(JSON.from(text).toObject(Map.class));
     }
 }

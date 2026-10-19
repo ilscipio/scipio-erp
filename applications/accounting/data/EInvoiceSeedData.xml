@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!--
+  E-invoices (EN 16931): formats, delivery channels, archive content types, party identification types.
+  See com.ilscipio.scipio.accounting.einvoice.EInvoiceFormat for the format registry.
+-->
+<entity-engine-xml>
+    <!-- Formats. The enumId is the format id used by the e-invoice services and requests. -->
+    <EnumerationType enumTypeId="EINV_FORMAT" hasTable="N" description="E-invoice format"/>
+    <Enumeration enumId="XRECHNUNG_UBL" enumTypeId="EINV_FORMAT" enumCode="XRECHNUNG_UBL" sequenceId="01" description="XRechnung 3.0 (UBL)"/>
+    <Enumeration enumId="XRECHNUNG_CII" enumTypeId="EINV_FORMAT" enumCode="XRECHNUNG_CII" sequenceId="02" description="XRechnung 3.0 (CII)"/>
+    <Enumeration enumId="ZUGFERD" enumTypeId="EINV_FORMAT" enumCode="ZUGFERD" sequenceId="03" description="ZUGFeRD 2 / Factur-X EN 16931 (PDF/A-3 with CII XML)"/>
+    <Enumeration enumId="PEPPOL_BIS3" enumTypeId="EINV_FORMAT" enumCode="PEPPOL_BIS3" sequenceId="04" description="Peppol BIS Billing 3.0 (UBL)"/>
+    <Enumeration enumId="EN16931_UBL" enumTypeId="EINV_FORMAT" enumCode="EN16931_UBL" sequenceId="05" description="EN 16931 (UBL)"/>
+    <Enumeration enumId="EN16931_CII" enumTypeId="EINV_FORMAT" enumCode="EN16931_CII" sequenceId="06" description="EN 16931 (CII)"/>
+
+    <!-- Delivery channels -->
+    <EnumerationType enumTypeId="EINV_DELIVERY" hasTable="N" description="E-invoice delivery channel"/>
+    <Enumeration enumId="EINV_DLV_EMAIL" enumTypeId="EINV_DELIVERY" enumCode="EMAIL" sequenceId="01" description="Email attachment"/>
+    <Enumeration enumId="EINV_DLV_DOWNLOAD" enumTypeId="EINV_DELIVERY" enumCode="DOWNLOAD" sequenceId="02" description="Download (manual upload to a portal)"/>
+    <Enumeration enumId="EINV_DLV_PEPPOL" enumTypeId="EINV_DELIVERY" enumCode="PEPPOL" sequenceId="03" description="Peppol network (needs an access-point provider)"/>
+
+    <!-- Archive: the e-invoice that was sent, and the original file of a received e-invoice (keep unchanged) -->
+    <InvoiceContentType invoiceContentTypeId="EINVOICE_XML" description="E-invoice XML (sent)" hasTable="N" parentTypeId=""/>
+    <InvoiceContentType invoiceContentTypeId="EINVOICE_PDF" description="E-invoice hybrid PDF (sent)" hasTable="N" parentTypeId=""/>
+    <InvoiceContentType invoiceContentTypeId="EINVOICE_ORIGINAL" description="E-invoice original file (received)" hasTable="N" parentTypeId=""/>
+
+    <!-- Invoice attributes read by the e-invoice builder -->
+    <InvoiceTypeAttr invoiceTypeId="SALES_INVOICE" attrName="EINV_BUYER_REFERENCE" description="E-invoice: buyer reference / Leitweg-ID (BT-10)"/>
+    <InvoiceTypeAttr invoiceTypeId="SALES_INVOICE" attrName="EINV_PRECEDING_INVOICE" description="E-invoice: preceding invoice number (BT-25)"/>
+    <InvoiceTypeAttr invoiceTypeId="CUST_RTN_INVOICE" attrName="EINV_BUYER_REFERENCE" description="E-invoice: buyer reference / Leitweg-ID (BT-10)"/>
+    <InvoiceTypeAttr invoiceTypeId="CUST_RTN_INVOICE" attrName="EINV_PRECEDING_INVOICE" description="E-invoice: preceding invoice number (BT-25)"/>
+    <InvoiceTypeAttr invoiceTypeId="PURCHASE_INVOICE" attrName="EINV_FORMAT" description="E-invoice: format of the received file"/>
+
+    <!-- Seller / buyer identifiers -->
+    <PartyIdentificationType partyIdentificationTypeId="LEGAL_REG_ID" description="Legal registration ID, e.g. commercial register number (e-invoice BT-30 / BT-47)"/>
+    <PartyIdentificationType partyIdentificationTypeId="TAX_NUMBER" description="National tax number, e.g. German Steuernummer (e-invoice BT-32)"/>
+</entity-engine-xml>

@@ -78,7 +78,9 @@ public class ChannelEntities {
             @Field(name = "fixHint", type = "description", description = "One sentence: what the seller does"),
             @Field(name = "variationGroupId", type = "id", description = "Virtual product id of a variation product"),
             @Field(name = "variationAxesJson", type = "long-varchar", description = "Axes of the variant, for example {\"Size\":\"M\"}"),
-            @Field(name = "lastPushedQuantity", type = "numeric", description = "Quantity that the channel last acknowledged")
+            @Field(name = "lastPushedQuantity", type = "numeric", description = "Quantity that the channel last acknowledged"),
+            @Field(name = "leaseTaskId", type = "id", description = "R4-15: the task that holds the write lease of the listing (one writer)"),
+            @Field(name = "leaseUntilDate", type = "date-time", description = "R4-15: the end of that lease; after it, the lease is free")
         },
         primaryKeys = {
             @PrimaryKey(field = "productId"),

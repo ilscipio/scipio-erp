@@ -32,6 +32,7 @@ SPDX-License-Identifier: AGPL-3.0-only
     <load-component component-location="marketing"/>
     <load-component component-location="compliance"/><!-- SCIPIO: 4.0.0: store compliance (legal pages, consent, privacy rights); before shop -->
     <load-component component-location="channel-core"/><!-- SCIPIO: 4.0.0: W1-08: store side of the channel hub (listings, stock rules, order intake) -->
+    <load-component component-location="acp"/><!-- SCIPIO: 4.0.0: Agentic Commerce Protocol (merchant side) -->
     <load-component component-location="country-packs"/><!-- SCIPIO: 4.0.0: W1-03: country packs (us, de, at): setup tasks and legal texts from templates; after compliance -->
     
     <!-- SCIPIO components -->

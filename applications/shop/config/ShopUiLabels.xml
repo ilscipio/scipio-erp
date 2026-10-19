@@ -28,6 +28,13 @@ SPDX-License-Identifier: AGPL-3.0-only
         <value xml:lang="de">Abonnement beenden</value>
         <value xml:lang="en">Cancel subscription</value>
     </property>
+    <property key="ShopDownloads">
+        <value xml:lang="de">Downloads</value>
+        <value xml:lang="en">Downloads</value>
+        <value xml:lang="fr">Téléchargements</value>
+        <value xml:lang="nl">Downloads</value>
+        <value xml:lang="zh">下載</value>
+    </property>
     <property key="ShopDidYouMean">
         <value xml:lang="de">Hast du gemeint</value>
         <value xml:lang="en">Did you mean</value>

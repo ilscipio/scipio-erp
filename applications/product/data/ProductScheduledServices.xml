@@ -38,4 +38,7 @@ the Apache License, version 2.0, as stated above.
     <JobSandbox jobId="UPINVRECOUNTS" jobName="Update Dirty Last Inventory Counts" runTime="2000-01-01 00:00:00.000" serviceName="updateDirtyLastInventoryCounts"
                 poolId="pool" runAsUser="system" tempExprId="UPINVRECOUNTS" maxRecurrenceCount="-1" maxRetry="0" priority="40"/>-->
 
+    <!-- SCIPIO: 4.0.0: R4-15 (J5-01): the job resumeDueProductStores has no seed row: the first pause of a store registers it
+         (StorePauses.ensureJob), so stores that exist already get it too -->
+
 </entity-engine-xml>

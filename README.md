@@ -47,6 +47,9 @@ modern HTML frameworks.
 * **Agent access built in.** Every application answers the Model Context Protocol at
   `POST /<webapp>/mcp` with curated tools, bearer tokens, permissions and an audit log.
   See `docs/AGENT-QUICKSTART.md`, `docs/AGENT-SECURITY.md` and `docs/EXTENDING-AGENTIC.md`.
+* **Agentic Commerce Protocol.** Agents such as ChatGPT can buy from a Scipio store through ACP checkout
+  sessions, the MCP binding, Stripe Shared Payment Tokens, signed order webhooks and a product feed.
+  See `docs/AGENTIC-COMMERCE.md`.
 * **Aurora.** A new default backend theme without a CSS framework, with a light and a dark scheme.
 * **Manufacturing, rebuilt.** Production lines, fabrication orders, lot reservation, barcode capture,
   MRP with supplier lead times, product costing and a shop floor board.

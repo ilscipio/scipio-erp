@@ -24549,4 +24549,18 @@ the Apache License, version 2.0, as stated above.
         <value xml:lang="zh">浏览交易记录</value>
         <value xml:lang="zh-TW">檢視交易記錄</value>
     </property>
+    <property key="AccountingEInvoice">
+        <value xml:lang="de">E-Rechnung</value>
+        <value xml:lang="en">E-Invoice</value>
+        <value xml:lang="es">Factura electrónica</value>
+        <value xml:lang="fr">Facture électronique</value>
+        <value xml:lang="it">Fattura elettronica</value>
+    </property>
+    <property key="AccountingEInvoiceReceive">
+        <value xml:lang="de">E-Rechnung empfangen</value>
+        <value xml:lang="en">Receive e-invoice</value>
+        <value xml:lang="es">Recibir factura electrónica</value>
+        <value xml:lang="fr">Recevoir une facture électronique</value>
+        <value xml:lang="it">Ricevi fattura elettronica</value>
+    </property>
 </resource>

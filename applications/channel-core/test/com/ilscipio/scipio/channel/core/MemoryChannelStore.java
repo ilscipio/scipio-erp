@@ -107,8 +107,62 @@ public class MemoryChannelStore implements ChannelStore {
     }
 
     @Override
+    public List<Listing> listingsOfChannel(String channelId) {
+        List<Listing> out = new ArrayList<>();
+        for (Listing l : listings.values()) {
+            if (l.channelId.equals(channelId)) {
+                out.add(l.copy());
+            }
+        }
+        return out;
+    }
+
+    @Override
     public void saveListing(Listing l) {
         listings.put(key(l.productId, l.channelId), l.copy());
+    }
+
+    @Override
+    public synchronized boolean saveListingIfLeased(Listing l, String taskId) {
+        Object[] held = leases.get(key(l.productId, l.channelId));
+        if (held == null || !taskId.equals(held[0])) {
+            return false;
+        }
+        listings.put(key(l.productId, l.channelId), l.copy());
+        return true;
+    }
+
+    /** R4-15: the write lease of each listing (key: taskId and its end), a compare and set like the UPDATE of the entity store. */
+    private final Map<String, Object[]> leases = new HashMap<>();
+
+    @Override
+    public synchronized boolean tryLockListing(String productId, String channelId, String taskId, java.time.Instant until, java.time.Instant now) {
+        String k = key(productId, channelId);
+        if (!listings.containsKey(k)) {
+            return false;
+        }
+        Object[] held = leases.get(k);
+        if (held != null && !taskId.equals(held[0]) && ((java.time.Instant) held[1]).isAfter(now)) {
+            return false;
+        }
+        leases.put(k, new Object[] {taskId, until});
+        return true;
+    }
+
+    @Override
+    public synchronized void unlockListing(String productId, String channelId, String taskId) {
+        Object[] held = leases.get(key(productId, channelId));
+        if (held != null && taskId.equals(held[0])) {
+            leases.remove(key(productId, channelId));
+        }
+    }
+
+    @Override
+    public void clearPushedQuantity(String productId, String channelId) {
+        Listing l = listings.get(key(productId, channelId));
+        if (l != null) {
+            l.lastPushedQuantity = null;
+        }
     }
 
     @Override

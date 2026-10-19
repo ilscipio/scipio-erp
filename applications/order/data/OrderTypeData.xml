@@ -383,6 +383,7 @@ the Apache License, version 2.0, as stated above.
     <ReturnType sequenceId="07" returnTypeId="RTN_REPLACE_IMMEDIAT" description="Replace Immediately"/>
     <ReturnType sequenceId="08" returnTypeId="RTN_REFUND_IMMEDIATE" description="Refund immediately"/>
     <ReturnType sequenceId="09" returnTypeId="RTN_RENTAL" description="Rental"/>
+    <ReturnType sequenceId="10" returnTypeId="RTN_SELLER_REFUND" description="Seller refund (manual)"/>
 
     <WorkReqFulfType description="Implements" workReqFulfTypeId="WRF_IMPLEMENTS"/>
     <WorkReqFulfType description="Fixes" workReqFulfTypeId="WRF_FIXES"/>

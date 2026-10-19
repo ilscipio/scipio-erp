@@ -648,10 +648,11 @@ public final class UtilHttp {
             if (paramEntry.getValue() instanceof String) {
                 paramEntry.setValue(canonicalizeParameter((String) paramEntry.getValue()));
             } else if (paramEntry.getValue() instanceof Collection<?>) {
-                Collection<String> collection = UtilGenerics.<String>checkCollection(paramEntry.getValue());
-                List<String> newList = new ArrayList<>(collection.size()); // SCIPIO: Switched to ArrayList
-                for (String listEntry : collection) {
-                    newList.add(canonicalizeParameter(listEntry));
+                // SCIPIO: 4.0.0: a JSON body can hold lists of objects or numbers; only strings are canonicalized
+                Collection<?> collection = (Collection<?>) paramEntry.getValue();
+                List<Object> newList = new ArrayList<>(collection.size()); // SCIPIO: Switched to ArrayList
+                for (Object listEntry : collection) {
+                    newList.add(listEntry instanceof String ? canonicalizeParameter((String) listEntry) : listEntry);
                 }
                 paramEntry.setValue(newList);
             }

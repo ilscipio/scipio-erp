@@ -53,6 +53,7 @@ import com.ilscipio.scipio.channel.core.MarketplaceDefaults;
 import com.ilscipio.scipio.channel.core.OrderIntake;
 import com.ilscipio.scipio.channel.core.OutboxEvent;
 import com.ilscipio.scipio.channel.core.OutboxEvents;
+import com.ilscipio.scipio.channel.core.PausedStockSource;
 import com.ilscipio.scipio.channel.core.PricePolicy;
 import com.ilscipio.scipio.channel.core.RetentionRun;
 import com.ilscipio.scipio.channel.core.StockRule;
@@ -64,6 +65,9 @@ import com.ilscipio.scipio.channel.store.EntityBuyerDataEraser;
 import com.ilscipio.scipio.channel.store.EntityChannelStore;
 import com.ilscipio.scipio.channel.store.EntityOrderCreator;
 import com.ilscipio.scipio.channel.store.EntityOutboxStore;
+import com.ilscipio.scipio.mcp.security.McpAudit;
+import com.ilscipio.scipio.mcp.security.McpRedactor;
+import com.ilscipio.scipio.product.store.StorePauses;
 
 /**
  * Service implementations of channel-core: thin adapters between the service engine and the classes of the
@@ -87,8 +91,16 @@ public final class ChannelServiceImpl {
         return ServiceUtil.returnError("Permission CHANNELCORE_UPDATE is required.");
     }
 
-    /** ATP of a product in the inventory facility of the channel store (ProductStore.inventoryFacilityId); all facilities when the store has none. */
+    /**
+     * The stock for the channels: 0 while the seller pauses the store (R4-15, {@link PausedStockSource}, the row
+     * ProductStorePause read without the cache at each call), else the ATP of {@link #atpSource}.
+     */
     private static StockSource stockSource(final DispatchContext dctx, final Map<String, ?> context) {
+        return new PausedStockSource(atpSource(dctx, context), productStoreId -> StorePauses.isPaused(dctx.getDelegator(), productStoreId));
+    }
+
+    /** ATP of a product in the inventory facility of the channel store (ProductStore.inventoryFacilityId); all facilities when the store has none. */
+    private static StockSource atpSource(final DispatchContext dctx, final Map<String, ?> context) {
         return (productId, productStoreId) -> {
             try {
                 String facilityId = null;
@@ -445,7 +457,9 @@ public final class ChannelServiceImpl {
         SyncQueue queue = new SyncQueue(store, Clock.systemUTC());
         String taskId = (String) context.get("taskId");
         try {
-            if ("Y".equals(yn(context.get("success"), "N"))) {
+            if ("Y".equals(yn(context.get("released"), "N"))) {
+                queue.released(taskId); // R4-15: the publish held the lease and sent nothing
+            } else if ("Y".equals(yn(context.get("success"), "N"))) {
                 queue.succeeded(taskId);
             } else {
                 Integer after = (Integer) context.get("retryAfterSeconds");
@@ -458,6 +472,137 @@ public final class ChannelServiceImpl {
         Map<String, Object> result = ServiceUtil.returnSuccess();
         result.put("taskState", store.task(taskId).map(t -> t.state.name()).orElse(null));
         return result;
+    }
+
+    // ---- store pause (R4-15, J5-01) ----
+
+    /**
+     * The ECA after the commit of pauseProductStore and resumeProductStore: plans the push of each listing of the store with the
+     * quantity of the state at this moment. A late run plans the newer state (the stock source reads the pause again).
+     */
+    public static Map<String, Object> reconcileStore(DispatchContext dctx, Map<String, ? extends Object> context) {
+        String productStoreId = (String) context.get("productStoreId");
+        try {
+            if (UtilValidate.isEmpty(productStoreId)) {
+                List<GenericValue> stores = EntityQuery.use(dctx.getDelegator()).from("ProductStore").select("productStoreId").maxRows(2).queryList();
+                productStoreId = stores.size() == 1 ? stores.get(0).getString("productStoreId") : null; // null: all channels
+            }
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("tasksPlanned", reconcile(dctx, context, productStoreId, false));
+            return result;
+        } catch (GenericEntityException | RuntimeException e) {
+            Debug.logError(e, "Could not plan the channel pushes of the store " + productStoreId, module);
+            return ServiceUtil.returnError("Could not plan the channel pushes of the store: " + e.getMessage());
+        }
+    }
+
+    /**
+     * One reconcile of the channels of a store (review C2): it reads stateSeq before the plan and, when the plan finished, marks
+     * the store reconciled up to that seq. A failed or lost run leaves the store pending, and the hourly sweep plans it again.
+     */
+    private static int reconcile(DispatchContext dctx, Map<String, ?> context, String productStoreId, boolean unknown) throws GenericEntityException {
+        GenericValue row = productStoreId == null ? null : StorePauses.row(dctx.getDelegator(), productStoreId);
+        Long seq = row == null ? null : row.getLong("stateSeq");
+        StockSync sync = new StockSync(new EntityChannelStore(dctx.getDelegator()), stockSource(dctx, context), Clock.systemUTC());
+        int planned = sync.reconcileStore(productStoreId, unknown).size();
+        if (seq != null) {
+            StorePauses.markReconciled(dctx.getDelegator(), productStoreId, seq);
+        }
+        return planned;
+    }
+
+    /**
+     * The hourly job: each listing of a paused store gets quantity 0 again (the value that the channel knows is forgotten
+     * first). A store with a pending reconcile (a pause or a resume whose reconcile failed or got lost, review C2) gets the
+     * quantities of its state again, also a live store. Each store with work writes an McpAuditLog row.
+     */
+    public static Map<String, Object> pauseSweep(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Delegator delegator = dctx.getDelegator();
+        int planned = 0;
+        try {
+            Map<String, Boolean> storeIds = new java.util.LinkedHashMap<>(); // store id: paused (force) or pending only
+            for (GenericValue row : EntityQuery.use(delegator).from(StorePauses.ENTITY).queryList()) {
+                boolean paused = StorePauses.isPaused(row, java.time.Instant.now());
+                if (paused || StorePauses.reconcilePending(row.getLong("stateSeq"), row.getLong("reconciledSeq"))) {
+                    storeIds.put(row.getString("productStoreId"), paused);
+                }
+            }
+            for (Map.Entry<String, Boolean> store : storeIds.entrySet()) {
+                String productStoreId = store.getKey();
+                long start = System.currentTimeMillis();
+                McpAudit.Entry e = new McpAudit.Entry();
+                int n = 0;
+                try {
+                    n = reconcile(dctx, context, productStoreId, store.getValue());
+                    planned += n;
+                    e.status = McpAudit.OK;
+                } catch (GenericEntityException | RuntimeException failed) {
+                    // the store stays pending; the next sweep tries again, the other stores run on
+                    Debug.logError(failed, "Could not sweep the store " + productStoreId, module);
+                    e.status = McpAudit.ERROR;
+                    e.errorMessage = failed.getMessage();
+                }
+                GenericValue userLogin = (GenericValue) context.get("userLogin");
+                e.userLoginId = userLogin == null ? null : userLogin.getString("userLoginId");
+                e.serverName = "channel";
+                e.method = "job";
+                e.toolName = "channel:pause_sweep";
+                e.args = UtilMisc.toMap("productStoreId", productStoreId, "tasksPlanned", n, "paused", store.getValue());
+                e.durationMs = System.currentTimeMillis() - start;
+                McpAudit.record(delegator, McpRedactor.fromConfig(), e);
+            }
+        } catch (GenericEntityException | RuntimeException e) {
+            Debug.logError(e, "Could not run the pause sweep", module);
+            return ServiceUtil.returnError("Could not run the pause sweep: " + e.getMessage());
+        }
+        Map<String, Object> result = ServiceUtil.returnSuccess();
+        result.put("tasksPlanned", planned);
+        return result;
+    }
+
+    /**
+     * The ECA of each pause and resume: the hourly sweep job of the tenant exists (registered at the first pause of a store that
+     * exists already; again after a lost or crashed chain).
+     */
+    public static Map<String, Object> ensurePauseJobs(DispatchContext dctx, Map<String, ? extends Object> context) {
+        try {
+            boolean registered = StorePauses.ensureJob(dctx.getDelegator(), "PSSWP", "Channel pause sweep", "channelPauseSweep",
+                    "HOURLY", 1);
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("registered", registered ? "Y" : "N");
+            return result;
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Could not register the pause sweep job", module);
+            return ServiceUtil.returnError("Could not register the pause sweep job: " + e.getMessage());
+        }
+    }
+
+    /** The hub takes the lease of one listing for a publish (see {@link SyncQueue#lease}). */
+    public static Map<String, Object> leaseListing(DispatchContext dctx, Map<String, ? extends Object> context) {
+        Map<String, Object> err = denied(dctx, context);
+        if (err != null) {
+            return err;
+        }
+        ChannelStore store = new EntityChannelStore(dctx.getDelegator());
+        int lease = context.get("leaseSeconds") == null ? 120 : Math.max(5, Math.min(600, (Integer) context.get("leaseSeconds")));
+        try {
+            SyncQueue.Lease l = new SyncQueue(store, Clock.systemUTC(), stockSource(dctx, context))
+                    .lease((String) context.get("channelId"), (String) context.get("productId"), Duration.ofSeconds(lease));
+            Map<String, Object> result = ServiceUtil.returnSuccess();
+            result.put("leaseState", l.kind.name());
+            if (l.task != null) {
+                result.put("taskId", l.task.taskId);
+            }
+            if (l.quantity != null) {
+                result.put("quantity", l.quantity); // also for NONE: a new listing during a pause goes out with 0 (review C4)
+            }
+            if (l.retryAfter != null) {
+                result.put("retryAfterSeconds", (int) Math.max(1, l.retryAfter.getSeconds()));
+            }
+            return result;
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
     }
 
     // ---- orders and retention ----

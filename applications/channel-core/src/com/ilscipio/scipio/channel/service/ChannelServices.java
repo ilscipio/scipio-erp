@@ -194,10 +194,121 @@ public class ChannelServices {
             @Attribute(name = "retryAfterSeconds", type = "Integer", mode = "IN", optional = "true"),
             @Attribute(name = "error", type = "String", mode = "IN", optional = "true"),
             @Attribute(name = "fixHint", type = "String", mode = "IN", optional = "true"),
+            @Attribute(name = "released", type = "String", mode = "IN", optional = "true", description = "Y: the hub held the lease and sent nothing (R4-15); the task is due again at once, without an attempt"),
             @Attribute(name = "taskState", type = "String", mode = "OUT", optional = "true")
         }
     )
     public interface ChannelReportStockTask {}
+
+    @Service(
+        name = "channelLeaseListing",
+        engine = "java",
+        location = IMPL,
+        invoke = "leaseListing",
+        description = "R4-15: the hub publishes a listing and writes its quantity with the listing. Each quantity write holds the lease of the "
+                + "listing: LEASED gives taskId and the quantity of this moment (0 while the store is paused); the hub sends that quantity and "
+                + "reports the task (channelReportStockTask). BUSY: another push of the listing runs; try again after retryAfterSeconds. "
+                + "NONE: the listing takes no stock yet (no lease needed).",
+        auth = "true",
+        attributes = {
+            @Attribute(name = "productId", type = "String", mode = "IN", optional = "false"),
+            @Attribute(name = "channelId", type = "String", mode = "IN", optional = "false"),
+            @Attribute(name = "leaseSeconds", type = "Integer", mode = "IN", optional = "true", defaultValue = "120"),
+            @Attribute(name = "leaseState", type = "String", mode = "OUT", optional = "true", description = "LEASED, BUSY or NONE"),
+            @Attribute(name = "taskId", type = "String", mode = "OUT", optional = "true"),
+            @Attribute(name = "quantity", type = "Integer", mode = "OUT", optional = "true"),
+            @Attribute(name = "retryAfterSeconds", type = "Integer", mode = "OUT", optional = "true")
+        }
+    )
+    public interface ChannelLeaseListing {}
+
+    @Service(
+        name = "channelReconcileStore",
+        engine = "java",
+        location = IMPL,
+        invoke = "reconcileStore",
+        description = "R4-15: plans the push of each listing of the store with the quantity of this moment (0 while the store is paused). "
+                + "The ECA runs it after the commit of a pause or a resume; a repeat is safe.",
+        auth = "true",
+        attributes = {
+            @Attribute(name = "productStoreId", type = "String", mode = "IN", optional = "true", description = "Empty: the only store"),
+            @Attribute(name = "tasksPlanned", type = "Integer", mode = "OUT", optional = "true")
+        }
+    )
+    public interface ChannelReconcileStore {}
+
+    @Service(
+        name = "channelPauseSweep",
+        engine = "java",
+        location = IMPL,
+        invoke = "pauseSweep",
+        description = "R4-15 job (hourly): each listing of a paused store gets quantity 0 again, also when the seller changed the quantity on "
+                + "the marketplace. A live store gets nothing.",
+        auth = "true",
+        useTransaction = "false",
+        attributes = {
+            @Attribute(name = "tasksPlanned", type = "Integer", mode = "OUT", optional = "true")
+        }
+    )
+    public interface ChannelPauseSweep {}
+
+    @Service(
+        name = "channelEnsurePauseJobs",
+        engine = "java",
+        location = IMPL,
+        invoke = "ensurePauseJobs",
+        description = "R4-15: registers the hourly job channelPauseSweep of the store when it has none. The ECA runs it in the transaction of "
+                + "each pause, so a store that exists already gets the job at its first pause; a repeat is safe.",
+        auth = "true",
+        attributes = {
+            @Attribute(name = "registered", type = "String", mode = "OUT", optional = "true", description = "Y: this call registered the job")
+        }
+    )
+    public interface ChannelEnsurePauseJobs {}
+
+    /** R4-15: in the transaction of a pause (after the lock of the store row), the sweep job of the store exists or comes. */
+    @Seca(
+        service = "pauseProductStore",
+        event = "commit",
+        actions = {
+            @SecaAction(service = "channelEnsurePauseJobs", mode = "sync", newTransaction = "false", ignoreError = "true", ignoreFailure = "true",
+                    resultToContext = "false")
+        }
+    )
+    public interface PauseProductStoreSweepJobSeca {}
+
+    /** R4-15 review C2: the resume needs the sweep too (it retries a failed reconcile), so the resume registers a lost chain again. */
+    @Seca(
+        service = "resumeProductStore",
+        event = "commit",
+        actions = {
+            @SecaAction(service = "channelEnsurePauseJobs", mode = "sync", newTransaction = "false", ignoreError = "true", ignoreFailure = "true",
+                    resultToContext = "false")
+        }
+    )
+    public interface ResumeProductStoreSweepJobSeca {}
+
+    /** R4-15: after the commit of a pause, the channels get their quantity of the new state (0). */
+    @Seca(
+        service = "pauseProductStore",
+        event = "global-commit",
+        actions = {
+            @SecaAction(service = "channelReconcileStore", mode = "sync", newTransaction = "true", ignoreError = "true", ignoreFailure = "true",
+                    resultToContext = "false")
+        }
+    )
+    public interface PauseProductStoreChannelSeca {}
+
+    /** R4-15: after the commit of a resume, the channels get their quantity of the stock rule again. */
+    @Seca(
+        service = "resumeProductStore",
+        event = "global-commit",
+        actions = {
+            @SecaAction(service = "channelReconcileStore", mode = "sync", newTransaction = "true", ignoreError = "true", ignoreFailure = "true",
+                    resultToContext = "false")
+        }
+    )
+    public interface ResumeProductStoreChannelSeca {}
 
     @Service(
         name = "channelIntakeOrder",

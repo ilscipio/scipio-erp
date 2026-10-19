@@ -336,6 +336,10 @@ public final class McpPathHandler implements WebappPathHandler {
         if (request.getContentLengthLong() > maxBytes) return null;
         String body = readStream(request, maxBytes);
         if (body != null && body.trim().isEmpty()) {
+            Object text = request.getAttribute(org.ofbiz.webapp.event.RequestBodyMapHandlerFactory.REQUEST_BODY_TEXT_ATTR);
+            if (text instanceof String && !((String) text).trim().isEmpty()) {
+                return ((String) text).length() > maxBytes ? null : (String) text;
+            }
             Object cached = request.getAttribute("requestBodyMap");
             if (cached instanceof Map && !((Map<?, ?>) cached).isEmpty()) {
                 return JsonRpc.write(cached);

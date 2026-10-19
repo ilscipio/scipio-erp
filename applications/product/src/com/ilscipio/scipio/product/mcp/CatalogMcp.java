@@ -62,6 +62,13 @@ import com.ilscipio.scipio.mcp.tool.ImportDiff;
             @McpServiceTool(service = "markProductReviewed", topic = "product", name = "review_mark",
                     description = "The seller confirms (reviewed true) or withdraws (false) the AI values of a product; stored as attribute scipio.reviewed.",
                     readOnly = false, destructive = "false", order = 45),
+            @McpServiceTool(service = "archiveProduct", topic = "product", name = "archive",
+                    description = "End the sales of a product (the sales end date is now). The product and its orders stay; "
+                            + "the desk then takes it off each sales channel.",
+                    readOnly = false, destructive = "false", order = 46),
+            @McpServiceTool(service = "deleteProductIfUnordered", topic = "product", name = "delete",
+                    description = "Delete a product, and its variants, that no order names. A product with an order is refused: archive it.",
+                    readOnly = false, destructive = "true", order = 47),
             @McpServiceTool(service = "createProductCategory", topic = "product", name = "category_create",
                     description = "Create a product category.", readOnly = false, destructive = "false", order = 42),
             @McpServiceTool(service = "safeAddProductToCategory", topic = "product", name = "category_assign",
@@ -115,6 +122,16 @@ import com.ilscipio.scipio.mcp.tool.ImportDiff;
             @McpServiceTool(service = "createProductPromoCode", topic = "store", name = "promo_code_create",
                     description = "Create a promo code for a promotion.",
                     readOnly = false, destructive = "false", order = 59),
+            // SCIPIO: 4.0.0: R4-15 (J5-01): the store pause; the row ProductStorePause is the only state of the pause
+            @McpServiceTool(service = "pauseProductStore", topic = "store", name = "pause",
+                    description = "Pause the store: the storefront shows the note and takes no order, each sales channel gets quantity 0; open orders stay. outcome PAUSED or ALREADY_PAUSED.",
+                    readOnly = false, destructive = "false", order = 59),
+            @McpServiceTool(service = "resumeProductStore", topic = "store", name = "resume",
+                    description = "End the pause of the store: the storefront and the sales channels open again. outcome RESUMED or NOT_PAUSED.",
+                    readOnly = false, destructive = "false", order = 59),
+            @McpServiceTool(service = "getProductStorePause", topic = "store", name = "pause_state",
+                    description = "The pause of the store: paused (Y or N), since, back-on day and note.",
+                    readOnly = true, order = 59),
             @McpServiceTool(service = "createProductFacility", topic = "product", name = "facility_set",
                     description = "Set facility inventory settings for a product.",
                     readOnly = false, destructive = "false", order = 60)
@@ -135,7 +152,8 @@ public final class CatalogMcp {
             @McpParam(name = "productTypeId", description = "e.g. FINISHED_GOOD", required = false) String productTypeId,
             @McpParam(name = "productName", description = "Product or internal name (partial match)", required = false) String productName,
             @McpParam(name = "categoryId", description = "Only products in this category", required = false) String categoryId,
-            @McpParam(name = "limit", description = "Max rows to return", required = false) Integer limit) throws McpToolException {
+            @McpParam(name = "limit", description = "Max rows to return", required = false) Integer limit,
+            @McpParam(name = "excludeVariants", description = "true: leave out the variants of other products (isVariant Y)", required = false) Boolean excludeVariants) throws McpToolException {
         Delegator delegator = ctx.getDelegator();
         int max = ctx.limit(limit);
         try {
@@ -150,6 +168,11 @@ public final class CatalogMcp {
             List<EntityCondition> conditions = new ArrayList<>();
             if (productId != null) conditions.add(EntityCondition.makeCondition("productId", productId));
             if (productTypeId != null) conditions.add(EntityCondition.makeCondition("productTypeId", productTypeId));
+            if (Boolean.TRUE.equals(excludeVariants)) {
+                conditions.add(EntityCondition.makeCondition(EntityOperator.OR,
+                        EntityCondition.makeCondition("isVariant", EntityOperator.EQUALS, null),
+                        EntityCondition.makeCondition("isVariant", EntityOperator.NOT_EQUAL, "Y")));
+            }
             if (productName != null) {
                 // case-insensitive: "candle" finds "Scented Jar Candle" (PostgreSQL LIKE is case-sensitive)
                 String pattern = "%" + productName.toUpperCase(java.util.Locale.ROOT) + "%";
@@ -366,6 +389,272 @@ public final class CatalogMcp {
             return result;
         } catch (GenericEntityException e) {
             throw new McpToolException("Image add failed: " + e.getMessage());
+        }
+    }
+
+    /** The product content type of a document for buyers (document_attach): a data sheet, a manual, a size chart, a certificate. */
+    static final String DOCUMENT_CONTENT_TYPE = "SPECIFICATION";
+    /** The content types of a document that document_attach takes (as the desk upload: PDF, Word, Excel, CSV). */
+    static final Set<String> DOCUMENT_TYPES = Set.of("application/pdf",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "text/csv");
+
+    @McpTool(topic = "product", name = "document_attach", description = "Attach a document (an http or https URL, for example a data sheet "
+            + "or a manual) to a product as a download for buyers: a DataResource (URL), a Content and a ProductContent of type "
+            + "SPECIFICATION. The same URL on the same product is attached once.", readOnly = false, destructive = "false", order = 48)
+    public static Object attachDocument(McpCallContext ctx,
+            @McpParam(name = "productId", description = "Product id", required = true) String productId,
+            @McpParam(name = "url", description = "The download URL (http or https, at most 2000 characters)", required = true) String url,
+            @McpParam(name = "fileName", description = "The file name that buyers see, at most 200 characters", required = true) String fileName,
+            @McpParam(name = "contentType", description = "application/pdf, Word (.docx), Excel (.xlsx) or text/csv", required = true) String contentType)
+            throws McpToolException {
+        ctx.requirePermission("CATALOG_UPDATE");
+        String link = url == null ? "" : url.trim();
+        if (link.isEmpty() || link.length() > 2000 || !(link.startsWith("https://") || link.startsWith("http://"))) {
+            throw new McpToolException("url is required: an http or https URL of at most 2000 characters");
+        }
+        String name = documentName(fileName);
+        if (name == null) {
+            throw new McpToolException("fileName is required (at most 200 characters, no control characters)");
+        }
+        if (contentType == null || !DOCUMENT_TYPES.contains(contentType)) {
+            throw new McpToolException("contentType is one of " + DOCUMENT_TYPES);
+        }
+        Delegator delegator = ctx.getDelegator();
+        try {
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
+            if (product == null) {
+                throw new McpToolException("Product not found: " + productId);
+            }
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put("productId", productId);
+            result.put("url", link);
+            result.put("productContentTypeId", DOCUMENT_CONTENT_TYPE);
+            for (GenericValue pc : EntityQuery.use(delegator).from("ProductContent").where("productId", productId,
+                    "productContentTypeId", DOCUMENT_CONTENT_TYPE).filterByDate().queryList()) {
+                GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", pc.getString("contentId")).queryOne();
+                GenericValue dr = content == null || content.getString("dataResourceId") == null ? null
+                        : EntityQuery.use(delegator).from("DataResource").where("dataResourceId", content.getString("dataResourceId")).queryOne();
+                if (dr != null && link.equals(dr.getString("objectInfo"))) {
+                    result.put("contentId", pc.getString("contentId"));
+                    result.put("created", false);
+                    return result;
+                }
+            }
+            String mimeTypeId = EntityQuery.use(delegator).from("MimeType").where("mimeTypeId", contentType).queryOne() != null ? contentType : null;
+            Map<String, Object> dr = new LinkedHashMap<>();
+            dr.put("dataResourceTypeId", "URL_RESOURCE");
+            dr.put("objectInfo", link);
+            dr.put("dataResourceName", name);
+            if (mimeTypeId != null) {
+                dr.put("mimeTypeId", mimeTypeId);
+            }
+            String dataResourceId = (String) ctx.runService("createDataResource", dr).get("dataResourceId");
+            Map<String, Object> content = new LinkedHashMap<>();
+            content.put("dataResourceId", dataResourceId);
+            content.put("contentTypeId", "DOCUMENT");
+            content.put("contentName", name);
+            if (mimeTypeId != null) {
+                content.put("mimeTypeId", mimeTypeId);
+            }
+            String contentId = (String) ctx.runService("createContent", content).get("contentId");
+            Map<String, Object> pc = new LinkedHashMap<>();
+            pc.put("productId", productId);
+            pc.put("contentId", contentId);
+            pc.put("productContentTypeId", DOCUMENT_CONTENT_TYPE);
+            pc.put("fromDate", org.ofbiz.base.util.UtilDateTime.nowTimestamp());
+            ctx.runService("createProductContent", pc);
+            result.put("contentId", contentId);
+            result.put("created", true);
+            return result;
+        } catch (GenericEntityException e) {
+            throw new McpToolException("Document attach failed: " + e.getMessage());
+        }
+    }
+
+    /** A file name without a path part and control or format characters, at most 200 characters; null when nothing is left. */
+    static String documentName(String fileName) {
+        if (fileName == null) {
+            return null;
+        }
+        String s = fileName.substring(Math.max(fileName.lastIndexOf('/'), fileName.lastIndexOf('\\')) + 1)
+                .replaceAll("[\\p{Cc}\\p{Cf}]", "").trim();
+        return s.isEmpty() || s.length() > 200 ? null : s;
+    }
+
+    /** The slot of the main image in the ordered photo list (image_remove, image_order). */
+    static final String MAIN = "MAIN";
+
+    /** The photos of a product in order: the main image first (slot MAIN), then ADDITIONAL_IMAGE_1 to 4 as the product get lists them. */
+    private static List<Map<String, Object>> orderedImages(Delegator delegator, GenericValue product) throws GenericEntityException {
+        List<Map<String, Object>> images = new ArrayList<>();
+        String main = null;
+        for (String f : new String[] {"originalImageUrl", "largeImageUrl", "detailImageUrl", "mediumImageUrl", "smallImageUrl"}) {
+            if (product.getString(f) != null && !product.getString(f).isEmpty()) {
+                main = product.getString(f);
+                break;
+            }
+        }
+        if (main != null) {
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("slot", MAIN);
+            m.put("url", main);
+            images.add(m);
+        }
+        for (GenericValue pc : EntityQuery.use(delegator).from("ProductContent").where(EntityCondition.makeCondition("productId", product.getString("productId")),
+                EntityCondition.makeCondition("productContentTypeId", EntityOperator.LIKE, ADDITIONAL_IMAGE + "%"))
+                .filterByDate().orderBy("productContentTypeId").queryList()) {
+            GenericValue content = EntityQuery.use(delegator).from("Content").where("contentId", pc.getString("contentId")).queryOne();
+            String dataResourceId = content == null ? null : content.getString("dataResourceId");
+            String url = dataResourceId == null ? null : imageUrlOf(delegator, pc.getString("contentId"));
+            if (url == null) {
+                continue;
+            }
+            Map<String, Object> m = new LinkedHashMap<>();
+            m.put("slot", pc.getString("productContentTypeId"));
+            m.put("url", url);
+            m.put("contentId", pc.getString("contentId"));
+            m.put("dataResourceId", dataResourceId);
+            m.put("fromDate", pc.getTimestamp("fromDate"));
+            images.add(m);
+        }
+        return images;
+    }
+
+    /** The slots in the wanted order. The wanted list must hold each current slot once. */
+    static List<String> reorderSlots(List<String> current, List<String> wanted) throws McpToolException {
+        if (wanted == null || wanted.size() != current.size() || !new LinkedHashSet<>(wanted).equals(new LinkedHashSet<>(current))
+                || new LinkedHashSet<>(wanted).size() != wanted.size()) {
+            throw new McpToolException("slots must list each photo of the product once: " + current);
+        }
+        return new ArrayList<>(wanted);
+    }
+
+    /**
+     * Writes the photo urls in the given order: the first is the main image, the others take the more-photo slots of the
+     * product in order. A slot that stays empty ends. Only a changed url is written.
+     */
+    static void writeImages(McpCallContext ctx, GenericValue product, List<Map<String, Object>> current, List<String> urls)
+            throws McpToolException {
+        for (Object[] write : planImageWrites(product.getString("productId"), current, urls)) {
+            @SuppressWarnings("unchecked")
+            Map<String, Object> params = (Map<String, Object>) write[1];
+            ctx.runService((String) write[0], params);
+        }
+    }
+
+    /**
+     * The service calls (name, parameters) that write the photo urls in the given order. A product with only more photos has no
+     * main image: the first photo moves to MAIN and the others shift down one slot, so that no photo is dropped.
+     */
+    static List<Object[]> planImageWrites(String productId, List<Map<String, Object>> current, List<String> urls) {
+        List<Object[]> writes = new ArrayList<>();
+        List<Map<String, Object>> slots = new ArrayList<>();
+        Map<String, Object> main = null;
+        for (Map<String, Object> im : current) {
+            if (MAIN.equals(im.get("slot"))) main = im; else slots.add(im);
+        }
+        if (main == null || !urls.get(0).equals(main.get("url"))) {
+            Map<String, Object> params = new LinkedHashMap<>();
+            params.put("productId", productId);
+            for (String f : new String[] {"originalImageUrl", "largeImageUrl", "detailImageUrl", "mediumImageUrl", "smallImageUrl"}) {
+                params.put(f, urls.get(0));
+            }
+            writes.add(new Object[] {"updateProduct", params});
+        }
+        for (int i = 0; i < slots.size(); i++) {
+            Map<String, Object> slot = slots.get(i);
+            if (i + 1 < urls.size()) {
+                if (!urls.get(i + 1).equals(slot.get("url"))) {
+                    Map<String, Object> params = new LinkedHashMap<>();
+                    params.put("dataResourceId", slot.get("dataResourceId"));
+                    params.put("objectInfo", urls.get(i + 1));
+                    writes.add(new Object[] {"updateDataResource", params});
+                }
+            } else {
+                Map<String, Object> params = new LinkedHashMap<>();
+                params.put("productId", productId);
+                params.put("contentId", slot.get("contentId"));
+                params.put("productContentTypeId", slot.get("slot"));
+                params.put("fromDate", slot.get("fromDate"));
+                params.put("thruDate", org.ofbiz.base.util.UtilDateTime.nowTimestamp());
+                writes.add(new Object[] {"updateProductContent", params});
+            }
+        }
+        return writes;
+    }
+
+    @McpTool(topic = "product", name = "image_remove", description = "Remove a photo of a product by its slot (MAIN or ADDITIONAL_IMAGE_1 to 4, as image_order lists them). "
+            + "The next photos move up; a product keeps its last photo.", readOnly = false, destructive = "false", order = 44)
+    public static Object removeImage(McpCallContext ctx,
+            @McpParam(name = "productId", description = "Product id", required = true) String productId,
+            @McpParam(name = "slot", description = "The slot of the photo: MAIN or ADDITIONAL_IMAGE_1 to 4", required = true) String slot) throws McpToolException {
+        ctx.requirePermission("CATALOG_UPDATE");
+        Delegator delegator = ctx.getDelegator();
+        try {
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
+            if (product == null) {
+                throw new McpToolException("Product not found: " + productId);
+            }
+            List<Map<String, Object>> current = orderedImages(delegator, product);
+            int at = -1;
+            for (int i = 0; i < current.size(); i++) {
+                if (current.get(i).get("slot").equals(slot)) at = i;
+            }
+            if (at < 0) {
+                throw new McpToolException("The product has no photo in the slot " + slot);
+            }
+            if (current.size() <= 1) {
+                throw new McpToolException("The product has one photo and keeps it. Add another photo first.");
+            }
+            List<String> urls = new ArrayList<>();
+            for (int i = 0; i < current.size(); i++) {
+                if (i != at) urls.add(String.valueOf(current.get(i).get("url")));
+            }
+            writeImages(ctx, product, current, urls);
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put("productId", productId);
+            result.put("removed", slot);
+            result.put("photos", urls.size());
+            return result;
+        } catch (GenericEntityException e) {
+            throw new McpToolException("Image remove failed: " + e.getMessage());
+        }
+    }
+
+    @McpTool(topic = "product", name = "image_order", description = "Set the order of the photos of a product: slots lists each current slot once "
+            + "(MAIN and ADDITIONAL_IMAGE_1 to 4); the first becomes the main image.", readOnly = false, destructive = "false", order = 44)
+    public static Object orderImages(McpCallContext ctx,
+            @McpParam(name = "productId", description = "Product id", required = true) String productId,
+            @McpParam(name = "slots", description = "The slots in the new order, each once", required = true, type = "array") List<Object> slots) throws McpToolException {
+        ctx.requirePermission("CATALOG_UPDATE");
+        Delegator delegator = ctx.getDelegator();
+        try {
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", productId).queryOne();
+            if (product == null) {
+                throw new McpToolException("Product not found: " + productId);
+            }
+            List<Map<String, Object>> current = orderedImages(delegator, product);
+            List<String> currentSlots = new ArrayList<>();
+            Map<String, String> urlOf = new LinkedHashMap<>();
+            for (Map<String, Object> im : current) {
+                currentSlots.add(String.valueOf(im.get("slot")));
+                urlOf.put(String.valueOf(im.get("slot")), String.valueOf(im.get("url")));
+            }
+            List<String> wanted = new ArrayList<>();
+            if (slots != null) {
+                for (Object o : slots) wanted.add(String.valueOf(o));
+            }
+            List<String> order = reorderSlots(currentSlots, wanted);
+            List<String> urls = new ArrayList<>();
+            for (String s : order) urls.add(urlOf.get(s));
+            writeImages(ctx, product, current, urls);
+            Map<String, Object> result = new LinkedHashMap<>();
+            result.put("productId", productId);
+            result.put("slots", order);
+            return result;
+        } catch (GenericEntityException e) {
+            throw new McpToolException("Image order failed: " + e.getMessage());
         }
     }
 

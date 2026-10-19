@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/ofbiz-properties.xsd">
+    <!-- User interface -->
+    <property key="EInvoice">
+        <value xml:lang="de">E-Rechnung</value>
+        <value xml:lang="en">E-Invoice</value>
+        <value xml:lang="es">Factura electrónica</value>
+        <value xml:lang="fr">Facture électronique</value>
+        <value xml:lang="it">Fattura elettronica</value>
+    </property>
+    <property key="EInvoiceCheckTitle">
+        <value xml:lang="de">Prüfung der E-Rechnung</value>
+        <value xml:lang="en">E-invoice check</value>
+        <value xml:lang="es">Comprobación de la factura electrónica</value>
+        <value xml:lang="fr">Contrôle de la facture électronique</value>
+        <value xml:lang="it">Controllo della fattura elettronica</value>
+    </property>
+    <property key="EInvoiceValid">
+        <value xml:lang="de">Die E-Rechnung kann im Format ${formatId} erstellt werden.</value>
+        <value xml:lang="en">The e-invoice can be made in the format ${formatId}.</value>
+        <value xml:lang="es">La factura electrónica se puede generar en el formato ${formatId}.</value>
+        <value xml:lang="fr">La facture électronique peut être générée au format ${formatId}.</value>
+        <value xml:lang="it">La fattura elettronica può essere generata nel formato ${formatId}.</value>
+    </property>
+    <property key="EInvoiceNotValid">
+        <value xml:lang="de">Die E-Rechnung kann im Format ${formatId} nicht erstellt werden. Beheben Sie diese Fehler:</value>
+        <value xml:lang="en">The e-invoice cannot be made in the format ${formatId}. Correct these errors:</value>
+        <value xml:lang="es">La factura electrónica no se puede generar en el formato ${formatId}. Corrija estos errores:</value>
+        <value xml:lang="fr">La facture électronique ne peut pas être générée au format ${formatId}. Corrigez ces erreurs :</value>
+        <value xml:lang="it">La fattura elettronica non può essere generata nel formato ${formatId}. Correggere questi errori:</value>
+    </property>
+    <property key="EInvoiceWarnings">
+        <value xml:lang="de">Hinweise</value>
+        <value xml:lang="en">Warnings</value>
+        <value xml:lang="es">Avisos</value>
+        <value xml:lang="fr">Avertissements</value>
+        <value xml:lang="it">Avvisi</value>
+    </property>
+    <property key="EInvoiceFormat">
+        <value xml:lang="de">Format</value>
+        <value xml:lang="en">Format</value>
+        <value xml:lang="es">Formato</value>
+        <value xml:lang="fr">Format</value>
+        <value xml:lang="it">Formato</value>
+    </property>
+    <property key="EInvoiceDownload">
+        <value xml:lang="de">Herunterladen</value>
+        <value xml:lang="en">Download</value>
+        <value xml:lang="es">Descargar</value>
+        <value xml:lang="fr">Télécharger</value>
+        <value xml:lang="it">Scarica</value>
+    </property>
+    <property key="EInvoiceCheck">
+        <value xml:lang="de">Prüfen</value>
+        <value xml:lang="en">Check</value>
+        <value xml:lang="es">Comprobar</value>
+        <value xml:lang="fr">Contrôler</value>
+        <value xml:lang="it">Controlla</value>
+    </property>
+    <property key="EInvoiceCustomerFormat">
+        <value xml:lang="de">Format des Kunden</value>
+        <value xml:lang="en">Customer format</value>
+        <value xml:lang="es">Formato del cliente</value>
+        <value xml:lang="fr">Format du client</value>
+        <value xml:lang="it">Formato del cliente</value>
+    </property>
+    <property key="EInvoiceSettings">
+        <value xml:lang="de">E-Rechnung-Einstellungen</value>
+        <value xml:lang="en">E-invoice settings</value>
+        <value xml:lang="es">Ajustes de factura electrónica</value>
+        <value xml:lang="fr">Paramètres de facture électronique</value>
+        <value xml:lang="it">Impostazioni fattura elettronica</value>
+    </property>
+    <property key="EInvoiceDeliveryChannel">
+        <value xml:lang="de">Zustellweg</value>
+        <value xml:lang="en">Delivery channel</value>
+        <value xml:lang="es">Canal de entrega</value>
+        <value xml:lang="fr">Canal de transmission</value>
+        <value xml:lang="it">Canale di consegna</value>
+    </property>
+    <property key="EInvoiceEmailAddress">
+        <value xml:lang="de">E-Mail für E-Rechnungen</value>
+        <value xml:lang="en">E-invoice email</value>
+        <value xml:lang="es">Correo para facturas electrónicas</value>
+        <value xml:lang="fr">E-mail pour factures électroniques</value>
+        <value xml:lang="it">E-mail per fatture elettroniche</value>
+    </property>
+    <property key="EInvoiceBuyerReference">
+        <value xml:lang="de">Käuferreferenz / Leitweg-ID</value>
+        <value xml:lang="en">Buyer reference / Leitweg-ID</value>
+        <value xml:lang="es">Referencia del comprador</value>
+        <value xml:lang="fr">Référence acheteur</value>
+        <value xml:lang="it">Riferimento acquirente</value>
+    </property>
+    <property key="EInvoiceElectronicAddress">
+        <value xml:lang="de">Elektronische Adresse (z. B. Peppol-ID)</value>
+        <value xml:lang="en">Electronic address (e.g. Peppol ID)</value>
+        <value xml:lang="es">Dirección electrónica (p. ej. ID Peppol)</value>
+        <value xml:lang="fr">Adresse électronique (p. ex. ID Peppol)</value>
+        <value xml:lang="it">Indirizzo elettronico (es. ID Peppol)</value>
+    </property>
+    <property key="EInvoiceElectronicAddressScheme">
+        <value xml:lang="de">Schema der Adresse (EAS, z. B. 0204, 9930, EM)</value>
+        <value xml:lang="en">Address scheme (EAS, e.g. 0204, 9930, EM)</value>
+        <value xml:lang="es">Esquema de la dirección (EAS)</value>
+        <value xml:lang="fr">Schéma de l'adresse (EAS)</value>
+        <value xml:lang="it">Schema dell'indirizzo (EAS)</value>
+    </property>
+    <property key="EInvoiceContactName">
+        <value xml:lang="de">Ansprechpartner</value>
+        <value xml:lang="en">Contact person</value>
+        <value xml:lang="es">Persona de contacto</value>
+        <value xml:lang="fr">Contact</value>
+        <value xml:lang="it">Referente</value>
+    </property>
+    <property key="EInvoiceContactPhone">
+        <value xml:lang="de">Telefon des Ansprechpartners</value>
+        <value xml:lang="en">Contact phone</value>
+        <value xml:lang="es">Teléfono de contacto</value>
+        <value xml:lang="fr">Téléphone du contact</value>
+        <value xml:lang="it">Telefono del referente</value>
+    </property>
+    <property key="EInvoiceContactEmail">
+        <value xml:lang="de">E-Mail des Ansprechpartners</value>
+        <value xml:lang="en">Contact email</value>
+        <value xml:lang="es">Correo de contacto</value>
+        <value xml:lang="fr">E-mail du contact</value>
+        <value xml:lang="it">E-mail del referente</value>
+    </property>
+    <property key="EInvoicePaymentAccount">
+        <value xml:lang="de">Bankkonto auf der Rechnung (IBAN)</value>
+        <value xml:lang="en">Bank account on the invoice (IBAN)</value>
+        <value xml:lang="es">Cuenta bancaria en la factura (IBAN)</value>
+        <value xml:lang="fr">Compte bancaire sur la facture (IBAN)</value>
+        <value xml:lang="it">Conto bancario in fattura (IBAN)</value>
+    </property>
+    <property key="EInvoiceSmallBusiness">
+        <value xml:lang="de">Kleinunternehmer (§ 19 UStG)</value>
+        <value xml:lang="en">Small business (Germany: § 19 UStG)</value>
+        <value xml:lang="es">Pequeña empresa (Alemania: § 19 UStG)</value>
+        <value xml:lang="fr">Petite entreprise (Allemagne : § 19 UStG)</value>
+        <value xml:lang="it">Piccola impresa (Germania: § 19 UStG)</value>
+    </property>
+    <property key="EInvoiceSmallBusinessHelp">
+        <value xml:lang="de">Nur für die eigene Organisation: Positionen ohne Umsatzsteuer erhalten den Hinweis nach § 19 Abs. 1 UStG.</value>
+        <value xml:lang="en">For your own organization only: lines without VAT get the note of section 19 (1) UStG.</value>
+    </property>
+    <property key="EInvoiceImportTitle">
+        <value xml:lang="de">E-Rechnung empfangen</value>
+        <value xml:lang="en">Receive an e-invoice</value>
+        <value xml:lang="es">Recibir una factura electrónica</value>
+        <value xml:lang="fr">Recevoir une facture électronique</value>
+        <value xml:lang="it">Ricevi una fattura elettronica</value>
+    </property>
+    <property key="EInvoiceImportHelp">
+        <value xml:lang="de">Laden Sie eine XRechnung, eine UBL- oder CII-Datei oder ein ZUGFeRD-/Factur-X-PDF hoch. Das System legt eine Eingangsrechnung im Status "In Bearbeitung" an und speichert die Originaldatei.</value>
+        <value xml:lang="en">Upload an XRechnung, a UBL or CII file, or a ZUGFeRD / Factur-X PDF. The system makes a purchase invoice in status "In process" and keeps the original file.</value>
+        <value xml:lang="es">Suba un archivo UBL o CII o un PDF ZUGFeRD / Factur-X. El sistema crea una factura de compra en estado "En proceso" y guarda el archivo original.</value>
+        <value xml:lang="fr">Chargez un fichier UBL ou CII, ou un PDF ZUGFeRD / Factur-X. Le système crée une facture d'achat au statut « En cours » et conserve le fichier original.</value>
+        <value xml:lang="it">Carica un file UBL o CII o un PDF ZUGFeRD / Factur-X. Il sistema crea una fattura passiva nello stato "In lavorazione" e conserva il file originale.</value>
+    </property>
+    <property key="EInvoiceImportSupplierHelp">
+        <value xml:lang="de">Leer lassen: das System sucht den Lieferanten über die USt-IdNr. in der Datei.</value>
+        <value xml:lang="en">Leave empty: the system finds the supplier by the VAT ID in the file.</value>
+        <value xml:lang="es">Deje vacío: el sistema busca el proveedor por el NIF-IVA del archivo.</value>
+        <value xml:lang="fr">Laisser vide : le système trouve le fournisseur par le numéro de TVA du fichier.</value>
+        <value xml:lang="it">Lasciare vuoto: il sistema trova il fornitore dalla partita IVA nel file.</value>
+    </property>
+    <property key="EInvoiceOriginal">
+        <value xml:lang="de">Originaldatei der E-Rechnung</value>
+        <value xml:lang="en">Original e-invoice file</value>
+        <value xml:lang="es">Archivo original de la factura electrónica</value>
+        <value xml:lang="fr">Fichier original de la facture électronique</value>
+        <value xml:lang="it">File originale della fattura elettronica</value>
+    </property>
+    <property key="EInvoiceView">
+        <value xml:lang="de">Anzeigen</value>
+        <value xml:lang="en">View</value>
+        <value xml:lang="es">Ver</value>
+        <value xml:lang="fr">Afficher</value>
+        <value xml:lang="it">Visualizza</value>
+    </property>
+
+    <property key="EInvoiceOrganization">
+        <value xml:lang="de">Organisation (Empfänger)</value>
+        <value xml:lang="en">Organization (recipient)</value>
+        <value xml:lang="es">Organización (destinatario)</value>
+        <value xml:lang="fr">Organisation (destinataire)</value>
+        <value xml:lang="it">Organizzazione (destinatario)</value>
+    </property>
+    <property key="EInvoiceSupplier">
+        <value xml:lang="de">Lieferant</value>
+        <value xml:lang="en">Supplier</value>
+        <value xml:lang="es">Proveedor</value>
+        <value xml:lang="fr">Fournisseur</value>
+        <value xml:lang="it">Fornitore</value>
+    </property>
+    <property key="EInvoiceFile">
+        <value xml:lang="de">Datei (XML oder PDF)</value>
+        <value xml:lang="en">File (XML or PDF)</value>
+        <value xml:lang="es">Archivo (XML o PDF)</value>
+        <value xml:lang="fr">Fichier (XML ou PDF)</value>
+        <value xml:lang="it">File (XML o PDF)</value>
+    </property>
+    <property key="EInvoiceArchivedFiles">
+        <value xml:lang="de">Gesendete E-Rechnungen (archiviert)</value>
+        <value xml:lang="en">Sent e-invoices (archived)</value>
+        <value xml:lang="es">Facturas electrónicas enviadas (archivadas)</value>
+        <value xml:lang="fr">Factures électroniques envoyées (archivées)</value>
+        <value xml:lang="it">Fatture elettroniche inviate (archiviate)</value>
+    </property>
+
+    <!-- Check and build messages -->
+    <property key="EInvoiceSeller">
+        <value xml:lang="de">Verkäufer</value>
+        <value xml:lang="en">seller</value>
+    </property>
+    <property key="EInvoiceBuyer">
+        <value xml:lang="de">Käufer</value>
+        <value xml:lang="en">buyer</value>
+    </property>
+    <property key="EInvoiceInvoiceNotFound">
+        <value xml:lang="de">Die Rechnung ${invoiceId} existiert nicht.</value>
+        <value xml:lang="en">The invoice ${invoiceId} does not exist.</value>
+    </property>
+    <property key="EInvoiceNotSalesInvoice">
+        <value xml:lang="de">Nur Ausgangsrechnungen und Gutschriften aus Kundenretouren können als E-Rechnung erstellt werden (Rechnungsart: ${invoiceTypeId}).</value>
+        <value xml:lang="en">Only sales invoices and customer return credit notes can be made as e-invoices (invoice type: ${invoiceTypeId}).</value>
+    </property>
+    <property key="EInvoiceInvoiceCancelled">
+        <value xml:lang="de">Die Rechnung ist storniert.</value>
+        <value xml:lang="en">The invoice is cancelled.</value>
+    </property>
+    <property key="EInvoiceInvoiceInProcess">
+        <value xml:lang="de">Die Rechnung ist noch in Bearbeitung. Senden Sie die E-Rechnung erst, wenn die Rechnung fertig ist.</value>
+        <value xml:lang="en">The invoice is still in process. Send the e-invoice only when the invoice is ready.</value>
+    </property>
+    <property key="EInvoiceMissingParties">
+        <value xml:lang="de">Der Rechnung fehlt der Absender oder der Empfänger.</value>
+        <value xml:lang="en">The invoice has no sender or no recipient.</value>
+    </property>
+    <property key="EInvoicePartyNoName">
+        <value xml:lang="de">Der ${role} ${partyId} hat keinen Namen.</value>
+        <value xml:lang="en">The ${role} ${partyId} has no name.</value>
+    </property>
+    <property key="EInvoicePartyNoAddress">
+        <value xml:lang="de">Der ${role} ${partyId} hat keine Postanschrift (Rechnungs-, Zahlungs- oder allgemeine Anschrift).</value>
+        <value xml:lang="en">The ${role} ${partyId} has no postal address (billing, payment or general address).</value>
+    </property>
+    <property key="EInvoicePartyNoCountry">
+        <value xml:lang="de">Die Anschrift des ${role}s ${partyId} hat kein Land.</value>
+        <value xml:lang="en">The address of the ${role} ${partyId} has no country.</value>
+    </property>
+    <property key="EInvoicePartyNoCity">
+        <value xml:lang="de">Die Anschrift des ${role}s ${partyId} hat keinen Ort oder keine Postleitzahl (XRechnung verlangt beide).</value>
+        <value xml:lang="en">The address of the ${role} ${partyId} has no city or no postal code (XRechnung requires both).</value>
+    </property>
+    <property key="EInvoicePartyNoElectronicAddress">
+        <value xml:lang="de">Der ${role} ${partyId} hat keine elektronische Adresse und keine E-Mail-Adresse.</value>
+        <value xml:lang="en">The ${role} ${partyId} has no electronic address and no email address.</value>
+    </property>
+    <property key="EInvoicePartyNoPeppolId">
+        <value xml:lang="de">Der ${role} ${partyId} hat keine Peppol-ID. Tragen Sie die elektronische Adresse und ihr Schema (z. B. 0088, 0204, 9930) in den E-Rechnung-Einstellungen ein.</value>
+        <value xml:lang="en">The ${role} ${partyId} has no Peppol ID. Enter the electronic address and its scheme (e.g. 0088, 0204, 9930) in the e-invoice settings.</value>
+    </property>
+    <property key="EInvoiceSellerNoContact">
+        <value xml:lang="de">Der Verkäufer ${partyId} hat keine Telefonnummer oder keine E-Mail-Adresse. XRechnung verlangt einen Ansprechpartner mit Telefon und E-Mail.</value>
+        <value xml:lang="en">The seller ${partyId} has no phone number or no email address. XRechnung requires a contact with phone and email.</value>
+    </property>
+    <property key="EInvoiceSellerNoIban">
+        <value xml:lang="de">Der Verkäufer ${partyId} hat kein Bankkonto mit gültiger IBAN (EFT-Konto).</value>
+        <value xml:lang="en">The seller ${partyId} has no bank account with a valid IBAN (EFT account).</value>
+    </property>
+    <property key="EInvoiceSellerNoVatId">
+        <value xml:lang="de">Der Verkäufer ${partyId} hat keine USt-IdNr. und keine Steuernummer.</value>
+        <value xml:lang="en">The seller ${partyId} has no VAT ID and no tax number.</value>
+    </property>
+    <property key="EInvoiceBuyerNoVatId">
+        <value xml:lang="de">Der Käufer ${partyId} hat keine USt-IdNr. Eine innergemeinschaftliche Lieferung oder Reverse Charge verlangt sie.</value>
+        <value xml:lang="en">The buyer ${partyId} has no VAT ID. An intra-community supply or a reverse charge requires it.</value>
+    </property>
+    <property key="EInvoicePaymentTermDays">
+        <value xml:lang="de">Zahlbar innerhalb von ${days} Tagen.</value>
+        <value xml:lang="en">Payable within ${days} days.</value>
+    </property>
+    <property key="EInvoicePaymentTermDiscount">
+        <value xml:lang="de">${percent} % Skonto bei Zahlung innerhalb von ${days} Tagen.</value>
+        <value xml:lang="en">${percent} % discount for payment within ${days} days.</value>
+    </property>
+    <property key="EInvoicePaymentTermDueDate">
+        <value xml:lang="de">Zahlbar bis ${dueDate}.</value>
+        <value xml:lang="en">Payable by ${dueDate}.</value>
+    </property>
+    <property key="EInvoicePaymentTermImmediate">
+        <value xml:lang="de">Zahlbar sofort.</value>
+        <value xml:lang="en">Payable immediately.</value>
+    </property>
+    <property key="EInvoiceNoBuyerReference">
+        <value xml:lang="de">Keine Käuferreferenz (Leitweg-ID) gefunden; die Kundennummer ${partyId} wird verwendet. Öffentliche Auftraggeber verlangen die Leitweg-ID.</value>
+        <value xml:lang="en">No buyer reference (Leitweg-ID) found; the customer number ${partyId} is used. Public authorities require the Leitweg-ID.</value>
+    </property>
+    <property key="EInvoiceCreditNoteNoPreceding">
+        <value xml:lang="de">Die Originalrechnung der Gutschrift wurde nicht gefunden (Rechnungsattribut EINV_PRECEDING_INVOICE).</value>
+        <value xml:lang="en">The original invoice of the credit note was not found (invoice attribute EINV_PRECEDING_INVOICE).</value>
+    </property>
+    <property key="EInvoiceNoLines">
+        <value xml:lang="de">Die Rechnung hat keine Positionen.</value>
+        <value xml:lang="en">The invoice has no lines.</value>
+    </property>
+    <property key="EInvoiceVatExempt">
+        <value xml:lang="de">Steuerfreier Umsatz</value>
+        <value xml:lang="en">VAT-exempt supply</value>
+    </property>
+    <property key="EInvoiceVatReverseCharge">
+        <value xml:lang="de">Steuerschuldnerschaft des Leistungsempfängers</value>
+        <value xml:lang="en">Reverse charge: the recipient owes the VAT</value>
+    </property>
+    <property key="EInvoiceVatNotSubject">
+        <value xml:lang="de">Nicht steuerbarer Umsatz</value>
+        <value xml:lang="en">Not subject to VAT</value>
+    </property>
+    <property key="EInvoiceVatSmallBusiness">
+        <value xml:lang="de">Als Kleinunternehmer im Sinne von § 19 Abs. 1 UStG wird Umsatzsteuer nicht berechnet</value>
+        <value xml:lang="en">As a small business within the meaning of section 19 (1) UStG, no VAT is charged</value>
+    </property>
+    <property key="EInvoiceVatExemptGeneric">
+        <value xml:lang="de">Mindestens eine Position ist steuerfrei, aber ohne Befreiungsgrund; die E-Rechnung nennt nur "Steuerfreier Umsatz". Tragen Sie den genauen Grund am Steuersatz ein (Befreiungsgrund) oder in einvoice.vat.exemptionReason.noTax. Ein Kleinunternehmer setzt die Kennzeichnung in den E-Rechnung-Einstellungen der Organisation.</value>
+        <value xml:lang="en">At least one line is VAT-exempt without an exemption reason; the e-invoice only says "VAT-exempt supply". Enter the exact reason on the tax rate (exemption reason) or in einvoice.vat.exemptionReason.noTax. A small business sets the flag in the e-invoice settings of the organization.</value>
+    </property>
+    <property key="EInvoiceVatIntraCommunity">
+        <value xml:lang="de">Steuerfreie innergemeinschaftliche Lieferung</value>
+        <value xml:lang="en">Intra-community supply, exempt from VAT</value>
+    </property>
+    <property key="EInvoiceVatExport">
+        <value xml:lang="de">Steuerfreie Ausfuhrlieferung</value>
+        <value xml:lang="en">Export outside the EU, exempt from VAT</value>
+    </property>
+    <property key="EInvoiceRoundingDifference">
+        <value xml:lang="de">Die Summe der E-Rechnung (${eTotal}) weicht wegen der Steuerrundung von der Rechnungssumme (${total}) ab. Der Betrag ${difference} steht als Rundungsbetrag in der E-Rechnung.</value>
+        <value xml:lang="en">The e-invoice total (${eTotal}) differs from the invoice total (${total}) because of tax rounding. The amount ${difference} is in the e-invoice as the rounding amount.</value>
+    </property>
+    <property key="EInvoiceTotalMismatch">
+        <value xml:lang="de">Die Summe der E-Rechnung (${eTotal}) weicht von der Rechnungssumme (${total}) ab. Prüfen Sie die Steuersätze und Positionen.</value>
+        <value xml:lang="en">The e-invoice total (${eTotal}) differs from the invoice total (${total}). Check the tax rates and the lines.</value>
+    </property>
+    <property key="EInvoiceNoFormat">
+        <value xml:lang="de">Kein E-Rechnungsformat gewählt oder unbekanntes Format (${formatId}).</value>
+        <value xml:lang="en">No e-invoice format selected, or the format is unknown (${formatId}).</value>
+    </property>
+    <property key="EInvoiceEmailNotSent">
+        <value xml:lang="de">Die E-Mail mit der Rechnung ${invoiceId} wurde nicht gesendet: der Kunde erhält E-Rechnungen, aber die E-Rechnung kann nicht erstellt werden.</value>
+        <value xml:lang="en">The email with invoice ${invoiceId} was not sent: the customer receives e-invoices, but the e-invoice cannot be made.</value>
+    </property>
+
+    <!-- Import messages -->
+    <property key="EInvoiceImportNoFile">
+        <value xml:lang="de">Wählen Sie eine Datei aus.</value>
+        <value xml:lang="en">Select a file.</value>
+    </property>
+    <property key="EInvoiceImportUnknownFile">
+        <value xml:lang="de">Die Datei ist keine E-Rechnung (weder CII noch UBL noch PDF).</value>
+        <value xml:lang="en">The file is not an e-invoice (not CII, not UBL, not PDF).</value>
+    </property>
+    <property key="EInvoiceImportNoXmlInPdf">
+        <value xml:lang="de">Das PDF enthält keine E-Rechnungsdaten (ZUGFeRD / Factur-X).</value>
+        <value xml:lang="en">The PDF has no e-invoice data (ZUGFeRD / Factur-X).</value>
+    </property>
+    <property key="EInvoiceImportCannotRead">
+        <value xml:lang="de">Die E-Rechnung kann nicht gelesen werden: ${message}</value>
+        <value xml:lang="en">The e-invoice cannot be read: ${message}</value>
+    </property>
+    <property key="EInvoiceImportCalculationError">
+        <value xml:lang="de">Die Beträge in der Datei passen nicht zusammen: ${message}. Prüfen Sie die Rechnung mit dem Lieferanten.</value>
+        <value xml:lang="en">The amounts in the file do not add up: ${message}. Check the invoice with the supplier.</value>
+    </property>
+    <property key="EInvoiceImportNoNumber">
+        <value xml:lang="de">Die E-Rechnung hat keine Rechnungsnummer.</value>
+        <value xml:lang="en">The e-invoice has no invoice number.</value>
+    </property>
+    <property key="EInvoiceImportNoSupplier">
+        <value xml:lang="de">Kein Lieferant zur E-Rechnung gefunden (Name: ${name}, USt-IdNr.: ${vatId}). Wählen Sie den Lieferanten aus oder legen Sie ihn an.</value>
+        <value xml:lang="en">No supplier found for the e-invoice (name: ${name}, VAT ID: ${vatId}). Select the supplier or create it.</value>
+    </property>
+    <property key="EInvoiceImportDuplicate">
+        <value xml:lang="de">Die Rechnung ${number} dieses Lieferanten ist schon erfasst (${invoiceId}).</value>
+        <value xml:lang="en">The invoice ${number} of this supplier is already recorded (${invoiceId}).</value>
+    </property>
+    <property key="EInvoiceImportDescription">
+        <value xml:lang="de">E-Rechnung ${number} von ${name}</value>
+        <value xml:lang="en">E-invoice ${number} from ${name}</value>
+    </property>
+    <property key="EInvoiceImportCreditNoteDescription">
+        <value xml:lang="de">E-Gutschrift ${number} von ${name}</value>
+        <value xml:lang="en">E-credit note ${number} from ${name}</value>
+    </property>
+    <property key="EInvoiceImportCharge">
+        <value xml:lang="de">Zuschlag</value>
+        <value xml:lang="en">Charge</value>
+    </property>
+    <property key="EInvoiceImportAllowance">
+        <value xml:lang="de">Nachlass</value>
+        <value xml:lang="en">Allowance</value>
+    </property>
+    <property key="EInvoiceImportLineAdjustment">
+        <value xml:lang="de">Positionsnachlass oder -zuschlag</value>
+        <value xml:lang="en">Line allowance or charge</value>
+    </property>
+    <property key="EInvoiceImportVat">
+        <value xml:lang="de">Umsatzsteuer ${percent} % (${category})</value>
+        <value xml:lang="en">VAT ${percent} % (${category})</value>
+    </property>
+    <property key="EInvoiceImportRounding">
+        <value xml:lang="de">Rundung</value>
+        <value xml:lang="en">Rounding</value>
+    </property>
+    <property key="EInvoiceImportTotalDiffers">
+        <value xml:lang="de">Die Summe der erfassten Rechnung (${total}) weicht von der Summe der Datei (${fileTotal}) ab.</value>
+        <value xml:lang="en">The total of the recorded invoice (${total}) differs from the file total (${fileTotal}).</value>
+    </property>
+    <property key="EInvoiceImportPrepaid">
+        <value xml:lang="de">Laut Datei ist der Betrag ${amount} schon bezahlt. Erfassen Sie die Zahlung.</value>
+        <value xml:lang="en">The file says the amount ${amount} is already paid. Record the payment.</value>
+    </property>
+    <property key="EInvoiceImportRecipientVatDiffers">
+        <value xml:lang="de">Die Empfänger-USt-IdNr. der Datei (${vatId}) gehört nicht zur Organisation ${partyId}.</value>
+        <value xml:lang="en">The recipient VAT ID in the file (${vatId}) does not belong to the organization ${partyId}.</value>
+    </property>
+    <property key="EInvoiceImportDone">
+        <value xml:lang="de">Die E-Rechnung ist als Eingangsrechnung ${invoiceId} erfasst. Prüfen Sie sie und geben Sie sie frei.</value>
+        <value xml:lang="en">The e-invoice is recorded as purchase invoice ${invoiceId}. Check it and approve it.</value>
+    </property>
+</resource>

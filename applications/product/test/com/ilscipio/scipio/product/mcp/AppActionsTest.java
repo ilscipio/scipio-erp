@@ -83,4 +83,87 @@ public class AppActionsTest {
         assertFalse(found.readOnly());
         assertEquals("UPS", FacilityMcp.VOID_CARRIER);
     }
+
+    /** R4-4: facility/shipment tracking_set is a write action with the shipment and tracking number as required arguments. */
+    @Test
+    void trackingSetIsAWriteActionOfTheShipmentTool() throws Exception {
+        java.lang.reflect.Method found = null;
+        for (java.lang.reflect.Method m : FacilityMcp.class.getDeclaredMethods()) {
+            McpTool a = m.getAnnotation(McpTool.class);
+            if (a != null && "shipment".equals(a.topic()) && "tracking_set".equals(a.name())) {
+                found = m;
+                assertFalse(a.readOnly());
+            }
+        }
+        assertNotNull(found);
+        java.util.Set<String> required = new java.util.HashSet<>();
+        for (java.lang.reflect.Parameter p : found.getParameters()) {
+            com.ilscipio.scipio.mcp.def.McpParam mp = p.getAnnotation(com.ilscipio.scipio.mcp.def.McpParam.class);
+            if (mp != null && mp.required()) required.add(mp.name());
+        }
+        assertEquals(java.util.Set.of("shipmentId", "trackingIdNumber"), required);
+    }
+
+    @Test
+    void trackingSetNeedsThePermission() {
+        org.ofbiz.entity.GenericValue userLogin = mock(org.ofbiz.entity.GenericValue.class);
+        when(userLogin.getString("userLoginId")).thenReturn("agent");
+        Security sec = mock(Security.class);
+        when(sec.hasPermission(anyString(), any(org.ofbiz.entity.GenericValue.class))).thenReturn(false);
+        when(sec.hasEntityPermission(anyString(), anyString(), any(org.ofbiz.entity.GenericValue.class))).thenReturn(false);
+        javax.servlet.http.HttpServletRequest http = mock(javax.servlet.http.HttpServletRequest.class);
+        com.ilscipio.scipio.mcp.web.McpRequest req = new com.ilscipio.scipio.mcp.web.McpRequest(http, null, null, null, null, sec, "req-1");
+        org.ofbiz.entity.GenericValue token = mock(org.ofbiz.entity.GenericValue.class);
+        when(token.getString("tokenId")).thenReturn("tok");
+        req.setPrincipal(new com.ilscipio.scipio.mcp.security.McpPrincipal(token, userLogin));
+        com.ilscipio.scipio.mcp.registry.McpCallContext ctx = new com.ilscipio.scipio.mcp.registry.McpCallContext(req);
+        com.ilscipio.scipio.mcp.registry.McpToolException e = assertThrows(com.ilscipio.scipio.mcp.registry.McpToolException.class,
+                () -> FacilityMcp.setTracking(ctx, "10050", "9400 1111", "USPS", null));
+        assertTrue(e.isDenied());
+        assertTrue(e.getMessage().contains("FACILITY_UPDATE"));
+    }
+
+    @Test
+    void trackingNumberIsCleanedAndBounded() {
+        assertEquals("940011112222", FacilityMcp.cleanTracking("  9400 1111 2222 "));
+        assertNull(FacilityMcp.cleanTracking("   "));
+        assertNull(FacilityMcp.cleanTracking(null));
+        assertEquals(60, FacilityMcp.MAX_TRACKING_LENGTH); // ShipmentRouteSegment.trackingIdNumber is a short-varchar (60)
+        assertNull(FacilityMcp.cleanTracking("1".repeat(FacilityMcp.MAX_TRACKING_LENGTH + 1)));
+        assertNotNull(FacilityMcp.cleanTracking("1".repeat(FacilityMcp.MAX_TRACKING_LENGTH)));
+    }
+
+    /** R4-4 finding 8: the carrier id is cleaned, and a new carrier party gets a readable name. */
+    @Test
+    void carrierIdIsCleanedAndNamed() {
+        assertEquals("ROYAL_MAIL", FacilityMcp.cleanCarrier(" royal_mail "));
+        assertNull(FacilityMcp.cleanCarrier("Royal Mail"));
+        assertNull(FacilityMcp.cleanCarrier(""));
+        assertNull(FacilityMcp.cleanCarrier(null));
+        assertNull(FacilityMcp.cleanCarrier("A".repeat(21)));
+        assertEquals("Royal Mail", FacilityMcp.carrierName("ROYAL_MAIL"));
+        assertEquals("Evri", FacilityMcp.carrierName("EVRI"));
+        assertEquals("XPRESS", FacilityMcp.carrierName("XPRESS"));
+    }
+
+    /** R4-4 finding 9: a new route segment needs FACILITY_CREATE; an existing segment does not. */
+    @Test
+    void aNewSegmentNeedsTheCreatePermission() throws Exception {
+        org.ofbiz.entity.GenericValue userLogin = mock(org.ofbiz.entity.GenericValue.class);
+        when(userLogin.getString("userLoginId")).thenReturn("agent");
+        Security sec = mock(Security.class);
+        when(sec.hasPermission(anyString(), any(org.ofbiz.entity.GenericValue.class))).thenReturn(false);
+        when(sec.hasEntityPermission(anyString(), anyString(), any(org.ofbiz.entity.GenericValue.class))).thenReturn(false);
+        javax.servlet.http.HttpServletRequest http = mock(javax.servlet.http.HttpServletRequest.class);
+        com.ilscipio.scipio.mcp.web.McpRequest req = new com.ilscipio.scipio.mcp.web.McpRequest(http, null, null, null, null, sec, "req-2");
+        org.ofbiz.entity.GenericValue token = mock(org.ofbiz.entity.GenericValue.class);
+        when(token.getString("tokenId")).thenReturn("tok");
+        req.setPrincipal(new com.ilscipio.scipio.mcp.security.McpPrincipal(token, userLogin));
+        com.ilscipio.scipio.mcp.registry.McpCallContext ctx = new com.ilscipio.scipio.mcp.registry.McpCallContext(req);
+        com.ilscipio.scipio.mcp.registry.McpToolException e = assertThrows(com.ilscipio.scipio.mcp.registry.McpToolException.class,
+                () -> FacilityMcp.requireCreateForNewSegment(ctx, false));
+        assertTrue(e.isDenied());
+        assertTrue(e.getMessage().contains("FACILITY_CREATE"));
+        FacilityMcp.requireCreateForNewSegment(ctx, true); // an existing segment needs FACILITY_UPDATE only: no check here
+    }
 }

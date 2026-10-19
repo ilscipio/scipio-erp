@@ -155,7 +155,7 @@ public final class OrderMcp {
 
     private OrderMcp() {}
 
-    @McpTool(topic = "order", name = "find", description = "Find orders by id, status, party, order type or order date range.", readOnly = true, order = 10)
+    @McpTool(topic = "order", name = "find", description = "Find orders by id, status, party, order type, order date range or a search text q (order id, buyer name or e-mail, item description). Newest first; offset pages.", readOnly = true, order = 10)
     public static Object findOrders(McpCallContext ctx,
             @McpParam(name = "orderId", description = "Exact order id", required = false) String orderId,
             @McpParam(name = "statusId", description = "e.g. ORDER_APPROVED", required = false) String statusId,
@@ -163,12 +163,30 @@ public final class OrderMcp {
             @McpParam(name = "orderTypeId", description = "e.g. SALES_ORDER, PURCHASE_ORDER", required = false) String orderTypeId,
             @McpParam(name = "fromDate", description = "Only orders placed on/after this date", required = false) Timestamp fromDate,
             @McpParam(name = "thruDate", description = "Only orders placed on/before this date", required = false) Timestamp thruDate,
-            @McpParam(name = "limit", description = "Max rows to return", required = false) Integer limit) throws McpToolException {
+            @McpParam(name = "limit", description = "Max rows to return", required = false) Integer limit,
+            @McpParam(name = "q", description = "Search text (at most 100 characters): part of the order id, the buyer's name or e-mail, or an item description; case-insensitive", required = false) String q,
+            @McpParam(name = "offset", description = "Rows to skip (paging); default 0", required = false) Integer offset,
+            @McpParam(name = "statusIds", description = "Several statuses: orders in any of them (one find pages all statuses of a group with one offset and limit)", required = false, type = "array") List<Object> statusIds,
+            @McpParam(name = "details", description = "true: each row also has salesChannelEnumId, itemCount, firstProductId, firstProductImageUrl, customerName and customerCity (what a list row needs, so no order get for each row); default false", required = false) Boolean details) throws McpToolException {
         Delegator delegator = ctx.getDelegator();
         try {
             List<EntityCondition> conditions = new ArrayList<>();
+            String text = cleanSearch(q);
+            if (q != null && !q.trim().isEmpty() && text == null) {
+                throw new McpToolException("invalid_q: the search text is longer than " + MAX_SEARCH_LENGTH + " characters");
+            }
+            if (text != null) {
+                java.util.Set<String> matching = orderIdsMatching(delegator, text);
+                if (matching.isEmpty()) return new ArrayList<>();
+                conditions.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, matching));
+            }
             if (orderId != null) conditions.add(EntityCondition.makeCondition("orderId", orderId));
             if (statusId != null) conditions.add(EntityCondition.makeCondition("statusId", statusId));
+            if (statusIds != null && !statusIds.isEmpty()) {
+                List<String> ids = new ArrayList<>();
+                for (Object id : statusIds) ids.add(String.valueOf(id));
+                conditions.add(EntityCondition.makeCondition("statusId", EntityOperator.IN, ids));
+            }
             if (orderTypeId != null) conditions.add(EntityCondition.makeCondition("orderTypeId", orderTypeId));
             if (fromDate != null) conditions.add(EntityCondition.makeCondition("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, fromDate));
             if (thruDate != null) conditions.add(EntityCondition.makeCondition("orderDate", EntityOperator.LESS_THAN_EQUAL_TO, thruDate));
@@ -180,8 +198,11 @@ public final class OrderMcp {
                 if (orderIds.isEmpty()) return new ArrayList<>();
                 conditions.add(EntityCondition.makeCondition("orderId", EntityOperator.IN, orderIds));
             }
+            int max = ctx.limit(limit);
+            int skip = offset != null && offset > 0 ? offset : 0;
             List<GenericValue> orders = EntityQuery.use(delegator).from("OrderHeader").where(conditions)
-                    .orderBy("-orderDate").maxRows(ctx.limit(limit)).queryList();
+                    .orderBy("-orderDate", "-orderId").maxRows(skip + max).queryList();
+            if (skip > 0) orders = skip >= orders.size() ? new ArrayList<GenericValue>() : orders.subList(skip, orders.size());
             List<Map<String, Object>> result = new ArrayList<>();
             for (GenericValue order : orders) {
                 Map<String, Object> row = new LinkedHashMap<>();
@@ -194,12 +215,180 @@ public final class OrderMcp {
                 GenericValue billTo = EntityQuery.use(delegator).from("OrderRole")
                         .where("orderId", order.getString("orderId"), "roleTypeId", "BILL_TO_CUSTOMER").queryFirst();
                 row.put("billToPartyId", billTo != null ? billTo.getString("partyId") : null);
+                if (Boolean.TRUE.equals(details)) {
+                    // A runtime error of the helpers for one order leaves this row without the detail fields (the caller then reads
+                    // the order itself). An entity error (GenericEntityException) fails the find, as it did before: on PostgreSQL it
+                    // aborts the open transaction, so the next rows could not read either, and no extra connection is opened per row.
+                    try {
+                        addListFields(delegator, order, row, billTo != null ? billTo.getString("partyId") : null);
+                    } catch (RuntimeException e) {
+                        org.ofbiz.base.util.Debug.logWarning(e, "order find details failed for order " + order.getString("orderId"), OrderMcp.class.getName());
+                        for (String f : DETAIL_FIELDS) row.remove(f);
+                    }
+                }
                 result.add(row);
             }
             return result;
         } catch (GenericEntityException e) {
             throw new McpToolException("Order search failed: " + e.getMessage());
         }
+    }
+
+    /** The product fields that hold an image, in the order of preference. */
+    private static final String[] IMAGE_FIELDS = {"mediumImageUrl", "smallImageUrl", "largeImageUrl", "originalImageUrl", "detailImageUrl"};
+
+    private static final String[] DETAIL_FIELDS = {"salesChannelEnumId", "itemCount", "firstProductId", "firstProductImageUrl", "customerName", "customerCity"};
+
+    /**
+     * SCIPIO: 4.0.0: R4-18: the fields that a list row of the app needs, so that the list needs no order get for each row:
+     * salesChannelEnumId, itemCount, firstProductId, firstProductImageUrl (the stored image path of the first product, as the
+     * product has it), customerName (bill-to party, else placing party) and customerCity (first shipping location). Light on
+     * purpose: no e-mail, no full address. Only the rows of the returned page get them.
+     */
+    private static void addListFields(Delegator delegator, GenericValue order, Map<String, Object> row, String billToPartyId) throws GenericEntityException {
+        String orderId = order.getString("orderId");
+        List<GenericValue> items = EntityQuery.use(delegator).from("OrderItem").where("orderId", orderId).orderBy("orderItemSeqId").queryList();
+        String firstProductId = null;
+        for (GenericValue item : items) {
+            if (item.getString("productId") != null) {
+                firstProductId = item.getString("productId");
+                break;
+            }
+        }
+        String image = null;
+        if (firstProductId != null) {
+            GenericValue product = EntityQuery.use(delegator).from("Product").where("productId", firstProductId).cache().queryOne();
+            for (String f : IMAGE_FIELDS) {
+                if (product != null && UtilValidate.isNotEmpty(product.getString(f)) && !product.getString(f).trim().isEmpty()) {
+                    image = product.getString(f).trim();
+                    break;
+                }
+            }
+        }
+        String partyId = billToPartyId;
+        if (partyId == null) {
+            GenericValue placing = EntityQuery.use(delegator).from("OrderRole").where("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER").queryFirst();
+            partyId = placing != null ? placing.getString("partyId") : null;
+        }
+        String city = null;
+        GenericValue shipTo = EntityQuery.use(delegator).from("OrderContactMech")
+                .where("orderId", orderId, "contactMechPurposeTypeId", "SHIPPING_LOCATION").queryFirst();
+        if (shipTo != null) {
+            GenericValue address = EntityQuery.use(delegator).from("PostalAddress").where("contactMechId", shipTo.getString("contactMechId")).queryOne();
+            city = address != null ? address.getString("city") : null;
+        }
+        row.put("salesChannelEnumId", order.getString("salesChannelEnumId"));
+        row.put("itemCount", items.size());
+        row.put("firstProductId", firstProductId);
+        row.put("firstProductImageUrl", image);
+        row.put("customerName", partyId == null ? null : org.ofbiz.party.party.PartyHelper.getPartyName(delegator, partyId, false));
+        row.put("customerCity", city);
+    }
+
+    /** Longest search text of order find q. */
+    static final int MAX_SEARCH_LENGTH = 100;
+    /** Most ids that one part of the search collects. */
+    private static final int SEARCH_CAP = 2000;
+
+    /** The search text as order find uses it: trimmed, without the LIKE wildcard %; null when empty or too long. */
+    static String cleanSearch(String q) {
+        if (q == null) return null;
+        String t = q.trim().replace("%", "");
+        return t.isEmpty() || t.length() > MAX_SEARCH_LENGTH ? null : t;
+    }
+
+    private static EntityCondition like(String field, String text) {
+        return EntityCondition.makeCondition(org.ofbiz.entity.condition.EntityFunction.UPPER_FIELD(field), EntityOperator.LIKE,
+                org.ofbiz.entity.condition.EntityFunction.UPPER("%" + text + "%"));
+    }
+
+    private static java.util.Set<String> column(List<GenericValue> rows, String field) {
+        java.util.Set<String> out = new java.util.LinkedHashSet<>();
+        for (GenericValue r : rows) {
+            String v = r.getString(field);
+            if (v != null) out.add(v);
+        }
+        return out;
+    }
+
+    /**
+     * The ids of the orders that match a search text: the order id, the name of a buyer (every word of the text must be in
+     * the first name, the last name or the group name of one party on the order), the e-mail address of the order or of
+     * a buyer, or the description of an order item.
+     */
+    static java.util.Set<String> orderIdsMatching(Delegator delegator, String text) throws GenericEntityException {
+        java.util.Set<String> ids = new java.util.LinkedHashSet<>();
+        ids.addAll(column(EntityQuery.use(delegator).select("orderId").from("OrderHeader").where(like("orderId", text))
+                .maxRows(SEARCH_CAP).queryList(), "orderId"));
+        ids.addAll(column(EntityQuery.use(delegator).select("orderId").from("OrderItem").where(like("itemDescription", text))
+                .maxRows(SEARCH_CAP).queryList(), "orderId"));
+        // names: every word must match one party
+        java.util.Set<String> partyIds = null;
+        for (String word : text.split("\\s+")) {
+            java.util.Set<String> hit = new java.util.LinkedHashSet<>();
+            hit.addAll(column(EntityQuery.use(delegator).select("partyId").from("Person")
+                    .where(EntityCondition.makeCondition(EntityOperator.OR, like("firstName", word), like("lastName", word)))
+                    .maxRows(SEARCH_CAP).queryList(), "partyId"));
+            hit.addAll(column(EntityQuery.use(delegator).select("partyId").from("PartyGroup").where(like("groupName", word))
+                    .maxRows(SEARCH_CAP).queryList(), "partyId"));
+            if (partyIds == null) partyIds = hit; else partyIds.retainAll(hit);
+            if (partyIds.isEmpty()) break;
+        }
+        // e-mail: the order's own address and the address of a party
+        java.util.Set<String> mechIds = column(EntityQuery.use(delegator).select("contactMechId").from("ContactMech")
+                .where(like("infoString", text)).maxRows(SEARCH_CAP).queryList(), "contactMechId");
+        if (!mechIds.isEmpty()) {
+            ids.addAll(column(EntityQuery.use(delegator).select("orderId").from("OrderContactMech")
+                    .where(EntityCondition.makeCondition("contactMechId", EntityOperator.IN, mechIds)).maxRows(SEARCH_CAP).queryList(), "orderId"));
+            if (partyIds == null) partyIds = new java.util.LinkedHashSet<>();
+            partyIds.addAll(column(EntityQuery.use(delegator).select("partyId").from("PartyContactMech")
+                    .where(EntityCondition.makeCondition("contactMechId", EntityOperator.IN, mechIds)).maxRows(SEARCH_CAP).queryList(), "partyId"));
+        }
+        if (partyIds != null && !partyIds.isEmpty()) {
+            ids.addAll(column(EntityQuery.use(delegator).select("orderId").from("OrderRole")
+                    .where(EntityCondition.makeCondition("partyId", EntityOperator.IN, partyIds)).maxRows(SEARCH_CAP).queryList(), "orderId"));
+        }
+        return ids;
+    }
+
+    /**
+     * The reason an order is on hold: the changeReason of the newest ORDER_HOLD status row of the order itself (no item, no
+     * payment preference), even when that reason is empty; else the noteInfo of the newest note written at or after that
+     * status row; null when neither has a text.
+     */
+    static String holdReasonOf(List<GenericValue> statuses, List<GenericValue> notes) {
+        GenericValue hold = null;
+        if (statuses != null) {
+            for (GenericValue st : statuses) {
+                if (!"ORDER_HOLD".equals(st.getString("statusId"))) continue;
+                if (UtilValidate.isNotEmpty(st.getString("orderItemSeqId"))) continue;
+                if (UtilValidate.isNotEmpty(st.getString("orderPaymentPreferenceId"))) continue;
+                if (hold == null || newer(st.getTimestamp("statusDatetime"), hold.getTimestamp("statusDatetime"))) {
+                    hold = st;
+                }
+            }
+        }
+        if (hold == null) return null;
+        if (UtilValidate.isNotEmpty(hold.getString("changeReason"))) {
+            return hold.getString("changeReason").trim();
+        }
+        java.sql.Timestamp holdAt = hold.getTimestamp("statusDatetime");
+        if (holdAt == null || notes == null) return null;
+        GenericValue newestNote = null;
+        for (GenericValue n : notes) {
+            if (UtilValidate.isEmpty(n.getString("noteInfo"))) continue;
+            java.sql.Timestamp at = n.getTimestamp("noteDateTime");
+            if (at == null || at.before(holdAt)) continue;
+            if (newestNote == null || newer(at, newestNote.getTimestamp("noteDateTime"))) {
+                newestNote = n;
+            }
+        }
+        return newestNote != null ? newestNote.getString("noteInfo").trim() : null;
+    }
+
+    private static boolean newer(java.sql.Timestamp a, java.sql.Timestamp b) {
+        if (a == null) return false;
+        return b == null || a.after(b);
     }
 
     /** The bill-to customer of an order: party id, name, e-mail and the city and country of the shipping address; null without one. */
@@ -219,6 +408,9 @@ public final class OrderMcp {
         List<GenericValue> addresses = helper.getShippingLocations();
         if (UtilValidate.isNotEmpty(addresses)) {
             GenericValue a = addresses.get(0);
+            c.put("toName", a.getString("toName"));
+            c.put("address1", a.getString("address1"));
+            c.put("address2", a.getString("address2"));
             c.put("city", a.getString("city"));
             c.put("postalCode", a.getString("postalCode"));
             c.put("countryGeoId", a.getString("countryGeoId"));
@@ -226,7 +418,37 @@ public final class OrderMcp {
         return c;
     }
 
-    @McpTool(topic = "order", name = "get", description = "Get full order detail: header, items, status history, roles, ship groups, payment preferences, shipments and the customer (name, e-mail, city).", readOnly = true, order = 20)
+    /** SCIPIO: 4.0.0: R4-11: the returns of an order: {returnId, statusId, entryDate, items[{returnItemSeqId, orderItemSeqId, productId, returnQuantity, returnPrice, returnReasonId, statusId}]}. */
+    private static List<Map<String, Object>> returnsOf(Delegator delegator, String orderId) throws GenericEntityException {
+        Map<String, Map<String, Object>> byReturn = new LinkedHashMap<>();
+        for (GenericValue item : EntityQuery.use(delegator).from("ReturnItem").where("orderId", orderId).orderBy("returnId", "returnItemSeqId").queryList()) {
+            String returnId = item.getString("returnId");
+            Map<String, Object> entry = byReturn.get(returnId);
+            if (entry == null) {
+                GenericValue header = EntityQuery.use(delegator).from("ReturnHeader").where("returnId", returnId).queryOne();
+                entry = new LinkedHashMap<>();
+                entry.put("returnId", returnId);
+                entry.put("statusId", header == null ? null : header.getString("statusId"));
+                entry.put("entryDate", header == null || header.getTimestamp("entryDate") == null ? null : header.getTimestamp("entryDate").toInstant().toString());
+                entry.put("items", new ArrayList<Map<String, Object>>());
+                byReturn.put(returnId, entry);
+            }
+            Map<String, Object> row = new LinkedHashMap<>();
+            for (String f : new String[] {"returnItemSeqId", "orderItemSeqId", "productId", "returnReasonId", "statusId"}) {
+                row.put(f, item.getString(f));
+            }
+            row.put("returnQuantity", item.get("returnQuantity") == null ? null : item.get("returnQuantity").toString());
+            row.put("returnPrice", item.get("returnPrice") == null ? null : item.get("returnPrice").toString());
+            @SuppressWarnings("unchecked")
+            List<Map<String, Object>> rows = (List<Map<String, Object>>) entry.get("items");
+            rows.add(row);
+        }
+        List<Map<String, Object>> out = new ArrayList<>(byReturn.values());
+        out.sort(java.util.Comparator.comparing((Map<String, Object> r) -> String.valueOf(r.get("entryDate"))));
+        return out;
+    }
+
+    @McpTool(topic = "order", name = "get", description = "Get full order detail: header, items, status history, roles, ship groups, payment preferences, shipments, the returns, and the customer (name, e-mail, address) and holdReason (why an order on hold is held).", readOnly = true, order = 20)
     public static Object getOrder(McpCallContext ctx,
             @McpParam(name = "orderId", description = "Order id", required = true) String orderId) throws McpToolException {
         Delegator delegator = ctx.getDelegator();
@@ -255,6 +477,12 @@ public final class OrderMcp {
             result.put("shipments", ResultConverter.toJson(EntityQuery.use(delegator).from("Shipment")
                     .where("primaryOrderId", orderId).orderBy("shipmentId").queryList()));
             result.put("customer", customerOf(delegator, helper));
+            // SCIPIO: 4.0.0: R4-11: the returns of the order (the header status and the returned items), newest last
+            result.put("returns", returnsOf(delegator, orderId));
+            // SCIPIO: 4.0.0: R4-3: why the order is on hold: the reason of the newest status change, else the newest note
+            result.put("holdReason", "ORDER_HOLD".equals(orderHeader.getString("statusId"))
+                    ? holdReasonOf(helper.getOrderStatuses(), EntityQuery.use(delegator).from("OrderHeaderNoteView")
+                            .where("orderId", orderId).queryList()) : null);
             List<GenericValue> messages = new ArrayList<>();
             for (GenericValue link : EntityQuery.use(delegator).from("CommunicationEventOrder").where("orderId", orderId).queryList()) {
                 GenericValue ev = EntityQuery.use(delegator).from("CommunicationEvent")
@@ -424,7 +652,11 @@ public final class OrderMcp {
                 itemParams.put("orderItemSeqId", seqId);
                 itemParams.put("returnQuantity", returnQuantity);
                 itemParams.put("returnReasonId", row.get("returnReasonId") != null ? row.get("returnReasonId") : "RTN_NOT_WANT");
-                itemParams.put("returnTypeId", row.get("returnTypeId") != null ? row.get("returnTypeId") : "RTN_REFUND");
+                Object itemReturnType = row.get("returnTypeId") != null ? row.get("returnTypeId") : "RTN_REFUND";
+                if ("RTN_SELLER_REFUND".equals(itemReturnType)) {
+                    ensureSellerRefundReturnType(ctx, delegator);
+                }
+                itemParams.put("returnTypeId", itemReturnType);
                 itemParams.put("returnItemTypeId", row.get("returnItemTypeId") != null ? row.get("returnItemTypeId") : "RET_FPROD_ITEM");
                 if (row.get("returnPrice") != null) {
                     try {
@@ -454,6 +686,19 @@ public final class OrderMcp {
         } catch (GenericEntityException e) {
             throw new McpToolException("Return creation failed: " + e.getMessage());
         }
+    }
+
+    /**
+     * Creates the ReturnType RTN_SELLER_REFUND when it is missing. Existing store databases do not get new seed rows.
+     * No core process acts on this type: the seller refunds by hand (payment_refund).
+     */
+    private static void ensureSellerRefundReturnType(McpCallContext ctx, Delegator delegator) throws GenericEntityException, McpToolException {
+        if (EntityQuery.use(delegator).from("ReturnType").where("returnTypeId", "RTN_SELLER_REFUND").queryOne() != null) return;
+        Map<String, Object> params = new LinkedHashMap<>();
+        params.put("returnTypeId", "RTN_SELLER_REFUND");
+        params.put("description", "Seller refund (manual)");
+        params.put("sequenceId", "10");
+        ctx.runService("createReturnType", params);
     }
 
     @McpTool(topic = "quote", name = "create", description = "Create a sales quote for a party from a list of items.",

@@ -37,6 +37,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
     <!-- Events to run on every request before security (chains exempt) -->
     <preprocessor>
+        <!-- SCIPIO: 4.0.0: R4-15 (J5-01): a paused store answers each page with the note (503) and takes no order; runs first -->
+        <event name="checkStorePause" type="java" path="com.ilscipio.scipio.shop.misc.StorePauseEvents" invoke="checkPause"/>
         <!-- This event allows affilate/distributor entry on any page -->
         <event name="setAssociationId" type="java" path="com.ilscipio.scipio.shop.misc.ThirdPartyEvents" invoke="setAssociationId"/>
         <event name="checkTrackingCodeUrlParam" type="java" path="org.ofbiz.marketing.tracking.TrackingCodeEvents" invoke="checkTrackingCodeUrlParam"/>

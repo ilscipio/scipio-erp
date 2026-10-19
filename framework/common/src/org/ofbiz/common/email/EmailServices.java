@@ -498,6 +498,8 @@ public class EmailServices {
         String attachmentNameParam = (String) serviceContext.remove("attachmentName");
         List<String> xslfoAttachScreenLocationListParam = UtilGenerics.checkList(serviceContext.remove("xslfoAttachScreenLocationList"));
         List<String> attachmentNameListParam = UtilGenerics.checkList(serviceContext.remove("attachmentNameList"));
+        // SCIPIO: 4.0.0: ready-made attachments (content byte[] or String, type, filename), e.g. an e-invoice XML
+        List<Map<String, Object>> attachments = UtilGenerics.checkList(serviceContext.remove("attachments"));
 
         List<String> xslfoAttachScreenLocationList = new LinkedList<>();
         List<String> attachmentNameList = new LinkedList<>();
@@ -591,7 +593,7 @@ public class EmailServices {
         boolean isMultiPart = false;
 
         // check if attachment screen location passed in
-        if (UtilValidate.isNotEmpty(xslfoAttachScreenLocationList)) {
+        if (UtilValidate.isNotEmpty(xslfoAttachScreenLocationList) || UtilValidate.isNotEmpty(attachments)) {
             List<Map<String, ? extends Object>> bodyParts = new LinkedList<Map<String, ? extends Object>>();
             if (bodyText != null) {
                 bodyText = FlexibleStringExpander.expandString(bodyText, screenContext,  locale);
@@ -652,6 +654,13 @@ public class EmailServices {
                             UtilMisc.toMap("errorString", e.toString()), locale));
                 }
 
+                serviceContext.put("bodyParts", bodyParts);
+            }
+            if (UtilValidate.isNotEmpty(attachments)) { // SCIPIO
+                isMultiPart = true;
+                for (Map<String, Object> attachment : attachments) {
+                    bodyParts.add(UtilMisc.toMap("content", attachment.get("content"), "type", attachment.get("type"), "filename", attachment.get("filename")));
+                }
                 serviceContext.put("bodyParts", bodyParts);
             }
         } else {

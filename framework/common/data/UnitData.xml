@@ -31,18 +31,18 @@ the Apache License, version 2.0, as stated above.
     -->
 
     <!-- =============== DATA_MEASURE =============== -->
-    <Uom abbreviation="b" description="Bit of Data" uomId="DATA_b" uomTypeId="DATA_MEASURE"/>
+    <Uom abbreviation="b" description="Bit of Data" uomId="DATA_b" uomTypeId="DATA_MEASURE" unCefactCode="A99"/>
     <Uom abbreviation="Kb" description="Kilobit of Data" uomId="DATA_Kb" uomTypeId="DATA_MEASURE"/>
     <Uom abbreviation="Mb" description="Megabit of Data" uomId="DATA_Mb" uomTypeId="DATA_MEASURE"/>
     <Uom abbreviation="Gb" description="Gigabit of Data" uomId="DATA_Gb" uomTypeId="DATA_MEASURE"/>
     <Uom abbreviation="Tb" description="Terabit of Data" uomId="DATA_Tb" uomTypeId="DATA_MEASURE"/>
     <Uom abbreviation="Pb" description="Petabit of Data" uomId="DATA_Pb" uomTypeId="DATA_MEASURE"/>
 
-    <Uom abbreviation="B" description="Byte of Data" uomId="DATA_B" uomTypeId="DATA_MEASURE"/>
-    <Uom abbreviation="KB" description="Kilobyte of Data" uomId="DATA_KB" uomTypeId="DATA_MEASURE"/>
-    <Uom abbreviation="MB" description="Megabyte of Data" uomId="DATA_MB" uomTypeId="DATA_MEASURE"/>
-    <Uom abbreviation="GB" description="Gigabyte of Data" uomId="DATA_GB" uomTypeId="DATA_MEASURE"/>
-    <Uom abbreviation="TB" description="Terabyte of Data" uomId="DATA_TB" uomTypeId="DATA_MEASURE"/>
+    <Uom abbreviation="B" description="Byte of Data" uomId="DATA_B" uomTypeId="DATA_MEASURE" unCefactCode="AD"/>
+    <Uom abbreviation="KB" description="Kilobyte of Data" uomId="DATA_KB" uomTypeId="DATA_MEASURE" unCefactCode="2P"/>
+    <Uom abbreviation="MB" description="Megabyte of Data" uomId="DATA_MB" uomTypeId="DATA_MEASURE" unCefactCode="4L"/>
+    <Uom abbreviation="GB" description="Gigabyte of Data" uomId="DATA_GB" uomTypeId="DATA_MEASURE" unCefactCode="E34"/>
+    <Uom abbreviation="TB" description="Terabyte of Data" uomId="DATA_TB" uomTypeId="DATA_MEASURE" unCefactCode="E35"/>
     <Uom abbreviation="PB" description="Petabyte of Data" uomId="DATA_PB" uomTypeId="DATA_MEASURE"/>
 
     <UomConversion uomId="DATA_Kb" uomIdTo="DATA_b" conversionFactor="1024"/>
@@ -71,15 +71,15 @@ the Apache License, version 2.0, as stated above.
     <UomConversion uomId="DATASPD_Tbps" uomIdTo="DATASPD_Gbps" conversionFactor="1024"/>
 
     <!-- =============== TIME_FREQ_MEASURE =============== -->
-    <Uom abbreviation="ms" description="Time in Milli-Seconds" uomId="TF_ms" uomTypeId="TIME_FREQ_MEASURE"/>
-    <Uom abbreviation="s" description="Time in Seconds" uomId="TF_s" uomTypeId="TIME_FREQ_MEASURE"/>
-    <Uom abbreviation="min" description="Time in Minutes" uomId="TF_min" uomTypeId="TIME_FREQ_MEASURE"/>
-    <Uom abbreviation="hr" description="Time in Hours" uomId="TF_hr" uomTypeId="TIME_FREQ_MEASURE"/>
-    <Uom abbreviation="day" description="Time in Days" uomId="TF_day" uomTypeId="TIME_FREQ_MEASURE"/>
-    <Uom abbreviation="wk" description="Time in Weeks" uomId="TF_wk" uomTypeId="TIME_FREQ_MEASURE"/>
-    <Uom abbreviation="mon" description="Time in Months" uomId="TF_mon" uomTypeId="TIME_FREQ_MEASURE"/>
-    <Uom abbreviation="yr" description="Time in Years" uomId="TF_yr" uomTypeId="TIME_FREQ_MEASURE"/>
-    <Uom abbreviation="decade" description="Time in Decades" uomId="TF_decade" uomTypeId="TIME_FREQ_MEASURE"/>
+    <Uom abbreviation="ms" description="Time in Milli-Seconds" uomId="TF_ms" uomTypeId="TIME_FREQ_MEASURE" unCefactCode="C26"/>
+    <Uom abbreviation="s" description="Time in Seconds" uomId="TF_s" uomTypeId="TIME_FREQ_MEASURE" unCefactCode="SEC"/>
+    <Uom abbreviation="min" description="Time in Minutes" uomId="TF_min" uomTypeId="TIME_FREQ_MEASURE" unCefactCode="MIN"/>
+    <Uom abbreviation="hr" description="Time in Hours" uomId="TF_hr" uomTypeId="TIME_FREQ_MEASURE" unCefactCode="HUR"/>
+    <Uom abbreviation="day" description="Time in Days" uomId="TF_day" uomTypeId="TIME_FREQ_MEASURE" unCefactCode="DAY"/>
+    <Uom abbreviation="wk" description="Time in Weeks" uomId="TF_wk" uomTypeId="TIME_FREQ_MEASURE" unCefactCode="WEE"/>
+    <Uom abbreviation="mon" description="Time in Months" uomId="TF_mon" uomTypeId="TIME_FREQ_MEASURE" unCefactCode="MON"/>
+    <Uom abbreviation="yr" description="Time in Years" uomId="TF_yr" uomTypeId="TIME_FREQ_MEASURE" unCefactCode="ANN"/>
+    <Uom abbreviation="decade" description="Time in Decades" uomId="TF_decade" uomTypeId="TIME_FREQ_MEASURE" unCefactCode="DEC"/>
     <Uom abbreviation="score" description="Time in Scores" uomId="TF_score" uomTypeId="TIME_FREQ_MEASURE"/>
     <Uom abbreviation="century" description="Time in Centuries" uomId="TF_century" uomTypeId="TIME_FREQ_MEASURE"/>
     <Uom abbreviation="millenium" description="Time in Millenia" uomId="TF_millenium" uomTypeId="TIME_FREQ_MEASURE"/>
@@ -98,30 +98,30 @@ the Apache License, version 2.0, as stated above.
     <!-- =============== LENGTH_MEASURE =============== -->
     <Uom abbreviation="A" description="Angstrom" uomId="LEN_A" uomTypeId="LENGTH_MEASURE"/>
     <Uom abbreviation="cb" description="Cable" uomId="LEN_cb" uomTypeId="LENGTH_MEASURE"/>
-    <Uom abbreviation="cm" description="Centimeter" uomId="LEN_cm" uomTypeId="LENGTH_MEASURE"/>
+    <Uom abbreviation="cm" description="Centimeter" uomId="LEN_cm" uomTypeId="LENGTH_MEASURE" unCefactCode="CMT"/>
     <Uom abbreviation="chG" description="Chain (Gunter's/surveyor's)" uomId="LEN_chG" uomTypeId="LENGTH_MEASURE"/>
     <Uom abbreviation="chR" description="Chain (Ramden's/engineer's)" uomId="LEN_chR" uomTypeId="LENGTH_MEASURE"/>
-    <Uom abbreviation="dm" description="Decimeter" uomId="LEN_dm" uomTypeId="LENGTH_MEASURE"/>
+    <Uom abbreviation="dm" description="Decimeter" uomId="LEN_dm" uomTypeId="LENGTH_MEASURE" unCefactCode="DMT"/>
     <Uom abbreviation="dam" description="Dekameter" uomId="LEN_dam" uomTypeId="LENGTH_MEASURE"/>
     <Uom abbreviation="fm" description="Fathom" uomId="LEN_fm" uomTypeId="LENGTH_MEASURE"/>
-    <Uom abbreviation="ft" description="Foot" uomId="LEN_ft" uomTypeId="LENGTH_MEASURE"/>
+    <Uom abbreviation="ft" description="Foot" uomId="LEN_ft" uomTypeId="LENGTH_MEASURE" unCefactCode="FOT"/>
     <Uom abbreviation="fur" description="Furlong" uomId="LEN_fur" uomTypeId="LENGTH_MEASURE"/>
     <Uom abbreviation="hand" description="Hand (horse's height)" uomId="LEN_hand" uomTypeId="LENGTH_MEASURE"/>
-    <Uom abbreviation="in" description="Inch" uomId="LEN_in" uomTypeId="LENGTH_MEASURE"/>
-    <Uom abbreviation="km" description="Kilometer" uomId="LEN_km" uomTypeId="LENGTH_MEASURE"/>
+    <Uom abbreviation="in" description="Inch" uomId="LEN_in" uomTypeId="LENGTH_MEASURE" unCefactCode="INH"/>
+    <Uom abbreviation="km" description="Kilometer" uomId="LEN_km" uomTypeId="LENGTH_MEASURE" unCefactCode="KMT"/>
     <Uom abbreviation="league" description="League" uomId="LEN_league" uomTypeId="LENGTH_MEASURE"/>
     <Uom abbreviation="lnG" description="Link (Gunter's)" uomId="LEN_lnG" uomTypeId="LENGTH_MEASURE"/>
     <Uom abbreviation="lnR" description="Link (Ramden's)" uomId="LEN_lnR" uomTypeId="LENGTH_MEASURE"/>
-    <Uom abbreviation="m" description="Meter" uomId="LEN_m" uomTypeId="LENGTH_MEASURE"/>
+    <Uom abbreviation="m" description="Meter" uomId="LEN_m" uomTypeId="LENGTH_MEASURE" unCefactCode="MTR"/>
     <Uom abbreviation="u" description="Micrometer (Micron)" uomId="LEN_u" uomTypeId="LENGTH_MEASURE"/>
-    <Uom abbreviation="mi" description="Mile (statute/land)" uomId="LEN_mi" uomTypeId="LENGTH_MEASURE"/>
-    <Uom abbreviation="nmi" description="Mile (nautical/sea)" uomId="LEN_nmi" uomTypeId="LENGTH_MEASURE"/>
-    <Uom abbreviation="mm" description="Millimeter" uomId="LEN_mm" uomTypeId="LENGTH_MEASURE"/>
+    <Uom abbreviation="mi" description="Mile (statute/land)" uomId="LEN_mi" uomTypeId="LENGTH_MEASURE" unCefactCode="SMI"/>
+    <Uom abbreviation="nmi" description="Mile (nautical/sea)" uomId="LEN_nmi" uomTypeId="LENGTH_MEASURE" unCefactCode="NMI"/>
+    <Uom abbreviation="mm" description="Millimeter" uomId="LEN_mm" uomTypeId="LENGTH_MEASURE" unCefactCode="MMT"/>
     <Uom abbreviation="mil" description="Mil (Milli-inch)" uomId="LEN_mil" uomTypeId="LENGTH_MEASURE"/>
     <Uom abbreviation="point" description="Point (type size)" uomId="LEN_point" uomTypeId="LENGTH_MEASURE"/>
     <Uom abbreviation="pica" description="Pica (type size)" uomId="LEN_pica" uomTypeId="LENGTH_MEASURE"/>
     <Uom abbreviation="rd" description="Rod" uomId="LEN_rd" uomTypeId="LENGTH_MEASURE"/>
-    <Uom abbreviation="yd" description="Yard" uomId="LEN_yd" uomTypeId="LENGTH_MEASURE"/>
+    <Uom abbreviation="yd" description="Yard" uomId="LEN_yd" uomTypeId="LENGTH_MEASURE" unCefactCode="YRD"/>
 
     <UomConversion uomId="LEN_A" uomIdTo="LEN_m" conversionFactor="0.0000000001"/> <!-- 10 to the -10 meters -->
     <UomConversion uomId="LEN_A" uomIdTo="LEN_in" conversionFactor="0.000000004"/>
@@ -175,17 +175,17 @@ the Apache License, version 2.0, as stated above.
 
     <!-- =============== AREA_MEASURE =============== -->
     <Uom abbreviation="A" description="Acre" uomId="AREA_A" uomTypeId="AREA_MEASURE"/>
-    <Uom abbreviation="a" description="Are" uomId="AREA_a" uomTypeId="AREA_MEASURE"/>
-    <Uom abbreviation="ha" description="Hectare" uomId="AREA_ha" uomTypeId="AREA_MEASURE"/>
-    <Uom abbreviation="cm2" description="Square Centimeter" uomId="AREA_cm2" uomTypeId="AREA_MEASURE"/>
-    <Uom abbreviation="ft2" description="Square Foot" uomId="AREA_ft2" uomTypeId="AREA_MEASURE"/>
-    <Uom abbreviation="in2" description="Square Inch" uomId="AREA_in2" uomTypeId="AREA_MEASURE"/>
-    <Uom abbreviation="km2" description="Square Kilometer" uomId="AREA_km2" uomTypeId="AREA_MEASURE"/>
-    <Uom abbreviation="m2" description="Square Meter" uomId="AREA_m2" uomTypeId="AREA_MEASURE"/>
-    <Uom abbreviation="mi2" description="Square Mile" uomId="AREA_mi2" uomTypeId="AREA_MEASURE"/>
-    <Uom abbreviation="mm2" description="Square Millimeter" uomId="AREA_mm2" uomTypeId="AREA_MEASURE"/>
+    <Uom abbreviation="a" description="Are" uomId="AREA_a" uomTypeId="AREA_MEASURE" unCefactCode="ARE"/>
+    <Uom abbreviation="ha" description="Hectare" uomId="AREA_ha" uomTypeId="AREA_MEASURE" unCefactCode="HAR"/>
+    <Uom abbreviation="cm2" description="Square Centimeter" uomId="AREA_cm2" uomTypeId="AREA_MEASURE" unCefactCode="CMK"/>
+    <Uom abbreviation="ft2" description="Square Foot" uomId="AREA_ft2" uomTypeId="AREA_MEASURE" unCefactCode="FTK"/>
+    <Uom abbreviation="in2" description="Square Inch" uomId="AREA_in2" uomTypeId="AREA_MEASURE" unCefactCode="INK"/>
+    <Uom abbreviation="km2" description="Square Kilometer" uomId="AREA_km2" uomTypeId="AREA_MEASURE" unCefactCode="KMK"/>
+    <Uom abbreviation="m2" description="Square Meter" uomId="AREA_m2" uomTypeId="AREA_MEASURE" unCefactCode="MTK"/>
+    <Uom abbreviation="mi2" description="Square Mile" uomId="AREA_mi2" uomTypeId="AREA_MEASURE" unCefactCode="MIK"/>
+    <Uom abbreviation="mm2" description="Square Millimeter" uomId="AREA_mm2" uomTypeId="AREA_MEASURE" unCefactCode="MMK"/>
     <Uom abbreviation="rd2" description="Square Rod" uomId="AREA_rd2" uomTypeId="AREA_MEASURE"/>
-    <Uom abbreviation="yd2" description="Square Yard" uomId="AREA_yd2" uomTypeId="AREA_MEASURE"/>
+    <Uom abbreviation="yd2" description="Square Yard" uomId="AREA_yd2" uomTypeId="AREA_MEASURE" unCefactCode="YDK"/>
 
     <UomConversion uomId="AREA_A" uomIdTo="AREA_ft2" conversionFactor="43560"/>
     <UomConversion uomId="AREA_a" uomIdTo="AREA_m2" conversionFactor="100"/>
@@ -205,14 +205,14 @@ the Apache License, version 2.0, as stated above.
     <Uom abbreviation="cup" description="Cup" uomId="VLIQ_cup" uomTypeId="VOLUME_LIQ_MEASURE"/>
     <Uom abbreviation="dr" description="Dram (US)" uomId="VLIQ_dr" uomTypeId="VOLUME_LIQ_MEASURE"/>
     <Uom abbreviation="gi" description="Gill (1/4 UK pint)" uomId="VLIQ_gi" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="gal" description="Gallon (UK)" uomId="VLIQ_galUK" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="gal" description="Gallon (US)" uomId="VLIQ_galUS" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="m3" description="Cubic meter (liquid)" uomId="VLIQ_M3" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="hL" description="Hectoliter" uomId="VLIQ_HL" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="L" description="Liter" uomId="VLIQ_L" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="ml" description="Milliliter" uomId="VLIQ_ml" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="fl. oz (UK)" description="Ounce, fluid (UK)" uomId="VLIQ_ozUK" uomTypeId="VOLUME_LIQ_MEASURE"/>
-    <Uom abbreviation="fl. oz (US)" description="Ounce, fluid (US)" uomId="VLIQ_ozUS" uomTypeId="VOLUME_LIQ_MEASURE"/>
+    <Uom abbreviation="gal" description="Gallon (UK)" uomId="VLIQ_galUK" uomTypeId="VOLUME_LIQ_MEASURE" unCefactCode="GLI"/>
+    <Uom abbreviation="gal" description="Gallon (US)" uomId="VLIQ_galUS" uomTypeId="VOLUME_LIQ_MEASURE" unCefactCode="GLL"/>
+    <Uom abbreviation="m3" description="Cubic meter (liquid)" uomId="VLIQ_M3" uomTypeId="VOLUME_LIQ_MEASURE" unCefactCode="MTQ"/>
+    <Uom abbreviation="hL" description="Hectoliter" uomId="VLIQ_HL" uomTypeId="VOLUME_LIQ_MEASURE" unCefactCode="HLT"/>
+    <Uom abbreviation="L" description="Liter" uomId="VLIQ_L" uomTypeId="VOLUME_LIQ_MEASURE" unCefactCode="LTR"/>
+    <Uom abbreviation="ml" description="Milliliter" uomId="VLIQ_ml" uomTypeId="VOLUME_LIQ_MEASURE" unCefactCode="MLT"/>
+    <Uom abbreviation="fl. oz (UK)" description="Ounce, fluid (UK)" uomId="VLIQ_ozUK" uomTypeId="VOLUME_LIQ_MEASURE" unCefactCode="OZI"/>
+    <Uom abbreviation="fl. oz (US)" description="Ounce, fluid (US)" uomId="VLIQ_ozUS" uomTypeId="VOLUME_LIQ_MEASURE" unCefactCode="OZA"/>
     <Uom abbreviation="pt (UK)" description="Pint (UK)" uomId="VLIQ_ptUK" uomTypeId="VOLUME_LIQ_MEASURE"/>
     <Uom abbreviation="pt (US)" description="Pint (US)" uomId="VLIQ_ptUS" uomTypeId="VOLUME_LIQ_MEASURE"/>
     <Uom abbreviation="qt" description="Quart" uomId="VLIQ_qt" uomTypeId="VOLUME_LIQ_MEASURE"/>
@@ -240,13 +240,13 @@ the Apache License, version 2.0, as stated above.
     <UomConversion uomId="VLIQ_qt" uomIdTo="VLIQ_ptUS" conversionFactor="2"/>
 
     <!-- =============== VOLUME_DRY_MEASURE =============== -->
-    <Uom abbreviation="cm3" description="Cubic centimeter" uomId="VDRY_cm3" uomTypeId="VOLUME_DRY_MEASURE"/>
-    <Uom abbreviation="ft3" description="Cubic foot" uomId="VDRY_ft3" uomTypeId="VOLUME_DRY_MEASURE"/>
-    <Uom abbreviation="in3" description="Cubic inch" uomId="VDRY_in3" uomTypeId="VOLUME_DRY_MEASURE"/>
-    <Uom abbreviation="m3" description="Cubic meter" uomId="VDRY_m3" uomTypeId="VOLUME_DRY_MEASURE"/>
-    <Uom abbreviation="mm3" description="Cubic millimeter" uomId="VDRY_mm3" uomTypeId="VOLUME_DRY_MEASURE"/>
+    <Uom abbreviation="cm3" description="Cubic centimeter" uomId="VDRY_cm3" uomTypeId="VOLUME_DRY_MEASURE" unCefactCode="CMQ"/>
+    <Uom abbreviation="ft3" description="Cubic foot" uomId="VDRY_ft3" uomTypeId="VOLUME_DRY_MEASURE" unCefactCode="FTQ"/>
+    <Uom abbreviation="in3" description="Cubic inch" uomId="VDRY_in3" uomTypeId="VOLUME_DRY_MEASURE" unCefactCode="INQ"/>
+    <Uom abbreviation="m3" description="Cubic meter" uomId="VDRY_m3" uomTypeId="VOLUME_DRY_MEASURE" unCefactCode="MTQ"/>
+    <Uom abbreviation="mm3" description="Cubic millimeter" uomId="VDRY_mm3" uomTypeId="VOLUME_DRY_MEASURE" unCefactCode="MMQ"/>
     <Uom abbreviation="ST" description="Stere (cubic meter)" uomId="VDRY_ST" uomTypeId="VOLUME_DRY_MEASURE"/>
-    <Uom abbreviation="yd3" description="Cubic yard" uomId="VDRY_yd3" uomTypeId="VOLUME_DRY_MEASURE"/>
+    <Uom abbreviation="yd3" description="Cubic yard" uomId="VDRY_yd3" uomTypeId="VOLUME_DRY_MEASURE" unCefactCode="YDQ"/>
 
     <UomConversion uomId="VLIQ_L" uomIdTo="VDRY_m3" conversionFactor="0.001"/>
     <UomConversion uomId="VLIQ_galUK" uomIdTo="VDRY_m3" conversionFactor="0.4546"/>
@@ -260,17 +260,17 @@ the Apache License, version 2.0, as stated above.
     <!-- =============== WEIGHT_MEASURE =============== -->
     <Uom abbreviation="dr avdp" description="Dram (avdp)" uomId="WT_dr_avdp" uomTypeId="WEIGHT_MEASURE"/>
     <Uom abbreviation="gr" description="Grain" uomId="WT_gr" uomTypeId="WEIGHT_MEASURE"/>
-    <Uom abbreviation="g" description="Gram" uomId="WT_g" uomTypeId="WEIGHT_MEASURE"/>
-    <Uom abbreviation="kg" description="Kilogram" uomId="WT_kg" uomTypeId="WEIGHT_MEASURE"/>
-    <Uom abbreviation="mg" description="Milligram" uomId="WT_mg" uomTypeId="WEIGHT_MEASURE"/>
-    <Uom abbreviation="oz" description="Ounce (avdp)" uomId="WT_oz" uomTypeId="WEIGHT_MEASURE"/>
+    <Uom abbreviation="g" description="Gram" uomId="WT_g" uomTypeId="WEIGHT_MEASURE" unCefactCode="GRM"/>
+    <Uom abbreviation="kg" description="Kilogram" uomId="WT_kg" uomTypeId="WEIGHT_MEASURE" unCefactCode="KGM"/>
+    <Uom abbreviation="mg" description="Milligram" uomId="WT_mg" uomTypeId="WEIGHT_MEASURE" unCefactCode="MGM"/>
+    <Uom abbreviation="oz" description="Ounce (avdp)" uomId="WT_oz" uomTypeId="WEIGHT_MEASURE" unCefactCode="ONZ"/>
     <Uom abbreviation="oz tr" description="Ounce (troy)" uomId="WT_oz_tr" uomTypeId="WEIGHT_MEASURE"/>
     <Uom abbreviation="dwt" description="Pennyweight" uomId="WT_dwt" uomTypeId="WEIGHT_MEASURE"/>
-    <Uom abbreviation="lb" description="Pound (avdp)" uomId="WT_lb" uomTypeId="WEIGHT_MEASURE"/>
+    <Uom abbreviation="lb" description="Pound (avdp)" uomId="WT_lb" uomTypeId="WEIGHT_MEASURE" unCefactCode="LBR"/>
     <Uom abbreviation="st" description="Stone" uomId="WT_st" uomTypeId="WEIGHT_MEASURE"/>
-    <Uom abbreviation="lt" description="Ton (long or British)" uomId="WT_lt" uomTypeId="WEIGHT_MEASURE"/>
-    <Uom abbreviation="mt" description="Ton (metric)" uomId="WT_mt" uomTypeId="WEIGHT_MEASURE"/>
-    <Uom abbreviation="sh t" description="Ton (short or US)" uomId="WT_sh_t" uomTypeId="WEIGHT_MEASURE"/>
+    <Uom abbreviation="lt" description="Ton (long or British)" uomId="WT_lt" uomTypeId="WEIGHT_MEASURE" unCefactCode="LTN"/>
+    <Uom abbreviation="mt" description="Ton (metric)" uomId="WT_mt" uomTypeId="WEIGHT_MEASURE" unCefactCode="TNE"/>
+    <Uom abbreviation="sh t" description="Ton (short or US)" uomId="WT_sh_t" uomTypeId="WEIGHT_MEASURE" unCefactCode="STN"/>
 
     <UomConversion uomId="WT_dr_avdp" uomIdTo="WT_oz" conversionFactor="0.0625"/>
     <UomConversion uomId="WT_gr" uomIdTo="WT_oz" conversionFactor="0.00229"/>
@@ -299,9 +299,9 @@ the Apache License, version 2.0, as stated above.
     <Uom abbreviation="Btu" description="British Thermal Unit" uomId="EN_Btu" uomTypeId="ENERGY_MEASURE"/>
     <Uom abbreviation="cal15" description="Calorie (@15.5c)" uomId="EN_cal15" uomTypeId="ENERGY_MEASURE"/>
     <Uom abbreviation="HP" description="Horsepower (mechanical)" uomId="EN_HP" uomTypeId="ENERGY_MEASURE"/>
-    <Uom abbreviation="J" description="Joule (absolute)" uomId="EN_J" uomTypeId="ENERGY_MEASURE"/>
-    <Uom abbreviation="Kw" description="Kilowatt" uomId="EN_Kw" uomTypeId="ENERGY_MEASURE"/>
-    <Uom abbreviation="w" description="Watt" uomId="EN_w" uomTypeId="ENERGY_MEASURE"/>
+    <Uom abbreviation="J" description="Joule (absolute)" uomId="EN_J" uomTypeId="ENERGY_MEASURE" unCefactCode="JOU"/>
+    <Uom abbreviation="Kw" description="Kilowatt" uomId="EN_Kw" uomTypeId="ENERGY_MEASURE" unCefactCode="KWT"/>
+    <Uom abbreviation="w" description="Watt" uomId="EN_w" uomTypeId="ENERGY_MEASURE" unCefactCode="WTT"/>
 
     <UomConversion uomId="EN_cal15" uomIdTo="EN_J" conversionFactor="4.1855"/>
     <UomConversion uomId="EN_Kw" uomIdTo="EN_w" conversionFactor="1000"/>
@@ -324,12 +324,12 @@ the Apache License, version 2.0, as stated above.
     -->
 
     <!-- =============== OTHER_MEASURE =============== -->
-    <Uom abbreviation="A" description="Amphere - Electric current" uomId="OTH_A" uomTypeId="OTHER_MEASURE"/>
-    <Uom abbreviation="cd" description="Candela - Luminosity (intensity of light)" uomId="OTH_cd" uomTypeId="OTHER_MEASURE"/>
-    <Uom abbreviation="mol" description="Mole - Substance (molecule)" uomId="OTH_mol" uomTypeId="OTHER_MEASURE"/>
+    <Uom abbreviation="A" description="Amphere - Electric current" uomId="OTH_A" uomTypeId="OTHER_MEASURE" unCefactCode="AMP"/>
+    <Uom abbreviation="cd" description="Candela - Luminosity (intensity of light)" uomId="OTH_cd" uomTypeId="OTHER_MEASURE" unCefactCode="CDL"/>
+    <Uom abbreviation="mol" description="Mole - Substance (molecule)" uomId="OTH_mol" uomTypeId="OTHER_MEASURE" unCefactCode="C34"/>
 
-    <Uom abbreviation="ea" description="Each" uomId="OTH_ea" uomTypeId="OTHER_MEASURE"/>
-    <Uom abbreviation="pp" description="Per Person" uomId="OTH_pp" uomTypeId="OTHER_MEASURE"/>
-    <Uom abbreviation="bx" description="Box" uomId="OTH_box" uomTypeId="OTHER_MEASURE"/>
-    <Uom abbreviation="pk" description="Package" uomId="OTH_pk" uomTypeId="OTHER_MEASURE"/>
+    <Uom abbreviation="ea" description="Each" uomId="OTH_ea" uomTypeId="OTHER_MEASURE" unCefactCode="H87"/>
+    <Uom abbreviation="pp" description="Per Person" uomId="OTH_pp" uomTypeId="OTHER_MEASURE" unCefactCode="IE"/>
+    <Uom abbreviation="bx" description="Box" uomId="OTH_box" uomTypeId="OTHER_MEASURE" unCefactCode="XBX"/>
+    <Uom abbreviation="pk" description="Package" uomId="OTH_pk" uomTypeId="OTHER_MEASURE" unCefactCode="XPK"/>
 </entity-engine-xml>

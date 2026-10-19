@@ -51,7 +51,27 @@ public interface ChannelStore {
 
     List<Listing> listingsOfProduct(String productId);
 
+    /** R4-15: all listings of one channel (the plan after a pause or a resume). */
+    List<Listing> listingsOfChannel(String channelId);
+
+    /** Writes the named fields of the listing; never the lease columns (review round 2). Creates a missing row. */
     void saveListing(Listing l);
+
+    /** Review round 2: like {@link #saveListing}, but only while {@code taskId} still holds the write lease. False: lost. */
+    boolean saveListingIfLeased(Listing l, String taskId);
+
+    /** R4-15: forgets the quantity that the channel knows (only this column), so the next plan pushes again. */
+    void clearPushedQuantity(String productId, String channelId);
+
+    /**
+     * R4-15 (review C3): takes the write lease of a listing for one task, as a compare and set in the store database: it
+     * succeeds only when the lease is free (no task, or its end passed) or held by this task already. Exactly one writer wins,
+     * also across JVMs. False also when the listing does not exist.
+     */
+    boolean tryLockListing(String productId, String channelId, String taskId, Instant until, Instant now);
+
+    /** R4-15: gives the write lease of the listing back, when this task holds it. */
+    void unlockListing(String productId, String channelId, String taskId);
 
     /** The store product for a SKU (the product id, or the SKU good identification), if one exists. */
     Optional<String> productIdBySku(String sku);

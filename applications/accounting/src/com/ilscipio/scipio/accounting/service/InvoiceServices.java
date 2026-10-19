@@ -561,7 +561,8 @@ public class InvoiceServices {
             @Attribute(name = "sendCc", type = "String", mode = "IN", optional = "true"),
             @Attribute(name = "subject", type = "String", mode = "IN", optional = "true"),
             @Attribute(name = "bodyText", type = "String", mode = "IN", optional = "true", allowHtml = "any"),
-            @Attribute(name = "other", type = "String", mode = "IN", optional = "true")
+            @Attribute(name = "other", type = "String", mode = "IN", optional = "true"),
+            @Attribute(name = "einvoiceFormatId", type = "String", mode = "IN", optional = "true", description = "E-invoice format to attach; empty = the format of the customer; NONE = no e-invoice")
         }
     )
     public interface SendInvoicePerEmail {}

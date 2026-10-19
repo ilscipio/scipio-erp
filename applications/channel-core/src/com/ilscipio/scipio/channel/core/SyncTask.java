@@ -90,6 +90,14 @@ public final class SyncTask {
         lastError = null;
     }
 
+    /** R4-15: the worker took the lease and sent nothing: the task is due again at once, without an attempt. */
+    public void release(Instant now) {
+        requireClaimed();
+        state = State.PENDING;
+        leaseUntil = null;
+        dueDate = now;
+    }
+
     /**
      * Records a failed push.
      *

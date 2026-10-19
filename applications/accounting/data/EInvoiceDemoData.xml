@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Scipio Commerce
+Copyright (C) Ilscipio GmbH
+
+This file is part of Scipio Commerce. Scipio Commerce is free software: you
+can redistribute it and modify it under the terms of the GNU Affero General
+Public License, version 3, as published by the Free Software Foundation.
+Scipio Commerce is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License
+for more details. You should have received a copy of the license with this
+work (file LICENSE). If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+A commercial license is available from Ilscipio GmbH.
+
+SPDX-License-Identifier: AGPL-3.0-only
+-->
+<!--
+  E-invoice demo: a German seller, a German public authority (XRechnung with Leitweg-ID), a French business
+  customer (Peppol BIS, intra-community supply), and three invoices with consistent amounts:
+  - EINV1001: 2 x 899.00 (19 %) with a 50.00 line promotion, 3 x 12.50 (7 %), shipping 9.90 (19 %);
+              net 1795.40, VAT 334.00 + 2.63, total 2132.03; payment terms 30 days, 2 % discount in 10 days
+  - EINV1002: intra-community supply to France, 2450.00 + shipping 45.00, no VAT (category K), total 2495.00
+  - EINV1003: customer return credit note for one bike of EINV1001, 899.00 + 170.81 VAT = 1069.81
+-->
+<entity-engine-xml>
+    <!-- German VAT rates -->
+    <TaxAuthorityRateProduct taxAuthorityRateSeqId="EINV_DE_19" taxAuthGeoId="DEU" taxAuthPartyId="DEU_BZSt" taxAuthorityRateTypeId="VAT_TAX"
+        taxPercentage="19" taxShipping="Y" taxPromotions="Y" vatCategoryCode="S" fromDate="2020-01-01 00:00:00.000" description="Umsatzsteuer 19 %"/>
+    <TaxAuthorityRateProduct taxAuthorityRateSeqId="EINV_DE_7" taxAuthGeoId="DEU" taxAuthPartyId="DEU_BZSt" taxAuthorityRateTypeId="VAT_TAX"
+        taxPercentage="7" taxShipping="N" taxPromotions="Y" vatCategoryCode="S" fromDate="2020-01-01 00:00:00.000" description="Umsatzsteuer 7 %"/>
+
+    <!-- Seller -->
+    <Party partyId="EINV_SELLER" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="EUR" statusId="PARTY_ENABLED"/>
+    <PartyGroup partyId="EINV_SELLER" groupName="Muster Fahrradbau GmbH"/>
+    <PartyRole partyId="EINV_SELLER" roleTypeId="BILL_FROM_VENDOR"/>
+    <PartyRole partyId="EINV_SELLER" roleTypeId="INTERNAL_ORGANIZATIO"/>
+    <PartyRole partyId="EINV_SELLER" roleTypeId="BILL_TO_CUSTOMER"/>
+    <PartyRole partyId="EINV_SELLER" roleTypeId="SUPPLIER"/>
+    <ContactMech contactMechId="EINV_SELLER_ADDR" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="EINV_SELLER_ADDR" toName="Muster Fahrradbau GmbH" address1="Hauptstraße 1" city="Berlin" postalCode="10115" countryGeoId="DEU"/>
+    <PartyContactMech partyId="EINV_SELLER" contactMechId="EINV_SELLER_ADDR" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_SELLER" contactMechId="EINV_SELLER_ADDR" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_SELLER" contactMechId="EINV_SELLER_ADDR" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_SELLER" contactMechId="EINV_SELLER_ADDR" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2020-01-01 00:00:00.000"/>
+    <ContactMech contactMechId="EINV_SELLER_EMAIL" contactMechTypeId="EMAIL_ADDRESS" infoString="rechnung@muster-fahrradbau.example"/>
+    <PartyContactMech partyId="EINV_SELLER" contactMechId="EINV_SELLER_EMAIL" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_SELLER" contactMechId="EINV_SELLER_EMAIL" contactMechPurposeTypeId="PRIMARY_EMAIL" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_SELLER" contactMechId="EINV_SELLER_EMAIL" contactMechPurposeTypeId="BILLING_EMAIL" fromDate="2020-01-01 00:00:00.000"/>
+    <ContactMech contactMechId="EINV_SELLER_PHONE" contactMechTypeId="TELECOM_NUMBER"/>
+    <TelecomNumber contactMechId="EINV_SELLER_PHONE" countryCode="49" areaCode="30" contactNumber="1234567"/>
+    <PartyContactMech partyId="EINV_SELLER" contactMechId="EINV_SELLER_PHONE" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_SELLER" contactMechId="EINV_SELLER_PHONE" contactMechPurposeTypeId="PRIMARY_PHONE" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyTaxAuthInfo partyId="EINV_SELLER" taxAuthGeoId="DEU" taxAuthPartyId="DEU_BZSt" fromDate="2020-01-01 00:00:00.000" partyTaxId="DE123456789" isExempt="N" isNexus="Y"/>
+    <PartyIdentification partyId="EINV_SELLER" partyIdentificationTypeId="TAX_NUMBER" idValue="30/123/45678"/>
+    <PartyIdentification partyId="EINV_SELLER" partyIdentificationTypeId="LEGAL_REG_ID" idValue="HRB 12345 B"/>
+    <PaymentMethod paymentMethodId="EINV_SELLER_BANK" paymentMethodTypeId="EFT_ACCOUNT" partyId="EINV_SELLER" fromDate="2020-01-01 00:00:00.000"/>
+    <EftAccount paymentMethodId="EINV_SELLER_BANK" bankName="Musterbank" nameOnAccount="Muster Fahrradbau GmbH" accountType="Checking"
+        accountNumber="0000202051" routingNumber="12030000" ibanNumber="DE02120300000000202051" bicCode="BYLADEM1001"/>
+    <PartyEInvoicePref partyId="EINV_SELLER" formatEnumId="XRECHNUNG_UBL" electronicAddress="DE123456789" electronicAddressScheme="9930"
+        contactName="Erika Mustermann" contactPhone="+49 30 1234567" contactEmail="buchhaltung@muster-fahrradbau.example" paymentMethodId="EINV_SELLER_BANK"/>
+
+    <!-- German public authority: XRechnung with Leitweg-ID -->
+    <Party partyId="EINV_BUYER_DE" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="EUR" statusId="PARTY_ENABLED"/>
+    <PartyGroup partyId="EINV_BUYER_DE" groupName="Bundesamt für Beispiele"/>
+    <PartyRole partyId="EINV_BUYER_DE" roleTypeId="BILL_TO_CUSTOMER"/>
+    <PartyRole partyId="EINV_BUYER_DE" roleTypeId="CUSTOMER"/>
+    <PartyRole partyId="EINV_BUYER_DE" roleTypeId="INTERNAL_ORGANIZATIO"/>
+    <ContactMech contactMechId="EINV_BUYER_DE_ADDR" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="EINV_BUYER_DE_ADDR" toName="Bundesamt für Beispiele" attnName="Beschaffung" address1="Amtsweg 5" city="Bonn" postalCode="53113" countryGeoId="DEU"/>
+    <PartyContactMech partyId="EINV_BUYER_DE" contactMechId="EINV_BUYER_DE_ADDR" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_BUYER_DE" contactMechId="EINV_BUYER_DE_ADDR" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_BUYER_DE" contactMechId="EINV_BUYER_DE_ADDR" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2020-01-01 00:00:00.000"/>
+    <ContactMech contactMechId="EINV_BUYER_DE_EMAIL" contactMechTypeId="EMAIL_ADDRESS" infoString="rechnungseingang@bundesamt.example"/>
+    <PartyContactMech partyId="EINV_BUYER_DE" contactMechId="EINV_BUYER_DE_EMAIL" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_BUYER_DE" contactMechId="EINV_BUYER_DE_EMAIL" contactMechPurposeTypeId="BILLING_EMAIL" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyEInvoicePref partyId="EINV_BUYER_DE" formatEnumId="XRECHNUNG_UBL" deliveryChannelEnumId="EINV_DLV_EMAIL" buyerReference="04011000-12345-03"/>
+
+    <!-- French business customer: Peppol BIS, intra-community supply -->
+    <Party partyId="EINV_BUYER_FR" partyTypeId="PARTY_GROUP" preferredCurrencyUomId="EUR" statusId="PARTY_ENABLED"/>
+    <PartyGroup partyId="EINV_BUYER_FR" groupName="Vélos Exemple SARL"/>
+    <PartyRole partyId="EINV_BUYER_FR" roleTypeId="BILL_TO_CUSTOMER"/>
+    <PartyRole partyId="EINV_BUYER_FR" roleTypeId="CUSTOMER"/>
+    <ContactMech contactMechId="EINV_BUYER_FR_ADDR" contactMechTypeId="POSTAL_ADDRESS"/>
+    <PostalAddress contactMechId="EINV_BUYER_FR_ADDR" toName="Vélos Exemple SARL" address1="12 Rue de l'Exemple" city="Paris" postalCode="75001" countryGeoId="FRA"/>
+    <PartyContactMech partyId="EINV_BUYER_FR" contactMechId="EINV_BUYER_FR_ADDR" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_BUYER_FR" contactMechId="EINV_BUYER_FR_ADDR" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_BUYER_FR" contactMechId="EINV_BUYER_FR_ADDR" contactMechPurposeTypeId="SHIPPING_LOCATION" fromDate="2020-01-01 00:00:00.000"/>
+    <ContactMech contactMechId="EINV_BUYER_FR_EMAIL" contactMechTypeId="EMAIL_ADDRESS" infoString="factures@velos-exemple.example"/>
+    <PartyContactMech partyId="EINV_BUYER_FR" contactMechId="EINV_BUYER_FR_EMAIL" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyContactMechPurpose partyId="EINV_BUYER_FR" contactMechId="EINV_BUYER_FR_EMAIL" contactMechPurposeTypeId="BILLING_EMAIL" fromDate="2020-01-01 00:00:00.000"/>
+    <PartyTaxAuthInfo partyId="EINV_BUYER_FR" taxAuthGeoId="FRA" taxAuthPartyId="FRA_TA" fromDate="2020-01-01 00:00:00.000" partyTaxId="FR40303265045" isExempt="Y" isNexus="N"/>
+    <PartyEInvoicePref partyId="EINV_BUYER_FR" formatEnumId="PEPPOL_BIS3" deliveryChannelEnumId="EINV_DLV_EMAIL" electronicAddress="30326504500015" electronicAddressScheme="0009"/>
+
+    <!-- EINV1001: sales invoice to the public authority -->
+    <Invoice invoiceId="EINV1001" invoiceTypeId="SALES_INVOICE" partyIdFrom="EINV_SELLER" partyId="EINV_BUYER_DE" statusId="INVOICE_IN_PROCESS" currencyUomId="EUR"
+        invoiceDate="2026-09-30 10:00:00.000" description="Lieferung Dienstfahrräder"/>
+    <InvoiceContactMech invoiceId="EINV1001" contactMechPurposeTypeId="BILLING_LOCATION" contactMechId="EINV_BUYER_DE_ADDR"/>
+    <InvoiceContactMech invoiceId="EINV1001" contactMechPurposeTypeId="PAYMENT_LOCATION" contactMechId="EINV_SELLER_ADDR"/>
+    <InvoiceItem invoiceId="EINV1001" invoiceItemSeqId="00001" invoiceItemTypeId="INV_FPROD_ITEM" description="Trekkingrad Modell T1" quantity="2" amount="899.00" uomId="OTH_ea" taxableFlag="Y"/>
+    <InvoiceItem invoiceId="EINV1001" invoiceItemSeqId="00002" invoiceItemTypeId="ITM_PROMOTION_ADJ" description="Aktionsrabatt" quantity="1" amount="-50.00"
+        parentInvoiceId="EINV1001" parentInvoiceItemSeqId="00001"/>
+    <InvoiceItem invoiceId="EINV1001" invoiceItemSeqId="00003" invoiceItemTypeId="ITM_SALES_TAX" description="Umsatzsteuer 19 %" quantity="1" amount="332.12"
+        parentInvoiceId="EINV1001" parentInvoiceItemSeqId="00001" taxAuthPartyId="DEU_BZSt" taxAuthGeoId="DEU" taxAuthorityRateSeqId="EINV_DE_19"/>
+    <InvoiceItem invoiceId="EINV1001" invoiceItemSeqId="00004" invoiceItemTypeId="INV_FPROD_ITEM" description="Fahrradkarte Berlin" quantity="3" amount="12.50" uomId="OTH_ea" taxableFlag="Y"/>
+    <InvoiceItem invoiceId="EINV1001" invoiceItemSeqId="00005" invoiceItemTypeId="ITM_SALES_TAX" description="Umsatzsteuer 7 %" quantity="1" amount="2.63"
+        parentInvoiceId="EINV1001" parentInvoiceItemSeqId="00004" taxAuthPartyId="DEU_BZSt" taxAuthGeoId="DEU" taxAuthorityRateSeqId="EINV_DE_7"/>
+    <InvoiceItem invoiceId="EINV1001" invoiceItemSeqId="00006" invoiceItemTypeId="ITM_SHIPPING_CHARGES" description="Versand" quantity="1" amount="9.90"/>
+    <InvoiceItem invoiceId="EINV1001" invoiceItemSeqId="00007" invoiceItemTypeId="ITM_SALES_TAX" description="Umsatzsteuer 19 % auf Versand" quantity="1" amount="1.88"
+        parentInvoiceId="EINV1001" parentInvoiceItemSeqId="00006" taxAuthPartyId="DEU_BZSt" taxAuthGeoId="DEU" taxAuthorityRateSeqId="EINV_DE_19"/>
+    <InvoiceTerm invoiceTermId="EINV1001_T1" invoiceId="EINV1001" termTypeId="FIN_PAYMENT_TERM" termDays="30"/>
+    <InvoiceTerm invoiceTermId="EINV1001_T2" invoiceId="EINV1001" termTypeId="FIN_PAYMENT_DISC" termDays="10" termValue="2"/>
+
+    <!-- EINV1002: intra-community supply to France (ready: the first generated e-invoice is kept) -->
+    <Invoice invoiceId="EINV1002" invoiceTypeId="SALES_INVOICE" partyIdFrom="EINV_SELLER" partyId="EINV_BUYER_FR" statusId="INVOICE_READY" currencyUomId="EUR"
+        invoiceDate="2026-09-30 11:00:00.000" dueDate="2026-10-30 00:00:00.000"/>
+    <InvoiceContactMech invoiceId="EINV1002" contactMechPurposeTypeId="BILLING_LOCATION" contactMechId="EINV_BUYER_FR_ADDR"/>
+    <InvoiceContactMech invoiceId="EINV1002" contactMechPurposeTypeId="SHIPPING_LOCATION" contactMechId="EINV_BUYER_FR_ADDR"/>
+    <InvoiceContactMech invoiceId="EINV1002" contactMechPurposeTypeId="PAYMENT_LOCATION" contactMechId="EINV_SELLER_ADDR"/>
+    <InvoiceItem invoiceId="EINV1002" invoiceItemSeqId="00001" invoiceItemTypeId="INV_FPROD_ITEM" description="E-Bike Modell E5" quantity="1" amount="2450.00" uomId="OTH_ea" taxableFlag="Y"/>
+    <InvoiceItem invoiceId="EINV1002" invoiceItemSeqId="00002" invoiceItemTypeId="ITM_SHIPPING_CHARGES" description="Transport" quantity="1" amount="45.00"/>
+
+    <!-- EINV1003: customer return credit note (the customer is partyIdFrom) -->
+    <Invoice invoiceId="EINV1003" invoiceTypeId="CUST_RTN_INVOICE" partyIdFrom="EINV_BUYER_DE" partyId="EINV_SELLER" statusId="INVOICE_IN_PROCESS" currencyUomId="EUR"
+        invoiceDate="2026-10-02 09:00:00.000" description="Gutschrift Rücksendung"/>
+    <InvoiceItem invoiceId="EINV1003" invoiceItemSeqId="00001" invoiceItemTypeId="CRT_FPROD_ITEM" description="Trekkingrad Modell T1 (Rücksendung)" quantity="1" amount="899.00" uomId="OTH_ea"/>
+    <InvoiceItem invoiceId="EINV1003" invoiceItemSeqId="00002" invoiceItemTypeId="CRT_SALES_TAX_ADJ" description="Umsatzsteuer 19 %" quantity="1" amount="170.81"
+        parentInvoiceId="EINV1003" parentInvoiceItemSeqId="00001" taxAuthPartyId="DEU_BZSt" taxAuthGeoId="DEU" taxAuthorityRateSeqId="EINV_DE_19"/>
+    <InvoiceAttribute invoiceId="EINV1003" attrName="EINV_PRECEDING_INVOICE" attrValue="EINV1001"/>
+</entity-engine-xml>

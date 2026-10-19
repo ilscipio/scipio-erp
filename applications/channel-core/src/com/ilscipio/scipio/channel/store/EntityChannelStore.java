@@ -160,19 +160,106 @@ public final class EntityChannelStore implements ChannelStore {
     }
 
     @Override
+    public List<Listing> listingsOfChannel(String channelId) {
+        List<Listing> out = new ArrayList<>();
+        for (GenericValue v : list("ChannelListing", EntityCondition.makeCondition("channelId", channelId))) {
+            out.add(toListing(v));
+        }
+        return out;
+    }
+
+    @Override
+    public void clearPushedQuantity(String productId, String channelId) {
+        Map<String, Object> fields = new HashMap<>();
+        fields.put("lastPushedQuantity", null);
+        try {
+            delegator.storeByCondition("ChannelListing", fields, EntityCondition.makeCondition(
+                    EntityCondition.makeCondition("productId", productId), EntityCondition.makeCondition("channelId", channelId)));
+        } catch (GenericEntityException e) {
+            throw new IllegalStateException("Could not change the listing " + productId + " on " + channelId + ": " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * One UPDATE with the free state in its WHERE: the database row lock lets one writer through; a second writer waits for the
+     * commit of the first, reads the row again and finds the lease taken (0 rows).
+     */
+    @Override
+    public boolean tryLockListing(String productId, String channelId, String taskId, Instant until, Instant now) {
+        Map<String, Object> fields = new HashMap<>();
+        fields.put("leaseTaskId", taskId);
+        fields.put("leaseUntilDate", ts(until));
+        EntityCondition free = EntityCondition.makeCondition(Arrays.asList(
+                EntityCondition.makeCondition("leaseTaskId", null),
+                EntityCondition.makeCondition("leaseTaskId", taskId),
+                EntityCondition.makeCondition("leaseUntilDate", null),
+                EntityCondition.makeCondition("leaseUntilDate", EntityOperator.LESS_THAN_EQUAL_TO, ts(now))), EntityOperator.OR);
+        try {
+            return delegator.storeByCondition("ChannelListing", fields, EntityCondition.makeCondition(Arrays.asList(
+                    EntityCondition.makeCondition("productId", productId), EntityCondition.makeCondition("channelId", channelId), free))) == 1;
+        } catch (GenericEntityException e) {
+            throw new IllegalStateException("Could not lease the listing " + productId + " on " + channelId + ": " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void unlockListing(String productId, String channelId, String taskId) {
+        Map<String, Object> fields = new HashMap<>();
+        fields.put("leaseTaskId", null);
+        fields.put("leaseUntilDate", null);
+        try {
+            delegator.storeByCondition("ChannelListing", fields, EntityCondition.makeCondition(Arrays.asList(
+                    EntityCondition.makeCondition("productId", productId), EntityCondition.makeCondition("channelId", channelId),
+                    EntityCondition.makeCondition("leaseTaskId", taskId))));
+        } catch (GenericEntityException e) {
+            throw new IllegalStateException("Could not free the listing " + productId + " on " + channelId + ": " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Writes the named fields of the listing and never the lease columns (review round 2, point 2): a whole-row write would free
+     * the lease of a running publish or push. A missing row is created.
+     */
+    @Override
     public void saveListing(Listing l) {
-        GenericValue v = delegator.makeValue("ChannelListing");
-        v.set("productId", l.productId);
-        v.set("channelId", l.channelId);
-        v.set("externalId", l.externalId);
-        v.set("listingState", l.state.name());
-        v.set("lastSyncDate", ts(l.lastSyncDate));
-        v.set("errorsJson", l.errorsJson);
-        v.set("fixHint", l.fixHint);
-        v.set("variationGroupId", l.variationGroupId);
-        v.set("variationAxesJson", l.variationAxesJson);
-        v.set("lastPushedQuantity", l.lastPushedQuantity == null ? null : Long.valueOf(l.lastPushedQuantity));
-        store(v);
+        try {
+            int n = delegator.storeByCondition("ChannelListing", listingFields(l), EntityCondition.makeCondition(Arrays.asList(
+                    EntityCondition.makeCondition("productId", l.productId), EntityCondition.makeCondition("channelId", l.channelId))));
+            if (n == 0) {
+                GenericValue v = delegator.makeValue("ChannelListing");
+                v.set("productId", l.productId);
+                v.set("channelId", l.channelId);
+                v.setNonPKFields(listingFields(l));
+                delegator.create(v);
+            }
+        } catch (GenericEntityException e) {
+            throw new IllegalStateException("Could not save the listing " + l.productId + " on " + l.channelId + ": " + e.getMessage(), e);
+        }
+    }
+
+    /** Review round 2, point 1: one UPDATE that writes the listing only while this task still holds its lease (0 rows: lost). */
+    @Override
+    public boolean saveListingIfLeased(Listing l, String taskId) {
+        try {
+            return delegator.storeByCondition("ChannelListing", listingFields(l), EntityCondition.makeCondition(Arrays.asList(
+                    EntityCondition.makeCondition("productId", l.productId), EntityCondition.makeCondition("channelId", l.channelId),
+                    EntityCondition.makeCondition("leaseTaskId", taskId)))) == 1;
+        } catch (GenericEntityException e) {
+            throw new IllegalStateException("Could not save the listing " + l.productId + " on " + l.channelId + ": " + e.getMessage(), e);
+        }
+    }
+
+    private static Map<String, Object> listingFields(Listing l) {
+        Map<String, Object> f = new HashMap<>();
+        f.put("externalId", l.externalId);
+        f.put("listingState", l.state.name());
+        f.put("lastSyncDate", ts(l.lastSyncDate));
+        f.put("errorsJson", l.errorsJson);
+        f.put("fixHint", l.fixHint);
+        f.put("variationGroupId", l.variationGroupId);
+        f.put("variationAxesJson", l.variationAxesJson);
+        f.put("lastPushedQuantity", l.lastPushedQuantity == null ? null : Long.valueOf(l.lastPushedQuantity));
+        return f;
     }
 
     private static Listing toListing(GenericValue v) {

@@ -243,6 +243,17 @@ public final class ShopMcp {
             throw new McpToolException("Cart is empty");
         }
         Delegator delegator = ctx.getDelegator();
+        // SCIPIO: 4.0.0: R4-15 (J5-01): a paused store takes no order from a buyer agent (the storefront refuses it the same way)
+        try {
+            GenericValue pause = com.ilscipio.scipio.product.store.StorePauses.row(delegator, ctx.getProductStoreId());
+            if (com.ilscipio.scipio.product.store.StorePauses.isPaused(pause, java.time.Instant.now())) {
+                throw new McpToolException("The shop is taking a break and takes no orders now."
+                        + (pause.getTimestamp("pauseUntilDate") != null ? " Back on " + pause.getTimestamp("pauseUntilDate").toInstant().toString().substring(0, 10) + "." : "")
+                        + (UtilValidate.isNotEmpty(pause.getString("pauseNote")) ? " " + pause.getString("pauseNote") : ""));
+            }
+        } catch (GenericEntityException e) {
+            throw new McpToolException("Could not read the state of the shop: " + e.getMessage());
+        }
         try {
             cart.setUserLogin(ctx.getUserLogin(), ctx.getDispatcher());
             cart.setOrderPartyId(partyId);

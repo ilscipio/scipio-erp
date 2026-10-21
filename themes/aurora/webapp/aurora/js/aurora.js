@@ -542,8 +542,12 @@
         if (b) { b.setAttribute("aria-expanded", open ? "true" : "false"); }
     }
 
-    /* A row that holds a list gets a fold control. The list of the page you
-       are on is open; opening a list closes its open siblings. */
+    /* A row that holds a list gets a fold control. Only the rows on the path of
+       the page you are on are open: the server marks them is-active or
+       is-active-ancestor. An active item deeper down does not open its list,
+       because a menu may mark an item active by style (the layout demo does),
+       and then every page opened that branch. Opening a list closes its open
+       siblings. */
     function initFoldMenu() {
         var menu = document.getElementById("au-side-menu");
         if (!menu) { return; }
@@ -552,8 +556,7 @@
             var link = li.querySelector(":scope > a");
             if (!sub || !link || !sub.querySelector(":scope > li")) { return; }
             if (!sub.id) { sub.id = "au-fold-" + (++foldSeq); }
-            var open = li.classList.contains("is-active") || li.classList.contains("is-active-ancestor") ||
-                !!sub.querySelector("li.is-active, a.is-active");
+            var open = li.classList.contains("is-active") || li.classList.contains("is-active-ancestor");
             var b = document.createElement("button");
             b.type = "button";
             b.className = "au-fold";
@@ -730,6 +733,16 @@
                 body.classList.toggle("is-open", open);
                 button.setAttribute("aria-expanded", String(open));
             });
+        });
+    }
+
+    /* A section with a title and nothing in its body draws a header only. The
+       body holds white space, which CSS :empty does not match. */
+    function initEmptySections() {
+        all(".section-screenlet > .title + div").forEach(function (body) {
+            if (!body.children.length && !body.textContent.trim()) {
+                body.parentNode.classList.add("au-empty-body");
+            }
         });
     }
 
@@ -992,6 +1005,7 @@
         initTabs();
         initDismissables();
         initFieldGroups();
+        initEmptySections();
         initDropdowns();
     }
 

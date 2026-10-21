@@ -750,11 +750,28 @@ progress::-moz-progress-bar      { background: var(--au-accent); }
     border-radius: var(--au-r-pill);
     transition: width .3s ease;
 }
+/* @progress: a plain wrapper (the track, with the colour class) holds
+   div.progress[role=progressbar], which is the meter with an inline width. */
+:has(> div.progress[role="progressbar"]) {
+    height: .5rem;
+    margin: 0 0 .5rem;
+    border-radius: var(--au-r-pill);
+    background: var(--au-surface-3);
+    overflow: hidden;
+}
+div.progress[role="progressbar"] { height: 100%; margin: 0; background: var(--au-accent); transition: width .3s ease; }
+.is-info > div.progress[role="progressbar"]    { background: var(--au-info); }
+.is-success > div.progress[role="progressbar"] { background: var(--au-ok); }
+.is-warning > div.progress[role="progressbar"] { background: var(--au-warn); }
+.is-danger > div.progress[role="progressbar"], .is-alert > div.progress[role="progressbar"] { background: var(--au-danger); }
 
 /* ---- Tooltip ------------------------------------------------------------- */
 
-[data-tooltip] { position: relative; cursor: help; }
-[data-tooltip]::after {
+/* Not on an input: a styled checkbox/radio draws its mark with ::after, and an
+   input keeps its native title tooltip. An empty data-tooltip draws nothing. */
+
+[data-tooltip]:not(input):not([data-tooltip=""]) { position: relative; cursor: help; }
+[data-tooltip]:not(input):not([data-tooltip=""])::after {
     content: attr(data-tooltip);
     position: absolute;
     z-index: 120;
@@ -775,13 +792,13 @@ progress::-moz-progress-bar      { background: var(--au-accent); }
     box-shadow: var(--au-shadow-float);
     transition: opacity var(--au-speed) ease, transform var(--au-speed) ease;
 }
-[data-tooltip]:hover::after, [data-tooltip]:focus-visible::after { opacity: 1; transform: translateX(-50%); }
-.has-tooltip-multiline::after { white-space: normal; width: 16rem; }
-.has-tooltip-bottom::after { bottom: auto; top: calc(100% + 6px); }
-.has-tooltip-left::after   { left: auto; right: calc(100% + 6px); bottom: auto; top: 50%; transform: translateY(-50%); }
-.has-tooltip-left:hover::after { transform: translateY(-50%); }
-.has-tooltip-right::after  { left: calc(100% + 6px); bottom: auto; top: 50%; transform: translateY(-50%); }
-.has-tooltip-right:hover::after { transform: translateY(-50%); }
+[data-tooltip]:not(input):not([data-tooltip=""]):hover::after, [data-tooltip]:not(input):not([data-tooltip=""]):focus-visible::after { opacity: 1; transform: translateX(-50%); }
+.has-tooltip-multiline:not(input)::after { white-space: normal; width: 16rem; }
+.has-tooltip-bottom:not(input)::after { bottom: auto; top: calc(100% + 6px); }
+.has-tooltip-left:not(input)::after   { left: auto; right: calc(100% + 6px); bottom: auto; top: 50%; transform: translateY(-50%); }
+.has-tooltip-left:not(input):hover::after { transform: translateY(-50%); }
+.has-tooltip-right:not(input)::after  { left: calc(100% + 6px); bottom: auto; top: 50%; transform: translateY(-50%); }
+.has-tooltip-right:not(input):hover::after { transform: translateY(-50%); }
 .field-tooltip-wrap { display: inline-flex; align-items: center; gap: .25rem; }
 .extralabel { color: var(--au-ink-4); font-size: var(--au-fs-tiny); }
 
@@ -934,6 +951,100 @@ progress::-moz-progress-bar      { background: var(--au-accent); }
 .has-addons > .control:has(> .field-label) { display: flex; align-items: center; padding-left: .75rem; }
 .has-addons > .control > .field-label { flex: none; width: auto; padding: 0; text-align: left; }
 .has-addons > .control > .field-label .label { margin: 0; white-space: nowrap; }
+
+/* The button row of a horizontal form starts under the controls, not under
+   the labels: the field macro emits it as a plain .field after the rows. */
+@media (min-width: 769px) {
+    .field.is-horizontal ~ .field:not(.is-horizontal):has(> .control > :is(.button, input[type="submit"], input[type="button"], input[type="reset"], button)):not(:has(input:not([type="submit"], [type="button"], [type="reset"], [type="image"], [type="hidden"]), select, textarea)) {
+        margin-left: 12rem;
+    }
+}
+
+/* Checkbox and radio items, the shape @field type="checkbox|radio" emits:
+   .is-checkradio > .checkbox-item > input + label:empty + span label, with a
+   <br> between items. The empty label is the box hook of a CSS-only checkradio
+   kit; this theme styles the input itself, so the hook only adds a gap. The
+   item row is as tall as the field label line, so box and label share a centre. */
+.is-checkradio label:empty, .checkbox-item > label:empty, .radio-item > label:empty { display: none; }
+br.checkbox-item-separator, br.radio-item-separator { display: none; }
+div.is-checkradio { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem 1rem; }
+div.is-checkradio.checkbox, div.is-checkradio.radio { margin-left: 0; }
+.checkbox-item, .radio-item {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: .375rem;
+    min-height: calc(var(--au-fs-small) * 1.3);
+    margin: 0;
+    color: var(--au-ink);
+    font-size: var(--au-fs-ui);
+    font-weight: 400;
+}
+/* The box aligns with the first text line, also when a long label wraps. */
+.checkbox-item > input, .radio-item > input { margin: calc((var(--au-fs-ui) * 1.3 - 1rem) / 2) 0 0; vertical-align: 0; }
+.checkbox-item + .checkbox-item, .radio-item + .radio-item { margin-left: 0; }
+.checkbox-label-local, .radio-label-local { min-width: 0; }
+div.is-checkradio:has(> .checkbox-item-noninline, > .radio-item-noninline) { flex-direction: column; align-items: flex-start; gap: .375rem; }
+.checkbox-item-noninline, .radio-item-noninline { display: flex; }
+/* Inline items outside the flex wrapper (generic fields) need their own space. */
+:not(div.is-checkradio) > :is(.checkbox-item-inline, .radio-item-inline) { margin-right: 1rem; }
+:not(div.is-checkradio) > .checkbox-item-noninline + .checkbox-item-noninline,
+:not(div.is-checkradio) > .radio-item-noninline + .radio-item-noninline { margin-top: .375rem; }
+.checkbox-label-local, .radio-label-local {
+    color: var(--au-ink);
+    font-size: var(--au-fs-ui);
+    font-weight: 400;
+    line-height: 1.3;
+    cursor: pointer;
+}
+.field.is-horizontal > .field-body .control:has(> .is-checkradio, > div > .is-checkradio) { padding-top: .375rem; }
+@media (max-width: 768px) {
+    .field.is-horizontal > .field-body .control:has(> .is-checkradio, > div > .is-checkradio) { padding-top: 0; }
+}
+
+/* A <button> or submit input without a class still gets the theme button. */
+button:not([class]), input[type="submit"]:not([class]), input[type="button"]:not([class]), input[type="reset"]:not([class]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--au-control-h);
+    padding: 0 1rem;
+    margin: .375rem .375rem 0 0;
+    background: var(--au-surface);
+    color: var(--au-ink);
+    font: 600 var(--au-fs-ui)/1 var(--au-font);
+    border: 1px solid var(--au-rule-strong);
+    border-radius: var(--au-r-control);
+    box-shadow: var(--au-bezel);
+    cursor: pointer;
+}
+button:not([class]):hover, input[type="button"]:not([class]):hover, input[type="reset"]:not([class]):hover { background: var(--au-surface-2); }
+button[type="submit"]:not([class]), input[type="submit"]:not([class]) { background: var(--au-accent); border-color: var(--au-accent); color: var(--au-on-accent); }
+button[type="submit"]:not([class]):hover, input[type="submit"]:not([class]):hover { background: var(--au-accent); opacity: .88; }
+/* A form that is only a button (a remove, a reset) is not the main action. */
+form > button[type="submit"]:not([class]):only-child,
+form > button[type="submit"]:not([class]):only-child:hover { background: var(--au-surface); border-color: var(--au-rule-strong); color: var(--au-ink); opacity: 1; }
+form > button[type="submit"]:not([class]):only-child:hover { background: var(--au-surface-2); }
+
+/* A hand-written form of one text input and a plain button is one row. */
+form:has(> input:is([type="text"], [type="search"], :not([type])) + button:not([class])) {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    max-width: 34rem;
+    margin: .5rem 0;
+}
+form:has(> input:is([type="text"], [type="search"], :not([type])) + button:not([class])) > input { flex: 1 1 auto; min-width: 0; }
+form:has(> input:is([type="text"], [type="search"], :not([type])) + button:not([class])) > button { flex: none; margin: 0; }
+
+/* The selected rows of a list box: a tint, not the grey of the browser. */
+/* No vertical padding: the size attribute counts rows, and taller rows add a scroll bar. */
+select[multiple] { overflow-x: hidden; }
+select[multiple] option { padding: 0 .375rem; border-radius: 4px; }
+select[multiple] option:checked {
+    background: linear-gradient(var(--au-surface-3), var(--au-surface-3));
+    color: var(--au-ink);
+    font-weight: 600;
+}
 
 @media (max-width: 768px) {
     .field.is-horizontal { display: block; }

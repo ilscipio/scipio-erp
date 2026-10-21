@@ -222,7 +222,8 @@ origArgs={} passArgs={} catchArgs...>
         <#local class = addClassArg(class,"is-open")/>
     </#if>
     <#-- Menu -->
-    <#if htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if !isSideMenu> role="menu"</#if>></#if>
+    <#-- inlineItems: the caller supplies the wrapper, so open it only when the close below runs -->
+    <#if !inlineItems && htmlwrap?has_content><${htmlwrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${escapeVal(id, 'html')}"</#if><#if style?has_content> style="${escapeVal(style, 'html')}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if !isSideMenu> role="menu"</#if>></#if>
     <#if (sepMenu.layout!) == "before-inline" && sepMenu.hasMenu>
         <li class="au-menu-heading" role="presentation">${getLabel("CommonNavigation")}</li>
     </#if>
@@ -378,7 +379,8 @@ origArgs={} passArgs={} catchArgs...>
                     animation: {
                         duration: 1000
                     },
-                    maintainAspectRatio: true,
+                    <#-- Aurora: the frame sets the height; a fixed ratio overflows it and the CSS clamp squashes the canvas. -->
+                    maintainAspectRatio: false,
                     tooltips: {
                         mode: <#if type=="line" || type=="bar">'label'<#else>'single'</#if><#if (labelUom1?has_content ||labelUom2?has_content) >,
                         callbacks: {

@@ -425,6 +425,17 @@ public abstract class XmlToAnnotationConverter {
      * @return Location string for @ScriptAction annotation
      */
     protected String extractScript(String widgetName, int scriptIndex, String lang, String code) {
+        // An inline script body keeps its "groovy:" language prefix; in a file it is a
+        // statement label, and a compile error when an import follows it.
+        if (code != null) {
+            java.util.regex.Matcher prefix = java.util.regex.Pattern.compile("^\\s*(groovy|bsh|java):").matcher(code);
+            if (prefix.find()) {
+                if (isEmpty(lang)) {
+                    lang = prefix.group(1);
+                }
+                code = code.substring(prefix.end());
+            }
+        }
         String filename = widgetName + "_script" + scriptIndex + "." + (isNotEmpty(lang) ? lang : "groovy");
         String location = "component://" + componentName + "/webapp/" + componentName +
                           "/WEB-INF/actions/generated/" + filename;

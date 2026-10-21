@@ -85,6 +85,16 @@ a {
    in a backend reads as a second, meaningless colour. */
 a:visited { color: var(--au-accent); }
 a:hover, a:visited:hover { color: var(--au-accent); text-decoration: underline; text-underline-offset: 2px; }
+/* The accent is the ink colour, so a bare link in body text needs a line to
+   read as a link. Links with a class (buttons, menus, IDs) keep their look. */
+.au-main :is(p, li, .section-screenlet > div, .column, .modal-content) > a:not([class]),
+.au-main a.js-modal-trigger:not(.button) {
+    text-decoration: underline;
+    text-decoration-color: var(--au-ink-4);
+    text-underline-offset: 2px;
+}
+.au-main :is(p, li, .section-screenlet > div, .column, .modal-content) > a:not([class]):hover,
+.au-main a.js-modal-trigger:not(.button):hover { text-decoration-color: currentColor; }
 /* The focus ring is brass, the one other place brass appears. */
 a:focus-visible,
 button:focus-visible,
@@ -213,14 +223,16 @@ input[type="checkbox"], input[type="radio"] {
     -webkit-appearance: none;
     accent-color: var(--au-accent);
     position: relative;
+    box-sizing: border-box;
     flex: none;
-    width: .9375rem;
-    height: .9375rem;
+    width: 1rem;
+    height: 1rem;
     margin: 0 .375rem 0 0;
-    vertical-align: -2px;
-    background: var(--au-surface-2);
-    border: 1px solid var(--au-rule-strong);
-    border-radius: 3px;
+    vertical-align: -3px;
+    background: var(--au-surface);
+    /* ink-4, not a rule colour: an empty box needs 3:1 against the card */
+    border: 1.5px solid var(--au-ink-4);
+    border-radius: 4px;
     cursor: pointer;
 }
 input[type="radio"] { border-radius: 50%; }
@@ -234,26 +246,28 @@ input[type="checkbox"]:checked:not(.switch), input[type="radio"]:checked {
     background: var(--au-accent);
     border-color: var(--au-accent);
 }
+/* Both marks are centred from the box middle, so a size change keeps them centred. */
 input[type="checkbox"]:checked:not(.switch)::after {
     content: "";
     position: absolute;
-    left: 2px;
-    top: -1px;
+    left: 50%;
+    top: 45%;
     width: 4px;
     height: 8px;
     border: solid var(--au-on-accent);
     border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
+    transform: translate(-50%, -50%) rotate(45deg);
 }
 input[type="radio"]:checked::after {
     content: "";
     position: absolute;
-    left: 3px;
-    top: 3px;
-    width: 5px;
-    height: 5px;
+    left: 50%;
+    top: 50%;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: var(--au-on-accent);
+    transform: translate(-50%, -50%);
 }
 input[type="range"] { accent-color: var(--au-accent); width: 100%; }
 input[type="color"] {

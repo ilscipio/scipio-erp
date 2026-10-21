@@ -62,7 +62,7 @@ public class ManufacturingFabricationForms {
         },
         actions = @FormActions(service = {@ServiceAction(serviceName = "performFind", resultMapName = "result", resultMapList = "listIt", fieldMaps = {@FieldMap(fieldName = "inputFields", fromField = "requestParameters"), @FieldMap(fieldName = "entityName", value = "WorkEffort"), @FieldMap(fieldName = "viewIndex", fromField = "viewIndex"), @FieldMap(fieldName = "viewSize", fromField = "viewSize"), @FieldMap(fieldName = "orderBy", value = "estimatedStartDate")})}),
         rowActions = @RowActions(
-            service = {@ServiceAction(serviceName = "getFabricationOrder", resultMapName = "fabSummary", autoFieldMap = false, fieldMaps = {@FieldMap(fieldName = "fabricationOrderId", fromField = "workEffortId")})},
+            service = {@ServiceAction(serviceName = "getFabricationOrder", resultMapName = "fabSummary", autoFieldMap = false, fieldMaps = {@FieldMap(fieldName = "fabricationOrderId", fromField = "workEffortId"), @FieldMap(fieldName = "userLogin", fromField = "userLogin")})},
             set = {
                 @SetAction(field = "derivedStatus", value = "${fabSummary.totals.derivedStatus}"),
                 @SetAction(field = "runCount", value = "${fabSummary.totals.runCount}", type = "Integer")

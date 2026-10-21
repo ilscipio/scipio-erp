@@ -689,6 +689,9 @@ section, .section { display: block; margin: 0 0 1rem; padding: 0; }
     padding: 16px var(--au-pad-panel) 0;
     border-top: 1px solid var(--au-rule);
 }
+/* A titled section with an empty body (marked by aurora.js) is a header only. */
+.section-screenlet.au-empty-body:not(:has(.section-screenlet, .block-grid :is(.panel, .card, .box), .tile-container, .button > :is(h1, h2, h3, h4))) { padding-bottom: 0; }
+.section-screenlet.au-empty-body > .title + div { display: none; }
 .section-screenlet.no-title:not(:has(.section-screenlet, .block-grid :is(.panel, .card, .box), .tile-container, .button > :is(h1, h2, h3, h4))) { padding-top: var(--au-pad-panel); }
 
 /* A table in a card or a box stays inside its padding, like every other widget. */
@@ -772,7 +775,21 @@ section, .section { display: block; margin: 0 0 1rem; padding: 0; }
 
 /* ---- Tiles ---------------------------------------------------------------- */
 
-.tile-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: var(--au-gap); margin-bottom: 1.25rem; }
+/* The tile grid: @tile size small and normal take one cell, wide two cells
+   in a row, large two by two. Dense packing fills the holes a big tile leaves.
+   A single column (phone) keeps every tile one cell wide. */
+.tile-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    grid-auto-rows: minmax(112px, auto);
+    grid-auto-flow: row dense;
+    gap: var(--au-gap);
+    margin-bottom: 1.25rem;
+}
+@media (min-width: 720px) {
+    .tile-container > .tile-wide { grid-column: span 2; }
+    .tile-container > .tile-large { grid-column: span 2; grid-row: span 2; }
+}
 .tile {
     position: relative;
     display: flex;
@@ -788,29 +805,95 @@ section, .section { display: block; margin: 0 0 1rem; padding: 0; }
     color: var(--au-ink);
 }
 a.tile, .tile a { color: inherit; text-decoration: none; }
-a.tile:hover { border-color: var(--au-rule-strong); }
-.tile-icon { margin-bottom: .5rem; color: var(--au-ink); font-size: 1.25rem; line-height: 1; }
-.tile-title, .tile-title-common { color: var(--au-ink-2); font-size: var(--au-fs-ui); font-weight: 600; }
-.tile-content { color: var(--au-ink); font-family: var(--au-font-display); font-size: 2rem; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
-.tile-image { position: absolute; inset: 0; z-index: 0; opacity: .12; }
+a.tile:hover, .tile:has(a:hover) { border-color: var(--au-rule-strong); }
+/* The content box does not position anything: the image fills the tile and
+   the overlay sits on the tile edge, not on the content box. */
+.tile > .tile-content {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .375rem;
+    color: var(--au-ink);
+    font-family: var(--au-font-display);
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+}
+.tile-content > a { display: contents; }
+.tile-icon { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: .375rem; color: var(--au-ink); font-size: 1.25rem; line-height: 1; }
+/* The title often sits inside .tile-content; it must not take the number font. */
+.tile-title, .tile-title-common {
+    position: relative;
+    z-index: 1;
+    color: var(--au-ink-2);
+    font-family: var(--au-font);
+    font-size: var(--au-fs-ui);
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: normal;
+}
+/* The image is the tile face. A title over it sits on a surface chip. */
+.tile-image { position: absolute; inset: 0; z-index: 0; background-color: var(--au-surface-2); }
 .tile-image-cover  { background-size: cover; background-position: 50% 50%; }
-.tile-image-contain { background-size: contain; background-repeat: no-repeat; background-position: 50% 50%; }
-.tile-overlay { position: absolute; inset: auto 0 0 0; padding: .5rem .75rem; background: var(--au-surface-2); border-top: 1px solid var(--au-rule-soft); font-size: var(--au-fs-small); }
+.tile-image-contain { inset: 12px 12px 12px 12px; background-color: transparent; background-size: contain; background-repeat: no-repeat; background-position: 50% 50%; }
+.tile:has(.tile-image) .tile-title {
+    padding: .1875rem .5rem;
+    background: var(--au-surface);
+    border-radius: var(--au-r-control);
+    box-shadow: var(--au-shadow-raise);
+}
+.tile-overlay {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 2;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    padding: .5rem .75rem;
+    background: var(--au-surface-2);
+    border-top: 1px solid var(--au-rule-soft);
+    color: var(--au-ink-2);
+    font-family: var(--au-font);
+    font-size: var(--au-fs-small);
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: normal;
+}
 .tile-overlay-slide-up { transform: translateY(100%); transition: transform var(--au-speed) ease; }
-.tile:hover .tile-overlay-slide-up { transform: none; }
-.tile > * { position: relative; z-index: 1; }
+.tile:hover .tile-overlay-slide-up, .tile:focus-within .tile-overlay-slide-up { transform: none; }
+/* Colours 1-7: a stripe on the top edge; 0 is the plain tile. */
 .tile-color-1 { box-shadow: inset 0 3px 0 var(--au-ink), var(--au-shadow-raise); }
 .tile-color-2 { box-shadow: inset 0 3px 0 var(--au-signal), var(--au-shadow-raise); }
 .tile-color-3 { box-shadow: inset 0 3px 0 var(--au-ok), var(--au-shadow-raise); }
 .tile-color-4 { box-shadow: inset 0 3px 0 var(--au-warn), var(--au-shadow-raise); }
 .tile-color-5 { box-shadow: inset 0 3px 0 var(--au-danger), var(--au-shadow-raise); }
 .tile-color-6 { box-shadow: inset 0 3px 0 var(--au-info), var(--au-shadow-raise); }
+.tile-color-7 { box-shadow: inset 0 3px 0 var(--au-ink-3), var(--au-shadow-raise); }
+.tile:has(.tile-image)[class*="tile-color-"] { box-shadow: var(--au-shadow-raise); }
+.tile:has(.tile-image):is(.tile-color-1, .tile-color-2, .tile-color-3, .tile-color-4, .tile-color-5, .tile-color-6, .tile-color-7)::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    z-index: 3;
+    height: 3px;
+    background: var(--tile-stripe);
+}
+.tile-color-1 { --tile-stripe: var(--au-ink); }
+.tile-color-2 { --tile-stripe: var(--au-signal); }
+.tile-color-3 { --tile-stripe: var(--au-ok); }
+.tile-color-4 { --tile-stripe: var(--au-warn); }
+.tile-color-5 { --tile-stripe: var(--au-danger); }
+.tile-color-6 { --tile-stripe: var(--au-info); }
+.tile-color-7 { --tile-stripe: var(--au-ink-3); }
 
 /* ---- The chart frame ------------------------------------------------------ */
 
 .chart-wrapper { position: relative; display: flex; justify-content: center; width: 100%; height: 30vh; min-height: 200px; }
 .chart-data { display: none; }
-.chart-wrapper canvas { margin: .5em 0; }
+.chart-wrapper { padding: .5em 0; box-sizing: border-box; }
 .chart-legend { list-style: none; margin: 0; padding: 0; font-size: var(--au-fs-small); }
 .chart-legend li { display: flex; align-items: center; gap: .375rem; padding: .1875rem 0; color: var(--au-ink-2); }
 .hero { display: block; }
